@@ -1,0 +1,15 @@
+*.[Cc]ache
+*.csproj.user
+*.resharper.user
+*.sln.cache
+*.suo
+*.user
+*.orig
+AssemblyInfo.cs
+deploy/
+build/
+[Bb]in/
+[Dd]ebug/
+[Oo]bj/
+[Rr]elease/
+_ReSharper.*/
