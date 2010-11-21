@@ -5,6 +5,8 @@
 *.suo
 *.user
 *.orig
+*.pidb
+*.userprefs
 AssemblyInfo.cs
 deploy/
 build/
