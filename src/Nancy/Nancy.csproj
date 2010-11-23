@@ -32,13 +32,21 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="INancy.cs" />
     <Compile Include="INancyEngine.cs" />
+    <Compile Include="IRequest.cs" />
+    <Compile Include="NancyModuleLocator.cs" />
+    <Compile Include="Response.cs" />
+    <Compile Include="NotFoundResponse.cs" />
+    <Compile Include="Route.cs" />
+    <Compile Include="RouteResolver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -57,12 +57,16 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Catch.cs" />
+    <Compile Include="Fakes\FakeNancy.cs" />
+    <Compile Include="Fakes\FakeRoute.cs" />
+    <Compile Include="Specifications\Handling a GET request.cs" />
     <Compile Include="ShouldExtensions.cs" />
+    <Compile Include="Specifications\Handling a POST request.cs" />
+    <Compile Include="Specifications\RequestSpec.cs" />
+    <Compile Include="Unit\NancyEngineFixture.cs" />
+    <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Integration\" />
-    <Folder Include="Unit\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
