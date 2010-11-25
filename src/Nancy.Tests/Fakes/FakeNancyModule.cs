@@ -36,4 +36,9 @@ namespace Nancy.Tests.Fakes
             };
         }
     }
+
+    public class FakeNancyModule2 : NancyModule
+    {
+        
+    }
 }

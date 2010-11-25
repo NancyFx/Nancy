@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Linq;
     using System.Reflection;
-    using Nancy.Tests.Fakes;
     using Xunit;
 
     public class NancyModuleLocatorFixture
@@ -28,7 +28,7 @@
             var modules = locator.GetModules();
 
             // Assert
-            modules.ShouldContainType<FakeNancyModule>();
+            modules.Count().ShouldEqual(2);
         }
     }
 }
