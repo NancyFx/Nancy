@@ -10,24 +10,24 @@
         [Fact]
         public void Should_throw_argumentnullexception_when_instatiated_with_null()
         {
-            // Arrange, Act
+            // Given, When
             var exception =
                 Catch.Exception(() => new NancyModuleLocator(null));
 
-            // Assert
+            // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
         public void Should_locate_all_modules()
         {
-            // Arrange
+            // Given
             var locator = new NancyModuleLocator(Assembly.GetExecutingAssembly());
 
-            // Act
+            // When
             var modules = locator.GetModules();
 
-            // Assert
+            // Then
             modules.Count().ShouldEqual(2);
         }
     }
