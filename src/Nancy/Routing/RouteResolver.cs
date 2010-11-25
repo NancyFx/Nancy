@@ -15,7 +15,7 @@
         {
             var matches =
                 from description in descriptions
-                where description.Path.Equals(request.Route.AbsolutePath)
+                where description.Path.Equals(request.Route)
                 select description;
 
             var match = matches.First();

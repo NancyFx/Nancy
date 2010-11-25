@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Tests.Specifications
 {
-    using System;
     using System.Reflection;
     using Nancy.Routing;
 
@@ -20,12 +19,12 @@
 
         protected static IRequest ManufactureGETRequestForRoute(string route)
         {
-            return new Request("GET", new Uri(route));
+            return new Request("GET", route);
         }
 
         protected static IRequest ManufacturePOSTRequestForRoute(string route)
         {
-            return new Request("POST", new Uri(route));
+            return new Request("POST", route);
         }
     }
 }

@@ -23,7 +23,7 @@
         public void Should_match_basic_request_path_to_route()
         {
             //Given
-            var request = new Request("GET", new Uri("http://localhost/route/with/some/parts"));
+            var request = new Request("GET", "/route/with/some/parts");
 
             var modules = new[] { new FakeNancyModule() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));

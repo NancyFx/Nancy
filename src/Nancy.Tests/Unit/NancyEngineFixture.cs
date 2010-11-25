@@ -52,7 +52,7 @@ namespace Nancy.Tests.Unit
         public void Should_retrieve_modules_from_locator_when_handling_request()
         {
             // Given
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
 
             // When
             this.engine.HandleRequest(request);
@@ -65,7 +65,7 @@ namespace Nancy.Tests.Unit
         public void Should_return_not_found_response_when_no_nancy_modules_could_be_found()
         {
             // Given
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
 
             A.CallTo(() => this.locator.GetModules()).Returns(Enumerable.Empty<NancyModule>());
 
@@ -80,7 +80,7 @@ namespace Nancy.Tests.Unit
         public void Should_pass_all_registered_route_handlers_for_get_request_to_route_resolver()
         {
             // Given
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(modules);
@@ -105,7 +105,7 @@ namespace Nancy.Tests.Unit
         public void Should_ignore_case_of_request_verb_when_resolving_route_handlers(string verb)
         {
             // Given
-            var request = new Request(verb, new Uri("http://localhost"));
+            var request = new Request(verb, "/");
             
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
@@ -121,7 +121,7 @@ namespace Nancy.Tests.Unit
         public void Should_pass_all_registered_route_handlers_for_delete_request_to_route_resolver()
         {
             // Given
-            var request = new Request("DELETE", new Uri("http://localhost"));
+            var request = new Request("DELETE", "/");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
@@ -137,7 +137,7 @@ namespace Nancy.Tests.Unit
         public void Should_call_route_resolver_with_all_route_handlers()
         {
             // Given
-            var request = new Request("PUT", new Uri("http://localhost"));
+            var request = new Request("PUT", "/");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
@@ -154,7 +154,7 @@ namespace Nancy.Tests.Unit
         public void Should_call_route_resolver_with_request()
         {
             // Given
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
@@ -170,7 +170,7 @@ namespace Nancy.Tests.Unit
         public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_verb()
         {
             // Given
-            var request = new Request("NOTVALID", new Uri("http://localhost"));
+            var request = new Request("NOTVALID", "/");
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
@@ -185,7 +185,7 @@ namespace Nancy.Tests.Unit
         public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_route()
         {
             // Given
-            var request = new Request("GET", new Uri("http://localhost/invalid"));
+            var request = new Request("GET", "/invalid");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
@@ -214,7 +214,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
@@ -233,7 +233,7 @@ namespace Nancy.Tests.Unit
             // Given
             var expectedResponse = new Response();
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", new Uri("http://localhost"));
+            var request = new Request("GET", "/");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => route.Invoke()).Returns(expectedResponse);
@@ -251,7 +251,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_base_route_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", new Uri("http://localhost"));
+            var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.locator, r);
@@ -269,7 +269,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_path_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", new Uri("http://localhost"));
+            var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.locator, r);
@@ -287,7 +287,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_action_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", new Uri("http://localhost"));
+            var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.locator, r);
@@ -311,10 +311,7 @@ namespace Nancy.Tests.Unit
 
         private static IRequest ManufactureGETRequest(string route)
         {
-            var url =
-                string.Concat("http://localhost", route);
-
-            return new Request("GET", new Uri(url));
+            return new Request("GET", route);
         }
     }
 }
