@@ -1,21 +1,26 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Net;
     using FakeItEasy;
-    using Nancy;
+    using Nancy.Extensions;
+    using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using Xunit.Extensions;
 
     public class NancyEngineFixture
     {
         private readonly INancyEngine engine;
         private readonly IRouteResolver resolver;
         private readonly INancyModuleLocator locator;
+        private readonly IEnumerable<NancyModule> modules;
 
         public NancyEngineFixture()
         {
+            this.modules = new[] { new FakeNancyModule() };
             this.locator = A.Fake<INancyModuleLocator>();
             this.resolver = A.Fake<IRouteResolver>();
             this.engine = new NancyEngine(this.locator, this.resolver);
@@ -24,135 +29,284 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_throw_argumentnullexception_when_created_with_null_locator()
         {
-            // Arrange, Act
+            // Given, When
             var exception =
                 Catch.Exception(() => new NancyEngine(null, A.Fake<IRouteResolver>()));
 
-            // Assert
+            // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
         public void Should_throw_argumentnullexception_when_created_with_null_resolver()
         {
-            // Arrange, Act
+            // Given, When
             var exception =
                 Catch.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(), null));
 
-            // Assert
+            // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
         public void Should_retrieve_modules_from_locator_when_handling_request()
         {
-            var request =
-                new Request("GET", new Uri("http://localhost"));
+            // Given
+            var request = new Request("GET", new Uri("http://localhost"));
 
-            var response =
-                this.engine.HandleRequest(request);
+            // When
+            this.engine.HandleRequest(request);
 
+            // Then
             A.CallTo(() => this.locator.GetModules()).MustHaveHappened();
         }
 
         [Fact]
         public void Should_return_not_found_response_when_no_nancy_modules_could_be_found()
         {
-            // Arrange
-            A.CallTo(() => this.locator.GetModules()).Returns(Enumerable.Empty<INancy>());
+            // Given
+            var request = new Request("GET", new Uri("http://localhost"));
 
-            var request =
-                new Request("GET", new Uri("http://localhost"));
+            A.CallTo(() => this.locator.GetModules()).Returns(Enumerable.Empty<NancyModule>());
 
-            // Act
-            var response =
-                this.engine.HandleRequest(request);
+            // When
+            var response = this.engine.HandleRequest(request);
 
-            // Assert
+            // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
-        public void Should_call_route_resolver_with_request_and_retrieved_modules()
+        public void Should_pass_all_registered_route_handlers_for_get_request_to_route_resolver()
         {
-            // Arrange
-            var modules = new [] { new FakeNancy() };
+            // Given
             var request = new Request("GET", new Uri("http://localhost"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => this.locator.GetModules()).Returns(modules);
 
-            // Act
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
+                A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData("get")]
+        [InlineData("GeT")]
+        [InlineData("PoSt")]
+        [InlineData("post")]
+        [InlineData("puT")]
+        [InlineData("PUT")]
+        [InlineData("DelETe")]
+        [InlineData("DELete")]
+        public void Should_ignore_case_of_request_verb_when_resolving_route_handlers(string verb)
+        {
+            // Given
+            var request = new Request(verb, new Uri("http://localhost"));
+            
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
+                A<IEnumerable<RouteDescription>>.Ignored.Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_all_registered_route_handlers_for_delete_request_to_route_resolver()
+        {
+            // Given
+            var request = new Request("DELETE", new Uri("http://localhost"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_call_route_resolver_with_all_route_handlers()
+        {
+            // Given
+            var request = new Request("PUT", new Uri("http://localhost"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+            A.CallTo(() => this.resolver.GetRoute(request, descriptions)).Returns(null);
+
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_call_route_resolver_with_request()
+        {
+            // Given
+            var request = new Request("GET", new Uri("http://localhost"));
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(request, 
+                A<IEnumerable<RouteDescription>>.Ignored.Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_verb()
+        {
+            // Given
+            var request = new Request("NOTVALID", new Uri("http://localhost"));
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
             var response = this.engine.HandleRequest(request);
 
-            // Assert
-            A.CallTo(() => this.resolver.GetRoute(request, modules)).MustHaveHappened();
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_route()
+        {
+            // Given
+            var request = new Request("GET", new Uri("http://localhost/invalid"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(null);
+            
+            // When
+            var response = this.engine.HandleRequest(request);
+
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
         public void Should_throw_argumentnullexception_when_handling_null_request()
         {
-            // Arrange, Act
+            // Given, When
             var exception =
                 Catch.Exception(() => this.engine.HandleRequest(null));
 
-            // Assert
+            // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
         public void Should_invoke_resolved_route()
         {
-            // Arrange
+            // Given
             var route = A.Fake<IRoute>();
-
-            var modules = new[] { new FakeNancy() };
             var request = new Request("GET", new Uri("http://localhost"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
 
-            A.CallTo(() => this.locator.GetModules()).Returns(modules);
-            A.CallTo(() => this.resolver.GetRoute(request, modules)).Returns(route);
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(route);
 
-            // Act
-            var response = this.engine.HandleRequest(request);
+            // When
+            this.engine.HandleRequest(request);
 
-            // Assert
+            // Then
             A.CallTo(() => route.Invoke()).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_return_not_found_response_when_no_route_was_matched()
-        {
-            // Arrange
-            var request = new Request("GET", new Uri("http://localhost"));
-            var modules = new[] { new FakeNancy() };
-
-            A.CallTo(() => this.locator.GetModules()).Returns(modules);
-            A.CallTo(() => this.resolver.GetRoute(request, modules)).Returns(null);
-
-            // Act
-            var response = this.engine.HandleRequest(request);
-
-            // Assert
-            response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
         public void Should_return_response_generated_by_route()
         {
-            // Arrange
+            // Given
             var expectedResponse = new Response();
             var route = A.Fake<IRoute>();
-            var modules = new[] { new FakeNancy() };
             var request = new Request("GET", new Uri("http://localhost"));
+            var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => route.Invoke()).Returns(expectedResponse);
-            A.CallTo(() => this.locator.GetModules()).Returns(modules);
-            A.CallTo(() => this.resolver.GetRoute(request, modules)).Returns(route);
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(route);
 
-            // Act
+            // When
             var response = this.engine.HandleRequest(request);
 
-            // Assert
+            // Then
             response.ShouldBeSameAs(expectedResponse);
+        }
+
+        [Fact]
+        public void Should_set_base_route_on_descriptions_that_are_passed_to_resolver()
+        {
+            // Given
+            var request = new Request("POST", new Uri("http://localhost"));
+
+            var r = new FakeRouteResolver();
+            var e = new NancyEngine(this.locator, r);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
+            e.HandleRequest(request);
+
+            // Then
+            r.BaseRoute.ShouldEqual("/fake");
+        }
+
+        [Fact]
+        public void Should_set_path_on_descriptions_that_are_passed_to_resolver()
+        {
+            // Given
+            var request = new Request("POST", new Uri("http://localhost"));
+
+            var r = new FakeRouteResolver();
+            var e = new NancyEngine(this.locator, r);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // When
+            e.HandleRequest(request);
+
+            // Then
+            r.Path.ShouldEqual("/");
+        }
+
+        [Fact]
+        public void Should_set_action_on_descriptions_that_are_passed_to_resolver()
+        {
+            // Given
+            var request = new Request("POST", new Uri("http://localhost"));
+
+            var r = new FakeRouteResolver();
+            var e = new NancyEngine(this.locator, r);
+
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            var expectedAction =
+                (new FakeNancyModule()).Post["/"];
+            
+            // When
+            e.HandleRequest(request);
+
+            // Then
+            r.Action.ShouldBeSameAs(expectedAction);
+        }
+        
+        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
+        {
+            return modules.SelectMany(x => x.GetRouteDescription(request));
         }
 
         private static IRequest ManufactureGETRequest(string route)

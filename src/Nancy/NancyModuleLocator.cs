@@ -7,7 +7,7 @@
 
     public interface INancyModuleLocator
     {
-        IEnumerable<INancy> GetModules();
+        IEnumerable<NancyModule> GetModules();
     }
 
     public class NancyModuleLocator : INancyModuleLocator
@@ -24,12 +24,12 @@
             this.assembly = assembly;
         }
 
-        public IEnumerable<INancy> GetModules()
+        public IEnumerable<NancyModule> GetModules()
         {
             return LocateNancyModules(this.assembly);
         }
 
-        private static IEnumerable<INancy> LocateNancyModules(Assembly assembly)
+        private static IEnumerable<NancyModule> LocateNancyModules(Assembly assembly)
         {
             var catalog =
                 new AssemblyCatalog(assembly);
@@ -37,7 +37,7 @@
             var container =
                 new CompositionContainer(catalog);
 
-            return container.GetExportedValues<INancy>();
+            return container.GetExportedValues<NancyModule>();
         }
     }
 }

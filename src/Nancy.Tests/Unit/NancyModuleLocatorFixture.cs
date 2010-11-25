@@ -28,7 +28,7 @@
             var modules = locator.GetModules();
 
             // Assert
-            modules.ShouldContainType<FakeNancy>();
+            modules.ShouldContainType<FakeNancyModule>();
         }
     }
 }

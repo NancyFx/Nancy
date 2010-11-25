@@ -5,23 +5,29 @@ namespace Nancy
     using System.ComponentModel.Composition;
 
     [InheritedExport]
-    public interface INancy
+    public abstract class NancyModule
     {
-        IDictionary<string, Func<dynamic, Response>> Get { get; }
-
-        IDictionary<string, Func<dynamic, Response>> Post { get; }
-    }
-
-    public class NancyModule : INancy
-    {
-        public NancyModule()
+        protected NancyModule() : this(string.Empty)
         {
+        }
+
+        protected NancyModule(string baseRoute)
+        {
+            this.BaseRoute = baseRoute;
+            this.Delete = new Dictionary<string, Func<dynamic, Response>>();
             this.Get = new Dictionary<string, Func<dynamic, Response>>();
             this.Post = new Dictionary<string, Func<dynamic, Response>>();
+            this.Put = new Dictionary<string, Func<dynamic, Response>>();
         }
+
+        public string BaseRoute { get; private set; }
+
+        public IDictionary<string, Func<dynamic, Response>> Delete { get; private set; }
 
         public IDictionary<string, Func<dynamic, Response>> Get { get; private set; }
 
         public IDictionary<string, Func<dynamic, Response>> Post { get; private set; }
+
+        public IDictionary<string, Func<dynamic, Response>> Put { get; private set; }
     }
 }

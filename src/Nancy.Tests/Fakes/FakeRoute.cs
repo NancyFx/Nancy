@@ -1,12 +1,12 @@
 namespace Nancy.Tests.Fakes
 {
-    using FakeItEasy;
+    using Nancy.Routing;
 
     public class FakeRoute : Route
     {
         public bool ActionWasInvoked;
 
-        public FakeRoute()
+        public FakeRoute() : base(string.Empty, x => new Response())
         {
             this.Action = x => {
                 this.ActionWasInvoked = true;

@@ -47,26 +47,27 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
-      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
-      <Name>Nancy</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Catch.cs" />
-    <Compile Include="Fakes\FakeNancy.cs" />
+    <Compile Include="Fakes\FakeNancyModule.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
+    <Compile Include="Fakes\FakeRouteResolver.cs" />
     <Compile Include="Specifications\Handling a GET request.cs" />
     <Compile Include="ShouldExtensions.cs" />
     <Compile Include="Specifications\Handling a POST request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
+    <Compile Include="Unit\RouteResolverFixture.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

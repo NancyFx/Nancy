@@ -39,14 +39,16 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="INancy.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
     <Compile Include="NancyModuleLocator.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
-    <Compile Include="Route.cs" />
-    <Compile Include="RouteResolver.cs" />
+    <Compile Include="Routing\Route.cs" />
+    <Compile Include="Routing\RouteDescription.cs" />
+    <Compile Include="Routing\RouteResolver.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

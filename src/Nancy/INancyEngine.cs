@@ -1,10 +1,18 @@
 namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Extensions;
+    using Nancy.Routing;
 
     public interface INancyEngine
     {
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/>.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <returns>An <see cref="Response"/> instance containing the results of invoking the action that matched the <paramref name="request"/>.</returns>
         Response HandleRequest(IRequest request);
     }
 
@@ -13,6 +21,11 @@ namespace Nancy
         private readonly INancyModuleLocator locator;
         private readonly IRouteResolver resolver;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyEngine"/> class.
+        /// </summary>
+        /// <param name="locator">An <see cref="INancyModuleLocator"/> instance, that will be used to locate <see cref="NancyModule"/> instances</param>
+        /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver)
         {
             if (locator == null)
@@ -29,6 +42,11 @@ namespace Nancy
             this.resolver = resolver;
         }
 
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/>.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <returns>An <see cref="Response"/> instance containing the results of invoking the action that matched the <paramref name="request"/>.</returns>
         public Response HandleRequest(IRequest request)
         {
             if (request == null)
@@ -36,17 +54,28 @@ namespace Nancy
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
+            // TODO: Remove arrowe-head anti-pattern
+
             var modules = this.locator.GetModules();
+            if (modules.Count() > 0)
+            {
+                var descriptions = GetRouteDescriptions(request, modules);
+                if (descriptions.Count() > 0)
+                {
+                    var resolvedRoute = this.resolver.GetRoute(request, descriptions);
+                    if (resolvedRoute != null)
+                    {
+                        return resolvedRoute.Invoke();
+                    }
+                }
+            }
+            
+            return new NotFoundResponse();
+        }
 
-            if (modules.Count() == 0)
-                return new NotFoundResponse();
-
-            var route = this.resolver.GetRoute(request, modules);
-
-            if (route == null)
-                return new NotFoundResponse();
-
-            return route.Invoke();
+        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
+        {
+            return modules.SelectMany(x => x.GetRouteDescription(request));
         }
     }
 }

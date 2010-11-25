@@ -2,6 +2,7 @@
 {
     using System;
     using System.Reflection;
+    using Nancy.Routing;
 
     public abstract class RequestSpec
     {
