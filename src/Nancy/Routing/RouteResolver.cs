@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public interface IRouteResolver
     {
@@ -12,7 +13,14 @@
     {
         public IRoute GetRoute(IRequest request, IEnumerable<RouteDescription> descriptions)
         {
-            throw new NotImplementedException();
+            var matches =
+                from description in descriptions
+                where description.Path.Equals(request.Route.AbsolutePath)
+                select description;
+
+            var match = matches.First();
+
+            return new Route(string.Empty, null);
         }
     }
 }

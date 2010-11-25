@@ -14,22 +14,25 @@
         {
             if (ReferenceEquals(null, other)) return false;
             if (ReferenceEquals(this, other)) return true;
-            return Equals(other.Path, Path) && Equals(other.Action, Action);
+            return Equals(other.Action, Action) && Equals(other.Path, Path) && Equals(other.BaseRoute, BaseRoute);
         }
 
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            if (obj.GetType() != typeof (RouteDescription)) return false;
-            return Equals((RouteDescription) obj);
+
+            return obj.GetType() == typeof (RouteDescription) && Equals((RouteDescription) obj);
         }
 
         public override int GetHashCode()
         {
             unchecked
             {
-                return (Path.GetHashCode()*397) ^ Action.GetHashCode();
+                var result = (Action != null ? Action.GetHashCode() : 0);
+                result = (result*397) ^ (Path != null ? Path.GetHashCode() : 0);
+                result = (result*397) ^ (BaseRoute != null ? BaseRoute.GetHashCode() : 0);
+                return result;
             }
         }
     }
