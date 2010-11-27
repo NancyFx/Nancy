@@ -31,5 +31,9 @@ namespace Nancy
         public IDictionary<string, Func<dynamic, Response>> Put { get; private set; }
 
         public IRequest Request { get; set; }
+
+        public IViewEngine View { get; }
+
+        public IResponseFormatter Response { get; }
     }
 }
