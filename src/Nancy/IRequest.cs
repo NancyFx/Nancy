@@ -4,20 +4,20 @@ namespace Nancy
 
     public interface IRequest
     {
-        string Route { get; }
+        string Path { get; }
 
         string Verb { get; }
     }
 
     public class Request : IRequest
     {
-        public Request(string verb, string route)
+        public Request(string verb, string path)
         {
-            this.Route = route;
+            this.Path = path;
             this.Verb = verb;
         }
 
-        public string Route { get; private set; }
+        public string Path { get; private set; }
 
         public string Verb { get; private set; }
     }

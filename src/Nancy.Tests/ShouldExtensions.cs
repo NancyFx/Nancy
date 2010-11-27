@@ -96,12 +96,9 @@
             Assert.IsAssignableFrom(expected, asserted);
         }
 
-        public static void ShouldNotBeOfType<T>(this object assertedType)
+        public static void ShouldNotBeOfType<T>(this object asserted)
         {
-            if (assertedType != null)
-            {
-                Assert.IsAssignableFrom(typeof(T), assertedType);
-            }
+            Assert.True(!asserted.GetType().Equals(typeof(T)));
         }
 
         public static void ShouldBeThrownBy(this Type expectedType, Action context)

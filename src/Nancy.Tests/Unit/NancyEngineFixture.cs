@@ -20,7 +20,7 @@ namespace Nancy.Tests.Unit
 
         public NancyEngineFixture()
         {
-            this.modules = new[] { new FakeNancyModule() };
+            this.modules = new[] { new FakeNancyModuleWithBasePath() };
             this.locator = A.Fake<INancyModuleLocator>();
             this.resolver = A.Fake<IRouteResolver>();
             this.engine = new NancyEngine(this.locator, this.resolver);
@@ -182,23 +182,6 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_route()
-        {
-            // Given
-            var request = new Request("GET", "/invalid");
-            var descriptions = GetRouteDescriptions(request, this.modules);
-
-            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(null);
-            
-            // When
-            var response = this.engine.HandleRequest(request);
-
-            // Then
-            response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
-        }
-
-        [Fact]
         public void Should_throw_argumentnullexception_when_handling_null_request()
         {
             // Given, When
@@ -262,7 +245,7 @@ namespace Nancy.Tests.Unit
             e.HandleRequest(request);
 
             // Then
-            r.BaseRoute.ShouldEqual("/fake");
+            r.ModulePath.ShouldEqual("/fake");
         }
 
         [Fact]
@@ -295,13 +278,27 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
             var expectedAction =
-                (new FakeNancyModule()).Post["/"];
+                (new FakeNancyModuleWithBasePath()).Post["/"];
             
             // When
             e.HandleRequest(request);
 
             // Then
             r.Action.ShouldBeSameAs(expectedAction);
+        }
+
+        [Fact]
+        public void Should_set_request_property_of_loaded_modules()
+        {
+            // Arrange
+            var request = new Request("GET", "/");
+            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
+
+            // Act
+            this.engine.HandleRequest(request);
+
+            // Assert
+            this.modules.First().Request.ShouldNotBeNull();
         }
         
         private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)

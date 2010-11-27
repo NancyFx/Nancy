@@ -26,5 +26,15 @@
         {
             return new Request("POST", route);
         }
+
+        protected static IRequest ManufactureDELETERequestForRoute(string route)
+        {
+            return new Request("DELETE", route);
+        }
+
+        protected static IRequest ManufacturePUTRequestForRoute(string route)
+        {
+            return new Request("PUT", route);
+        }
     }
 }

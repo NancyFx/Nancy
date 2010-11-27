@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.Composition.Hosting;
+    using System.IO;
     using System.Reflection;
+    using System.Web.Hosting;
 
     public interface INancyModuleLocator
     {
@@ -18,7 +20,7 @@
         {
             if (assembly == null)
             {
-                throw new ArgumentNullException("locator", "The locator parameter cannot be null.");
+                throw new ArgumentNullException("assembly", "The assembly parameter cannot be null.");
             }
 
             this.assembly = assembly;

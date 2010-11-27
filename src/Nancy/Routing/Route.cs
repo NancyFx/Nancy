@@ -2,30 +2,34 @@
 {
     using System;
 
-    public interface IRoute
-    {
-        Func<object, Response> Action { get; set; }
-
-        string Path { get; }
-
-        Response Invoke();
-    }
-
     public class Route : IRoute
     {
-        public Route(string path, Func<object, Response> action)
+        public Route(string path, RouteParameters parameters, Func<object, Response> action)
         {
-            this.Action = action;
+            if (path == null)
+            {
+                throw new ArgumentNullException("path", "The path parameter cannot be null.");
+            }
+
+            if (action == null)
+            {
+                throw new ArgumentNullException("action", "The action parameter cannot be null.");
+            }
+
             this.Path = path;
+            this.Parameters = parameters;
+            this.Action = action;
         }
 
-        public Func<object, Response> Action { get; set; }
+        public Func<dynamic, Response> Action { get; set; }
 
         public string Path { get; private set; }
 
+        public dynamic Parameters { get; private set; }
+
         public Response Invoke()
         {
-            return new Response();
+            return this.Action.Invoke(this.Parameters);
         }
     }
 }

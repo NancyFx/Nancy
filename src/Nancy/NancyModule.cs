@@ -11,16 +11,16 @@ namespace Nancy
         {
         }
 
-        protected NancyModule(string baseRoute)
+        protected NancyModule(string basePath)
         {
-            this.BaseRoute = baseRoute;
+            this.BasePath = basePath;
             this.Delete = new Dictionary<string, Func<dynamic, Response>>();
             this.Get = new Dictionary<string, Func<dynamic, Response>>();
             this.Post = new Dictionary<string, Func<dynamic, Response>>();
             this.Put = new Dictionary<string, Func<dynamic, Response>>();
         }
 
-        public string BaseRoute { get; private set; }
+        public string BasePath { get; private set; }
 
         public IDictionary<string, Func<dynamic, Response>> Delete { get; private set; }
 
@@ -29,5 +29,7 @@ namespace Nancy
         public IDictionary<string, Func<dynamic, Response>> Post { get; private set; }
 
         public IDictionary<string, Func<dynamic, Response>> Put { get; private set; }
+
+        public IRequest Request { get; set; }
     }
 }

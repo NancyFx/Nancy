@@ -3,11 +3,11 @@ namespace Nancy.Tests.Specifications
     using System.Net;
     using Machine.Specifications;
 
-    [Subject("Handling a POST request")]
-    public class when_post_request_matched_existing_route : RequestSpec
+    [Subject("Handling a PUT request")]
+    public class when_put_request_matched_existing_route : RequestSpec
     {
         Establish context = () =>
-            request = ManufacturePOSTRequestForRoute("/");
+            request = ManufacturePUTRequestForRoute("/");
 
         Because of = () =>
             response = engine.HandleRequest(request);
@@ -19,14 +19,14 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_content = () =>
-            response.Contents.ShouldEqual("Default post root");
+            response.Contents.ShouldEqual("Default put root");
     }
 
-    [Subject("Handling a POST request")]
-    public class when_post_request_does_not_matched_existing_route : RequestSpec
+    [Subject("Handling a PUT request")]
+    public class when_put_request_does_not_matched_existing_route : RequestSpec
     {
         Establish context = () =>
-            request = ManufacturePOSTRequestForRoute("/invalid");
+            request = ManufacturePUTRequestForRoute("/invalid");
 
         Because of = () =>
             response = engine.HandleRequest(request);

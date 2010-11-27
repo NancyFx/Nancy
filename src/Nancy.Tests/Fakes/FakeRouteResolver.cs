@@ -12,7 +12,7 @@
             var description = descriptions.First();
 
             this.Action = description.Action;
-            this.BaseRoute = description.BaseRoute;
+            this.ModulePath = description.ModulePath;
             this.Path = description.Path;
 
             return new FakeRoute();
@@ -22,6 +22,6 @@
 
         public string Path { get; private set; }
 
-        public string BaseRoute { get; private set; }
+        public string ModulePath { get; private set; }
     }
 }

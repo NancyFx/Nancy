@@ -3,16 +3,20 @@ namespace Nancy.Tests.Fakes
     using System;
     using Nancy;
 
-    public class FakeNancyModule : NancyModule
+    public class FakeNancyModuleWithBasePath : NancyModule
     {
-        public FakeNancyModule() : base("/fake")
+        public FakeNancyModuleWithBasePath() : base("/fake")
         {
             Delete["/"] = x => {
                 throw new NotImplementedException();
             };
 
             Get["/route/with/some/parts"] = x => {
-                return new Response();
+                return new Response { Contents = "FakeNancyModuleWithBasePath" };
+            };
+
+            Get["/should/have/conflicting/route/defined"] = x => {
+                return new Response { Contents = "FakeNancyModuleWithBasePath" };
             };
 
             Get["/child/{value}"] = x => {
@@ -20,10 +24,14 @@ namespace Nancy.Tests.Fakes
             };
 
             Get["/child/route/{value}"] = x => {
-                throw new NotImplementedException();
+                return new Response { Contents = "test" };
             };
 
             Get["/"] = x => {
+                throw new NotImplementedException();
+            };
+
+            Get["/foo/{value}/bar/{capture}"] = x => {
                 throw new NotImplementedException();
             };
 
@@ -35,10 +43,5 @@ namespace Nancy.Tests.Fakes
                 throw new NotImplementedException();
             };
         }
-    }
-
-    public class FakeNancyModule2 : NancyModule
-    {
-        
     }
 }

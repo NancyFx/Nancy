@@ -19,7 +19,7 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_content = () =>
-            response.Contents.ShouldEqual("Contents from route");
+            response.Contents.ShouldEqual("Default get root");
     }
 
     [Subject("Handling a GET request")]
