@@ -45,6 +45,8 @@
     <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
+    <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="IViewEngine.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />

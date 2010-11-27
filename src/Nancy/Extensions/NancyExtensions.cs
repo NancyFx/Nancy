@@ -24,7 +24,7 @@ namespace Nancy.Extensions
                 select new RouteDescription
                 {
                     Action = route.Value,
-                    ModulePath = source.BasePath,
+                    ModulePath = source.ModulePath,
                     Path = route.Key
                 };
         }

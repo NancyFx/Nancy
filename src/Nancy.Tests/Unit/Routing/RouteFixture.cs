@@ -63,7 +63,7 @@
             var route = new Route("/", parameters, action);
 
             // Then
-            route.Parameters.ShouldBeSameAs((object)parameters);
+            ((object)route.Parameters).ShouldBeSameAs((object)parameters);
         }
 
         [Fact]
