@@ -32,8 +32,8 @@ namespace Nancy
 
         public IRequest Request { get; set; }
 
-        public IViewEngine View { get; }
+        public IViewEngine View { get; set; }
 
-        public IResponseFormatter Response { get; }
+        public IResponseFormatter Response { get; set; }
     }
 }
