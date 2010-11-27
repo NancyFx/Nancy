@@ -11,16 +11,16 @@ namespace Nancy
         {
         }
 
-        protected NancyModule(string basePath)
+        protected NancyModule(string modulePath)
         {
-            this.BasePath = basePath;
+            this.ModulePath = modulePath;
             this.Delete = new Dictionary<string, Func<dynamic, Response>>();
             this.Get = new Dictionary<string, Func<dynamic, Response>>();
             this.Post = new Dictionary<string, Func<dynamic, Response>>();
             this.Put = new Dictionary<string, Func<dynamic, Response>>();
         }
 
-        public string BasePath { get; private set; }
+        public string ModulePath { get; private set; }
 
         public IDictionary<string, Func<dynamic, Response>> Delete { get; private set; }
 
