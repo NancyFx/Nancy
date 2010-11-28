@@ -31,14 +31,38 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\NancyExtensions.cs" />
+    <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
+    <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
+    <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="IViewEngine.cs" />
+    <Compile Include="NancyModule.cs" />
+    <Compile Include="INancyEngine.cs" />
+    <Compile Include="IRequest.cs" />
+    <Compile Include="NancyEngine.cs" />
+    <Compile Include="NancyModuleLocator.cs" />
+    <Compile Include="Response.cs" />
+    <Compile Include="NotFoundResponse.cs" />
+    <Compile Include="Routing\IRoute.cs" />
+    <Compile Include="Routing\IRouteResolver.cs" />
+    <Compile Include="Routing\NoMatchingRouteFoundRoute.cs" />
+    <Compile Include="Routing\Route.cs" />
+    <Compile Include="Routing\RouteDescription.cs" />
+    <Compile Include="Routing\RouteParameters.cs" />
+    <Compile Include="Routing\RouteResolver.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

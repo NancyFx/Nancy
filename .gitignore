@@ -1,6 +1,6 @@
 *.[Cc]ache
 *.csproj.user
-*.resharper.user
+*.[Rr]e[Ss]harper*
 *.sln.cache
 *.suo
 *.user
@@ -15,4 +15,4 @@ build/
 [Dd]ebug/
 [Oo]bj/
 [Rr]elease/
-_ReSharper.*/
+_[Rr]e[Ss]harper.*/
