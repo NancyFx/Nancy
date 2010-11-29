@@ -31,7 +31,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Catch.Exception(() => new NancyEngine(null, A.Fake<IRouteResolver>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteResolver>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -42,7 +42,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Catch.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(), null));
+                Record.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -186,7 +186,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Catch.Exception(() => this.engine.HandleRequest(null));
+                Record.Exception(() => this.engine.HandleRequest(null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();

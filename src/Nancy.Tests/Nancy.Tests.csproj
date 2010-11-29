@@ -51,7 +51,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Catch.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />

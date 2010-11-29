@@ -12,7 +12,7 @@
         {
             // Given, When
             var exception =
-                Catch.Exception(() => new NancyModuleLocator(null));
+                Record.Exception(() => new NancyModuleLocator(null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();

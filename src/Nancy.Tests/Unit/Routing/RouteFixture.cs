@@ -11,7 +11,7 @@
         {
             //Given, When
             var exception =
-                Catch.Exception(() => new Route(null, null, x => null));
+                Record.Exception(() => new Route(null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -22,7 +22,7 @@
         {
             //Given, When
             var exception =
-                Catch.Exception(() => new Route("/", null, null));
+                Record.Exception(() => new Route("/", null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();

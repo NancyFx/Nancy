@@ -193,8 +193,8 @@
             var route = this.resolver.GetRoute(request, descriptions);
 
             // Then
-            Catch.Exception(() => result = route.Parameters.value).ShouldBeNull();
-            Catch.Exception(() => result = route.Parameters.capture).ShouldBeNull();
+            Record.Exception(() => result = route.Parameters.value).ShouldBeNull();
+            Record.Exception(() => result = route.Parameters.capture).ShouldBeNull();
         }
     }
 }
