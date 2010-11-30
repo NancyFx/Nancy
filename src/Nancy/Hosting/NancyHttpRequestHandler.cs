@@ -35,7 +35,7 @@ namespace Nancy.Hosting
         private static IRequest CreateNancyRequest(HttpContext context)
         {
             return new Request(
-                context.Request.RequestType,
+                context.Request.HttpMethod,
                 context.Request.Url.AbsolutePath);
         }
 
