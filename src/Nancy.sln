@@ -5,6 +5,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy", "Nancy\Nancy.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Tests", "Nancy.Tests\Nancy.Tests.csproj", "{776D244D-BC4D-4BBB-A478-CAF2D04520E1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWcf", "NancyWcf\NancyWcf.csproj", "{8B7EC9F2-44D2-426C-AE7F-801DC3238259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyWcf.Tests", "NancyWcf.Tests\NancyWcf.Tests.csproj", "{3D44A461-3133-4B49-A74B-D25632A12FE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +23,14 @@ Global
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
