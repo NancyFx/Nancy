@@ -1,27 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Web;
-using System.Text;
-using Nancy;
-using Nancy.Routing;
-
-namespace NancyWcf
+﻿namespace Nancy.Hosting.Wcf
 {
+    using System.Reflection;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Web;
+    using Nancy;
+    using Nancy.Routing;
+
     [ServiceContract]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class NancyWcfGenericService
     {
-
-        private readonly NancyEngine _engine;
+        private readonly NancyEngine engine;
 
         public NancyWcfGenericService(Assembly modulesAssembly)
         {
-            _engine = new NancyEngine(new NancyModuleLocator(modulesAssembly), new RouteResolver());
+            this.engine = new NancyEngine(new NancyModuleLocator(modulesAssembly), new RouteResolver());
         }
 
         [WebInvoke(UriTemplate="*")]
@@ -41,7 +35,7 @@ namespace NancyWcf
             var ctx = WebOperationContext.Current;
             
             var request = CreateNancyRequestFromIncomingRequest(ctx.IncomingRequest);
-            var response = _engine.HandleRequest(request);
+            var response = this.engine.HandleRequest(request);
             SetNancyResponseToOutgoingResponse(ctx.OutgoingResponse, response);
             return ctx.CreateTextResponse(response.Contents);
         }

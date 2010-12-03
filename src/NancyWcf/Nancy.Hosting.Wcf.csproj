@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3D44A461-3133-4B49-A74B-D25632A12FE5}</ProjectGuid>
+    <ProjectGuid>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NancyWcf.Tests</RootNamespace>
-    <AssemblyName>NancyWcf.Tests</AssemblyName>
+    <RootNamespace>Nancy.Hosting.Wcf</RootNamespace>
+    <AssemblyName>Nancy.Hosting.Wcf</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -33,6 +33,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceModel.Web" />
     <Reference Include="System.Xml.Linq" />
@@ -40,22 +41,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="xunit">
-      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HostingFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="NancyWcfGenericService.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NancyWcf\NancyWcf.csproj">
-      <Project>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</Project>
-      <Name>NancyWcf</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
