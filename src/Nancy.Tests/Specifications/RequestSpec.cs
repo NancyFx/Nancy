@@ -36,5 +36,10 @@
         {
             return new Request("PUT", route);
         }
+
+		protected static IRequest ManufactureHEADRequestForRoute(string route)
+		{
+			return new Request("HEAD", route);
+		}
     }
 }

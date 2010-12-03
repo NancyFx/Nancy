@@ -55,6 +55,7 @@
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
+    <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
     <Compile Include="Specifications\Handling a GET request.cs" />
     <Compile Include="ShouldExtensions.cs" />

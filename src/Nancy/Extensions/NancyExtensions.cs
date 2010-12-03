@@ -13,8 +13,13 @@ namespace Nancy.Extensions
             const BindingFlags flags =
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
 
-            var property =
-                typeof(NancyModule).GetProperty(request.Verb, flags);
+        	var verb = request.Verb;
+			if (verb.ToUpperInvariant() == "HEAD")
+			{
+				verb = "GET";
+			}
+        	var property =
+                typeof(NancyModule).GetProperty(verb, flags);
 
             if (property == null)
                 return Enumerable.Empty<RouteDescription>();

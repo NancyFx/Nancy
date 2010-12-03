@@ -34,12 +34,12 @@ namespace Nancy.Hosting
 
         private static IRequest CreateNancyRequest(HttpContext context)
         {
-            return new Request(
+        	return new Request(
                 context.Request.HttpMethod,
                 context.Request.Url.AbsolutePath);
         }
 
-        private static void SetNancyResponseToHttpResponse(HttpContext context, Response response)
+    	private static void SetNancyResponseToHttpResponse(HttpContext context, Response response)
         {
             if (!string.IsNullOrEmpty(response.ContentType))
             {

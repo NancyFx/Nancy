@@ -56,7 +56,12 @@
                     var resolvedRoute = 
                         this.resolver.GetRoute(request, descriptions);
 
-                    return resolvedRoute.Invoke();
+                	var response = resolvedRoute.Invoke();
+					if (request.Verb.ToUpperInvariant() == "HEAD")
+					{
+						response = new HeadResponse(response);
+					}
+                	return response;
                 }
             }
             
