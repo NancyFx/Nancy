@@ -30,7 +30,7 @@ Start adding your Nancy modules containig your actions
 	
     public class Module : NancyModule
     {
-        public MyNancy()
+        public Module()
         {
             Get["/"] = x => {
                 return "This is the root";
@@ -44,7 +44,7 @@ If you want to get fancy you can add parameters to your paths
 
     public class Module : NancyModule
     {
-        public MyNancy()
+        public Module()
         {
             Get["/greet/{name}"] = x => {
                 return string.Concat("Hello ", x.name);
@@ -53,6 +53,20 @@ If you want to get fancy you can add parameters to your paths
     }
 
 The _{name}_ parameter will be captured and injected into the action parameters, shown as _x_ in the sample. The parameters are represented by a _dynamic_ type so you can access any parameter name straight on it as a property or an indexer. For more information on action parameters please refer to the [Nancy introduction post](http://elegantcode.com/2010/11/28/introducing-nancy-a-lightweight-web-framework-inspired-by-sinatra "Read the Nancy introduction post at elegantcode.com") over at my blog on [ElegantCode](http://elegantcode.com "Visit ElegantCode).
+
+Nancy also supports the idea of _module paths_, where you assign a root path for all actions in the module and they will all be relative to that
+
+    public class Module : NancyModule
+    {
+        public Module() : base("/butler")
+        {
+            Get["/greet/{name}"] = x => {
+                return string.Concat("Hello ", x.name);
+            };
+        }
+    }
+
+Notice the _base("/butler")_ call to the NancyModule constructor. Now all action paths that are defined in the module will be relative to _/butler_ so in order to greet someone you could access _/butler/greet/{name}_, for example _/butler/greet/thecodejunkie_
 	
 ## Help out
 
