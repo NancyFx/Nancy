@@ -12,11 +12,11 @@ namespace Nancy.Tests.Fakes
             };
 
             Get["/route/with/some/parts"] = x => {
-                return new Response { Contents = "FakeNancyModuleWithBasePath" };
+                return "FakeNancyModuleWithBasePath";
             };
 
             Get["/should/have/conflicting/route/defined"] = x => {
-                return new Response { Contents = "FakeNancyModuleWithBasePath" };
+                return "FakeNancyModuleWithBasePath";
             };
 
             Get["/child/{value}"] = x => {
@@ -24,7 +24,7 @@ namespace Nancy.Tests.Fakes
             };
 
             Get["/child/route/{value}"] = x => {
-                return new Response { Contents = "test" };
+                return "test";
             };
 
             Get["/"] = x => {
@@ -36,7 +36,7 @@ namespace Nancy.Tests.Fakes
             };
 
             Post["/"] = x => {
-                return new Response { Contents = "Action result" };
+                return "Action result";
             };
 
             Put["/"] = x => {

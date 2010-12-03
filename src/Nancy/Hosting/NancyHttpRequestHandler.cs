@@ -41,13 +41,9 @@ namespace Nancy.Hosting
 
         private static void SetNancyResponseToHttpResponse(HttpContext context, Response response)
         {
-            if (!string.IsNullOrEmpty(response.ContentType))
-            {
-                context.Response.ContentType = response.ContentType;
-            }
-
+            context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;
-            context.Response.Write(response.Contents);
+            response.Contents.Invoke(context.Response.OutputStream);
         }
     }
 }

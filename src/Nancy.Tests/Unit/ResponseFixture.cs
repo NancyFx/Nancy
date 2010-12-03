@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.IO;
     using System.Net;
     using Nancy;
     using Xunit;
@@ -28,17 +29,6 @@
         }
 
         [Fact]
-        public void Should_set_content_when_implicitly_cast_from_string()
-        {
-            // Given, When
-            const string value = "test value";
-            Response response = value;
-
-            // Then
-            response.Contents.ShouldEqual(value);
-        }
-
-        [Fact]
         public void Should_set_status_code_to_ok_when_implicitly_cast_from_string()
         {
             // Given, When
@@ -57,7 +47,7 @@
             Response response = value;
 
             // When
-            String output = response;
+            var output = GetStringContentsFromResponse(response);
 
             // Then
             output.ShouldEqual(value);
@@ -72,6 +62,17 @@
 
             // Then
             response.ContentType.ShouldEqual("text/html");
+        }
+
+        private static string GetStringContentsFromResponse(Response response)
+        {
+            var memory = new MemoryStream();
+            response.Contents.Invoke(memory);
+            memory.Position = 0;
+            using(var reader = new StreamReader(memory))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }
