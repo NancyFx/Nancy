@@ -36,8 +36,11 @@
             
             var request = CreateNancyRequestFromIncomingRequest(ctx.IncomingRequest);
             var response = this.engine.HandleRequest(request);
+            
             SetNancyResponseToOutgoingResponse(ctx.OutgoingResponse, response);
-            return ctx.CreateTextResponse(response.Contents);
+
+            return ctx.CreateStreamResponse(response.Contents, response.ContentType);
+            //return ctx.CreateTextResponse(response.Contents);
         }
 
         private static IRequest CreateNancyRequestFromIncomingRequest(IncomingWebRequestContext req)
