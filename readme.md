@@ -38,7 +38,21 @@ Start adding your Nancy modules containig your actions
         }
     }
 
-Start application and enjoy!
+Start application and enjoy! Swap out Get with either Put, Post or Delete to create actions that will respond to calls using those request methods. 
+
+If you want to get fancy you can add parameters to your paths
+
+    public class Module : NancyModule
+    {
+        public MyNancy()
+        {
+            Get["/greet/{name}"] = x => {
+                return string.Concat("Hello ", x.name);
+            };
+        }
+    }
+
+The _{name}_ parameter will be captured and injected into the action parameters, shown as _x_ in the sample. The parameters are represented by a _dynamic_ type so you can access any parameter name straight on it as a property or an indexer. For more information on action parameters please refer to the [Nancy introduction post](http://elegantcode.com/2010/11/28/introducing-nancy-a-lightweight-web-framework-inspired-by-sinatra "Read the Nancy introduction post at elegantcode.com") over at my blog on [ElegantCode](http://elegantcode.com "Visit ElegantCode).
 	
 ## Help out
 
