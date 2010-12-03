@@ -47,6 +47,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
+    <Compile Include="HeadResponse.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="IViewEngine.cs" />

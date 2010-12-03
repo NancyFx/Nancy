@@ -45,5 +45,10 @@
                 return reader.ReadToEnd();
             }
         }
+
+		protected static IRequest ManufactureHEADRequestForRoute(string route)
+		{
+			return new Request("HEAD", route);
+		}
     }
 }
