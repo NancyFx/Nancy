@@ -6,7 +6,7 @@ namespace Nancy
 	{
 		public HeadResponse(Response response)
 		{
-			Contents = String.Empty; // head should not return any content
+			Contents = stream => { }; // head should not return any content
 			ContentType = response.ContentType;
 			StatusCode = response.StatusCode;
 		}

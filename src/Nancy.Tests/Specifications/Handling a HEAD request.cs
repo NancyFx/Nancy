@@ -19,7 +19,7 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
     	private It should_set_blank_content = () =>
-    	    response.Contents.ShouldBeEmpty();
+    	    GetStringContentsFromResponse(response).ShouldBeEmpty();
     }
 
     [Subject("Handling a GET request")]
@@ -38,6 +38,6 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_blank_content = () =>
-			response.Contents.ShouldBeEmpty();
+			GetStringContentsFromResponse(response).ShouldBeEmpty();
 	}
 }

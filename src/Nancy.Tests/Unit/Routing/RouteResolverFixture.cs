@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.IO;
     using System.Linq;
     using Extensions;
     using FakeItEasy;
@@ -125,13 +126,14 @@
             var request = new Request("GET", "/fake/should/have/conflicting/route/defined");
             var modules = new NancyModule[] { new FakeNancyModuleWithBasePath(), new FakeNancyModuleWithoutBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
-
-            // When
             var route = this.resolver.GetRoute(request, descriptions);
             var response = route.Invoke();
 
+            // When
+            var output = GetStringContentsFromResponse(response);
+
             // Then
-            response.Contents.ShouldEqual("FakeNancyModuleWithBasePath");
+            output.ShouldEqual("FakeNancyModuleWithBasePath");
         }
 
         [Fact]
@@ -171,13 +173,14 @@
             var request = new Request("GET", "/fake/child/route/foo");
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
-
-            // When
             var route = this.resolver.GetRoute(request, descriptions);
             var response = route.Invoke();
 
+            // When
+            var output = GetStringContentsFromResponse(response);
+
             // Then
-            response.Contents.ShouldEqual("test");
+            output.ShouldEqual("test");
         }
 
         [Fact]
@@ -195,6 +198,17 @@
             // Then
             Record.Exception(() => result = route.Parameters.value).ShouldBeNull();
             Record.Exception(() => result = route.Parameters.capture).ShouldBeNull();
+        }
+
+        protected static string GetStringContentsFromResponse(Response response)
+        {
+            var memory = new MemoryStream();
+            response.Contents.Invoke(memory);
+            memory.Position = 0;
+            using (var reader = new StreamReader(memory))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }
