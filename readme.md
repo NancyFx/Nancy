@@ -94,6 +94,13 @@ Nancy are:
 7. Self-composing framework - make Nancy use an internal IoC to compose the framework at runtime. Increasing modularity of the framework and the ability to swap out parts
 8. NuGet presence
 
+## Contributors
+
+* Graeme Foster
+* Joao Braganca
+* John Downey
+* Pedro Felix
+
 ## Copyright
 
 Copyright © 2010 Andreas Håkansson
