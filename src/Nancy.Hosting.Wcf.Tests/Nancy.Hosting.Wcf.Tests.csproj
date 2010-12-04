@@ -59,7 +59,7 @@
       <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
       <Name>Nancy.Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NancyWcf\Nancy.Hosting.Wcf.csproj">
+    <ProjectReference Include="..\Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj">
       <Project>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</Project>
       <Name>Nancy.Hosting.Wcf</Name>
     </ProjectReference>
