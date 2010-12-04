@@ -6,7 +6,7 @@
     {
         public NotFoundResponse()
         {
-            this.Contents = string.Empty;
+            this.Contents = GetStringContents(string.Empty);
             this.ContentType = "text/html";
             this.StatusCode = HttpStatusCode.NotFound;
         }

@@ -15,7 +15,7 @@
             };
 
             Get["/fake/should/have/conflicting/route/defined"] = x => {
-                return new Response { Contents = "FakeNancyModuleWithoutBasePath" };
+                return "FakeNancyModuleWithoutBasePath";
             };
 
             Post["/"] = x => {

@@ -19,7 +19,7 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_content = () =>
-            response.Contents.ShouldEqual("Default delete root");
+            GetStringContentsFromResponse(response).ShouldEqual("Default delete root");
     }
 
     [Subject("Handling a DELETE request")]
@@ -38,6 +38,6 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_blank_content = () =>
-            response.Contents.ShouldEqual(string.Empty);
+            GetStringContentsFromResponse(response).ShouldEqual(string.Empty);
     }
 }
