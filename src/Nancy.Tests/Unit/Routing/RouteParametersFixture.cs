@@ -95,5 +95,20 @@ namespace Nancy.Tests.Unit.Routing
 			value.ShouldEqual(guid);
 		}
 
+		[Fact]
+		public void Should_support_implicit_casting()
+		{
+			// Given
+			dynamic parameters = new RouteParameters();
+
+			parameters.test = "10";
+
+			// When
+			int value = parameters.test;
+
+			// Then
+			value.ShouldEqual(10);
+		}
+
 	}
 }
