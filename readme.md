@@ -1,19 +1,19 @@
 # Meet Nancy
 
-Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications. 
+Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aims to deliver a low ceremony approach to building light, fast web applications. 
 
 ## Features
 
-* Built from the bottom up, not simply a DSL on top of an existing framework. Removing limitations and feature hacks of an underlaying framework, as well as the need to reference more assemblies than you need. _keep it light_
+* Built from the bottom up, not simply a DSL on top of an existing framework. Removing limitations and feature hacks of an underlying framework, as well as the need to reference more assemblies than you need. _keep it light_
 * Abstracted away from ASP.NET / IIS so that it can run on multiple hosting environments (see below for planned OWIN support), such as (but not limited to) ASP.NET, WCF, Mono/FastCGI and more (ASP.NET and WCF currently supported)
-* Ultra light weight action declarations for GET, PUT, POST and DELETE requests
+* Ultra lightweight action declarations for GET, PUT, POST and DELETE requests
 * View engine integration (Spark and Razor in development, read below how to help add more to the list)
 * Powerful request path matching that includes advanced parameter capabilities. The path matching strategy can be replaced with custom implementations to fit your exact needs
 * Easy response syntax, enabling you to return things like int, string, HttpStatusCode and Action<Stream> elements without having to explicitly cast or wrap your response - you just return it and Nancy _will_ do the work for you
 
 ## Usage
 
-Set up your web.config file
+Set up your web.config file:
 
     <httpHandlers>
         <add verb="*" type="Nancy.Hosting.NancyHttpRequestHandler" path="*"/>
@@ -26,7 +26,7 @@ Set up your web.config file
         </handlers>
     </system.webServer>
 
-Start adding your Nancy modules containig your actions
+Start adding your Nancy modules containing your actions:
 	
     public class Module : NancyModule
     {
@@ -38,9 +38,9 @@ Start adding your Nancy modules containig your actions
         }
     }
 
-Start application and enjoy! Swap out Get with either Put, Post or Delete to create actions that will respond to calls using those request methods. 
+Start your application and enjoy! Swap out Get with either Put, Post or Delete to create actions that will respond to calls using those request methods. 
 
-If you want to get fancy you can add parameters to your paths
+If you want to get fancy you can add parameters to your paths:
 
     public class Module : NancyModule
     {
@@ -54,7 +54,7 @@ If you want to get fancy you can add parameters to your paths
 
 The _{name}_ parameter will be captured and injected into the action parameters, shown as _x_ in the sample. The parameters are represented by a _dynamic_ type so you can access any parameter name straight on it as a property or an indexer. For more information on action parameters please refer to the [Nancy introduction post](http://elegantcode.com/2010/11/28/introducing-nancy-a-lightweight-web-framework-inspired-by-sinatra "Read the Nancy introduction post at elegantcode.com") over at my blog on [ElegantCode](http://elegantcode.com "Visit ElegantCode).
 
-Nancy also supports the idea of _module paths_, where you assign a root path for all actions in the module and they will all be relative to that
+Nancy also supports the idea of _module paths_, where you assign a root path for all actions in the module and they will all be relative to that:
 
     public class Module : NancyModule
     {
@@ -70,9 +70,9 @@ Notice the _base("/butler")_ call to the NancyModule constructor. Now all action
 	
 ## Help out
 
-There are many ways you can contribute to Nancy. Like most open-source software project, contributing code
+There are many ways you can contribute to Nancy. Like most open-source software projects, contributing code
 is just one of many outlets where you can help improve. Some of the things that you could help out with in
-Nancy is:
+Nancy are:
 
 * Documentation (both code and features)
 * Bug reports
