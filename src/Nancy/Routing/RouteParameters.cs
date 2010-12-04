@@ -1,11 +1,10 @@
-﻿using System.Linq.Expressions;
-using Microsoft.CSharp.RuntimeBinder;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Linq.Expressions;
+    using Microsoft.CSharp.RuntimeBinder;
 
     public class RouteParameters : DynamicObject, IEquatable<RouteParameters>
     {
@@ -24,24 +23,34 @@ namespace Nancy.Routing
 				result = null;
 
 				if (binder.Operation != ExpressionType.Equal)
-					return false;
+				{
+				    return false;
+				}
 
-				var convert = Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicRouteParameter));
-				if (false == TryConvert((ConvertBinder)convert, out resultOfCast))
+				var convert = 
+                    Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicRouteParameter));
+
+				if (!TryConvert((ConvertBinder)convert, out resultOfCast))
 				{
 					return false;
 				}
 
-				result = resultOfCast == null
-							? Equals(arg, resultOfCast)
-							: resultOfCast.Equals(arg);
+				result = (resultOfCast == null) ? 
+                    Equals(arg, resultOfCast) :
+					resultOfCast.Equals(arg);
+
 				return true;
 			}
+
 			public override bool TryConvert(ConvertBinder binder, out object result)
 			{
 				result = null;
+
 				if (value == null)
-					return true;
+				{
+				    return true;
+				}
+
 				var binderType = binder.Type;
 				if (binderType == typeof(String))
 				{
@@ -70,13 +79,19 @@ namespace Nancy.Routing
 				else
 				{
 					if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
-						binderType = binderType.GetGenericArguments()[0];
+					{
+					    binderType = binderType.GetGenericArguments()[0];
+					}
+
 					var typeCode = Type.GetTypeCode(binderType);
+
 					if (typeCode == TypeCode.Object) // something went wrong here
 					{
 						return false;
 					}
+
 					result = Convert.ChangeType(value, typeCode);
+
 					return true;
 				}
 				return base.TryConvert(binder, out result);
