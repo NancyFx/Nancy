@@ -1,24 +1,41 @@
 namespace Nancy
 {
-    using System;
+    using System.Collections.Generic;
+    using System.IO;
 
     public interface IRequest
     {
-        string Path { get; }
+        string Uri { get; }
 
-        string Verb { get; }
+        string Method { get; }
+
+        IDictionary<string, IEnumerable<string>> Headers { get; }
+
+        string ContentType { get; }
+
+        int ContentLenght { get; }
+
+        Stream Body { get; }
     }
 
     public class Request : IRequest
     {
-        public Request(string verb, string path)
+        public Request(string method, string uri)
         {
-            this.Path = path;
-            this.Verb = verb;
+            this.Uri = uri;
+            this.Method = method;
         }
 
-        public string Path { get; private set; }
+        public string Uri { get; private set; }
 
-        public string Verb { get; private set; }
+        public string Method { get; private set; }
+
+        public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
+
+        public string ContentType { get; private set; }
+
+        public int ContentLenght { get; private set; }
+
+        public  Stream Body { get; private set; }
     }
 }
