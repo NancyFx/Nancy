@@ -1,12 +1,8 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Dynamic;
     using System.IO;
     using System.Linq;
     using Extensions;
-    using FakeItEasy;
     using Nancy;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
@@ -114,9 +110,10 @@
             // When
             var route = this.resolver.GetRoute(request, descriptions);
             var response = route.Invoke();
+            var output = GetStringContentsFromResponse(response);
 
             // Then
-            response.Contents.Equals("FakeNancyModuleWithBasePath");
+            output.ShouldEqual("FakeNancyModuleWithBasePath");
         }
 
         [Fact]
