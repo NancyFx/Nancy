@@ -13,6 +13,11 @@
             Assert.True(condition.Invoke(actual));
         }
 
+        public static void ShouldBeEmpty(this string actual)
+        {
+            Assert.True(string.IsNullOrEmpty(actual));
+        }
+
         public static void ShouldImplementInterface<T>(this Type actual)
         {
             var found =

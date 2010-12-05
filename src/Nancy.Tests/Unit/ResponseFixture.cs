@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using System;
     using System.IO;
     using System.Net;
     using Nancy;
@@ -19,6 +18,29 @@
         }
 
         [Fact]
+        public void Should_set_empty_content_when_implicitly_cast_from_int()
+        {
+            // Arrange
+            Response response = 200;
+
+            // Act
+            var output = GetStringContentsFromResponse(response);
+
+            // Assert
+            output.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void Should_set_content_type_to_text_html_when_implicitly_cast_from_int()
+        {
+            // Arrange, Act
+            Response response = 200;
+
+            // Assert
+            response.ContentType.ShouldEqual("text/html");
+        }
+
+        [Fact]
         public void Should_set_status_code_when_implicitly_cast_from_http_status_code()
         {
             // Given, When
@@ -26,6 +48,29 @@
 
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public void Should_set_empty_content_when_implicitly_cast_from_http_status_code()
+        {
+            // Arrange
+            Response response = HttpStatusCode.OK;
+
+            // Act
+            var output = GetStringContentsFromResponse(response);
+
+            // Assert
+            output.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void Should_set_content_type_to_text_html_when_implicitly_cast_from_http_status_code()
+        {
+            // Arrange, Act
+            Response response = HttpStatusCode.OK;
+
+            // Assert
+            response.ContentType.ShouldEqual("text/html");
         }
 
         [Fact]
@@ -40,7 +85,7 @@
         }
 
         [Fact]
-        public void Should_return_contents_when_implicitly_cast_to_string()
+        public void Should_set_content_when_implicitly_cast_from_string()
         {
             // Given
             const string value = "test value";
