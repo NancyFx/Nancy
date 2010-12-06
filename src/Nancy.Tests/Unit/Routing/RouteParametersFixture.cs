@@ -110,5 +110,21 @@ namespace Nancy.Tests.Unit.Routing
 			value.ShouldEqual(10);
 		}
 
+		[Fact]
+		public void Should_support_casting_when_using_indexer_to_set_values()
+		{
+			// Given
+			dynamic parameters = new RouteParameters();
+
+			parameters["test"] = "10";
+
+			// When
+			int value = parameters.test;
+
+			// Then
+			value.ShouldEqual(10);
+		}
+
+
 	}
 }

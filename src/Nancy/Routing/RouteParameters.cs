@@ -88,7 +88,7 @@ namespace Nancy.Routing
 
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-			dictionary[binder.Name] = value is DynamicRouteParameter ? value : new DynamicRouteParameter(value);
+        	this[binder.Name] = value;
             return true;
         }
 
@@ -100,7 +100,10 @@ namespace Nancy.Routing
         public dynamic this[string name]
         {
             get { return dictionary[name]; }
-            set { dictionary[name] = value; }
+            set
+            {
+				dictionary[name] = value is DynamicRouteParameter ? value : new DynamicRouteParameter(value);
+            }
         }
 
         public bool Equals(RouteParameters other)
