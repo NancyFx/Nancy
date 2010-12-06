@@ -40,6 +40,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="xunit">
       <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
     </Reference>
@@ -63,6 +64,7 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
+    <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteFixture.cs" />

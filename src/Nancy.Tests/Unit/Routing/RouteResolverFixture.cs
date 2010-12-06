@@ -26,7 +26,7 @@
         public void Should_return_no_matching_route_found_route_when_no_match_could_be_found()
         {
             // Given
-            var request = new Request("GET", "/invalid");
+            var request = new Request("GET", "/invalid", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
@@ -42,7 +42,7 @@
         public void Should_match_on_combination_of_module_base_path_and_action_path_when_module_defines_base_path()
         {
             // Given
-            var request = new Request("GET", "/fake/route/with/some/parts");
+            var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
@@ -60,7 +60,7 @@
         public void Should_be_case_insensitive_when_matching(string path)
         {
             // Given
-            var request = new Request("GET", path);
+            var request = new Request("GET", path, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
@@ -76,7 +76,7 @@
         public void Should_not_match_on_combination_of_module_base_path_and_action_path_when_module_defines_base_path()
         {
             // Given
-            var request = new Request("GET", "/route/with/some/parts");
+            var request = new Request("GET", "/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
@@ -92,7 +92,7 @@
         public void Should_set_combination_of_module_base_path_and_action_path_on_no_matching_route_found_route_when_no_match_could_be_found()
         {
             // Given
-            var request = new Request("GET", "/fake/route/with/some/parts");
+            var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
 
@@ -100,14 +100,14 @@
             var route = this.resolver.GetRoute(request, descriptions);
 
             // Then
-            route.Path.ShouldEqual(request.Path);
+            route.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
         public void Should_set_action_on_route_when_match_was_found()
         {
             // Given
-            var request = new Request("GET", "/fake/route/with/some/parts");
+            var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
 
@@ -123,7 +123,7 @@
         public void Should_return_first_matched_route_when_conflicting_routs_are_available()
         {
             // Given
-            var request = new Request("GET", "/fake/should/have/conflicting/route/defined");
+            var request = new Request("GET", "/fake/should/have/conflicting/route/defined", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new NancyModule[] { new FakeNancyModuleWithBasePath(), new FakeNancyModuleWithoutBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
             var route = this.resolver.GetRoute(request, descriptions);
@@ -140,7 +140,7 @@
         public void Should_match_parameterized_action_path_with_request_path()
         {
             // Given
-            var request = new Request("GET", "/fake/child/route");
+            var request = new Request("GET", "/fake/child/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
 
@@ -155,7 +155,7 @@
         public void Should_treat_action_route_parameters_as_greedy()
         {
             // Given
-            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route");
+            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
 
@@ -170,7 +170,7 @@
         public void Should_return_the_route_with_most_static_matches_when_multiple_matches_are_found()
         {
             // Given
-            var request = new Request("GET", "/fake/child/route/foo");
+            var request = new Request("GET", "/fake/child/route/foo", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
             var route = this.resolver.GetRoute(request, descriptions);
@@ -187,7 +187,7 @@
         public void Should_set_parameters_on_route_when_match_was_made_for_parameterized_action_route()
         {
             // Given
-            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route");
+            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
             var modules = new[] { new FakeNancyModuleWithBasePath() };
             var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
             dynamic result;

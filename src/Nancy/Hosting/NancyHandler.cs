@@ -16,8 +16,7 @@
             }
 
             var request = CreateNancyRequest(context);
-            request.Headers = context.Request.Headers.ToDictionary();
-            request.Body = context.Request.InputStream;
+            
 
             var assembly =
                 context.ApplicationInstance.GetType().BaseType.Assembly;
@@ -34,7 +33,9 @@
         {
             return new Request(
                 context.Request.HttpMethod,
-                context.Request.Url.AbsolutePath);
+                context.Request.Url.AbsolutePath,
+                context.Request.Headers.ToDictionary(),
+                context.Request.InputStream);
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

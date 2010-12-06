@@ -1,10 +1,12 @@
 ﻿namespace Nancy.Hosting.Wcf
 {
+    using System.IO;
     using System.Reflection;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
     using Nancy;
+    using Nancy.Extensions;
     using Nancy.Routing;
 
     [ServiceContract]
@@ -32,23 +34,25 @@
 
         private Message HandleAll()
         {
-            var ctx = WebOperationContext.Current;
-            
-            var request = CreateNancyRequestFromIncomingRequest(ctx.IncomingRequest);
+            var context = WebOperationContext.Current;
+            var request = CreateNancyRequestFromIncomingRequest(context.IncomingRequest);
             var response = this.engine.HandleRequest(request);
             
-            SetNancyResponseToOutgoingResponse(ctx.OutgoingResponse, response);
+            SetNancyResponseToOutgoingResponse(context.OutgoingResponse, response);
 
-            return ctx.CreateStreamResponse(response.Contents, response.ContentType);
-            //return ctx.CreateTextResponse(response.Contents);
+            return context.CreateStreamResponse(response.Contents, response.ContentType);
         }
 
-        private static IRequest CreateNancyRequestFromIncomingRequest(IncomingWebRequestContext req)
+        private static IRequest CreateNancyRequestFromIncomingRequest(IncomingWebRequestContext request)
         {
-            var ruri = req.UriTemplateMatch.BaseUri.MakeRelativeUri(req.UriTemplateMatch.RequestUri);
+            var relativeUri = 
+                request.UriTemplateMatch.BaseUri.MakeRelativeUri(request.UriTemplateMatch.RequestUri);
+
             return new Request(
-                req.Method,
-                "/"+ruri.ToString());
+                request.Method,
+                string.Concat("/", relativeUri),
+                request.Headers.ToDictionary(),
+                new MemoryStream());
         }
 
         private static void SetNancyResponseToOutgoingResponse(OutgoingWebResponseContext resp, Response response)

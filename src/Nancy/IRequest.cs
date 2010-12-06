@@ -1,5 +1,6 @@
 namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -11,19 +12,35 @@ namespace Nancy
 
         IDictionary<string, IEnumerable<string>> Headers { get; }
 
-        string ContentType { get; }
-
-        int ContentLenght { get; }
-
         Stream Body { get; }
     }
 
     public class Request : IRequest
     {
-        public Request(string method, string uri)
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body)
         {
-            this.Uri = uri;
+            if (method == null)
+                throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
+
+            if (method.Length == 0)
+                throw new ArgumentOutOfRangeException("method", method, "The value of the method parameter cannot empty.");
+
+            if (uri == null)
+                throw new ArgumentNullException("uri", "The value of the uri parameter cannot be null.");
+
+            if (uri.Length == 0)
+                throw new ArgumentOutOfRangeException("uri", uri, "The value of the uri parameter cannot empty.");
+
+            if (headers == null)
+                throw new ArgumentNullException("headers", "The value of the headers parameter cannot be null.");
+
+            if (body == null)
+                throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
+
+            this.Body = body;
+            this.Headers = headers;
             this.Method = method;
+            this.Uri = uri;
         }
 
         public string Uri { get; private set; }
@@ -32,10 +49,6 @@ namespace Nancy
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
 
-        public string ContentType { get; private set; }
-
-        public int ContentLenght { get; private set; }
-
-        public  Stream Body { get; private set; }
+        public Stream Body { get; set; }
     }
 }

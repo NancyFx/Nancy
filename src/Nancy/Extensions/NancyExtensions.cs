@@ -14,7 +14,7 @@ namespace Nancy.Extensions
                 BindingFlags.Instance | BindingFlags.Public | BindingFlags.IgnoreCase;
 
             var property =
-                typeof(NancyModule).GetProperty(request.Verb, flags);
+                typeof(NancyModule).GetProperty(request.Method, flags);
 
             if (property == null)
                 return Enumerable.Empty<RouteDescription>();

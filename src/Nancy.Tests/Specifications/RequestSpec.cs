@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Specifications
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Reflection;
     using Nancy.Routing;
@@ -20,22 +21,22 @@
 
         protected static IRequest ManufactureGETRequestForRoute(string route)
         {
-            return new Request("GET", route);
+            return new Request("GET", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
         }
 
         protected static IRequest ManufacturePOSTRequestForRoute(string route)
         {
-            return new Request("POST", route);
+            return new Request("POST", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
         }
 
         protected static IRequest ManufactureDELETERequestForRoute(string route)
         {
-            return new Request("DELETE", route);
+            return new Request("DELETE", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
         }
 
         protected static IRequest ManufacturePUTRequestForRoute(string route)
         {
-            return new Request("PUT", route);
+            return new Request("PUT", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
         }
 
         protected static string GetStringContentsFromResponse(Response response)
