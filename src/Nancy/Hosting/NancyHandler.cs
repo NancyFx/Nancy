@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Hosting
 {
     using System.Web;
-
     using Nancy.Extensions;
     using Nancy.Routing;
 
@@ -16,7 +15,6 @@
             }
 
             var request = CreateNancyRequest(context);
-            
 
             var assembly =
                 context.ApplicationInstance.GetType().BaseType.Assembly;
@@ -41,7 +39,9 @@
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             context.Response.ContentType = response.ContentType;
+            context.Response.Headers.Add(response.Headers.ToNameValueCollection());
             context.Response.StatusCode = (int)response.StatusCode;
+
             response.Contents.Invoke(context.Response.OutputStream);
         }
     }
