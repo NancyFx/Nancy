@@ -3,6 +3,9 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Web;
+
+    using Nancy.Routing;
 
     public interface IRequest
     {
@@ -13,6 +16,8 @@ namespace Nancy
         IDictionary<string, IEnumerable<string>> Headers { get; }
 
         Stream Body { get; }
+
+        dynamic Form { get; }
     }
 
     public class Request : IRequest
@@ -43,12 +48,29 @@ namespace Nancy
             this.Uri = uri;
         }
 
-        public string Uri { get; private set; }
+        public Stream Body { get; set; }
 
-        public string Method { get; private set; }
+        public dynamic Form
+        {
+            get
+            {
+                var reader = new StreamReader(this.Body);
+                var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
+
+                var ret = new RouteParameters();
+                foreach (var key in coll.AllKeys)
+                {
+                    ret[key] = coll[key];
+                }
+
+                return ret;
+            }
+        }
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
 
-        public Stream Body { get; set; }
+        public string Method { get; private set; }
+
+        public string Uri { get; private set; }
     }
 }

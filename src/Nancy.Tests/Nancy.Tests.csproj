@@ -62,6 +62,7 @@
     <Compile Include="Specifications\Handling a POST request.cs" />
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
+    <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />

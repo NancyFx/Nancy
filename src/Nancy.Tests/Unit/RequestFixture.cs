@@ -2,6 +2,7 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.IO;
     using Xunit;
 
@@ -123,6 +124,30 @@ namespace Nancy.Tests.Unit
 
             // Then
             request.Body.ShouldBeSameAs(body);
+        }
+
+        [Fact]
+        public void Should_set_extract_form_data_from_body_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
+            var memory = new MemoryStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers = 
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory);
+
+            // Then
+            ((string)request.Form.name).ShouldEqual("John Doe");
         }
     }
 }
