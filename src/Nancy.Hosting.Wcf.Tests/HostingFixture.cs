@@ -11,6 +11,9 @@
 
     public class HostingFixture
     {
+        /// <summary>
+        /// This test requires you to run with administrative priviledges or it will fail.
+        /// </summary>
         [Fact]
         public void Should_be_able_to_get_from_selfhost()
         {
