@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using Extensions;
