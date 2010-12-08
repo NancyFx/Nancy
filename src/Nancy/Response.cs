@@ -7,6 +7,17 @@ namespace Nancy
 
     public class Response
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Response"/> class.
+        /// </summary>
+        public Response()
+        {
+            this.Contents = GetStringContents(string.Empty);
+            this.ContentType = "text/html";
+            this.Headers = new Dictionary<string, IEnumerable<string>>();
+            this.StatusCode = HttpStatusCode.OK;
+        }
+
         public string ContentType { get; set; }
 
         public Action<Stream> Contents { get; set; }

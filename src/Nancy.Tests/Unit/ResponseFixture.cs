@@ -8,6 +8,49 @@
     public class ResponseFixture
     {
         [Fact]
+        public void Should_set_empty_content_on_new_instance()
+        {
+            // Given
+            var response = new Response();
+
+            // When 
+            var content = GetStringContentsFromResponse(response);
+
+            // Then
+            content.ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void Should_set_content_type_to_text_html_on_new_instance()
+        {
+            // Given, When
+            var response = new Response();
+
+            // Then
+            response.ContentType.ShouldEqual("text/html");
+        }
+
+        [Fact]
+        public void Should_set_status_code_ok_on_new_instance()
+        {
+            // Given, When
+            var response = new Response();
+
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void Should_not_make_headers_null_on_new_instance()
+        {
+            // Given, When
+            var response = new Response();
+
+            // Then
+            response.Headers.ShouldNotBeNull();
+        }
+
+        [Fact]
         public void Should_set_status_code_when_implicitly_cast_from_int()
         {
             // Given, When
