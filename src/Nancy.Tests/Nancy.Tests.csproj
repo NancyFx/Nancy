@@ -64,7 +64,6 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
-    <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />

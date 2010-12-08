@@ -14,9 +14,12 @@
     {
         private readonly NancyEngine engine;
 
-        public NancyWcfGenericService(Assembly modulesAssembly)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
+        /// </summary>
+        public NancyWcfGenericService()
         {
-            engine = new NancyEngine(new NancyModuleLocator(modulesAssembly), new RouteResolver());
+            engine = new NancyEngine(new AppDomainModuleLocator(), new RouteResolver());
         }
 
         [WebInvoke(UriTemplate = "*")]

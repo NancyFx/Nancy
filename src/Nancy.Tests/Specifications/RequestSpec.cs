@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Reflection;
     using Nancy.Routing;
 
     public abstract class RequestSpec
@@ -13,10 +12,7 @@
 
         protected RequestSpec()
         {
-            var locator = 
-                new NancyModuleLocator(Assembly.GetExecutingAssembly());
-
-            engine = new NancyEngine(locator, new RouteResolver());
+            engine = new NancyEngine(new AppDomainModuleLocator(), new RouteResolver());
         }
 
         protected static IRequest ManufactureGETRequestForRoute(string route)

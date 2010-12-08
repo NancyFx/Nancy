@@ -16,11 +16,9 @@
 
             var request = CreateNancyRequest(context);
 
-            var assembly =
-                context.ApplicationInstance.GetType().BaseType.Assembly;
-
-            var engine =
-                new NancyEngine(new NancyModuleLocator(assembly), new RouteResolver());
+            var engine = new NancyEngine(
+                new AppDomainModuleLocator(), 
+                new RouteResolver());
 
             var response = engine.HandleRequest(request);
 

@@ -41,6 +41,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppDomainModuleLocator.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -53,7 +54,7 @@
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
     <Compile Include="NancyEngine.cs" />
-    <Compile Include="NancyModuleLocator.cs" />
+    <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
     <Compile Include="Routing\IRoute.cs" />
