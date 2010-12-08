@@ -51,7 +51,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="HostingFixture.cs" />
+    <Compile Include="NancyWcfGenericServiceFixture.cs" />
     <Compile Include="TestModule.cs" />
   </ItemGroup>
   <ItemGroup>
