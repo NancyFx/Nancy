@@ -7,6 +7,8 @@ namespace Nancy
     [InheritedExport]
     public abstract class NancyModule
     {
+        private readonly IDictionary<string, IDictionary<string, Func<dynamic, Response>>> moduleRoutes;
+
         protected NancyModule() : this(string.Empty)
         {
         }
@@ -14,21 +16,43 @@ namespace Nancy
         protected NancyModule(string modulePath)
         {
             this.ModulePath = modulePath;
-            this.Delete = new Dictionary<string, Func<dynamic, Response>>();
-            this.Get = new Dictionary<string, Func<dynamic, Response>>();
-            this.Post = new Dictionary<string, Func<dynamic, Response>>();
-            this.Put = new Dictionary<string, Func<dynamic, Response>>();
+            this.moduleRoutes = new Dictionary<string, IDictionary<string, Func<dynamic, Response>>>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        public IDictionary<string, Func<dynamic, Response>> GetRoutes(string method)
+        {
+            IDictionary<string, Func<dynamic, Response>> routes;
+
+            if (!this.moduleRoutes.TryGetValue(method, out routes))
+            {
+                routes = new Dictionary<string, Func<dynamic, Response>>(StringComparer.OrdinalIgnoreCase);
+                this.moduleRoutes[method] = routes;
+            }
+
+            return routes;
+        }
+
+        public IDictionary<string, Func<dynamic, Response>> Delete
+        {
+            get { return GetRoutes("DELETE"); }
+        }
+
+        public IDictionary<string, Func<dynamic, Response>> Get
+        {
+            get { return GetRoutes("GET"); }
         }
 
         public string ModulePath { get; private set; }
 
-        public IDictionary<string, Func<dynamic, Response>> Delete { get; private set; }
+        public IDictionary<string, Func<dynamic, Response>> Post
+        {
+            get { return GetRoutes("POST"); }
+        }
 
-        public IDictionary<string, Func<dynamic, Response>> Get { get; private set; }
-
-        public IDictionary<string, Func<dynamic, Response>> Post { get; private set; }
-
-        public IDictionary<string, Func<dynamic, Response>> Put { get; private set; }
+        public IDictionary<string, Func<dynamic, Response>> Put
+        {
+            get { return GetRoutes("PUT"); }
+        }
 
         public IRequest Request { get; set; }
 
