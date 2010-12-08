@@ -39,10 +39,22 @@
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             context.Response.ContentType = response.ContentType;
-            context.Response.Headers.Add(response.Headers.ToNameValueCollection());
             context.Response.StatusCode = (int)response.StatusCode;
 
+            SetHttpResponseHeaders(context, response);
+
             response.Contents.Invoke(context.Response.OutputStream);
+        }
+
+        private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
+        {
+            foreach (var key in response.Headers.Keys)
+            {
+                foreach (var value in response.Headers[key])
+                {
+                    context.Response.AddHeader(key, value);
+                }
+            }
         }
     }
 }
