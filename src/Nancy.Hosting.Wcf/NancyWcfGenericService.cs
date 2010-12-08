@@ -1,14 +1,13 @@
-﻿using System;
-using System.IO;
-using System.Reflection;
-using System.ServiceModel;
-using System.ServiceModel.Channels;
-using System.ServiceModel.Web;
-using Nancy.Extensions;
-using Nancy.Routing;
-
-namespace Nancy.Hosting.Wcf
+﻿namespace Nancy.Hosting.Wcf
 {
+    using System.IO;
+    using System.Reflection;
+    using System.ServiceModel;
+    using System.ServiceModel.Channels;
+    using System.ServiceModel.Web;
+    using Nancy.Extensions;
+    using Nancy.Routing;
+
     [ServiceContract]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class NancyWcfGenericService
@@ -34,9 +33,9 @@ namespace Nancy.Hosting.Wcf
 
         private Message HandleAll(Stream body)
         {
-            WebOperationContext context = WebOperationContext.Current;
-            IRequest request = CreateNancyRequestFromIncomingRequest(context.IncomingRequest, body);
-            Response response = engine.HandleRequest(request);
+            var context = WebOperationContext.Current;
+            var request = CreateNancyRequestFromIncomingRequest(context.IncomingRequest, body);
+            var response = engine.HandleRequest(request);
 
             SetNancyResponseToOutgoingResponse(context.OutgoingResponse, response);
 
@@ -45,13 +44,14 @@ namespace Nancy.Hosting.Wcf
 
         private static IRequest CreateNancyRequestFromIncomingRequest(IncomingWebRequestContext request, Stream body)
         {
-            Uri relativeUri =
+            var relativeUri =
                 request.UriTemplateMatch.BaseUri.MakeRelativeUri(request.UriTemplateMatch.RequestUri);
 
-            return new Request(request.Method,
-                               string.Concat("/", relativeUri),
-                               request.Headers.ToDictionary(),
-                               body ?? new MemoryStream());
+            return new Request(
+                request.Method,
+                string.Concat("/", relativeUri),
+                request.Headers.ToDictionary(),
+                body ?? new MemoryStream());
         }
 
         private static void SetNancyResponseToOutgoingResponse(OutgoingWebResponseContext resp, Response response)
