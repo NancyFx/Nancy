@@ -22,11 +22,12 @@
         {
             using (CreateAndOpenWebServiceHost())
             {
-                var reader = new StreamReader(WebRequest.Create("http://localhost:1234/base/rel").
-                                                  GetResponse().
-                                                  GetResponseStream());
+                var reader = new StreamReader(
+                    WebRequest.Create("http://localhost:1234/base/rel").
+                    GetResponse().
+                    GetResponseStream());
 
-                string response = reader.ReadToEnd();
+                var response = reader.ReadToEnd();
 
                 response.ShouldEqual("This is the site route");
             }
@@ -39,13 +40,13 @@
             {
                 const string testBody = "This is the body of the request";
 
-                WebRequest request = WebRequest.Create("http://localhost:1234/base/rel");
+                var request = WebRequest.Create("http://localhost:1234/base/rel");
                 request.Method = "POST";
 
                 var writer = new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
                 writer.Write(testBody);
 
-                string responseBody = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
+                var responseBody = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
                 responseBody.ShouldEqual(testBody);
             }
@@ -53,8 +54,9 @@
 
         private WebServiceHost CreateAndOpenWebServiceHost()
         {
-            var host = new WebServiceHost(new NancyWcfGenericService(GetType().Assembly),
-                                          new Uri("http://localhost:1234/base/"));
+            var host = new WebServiceHost(
+                new NancyWcfGenericService(GetType().Assembly),
+                new Uri("http://localhost:1234/base/"));
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
             host.Open();
