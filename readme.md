@@ -97,6 +97,7 @@ Nancy are:
 ## Contributors
 
 * Graeme Foster
+* Jason Mead
 * Joao Braganca
 * John Downey
 * Pedro Felix
