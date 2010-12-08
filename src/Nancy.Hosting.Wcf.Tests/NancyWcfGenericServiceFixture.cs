@@ -42,7 +42,8 @@
                 WebRequest request = WebRequest.Create("http://localhost:1234/base/rel");
                 request.Method = "POST";
 
-                new StreamWriter(request.GetRequestStream()).Write(testBody);
+                var writer = new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
+                writer.Write(testBody);
 
                 string responseBody = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
