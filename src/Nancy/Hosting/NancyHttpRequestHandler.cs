@@ -1,8 +1,6 @@
 namespace Nancy.Hosting
 {
-    using System.Reflection;
     using System.Web;
-    using Nancy.Routing;
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
@@ -13,37 +11,9 @@ namespace Nancy.Hosting
 
         public void ProcessRequest(HttpContext context)
         {
-            var url = context.Request.Url.AbsolutePath;
-            if (url.Contains("favicon.ico"))
-            {
-                return;
-            }
-
-            var request = CreateNancyRequest(context);
-
-            var assembly = 
-                context.ApplicationInstance.GetType().BaseType.Assembly;
-
-            var engine =
-                new NancyEngine(new NancyModuleLocator(assembly), new RouteResolver());
-
-            var response = engine.HandleRequest(request);
-
-            SetNancyResponseToHttpResponse(context, response);
-        }
-
-        private static IRequest CreateNancyRequest(HttpContext context)
-        {
-        	return new Request(
-                context.Request.HttpMethod,
-                context.Request.Url.AbsolutePath);
-        }
-
-    	private static void SetNancyResponseToHttpResponse(HttpContext context, Response response)
-        {
-            context.Response.ContentType = response.ContentType;
-            context.Response.StatusCode = (int)response.StatusCode;
-            response.Contents.Invoke(context.Response.OutputStream);
+            var wrappedContext = new HttpContextWrapper(context);
+            var handler = new NancyHandler();
+            handler.ProcessRequest(wrappedContext);
         }
     }
 }

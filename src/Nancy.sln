@@ -5,6 +5,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy", "Nancy\Nancy.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Tests", "Nancy.Tests\Nancy.Tests.csproj", "{776D244D-BC4D-4BBB-A478-CAF2D04520E1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E944109B-0B7A-4ADE-8602-004CEFA5897D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Wcf", "Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj", "{8B7EC9F2-44D2-426C-AE7F-801DC3238259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Wcf.Tests", "Nancy.Hosting.Wcf.Tests\Nancy.Hosting.Wcf.Tests.csproj", "{3D44A461-3133-4B49-A74B-D25632A12FE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,8 +27,22 @@ Global
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{776D244D-BC4D-4BBB-A478-CAF2D04520E1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F} = {E944109B-0B7A-4ADE-8602-004CEFA5897D}
+		{8B7EC9F2-44D2-426C-AE7F-801DC3238259} = {E944109B-0B7A-4ADE-8602-004CEFA5897D}
+		{776D244D-BC4D-4BBB-A478-CAF2D04520E1} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
+		{3D44A461-3133-4B49-A74B-D25632A12FE5} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 	EndGlobalSection
 EndGlobal

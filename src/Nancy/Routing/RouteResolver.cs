@@ -15,7 +15,7 @@
             var matchingRoutes =
                 from description in descriptions
                 let matcher = BuildRegexMatcher(description)
-                let result = matcher.Match(request.Path)
+                let result = matcher.Match(request.Uri)
                 where result.Success
                 select new
                 {
@@ -29,7 +29,7 @@
 
             return selected != null ?
                 new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), selected.Description.Action) : 
-                new NoMatchingRouteFoundRoute(request.Path);
+                new NoMatchingRouteFoundRoute(request.Uri);
         }
 
         private static RouteParameters GetParameters(RouteDescription description, GroupCollection groups)

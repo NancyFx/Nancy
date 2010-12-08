@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</ProjectGuid>
+    <ProjectGuid>{3D44A461-3133-4B49-A74B-D25632A12FE5}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy</RootNamespace>
-    <AssemblyName>Nancy</AssemblyName>
+    <RootNamespace>Nancy.Hosting.Wcf.Tests</RootNamespace>
+    <AssemblyName>Nancy.Hosting.Wcf.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,41 +31,43 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
-    <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\NancyExtensions.cs" />
-    <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
-    <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="HeadResponse.cs" />
-    <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Hosting\NancyHandler.cs" />
-    <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
-    <Compile Include="IResponseFormatter.cs" />
-    <Compile Include="IViewEngine.cs" />
-    <Compile Include="NancyModule.cs" />
-    <Compile Include="INancyEngine.cs" />
-    <Compile Include="IRequest.cs" />
-    <Compile Include="NancyEngine.cs" />
-    <Compile Include="NancyModuleLocator.cs" />
-    <Compile Include="Response.cs" />
-    <Compile Include="NotFoundResponse.cs" />
-    <Compile Include="Routing\IRoute.cs" />
-    <Compile Include="Routing\IRouteResolver.cs" />
-    <Compile Include="Routing\NoMatchingRouteFoundRoute.cs" />
-    <Compile Include="Routing\Route.cs" />
-    <Compile Include="Routing\RouteDescription.cs" />
-    <Compile Include="Routing\RouteParameters.cs" />
-    <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="NancyWcfGenericServiceFixture.cs" />
+    <Compile Include="TestModule.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
+      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
+      <Name>Nancy.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj">
+      <Project>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</Project>
+      <Name>Nancy.Hosting.Wcf</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
