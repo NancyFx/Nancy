@@ -22,7 +22,7 @@ namespace Nancy
 
         public Action<Stream> Contents { get; set; }
 
-        public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
+        public IDictionary<string, IEnumerable<string>> Headers { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
 
