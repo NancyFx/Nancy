@@ -1,0 +1,5 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Target Name="Build">
+    <Exec Command="powershell -ExecutionPolicy Bypass -File .\dependencies\psake\psake.ps1 build_teamcity.ps1" />
+  </Target>
+</Project>

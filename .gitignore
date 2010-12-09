@@ -9,6 +9,7 @@
 *.userprefs
 AssemblyInfo.cs
 .DS_Store
+CI/
 deploy/
 build/
 [Bb]in/
