@@ -11,7 +11,8 @@ namespace Nancy.ViewEngines.Razor {
             var viewEngine = new RazorViewEngine();
 
             return stream => {
-                viewEngine.RenderView(name, stream, model);
+                var result = viewEngine.RenderView(name, model);
+                result.Execute(stream);
             };
         }
     }
