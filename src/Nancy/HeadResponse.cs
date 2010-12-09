@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace Nancy
+﻿namespace Nancy
 {
 	public class HeadResponse : Response
 	{
 		public HeadResponse(Response response)
 		{
-			Contents = String.Empty; // head should not return any content
+		    Contents = GetStringContents(string.Empty);
 			ContentType = response.ContentType;
 			StatusCode = response.StatusCode;
 		}

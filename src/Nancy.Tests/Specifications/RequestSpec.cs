@@ -35,6 +35,11 @@
             return new Request("PUT", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
         }
 
+        protected static IRequest ManufactureHEADRequestForRoute(string route)
+        {
+            return new Request("HEAD", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+        }
+
         protected static string GetStringContentsFromResponse(Response response)
         {
             var memory = new MemoryStream();
@@ -45,10 +50,5 @@
                 return reader.ReadToEnd();
             }
         }
-
-		protected static IRequest ManufactureHEADRequestForRoute(string route)
-		{
-			return new Request("HEAD", route);
-		}
     }
 }
