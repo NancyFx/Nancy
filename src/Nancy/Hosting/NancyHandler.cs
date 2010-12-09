@@ -2,7 +2,6 @@
 {
     using System.Web;
     using Nancy.Extensions;
-    using Nancy.Routing;
 
     public class NancyHandler
     {
