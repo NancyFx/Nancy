@@ -41,6 +41,10 @@ namespace Nancy
             return new Response { Contents = GetStringContents(contents) };
         }
 
+        public static implicit operator Response(Action<Stream> streamFactory) {
+            return new Response { Contents = streamFactory };
+        }
+
         protected static Action<Stream> GetStringContents(string contents)
         {
             return stream =>
