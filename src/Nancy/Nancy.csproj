@@ -64,6 +64,7 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
