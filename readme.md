@@ -93,6 +93,22 @@ Nancy are:
 7. Self-composing framework - make Nancy use an internal IoC to compose the framework at runtime. Increasing modularity of the framework and the ability to swap out parts
 8. NuGet presence
 
+## View Engines
+
+There is a rich set of view engines in the .net space and most of them have been design in such a away that they are framework agnostic, all that is needed is a bit
+of integration work to get it running in Nancy.
+
+* Static - The static view engine serves up any static textfile (which includes html files) you have in your project. It is invoked with the virtual path of the file you want to serve. The
+current implementation serves as a proof of concept and needs more work to be stable.
+* Razor - With this view engine you can use [Razor](http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx "Read more about the Razor view engine") views with Nancy. The
+currecnt implemenation serves as a proof of concept and needs more work to be stable.
+* Spark - Currently running in an unpublished spike
+* NDjango - Need help integrating
+* NHaml - Need help integrating
+* WebForm - Need help integrating
+
+Of course, if you know of a cool view engine that is not on the list, feel free to contribute it anyway! The list is simply a list of the view engines I have on my radar at the moment.
+
 ## Contributors
 
 * Graeme Foster
