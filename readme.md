@@ -97,9 +97,10 @@ Nancy are:
 
 * Graeme Foster
 * Jason Mead
-* Joao Braganca
+* João Bragança
 * John Downey
 * Pedro Felix
+* Phil Haack
 
 ## Copyright
 
