@@ -1,9 +1,10 @@
-﻿
-namespace Nancy.ViewEngines.Razor {
+﻿namespace Nancy.ViewEngines.Razor
+{
     // Notice that the template might not have a "Path".
     // For example, it could be embedded. So that's why this 
     // returns a reader.
-    public interface IViewLocator {
+    public interface IViewLocator
+    {
         ViewLocationResult GetTemplateContents(string viewTemplate);
     }
 }

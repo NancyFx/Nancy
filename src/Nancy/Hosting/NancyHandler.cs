@@ -7,7 +7,7 @@
     {
         private readonly INancyEngine engine;
 
-        public public NancyHandler(INancyEngine engine)
+        public NancyHandler(INancyEngine engine)
         {
             this.engine = engine;
         }

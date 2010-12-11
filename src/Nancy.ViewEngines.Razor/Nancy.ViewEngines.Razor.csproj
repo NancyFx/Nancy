@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="AspNetTemplateLocator.cs" />
     <Compile Include="ErrorView.cs" />
     <Compile Include="IView.cs" />
@@ -53,7 +56,6 @@
     <Compile Include="RazorViewCompiler.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineExtensions.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewLocationResult.cs" />
     <Compile Include="ViewResult.cs" />
   </ItemGroup>
