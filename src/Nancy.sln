@@ -13,8 +13,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Wcf", "Nancy.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Wcf.Tests", "Nancy.Hosting.Wcf.Tests\Nancy.Hosting.Wcf.Tests.csproj", "{3D44A461-3133-4B49-A74B-D25632A12FE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyTestRun", "C:\Users\Andreas\Documents\Visual Studio 2010\Projects\NancyTestRun\NancyTestRun\NancyTestRun.csproj", "{7A0DE207-F1B3-48D9-85A5-39B8C18954A7}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,10 +35,6 @@ Global
 		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3D44A461-3133-4B49-A74B-D25632A12FE5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7A0DE207-F1B3-48D9-85A5-39B8C18954A7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7A0DE207-F1B3-48D9-85A5-39B8C18954A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7A0DE207-F1B3-48D9-85A5-39B8C18954A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7A0DE207-F1B3-48D9-85A5-39B8C18954A7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
