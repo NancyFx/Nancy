@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Tests.Fakes
 {
-    using System;
-
     public class FakeNancyModuleWithoutBasePath : NancyModule
     {
         public FakeNancyModuleWithoutBasePath()

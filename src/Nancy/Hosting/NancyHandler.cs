@@ -6,23 +6,29 @@
 
     public class NancyHandler
     {
+        private readonly INancyEngine engine;
+
+        public public NancyHandler(INancyEngine engine)
+        {
+            this.engine = engine;
+        }
+
         public void ProcessRequest(HttpContextBase context)
         {
-            var url = context.Request.Url.AbsolutePath;
-            if (url.Contains("favicon.ico"))
+            if(IsRequestForFavicon(context))
             {
                 return;
             }
 
             var request = CreateNancyRequest(context);
-
-            var engine = new NancyEngine(
-                new AppDomainModuleLocator(), 
-                new RouteResolver());
-
             var response = engine.HandleRequest(request);
 
             SetNancyResponseToHttpResponse(context, response);
+        }
+
+        private static bool IsRequestForFavicon(HttpContextBase context)
+        {
+            return context.Request.Url.AbsolutePath.Contains("favicon.ico");
         }
 
         private static IRequest CreateNancyRequest(HttpContextBase context)
@@ -36,11 +42,10 @@
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
-            context.Response.ContentType = response.ContentType;
-            context.Response.StatusCode = (int)response.StatusCode;
-
             SetHttpResponseHeaders(context, response);
 
+            context.Response.ContentType = response.ContentType;
+            context.Response.StatusCode = (int)response.StatusCode;
             response.Contents.Invoke(context.Response.OutputStream);
         }
 

@@ -3,6 +3,8 @@
     using System.IO;
     using System.Net;
     using Nancy;
+    using Nancy.Tests.Extensions;
+
     using Xunit;
 
     public class ResponseFixture
@@ -14,7 +16,7 @@
             var response = new Response();
 
             // When 
-            var content = GetStringContentsFromResponse(response);
+            var content = response.GetStringContentsFromResponse();
 
             // Then
             content.ShouldBeEmpty();
@@ -67,7 +69,7 @@
             Response response = 200;
 
             // Act
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Assert
             output.ShouldBeEmpty();
@@ -100,7 +102,7 @@
             Response response = HttpStatusCode.OK;
 
             // Act
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Assert
             output.ShouldBeEmpty();
@@ -135,7 +137,7 @@
             Response response = value;
 
             // When
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Then
             output.ShouldEqual(value);

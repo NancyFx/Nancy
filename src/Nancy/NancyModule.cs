@@ -32,6 +32,11 @@ namespace Nancy
         /// <remarks>Valid values are delete, get, post and put. The parameter is not case sensitive.</remarks>
         public IDictionary<string, Func<dynamic, Response>> GetRoutes(string method)
         {
+            if (method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+            {
+                method = "GET";
+            }
+
             IDictionary<string, Func<dynamic, Response>> routes;
 
             if (!this.moduleRoutes.TryGetValue(method, out routes))

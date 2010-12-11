@@ -2,6 +2,7 @@ namespace Nancy.Tests.Specifications
 {
     using System.Net;
     using Machine.Specifications;
+    using Nancy.Tests.Extensions;
 
     [Subject("Handling a HEAD request")]
     public class when_head_request_matched_existing_route : RequestSpec
@@ -19,7 +20,7 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
     	It should_set_blank_content = () =>
-            GetStringContentsFromResponse(response).ShouldBeEmpty();
+            response.GetStringContentsFromResponse().ShouldBeEmpty();
     }
 
     [Subject("Handling a GET request")]
@@ -38,6 +39,6 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_blank_content = () =>
-            GetStringContentsFromResponse(response).ShouldBeEmpty();
+            response.GetStringContentsFromResponse().ShouldBeEmpty();
 	}
 }

@@ -4,9 +4,10 @@
 	{
 		public HeadResponse(Response response)
 		{
-		    Contents = GetStringContents(string.Empty);
-			ContentType = response.ContentType;
-			StatusCode = response.StatusCode;
+		    this.Contents = GetStringContents(string.Empty);
+			this.ContentType = response.ContentType;
+		    this.Headers = response.Headers;
+			this.StatusCode = response.StatusCode;
 		}
 	}
 }
