@@ -6,7 +6,7 @@ Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra.
 
 * Built from the bottom up, not simply a DSL on top of an existing framework. Removing limitations and feature hacks of an underlying framework, as well as the need to reference more assemblies than you need. _keep it light_
 * Abstracted away from ASP.NET / IIS so that it can run on multiple hosting environments (see below for planned OWIN support), such as (but not limited to) ASP.NET, WCF, Mono/FastCGI and more (ASP.NET and WCF currently supported)
-* Ultra lightweight action declarations for GET, PUT, POST and DELETE requests
+* Ultra lightweight action declarations for GET, HEAD, PUT, POST and DELETE requests
 * View engine integration (Spark and Razor in development, read below how to help add more to the list)
 * Powerful request path matching that includes advanced parameter capabilities. The path matching strategy can be replaced with custom implementations to fit your exact needs
 * Easy response syntax, enabling you to return things like int, string, HttpStatusCode and Action<Stream> elements without having to explicitly cast or wrap your response - you just return it and Nancy _will_ do the work for you
@@ -87,7 +87,6 @@ Nancy are:
 
 1. Make Nancy run on the [Open Web Interface for .NET](http://bvanderveen.com/a/dotnet-http-abstractions "Read more about the Open Web Interface for .NET")
 2. Enable IoC container integration so that Nancy modules can have dependencies that are resolved at runtime
-3. The ability to wire up your favorite IoC container with Nancy and use it to resolve module dependencies
 4. Ship a nice set of Response formatters, such as json, xml and others
 5. Request and Response interception to enable rich middleware capabilities such as caching and logging
 6. View engine integration. Spark and Razor are planned. Looking for contributors for Haml, NDjango and other popular view engines (contact me if you want to help out!)
