@@ -63,7 +63,9 @@
         private static RazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult)
         {
             // Compile the generated code into an assembly
-            var outputAssemblyName = String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N"));
+
+            var outputAssemblyName =
+                Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
             var results = codeProvider.CompileAssemblyFromDom(
                 new CompilerParameters(new [] { 
