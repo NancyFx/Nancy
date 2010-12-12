@@ -99,15 +99,12 @@ There is a rich set of view engines in the .net space and most of them have been
 of integration work to get it running in Nancy.
 
 * Static - The static view engine serves up any static textfile (which includes html files) you have in your project. It is invoked with the virtual path of the file you want to serve. The
-current implementation serves as a proof of concept and needs more work to be stable.
-* Razor - With this view engine you can use [Razor](http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx "Read more about the Razor view engine") views with Nancy. The
-currecnt implemenation serves as a proof of concept and needs more work to be stable.
-* Spark - Currently running in an unpublished spike
-* NDjango - Need help integrating
-* NHaml - Need help integrating
-* WebForm - Need help integrating
-
-Of course, if you know of a cool view engine that is not on the list, feel free to contribute it anyway! The list is simply a list of the view engines I have on my radar at the moment.
+current implementation serves as a proof of concept and needs more work to be stable
+* [Razor](http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx "Read more about the Razor view engine") - With this view engine you can use  views with Nancy. The current implementation serves as a proof of concept and needs more work to be stable
+* [Spark](http://sparkviewengine.com "Read more about the Spark view engine") - Working spike waiting to be cleaned up and pushed into the repository
+* [NDjango](http://ndjango.org "Read more about the NDjango view engine") - In need of integration help
+* [NHaml](http://code.google.com/p/nhaml "Read more about the NHaml view engine") - In need of integration help
+* WebForm - In need of integration help
 
 ## Contributors
 
