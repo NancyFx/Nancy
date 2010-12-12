@@ -17,15 +17,22 @@ namespace Nancy.ViewEngines.Spark
         public static Action<Stream> Razor<TModel>(this IViewEngine source, string name, TModel model)
         {
             var settings =
-                new SparkSettings().SetPageBaseType(typeof(StubSparkView));
+                new SparkSettings().SetPageBaseType(typeof(NancySparkView));
 
             var engine =
                 new SparkViewEngine(settings) { ViewFolder = new FileSystemViewFolder(HostingEnvironment.MapPath(@"~/Views")) };
 
+            
+
             return stream => {
-                var result = viewEngine.RenderView(name, model);
-                result.Execute(stream);
+                //var result = engine.RenderView(name, model);
+                //result.Execute(stream);
             };
         }
+    }
+
+    public abstract class NancySparkView : SparkViewBase
+    {
+        
     }
 }

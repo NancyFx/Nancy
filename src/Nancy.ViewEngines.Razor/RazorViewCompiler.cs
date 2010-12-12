@@ -89,7 +89,7 @@
             var assembly = Assembly.LoadFrom(outputAssemblyName);
             if (assembly == null)
             {
-                var error = "Error loading template assembly";
+                const string error = "Error loading template assembly";
                 return new ErrorView(error);
             }
 

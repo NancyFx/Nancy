@@ -1,22 +1,26 @@
-﻿using System.IO;
-using Nancy.Tests;
-using Xunit;
+﻿namespace Nancy.ViewEngines.Razor.Tests
+{
+    using System.IO;
+    using Nancy.Tests;
+    using Xunit;
 
-namespace Nancy.ViewEngines.Razor.Tests {
     // TODO All the error test cases.
-    public class RazorViewCompilerTest {
+
+    public class RazorViewCompilerFixture
+    {
         [Fact]
-        public void CompiledViewShouldRenderToStream() {
-            // arrange
+        public void CompiledViewShouldRenderToStream()
+        {
+            // Given
             var compiler = new RazorViewCompiler();
             var reader = new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
             var view = compiler.GetCompiledView(reader);
             view.Writer = new StringWriter();
 
-            // act
+            // When
             view.Execute();
 
-            // assert
+            // Then
             view.Writer.ToString().ShouldEqual("<h1>Hello Mr. test</h1>");
         }
     }

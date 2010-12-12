@@ -22,7 +22,7 @@
         public ViewResult RenderView(string viewTemplate, object model)
         {
             IView view;
-            var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
+            var result = this.ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
             using (var reader = result.Contents)
             {
