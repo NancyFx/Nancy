@@ -52,8 +52,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="RazorViewCompilerTest.cs" />
-    <Compile Include="RazorViewEngineTest.cs" />
+    <Compile Include="RazorViewCompilerFixture.cs" />
+    <Compile Include="RazorViewEngineFixture.cs" />
     <Compile Include="ViewResultTest.cs" />
   </ItemGroup>
   <ItemGroup>
