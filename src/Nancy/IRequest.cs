@@ -48,6 +48,11 @@ namespace Nancy
             this.Uri = uri;
         }
 
+        public Request(string method, string uri)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
+        {
+        }
+
         public Stream Body { get; set; }
 
         public dynamic Form
