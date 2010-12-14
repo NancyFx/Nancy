@@ -17,27 +17,27 @@
 
         protected static IRequest ManufactureGETRequestForRoute(string route)
         {
-            return new Request("GET", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            return new Request("GET", route);
         }
 
         protected static IRequest ManufacturePOSTRequestForRoute(string route)
         {
-            return new Request("POST", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            return new Request("POST", route);
         }
 
         protected static IRequest ManufactureDELETERequestForRoute(string route)
         {
-            return new Request("DELETE", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            return new Request("DELETE", route);
         }
 
         protected static IRequest ManufacturePUTRequestForRoute(string route)
         {
-            return new Request("PUT", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            return new Request("PUT", route);
         }
 
         protected static IRequest ManufactureHEADRequestForRoute(string route)
         {
-            return new Request("HEAD", route, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            return new Request("HEAD", route);
         }
     }
 }
