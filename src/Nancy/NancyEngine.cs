@@ -57,6 +57,8 @@
                         this.resolver.GetRoute(request, descriptions);
 
                 	var response = resolvedRoute.Invoke();
+
+                    // TODO: REFACTOR
 					if (request.Method.ToUpperInvariant() == "HEAD")
 					{
 						response = new HeadResponse(response);

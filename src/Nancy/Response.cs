@@ -22,7 +22,7 @@ namespace Nancy
 
         public Action<Stream> Contents { get; set; }
 
-        public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
+        public IDictionary<string, IEnumerable<string>> Headers { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
 
@@ -39,6 +39,11 @@ namespace Nancy
         public static implicit operator Response(string contents)
         {
             return new Response { Contents = GetStringContents(contents) };
+        }
+
+        public static implicit operator Response(Action<Stream> streamFactory)
+        {
+            return new Response { Contents = streamFactory };
         }
 
         protected static Action<Stream> GetStringContents(string contents)

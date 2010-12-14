@@ -5,6 +5,7 @@
     using System.Linq;
     using Extensions;
     using Nancy;
+    using Nancy.Extensions;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -111,7 +112,7 @@
             // When
             var route = this.resolver.GetRoute(request, descriptions);
             var response = route.Invoke();
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Then
             output.ShouldEqual("FakeNancyModuleWithBasePath");
@@ -128,7 +129,7 @@
             var response = route.Invoke();
 
             // When
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Then
             output.ShouldEqual("FakeNancyModuleWithBasePath");
@@ -175,7 +176,7 @@
             var response = route.Invoke();
 
             // When
-            var output = GetStringContentsFromResponse(response);
+            var output = response.GetStringContentsFromResponse();
 
             // Then
             output.ShouldEqual("test");

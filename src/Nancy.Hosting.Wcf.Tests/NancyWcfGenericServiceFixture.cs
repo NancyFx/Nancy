@@ -22,10 +22,8 @@
         {
             using (CreateAndOpenWebServiceHost())
             {
-                var reader = new StreamReader(
-                    WebRequest.Create("http://localhost:1234/base/rel").
-                    GetResponse().
-                    GetResponseStream());
+                var reader = 
+                    new StreamReader(WebRequest.Create("http://localhost:1234/base/rel").GetResponse().GetResponseStream());
 
                 var response = reader.ReadToEnd();
 
@@ -40,22 +38,25 @@
             {
                 const string testBody = "This is the body of the request";
 
-                var request = WebRequest.Create("http://localhost:1234/base/rel");
+                var request = 
+                    WebRequest.Create("http://localhost:1234/base/rel");
                 request.Method = "POST";
 
-                var writer = new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
+                var writer = 
+                    new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
                 writer.Write(testBody);
 
-                var responseBody = new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
+                var responseBody = 
+                    new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
                 responseBody.ShouldEqual(testBody);
             }
         }
 
-        private WebServiceHost CreateAndOpenWebServiceHost()
+        private static WebServiceHost CreateAndOpenWebServiceHost()
         {
             var host = new WebServiceHost(
-                new NancyWcfGenericService(GetType().Assembly),
+                new NancyWcfGenericService(),
                 new Uri("http://localhost:1234/base/"));
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");

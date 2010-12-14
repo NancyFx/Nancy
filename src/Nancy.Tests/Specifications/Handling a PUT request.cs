@@ -3,6 +3,8 @@ namespace Nancy.Tests.Specifications
     using System.Net;
     using Machine.Specifications;
 
+    using Nancy.Tests.Extensions;
+
     [Subject("Handling a PUT request")]
     public class when_put_request_matched_existing_route : RequestSpec
     {
@@ -19,7 +21,7 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_content = () =>
-           GetStringContentsFromResponse(response).ShouldEqual("Default put root");
+           response.GetStringContentsFromResponse().ShouldEqual("Default put root");
     }
 
     [Subject("Handling a PUT request")]
@@ -38,6 +40,6 @@ namespace Nancy.Tests.Specifications
             response.ContentType.ShouldEqual("text/html");
 
         It should_set_blank_content = () =>
-            GetStringContentsFromResponse(response).ShouldEqual(string.Empty);
+            response.GetStringContentsFromResponse().ShouldEqual(string.Empty);
     }
 }

@@ -26,15 +26,15 @@ namespace Nancy
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
-
+            
             if (method.Length == 0)
-                throw new ArgumentOutOfRangeException("method", method, "The value of the method parameter cannot empty.");
+                throw new ArgumentOutOfRangeException("method", method, "The value of the method parameter cannot be empty.");
 
             if (uri == null)
                 throw new ArgumentNullException("uri", "The value of the uri parameter cannot be null.");
 
             if (uri.Length == 0)
-                throw new ArgumentOutOfRangeException("uri", uri, "The value of the uri parameter cannot empty.");
+                throw new ArgumentOutOfRangeException("uri", uri, "The value of the uri parameter cannot be empty.");
 
             if (headers == null)
                 throw new ArgumentNullException("headers", "The value of the headers parameter cannot be null.");
@@ -46,6 +46,11 @@ namespace Nancy
             this.Headers = headers;
             this.Method = method;
             this.Uri = uri;
+        }
+
+        public Request(string method, string uri)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
+        {
         }
 
         public Stream Body { get; set; }

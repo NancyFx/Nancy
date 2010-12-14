@@ -40,6 +40,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="xunit">
       <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
     </Reference>
@@ -51,6 +52,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
@@ -62,8 +64,11 @@
     <Compile Include="Specifications\Handling a POST request.cs" />
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
+    <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
+    <Compile Include="Unit\HeadResponseFixture.cs" />
+    <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
-    <Compile Include="Unit\NancyModuleLocatorFixture.cs" />
+    <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteFixture.cs" />
@@ -75,9 +80,6 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Unit\Interception\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

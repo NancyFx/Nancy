@@ -1,14 +1,13 @@
-﻿using System;
-
-namespace Nancy
+﻿namespace Nancy
 {
 	public class HeadResponse : Response
 	{
 		public HeadResponse(Response response)
 		{
-			Contents = stream => { }; // head should not return any content
-			ContentType = response.ContentType;
-			StatusCode = response.StatusCode;
+		    this.Contents = GetStringContents(string.Empty);
+			this.ContentType = response.ContentType;
+		    this.Headers = response.Headers;
+			this.StatusCode = response.StatusCode;
 		}
 	}
 }

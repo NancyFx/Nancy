@@ -41,6 +41,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AppDomainModuleLocator.cs" />
+    <Compile Include="DefaultModuleActivator.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
@@ -48,13 +50,14 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
+    <Compile Include="IModuleActivator.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="IViewEngine.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
     <Compile Include="NancyEngine.cs" />
-    <Compile Include="NancyModuleLocator.cs" />
+    <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
     <Compile Include="Routing\IRoute.cs" />
@@ -64,6 +67,7 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

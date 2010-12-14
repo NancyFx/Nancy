@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Hosting.Wcf
 {
     using System.IO;
-    using System.Reflection;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
@@ -14,9 +13,12 @@
     {
         private readonly NancyEngine engine;
 
-        public NancyWcfGenericService(Assembly modulesAssembly)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
+        /// </summary>
+        public NancyWcfGenericService()
         {
-            engine = new NancyEngine(new NancyModuleLocator(modulesAssembly), new RouteResolver());
+            engine = new NancyEngine(new AppDomainModuleLocator(new DefaultModuleActivator()), new RouteResolver());
         }
 
         [WebInvoke(UriTemplate = "*")]
