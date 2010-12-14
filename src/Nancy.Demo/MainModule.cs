@@ -2,6 +2,7 @@
 using Nancy.ViewEngines.Razor;
 
 namespace Nancy.Demo {
+    using ViewEngines.NDjango;
     using ViewEngines.NHaml;
 
     public class Module : NancyModule {
@@ -22,6 +23,11 @@ namespace Nancy.Demo {
             Get["/nhaml"] = x => {
                 var model = new RatPack { FirstName = "Andrew" };
                 return View.Haml("~/views/nhaml.haml", model);
+            };
+
+            Get["/ndjango"] = x => {
+                var model = new RatPack { FirstName = "Michael" };
+                return View.Django("~/views/ndjango.django", model);
             };
         }
     }

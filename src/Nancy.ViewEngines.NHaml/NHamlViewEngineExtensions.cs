@@ -5,7 +5,7 @@ namespace Nancy.ViewEngines.NHaml
     using System.Web.Hosting;
     using global::NHaml;
 
-    public static class HamlViewEngineExtensions
+    public static class NHamlViewEngineExtensions
     {
         public static Action<Stream> Haml(this IViewEngine source, string name)
         {
