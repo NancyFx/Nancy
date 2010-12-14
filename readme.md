@@ -110,6 +110,7 @@ current implementation serves as a proof of concept and needs more work to be st
 
 * Graeme Foster
 * Jason Mead
+* Jeremy Skinner
 * João Bragança
 * John Downey
 * Pedro Felix
