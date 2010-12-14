@@ -19,7 +19,7 @@
         /// </summary>
         public NancyWcfGenericService()
         {
-            engine = new NancyEngine(new AppDomainModuleLocator(), new RouteResolver());
+            engine = new NancyEngine(new AppDomainModuleLocator(new DefaultModuleActivator()), new RouteResolver());
         }
 
         [WebInvoke(UriTemplate = "*")]
