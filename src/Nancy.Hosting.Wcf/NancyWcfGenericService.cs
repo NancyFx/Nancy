@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Hosting.Wcf
 {
     using System.IO;
-    using System.Reflection;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
