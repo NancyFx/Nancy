@@ -69,6 +69,10 @@
     <Content Include="Views\razor.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj">
+      <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
+      <Name>Nancy.ViewEngines.NDjango</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
       <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
       <Name>Nancy.ViewEngines.NHaml</Name>
@@ -81,6 +85,10 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Views\ndjango.django" />
+    <None Include="Views\nhaml.haml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
