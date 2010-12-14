@@ -2,7 +2,6 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
     using Xunit;
 
@@ -13,7 +12,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception = 
-                Record.Exception(() => new Request(null, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request(null, "/"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -24,7 +23,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request(string.Empty, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request(string.Empty, "/"));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -35,7 +34,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", null, new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request("GET", null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -46,7 +45,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", string.Empty, new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request("GET", string.Empty));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -81,7 +80,7 @@ namespace Nancy.Tests.Unit
             const string method = "GET";
 
             // When
-            var request = new Request(method, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var request = new Request(method, "/");
 
             // Then
             request.Method.ShouldEqual(method);
@@ -94,7 +93,7 @@ namespace Nancy.Tests.Unit
             const string uri = "/";
             
             // When
-            var request = new Request("GET", uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var request = new Request("GET", uri);
 
             // Then
             request.Uri.ShouldEqual(uri);
