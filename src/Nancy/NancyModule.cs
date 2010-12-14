@@ -3,10 +3,11 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
-    
+    using Nancy.Routing;
+
     public abstract class NancyModule
     {
-        private readonly IDictionary<string, IDictionary<string, Func<dynamic, Response>>> moduleRoutes;
+        private readonly IDictionary<string, RouteDictionary> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -21,8 +22,8 @@ namespace Nancy
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
         protected NancyModule(string modulePath)
         {
-            ModulePath = modulePath;
-            moduleRoutes = new Dictionary<string, IDictionary<string, Func<dynamic, Response>>>(StringComparer.OrdinalIgnoreCase);
+            this.ModulePath = modulePath;
+            this.routes = new Dictionary<string, RouteDictionary>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -30,26 +31,64 @@ namespace Nancy
         /// </summary>
         public INancyApplication Application { get; set; }
 
-        public IDictionary<string, Func<dynamic, Response>> Delete
+        /// <param name="method">A <see cref="string"/> containing the http request method for which the routes should be returned.</param>
+        /// <returns>An <see cref="IDictionary{TKey,TValue}"/> containing the routes.</returns>
+        /// <remarks>Valid values are delete, get, post and put. The parameter is not case sensitive.</remarks>
+        public RouteDictionary GetRoutes(string method)
         {
-            get { return GetRoutes("DELETE"); }
+            if (method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
+            {
+                method = "GET";
+            }
+
+            RouteDictionary routesForSpecifiedMethod;
+
+            if (!this.routes.TryGetValue(method, out routesForSpecifiedMethod))
+            {
+                routesForSpecifiedMethod = new RouteDictionary(this);
+                this.routes[method] = routesForSpecifiedMethod;
+            }
+
+            return routesForSpecifiedMethod;
         }
 
-        public IDictionary<string, Func<dynamic, Response>> Get
+        /// <summary>
+        /// Gets <see cref="RouteDictionary"/> for declaring actions for DELETE requests.
+        /// </summary>
+        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        public RouteDictionary Delete
         {
-            get { return GetRoutes("GET"); }
+            get { return this.GetRoutes("DELETE"); }
+        }
+
+        /// <summary>
+        /// Gets <see cref="RouteDictionary"/> for declaring actions for GET requests.
+        /// </summary>
+        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        /// <remarks>These actions will also be used when a HEAD request is recieved.</remarks>
+        public RouteDictionary Get
+        {
+            get { return this.GetRoutes("GET"); }
         }
 
         public string ModulePath { get; private set; }
 
-        public IDictionary<string, Func<dynamic, Response>> Post
+        /// <summary>
+        /// Gets <see cref="RouteDictionary"/> for declaring actions for POST requests.
+        /// </summary>
+        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        public RouteDictionary Post
         {
-            get { return GetRoutes("POST"); }
+            get { return this.GetRoutes("POST"); }
         }
 
-        public IDictionary<string, Func<dynamic, Response>> Put
+        /// <summary>
+        /// Gets <see cref="RouteDictionary"/> for declaring actions for PUT requests.
+        /// </summary>
+        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        public RouteDictionary Put
         {
-            get { return GetRoutes("PUT"); }
+            get { return this.GetRoutes("PUT"); }
         }
 
         /// <summary>

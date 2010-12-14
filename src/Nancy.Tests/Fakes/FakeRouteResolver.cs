@@ -1,4 +1,4 @@
-﻿namespace Nancy.Tests.Fakes
+namespace Nancy.Tests.Fakes
 {    
     using System.Collections.Generic;
     using System.Linq;
@@ -13,7 +13,7 @@
                                where d.ModulePath + d.Path == request.Uri
                                select d).First();
 
-            this.ModulePath = description.ModulePath;
+            this.ModulePath = description.Module.ModulePath;
             this.Path = description.Path;            
 
             return new FakeRoute();

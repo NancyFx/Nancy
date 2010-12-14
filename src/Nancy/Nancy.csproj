@@ -70,6 +70,7 @@
     <Compile Include="Routing\NoMatchingRouteFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
+    <Compile Include="Routing\RouteDictionary.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />

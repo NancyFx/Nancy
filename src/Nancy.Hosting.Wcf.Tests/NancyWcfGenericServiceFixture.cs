@@ -17,7 +17,7 @@
     /// </remarks>
     public class NancyWcfGenericServiceFixture
     {
-        [Fact]
+        [Fact(Skip = "Requires administrator priveledges. See test fixture remark for more information.")]
         public void Should_be_able_to_get_from_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
@@ -31,7 +31,7 @@
             }
         }
 
-        [Fact]
+        [Fact(Skip = "Requires administrator priveledges. See test fixture remark for more information.")]
         public void Should_be_able_to_post_body_to_selfhost()
         {
             using (CreateAndOpenWebServiceHost())

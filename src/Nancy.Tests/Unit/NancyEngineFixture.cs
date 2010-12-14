@@ -106,6 +106,8 @@ namespace Nancy.Tests.Unit
                 A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
+
+        // TODO: This test doesn't belong here?
         [Theory]
         [InlineData("get")]
         [InlineData("GeT")]

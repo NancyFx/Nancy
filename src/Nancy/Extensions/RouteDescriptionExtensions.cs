@@ -6,7 +6,7 @@ namespace Nancy.Extensions
     {
         public static string GetModuleQualifiedPath(this RouteDescription description)
         {
-            return string.Concat(description.ModulePath, description.Path);
+            return string.Concat(description.Module.ModulePath, description.Path);
         }
     }
 }
