@@ -76,6 +76,9 @@
     <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
       <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
       <Name>Nancy.ViewEngines.NHaml</Name>
+    <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
+      <Project>{25643482-07E3-4981-9FBD-210CDF108AA8}</Project>
+      <Name>Nancy.Formatters</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>

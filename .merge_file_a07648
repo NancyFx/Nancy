@@ -1,9 +1,9 @@
+﻿namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
     using Nancy.ViewEngines.Razor;
     using ViewEngines.NDjango;
     using ViewEngines.NHaml;
-    using Nancy.Formatters;
 
     public class Module : NancyModule
     {
@@ -29,11 +29,6 @@
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
                 return View.Django("~/views/ndjango.django", model);
-			};
-
-            Get["/json"] = x => {
-                var model = new RatPack { FirstName = "Frank" };
-                return Response.Json(model);
             };
         }
     }
