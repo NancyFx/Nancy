@@ -47,17 +47,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AspNetTemplateLocator.cs" />
     <Compile Include="ErrorView.cs" />
-    <Compile Include="IView.cs" />
     <Compile Include="IViewCompiler.cs" />
-    <Compile Include="IViewLocator.cs" />
     <Compile Include="RazorViewBase.cs" />
     <Compile Include="RazorViewCompiler.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineExtensions.cs" />
-    <Compile Include="ViewLocationResult.cs" />
-    <Compile Include="ViewResult.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

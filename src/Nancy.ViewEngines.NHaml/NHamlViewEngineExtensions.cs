@@ -2,8 +2,6 @@ namespace Nancy.ViewEngines.NHaml
 {
     using System;
     using System.IO;
-    using System.Web.Hosting;
-    using global::NHaml;
 
     public static class NHamlViewEngineExtensions
     {
@@ -14,19 +12,13 @@ namespace Nancy.ViewEngines.NHaml
 
         public static Action<Stream> Haml<TModel>(this IViewEngine source, string name, TModel model)
         {
-            var templateEngine = new TemplateEngine();
-            var path = HostingEnvironment.MapPath(name);
+            var viewEngine = new NHamlViewEngine();
 
             return stream =>
-            {
-                CompiledTemplate compiledTemplate = templateEngine.Compile(path, typeof(Template<TModel>));
-
-                var writer = new StreamWriter(stream);
-                var template = (Template<TModel>)compiledTemplate.CreateInstance();
-                template.Model = model;
-                template.Render(writer);
-                writer.Flush();
-            };
+                       {
+                           var result = viewEngine.RenderView(name, model);
+                           result.Execute(stream);
+                       };
         }
     }
 }

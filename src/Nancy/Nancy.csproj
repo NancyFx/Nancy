@@ -67,7 +67,12 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
+    <Compile Include="ViewEngines\IView.cs" />
+    <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
+    <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

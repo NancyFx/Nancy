@@ -34,6 +34,8 @@
                     DefaultClassName = "RazorView"
                 };
 
+            host.NamespaceImports.Add("Nancy.ViewEngines");
+
             host.NamespaceImports.Add("System");
             host.NamespaceImports.Add("System.IO");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
@@ -68,10 +70,11 @@
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
             var results = codeProvider.CompileAssemblyFromDom(
-                new CompilerParameters(new [] { 
+                new CompilerParameters(new [] {
+                    GetAssemblyPath(typeof(IView)),
                     GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
                     GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
-                    GetAssemblyPath(Assembly.GetExecutingAssembly()) }, outputAssemblyName),
+                    GetAssemblyPath(Assembly.GetExecutingAssembly())}, outputAssemblyName),
                     razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)

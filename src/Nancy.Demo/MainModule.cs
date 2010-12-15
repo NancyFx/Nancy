@@ -8,7 +8,7 @@ namespace Nancy.Demo {
     public class Module : NancyModule {
         public Module() {
             Get["/"] = x => {
-                return "This is the root. Visit /razor or /nhaml!";
+                return "This is the root. Visit /razor, /nhaml or /ndjango!";
             };
 
             Get["/test"] = x => {
