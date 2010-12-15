@@ -1,4 +1,4 @@
-﻿namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines
 {
     // Notice that the template might not have a "Path".
     // For example, it could be embedded. So that's why this 

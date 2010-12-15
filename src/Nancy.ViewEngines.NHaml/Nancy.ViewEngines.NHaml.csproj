@@ -48,8 +48,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NHamlViewEngine.cs" />
     <Compile Include="NHamlViewEngineExtensions.cs" />
-    <Compile Include="Template.cs" />
+    <Compile Include="NHamlView.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
