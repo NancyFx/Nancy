@@ -1,3 +1,4 @@
+namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
     using Nancy.ViewEngines.Razor;
