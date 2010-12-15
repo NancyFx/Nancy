@@ -34,8 +34,6 @@
                     DefaultClassName = "RazorView"
                 };
 
-            host.NamespaceImports.Add("Nancy.ViewEngines");
-
             host.NamespaceImports.Add("System");
             host.NamespaceImports.Add("System.IO");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
