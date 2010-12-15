@@ -77,7 +77,7 @@
                 if (current.IsParameterized())
                 {
                     var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>[/A-Z0-9_-]*)", segment.GetParameterName());
+                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>[/A-Z0-9._-]*)", segment.GetParameterName());
 
                     current = segment.Replace(segment, replacement);
                 }

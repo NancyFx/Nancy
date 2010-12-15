@@ -59,8 +59,10 @@ namespace Nancy
         {
             get
             {
+            	var position = this.Body.Position;
                 var reader = new StreamReader(this.Body);
                 var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
+            	this.Body.Position = position;
 
                 var ret = new RouteParameters();
                 foreach (var key in coll.AllKeys)
