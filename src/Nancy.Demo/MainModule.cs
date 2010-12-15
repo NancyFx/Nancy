@@ -33,7 +33,7 @@
 
             Get["/json"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
-                return Response.Json(model);
+                return Response.AsJson(model);
             };
         }
     }

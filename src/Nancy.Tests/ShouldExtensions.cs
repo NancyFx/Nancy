@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests
+﻿using System.IO;
+
+namespace Nancy.Tests
 {
     using System;
     using System.Collections;
@@ -115,6 +117,15 @@
             catch (Exception thrownException)
             {
                 Assert.Equal(expectedType, thrownException.GetType());
+            }
+        }
+
+        public static void ShouldEqual(this MemoryStream stream, string expected)
+        {
+            stream.Position = 0;
+            using (var reader = new StreamReader(stream))
+            {
+                reader.ReadToEnd().ShouldEqual(expected);
             }
         }
     }
