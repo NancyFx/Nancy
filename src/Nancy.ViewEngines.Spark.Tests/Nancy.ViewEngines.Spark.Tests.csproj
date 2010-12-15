@@ -42,6 +42,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -55,12 +56,17 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DescriptorBuildingFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
       <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
       <Name>Nancy.Tests</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+      <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
+      <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

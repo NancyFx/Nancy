@@ -38,9 +38,9 @@ namespace Nancy.Tests
             Assert.True(selection.Count() > 0);
         }
 
-        public static void ShouldHaveCount<T>(this IList<T> list, int expected)
+        public static void ShouldHaveCount<T>(this IEnumerable<T> list, int expected)
         {
-            list.Count.ShouldEqual(expected);
+            list.Count().ShouldEqual(expected);
         }
 
         public static void ShouldBeTrue(this bool actual)

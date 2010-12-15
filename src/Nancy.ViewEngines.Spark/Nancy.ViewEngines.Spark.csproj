@@ -35,7 +35,9 @@
       <HintPath>..\..\dependencies\spark\Spark.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,8 +45,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ActionContext.cs" />
+    <Compile Include="Caching\DefaultCacheServiceProvider.cs" />
+    <Compile Include="Descriptors\DescriptorFilterExtensions.cs" />
+    <Compile Include="Descriptors\BuildDescriptorParams.cs" />
+    <Compile Include="Descriptors\IDescriptorFilter.cs" />
+    <Compile Include="Caching\ICacheServiceProvider.cs" />
+    <Compile Include="Descriptors\IDescriptorBuilder.cs" />
+    <Compile Include="Descriptors\DefaultDescriptorBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SparkView.cs" />
+    <Compile Include="SparkViewFactory.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
