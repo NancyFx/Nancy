@@ -148,5 +148,28 @@ namespace Nancy.Tests.Unit
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
         }
+
+		[Fact]
+		public void Should_be_able_to_invoke_form_repeatedly()
+		{
+			const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
+			var memory = new MemoryStream();
+			var writer = new StreamWriter(memory);
+			writer.Write(bodyContent);
+			writer.Flush();
+			memory.Position = 0;
+
+			var headers =
+				new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                };
+
+			// When
+			var request = new Request("POST", "/", headers, memory);
+			request.Form.ToString();
+			// Then
+			((string)request.Form.name).ShouldEqual("John Doe");
+		}
     }
 }
