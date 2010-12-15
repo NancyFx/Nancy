@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{25643482-07E3-4981-9FBD-210CDF108AA8}</ProjectGuid>
+    <ProjectGuid>{CFC855CB-5D43-463A-9053-AEEDCD7227FA}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Formatters</RootNamespace>
-    <AssemblyName>Nancy.Formatters</AssemblyName>
+    <RootNamespace>Nancy.Formatters.Tests</RootNamespace>
+    <AssemblyName>Nancy.Formatters.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,8 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\..\dependencies\json\Newtonsoft.Json.dll</HintPath>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -41,15 +41,27 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
-      <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="JsonFormatterExtensions.cs" />
-    <Compile Include="Responses\JsonResponse.cs" />
+    <Compile Include="JsonFormatterExtensionsFixtures.cs" />
+    <Compile Include="Fakes\Person.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
+      <Project>{25643482-07E3-4981-9FBD-210CDF108AA8}</Project>
+      <Name>Nancy.Formatters</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
+      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
+      <Name>Nancy.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
