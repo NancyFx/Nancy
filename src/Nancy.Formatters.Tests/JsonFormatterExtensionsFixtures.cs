@@ -1,12 +1,12 @@
-using System.IO;
-using System.Net;
-using FakeItEasy;
-using Nancy.Formatters.Tests.Fakes;
-using Xunit;
-using Nancy.Tests;
-
 namespace Nancy.Formatters.Tests
 {
+    using System.IO;
+    using System.Net;
+    using FakeItEasy;
+    using Fakes;
+    using Xunit;
+    using Nancy.Tests;
+
     public class JsonFormatterExtensionsFixtures
     {
         private readonly IResponseFormatter formatter;

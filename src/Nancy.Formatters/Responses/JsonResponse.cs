@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Net;
     using Newtonsoft.Json;
 
     public class JsonResponse<TModel> : Response
@@ -10,6 +11,7 @@
         {
             this.Contents = GetJsonContents(model);
             this.ContentType = "application/json";
+            this.StatusCode = HttpStatusCode.OK;
         }
      
         private static Action<Stream> GetJsonContents(TModel model)

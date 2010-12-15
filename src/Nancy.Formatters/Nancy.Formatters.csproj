@@ -46,8 +46,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="JsonFormatterExtensions.cs" />
+    <Compile Include="FormatterExtensions.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
+    <Compile Include="Responses\XmlResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

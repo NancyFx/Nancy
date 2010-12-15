@@ -22,6 +22,12 @@ namespace Nancy.Demo {
                 var model = new RatPack { FirstName = "Frank" };
                 return Response.AsJson(model);
             };
+
+            Get["/xml"] = x =>
+            {
+                var model = new RatPack { FirstName = "Frank" };
+                return Response.AsXml(model);
+            };
         }
     }
 }
