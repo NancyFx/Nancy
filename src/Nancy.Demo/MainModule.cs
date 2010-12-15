@@ -1,20 +1,25 @@
 namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
-    using Nancy.ViewEngines.Razor;
-    using ViewEngines.NDjango;
-    using ViewEngines.NHaml;
     using Nancy.Formatters;
+    using Nancy.ViewEngines;
+    using Nancy.ViewEngines.NDjango;
+    using Nancy.ViewEngines.NHaml;
+    using Nancy.ViewEngines.Razor;
 
     public class Module : NancyModule
     {
         public Module() {
             Get["/"] = x => {
-                return "This is the root. Visit /razor, /nhaml or /ndjango!";
+                return "This is the root. Visit /static, /razor, /nhaml or /ndjango!";
             };
 
             Get["/test"] = x => {
                 return "Test";
+            };
+
+            Get["/static"] = x => {
+                return View.Static("~/views/static.htm");
             };
 
             Get["/razor"] = x => {

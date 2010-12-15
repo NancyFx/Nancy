@@ -50,6 +50,7 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\static.htm" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -76,7 +77,7 @@
     <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
       <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
       <Name>Nancy.ViewEngines.NHaml</Name>
-	</ProjectReference>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
       <Project>{25643482-07E3-4981-9FBD-210CDF108AA8}</Project>
       <Name>Nancy.Formatters</Name>
