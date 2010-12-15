@@ -1,11 +1,12 @@
-﻿using Nancy.Demo.Models;
-using Nancy.ViewEngines.Razor;
-
-namespace Nancy.Demo {
+﻿namespace Nancy.Demo
+{
+    using Nancy.Demo.Models;
+    using Nancy.ViewEngines.Razor;
     using ViewEngines.NDjango;
     using ViewEngines.NHaml;
 
-    public class Module : NancyModule {
+    public class Module : NancyModule
+    {
         public Module() {
             Get["/"] = x => {
                 return "This is the root. Visit /razor, /nhaml or /ndjango!";
