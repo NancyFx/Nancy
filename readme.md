@@ -108,6 +108,8 @@ current implementation serves as a proof of concept and needs more work to be st
 
 ## Contributors
 
+Nancy is not a one man project and many of the features that are availble would not have been available without the awesome contributions from the community!
+
 * Andy Pike
 * Graeme Foster
 * Jason Mead
