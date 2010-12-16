@@ -112,6 +112,12 @@
             return dictionary.TryGetValue(binder.Name, out result);
         }
 
+		public override IEnumerable<string> GetDynamicMemberNames()
+		{
+			return dictionary.Keys;
+		}
+
+
         public dynamic this[string name]
         {
             get { return dictionary[name]; }

@@ -13,12 +13,17 @@ namespace Nancy.Hosting
         public void ProcessRequest(HttpContext context)
         {
             var engine = new NancyEngine(
-                new AppDomainModuleLocator(),
+                CreateModuleLocator(),
                 new RouteResolver());
 
             var wrappedContext = new HttpContextWrapper(context);
             var handler = new NancyHandler(engine);
             handler.ProcessRequest(wrappedContext);
+        }
+
+        protected virtual INancyModuleLocator CreateModuleLocator()
+        {
+            return new AppDomainModuleLocator(new DefaultModuleActivator());
         }
     }
 }

@@ -42,13 +42,15 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AppDomainModuleLocator.cs" />
+    <Compile Include="DefaultModuleActivator.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
-    <Compile Include="HeadResponse.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
+    <Compile Include="IModuleActivator.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="IViewEngine.cs" />
     <Compile Include="NancyModule.cs" />

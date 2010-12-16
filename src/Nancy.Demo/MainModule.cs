@@ -1,18 +1,26 @@
-﻿using Nancy.Demo.Models;
-using Nancy.ViewEngines.Razor;
+namespace Nancy.Demo
+{
+    using Nancy.Demo.Models;
+    using Nancy.Formatters;
+    using Nancy.ViewEngines;
+    using Nancy.ViewEngines.NDjango;
+    using Nancy.ViewEngines.NHaml;
+    using Nancy.ViewEngines.Razor;
 
-namespace Nancy.Demo {
-    using ViewEngines.NDjango;
-    using ViewEngines.NHaml;
-
-    public class Module : NancyModule {
-        public Module() {
+    public class Module : NancyModule
+    {
+        public Module()
+        {
             Get["/"] = x => {
-                return "This is the root. Visit /razor, /nhaml or /ndjango!";
+                return "This is the root. Visit /static, /razor, /nhaml or /ndjango!";
             };
-
+            
             Get["/test"] = x => {
                 return "Test";
+            };
+
+            Get["/static"] = x => {
+                return View.Static("~/views/static.htm");
             };
 
             Get["/razor"] = x => {
@@ -28,6 +36,11 @@ namespace Nancy.Demo {
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
                 return View.Django("~/views/ndjango.django", model);
+			};
+
+            Get["/json"] = x => {
+                var model = new RatPack { FirstName = "Frank" };
+                return Response.AsJson(model);
             };
         }
     }

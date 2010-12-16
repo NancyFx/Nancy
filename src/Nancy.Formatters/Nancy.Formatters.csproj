@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</ProjectGuid>
+    <ProjectGuid>{25643482-07E3-4981-9FBD-210CDF108AA8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Tests</RootNamespace>
-    <AssemblyName>Nancy.Tests</AssemblyName>
+    <RootNamespace>Nancy.Formatters</RootNamespace>
+    <AssemblyName>Nancy.Formatters</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,49 +31,23 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy">
-      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\dependencies\json\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="Machine.Specifications">
-      <HintPath>..\..\dependencies\mspec\Machine.Specifications.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Web" />
-    <Reference Include="xunit">
-      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
-    </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\ResponseExtensions.cs" />
-    <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
-    <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
-    <Compile Include="Fakes\FakeRoute.cs" />
-    <Compile Include="Fakes\FakeRouteResolver.cs" />
-    <Compile Include="Specifications\Handling a HEAD request.cs" />
-    <Compile Include="Specifications\Handling a DELETE request.cs" />
-    <Compile Include="Specifications\Handling a GET request.cs" />
-    <Compile Include="ShouldExtensions.cs" />
-    <Compile Include="Specifications\Handling a POST request.cs" />
-    <Compile Include="Specifications\Handling a PUT request.cs" />
-    <Compile Include="Specifications\RequestSpec.cs" />
-    <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
-    <Compile Include="Unit\HeadResponseFixture.cs" />
-    <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
-    <Compile Include="Unit\NancyEngineFixture.cs" />
-    <Compile Include="Unit\RequestFixture.cs" />
-    <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
-    <Compile Include="Unit\ResponseFixture.cs" />
-    <Compile Include="Unit\Routing\RouteFixture.cs" />
-    <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
-    <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
+    <Compile Include="JsonFormatterExtensions.cs" />
+    <Compile Include="Responses\JsonResponse.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

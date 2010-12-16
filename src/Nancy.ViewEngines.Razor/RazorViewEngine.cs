@@ -22,14 +22,15 @@
         public ViewResult RenderView(string viewTemplate, object model)
         {
             IView view;
-            var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
+            var result = this.ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
             using (var reader = result.Contents)
             {
                 view = ViewCompiler.GetCompiledView(reader);
             }
 
-            if (view == null) {
+            if (view == null)
+            {
                 // TODO: This should be a resource string
                 throw new InvalidOperationException(String.Format("Could not find a valid view at the location '{0}'", result.Location));
             }

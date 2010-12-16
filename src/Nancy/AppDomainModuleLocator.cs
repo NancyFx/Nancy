@@ -12,26 +12,26 @@
     public class AppDomainModuleLocator : INancyModuleLocator
     {
         private static IEnumerable<NancyModule> modules;
+        private readonly IModuleActivator activator;
+
+        public AppDomainModuleLocator(IModuleActivator activator)
+        {
+            this.activator = activator;
+        }
 
         public IEnumerable<NancyModule> GetModules()
         {
             return modules ?? (modules = LocateModulesInAppDomain());
         }
 
-        private static NancyModule CreateModuleInstance(Type type)
-        {
-            return (NancyModule)Activator.CreateInstance(type);
-        }
-
-        private static IEnumerable<NancyModule> LocateModulesInAppDomain()
+        private IEnumerable<NancyModule> LocateModulesInAppDomain()
         {
             var locatedModules =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetExportedTypes()
                 where !type.IsAbstract
-                where type.IsSubclassOf(typeof(NancyModule))
-                where type.GetConstructor(Type.EmptyTypes) != null
-                select CreateModuleInstance(type);
+                where activator.CanCreateInstance(type)
+                select activator.CreateInstance(type);
 
             return locatedModules.ToList();
         }

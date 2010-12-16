@@ -46,12 +46,12 @@
             }
 
             var modules = this.locator.GetModules();
-            if (modules.Count() > 0)
+            if (modules.Any())
             {
                 InitializeModules(request, modules);
 
                 var descriptions = GetRouteDescriptions(request, modules);
-                if (descriptions.Count() > 0)
+                if (descriptions.Any())
                 {
                     var resolvedRoute = 
                         this.resolver.GetRoute(request, descriptions);

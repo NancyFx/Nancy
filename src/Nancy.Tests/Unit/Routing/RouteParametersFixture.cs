@@ -4,6 +4,7 @@ namespace Nancy.Tests.Unit.Routing
 {
     using Nancy.Routing;
     using Xunit;
+	using System.Linq;
 
     public class RouteParametersFixture
     {
@@ -125,6 +126,20 @@ namespace Nancy.Tests.Unit.Routing
 			value.ShouldEqual(10);
 		}
 
+		[Fact]
+		public void Should_support_GetDynamicMemberNames()
+		{
+			// Given
+			dynamic parameters = new RouteParameters();
 
+			parameters["test"] = "10";
+			parameters["rest"] = "20";
+
+			// When
+			var names = ((RouteParameters) parameters).GetDynamicMemberNames();
+
+			// Then
+			Assert.True(names.SequenceEqual(new[] {"test", "rest"}));
+		}
 	}
 }

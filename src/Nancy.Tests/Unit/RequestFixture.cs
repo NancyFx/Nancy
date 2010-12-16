@@ -2,7 +2,6 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.Specialized;
     using System.IO;
     using Xunit;
 
@@ -13,7 +12,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception = 
-                Record.Exception(() => new Request(null, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request(null, "/"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -24,7 +23,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request(string.Empty, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request(string.Empty, "/"));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -35,7 +34,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", null, new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request("GET", null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -46,7 +45,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", string.Empty, new Dictionary<string, IEnumerable<string>>(), new MemoryStream()));
+                Record.Exception(() => new Request("GET", string.Empty));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -81,7 +80,7 @@ namespace Nancy.Tests.Unit
             const string method = "GET";
 
             // When
-            var request = new Request(method, "/", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var request = new Request(method, "/");
 
             // Then
             request.Method.ShouldEqual(method);
@@ -94,7 +93,7 @@ namespace Nancy.Tests.Unit
             const string uri = "/";
             
             // When
-            var request = new Request("GET", uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var request = new Request("GET", uri);
 
             // Then
             request.Uri.ShouldEqual(uri);
@@ -149,5 +148,28 @@ namespace Nancy.Tests.Unit
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
         }
+
+		[Fact]
+		public void Should_be_able_to_invoke_form_repeatedly()
+		{
+			const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
+			var memory = new MemoryStream();
+			var writer = new StreamWriter(memory);
+			writer.Write(bodyContent);
+			writer.Flush();
+			memory.Position = 0;
+
+			var headers =
+				new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                };
+
+			// When
+			var request = new Request("POST", "/", headers, memory);
+			request.Form.ToString();
+			// Then
+			((string)request.Form.name).ShouldEqual("John Doe");
+		}
     }
 }
