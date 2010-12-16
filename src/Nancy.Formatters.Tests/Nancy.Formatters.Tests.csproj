@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Fakes\Person.cs" />
+    <Compile Include="XmlFormatterExtensionsFixtures.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
