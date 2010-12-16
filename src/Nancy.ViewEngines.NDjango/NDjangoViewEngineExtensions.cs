@@ -15,10 +15,10 @@ namespace Nancy.ViewEngines.NDjango
             var viewEngine = new NDjangoViewEngine();
 
             return stream =>
-                       {
-                           var result = viewEngine.RenderView(name, model);
-                           result.Execute(stream);
-                       };
+            {
+                var result = viewEngine.RenderView(name, model);
+                result.Execute(stream);
+            };
         }
     }
 }

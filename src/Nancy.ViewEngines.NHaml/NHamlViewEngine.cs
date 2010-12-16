@@ -19,9 +19,9 @@ namespace Nancy.ViewEngines.NHaml
         {
             var templateEngine = new TemplateEngine();
             var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
-            string location = result.Location;
+            var location = result.Location;
 
-            CompiledTemplate compiledTemplate = templateEngine.Compile(location, typeof(NHamlView<TModel>));
+            var compiledTemplate = templateEngine.Compile(location, typeof(NHamlView<TModel>));
             var view = (NHamlView<TModel>) compiledTemplate.CreateInstance();
 
             view.Model = model;
