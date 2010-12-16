@@ -9,11 +9,12 @@ namespace Nancy.Demo
 
     public class Module : NancyModule
     {
-        public Module() {
+        public Module()
+        {
             Get["/"] = x => {
                 return "This is the root. Visit /static, /razor, /nhaml or /ndjango!";
             };
-
+            
             Get["/test"] = x => {
                 return "Test";
             };
