@@ -41,6 +41,14 @@
             return new RazorTemplateEngine(host);
         }
 
+        public IView GetCompiledView<TModel>(string fullPath)
+        {
+            using (var reader = new StreamReader(fullPath))
+            {
+                return GetCompiledView(reader);
+            }
+        }
+
         public IView GetCompiledView(TextReader reader) 
         {
             var razorResult = this.engine.GenerateCode(reader);
@@ -119,6 +127,5 @@
         private static string GetAssemblyPath(Assembly assembly) {
             return new Uri(assembly.CodeBase).LocalPath;
         }
-
     }
 }

@@ -5,7 +5,6 @@
     using Xunit;
 
     // TODO All the error test cases.
-
     public class RazorViewCompilerFixture
     {
         [Fact]

@@ -1,19 +1,19 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.IO;
     using FakeItEasy;
-    using Nancy.Tests;
+    using Nancy.ViewEngines;
     using Xunit;
 
-    public class RazorViewEngineFixture
+    public class ViewEngineFixture
     {
         private readonly IViewLocator templateLocator;
         private readonly IViewCompiler viewCompiler;
         private readonly IView view;
         private readonly ViewLocationResult viewLocationResult;
-        private readonly RazorViewEngine engine;
+        private readonly ViewEngine engine;
 
-        public RazorViewEngineFixture()
+        public ViewEngineFixture()
         {
             this.templateLocator = A.Fake<IViewLocator>();
             this.viewCompiler = A.Fake<IViewCompiler>();
@@ -21,16 +21,16 @@
             this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
 
             A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
-            A.CallTo(() => viewCompiler.GetCompiledView(null)).Returns(view);
+            A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).WithAnyArguments().Returns(view);
 
-            this.engine = new RazorViewEngine(templateLocator, viewCompiler);
+            this.engine = new ViewEngine(templateLocator, viewCompiler);
         }
 
         [Fact]
         public void RenderViewSetsPath()
         {
             // Given, When
-            var result = engine.RenderView("test", null);
+            var result = engine.RenderView<object>("test", null);
 
             // Then
             result.Location.ShouldEqual(@"c:\some\fake\path");
@@ -46,7 +46,7 @@
             var result = engine.RenderView("test", stream);
 
             // Then
-            result.View.ShouldBeSameAs(view);
+            result.View.Model.ShouldBeSameAs(stream);
         }
     }
 }

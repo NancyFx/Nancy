@@ -1,8 +1,8 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.IO;
     using FakeItEasy;
-    using Nancy.Tests;
+    using Nancy.ViewEngines;
     using Xunit;
 
     public class ViewResultTest
