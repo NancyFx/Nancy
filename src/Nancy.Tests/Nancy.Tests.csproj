@@ -75,7 +75,7 @@
     <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
-    <Compile Include="Unit\ViewEngines\ViewResultTest.cs" />
+    <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

@@ -5,7 +5,7 @@
     using Nancy.ViewEngines;
     using Xunit;
 
-    public class ViewResultTest
+    public class ViewResultFixture
     {
         [Fact]
         public void ExecuteWritesViewToStream()

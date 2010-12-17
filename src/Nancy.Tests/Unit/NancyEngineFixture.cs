@@ -2,7 +2,6 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using System.Net;
     using FakeItEasy;
@@ -305,11 +304,6 @@ namespace Nancy.Tests.Unit
         private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
         {
             return modules.SelectMany(x => x.GetRouteDescription(request));
-        }
-
-        private static IRequest ManufactureGETRequest(string route)
-        {
-            return new Request("GET", route);
         }
     }
 }

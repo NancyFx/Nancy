@@ -18,17 +18,17 @@ namespace Nancy.ViewEngines
         {
             var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
-            IView view = ViewCompiler.GetCompiledView<TModel>(result.Location);
+            IView view = ViewCompiler.GetCompiledView<TModel>(result);
 
             if (view == null)
             {
                 // TODO: This should be a resource string
-                throw new InvalidOperationException(String.Format("Could not find a valid view at the location '{0}'", result.Location));
+                throw new InvalidOperationException(String.Format("Could not find a valid view at the location '{0}'", result));
             }
 
             view.Model = model;
 
-            return new ViewResult(view, result.Location);
+            return new ViewResult(view, result);
         }
     }
 }

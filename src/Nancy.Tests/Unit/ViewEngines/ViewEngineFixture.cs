@@ -10,7 +10,6 @@
         private readonly IViewLocator templateLocator;
         private readonly IViewCompiler viewCompiler;
         private readonly IView view;
-        private readonly ViewLocationResult viewLocationResult;
         private readonly ViewEngine engine;
 
         public ViewEngineFixture()
@@ -18,16 +17,16 @@
             this.templateLocator = A.Fake<IViewLocator>();
             this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
-            this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
 
-            A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
-            A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).WithAnyArguments().Returns(view);
+            A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(@"c:\some\fake\path");
+            
+            A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
 
             this.engine = new ViewEngine(templateLocator, viewCompiler);
         }
 
         [Fact]
-        public void RenderViewSetsPath()
+        public void RenderView_Should_set_path()
         {
             // Given, When
             var result = engine.RenderView<object>("test", null);
@@ -37,7 +36,7 @@
         }
 
         [Fact]
-        public void RenderViewShouldReturnCompiledView()
+        public void RenderView_Should_return_compiled_view()
         {
             // Given
             var stream = new MemoryStream();

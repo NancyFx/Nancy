@@ -73,7 +73,6 @@
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
     <Compile Include="ViewEngines\ViewEngine.cs" />
-    <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup />
