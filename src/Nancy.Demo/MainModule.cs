@@ -46,6 +46,10 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Frank" };
                 return Response.AsXml(model);
             };
+
+            Post["/form"] = x => {
+                return string.Concat("Firstname: ", (string)Request.Form.name);
+            };
         }
     }
 }

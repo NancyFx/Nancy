@@ -139,7 +139,7 @@ namespace Nancy.Tests.Unit
             var headers = 
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
                 };
 
             // When
@@ -162,7 +162,7 @@ namespace Nancy.Tests.Unit
 			var headers =
 				new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
                 };
 
 			// When

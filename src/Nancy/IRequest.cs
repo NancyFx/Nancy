@@ -22,6 +22,13 @@ namespace Nancy
 
     public class Request : IRequest
     {
+        private dynamic form;
+
+        public Request(string method, string uri)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
+        {
+        }
+
         public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body)
         {
             if (method == null)
@@ -48,30 +55,27 @@ namespace Nancy
             this.Uri = uri;
         }
 
-        public Request(string method, string uri)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
-        {
-        }
-
         public Stream Body { get; set; }
 
         public dynamic Form
         {
-            get
+            get { return this.form ?? (this.form = this.GetFormData()); }
+        }
+
+        private dynamic GetFormData()
+        {
+            var position = this.Body.Position;
+            var reader = new StreamReader(this.Body);
+            var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
+            this.Body.Position = position;
+
+            var ret = new RouteParameters();
+            foreach (var key in coll.AllKeys)
             {
-            	var position = this.Body.Position;
-                var reader = new StreamReader(this.Body);
-                var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-            	this.Body.Position = position;
-
-                var ret = new RouteParameters();
-                foreach (var key in coll.AllKeys)
-                {
-                    ret[key] = coll[key];
-                }
-
-                return ret;
+                ret[key] = coll[key];
             }
+
+            return ret;
         }
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
