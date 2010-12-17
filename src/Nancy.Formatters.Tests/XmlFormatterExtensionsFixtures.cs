@@ -2,6 +2,7 @@ namespace Nancy.Formatters.Tests
 {
     using System.IO;
     using System.Net;
+    using System.Xml;
     using FakeItEasy;
     using Nancy.Formatters.Tests.Fakes;
     using Nancy.Tests;
@@ -38,19 +39,36 @@ namespace Nancy.Formatters.Tests
             using (var stream = new MemoryStream())
             {
                 response.Contents(stream);
-                stream.ShouldEqual("<?xml version=\"1.0\"?>\r\n<Person xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">\r\n  <FirstName>Andy</FirstName>\r\n  <LastName>Pike</LastName>\r\n</Person>");
+
+                var root = GetXmlRoot(stream);
+
+                root.Name.ShouldEqual("Person");
+                root.ChildNodes.Count.ShouldEqual(2);
+                root.SelectSingleNode("//Person/FirstName").InnerText.ShouldEqual("Andy");
+                root.SelectSingleNode("//Person/LastName").InnerText.ShouldEqual("Pike");
             }
         }
 
         [Fact]
         public void Should_return_a_null_in_xml_format()
         {
-            var nullResponse = formatter.AsXml<Person>(null);
             using (var stream = new MemoryStream())
             {
-                nullResponse.Contents(stream);
-                stream.ShouldEqual("<?xml version=\"1.0\"?>\r\n<Person xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:nil=\"true\" />");
+                formatter.AsXml<Person>(null).Contents(stream);
+
+                var root = GetXmlRoot(stream);
+                root.GetAttribute("nil", "http://www.w3.org/2001/XMLSchema-instance").ShouldEqual("true");
+                root.ChildNodes.Count.ShouldEqual(0);
             }
+        }
+
+        private static XmlElement GetXmlRoot(Stream stream)
+        {
+            stream.Position = 0;
+            var xml = new XmlDocument();
+            xml.Load(stream);
+
+            return xml.DocumentElement;
         }
     }
 }
