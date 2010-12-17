@@ -1,13 +1,13 @@
-using System.IO;
-using System.Net;
-using System.Xml;
-using FakeItEasy;
-using Nancy.Formatters.Tests.Fakes;
-using Nancy.Tests;
-using Xunit;
-
 namespace Nancy.Formatters.Tests
 {
+    using System.IO;
+    using System.Net;
+    using System.Xml;
+    using FakeItEasy;
+    using Fakes;
+    using Nancy.Tests;
+    using Xunit;
+
     public class XmlFormatterExtensionsFixtures
     {
         private readonly IResponseFormatter formatter;
