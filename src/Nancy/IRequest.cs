@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Web;
 
     using Nancy.Routing;
@@ -50,7 +51,7 @@ namespace Nancy
                 throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
 
             this.Body = body;
-            this.Headers = headers;
+            this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
             this.Method = method;
             this.Uri = uri;
         }
@@ -64,17 +65,25 @@ namespace Nancy
 
         private dynamic GetFormData()
         {
-            var position = this.Body.Position;
-            var reader = new StreamReader(this.Body);
-            var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-            this.Body.Position = position;
-
             var ret = new RouteParameters();
-            foreach (var key in coll.AllKeys)
-            {
-                ret[key] = coll[key];
-            }
 
+            if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
+            {
+                var contentType = this.Headers["content-type"].First();
+                if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+                {
+                    var position = this.Body.Position;
+                    var reader = new StreamReader(this.Body);
+                    var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
+                    this.Body.Position = position;
+
+                    foreach (var key in coll.AllKeys)
+                    {
+                        ret[key] = coll[key];
+                    }        
+                }
+            }
+            
             return ret;
         }
 
