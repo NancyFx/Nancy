@@ -50,6 +50,7 @@
     <Compile Include="NDjangoView.cs" />
     <Compile Include="NDjangoViewEngine.cs" />
     <Compile Include="NDjangoViewEngineExtensions.cs" />
+    <Compile Include="NDjangoViewRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
