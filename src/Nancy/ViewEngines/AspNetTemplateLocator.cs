@@ -4,7 +4,7 @@
 
     public class AspNetTemplateLocator : IViewLocator
     {
-        public string GetTemplateContents(string viewTemplate)
+        public string GetFullPath(string viewTemplate)
         {
             return HostingEnvironment.MapPath(viewTemplate);
         }

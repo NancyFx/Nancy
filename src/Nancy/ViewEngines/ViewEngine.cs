@@ -16,7 +16,7 @@ namespace Nancy.ViewEngines
 
         public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
         {
-            var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
+            var result = ViewTemplateLocator.GetFullPath(viewTemplate);
 
             IView view = ViewCompiler.GetCompiledView<TModel>(result);
 

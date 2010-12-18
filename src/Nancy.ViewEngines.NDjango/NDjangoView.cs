@@ -26,13 +26,7 @@
             var context = new Dictionary<string, object> {{"Model", Model}};
             var reader = template.Walk(templateManager, context);
 
-            var buffer = new char[4096];
-            int count;
-            while ((count = reader.Read(buffer, 0, buffer.Length)) > 0)
-            {
-                Writer.Write(buffer, 0, count);
-            }
-
+            Writer.Write(reader.ReadToEnd());
             Writer.Flush();
         }
     }

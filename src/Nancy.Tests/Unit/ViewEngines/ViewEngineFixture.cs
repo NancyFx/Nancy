@@ -18,7 +18,7 @@
             this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
 
-            A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(@"c:\some\fake\path");
+            A.CallTo(() => templateLocator.GetFullPath("test")).Returns(@"c:\some\fake\path");
             
             A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
 

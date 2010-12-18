@@ -8,11 +8,11 @@
         public IView GetCompiledView<TModel>(string fullPath)
         {
             var templateManagerProvider = new TemplateManagerProvider();
-            var manager = templateManagerProvider.GetNewManager();
+            var templateManager = templateManagerProvider.GetNewManager();
 
-            ITemplate template = manager.GetTemplate(fullPath);
+            ITemplate template = templateManager.GetTemplate(fullPath);
 
-            return new NDjangoView(template, manager);
+            return new NDjangoView(template, templateManager);
         }
     }
 }
