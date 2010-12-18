@@ -11,13 +11,14 @@
     {
         private readonly INancyModuleLocator locator;
         private readonly IRouteResolver resolver;
+        private readonly INancyApplication application;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="locator">An <see cref="INancyModuleLocator"/> instance, that will be used to locate <see cref="NancyModule"/> instances</param>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-        public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver)
+        public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver, INancyApplication application)
         {
             if (locator == null)
             {
@@ -29,8 +30,14 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
+            if (application == null)
+            {
+                throw new ArgumentNullException("application", "The application parameter cannot be null.");
+            }
+
             this.locator = locator;
             this.resolver = resolver;
+            this.application = application;
         }
 
         /// <summary>
@@ -70,11 +77,12 @@
             return new NotFoundResponse();
         }
 
-        private static void InitializeModules(IRequest request, IEnumerable<NancyModule> modules)
+        private void InitializeModules(IRequest request, IEnumerable<NancyModule> modules)
         {
             foreach (var module in modules)
             {
                 module.Request = request;
+                module.Application = this.application;
             }
         }
 

@@ -48,6 +48,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NHamlViewRegistry.cs" />
     <Compile Include="NHamlViewEngine.cs" />
     <Compile Include="NHamlViewEngineExtensions.cs" />
     <Compile Include="NHamlView.cs" />

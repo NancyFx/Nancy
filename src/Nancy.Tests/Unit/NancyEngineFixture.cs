@@ -17,6 +17,7 @@ namespace Nancy.Tests.Unit
         private readonly INancyEngine engine;
         private readonly IRouteResolver resolver;
         private readonly INancyModuleLocator locator;
+        private readonly INancyApplication application;
         private readonly IEnumerable<NancyModule> modules;
 
         public NancyEngineFixture()
@@ -24,7 +25,8 @@ namespace Nancy.Tests.Unit
             this.modules = new[] { new FakeNancyModuleWithBasePath() };
             this.locator = A.Fake<INancyModuleLocator>();
             this.resolver = A.Fake<IRouteResolver>();
-            this.engine = new NancyEngine(this.locator, this.resolver);
+            this.application = A.Fake<INancyApplication>();
+            this.engine = new NancyEngine(this.locator, this.resolver, this.application);
         }
 
         [Fact]
@@ -32,7 +34,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteResolver>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteResolver>(), A.Fake<INancyApplication>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -43,7 +45,18 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(), null));
+                Record.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(), null, A.Fake<INancyApplication>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_application()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new NancyEngine(A.Fake<INancyModuleLocator>(),  A.Fake<IRouteResolver>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -238,7 +251,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
-            var e = new NancyEngine(this.locator, r);
+            var e = new NancyEngine(this.locator, r, this.application);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
@@ -256,7 +269,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
-            var e = new NancyEngine(this.locator, r);
+            var e = new NancyEngine(this.locator, r, this.application);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
@@ -274,7 +287,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("POST", "/");
 
             var r = new FakeRouteResolver();
-            var e = new NancyEngine(this.locator, r);
+            var e = new NancyEngine(this.locator, r, this.application);
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
