@@ -12,7 +12,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_support_dynamic_properties()
         {
             //Given
-            dynamic parameters = new RouteParameters();
+            dynamic parameters = new DynamicDictionary();
             parameters.test = 10;
 
             // When
@@ -25,7 +25,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_dynamic_casting_of_properties_to_ints()
 		{
 			//Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 			parameters.test = "10";
 
 			// When
@@ -39,7 +39,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_dynamic_casting_of_properties_to_guids()
 		{
 			//Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 			var guid = Guid.NewGuid();
 			parameters.test = guid.ToString();
 
@@ -55,7 +55,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_dynamic_casting_of_properties_to_timespans()
 		{
 			//Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 			parameters.test = new TimeSpan(1, 2, 3, 4).ToString();
 
 			// When
@@ -69,7 +69,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_dynamic_casting_of_properties_to_datetimes()
 		{
 			//Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 
 			parameters.test = new DateTime(2001, 3, 4);
 
@@ -85,7 +85,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_dynamic_casting_of_nullable_properties()
 		{
 			//Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 			var guid = Guid.NewGuid();
 			parameters.test = guid.ToString();
 
@@ -100,7 +100,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_implicit_casting()
 		{
 			// Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 
 			parameters.test = "10";
 
@@ -115,7 +115,7 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_casting_when_using_indexer_to_set_values()
 		{
 			// Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 
 			parameters["test"] = "10";
 
@@ -130,13 +130,13 @@ namespace Nancy.Tests.Unit.Routing
 		public void Should_support_GetDynamicMemberNames()
 		{
 			// Given
-			dynamic parameters = new RouteParameters();
+			dynamic parameters = new DynamicDictionary();
 
 			parameters["test"] = "10";
 			parameters["rest"] = "20";
 
 			// When
-			var names = ((RouteParameters) parameters).GetDynamicMemberNames();
+			var names = ((DynamicDictionary) parameters).GetDynamicMemberNames();
 
 			// Then
 			Assert.True(names.SequenceEqual(new[] {"test", "rest"}));

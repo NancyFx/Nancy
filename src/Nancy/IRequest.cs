@@ -65,7 +65,7 @@ namespace Nancy
 
         private dynamic GetFormData()
         {
-            var ret = new RouteParameters();
+            var ret = new DynamicDictionary();
 
             if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
             {

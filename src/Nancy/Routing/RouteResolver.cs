@@ -41,7 +41,7 @@
             return new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), instance, action);
         }
 
-        private static RouteParameters GetParameters(RouteDescription description, GroupCollection groups)
+        private static DynamicDictionary GetParameters(RouteDescription description, GroupCollection groups)
         {
             var segments =
                 new ReadOnlyCollection<string>(
@@ -54,7 +54,7 @@
                 select segment.GetParameterName();
 
             dynamic data =
-                new RouteParameters();
+                new DynamicDictionary();
 
             foreach (var parameter in parameters)
             {
