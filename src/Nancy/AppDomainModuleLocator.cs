@@ -26,10 +26,13 @@
 
         private IEnumerable<NancyModule> LocateModulesInAppDomain()
         {
+            var moduleType = typeof(NancyModule);
+
             var locatedModules =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetExportedTypes()
                 where !type.IsAbstract
+                where moduleType.IsAssignableFrom(type)
                 where activator.CanCreateInstance(type)
                 select activator.CreateInstance(type);
 
