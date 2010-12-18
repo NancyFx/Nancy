@@ -1,0 +1,17 @@
+﻿<html>
+  <head>
+    <title>View that uses foreach</title>
+  </head>
+  <body>
+    <h1>View that uses foreach</h1>
+    <div>${System.DateTime.Now}</div>
+    <var items="new[]{'foo','bar','baz'}" />
+    <ul>
+      <var css="new[]{'even','odd'}" i="0">
+        <for each="var item in items" i="i+1">
+          <li class="${css[i%2]}">${i}: ${item}</li>
+        </for>
+      </var>
+    </ul>
+  </body>
+</html>

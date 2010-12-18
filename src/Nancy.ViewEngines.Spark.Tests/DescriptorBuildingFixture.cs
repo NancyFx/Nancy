@@ -16,12 +16,12 @@ namespace Nancy.ViewEngines.Spark.Tests
     public class DescriptorBuildingFixture
     {
         private readonly ActionContext actionContext;
-        private readonly SparkViewFactory factory;
+        private readonly ViewFactory factory;
         private readonly InMemoryViewFolder viewFolder;
 
         public DescriptorBuildingFixture()
         {
-            factory = new SparkViewFactory(null);
+            factory = new ViewFactory(null);
             viewFolder = new InMemoryViewFolder();
             factory.ViewFolder = viewFolder;
             var httpContext = A.Fake<HttpContextBase>();

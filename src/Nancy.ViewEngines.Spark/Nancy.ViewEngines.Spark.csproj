@@ -55,7 +55,8 @@
     <Compile Include="Descriptors\DefaultDescriptorBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SparkView.cs" />
-    <Compile Include="SparkViewFactory.cs" />
+    <Compile Include="ViewContext.cs" />
+    <Compile Include="ViewFactory.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

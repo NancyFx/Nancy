@@ -1,0 +1,10 @@
+﻿<use namespace="System.Collections.Generic"/>
+
+<var args='new List[[string]] { "Foo","Bar" }' fakeViewModel='new FakeViewModel {Text="Hello"}'/>
+
+<for each='var arg in args'>
+  <div>${arg}</div>
+  <use namespace="Nancy.ViewEngines.Spark.Tests.ViewModels"/>
+</for>
+
+<div>${fakeViewModel.Text}</div>

@@ -10,7 +10,7 @@ namespace Nancy.ViewEngines.Spark.Descriptors
             target.GetService<IDescriptorBuilder>().AddFilter(filter);
         }
 
-        public static void AddFilter(this SparkViewFactory target, IDescriptorFilter filter)
+        public static void AddFilter(this ViewFactory target, IDescriptorFilter filter)
         {
             target.DescriptorBuilder.AddFilter(filter);
         }

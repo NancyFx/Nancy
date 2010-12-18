@@ -14,7 +14,7 @@ using Spark.FileSystem;
 
 namespace Nancy.ViewEngines.Spark
 {
-    public class SparkViewFactory : ISparkServiceInitialize
+    public class ViewFactory : ISparkServiceInitialize
     {
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache =
             new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
@@ -25,12 +25,12 @@ namespace Nancy.ViewEngines.Spark
         private ISparkViewEngine engine;
 
 
-        public SparkViewFactory()
+        public ViewFactory()
             : this(null)
         {
         }
 
-        public SparkViewFactory(ISparkSettings settings)
+        public ViewFactory(ISparkSettings settings)
         {
             Settings = settings ?? (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
@@ -341,7 +341,7 @@ namespace Nancy.ViewEngines.Spark
 
         public class ViewEngineResult
         {
-            public ViewEngineResult(ISparkView view, SparkViewFactory factory)
+            public ViewEngineResult(ISparkView view, ViewFactory factory)
             {
                 View = view;
                 Factory = factory;
@@ -356,7 +356,7 @@ namespace Nancy.ViewEngines.Spark
             }
 
             public ISparkView View { get; set; }
-            public SparkViewFactory Factory { get; set; }
+            public ViewFactory Factory { get; set; }
         }
 
         #endregion
