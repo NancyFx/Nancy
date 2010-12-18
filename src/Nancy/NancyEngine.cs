@@ -55,13 +55,14 @@
             var modules = this.locator.GetModules();
             if (modules.Any())
             {
-                InitializeModules(request, modules);
-
-                var descriptions = GetRouteDescriptions(request, modules);
-                if (descriptions.Any())
+                var method = request.Method;
+                if (method.ToUpperInvariant() == "HEAD")
                 {
-                    var resolvedRoute = 
-                        this.resolver.GetRoute(request, descriptions);
+                    method = "GET";
+                }                
+                if (modules.ContainsKey(method))
+                {
+                    var resolvedRoute = this.resolver.GetRoute(request, modules[method], application);
 
                 	var response = resolvedRoute.Invoke();
 
@@ -75,20 +76,6 @@
             }
             
             return new NotFoundResponse();
-        }
-
-        private void InitializeModules(IRequest request, IEnumerable<NancyModule> modules)
-        {
-            foreach (var module in modules)
-            {
-                module.Request = request;
-                module.Application = this.application;
-            }
-        }
-
-        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
-        {
-            return modules.SelectMany(x => x.GetRouteDescription(request));
         }
     }
 }

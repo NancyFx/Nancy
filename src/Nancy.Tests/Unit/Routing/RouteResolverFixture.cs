@@ -26,11 +26,10 @@
             // Given
             var request = new Request("GET", "/invalid", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
-
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
+            
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldBeOfType<NoMatchingRouteFoundRoute>();
@@ -42,11 +41,10 @@
             // Given
             var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldNotBeOfType<NoMatchingRouteFoundRoute>();
@@ -60,11 +58,10 @@
             // Given
             var request = new Request("GET", path, new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldNotBeOfType<NoMatchingRouteFoundRoute>();
@@ -76,11 +73,10 @@
             // Given
             var request = new Request("GET", "/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
 
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldBeOfType<NoMatchingRouteFoundRoute>();
@@ -91,11 +87,10 @@
         {
             // Given
             var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.Path.ShouldEqual(request.Uri);
@@ -106,11 +101,10 @@
         {
             // Given
             var request = new Request("GET", "/fake/route/with/some/parts", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
             var response = route.Invoke();
             var output = response.GetStringContentsFromResponse();
 
@@ -123,9 +117,8 @@
         {
             // Given
             var request = new Request("GET", "/fake/should/have/conflicting/route/defined", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new NancyModule[] { new FakeNancyModuleWithBasePath(), new FakeNancyModuleWithoutBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
-            var route = this.resolver.GetRoute(request, descriptions);
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
             var response = route.Invoke();
 
             // When
@@ -140,11 +133,10 @@
         {
             // Given
             var request = new Request("GET", "/fake/child/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldNotBeOfType<NoMatchingRouteFoundRoute>();
@@ -155,11 +147,10 @@
         {
             // Given
             var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             route.ShouldNotBeOfType<NoMatchingRouteFoundRoute>();
@@ -170,9 +161,8 @@
         {
             // Given
             var request = new Request("GET", "/fake/child/route/foo", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
-            var route = this.resolver.GetRoute(request, descriptions);
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
             var response = route.Invoke();
 
             // When
@@ -187,12 +177,11 @@
         {
             // Given
             var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var modules = new[] { new FakeNancyModuleWithBasePath() };
-            var descriptions = modules.SelectMany(x => x.GetRouteDescription(request));
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
             dynamic result;
 
             // When
-            var route = this.resolver.GetRoute(request, descriptions);
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
 
             // Then
             Record.Exception(() => result = route.Parameters.value).ShouldBeNull();
