@@ -18,11 +18,11 @@ namespace Nancy.Tests.Unit
         private readonly IRouteResolver resolver;
         private readonly INancyModuleLocator locator;
         private readonly INancyApplication application;
-        private readonly IEnumerable<NancyModule> modules;
+        private readonly IDictionary<string, IEnumerable<ModuleMeta>> modules;
 
         public NancyEngineFixture()
         {
-            this.modules = new[] { new FakeNancyModuleWithBasePath() };
+            this.modules = new AppDomainModuleLocator(new DefaultModuleActivator()).GetModules();
             this.locator = A.Fake<INancyModuleLocator>();
             this.resolver = A.Fake<IRouteResolver>();
             this.application = A.Fake<INancyApplication>();
@@ -81,7 +81,7 @@ namespace Nancy.Tests.Unit
             // Given
             var request = new Request("GET", "/");
 
-            A.CallTo(() => this.locator.GetModules()).Returns(Enumerable.Empty<NancyModule>());
+            A.CallTo(() => this.locator.GetModules()).Returns(new Dictionary<string, IEnumerable<ModuleMeta>>());
 
             // When
             var response = this.engine.HandleRequest(request);
@@ -95,7 +95,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/");
-            var descriptions = GetRouteDescriptions(request, this.modules);
+            
 
             A.CallTo(() => this.locator.GetModules()).Returns(modules);
 
@@ -104,7 +104,7 @@ namespace Nancy.Tests.Unit
 
             // Then
             A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
-                A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Theory]
@@ -127,8 +127,8 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
-                A<IEnumerable<RouteDescription>>.Ignored.Argument)).MustHaveHappened();
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument,
+                A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -136,15 +136,14 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("DELETE", "/");
-            var descriptions = GetRouteDescriptions(request, this.modules);
-
+            
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
 
             // When
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["DELETE"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -152,16 +151,14 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("PUT", "/");
-            var descriptions = GetRouteDescriptions(request, this.modules);
-
+            
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-            A.CallTo(() => this.resolver.GetRoute(request, descriptions)).Returns(null);
 
             // When
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["PUT"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -176,8 +173,8 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.resolver.GetRoute(request, 
-                A<IEnumerable<RouteDescription>>.Ignored.Argument)).MustHaveHappened();
+            A.CallTo(() => this.resolver.GetRoute(request,
+                A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -211,11 +208,10 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", "/");
-            var descriptions = GetRouteDescriptions(request, this.modules);
+            var request = new Request("GET", "/");            
 
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(route);
+            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).Returns(route);
 
             // When
             this.engine.HandleRequest(request);
@@ -235,7 +231,7 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => route.Invoke()).Returns(expectedResponse);
             A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).Returns(route);
+            A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).Returns(route);
 
             // When
             var response = this.engine.HandleRequest(request);
@@ -279,50 +275,10 @@ namespace Nancy.Tests.Unit
             // Then
             r.Path.ShouldEqual("/");
         }
-
-        [Fact]
-        public void Should_set_action_on_descriptions_that_are_passed_to_resolver()
-        {
-            // Given
-            var request = new Request("POST", "/");
-
-            var r = new FakeRouteResolver();
-            var e = new NancyEngine(this.locator, r, this.application);
-
-            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-
-            var expectedAction =
-                (new FakeNancyModuleWithBasePath()).Post["/"];
-            
-            // When
-            e.HandleRequest(request);
-
-            // Then
-            r.Action.ShouldBeSameAs(expectedAction);
-        }
-
-        [Fact]
-        public void Should_set_request_property_of_loaded_modules()
-        {
-            // Given
-            var request = new Request("GET", "/");
-            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-
-            // When
-            this.engine.HandleRequest(request);
-
-            // Then
-            this.modules.First().Request.ShouldNotBeNull();
-        }
         
-        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
+        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IDictionary<string, IEnumerable<ModuleMeta>> modules)
         {
-            return modules.SelectMany(x => x.GetRouteDescription(request));
-        }
-
-        private static IRequest ManufactureGETRequest(string route)
-        {
-            return new Request("GET", route);
+            return modules.First().Value.SelectMany(s => s.RouteDescriptions);
         }
     }
 }

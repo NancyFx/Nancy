@@ -55,6 +55,7 @@
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="IViewEngine.cs" />
     <Compile Include="IViewEngineRegistry.cs" />
+    <Compile Include="ModuleMeta.cs" />
     <Compile Include="NancyApplication.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
@@ -77,7 +78,9 @@
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Caching\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
