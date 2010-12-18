@@ -17,18 +17,18 @@
         private static Action<Stream> GetJsonContents(TModel model)
         {
             return stream =>
-                       {
-                           var serializer = new JsonSerializer();
+            {
+                var serializer = new JsonSerializer();
 
-                           //The caller will close the stream (needed for tests), do not dispose these writers here as this will close the stream 
-                           var sw = new StreamWriter(stream);
-                           var writer = new JsonTextWriter(sw);
+                //The caller will close the stream (needed for tests), do not dispose these writers here as this will close the stream 
+                var sw = new StreamWriter(stream);
+                var writer = new JsonTextWriter(sw);
                            
-                           serializer.Serialize(writer, model);
+                serializer.Serialize(writer, model);
                            
-                           writer.Flush();
-                           sw.Flush();
-                       };
+                writer.Flush();
+                sw.Flush();
+            };
         }
     }
 }

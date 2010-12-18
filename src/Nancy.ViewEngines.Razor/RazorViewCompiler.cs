@@ -68,10 +68,11 @@
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
             var results = codeProvider.CompileAssemblyFromDom(
-                new CompilerParameters(new [] { 
+                new CompilerParameters(new [] {
+                    GetAssemblyPath(typeof(IView)),
                     GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
                     GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
-                    GetAssemblyPath(Assembly.GetExecutingAssembly()) }, outputAssemblyName),
+                    GetAssemblyPath(Assembly.GetExecutingAssembly())}, outputAssemblyName),
                     razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)

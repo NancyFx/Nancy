@@ -14,7 +14,8 @@
         {
             var viewEngine = new RazorViewEngine();
 
-            return stream => {
+            return stream =>
+            {
                 var result = viewEngine.RenderView(name, model);
                 result.Execute(stream);
             };

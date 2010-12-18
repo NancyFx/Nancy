@@ -1,10 +1,9 @@
-﻿using System.Xml.Serialization;
-
-namespace Nancy.Formatters.Responses
+﻿namespace Nancy.Formatters.Responses
 {
     using System;
     using System.Net;
     using System.IO;
+    using System.Xml.Serialization;
 
     public class XmlResponse<TModel> : Response
     {
@@ -15,13 +14,13 @@ namespace Nancy.Formatters.Responses
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private Action<Stream> GetXmlContents(TModel model)
+        private static Action<Stream> GetXmlContents(TModel model)
         {
             return stream =>
-                        {
-                            var serializer = new XmlSerializer(typeof(TModel));
-                            serializer.Serialize(stream, model);
-                        };
+            {
+                var serializer = new XmlSerializer(typeof(TModel));
+                serializer.Serialize(stream, model);
+            };
         }
     }
 }

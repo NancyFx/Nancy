@@ -3,6 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Web;
 
     using Nancy.Routing;
@@ -22,6 +23,13 @@ namespace Nancy
 
     public class Request : IRequest
     {
+        private dynamic form;
+
+        public Request(string method, string uri)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
+        {
+        }
+
         public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body)
         {
             if (method == null)
@@ -43,35 +51,40 @@ namespace Nancy
                 throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
 
             this.Body = body;
-            this.Headers = headers;
+            this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
             this.Method = method;
             this.Uri = uri;
-        }
-
-        public Request(string method, string uri)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
-        {
         }
 
         public Stream Body { get; set; }
 
         public dynamic Form
         {
-            get
+            get { return this.form ?? (this.form = this.GetFormData()); }
+        }
+
+        private dynamic GetFormData()
+        {
+            var ret = new RouteParameters();
+
+            if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
             {
-            	var position = this.Body.Position;
-                var reader = new StreamReader(this.Body);
-                var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-            	this.Body.Position = position;
-
-                var ret = new RouteParameters();
-                foreach (var key in coll.AllKeys)
+                var contentType = this.Headers["content-type"].First();
+                if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
                 {
-                    ret[key] = coll[key];
-                }
+                    var position = this.Body.Position;
+                    var reader = new StreamReader(this.Body);
+                    var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
+                    this.Body.Position = position;
 
-                return ret;
+                    foreach (var key in coll.AllKeys)
+                    {
+                        ret[key] = coll[key];
+                    }        
+                }
             }
+            
+            return ret;
         }
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
