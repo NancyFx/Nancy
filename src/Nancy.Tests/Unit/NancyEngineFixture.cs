@@ -90,8 +90,8 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
-                A<IEnumerable<RouteDescription>>.That.Matches(x => x.SequenceEqual(descriptions)).Argument)).MustHaveHappened();
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument,
+                A<IEnumerable<RouteDescription>>.That.IsSameSequenceAs(descriptions).Argument)).MustHaveHappened();
         }
 
         [Theory]
