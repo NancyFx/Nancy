@@ -17,12 +17,7 @@ namespace Nancy
         public virtual bool CanCreateInstance(Type moduleType)
         {
             bool hasDefaultConstructor = moduleType.GetConstructor(Type.EmptyTypes) != null;
-            return IsModuleType(moduleType) && hasDefaultConstructor;
-        }
-
-        protected bool IsModuleType(Type type)
-        {
-            return type.IsSubclassOf(typeof(NancyModule));
+            return hasDefaultConstructor;
         }
     }
 }
