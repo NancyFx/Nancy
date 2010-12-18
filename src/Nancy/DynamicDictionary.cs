@@ -32,19 +32,45 @@
             set { dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value); }
         }
 
+        /// <summary>
+        /// Indicates whether the current <see cref="DynamicDictionary"/> is equal to another object of the same type.
+        /// </summary>
+        /// <returns><see langword="true"/> if the current instance is equal to the <paramref name="other"/> parameter; otherwise, <see langword="false"/>.</returns>
+        /// <param name="other">An <see cref="DynamicDictionary"/> instance to compare with this instance.</param>
         public bool Equals(DynamicDictionary other)
         {
-            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(null, other))
+            {
+                return false;
+            }
+
             return ReferenceEquals(this, other) || Equals(other.dictionary, this.dictionary);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// </summary>
+        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <returns><see langword="true"/> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <see langword="false"/>.</returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj)) return false;
-            if (ReferenceEquals(this, obj)) return true;
+            if (ReferenceEquals(null, obj))
+            {
+                return false;
+            }
+
+            if (ReferenceEquals(this, obj))
+            {
+                return true;
+            }
+
             return obj.GetType() == typeof (DynamicDictionary) && this.Equals((DynamicDictionary) obj);
         }
 
+        /// <summary>
+        /// Returns a hash code for this <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns> A hash code for this <see cref="DynamicDictionary"/>, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return (dictionary != null ? dictionary.GetHashCode() : 0);
