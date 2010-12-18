@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Tests.Specifications
 {
-    using System.Collections.Generic;
-    using System.IO;
     using Nancy.Routing;
 
     public abstract class RequestSpec

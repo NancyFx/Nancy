@@ -8,7 +8,7 @@
     using System.Web.Razor;
     using Microsoft.CSharp;
 
-    public class RazorViewCompiler : IViewCompiler
+    public class RazorViewCompiler : IViewCompilerWithTextReaderSupport
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
@@ -45,11 +45,11 @@
         {
             using (var reader = new StreamReader(fullPath))
             {
-                return GetCompiledView(reader);
+                return GetCompiledView<TModel>(reader);
             }
         }
 
-        public IView GetCompiledView(TextReader reader) 
+        public IView GetCompiledView<TModel>(TextReader reader) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 

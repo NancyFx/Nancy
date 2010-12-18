@@ -1,12 +1,14 @@
 ﻿namespace Nancy.ViewEngines 
 {
+    using System.IO;
     using System.Web.Hosting;
 
     public class AspNetTemplateLocator : IViewLocator
     {
-        public string GetFullPath(string viewTemplate)
+        public ViewLocationResult GetTemplateContents(string viewTemplate)
         {
-            return HostingEnvironment.MapPath(viewTemplate);
+            var path = HostingEnvironment.MapPath(viewTemplate);
+            return new ViewLocationResult(path, new StreamReader(path));
         }
     }
 }

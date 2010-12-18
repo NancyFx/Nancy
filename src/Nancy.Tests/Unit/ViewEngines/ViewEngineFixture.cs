@@ -10,16 +10,17 @@
         private readonly IViewLocator templateLocator;
         private readonly IViewCompiler viewCompiler;
         private readonly IView view;
-        private readonly ViewEngine engine;
+        private readonly ViewLocationResult viewLocationResult;
+        private readonly ViewEngine engine;        
 
         public ViewEngineFixture()
         {
             this.templateLocator = A.Fake<IViewLocator>();
             this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
+            this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
 
-            A.CallTo(() => templateLocator.GetFullPath("test")).Returns(@"c:\some\fake\path");
-            
+            A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
             A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
 
             this.engine = new ViewEngine(templateLocator, viewCompiler);

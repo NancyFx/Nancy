@@ -16,9 +16,9 @@ namespace Nancy.ViewEngines
 
         public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
         {
-            var result = ViewTemplateLocator.GetFullPath(viewTemplate);
+            var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
-            IView view = ViewCompiler.GetCompiledView<TModel>(result);
+            var view = GetCompiledView<TModel>(result);
 
             if (view == null)
             {
@@ -28,7 +28,16 @@ namespace Nancy.ViewEngines
 
             view.Model = model;
 
-            return new ViewResult(view, result);
+            return new ViewResult(view, result.Location);
+        }
+
+        private IView GetCompiledView<TModel>(ViewLocationResult result)
+        {
+            if (ViewCompiler is IViewCompilerWithTextReaderSupport)
+            {
+                return (ViewCompiler as IViewCompilerWithTextReaderSupport).GetCompiledView<TModel>(result.Contents);
+            }
+            return ViewCompiler.GetCompiledView<TModel>(result.Location);
         }
     }
 }

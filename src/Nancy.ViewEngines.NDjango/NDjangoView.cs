@@ -27,7 +27,6 @@
             var reader = template.Walk(templateManager, context);
 
             Writer.Write(reader.ReadToEnd());
-            Writer.Flush();
         }
     }
 }
