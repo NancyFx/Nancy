@@ -8,7 +8,7 @@
     public class ViewResultFixture
     {
         [Fact]
-        public void ExecuteWritesViewToStream()
+        public void Execute_should_write_view_to_stream()
         {
             // Given
             var view = A.Fake<IView>();

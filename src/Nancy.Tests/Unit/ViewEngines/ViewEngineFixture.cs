@@ -26,7 +26,7 @@
         }
 
         [Fact]
-        public void RenderView_Should_set_path()
+        public void RenderView_should_set_path()
         {
             // Given, When
             var result = engine.RenderView<object>("test", null);
@@ -36,7 +36,7 @@
         }
 
         [Fact]
-        public void RenderView_Should_return_compiled_view()
+        public void RenderView_should_return_compiled_view()
         {
             // Given
             var stream = new MemoryStream();
