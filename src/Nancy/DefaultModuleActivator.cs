@@ -13,7 +13,7 @@ namespace Nancy
         {
             if(!CanCreateInstance(moduleType))
             {
-                throw new InvalidOperationException("Cannot create an instance of type {0} as it does not inherit from NancyModule or it does not have a public parameterless constructor.");
+                throw new InvalidOperationException(string.Format("Cannot create an instance of type {0} as it does not inherit from NancyModule or it does not have a public parameterless constructor.", moduleType));
             }
 
             return (NancyModule) Activator.CreateInstance(moduleType);
