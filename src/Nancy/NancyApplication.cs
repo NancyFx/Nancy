@@ -63,7 +63,7 @@ namespace Nancy
                         };
             foreach (var type in types)
             {
-                var module = (NancyModule)Activator.CreateInstance(type);
+                var module = Activator.CreateInstance(type);
                 ((List<ModuleMeta>)metas["GET"]).Add(new ModuleMeta(type, module.GetRouteDescription("GET")));
                 ((List<ModuleMeta>)metas["POST"]).Add(new ModuleMeta(type, module.GetRouteDescription("POST")));
                 ((List<ModuleMeta>)metas["PUT"]).Add(new ModuleMeta(type, module.GetRouteDescription("PUT")));
