@@ -29,6 +29,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Formatters.Tests", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.NDjango.Tests", "Nancy.ViewEngines.NDjango.Tests\Nancy.ViewEngines.NDjango.Tests.csproj", "{E5428285-6584-45D8-B07D-81E1BCD83F33}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.NHaml.Tests", "Nancy.ViewEngines.NHaml.Tests\Nancy.ViewEngines.NHaml.Tests.csproj", "{64987A67-713F-42D1-8A79-B9B77936BF5D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,10 @@ Global
 		{E5428285-6584-45D8-B07D-81E1BCD83F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E5428285-6584-45D8-B07D-81E1BCD83F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E5428285-6584-45D8-B07D-81E1BCD83F33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64987A67-713F-42D1-8A79-B9B77936BF5D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64987A67-713F-42D1-8A79-B9B77936BF5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64987A67-713F-42D1-8A79-B9B77936BF5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64987A67-713F-42D1-8A79-B9B77936BF5D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -100,5 +106,6 @@ Global
 		{FE32460D-547C-4EB9-A768-541255CCAA83} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{CFC855CB-5D43-463A-9053-AEEDCD7227FA} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{E5428285-6584-45D8-B07D-81E1BCD83F33} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
+		{64987A67-713F-42D1-8A79-B9B77936BF5D} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 	EndGlobalSection
 EndGlobal

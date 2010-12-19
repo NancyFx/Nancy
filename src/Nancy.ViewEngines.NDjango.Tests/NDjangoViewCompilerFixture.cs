@@ -1,19 +1,18 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+namespace Nancy.ViewEngines.NDjango.Tests
 {
     using System.IO;
     using Nancy.Tests;
     using Xunit;
 
-    // TODO All the error test cases.
-    public class RazorViewCompilerFixture
+    public class NDjangoViewCompilerFixture
     {
         [Fact]
         public void GetCompiledView_should_render_to_stream()
         {
             // Given
-            var compiler = new RazorViewCompiler();
+            var compiler = new NDjangoViewCompiler();
 
-            var reader = new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
+            var reader = new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}");
             var view = compiler.GetCompiledView<object>(reader);
             view.Writer = new StringWriter();
 

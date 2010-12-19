@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E5428285-6584-45D8-B07D-81E1BCD83F33}</ProjectGuid>
+    <ProjectGuid>{64987A67-713F-42D1-8A79-B9B77936BF5D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.ViewEngines.NDjango.Tests</RootNamespace>
-    <AssemblyName>Nancy.ViewEngines.NDjango.Tests</AssemblyName>
+    <RootNamespace>Nancy.ViewEngines.NHaml.Tests</RootNamespace>
+    <AssemblyName>Nancy.ViewEngines.NHaml.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,12 +31,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy">
-      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
-    </Reference>
-    <Reference Include="NDjango.Core40">
-      <HintPath>..\..\dependencies\ndjango\NDjango.Core40.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -52,17 +46,16 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="NDjangoViewCompilerFixture.cs" />
-    <Compile Include="NDjangoViewFixture.cs" />
+    <Compile Include="NHamlViewCompilerFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
       <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
       <Name>Nancy.Tests</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj">
-      <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
-      <Name>Nancy.ViewEngines.NDjango</Name>
+    <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
+      <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
+      <Name>Nancy.ViewEngines.NHaml</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
