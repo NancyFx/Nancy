@@ -40,14 +40,8 @@
 
         private IDictionary<string, IEnumerable<ModuleMeta>> LocateModulesInAppDomain()
         {
-            var locatedModules =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from type in assembly.GetExportedTypes()
             var moduleType = typeof(NancyModule);
 
-            var locatedModules =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                from type in assembly.GetExportedTypes()
             var types = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from type in assembly.GetTypes()
                 where !type.IsAbstract
@@ -55,13 +49,14 @@
                 where activator.CanCreateInstance(type)
                 select type;
 
-            var metas = new Dictionary<string, IEnumerable<ModuleMeta>>(StringComparer.CurrentCultureIgnoreCase)
-                        {
-                            {"GET", new List<ModuleMeta>(types.Count())},
-                            {"POST", new List<ModuleMeta>(types.Count())},
-                            {"PUT", new List<ModuleMeta>(types.Count())},
-                            {"DELETE", new List<ModuleMeta>(types.Count())},
-                        };
+            var metas = CreateModuleMetadataDictionary(types);
+            StoreModuleMeta(types, metas);
+
+            return metas;
+        }
+
+        private static void StoreModuleMeta(IEnumerable<Type> types, Dictionary<string, IEnumerable<ModuleMeta>> metas)
+        {
             foreach(var type in types)
             {
                 var module = (NancyModule)Activator.CreateInstance(type);
@@ -71,7 +66,17 @@
                 ((List<ModuleMeta>)metas["DELETE"]).Add(new ModuleMeta(type, module.GetRouteDescription("DELETE")));
                 
             }
-            return metas;
+        }
+
+        private static Dictionary<string, IEnumerable<ModuleMeta>> CreateModuleMetadataDictionary(IEnumerable<Type> types)
+        {
+            return new Dictionary<string, IEnumerable<ModuleMeta>>(StringComparer.CurrentCultureIgnoreCase)
+            {
+                {"GET", new List<ModuleMeta>(types.Count())},
+                {"POST", new List<ModuleMeta>(types.Count())},
+                {"PUT", new List<ModuleMeta>(types.Count())},
+                {"DELETE", new List<ModuleMeta>(types.Count())},
+            };
         }
     }
 }
