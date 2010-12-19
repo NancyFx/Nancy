@@ -13,13 +13,13 @@ namespace Nancy.Tests.Unit
         {
             var application = A.Fake<INancyApplication>();
             var module = new FakeNancyModuleWithoutBasePath {Application = application};
-            var action = new Action<Stream>((s) => { });
-            var processor = new Func<string, object, Action<Stream>>((a, b) => action);
+            var response = new Response();
+            var processor = new Func<string, object, Response>((a, b) => response);
 
             A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
             A.CallTo(() => application.DefaultProcessor).Returns(processor);
 
-            module.SmartView("file.txt").ShouldBeSameAs(action);
+            module.SmartView("file.txt").ShouldBeSameAs(response);
         }
 
         [Fact]
@@ -30,9 +30,9 @@ namespace Nancy.Tests.Unit
             var action = new Action<Stream>((s) => { });
             var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 
-            A.CallTo(() => application.GetTemplateProcessor(".razor")).Returns(processor);            
+            A.CallTo(() => application.GetTemplateProcessor(".razor")).Returns(processor);
 
-            module.SmartView("file2.razor").ShouldBeSameAs(action);
+            module.SmartView("file2.razor").Contents.ShouldBeSameAs(action);
         }
     }
 }

@@ -32,7 +32,7 @@ namespace Nancy
             return this.templateProcessors.ContainsKey(extension) ? this.templateProcessors[extension] : null;
         }
 
-        public Func<string, object, Action<Stream>> DefaultProcessor
+        public Func<string, object, Response> DefaultProcessor
         {
             get { return (path, model) => StaticViewEngineExtension.Static(null, path); }
         }

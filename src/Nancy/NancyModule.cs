@@ -100,7 +100,7 @@ namespace Nancy
         /// Renders the view based on the extension without a model.
         /// </summary>
         /// <param name="name">The path to the view</param>        
-        public Action<Stream> SmartView(string name)
+        public Response SmartView(string name)
         {
             return SmartView(name, (object) null);
         }
@@ -110,7 +110,7 @@ namespace Nancy
         /// </summary>
         /// <param name="name">The path to the view</param>
         /// <param name="model">The model to pass to the view</param>
-        public Action<Stream> SmartView<TModel>(string name, TModel model)
+        public Response SmartView<TModel>(string name, TModel model)
         {            
             var processor = Application.GetTemplateProcessor(Path.GetExtension(name));
             return processor == null ? Application.DefaultProcessor(name, model) : processor(name, model);            
