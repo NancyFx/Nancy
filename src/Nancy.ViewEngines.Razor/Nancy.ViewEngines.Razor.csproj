@@ -48,7 +48,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ErrorView.cs" />
-    <Compile Include="IRazorViewCompiler.cs" />
     <Compile Include="RazorViewBase.cs" />
     <Compile Include="RazorViewCompiler.cs" />
     <Compile Include="RazorViewEngine.cs" />

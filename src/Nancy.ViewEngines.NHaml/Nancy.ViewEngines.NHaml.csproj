@@ -48,11 +48,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="INHamlViewCompiler.cs" />
     <Compile Include="NHamlViewCompiler.cs" />
     <Compile Include="NHamlViewEngine.cs" />
     <Compile Include="NHamlViewEngineExtensions.cs" />
     <Compile Include="NHamlView.cs" />
+    <Compile Include="ViewSource.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

@@ -1,30 +1,29 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.IO;
     using FakeItEasy;
-    using Nancy.Tests;
     using Nancy.ViewEngines;
     using Xunit;
 
-    public class RazorViewEngineFixture
+    public class ViewEngineFixture
     {
         private readonly IViewLocator templateLocator;
-        private readonly IRazorViewCompiler viewCompiler;
+        private readonly IViewCompiler viewCompiler;
         private readonly IView view;
         private readonly ViewLocationResult viewLocationResult;
         private readonly ViewEngine engine;        
 
-        public RazorViewEngineFixture()
+        public ViewEngineFixture()
         {
             this.templateLocator = A.Fake<IViewLocator>();
-            this.viewCompiler = A.Fake<IRazorViewCompiler>();
+            this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
             this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
 
             A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
-            A.CallTo(() => viewCompiler.GetCompiledView(null)).Returns(view);
+            A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
 
-            this.engine = new RazorViewEngine(templateLocator, viewCompiler);
+            this.engine = new ViewEngine(templateLocator, viewCompiler);
         }
 
         [Fact]
@@ -47,7 +46,7 @@
             var result = engine.RenderView("test", stream);
 
             // Then
-            result.View.ShouldBeSameAs(view);
+            result.View.Model.ShouldBeSameAs(view.Model);
         }
     }
 }

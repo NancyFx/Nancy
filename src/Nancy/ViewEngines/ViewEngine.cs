@@ -2,20 +2,22 @@ namespace Nancy.ViewEngines
 {
     using System;
 
-    public abstract class ViewEngine
+    public class ViewEngine
     {
-        protected ViewEngine(IViewLocator viewTemplateLocator)
+        public ViewEngine(IViewLocator viewTemplateLocator, IViewCompiler viewCompiler)
         {
             ViewTemplateLocator = viewTemplateLocator;
+            ViewCompiler = viewCompiler;
         }
 
         public IViewLocator ViewTemplateLocator { get; private set; }
+        public IViewCompiler ViewCompiler { get; private set; }
 
         public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
         {
             var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
-            var view = GetCompiledView<TModel>(result);
+            var view = ViewCompiler.GetCompiledView<TModel>(result.Contents);
 
             if (view == null)
             {
@@ -27,7 +29,5 @@ namespace Nancy.ViewEngines
 
             return new ViewResult(view, result.Location);
         }
-
-        protected abstract IView GetCompiledView<TModel>(ViewLocationResult result);
     }
 }
