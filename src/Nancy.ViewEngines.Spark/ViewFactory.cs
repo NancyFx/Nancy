@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 using System.Web;
+using System.Web.Hosting;
 using Nancy.ViewEngines.Spark.Caching;
 using Nancy.ViewEngines.Spark.Descriptors;
 using Spark;
@@ -32,7 +33,7 @@ namespace Nancy.ViewEngines.Spark
 
         public ViewFactory(ISparkSettings settings)
         {
-            Settings = settings ?? (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+            Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
 
 
@@ -107,7 +108,7 @@ namespace Nancy.ViewEngines.Spark
             this.engine = engine;
             if (this.engine != null)
             {
-                this.engine.DefaultPageBaseType = typeof (SparkView).FullName;
+                this.engine.DefaultPageBaseType = typeof(SparkView).FullName;
             }
         }
 
@@ -183,7 +184,7 @@ namespace Nancy.ViewEngines.Spark
         {
             ISparkView view = entry.CreateInstance();
             if (view is SparkView)
-                ((SparkView) view).CacheService = CacheServiceProvider.GetCacheService(httpContext);
+                ((SparkView)view).CacheService = CacheServiceProvider.GetCacheService(httpContext);
             return new ViewEngineResult(view, this);
         }
 
@@ -249,7 +250,7 @@ namespace Nancy.ViewEngines.Spark
             var viewNames = new List<string>();
             IList<string> includeViews = entry.IncludeViews;
             if (includeViews.Count == 0)
-                includeViews = new[] {"*"};
+                includeViews = new[] { "*" };
 
             foreach (string include in includeViews)
             {
@@ -360,5 +361,21 @@ namespace Nancy.ViewEngines.Spark
         }
 
         #endregion
+
+        public ViewResult RenderView<TModel>(string path, TModel model)
+        {
+            var viewName = path.Substring(path.LastIndexOf('/') + 1).Replace(".spark", string.Empty);
+            string viewPath = path.Substring(0, path.LastIndexOf('/'));
+            string targetNamespace = string.Empty; //TODO Rob G: This can be used to support things like areas or features
+            ViewFolder = new FileSystemViewFolder(HostingEnvironment.MapPath(viewPath));
+            HttpContextBase httpContext = null; //TODO Rob G: figure out how to get httpcontext passed in so that we can support view and partial caching.
+            var actionContext = new ActionContext(httpContext, targetNamespace);
+            ViewEngineResult result = FindView(actionContext, viewName, null);
+            var viewWithModel = result.View as SparkView<TModel>;
+            if (viewWithModel != null)
+                viewWithModel.SetModel(model);
+
+            return new ViewResult(result.View as SparkView, HostingEnvironment.MapPath(path));
+        }
     }
 }

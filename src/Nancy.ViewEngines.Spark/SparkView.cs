@@ -1,9 +1,11 @@
-﻿using System.Web;
+﻿using System;
+using System.IO;
+using System.Web;
 using Spark;
 
 namespace Nancy.ViewEngines.Spark
 {
-    public abstract class SparkView : SparkViewBase
+    public abstract class SparkView : SparkViewBase, IView
     {
         public ViewContext ViewContext { get; set; }
 
@@ -16,15 +18,26 @@ namespace Nancy.ViewEngines.Spark
         {
             return value;
         }
+
+        public string Code { get; set; }
+
+        public object Model { get; set; }
+
+        public TextWriter Writer { get; set; }
+
+        public void Execute()
+        {
+            RenderView(Writer);
+        }
     }
 
-    public abstract class SparkView<TModel> : SparkView where TModel : class
+    public abstract class SparkView<TModel> : SparkView
     {
-        public TModel Model { get; private set; }
+        public new TModel Model { get; private set; }
 
         public void SetModel(object model)
         {
-            Model = model as TModel;
+            Model = model is TModel ? (TModel)model : default(TModel);
         }
     }
 }
