@@ -3,9 +3,9 @@
     using global::NDjango;
     using global::NDjango.Interfaces;
 
-    public class NDjangoViewCompiler : IViewCompiler
+    public class NDjangoViewCompiler : INDjangoViewCompiler
     {
-        public IView GetCompiledView<TModel>(string fullPath)
+        public IView GetCompiledView(string fullPath)
         {
             var templateManagerProvider = new TemplateManagerProvider();
             var templateManager = templateManagerProvider.GetNewManager();

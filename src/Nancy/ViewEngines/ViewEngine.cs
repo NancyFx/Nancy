@@ -2,15 +2,12 @@ namespace Nancy.ViewEngines
 {
     using System;
 
-    public class ViewEngine
+    public abstract class ViewEngine
     {
-        public ViewEngine(IViewLocator viewTemplateLocator, IViewCompiler viewCompiler)
+        protected ViewEngine(IViewLocator viewTemplateLocator)
         {
             ViewTemplateLocator = viewTemplateLocator;
-            ViewCompiler = viewCompiler;
         }
-
-        public IViewCompiler ViewCompiler { get; private set; }
 
         public IViewLocator ViewTemplateLocator { get; private set; }
 
@@ -31,13 +28,6 @@ namespace Nancy.ViewEngines
             return new ViewResult(view, result.Location);
         }
 
-        private IView GetCompiledView<TModel>(ViewLocationResult result)
-        {
-            if (ViewCompiler is IViewCompilerWithTextReaderSupport)
-            {
-                return (ViewCompiler as IViewCompilerWithTextReaderSupport).GetCompiledView<TModel>(result.Contents);
-            }
-            return ViewCompiler.GetCompiledView<TModel>(result.Location);
-        }
+        protected abstract IView GetCompiledView<TModel>(ViewLocationResult result);
     }
 }

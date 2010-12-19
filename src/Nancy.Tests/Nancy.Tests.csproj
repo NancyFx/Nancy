@@ -75,7 +75,6 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
-    <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
   </ItemGroup>
   <ItemGroup>

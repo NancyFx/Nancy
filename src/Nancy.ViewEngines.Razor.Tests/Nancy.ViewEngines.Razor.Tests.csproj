@@ -53,6 +53,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="RazorViewCompilerFixture.cs" />
+    <Compile Include="RazorViewEngineFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">

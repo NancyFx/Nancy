@@ -2,7 +2,7 @@
 {
     using global::NHaml;
 
-    public class NHamlViewCompiler : IViewCompiler
+    public class NHamlViewCompiler : INHamlViewCompiler
     {
         public IView GetCompiledView<TModel>(string fullPath)
         {

@@ -47,6 +47,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="INDjangoViewCompiler.cs" />
     <Compile Include="NDjangoView.cs" />
     <Compile Include="NDjangoViewCompiler.cs" />
     <Compile Include="NDjangoViewEngine.cs" />
