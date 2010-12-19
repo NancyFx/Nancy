@@ -6,7 +6,7 @@ namespace Nancy
     public interface INancyApplication : INancyModuleLocator
     {
         Func<string, object, Action<Stream>> GetTemplateProcessor(string extension);
-        Func<string, object, Response> DefaultProcessor { get; }
+        Func<string, object, Action<Stream>> DefaultProcessor { get; }
 
         IModuleActivator Activator { get; }
     }

@@ -22,8 +22,6 @@ namespace Nancy
 
         public Action<Stream> Contents { get; set; }
 
-        public String File { get; set; }
-
         public IDictionary<string, IEnumerable<string>> Headers { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
@@ -56,14 +54,6 @@ namespace Nancy
                     new StreamWriter(stream) { AutoFlush = true };
                 writer.Write(contents);
             };
-        }
-
-        public static Response WriteFile(string virtualPath)
-        {
-            return new Response
-                   {
-                       File = virtualPath
-                   };            
         }
     }
 }
