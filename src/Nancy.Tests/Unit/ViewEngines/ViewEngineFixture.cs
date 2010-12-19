@@ -22,6 +22,7 @@
 
             A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
             A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
+            A.CallTo(() => viewCompiler.GetCompiledView<MemoryStream>(null)).Returns(view);
 
             this.engine = new ViewEngine(templateLocator, viewCompiler);
         }
@@ -46,7 +47,7 @@
             var result = engine.RenderView("test", stream);
 
             // Then
-            result.View.Model.ShouldBeSameAs(view.Model);
+            result.View.ShouldBeSameAs(view);
         }
     }
 }
