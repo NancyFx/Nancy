@@ -4,6 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.IO;
     using System.Net;
+    using Extensions;
 
     public class Response
     {
@@ -14,7 +15,7 @@ namespace Nancy
         {
             this.Contents = GetStringContents(string.Empty);
             this.ContentType = "text/html";
-            this.Headers = new Dictionary<string, IEnumerable<string>>();
+            this.Headers = new Dictionary<string, string>();
             this.StatusCode = HttpStatusCode.OK;
         }
 
@@ -22,7 +23,9 @@ namespace Nancy
 
         public Action<Stream> Contents { get; set; }
 
-        public IDictionary<string, IEnumerable<string>> Headers { get; set; }
+        public String File { get; set; }
+
+        public IDictionary<string, string> Headers { get; set; }
 
         public HttpStatusCode StatusCode { get; set; }
 
@@ -54,6 +57,14 @@ namespace Nancy
                     new StreamWriter(stream) { AutoFlush = true };
                 writer.Write(contents);
             };
+        }
+
+        public static Response WriteFile(string virtualPath)
+        {
+            return new Response
+                   {
+                       File = virtualPath
+                   };            
         }
     }
 }

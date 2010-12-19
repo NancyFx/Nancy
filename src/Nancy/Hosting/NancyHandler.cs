@@ -45,17 +45,21 @@
 
             context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;
-            response.Contents.Invoke(context.Response.OutputStream);
+            if (!string.IsNullOrEmpty(response.File))
+            {
+                context.Response.WriteFile(response.File);
+            }
+            else
+            {
+                response.Contents.Invoke(context.Response.OutputStream);    
+            }            
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
-            foreach (var key in response.Headers.Keys)
+            foreach (var kvp in response.Headers)
             {
-                foreach (var value in response.Headers[key])
-                {
-                    context.Response.AddHeader(key, value);
-                }
+                context.Response.AddHeader(kvp.Key, kvp.Value);
             }
         }
     }
