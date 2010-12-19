@@ -10,6 +10,8 @@
 
         dynamic Parameters { get; }
 
+        NancyModule Module { get; }
+
         Response Invoke();
     }
 }
