@@ -61,6 +61,10 @@
             {
                 context.Response.AddHeader(kvp.Key, kvp.Value);
             }
+            foreach(var cookie in response.Cookies)
+            {
+                context.Response.AddHeader("Set-Cookie", cookie.ToString());
+            }
         }
     }
 }

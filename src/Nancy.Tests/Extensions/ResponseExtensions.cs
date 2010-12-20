@@ -1,6 +1,8 @@
 namespace Nancy.Tests.Extensions
 {
+    using System;
     using System.IO;
+    using Cookies;
 
     public static class ResponseExtensions
     {
@@ -13,6 +15,15 @@ namespace Nancy.Tests.Extensions
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        public static void ShouldEqual(this INancyCookie cookie, string name, string value, DateTime? expires, string domain, string path)
+        {
+            cookie.Name.ShouldEqual(name);
+            cookie.Value.ShouldEqual(value);
+            cookie.Expires.ShouldEqual(expires);
+            cookie.Domain.ShouldEqual(domain);
+            cookie.Path.ShouldEqual(path);
         }
     }
 }
