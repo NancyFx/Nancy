@@ -23,9 +23,7 @@ namespace Nancy
 
         public string ContentType { get; set; }
 
-        public Action<Stream> Contents { get; set; }
-
-        public String File { get; set; }
+        public Action<Stream> Contents { get; set; }        
 
         public IDictionary<string, string> Headers { get; set; }
 
@@ -81,14 +79,6 @@ namespace Nancy
                 var writer = new StreamWriter(stream) { AutoFlush = true };
                 writer.Write(contents);
             };
-        }
-
-        public static Response WriteFile(string virtualPath)
-        {
-            return new Response
-                   {
-                       File = virtualPath
-                   };            
         }
     }
 }
