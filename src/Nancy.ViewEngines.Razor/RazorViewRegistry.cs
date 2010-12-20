@@ -7,7 +7,7 @@ namespace Nancy.ViewEngines.Razor
     {
         public string Extension
         {
-            get { return ".razor"; }
+            get { return ".cshtml"; }
         }
 
         public Func<string, object, Action<Stream>> Executor
