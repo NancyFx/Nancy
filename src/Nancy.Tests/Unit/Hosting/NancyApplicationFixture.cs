@@ -1,7 +1,7 @@
 namespace Nancy.Tests.Unit.Hosting
 {
     using System.Linq;
-    using Fakes;    
+    using Fakes;     
     using Xunit;
 
     public class NancyApplicationFixture

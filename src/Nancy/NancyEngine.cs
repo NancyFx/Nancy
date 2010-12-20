@@ -56,7 +56,7 @@
                 if (method.ToUpperInvariant() == "HEAD")
                 {
                     method = "GET";
-                }                
+                }                                
                 if (modules.ContainsKey(method))
                 {
                     var resolvedRoute = this.resolver.GetRoute(request, modules[method], application);

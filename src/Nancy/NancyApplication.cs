@@ -19,9 +19,9 @@ namespace Nancy
         {
             this.activator = activator;
             var types = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                             from type in assembly.GetTypes()
-                             where !type.IsAbstract
-                             select type).ToList();
+                         from type in assembly.GetTypes()
+                         where !type.IsAbstract
+                         select type).ToList();
 
             this.templateProcessors = LoadTemplates(types);
             this.modules = LoadModules(types);
@@ -75,7 +75,7 @@ namespace Nancy
 
         private static IDictionary<string, Func<string, object, Action<Stream>>> LoadTemplates(IEnumerable<Type> types)
         {
-            var registries = from type in types                             
+            var registries = from type in types
                              where typeof (IViewEngineRegistry).IsAssignableFrom(type)
                              select type;
 

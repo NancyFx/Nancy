@@ -8,8 +8,6 @@
     {
         public IRoute GetRoute(IRequest request, IEnumerable<ModuleMeta> meta, INancyApplication application)
         {
-
-
             var description = (from m in meta
                                from d in m.RouteDescriptions
                                where d.ModulePath + d.Path == request.Uri

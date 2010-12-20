@@ -102,7 +102,8 @@ namespace Nancy.Tests.Unit
 
             // Then
             A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
-                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
+                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, 
+                A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Theory]
