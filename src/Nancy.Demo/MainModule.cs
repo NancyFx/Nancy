@@ -1,3 +1,5 @@
+using Nancy.ViewEngines.Spark;
+
 namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
@@ -12,7 +14,7 @@ namespace Nancy.Demo
         public Module()
         {
             Get["/"] = x => {
-                return "This is the root. Visit /static, /razor, /nhaml or /ndjango!";
+                return "This is the root. Visit /static, /razor, /nhaml or /ndjango or /spark!";
             };
             
             Get["/test"] = x => {
@@ -35,6 +37,11 @@ namespace Nancy.Demo
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
                 return View.Django("~/views/ndjango.django", model);
+			};
+
+            Get["/spark"] = x => {
+                var model = new RatPack { FirstName = "Bright" };
+                return View.Spark("~/views/spark.spark", model);
 			};
 
             Get["/json"] = x => {

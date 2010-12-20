@@ -1,0 +1,5 @@
+﻿<div>
+	<div>!{ActionLink("Back to List", "List")}</div>
+	<var fizz='"foo>bar"'/>
+	<div>!{Html.Encode(fizz)}</div>
+</div>
