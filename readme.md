@@ -112,6 +112,7 @@ Nancy is not a one man project and many of the features that are availble would 
 
 * Andy Pike
 * Graeme Foster
+* Karl Seguin
 * Jason Mead
 * Jeremy Skinner
 * João Bragança
@@ -119,6 +120,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * Mindaugas Mozuras
 * Pedro Felix
 * Phil Haack
+* Steven Robbins
 
 ## Copyright
 

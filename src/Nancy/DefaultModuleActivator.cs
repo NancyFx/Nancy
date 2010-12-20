@@ -4,25 +4,29 @@ namespace Nancy
 
     public class DefaultModuleActivator : IModuleActivator
     {
+        /// <summary>
+        /// Creates an instance of the specified <see cref="Type"/>.
+        /// </summary>
+        /// <param name="moduleType">The <see cref="Type"/> of the module to instantiate.</param>
+        /// <returns>A <see cref="NancyModule"/> instance.</returns>
         public virtual NancyModule CreateInstance(Type moduleType)
         {
-            if(! CanCreateInstance(moduleType))
+            if(!CanCreateInstance(moduleType))
             {
-                throw new InvalidOperationException("Cannot create an instance of type {0} as it does not inherit from NancyModule or it does not have a public parameterless constructor.");
+                throw new InvalidOperationException(string.Format("Cannot create an instance of type {0} as it does not inherit from NancyModule or it does not have a public parameterless constructor.", moduleType));
             }
 
             return (NancyModule) Activator.CreateInstance(moduleType);
         }
 
+        /// <summary>
+        /// Checks whether the activator can create an instance of the specified type.
+        /// </summary>
+        /// <param name="moduleType">The <see cref="Type"/> to check.</param>
+        /// <returns><see langword="true"/> if this activator can create an instance of the specified module type, otherwise <see langword="false"/>.</returns>
         public virtual bool CanCreateInstance(Type moduleType)
         {
-            bool hasDefaultConstructor = moduleType.GetConstructor(Type.EmptyTypes) != null;
-            return IsModuleType(moduleType) && hasDefaultConstructor;
-        }
-
-        protected bool IsModuleType(Type type)
-        {
-            return type.IsSubclassOf(typeof(NancyModule));
+            return moduleType.GetConstructor(Type.EmptyTypes) != null;
         }
     }
 }

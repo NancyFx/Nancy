@@ -1,9 +1,9 @@
 ﻿namespace Nancy
-{
+{    
     using System.Collections.Generic;
 
     public interface INancyModuleLocator
     {
-        IEnumerable<NancyModule> GetModules();
+        IDictionary<string, IEnumerable<ModuleMeta>> GetModules();
     }
 }

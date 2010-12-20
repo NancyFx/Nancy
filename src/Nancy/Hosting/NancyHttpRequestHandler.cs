@@ -5,6 +5,8 @@ namespace Nancy.Hosting
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
+        private readonly static INancyApplication application = new NancyApplication();
+
         public bool IsReusable
         {
             get { return false; }
@@ -14,7 +16,8 @@ namespace Nancy.Hosting
         {
             var engine = new NancyEngine(
                 CreateModuleLocator(),
-                new RouteResolver());
+                new RouteResolver(),
+                application);
 
             var wrappedContext = new HttpContextWrapper(context);
             var handler = new NancyHandler(engine);

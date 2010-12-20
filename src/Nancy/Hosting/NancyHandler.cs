@@ -4,7 +4,7 @@
     using Nancy.Extensions;
 
     public class NancyHandler
-    {
+    {        
         private readonly INancyEngine engine;
 
         public NancyHandler(INancyEngine engine)

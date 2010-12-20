@@ -27,7 +27,7 @@
         /// <param name="moduleLocator">An <see cref="INancyModuleLocator"/> instance that will be used by Nancy to decect available modules.</param>
         public NancyWcfGenericService(INancyModuleLocator moduleLocator)
         {
-            engine = new NancyEngine(moduleLocator, new RouteResolver());
+            engine = new NancyEngine(moduleLocator, new RouteResolver(), new NancyApplication());
         }
         
         [WebInvoke(UriTemplate = "*", Method = "*")]
