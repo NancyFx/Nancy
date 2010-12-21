@@ -169,10 +169,65 @@ namespace Nancy.Tests.Unit
                 };
 
 			// When
-			var request = new Request("POST", "/", headers, memory);
+            var request = new Request("POST", "/", headers, memory);
 			request.Form.ToString();
 			// Then
 			((string)request.Form.name).ShouldEqual("John Doe");
 		}
+
+        [Fact]
+        public void Should_have_an_empty_cookie_collection_when_none_exist()
+        {
+            // When
+            var request = new Request("POST", "/", new Dictionary<string, IEnumerable<string>>(0), new MemoryStream());
+
+            // Then
+            request.Cookie.Count.ShouldEqual(0);
+        }
+
+
+        [Fact]
+        public void Should_expose_a_single_cookie()
+        {
+            var headers = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "cookie", new[] { "leto=dune" } }
+                };
+            // When
+            var request = new Request("POST", "/", headers, new MemoryStream());
+
+            // Then
+            request.Cookie["leto"].ShouldEqual("dune");
+        }
+
+        [Fact]
+        public void Should_expose_a_case_insensitve_cookie_name()
+        {
+            var headers = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "cookie", new[] { "leto=emperor" } }
+                };
+            // When
+            var request = new Request("POST", "/", headers, new MemoryStream());
+
+            // Then
+            request.Cookie["LetO"].ShouldEqual("emperor");
+        }
+
+        [Fact]
+        public void Should_expose_multiple_cookies()
+        {
+            var headers = new Dictionary<string, IEnumerable<string>>
+                {
+                    { "cookie", new[] { "leto=emperor; paul=father; duncan=cool" } }
+                };
+            // When
+            var request = new Request("POST", "/", headers, new MemoryStream());
+
+            // Then
+            request.Cookie["LetO"].ShouldEqual("emperor");
+            request.Cookie["paul"].ShouldEqual("father");
+            request.Cookie["Duncan"].ShouldEqual("cool");
+        }
     }
 }

@@ -20,14 +20,14 @@ namespace Nancy
 
         dynamic Form { get; }
 
-        dynamic Cookie { get; }
+        IDictionary<string, string> Cookie { get; }
     }
 
     public class Request : IRequest
-    {
+    {        
         private dynamic form;
 
-        private dynamic cookie;
+        private IDictionary<string, string> cookie;
 
         public Request(string method, string uri)
             : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
@@ -67,7 +67,7 @@ namespace Nancy
             get { return this.form ?? (this.form = this.GetFormData()); }
         }
 
-        public dynamic Cookie
+        public IDictionary<string, string> Cookie
         {
             get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
         }
@@ -96,10 +96,18 @@ namespace Nancy
             return ret;
         }
 
-        private dynamic GetCookieData()
+        private IDictionary<string, string> GetCookieData()
         {
-            var ret = new RouteParameters();
-            
+            var ret = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (this.Headers.ContainsKey("cookie"))
+            {                
+                var cookies = this.Headers["cookie"].First().Split(';');
+                foreach (var cookie in cookies)
+                {
+                    var parts = cookie.Split('=');
+                    ret[parts[0].Trim()] = parts[1];
+                }
+            }
             return ret;
         }
 
