@@ -19,11 +19,15 @@ namespace Nancy
         Stream Body { get; }
 
         dynamic Form { get; }
+
+        dynamic Cookie { get; }
     }
 
     public class Request : IRequest
     {
         private dynamic form;
+
+        private dynamic cookie;
 
         public Request(string method, string uri)
             : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
@@ -63,6 +67,11 @@ namespace Nancy
             get { return this.form ?? (this.form = this.GetFormData()); }
         }
 
+        public dynamic Cookie
+        {
+            get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
+        }
+
         private dynamic GetFormData()
         {
             var ret = new RouteParameters();
@@ -83,6 +92,13 @@ namespace Nancy
                     }        
                 }
             }
+            
+            return ret;
+        }
+
+        private dynamic GetCookieData()
+        {
+            var ret = new RouteParameters();
             
             return ret;
         }

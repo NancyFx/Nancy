@@ -21,7 +21,7 @@ namespace Nancy.Cookies
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}", Name, Value);
+            sb.AppendFormat("{0}={1}; path={2}", Name, Value, Path ?? "/");
             if (Expires != null)
             {
                 sb.Append("; expires=");
@@ -32,12 +32,7 @@ namespace Nancy.Cookies
             {
                 sb.Append("; domain=");
                 sb.Append(Domain);
-            }
-            if (Path != null)
-            {
-                sb.Append("; path=");
-                sb.Append(Path);
-            }
+            }            
             return sb.ToString();
         }
     }
