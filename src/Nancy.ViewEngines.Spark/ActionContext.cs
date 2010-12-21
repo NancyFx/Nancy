@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Web;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
+    using System.Collections.Generic;
+    using System.Web;
+
     public class ActionContext
     {
         private readonly IDictionary<string, object> extraData;

@@ -1,8 +1,8 @@
-﻿using System;
-using Spark;
-
-namespace Nancy.ViewEngines.Spark.Descriptors
+﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
+    using System;
+    using global::Spark;
+
     public static class DescriptorFilterExtensions
     {
         public static void AddFilter(this ISparkServiceContainer target, IDescriptorFilter filter)
@@ -18,7 +18,9 @@ namespace Nancy.ViewEngines.Spark.Descriptors
         public static void AddFilter(this IDescriptorBuilder target, IDescriptorFilter filter)
         {
             if (!(target is DefaultDescriptorBuilder))
+            {
                 throw new InvalidCastException("IDescriptorFilters may only be added to DefaultDescriptorBuilder");
+            }
 
             ((DefaultDescriptorBuilder) target).AddFilter(filter);
         }

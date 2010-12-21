@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using Spark;
-using Spark.Parser;
-using Spark.Parser.Syntax;
-
-namespace Nancy.ViewEngines.Spark.Descriptors
+﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using Spark;
+    using global::Spark;
+    using global::Spark.Parser;
+    using global::Spark.Parser.Syntax;
+
     public class DefaultDescriptorBuilder : IDescriptorBuilder
     {
         private ISparkViewEngine engine;
@@ -37,13 +38,14 @@ namespace Nancy.ViewEngines.Spark.Descriptors
             get { return grammar.ParseUseMaster; }
         }
 
-        #region IDescriptorBuilder Members
-
         public virtual IDictionary<string, object> GetExtraParameters(ActionContext actionContext)
         {
             var extra = new Dictionary<string, object>();
-            foreach (IDescriptorFilter filter in Filters)
+            foreach (var filter in Filters)
+            {
                 filter.ExtraParameters(actionContext, extra);
+            }
+
             return extra;
         }
 
@@ -84,7 +86,7 @@ namespace Nancy.ViewEngines.Spark.Descriptors
                     null);
             }
 
-            string trailingUseMaster = TrailingUseMasterName(descriptor);
+            var trailingUseMaster = TrailingUseMasterName(descriptor);
             while (buildDescriptorParams.FindDefaultMaster && !string.IsNullOrEmpty(trailingUseMaster))
             {
                 if (!LocatePotentialTemplate(
@@ -101,8 +103,6 @@ namespace Nancy.ViewEngines.Spark.Descriptors
             return descriptor;
         }
 
-        #endregion
-
         public virtual void Initialize(ISparkServiceContainer container)
         {
             engine = container.GetService<ISparkViewEngine>();
@@ -111,11 +111,16 @@ namespace Nancy.ViewEngines.Spark.Descriptors
 
         public string TrailingUseMasterName(SparkViewDescriptor descriptor)
         {
-            string lastTemplate = descriptor.Templates.Last();
-            SourceContext sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, engine.ViewFolder);
+            var lastTemplate = descriptor.Templates.Last();
+            var sourceContext = AbstractSyntaxProvider.CreateSourceContext(lastTemplate, engine.ViewFolder);
+
             if (sourceContext == null)
+            {
                 return null;
-            ParseResult<string> result = ParseUseMaster(new Position(sourceContext));
+            }
+
+            var result = ParseUseMaster(new Position(sourceContext));
+
             return result == null ? null : result.Value;
         }
 
@@ -124,26 +129,28 @@ namespace Nancy.ViewEngines.Spark.Descriptors
             ICollection<string> descriptorTemplates,
             ICollection<string> searchedLocations)
         {
-            string template = potentialTemplates.FirstOrDefault(t => engine.ViewFolder.HasView(t));
+            var template = potentialTemplates.FirstOrDefault(t => engine.ViewFolder.HasView(t));
             if (template != null)
             {
                 descriptorTemplates.Add(template);
                 return true;
             }
+
             if (searchedLocations != null)
             {
-                foreach (string potentialTemplate in potentialTemplates)
+                foreach (var potentialTemplate in potentialTemplates)
+                {
                     searchedLocations.Add(potentialTemplate);
+                }
             }
+
             return false;
         }
 
+        /// <remarks>Apply all of the filters PotentialLocations in order</remarks>
         private IEnumerable<string> ApplyFilters(IEnumerable<string> locations, IDictionary<string, object> extra)
         {
-            // apply all of the filters PotentialLocations in order
-            return Filters.Aggregate(
-                locations,
-                (aggregate, filter) => filter.PotentialLocations(aggregate, extra));
+            return Filters.Aggregate(locations, (aggregate, filter) => filter.PotentialLocations(aggregate, extra));
         }
 
         protected virtual IEnumerable<string> PotentialViewLocations(string viewPath, string viewName, IDictionary<string, object> extra)
@@ -173,8 +180,6 @@ namespace Nancy.ViewEngines.Spark.Descriptors
                                     }, extra);
         }
 
-        #region Nested type: UseMasterGrammar
-
         /// <summary>
         /// Simplified parser for &lt;use master=""/&gt; detection.
         /// TODO: Rob G - move somewhere else when I've had some sleep - probably to Spark.Parser in Core
@@ -183,16 +188,16 @@ namespace Nancy.ViewEngines.Spark.Descriptors
         {
             public UseMasterGrammar(string prefix)
             {
-                ParseAction<IList<char>> whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
-                ParseAction<IList<char>> whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
-                ParseAction<string> startOfElement = !string.IsNullOrEmpty(prefix) ? Ch("<" + prefix + ":use") : Ch("<use");
-                ParseAction<Chain<Chain<Chain<string, IList<char>>, char>, IList<char>>> startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
-                ParseAction<Chain<Chain<char, IList<char>>, char>> attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
+                var whiteSpace0 = Rep(Ch(char.IsWhiteSpace));
+                var whiteSpace1 = Rep1(Ch(char.IsWhiteSpace));
+                var startOfElement = !string.IsNullOrEmpty(prefix) ? Ch("<" + prefix + ":use") : Ch("<use");
+                var startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
+                var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
                     .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
 
-                ParseAction<string> endOfElement = Ch("/>");
+                var endOfElement = Ch("/>");
 
-                ParseAction<string> useMaster = startOfElement
+                var useMaster = startOfElement
                     .And(whiteSpace1)
                     .And(startOfAttribute)
                     .And(attrValue)
@@ -215,7 +220,5 @@ namespace Nancy.ViewEngines.Spark.Descriptors
 
             public ParseAction<string> ParseUseMaster { get; private set; }
         }
-
-        #endregion
     }
 }

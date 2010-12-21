@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nancy.ViewEngines.Spark.Descriptors
+﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class BuildDescriptorParams
     {
         private static readonly IDictionary<string, object> extraEmpty = new Dictionary<string, object>();
@@ -73,8 +73,11 @@ namespace Nancy.ViewEngines.Spark.Descriptors
         public override bool Equals(object obj)
         {
             var that = obj as BuildDescriptorParams;
+
             if (that == null || that.GetType() != GetType())
+            {
                 return false;
+            }
 
             if (!string.Equals(viewName, that.viewName) ||
                 !string.Equals(viewPath, that.viewPath) ||
@@ -84,15 +87,17 @@ namespace Nancy.ViewEngines.Spark.Descriptors
             {
                 return false;
             }
+
             foreach (var kv in extra)
             {
                 object value;
-                if (!that.extra.TryGetValue(kv.Key, out value) ||
-                    !Equals(kv.Value, value))
+                if (!that.extra.TryGetValue(kv.Key, out value) || !Equals(kv.Value, value))
                 {
                     return false;
                 }
+
             }
+
             return true;
         }
     }

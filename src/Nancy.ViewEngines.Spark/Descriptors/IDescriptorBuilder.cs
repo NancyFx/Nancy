@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Spark;
-
-namespace Nancy.ViewEngines.Spark.Descriptors
+﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
+    using System.Collections.Generic;
+    using global::Spark;
+
     public interface IDescriptorBuilder
     {
         /// <summary>

@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
-using System.Web;
-using Spark;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
+    using System.IO;
+    using System.Web;
+    using global::Spark;
+
     public abstract class SparkView : SparkViewBase, IView
     {
         public ViewContext ViewContext { get; set; }

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Nancy.ViewEngines.Spark.Descriptors
+﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
+    using System.Collections.Generic;
+
     public interface IDescriptorFilter
     {
         /// <summary>

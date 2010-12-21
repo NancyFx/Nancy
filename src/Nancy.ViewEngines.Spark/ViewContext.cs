@@ -1,7 +1,7 @@
-﻿using Spark;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
+    using global::Spark;
+
     public class ViewContext : ActionContext
     {
         public ViewContext(ActionContext actionContext, ISparkView view) :

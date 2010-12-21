@@ -13,6 +13,7 @@
         public static Action<Stream> Spark<TModel>(this IViewEngine source, string name, TModel model)
         {
             var factory = new ViewFactory();
+
             return stream =>
             {
                 var result = factory.RenderView(name, model);
