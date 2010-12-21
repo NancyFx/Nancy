@@ -19,14 +19,22 @@ namespace Nancy.Demo
                 return "Test";
             };
 
-            Get["/static"] = x => {
+            Get["/static"] = x =>
+            {
                 return View.Static("~/views/static.htm");
+            };
+
+            //test with /images/nancy.jpg or /images/nancy.png
+            Get["/images/{image}"] = x =>
+            {
+                return Response.Image("~/images/" + (string)x.image);
             };
 
             Get["/razor"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
                 return View.Razor("~/views/razor.cshtml", model);
             };
+
             Get["/nhaml"] = x => {
                 var model = new RatPack { FirstName = "Andrew" };
                 return View.Haml("~/views/nhaml.haml", model);
@@ -45,6 +53,7 @@ namespace Nancy.Demo
             Get["/xml"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
                 return Response.AsXml(model);
+
             };
         }
     }
