@@ -1,5 +1,3 @@
-using Nancy.ViewEngines.Spark;
-
 namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
@@ -8,6 +6,7 @@ namespace Nancy.Demo
     using Nancy.ViewEngines.NDjango;
     using Nancy.ViewEngines.NHaml;
     using Nancy.ViewEngines.Razor;
+    using Nancy.ViewEngines.Spark;
 
     public class Module : NancyModule
     {

@@ -376,6 +376,7 @@
             }
 
             public ISparkView View { get; set; }
+
             public ViewFactory Factory { get; set; }
         }
 

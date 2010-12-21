@@ -1,18 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
-using FakeItEasy;
-using Nancy.Tests;
-using Nancy.ViewEngines.Spark.Descriptors;
-using Spark;
-using Spark.FileSystem;
-using Spark.Parser;
-using Xunit;
-
-namespace Nancy.ViewEngines.Spark.Tests
+﻿namespace Nancy.ViewEngines.Spark.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Web;
+    using FakeItEasy;
+    using global::Spark.Parser;
+    using Nancy.Tests;
+    using Nancy.ViewEngines.Spark.Descriptors;
+    using Spark;
+    using Xunit;
+    using global::Spark;
+    using global::Spark.FileSystem;
+
     public class DescriptorBuildingFixture
     {
         private readonly ActionContext actionContext;
@@ -21,29 +22,12 @@ namespace Nancy.ViewEngines.Spark.Tests
 
         public DescriptorBuildingFixture()
         {
-            factory = new ViewFactory(null);
-            viewFolder = new InMemoryViewFolder();
-            factory.ViewFolder = viewFolder;
-            var httpContext = A.Fake<HttpContextBase>();
-            actionContext = new ActionContext(httpContext, "Bar");
+            this.viewFolder = new InMemoryViewFolder();
+            this.factory = new ViewFactory(null) {ViewFolder = viewFolder};
+            this.actionContext = new ActionContext(A.Fake<HttpContextBase>(), "Bar");
         }
 
-        private static void AssertDescriptorTemplates(SparkViewDescriptor descriptor, IEnumerable<string> searchedLocations, params string[] templates)
-        {
-            templates.ShouldHaveCount(descriptor.Templates.Count);
-            for (int index = 0; index != templates.Length; ++index)
-                templates[index].ShouldEqual(descriptor.Templates[index]);
-            searchedLocations.ShouldHaveCount(0);
-        }
-
-        private static IDictionary<string, object> Dict(IEnumerable<string> values)
-        {
-            return values == null
-                       ? null
-                       : values.Select((v, k) => new {k, v}).ToDictionary(kv => kv.k.ToString(), kv => (object) kv.v);
-        }
-
-
+        
         [Fact]
         public void Build_descriptor_extra_params_set_to_null_should_acts_as_empty()
         {
@@ -96,7 +80,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             factory.DescriptorBuilder = A.Fake<IDescriptorBuilder>();
 
             //When
-            Exception exception = Record.Exception(() => factory.AddFilter(A.Fake<IDescriptorFilter>()));
+            var exception = Record.Exception(() => factory.AddFilter(A.Fake<IDescriptorFilter>()));
 
             //Then
             exception.ShouldBeOfType<InvalidCastException>();
@@ -116,7 +100,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Layouts\Application.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.en-gb.spark", @"Layouts\Application.en.spark");
@@ -134,7 +118,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Layouts\Bar.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", "Elephant", true, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", "Elephant", true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Elephant.spark", @"Layouts\Whale.spark");
@@ -148,7 +132,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Layouts\Application.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Application.spark");
@@ -164,7 +148,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Layouts\Site.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", "Site", true, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", "Site", true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Site.spark");
@@ -177,7 +161,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Bar\Index.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark");
@@ -194,7 +178,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Shared\Home.spark", "");
 
             //When
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, false, new List<string>());
+            var result = factory.CreateDescriptor(actionContext, "Index", null, false, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark");
@@ -213,7 +197,7 @@ namespace Nancy.ViewEngines.Spark.Tests
 
             //When
             var searchedLocations = new List<string>();
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, false, searchedLocations);
+            var result = factory.CreateDescriptor(actionContext, "Index", null, false, searchedLocations);
 
             //Then
             AssertDescriptorTemplates(result, searchedLocations, @"Bar\Index.spark");
@@ -226,12 +210,12 @@ namespace Nancy.ViewEngines.Spark.Tests
             var builder = new DefaultDescriptorBuilder();
 
             //When
-            ParseResult<string> a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
-            ParseResult<string> b = builder.ParseUseMaster(new Position(new SourceContext("<use\r\nmaster \r\n =\r\n'b' />")));
-            ParseResult<string> c = builder.ParseUseMaster(new Position(new SourceContext("<use master=\"c\"/>")));
-            ParseResult<string> def = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <use master=\"def\"/> y ")));
-            ParseResult<string> none = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <using master=\"def\"/> y ")));
-            ParseResult<string> g = builder.ParseUseMaster(new Position(new SourceContext("-<use master=\"g\"/>-<use master=\"h\"/>-")));
+            var a = builder.ParseUseMaster(new Position(new SourceContext("<use master='a'/>")));
+            var b = builder.ParseUseMaster(new Position(new SourceContext("<use\r\nmaster \r\n =\r\n'b' />")));
+            var c = builder.ParseUseMaster(new Position(new SourceContext("<use master=\"c\"/>")));
+            var def = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <use master=\"def\"/> y ")));
+            var none = builder.ParseUseMaster(new Position(new SourceContext("  x <use etc=''/> <using master=\"def\"/> y ")));
+            var g = builder.ParseUseMaster(new Position(new SourceContext("-<use master=\"g\"/>-<use master=\"h\"/>-")));
 
             //Then
             a.Value.ShouldEqual("a");
@@ -252,13 +236,28 @@ namespace Nancy.ViewEngines.Spark.Tests
             viewFolder.Add(@"Layouts\Whale.spark", "");
             viewFolder.Add(@"Layouts\Application.spark", "");
             viewFolder.Add(@"Layouts\Bar.spark", "");
+            var searchedLocations = new List<string>();
 
             //When
-            var searchedLocations = new List<string>();
-            SparkViewDescriptor result = factory.CreateDescriptor(actionContext, "Index", null, true, searchedLocations);
+            var result = factory.CreateDescriptor(actionContext, "Index", null, true, searchedLocations);
 
             //Then
             AssertDescriptorTemplates(result, searchedLocations, @"Bar\Index.spark", @"Layouts\Lion.spark", @"Layouts\Elephant.spark", @"Layouts\Whale.spark");
+        }
+
+        private static void AssertDescriptorTemplates(SparkViewDescriptor descriptor, IEnumerable<string> searchedLocations, params string[] templates)
+        {
+            templates.ShouldHaveCount(descriptor.Templates.Count);
+            for (var index = 0; index != templates.Length; ++index)
+            {
+                templates[index].ShouldEqual(descriptor.Templates[index]);
+            }
+            searchedLocations.ShouldHaveCount(0);
+        }
+
+        private static IDictionary<string, object> Dict(IEnumerable<string> values)
+        {
+            return (values == null) ? null : values.Select((v, k) => new { k, v }).ToDictionary(kv => kv.k.ToString(), kv => (object)kv.v);
         }
     }
 
@@ -271,10 +270,7 @@ namespace Nancy.ViewEngines.Spark.Tests
 
         public override IDictionary<string, object> GetExtraParameters(ActionContext actionContext)
         {
-            return new Dictionary<string, object>
-                       {
-                           {"language", Convert.ToString(actionContext.ExtraData["language"])}
-                       };
+            return new Dictionary<string, object> { {"language", Convert.ToString(actionContext.ExtraData["language"])} };
         }
 
         protected override IEnumerable<string> PotentialViewLocations(string actionName, string viewName, IDictionary<string, object> extra)
@@ -294,18 +290,21 @@ namespace Nancy.ViewEngines.Spark.Tests
 
         private static IEnumerable<string> Merge(IEnumerable<string> locations, string region)
         {
-            int slashPos = (region ?? "").IndexOf('-');
+            var slashPos = (region ?? "").IndexOf('-');
+
             if (region != null)
             {
-                string language = slashPos == -1 ? null : region.Substring(0, slashPos);
+                var language = slashPos == -1 ? null : region.Substring(0, slashPos);
 
-                foreach (string location in locations)
+                foreach (var location in locations)
                 {
                     if (!string.IsNullOrEmpty(region))
                     {
                         yield return Path.ChangeExtension(location, region + ".spark");
                         if (slashPos != -1)
+                        {
                             yield return Path.ChangeExtension(location, language + ".spark");
+                        }
                     }
                     yield return location;
                 }

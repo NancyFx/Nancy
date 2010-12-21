@@ -1,17 +1,18 @@
-﻿using System;
-using System.Globalization;
-using System.IO;
-using System.Threading;
-using System.Web;
-using FakeItEasy;
-using Nancy.Tests;
-using Nancy.ViewEngines.Spark.Tests.ViewModels;
-using Spark;
-using Spark.FileSystem;
-using Xunit;
-
-namespace Nancy.ViewEngines.Spark.Tests
+﻿namespace Nancy.ViewEngines.Spark.Tests
 {
+    using System;
+    using System.Globalization;
+    using System.IO;
+    using System.Threading;
+    using System.Web;
+    using FakeItEasy;
+    using Nancy.Tests;
+    using Nancy.ViewEngines.Spark.Tests.ViewModels;
+    using Spark;
+    using Xunit;
+    using global::Spark;
+    using global::Spark.FileSystem;
+
     public class ViewFactoryFixture
     {
         private readonly ActionContext actionContext;
@@ -24,42 +25,21 @@ namespace Nancy.ViewEngines.Spark.Tests
         {
             var settings = new SparkSettings();
 
-            factory = new ViewFactory(settings) {ViewFolder = new FileSystemViewFolder("TestViews")};
-
-            httpContext = MockHttpContextBase.Generate("/", new StringWriter());
-            response = httpContext.Response;
-            output = response.Output;
-
-            actionContext = new ActionContext(httpContext, "Stub");
-        }
-
-        private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
-        {
-            ViewFactory.ViewEngineResult result = factory.FindView(actionContext, viewName, null);
-            var viewWithModel = result.View as SparkView<T>;
-            if (viewWithModel != null)
-                viewWithModel.SetModel(viewModel);
-            result.View.RenderView(output);
-        }
-
-        private void FindViewAndRender(string viewName, string masterName = null)
-        {
-            ViewFactory.ViewEngineResult result = factory.FindView(actionContext, viewName, masterName);
-            result.View.RenderView(output);
+            this.actionContext = new ActionContext(httpContext, "Stub");
+            this.factory = new ViewFactory(settings) {ViewFolder = new FileSystemViewFolder("TestViews")};
+            this.httpContext = MockHttpContextBase.Generate("/", new StringWriter());
+            this.response = httpContext.Response;
+            this.output = response.Output;
         }
 
         [Fact]
         public void Application_dot_spark_should_be_used_as_the_master_layout_if_present()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder
-                                      {
-                                          {"Stub\\baz.spark", ""},
-                                          {"Shared\\Application.spark", ""}
-                                      };
+            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""}, {"Shared\\Application.spark", ""} };
 
             //When
-            SparkViewDescriptor descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
+            var descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
 
             //Then
             descriptor.Templates.ShouldHaveCount(2);
@@ -74,7 +54,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             var replacement = A.Fake<IViewFolder>();
 
             //When
-            IViewFolder existing = factory.ViewFolder;
+            var existing = factory.ViewFolder;
 
             //Then
             existing.ShouldNotBeSameAs(replacement);
@@ -92,14 +72,10 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_get_the_target_namespace_from_the_action_context()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder
-                                      {
-                                          {"Stub\\Foo.spark", ""},
-                                          {"Layouts\\Home.spark", ""}
-                                      };
+            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\Foo.spark", ""}, {"Layouts\\Home.spark", ""} };
 
             //When
-            SparkViewDescriptor descriptor = factory.CreateDescriptor(actionContext, "Foo", null, true, null);
+            var descriptor = factory.CreateDescriptor(actionContext, "Foo", null, true, null);
 
             //Then
             Assert.Equal("Stub", descriptor.TargetNamespace);
@@ -109,7 +85,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_html_encode_using_H_function_from_views()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesHtmlEncoding");
+            this.FindViewAndRender("ViewThatUsesHtmlEncoding");
 
             //Then
             output.ToString().Replace(" ", "").Replace("\r", "").Replace("\n", "")
@@ -120,7 +96,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_provide_global_setting_for_views()
         {
             //Given, When
-            FindViewAndRender("ViewThatChangesGlobalSettings", null);
+            this.FindViewAndRender("ViewThatChangesGlobalSettings");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -132,7 +108,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_a_child_view_with_a_master_layout()
         {
             //Given, When
-            FindViewAndRender("ChildViewThatExpectsALayout", "Layout");
+            this.FindViewAndRender("ChildViewThatExpectsALayout", "Layout");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -146,7 +122,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_a_plain_view()
         {
             //Given
-            ViewFactory.ViewEngineResult viewEngineResult = factory.FindView(actionContext, "index", null);
+            var viewEngineResult = factory.FindView(actionContext, "index", null);
 
             //When
             viewEngineResult.View.RenderView(output);
@@ -159,7 +135,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_a_view_even_with_null_view_model()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesANullViewModel");
+            this.FindViewAndRender("ViewThatUsesANullViewModel");
 
             //Then
             output.ToString().ShouldContain("<div>nothing</div>");
@@ -169,7 +145,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_a_view_with_a_strongly_typed_model()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesViewModel", new FakeViewModel { Text = "Spark" });
+            this.FindViewAndRender("ViewThatUsesViewModel", new FakeViewModel { Text = "Spark" });
 
             //Then
             output.ToString().ShouldContain("<div>Spark</div>");
@@ -179,8 +155,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_a_view_with_an_anonymous_view_model()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesAnonymousViewModel",
-                              new {Foo = 42, Bar = new FakeViewModel {Text = "is the answer"}});
+            this.FindViewAndRender("ViewThatUsesAnonymousViewModel", new {Foo = 42, Bar = new FakeViewModel {Text = "is the answer"}});
 
             //Then
             output.ToString().ShouldContain("<div>42 is the answer</div>");
@@ -192,7 +167,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             using (new ScopedCulture(CultureInfo.CreateSpecificCulture("en-us")))
             {
                 //Given, When
-                FindViewAndRender("ViewThatUsesFormatting", new { Number = 9876543.21, Date = new DateTime(2010, 12, 11) });
+                this.FindViewAndRender("ViewThatUsesFormatting", new { Number = 9876543.21, Date = new DateTime(2010, 12, 11) });
 
                 //Then
                 output.ToString().ShouldContainInOrder(
@@ -205,7 +180,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_render_partials_that_share_state()
         {
             //Given, When
-            FindViewAndRender("ViewThatRendersPartialsThatShareState");
+            this.FindViewAndRender("ViewThatRendersPartialsThatShareState");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -231,7 +206,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_use_a_partial_file_explicitly()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesPartial");
+            this.FindViewAndRender("ViewThatUsesPartial");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -248,7 +223,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_use_a_partial_file_implicitly()
         {
             //Given, Then
-            FindViewAndRender("ViewThatUsesPartialImplicitly");
+            this.FindViewAndRender("ViewThatUsesPartialImplicitly");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -260,7 +235,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_use_foreach_construct_in_the_view()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesForeach");
+            this.FindViewAndRender("ViewThatUsesForeach");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -273,7 +248,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_be_able_to_use_namespaces_directly()
         {
             //Given, When
-            FindViewAndRender("ViewThatUsesNamespaces");
+            this.FindViewAndRender("ViewThatUsesNamespaces");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -286,7 +261,7 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void Should_capture_named_content_areas_and_render_in_the_correct_order()
         {
             //Given, When
-            FindViewAndRender("ChildViewThatUsesAllNamedContentAreas", "Layout");
+            this.FindViewAndRender("ChildViewThatUsesAllNamedContentAreas", "Layout");
 
             //Then
             output.ToString().ShouldContainInOrder(
@@ -300,17 +275,33 @@ namespace Nancy.ViewEngines.Spark.Tests
         public void The_master_layout_should_be_empty_by_default()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder
-                                      {
-                                          {"Stub\\baz.spark", ""}
-                                      };
+            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""} };
 
             //When
-            SparkViewDescriptor descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
+            var descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
 
             //Then
             descriptor.Templates.ShouldHaveCount(1);
             descriptor.Templates[0].ShouldEqual("Stub\\baz.spark");
+        }
+
+        private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
+        {
+            var result = factory.FindView(actionContext, viewName, null);
+            var viewWithModel = result.View as SparkView<T>;
+
+            if (viewWithModel != null)
+            {
+                viewWithModel.SetModel(viewModel);
+            }
+
+            result.View.RenderView(output);
+        }
+
+        private void FindViewAndRender(string viewName, string masterName = null)
+        {
+            var result = factory.FindView(actionContext, viewName, masterName);
+            result.View.RenderView(output);
         }
 
         #region Nested type: MockHttpContextBase
