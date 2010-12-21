@@ -25,14 +25,34 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
-            var thursday = GetLocalizedAbbreviatedWeekdayName(date);
-            var october = GetLocalizedAbbreviatedMonthName(date);
 
             // When
             var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
             
             // Then
-            cookie.ShouldEqual(string.Format("leto=worm; expires={0}, 08-{1}-2015 09:10:11 GMT", thursday, october));
+            cookie.ShouldEqual("leto=worm; expires=Thu, 08-Oct-2015 09:10:11 GMT");
+        }
+
+        [Fact]
+        public void Should_stringify_an_expiry_to_english()
+        {
+            var originalCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                // Given
+                System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+                var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
+
+                // When
+                var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
+
+                // Then
+                cookie.ShouldEqual("leto=worm; expires=Thu, 08-Oct-2015 09:10:11 GMT");
+            }
+            finally
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture = originalCulture;
+            }           
         }
 
         [Fact]

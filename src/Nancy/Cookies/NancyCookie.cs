@@ -1,6 +1,7 @@
 namespace Nancy.Cookies
 {
     using System;
+    using System.Globalization;
     using System.Text;
 
     public class NancyCookie : INancyCookie
@@ -24,7 +25,7 @@ namespace Nancy.Cookies
             if (Expires != null)
             {
                 sb.Append("; expires=");
-                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss"));
+                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
                 sb.Append(" GMT");
             }
             if (Domain != null)
