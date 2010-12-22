@@ -35,7 +35,7 @@ namespace Nancy.Tests
                 where c.GetType().IsAssignableFrom(typeof(T))
                 select c;
 
-            Assert.True(selection.Count() > 0);
+            Assert.True(selection.Any());
         }
 
         public static void ShouldContainInOrder(this string actual, params string[] values)

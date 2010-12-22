@@ -1,4 +1,4 @@
-﻿namespace Nancy.Tests.Specifications
+namespace Nancy.Tests.Specifications
 {    
     using Nancy.Routing;
 
