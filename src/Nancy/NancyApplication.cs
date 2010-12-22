@@ -5,6 +5,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;    
     using Extensions;
+    using Sessions;
     using ViewEngines;
 
     public class NancyApplication : INancyApplication
@@ -12,12 +13,14 @@ namespace Nancy
         private readonly IDictionary<string, Func<string, object, Action<Stream>>> templateProcessors;
         private readonly IDictionary<string, IEnumerable<ModuleMeta>> modules;
         private readonly IModuleActivator activator;
+        private readonly ISessionStore sessionStore;
 
         //poor man's low-level DI
-        public NancyApplication() : this(new DefaultModuleActivator()) {}
-        public NancyApplication(IModuleActivator activator)
+        public NancyApplication() : this(new DefaultModuleActivator(), new CookieSessionStore()) {}
+        public NancyApplication(IModuleActivator activator, ISessionStore sessionStore)
         {
             this.activator = activator;
+            this.sessionStore = sessionStore;
             var types = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
                          from type in assembly.GetTypes()
                          where !type.IsAbstract
@@ -40,6 +43,11 @@ namespace Nancy
         public IModuleActivator Activator
         {
             get { return this.activator; }
+        }
+
+        public ISessionStore SessionStore
+        {
+            get { return this.sessionStore; }
         }
 
         public IDictionary<string, IEnumerable<ModuleMeta>> GetModules()

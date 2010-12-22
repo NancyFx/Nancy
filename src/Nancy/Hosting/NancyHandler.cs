@@ -6,10 +6,12 @@
     public class NancyHandler
     {        
         private readonly INancyEngine engine;
+        private readonly INancyApplication application;
 
-        public NancyHandler(INancyEngine engine)
+        public NancyHandler(INancyEngine engine, INancyApplication application)
         {
             this.engine = engine;
+            this.application = application;
         }
 
         public void ProcessRequest(HttpContextBase context)
@@ -19,9 +21,13 @@
                 return;
             }
 
-            var request = CreateNancyRequest(context);
-            var response = engine.HandleRequest(request);
+            var sessionStore = application.SessionStore;
 
+            var request = CreateNancyRequest(context);
+            request.Session = sessionStore.Load(request);
+            
+            var response = engine.HandleRequest(request);
+            sessionStore.Save(request.Session, response);
             SetNancyResponseToHttpResponse(context, response);
         }
 
@@ -40,7 +46,7 @@
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
-        {
+        {            
             SetHttpResponseHeaders(context, response);
 
             context.Response.ContentType = response.ContentType;

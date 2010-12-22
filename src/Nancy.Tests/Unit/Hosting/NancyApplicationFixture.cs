@@ -30,10 +30,6 @@ namespace Nancy.Tests.Unit.Hosting
         {
             var modules = new NancyApplication().GetModules();
             modules.Count.ShouldEqual(4);
-            modules["GET"].Count().ShouldEqual(3);
-            modules["POST"].Count().ShouldEqual(3);
-            modules["PUT"].Count().ShouldEqual(3);
-            modules["DELETE"].Count().ShouldEqual(3);
         }
     }
 }

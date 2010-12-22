@@ -7,6 +7,7 @@ namespace Nancy
     using System.Web;
 
     using Nancy.Routing;
+    using Sessions;
 
     public interface IRequest
     {
@@ -21,6 +22,8 @@ namespace Nancy
         dynamic Form { get; }
 
         IDictionary<string, string> Cookie { get; }
+
+        ISession Session { get; set; }
     }
 
     public class Request : IRequest
@@ -28,7 +31,7 @@ namespace Nancy
         private dynamic form;
 
         private IDictionary<string, string> cookie;
-
+        
         public Request(string method, string uri)
             : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
         {
@@ -53,7 +56,7 @@ namespace Nancy
 
             if (body == null)
                 throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
-
+            
             this.Body = body;
             this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
             this.Method = method;
@@ -71,6 +74,9 @@ namespace Nancy
         {
             get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
         }
+
+        public ISession Session { get; set; }
+        
 
         private dynamic GetFormData()
         {

@@ -16,7 +16,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
         /// </summary>
-        public NancyWcfGenericService() : this(new NancyApplication(new DefaultModuleActivator()))
+        public NancyWcfGenericService() : this(new NancyApplication())
         {
         }
 
@@ -24,9 +24,9 @@
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
         /// </summary>
         /// <param name="moduleLocator">An <see cref="INancyModuleLocator"/> instance that will be used by Nancy to decect available modules.</param>
-        public NancyWcfGenericService(INancyModuleLocator moduleLocator)
+        public NancyWcfGenericService(INancyApplication application)
         {
-            engine = new NancyEngine(moduleLocator, new RouteResolver(), new NancyApplication());
+            engine = new NancyEngine(application, new RouteResolver());
         }
         
         [WebInvoke(UriTemplate = "*", Method = "*")]

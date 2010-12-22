@@ -72,6 +72,10 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="Sessions\CookieSessionStore.cs" />
+    <Compile Include="Sessions\ISession.cs" />
+    <Compile Include="Sessions\ISessionStore.cs" />
+    <Compile Include="Sessions\Session.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />

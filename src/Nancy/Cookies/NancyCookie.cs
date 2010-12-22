@@ -3,6 +3,7 @@ namespace Nancy.Cookies
     using System;
     using System.Globalization;
     using System.Text;
+    using System.Web;
 
     public class NancyCookie : INancyCookie
     {
@@ -21,7 +22,7 @@ namespace Nancy.Cookies
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}; path={2}", Name, Value, Path ?? "/");
+            sb.AppendFormat("{0}={1}; path={2}", HttpUtility.UrlEncode(Name), HttpUtility.UrlEncode(Value), Path ?? "/");
             if (Expires != null)
             {
                 sb.Append("; expires=");

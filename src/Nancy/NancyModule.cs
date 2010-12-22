@@ -3,11 +3,12 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
-    
+    using Sessions;
+
     public abstract class NancyModule
     {
         private readonly IDictionary<string, IDictionary<string, Func<dynamic, Response>>> moduleRoutes;
-
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
@@ -28,7 +29,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets an <see cref="INancyApplication"/> which represents the current application context
         /// </summary>
-        public INancyApplication Application { get; set; }
+        public INancyApplication Application { get; set; }        
 
         public IDictionary<string, Func<dynamic, Response>> Delete
         {
@@ -57,6 +58,14 @@ namespace Nancy
         /// </summary>
         /// <value>An <see cref="IRequest"/> instance.</value>
         public IRequest Request { get; set; }
+
+        /// <summary>
+        /// Gets a session object
+        /// </summary>
+        public ISession Session 
+        {
+            get { return Request.Session; }
+        }
 
         /// <summary>
         /// An extension point for adding support for view engines.

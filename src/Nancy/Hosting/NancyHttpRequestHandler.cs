@@ -14,9 +14,9 @@ namespace Nancy.Hosting
 
         public void ProcessRequest(HttpContext context)
         {
-            var engine = new NancyEngine(application, new RouteResolver(), application);
+            var engine = new NancyEngine(application, new RouteResolver());
             var wrappedContext = new HttpContextWrapper(context);
-            var handler = new NancyHandler(engine);
+            var handler = new NancyHandler(engine, application);
             handler.ProcessRequest(wrappedContext);
         }        
     }

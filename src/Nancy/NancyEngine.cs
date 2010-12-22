@@ -6,20 +6,19 @@
 
     public class NancyEngine : INancyEngine
     {
-        private readonly INancyModuleLocator locator;
-        private readonly IRouteResolver resolver;
         private readonly INancyApplication application;
+        private readonly IRouteResolver resolver;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
-        /// <param name="locator">An <see cref="INancyModuleLocator"/> instance, that will be used to locate <see cref="NancyModule"/> instances</param>
+        /// <param name="application">An <see cref="INancyApplication"/> instance, containing the information about the current application.</param>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-        public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver, INancyApplication application)
+        public NancyEngine(INancyApplication application, IRouteResolver resolver)
         {
-            if (locator == null)
+            if (application == null)
             {
-                throw new ArgumentNullException("locator", "The locator parameter cannot be null.");
+                throw new ArgumentNullException("application", "The locator parameter cannot be null.");
             }
 
             if (resolver == null)
@@ -27,14 +26,8 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
-            if (application == null)
-            {
-                throw new ArgumentNullException("application", "The application parameter cannot be null.");
-            }
-
-            this.locator = locator;
-            this.resolver = resolver;
             this.application = application;
+            this.resolver = resolver;            
         }
 
         /// <summary>
@@ -49,7 +42,7 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            var modules = this.locator.GetModules();
+            var modules = this.application.GetModules();
             if (modules.Any())
             {
                 var method = request.Method;
@@ -59,7 +52,7 @@
                 }                                
                 if (modules.ContainsKey(method))
                 {
-                    var resolvedRoute = this.resolver.GetRoute(request, modules[method], application);
+                    var resolvedRoute = this.resolver.GetRoute(request, modules[method],this.application);
 
                 	var response = resolvedRoute.Invoke();
 
@@ -67,7 +60,7 @@
 					if (request.Method.ToUpperInvariant() == "HEAD")
 					{
 						response = new HeadResponse(response);
-					}
+					}                       
                 	return response;
                 }
             }
