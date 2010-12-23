@@ -4,7 +4,7 @@
     using Nancy.Extensions;
 
     public class NancyHandler
-    {
+    {        
         private readonly INancyEngine engine;
 
         public NancyHandler(INancyEngine engine)
@@ -45,17 +45,18 @@
 
             context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;
-            response.Contents.Invoke(context.Response.OutputStream);
+            response.Contents.Invoke(context.Response.OutputStream);         
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
-            foreach (var key in response.Headers.Keys)
+            foreach (var kvp in response.Headers)
             {
-                foreach (var value in response.Headers[key])
-                {
-                    context.Response.AddHeader(key, value);
-                }
+                context.Response.AddHeader(kvp.Key, kvp.Value);
+            }
+            foreach(var cookie in response.Cookies)
+            {
+                context.Response.AddHeader("Set-Cookie", cookie.ToString());
             }
         }
     }

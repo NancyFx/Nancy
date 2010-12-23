@@ -57,6 +57,7 @@
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
+    <Compile Include="Fakes\FakeViewEngineRegistry.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
     <Compile Include="Specifications\Handling a GET request.cs" />
@@ -65,15 +66,21 @@
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
+    <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
     <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
+    <Compile Include="Unit\Hosting\NancyApplicationFixture.cs" />
+    <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
+    <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

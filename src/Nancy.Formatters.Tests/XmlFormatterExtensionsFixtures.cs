@@ -4,7 +4,7 @@ namespace Nancy.Formatters.Tests
     using System.Net;
     using System.Xml;
     using FakeItEasy;
-    using Fakes;
+    using Nancy.Formatters.Tests.Fakes;
     using Nancy.Tests;
     using Xunit;
 
@@ -16,13 +16,9 @@ namespace Nancy.Formatters.Tests
 
         public XmlFormatterExtensionsFixtures()
         {
-            formatter = A.Fake<IResponseFormatter>();
-            model = new Person
-            {
-                FirstName = "Andy",
-                LastName = "Pike"
-            }; 
-            response = formatter.AsXml(model);
+            this.formatter = A.Fake<IResponseFormatter>();
+            this.model = new Person { FirstName = "Andy", LastName = "Pike" };
+            this.response = this.formatter.AsXml(model);
         }
 
         [Fact]
@@ -44,7 +40,7 @@ namespace Nancy.Formatters.Tests
             {
                 response.Contents(stream);
 
-                XmlElement root = GetXmlRoot(stream);
+                var root = GetXmlRoot(stream);
 
                 root.Name.ShouldEqual("Person");
                 root.ChildNodes.Count.ShouldEqual(2);
@@ -60,13 +56,13 @@ namespace Nancy.Formatters.Tests
             {
                 formatter.AsXml<Person>(null).Contents(stream);
 
-                XmlElement root = GetXmlRoot(stream);
+                var root = GetXmlRoot(stream);
                 root.GetAttribute("nil", "http://www.w3.org/2001/XMLSchema-instance").ShouldEqual("true");
                 root.ChildNodes.Count.ShouldEqual(0);
             }
         }
 
-        private XmlElement GetXmlRoot(Stream stream)
+        private static XmlElement GetXmlRoot(Stream stream)
         {
             stream.Position = 0;
             var xml = new XmlDocument();

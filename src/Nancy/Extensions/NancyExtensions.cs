@@ -1,21 +1,14 @@
 namespace Nancy.Extensions
-{
-    using System;
+{    
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Linq;    
     using Nancy.Routing;
 
     public static class NancyExtensions
     {
-        public static IEnumerable<RouteDescription> GetRouteDescription(this NancyModule source, IRequest request)
+        public static IEnumerable<RouteDescription> GetRouteDescription(this NancyModule source, string method)
         {
-        	var method = request.Method;
-			if (method.ToUpperInvariant() == "HEAD")
-			{
-				method = "GET";
-			}
-            return source.GetRoutes(method).Select(route => new RouteDescription { Action = route.Value, ModulePath = source.ModulePath, Path = route.Key });
-
+            return source.GetRoutes(method).Select(route => new RouteDescription { ModulePath = source.ModulePath, Path = route.Key, Method = method });
         }
     }
 }

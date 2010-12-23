@@ -1,23 +1,21 @@
 ﻿namespace Nancy
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-
-    using Nancy.Extensions;
+    using System;    
+    using System.Linq;    
     using Nancy.Routing;
 
     public class NancyEngine : INancyEngine
     {
         private readonly INancyModuleLocator locator;
         private readonly IRouteResolver resolver;
+        private readonly INancyApplication application;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="locator">An <see cref="INancyModuleLocator"/> instance, that will be used to locate <see cref="NancyModule"/> instances</param>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-        public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver)
+        public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver, INancyApplication application)
         {
             if (locator == null)
             {
@@ -29,8 +27,14 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
+            if (application == null)
+            {
+                throw new ArgumentNullException("application", "The application parameter cannot be null.");
+            }
+
             this.locator = locator;
             this.resolver = resolver;
+            this.application = application;
         }
 
         /// <summary>
@@ -46,15 +50,16 @@
             }
 
             var modules = this.locator.GetModules();
-            if (modules.Count() > 0)
+            if (modules.Any())
             {
-                InitializeModules(request, modules);
-
-                var descriptions = GetRouteDescriptions(request, modules);
-                if (descriptions.Count() > 0)
+                var method = request.Method;
+                if (method.ToUpperInvariant() == "HEAD")
                 {
-                    var resolvedRoute = 
-                        this.resolver.GetRoute(request, descriptions);
+                    method = "GET";
+                }                                
+                if (modules.ContainsKey(method))
+                {
+                    var resolvedRoute = this.resolver.GetRoute(request, modules[method], application);
 
                 	var response = resolvedRoute.Invoke();
 
@@ -68,19 +73,6 @@
             }
             
             return new NotFoundResponse();
-        }
-
-        private static void InitializeModules(IRequest request, IEnumerable<NancyModule> modules)
-        {
-            foreach (var module in modules)
-            {
-                module.Request = request;
-            }
-        }
-
-        private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IEnumerable<NancyModule> modules)
-        {
-            return modules.SelectMany(x => x.GetRouteDescription(request));
         }
     }
 }

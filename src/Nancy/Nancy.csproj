@@ -41,7 +41,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AppDomainModuleLocator.cs" />
+    <Compile Include="Cookies\NancyCookie.cs" />
+    <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultModuleActivator.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
@@ -51,13 +52,17 @@
     <Compile Include="Hosting\NancyHandler.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
     <Compile Include="IModuleActivator.cs" />
+    <Compile Include="INancyApplication.cs" />
+    <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="IViewEngine.cs" />
+    <Compile Include="IViewEngineRegistry.cs" />
+    <Compile Include="ModuleMeta.cs" />
+    <Compile Include="NancyApplication.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
     <Compile Include="NancyEngine.cs" />
-    <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
     <Compile Include="Routing\IRoute.cs" />
@@ -67,9 +72,18 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
+    <Compile Include="ViewEngines\IView.cs" />
+    <Compile Include="ViewEngines\IViewCompiler.cs" />
+    <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
+    <Compile Include="ViewEngines\ViewEngine.cs" />
+    <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Caching\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

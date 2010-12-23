@@ -10,26 +10,35 @@
 
     public class RouteResolver : IRouteResolver
     {
-        public IRoute GetRoute(IRequest request, IEnumerable<RouteDescription> descriptions)
-        {
+        public IRoute GetRoute(IRequest request, IEnumerable<ModuleMeta> metas, INancyApplication application)
+        {            
             var matchingRoutes =
-                from description in descriptions
+                from meta in metas
+                from description in meta.RouteDescriptions
                 let matcher = BuildRegexMatcher(description)
                 let result = matcher.Match(request.Uri)
                 where result.Success
                 select new
                 {
                     Groups = result.Groups,
+                    Meta = meta,
                     Description = description
                 };
 
             var selected = matchingRoutes
                 .OrderByDescending(x => GetSegmentCount(x.Description))
-                .FirstOrDefault();
+                .FirstOrDefault();            
 
-            return selected != null ?
-                new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), selected.Description.Action) : 
-                new NoMatchingRouteFoundRoute(request.Uri);
+            if (selected == null)
+            {
+                return new NoMatchingRouteFoundRoute(request.Uri);
+            }
+
+            var instance = application.Activator.CreateInstance(selected.Meta.Type);
+            instance.Application = application;
+            instance.Request = request;
+            var action = instance.GetRoutes(selected.Description.Method)[selected.Description.Path];
+            return new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), instance, action);
         }
 
         private static RouteParameters GetParameters(RouteDescription description, GroupCollection groups)

@@ -103,13 +103,16 @@ namespace Nancy.Tests.Unit
         public void Should_set_header_parameter_value_to_header_property_when_initialized()
         {
             // Given
-            var headers = new Dictionary<string, IEnumerable<string>>();
+            var headers = new Dictionary<string, IEnumerable<string>>()
+                {
+                    { "content-type", new[] {"foo"} }
+                };
 
             // When
             var request = new Request("GET", "/", headers, new MemoryStream());
 
             // Then
-            request.Headers.ShouldBeSameAs(headers);
+            request.Headers.Keys.Contains("content-type").ShouldBeTrue();
         }
 
         [Fact]
@@ -139,7 +142,7 @@ namespace Nancy.Tests.Unit
             var headers = 
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
                 };
 
             // When
@@ -162,7 +165,7 @@ namespace Nancy.Tests.Unit
 			var headers =
 				new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "x-www-form-urlencoded" } }
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
                 };
 
 			// When

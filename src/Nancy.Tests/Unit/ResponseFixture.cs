@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit
 {
+    using System;
     using System.IO;
     using System.Net;
     using Nancy;
@@ -152,6 +153,35 @@
 
             // Then
             response.ContentType.ShouldEqual("text/html");
+        }
+
+        [Fact]
+        public void Should_set_a_cookie_with_name_and_value()
+        {
+            var response = new Response();
+            response.AddCookie("itsover", "9000");
+            response.Cookies.Count.ShouldEqual(1);
+            response.Cookies[0].ShouldEqual("itsover", "9000", null, null, null);
+        }
+
+        [Fact]
+        public void Should_set_a_cookie_with_name_and_value_and_expiry()
+        {
+            var response = new Response();
+            var date = DateTime.Now;
+            response.AddCookie("itsover", "9000", date);
+            response.Cookies.Count.ShouldEqual(1);
+            response.Cookies[0].ShouldEqual("itsover", "9000", date, null, null);
+        }
+
+        [Fact]
+        public void Should_set_a_cookie_with_everything()
+        {
+            var response = new Response();
+            var date = DateTime.Now;
+            response.AddCookie("itsover", "9000", date, "life", "/andeverything");
+            response.Cookies.Count.ShouldEqual(1);
+            response.Cookies[0].ShouldEqual("itsover", "9000", date, "life", "/andeverything");
         }
 
         private static string GetStringContentsFromResponse(Response response)

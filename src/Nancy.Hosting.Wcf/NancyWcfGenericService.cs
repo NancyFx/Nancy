@@ -16,50 +16,48 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
         /// </summary>
-        public NancyWcfGenericService()
+        public NancyWcfGenericService() : this(new NancyApplication(new DefaultModuleActivator()))
         {
-            engine = new NancyEngine(new AppDomainModuleLocator(new DefaultModuleActivator()), new RouteResolver());
         }
 
-        [WebInvoke(UriTemplate = "*")]
-        public Message HandleOther(Stream body)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
+        /// </summary>
+        /// <param name="moduleLocator">An <see cref="INancyModuleLocator"/> instance that will be used by Nancy to decect available modules.</param>
+        public NancyWcfGenericService(INancyModuleLocator moduleLocator)
         {
-            return HandleAll(body);
+            engine = new NancyEngine(moduleLocator, new RouteResolver(), new NancyApplication());
+        }
+        
+        [WebInvoke(UriTemplate = "*", Method = "*")]
+        public Message HandleRequests(Stream requestBody)
+        {
+            var webContext = WebOperationContext.Current;
+
+            var nancyRequest = CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
+            var nancyResponse = engine.HandleRequest(nancyRequest);
+
+            SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyResponse);
+            
+            return webContext.CreateStreamResponse(nancyResponse.Contents, nancyResponse.ContentType);
         }
 
-        [WebGet(UriTemplate = "*")]
-        public Message HandleGet()
-        {
-            return HandleAll(null);
-        }
-
-        private Message HandleAll(Stream body)
-        {
-            var context = WebOperationContext.Current;
-            var request = CreateNancyRequestFromIncomingRequest(context.IncomingRequest, body);
-            var response = engine.HandleRequest(request);
-
-            SetNancyResponseToOutgoingResponse(context.OutgoingResponse, response);
-
-            return context.CreateStreamResponse(response.Contents, response.ContentType);
-        }
-
-        private static IRequest CreateNancyRequestFromIncomingRequest(IncomingWebRequestContext request, Stream body)
+        private static IRequest CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
         {
             var relativeUri =
-                request.UriTemplateMatch.BaseUri.MakeRelativeUri(request.UriTemplateMatch.RequestUri);
+                webRequest.UriTemplateMatch.BaseUri.MakeRelativeUri(webRequest.UriTemplateMatch.RequestUri);
 
             return new Request(
-                request.Method,
+                webRequest.Method,
                 string.Concat("/", relativeUri),
-                request.Headers.ToDictionary(),
-                body ?? new MemoryStream());
+                webRequest.Headers.ToDictionary(),
+                requestBody);
         }
 
-        private static void SetNancyResponseToOutgoingResponse(OutgoingWebResponseContext resp, Response response)
+        private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)
         {
-            resp.ContentType = response.ContentType;
-            resp.StatusCode = response.StatusCode;
+            webResponse.ContentType = nancyResponse.ContentType;
+            webResponse.StatusCode = nancyResponse.StatusCode;
         }
     }
 }

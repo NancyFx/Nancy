@@ -2,17 +2,17 @@ namespace Nancy.Tests.Unit
 {
     using System.Collections.Generic;
     using System.Net;
-    using Extensions;
+    using Tests.Extensions;
     using Xunit;
 
     public class HeadResponseFixture
     {
-        private readonly IDictionary<string, IEnumerable<string>> headers;
+        private readonly IDictionary<string, string> headers;
         private readonly Response response;
 
         public HeadResponseFixture()
         {
-            this.headers = new Dictionary<string, IEnumerable<string>> { { "Test", new[] { "Value " } } };
+            this.headers = new Dictionary<string, string> { { "Test", "Value " } };
             this.response = new Response { ContentType = "application/json", Headers = headers, StatusCode = HttpStatusCode.ResetContent };
         }
 

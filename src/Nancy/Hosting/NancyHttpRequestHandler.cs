@@ -5,6 +5,8 @@ namespace Nancy.Hosting
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
+        private readonly static INancyApplication application = new NancyApplication();
+
         public bool IsReusable
         {
             get { return false; }
@@ -12,18 +14,10 @@ namespace Nancy.Hosting
 
         public void ProcessRequest(HttpContext context)
         {
-            var engine = new NancyEngine(
-                CreateModuleLocator(),
-                new RouteResolver());
-
+            var engine = new NancyEngine(application, new RouteResolver(), application);
             var wrappedContext = new HttpContextWrapper(context);
             var handler = new NancyHandler(engine);
             handler.ProcessRequest(wrappedContext);
-        }
-
-        protected virtual INancyModuleLocator CreateModuleLocator()
-        {
-            return new AppDomainModuleLocator(new DefaultModuleActivator());
-        }
+        }        
     }
 }

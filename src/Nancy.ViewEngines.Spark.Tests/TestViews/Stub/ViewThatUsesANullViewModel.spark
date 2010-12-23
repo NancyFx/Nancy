@@ -1,0 +1,2 @@
+﻿<viewdata model="string"/>
+<div>${Model ?? "nothing"}</div>

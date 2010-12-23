@@ -1,4 +1,4 @@
-﻿namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines
 {
     using System.IO;
 
