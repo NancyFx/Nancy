@@ -3,6 +3,7 @@ namespace Nancy.Tests.Unit
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Sessions;
     using Xunit;
 
     public class RequestFixture
@@ -56,7 +57,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", "/", null, new MemoryStream()));
+                Record.Exception(() => new Request("GET", "/", null, new MemoryStream(), new CookieSessionStore()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -67,7 +68,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), null));
+                Record.Exception(() => new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), null, new CookieSessionStore()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -109,7 +110,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("GET", "/", headers, new MemoryStream());
+            var request = new Request("GET", "/", headers, new MemoryStream(), new CookieSessionStore());
 
             // Then
             request.Headers.Keys.Contains("content-type").ShouldBeTrue();
@@ -122,7 +123,7 @@ namespace Nancy.Tests.Unit
             var body = new MemoryStream();
 
             // When
-            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body);
+            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body, new CookieSessionStore());
 
             // Then
             request.Body.ShouldBeSameAs(body);
@@ -146,7 +147,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory);
+            var request = new Request("POST", "/", headers, memory, new CookieSessionStore());
 
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
@@ -169,7 +170,7 @@ namespace Nancy.Tests.Unit
                 };
 
 			// When
-            var request = new Request("POST", "/", headers, memory);
+            var request = new Request("POST", "/", headers, memory, new CookieSessionStore());
 			request.Form.ToString();
 			// Then
 			((string)request.Form.name).ShouldEqual("John Doe");
@@ -179,7 +180,7 @@ namespace Nancy.Tests.Unit
         public void Should_have_an_empty_cookie_collection_when_none_exist()
         {
             // When
-            var request = new Request("POST", "/", new Dictionary<string, IEnumerable<string>>(0), new MemoryStream());
+            var request = new Request("POST", "/", new Dictionary<string, IEnumerable<string>>(0), new MemoryStream(), new CookieSessionStore());
 
             // Then
             request.Cookie.Count.ShouldEqual(0);
@@ -194,7 +195,7 @@ namespace Nancy.Tests.Unit
                     { "cookie", new[] { "leto=dune" } }
                 };
             // When
-            var request = new Request("POST", "/", headers, new MemoryStream());
+            var request = new Request("POST", "/", headers, new MemoryStream(), new CookieSessionStore());
 
             // Then
             request.Cookie["leto"].ShouldEqual("dune");
@@ -208,7 +209,7 @@ namespace Nancy.Tests.Unit
                     { "cookie", new[] { "leto=emperor" } }
                 };
             // When
-            var request = new Request("POST", "/", headers, new MemoryStream());
+            var request = new Request("POST", "/", headers, new MemoryStream(), new CookieSessionStore());
 
             // Then
             request.Cookie["LetO"].ShouldEqual("emperor");
@@ -222,7 +223,7 @@ namespace Nancy.Tests.Unit
                     { "cookie", new[] { "leto=emperor; paul=father; duncan=cool" } }
                 };
             // When
-            var request = new Request("POST", "/", headers, new MemoryStream());
+            var request = new Request("POST", "/", headers, new MemoryStream(), new CookieSessionStore());
 
             // Then
             request.Cookie["LetO"].ShouldEqual("emperor");

@@ -2,6 +2,7 @@
 {
     using System.Web;
     using Nancy.Extensions;
+    using Sessions;
 
     public class NancyHandler
     {        
@@ -22,12 +23,12 @@
             }
 
             var sessionStore = application.SessionStore;
-
-            var request = CreateNancyRequest(context);
-            request.Session = sessionStore.Load(request);
-            
+            var request = CreateNancyRequest(context, sessionStore);            
             var response = engine.HandleRequest(request);
-            sessionStore.Save(request.Session, response);
+            if (request.SessionWasLoaded)
+            {
+                sessionStore.Save(request.Session, response);
+            }
             SetNancyResponseToHttpResponse(context, response);
         }
 
@@ -36,13 +37,14 @@
             return context.Request.Url.AbsolutePath.Contains("favicon.ico");
         }
 
-        private static IRequest CreateNancyRequest(HttpContextBase context)
+        private static IRequest CreateNancyRequest(HttpContextBase context, ISessionStore sessionStore)
         {
             return new Request(
                 context.Request.HttpMethod,
                 context.Request.Url.AbsolutePath,
                 context.Request.Headers.ToDictionary(),
-                context.Request.InputStream);
+                context.Request.InputStream, 
+                sessionStore);
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

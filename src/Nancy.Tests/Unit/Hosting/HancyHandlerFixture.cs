@@ -54,7 +54,7 @@ namespace Nancy.Tests.Unit.Hosting
         }
 
         [Fact]
-        public void Should_store_the_session()
+        public void Should_not_store_the_session_if_it_was_not_even_loaded()
         {
             // Given
             var request = new Request("GET", "http://leto.dune/about");
@@ -66,6 +66,25 @@ namespace Nancy.Tests.Unit.Hosting
             SetupRequestProcess();
 
             // When           
+            handler.ProcessRequest(context);
+
+            // Then
+            A.CallTo(() => this.sessionStore.Save(session, response)).MustNotHaveHappened();
+        }
+
+        [Fact(Skip="The static construction of the request makes this impossible to test")]
+        public void Should_store_the_session_if_it_was_loaded()
+        {
+            // Given
+            var request = new Request("GET", "http://leto.dune/about");
+            var response = new Response();
+            var session = new Session();            
+
+            A.CallTo(() => sessionStore.Load(A<IRequest>.Ignored.Argument)).Returns(session);            
+            A.CallTo(() => this.engine.HandleRequest(A<IRequest>.Ignored.Argument)).Returns(response);
+            SetupRequestProcess();
+
+            // When                       
             handler.ProcessRequest(context);
 
             // Then

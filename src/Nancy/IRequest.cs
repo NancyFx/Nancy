@@ -23,7 +23,9 @@ namespace Nancy
 
         IDictionary<string, string> Cookie { get; }
 
-        ISession Session { get; set; }
+        ISession Session { get; }
+
+        bool SessionWasLoaded { get; }
     }
 
     public class Request : IRequest
@@ -31,13 +33,17 @@ namespace Nancy
         private dynamic form;
 
         private IDictionary<string, string> cookie;
+
+        private ISession session;
+
+        private readonly ISessionStore sessionStore;
         
         public Request(string method, string uri)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream())
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), new CookieSessionStore())
         {
         }
 
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body)
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, ISessionStore sessionStore)
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -56,11 +62,15 @@ namespace Nancy
 
             if (body == null)
                 throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
+
+            if (sessionStore == null)
+                throw new ArgumentNullException("sessionStore", "The value of the sessionStore parameter cannot be null.");
             
             this.Body = body;
             this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
             this.Method = method;
             this.Uri = uri;
+            this.sessionStore = sessionStore;
         }
 
         public Stream Body { get; set; }
@@ -75,8 +85,20 @@ namespace Nancy
             get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
         }
 
-        public ISession Session { get; set; }
-        
+        public ISession Session
+        {
+            get { 
+                if (session == null)
+                {
+                    SessionWasLoaded = true;
+                    session = sessionStore.Load(this);
+                }
+                return session;
+            }
+        }
+
+        public bool SessionWasLoaded { get; set; }
+
 
         private dynamic GetFormData()
         {
