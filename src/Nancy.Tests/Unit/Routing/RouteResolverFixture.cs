@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Extensions;
     using Nancy;
     using Nancy.Extensions;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Tests.Extensions;
     using Xunit;
     using Xunit.Extensions;
 

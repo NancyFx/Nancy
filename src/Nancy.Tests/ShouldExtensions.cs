@@ -35,12 +35,33 @@ namespace Nancy.Tests
                 where c.GetType().IsAssignableFrom(typeof(T))
                 select c;
 
-            Assert.True(selection.Count() > 0);
+            Assert.True(selection.Any());
         }
 
-        public static void ShouldHaveCount<T>(this IList<T> list, int expected)
+        public static void ShouldContainInOrder(this string actual, params string[] values)
         {
-            list.Count.ShouldEqual(expected);
+            int index = 0;
+            foreach (string value in values)
+            {
+                int nextIndex = actual.IndexOf(value, index);
+                Assert.True(nextIndex >= 0, string.Format("Looking for {0}", value));
+                index = nextIndex + value.Length;
+            }
+        }
+
+        public static void ShouldContain(this string actual, string expected)
+        {
+            Assert.True(actual.Contains(expected), string.Format("'{0}' does not contain '{1}'", actual, expected));
+        }
+
+        public static void ShouldNotContain(this string actual, string expected)
+        {
+            Assert.False(actual.Contains(expected), string.Format("'{0}' does contain '{1}'", actual, expected));
+        }
+
+        public static void ShouldHaveCount<T>(this IEnumerable<T> list, int expected)
+        {
+            list.Count().ShouldEqual(expected);
         }
 
         public static void ShouldBeTrue(this bool actual)

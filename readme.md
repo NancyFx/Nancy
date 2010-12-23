@@ -101,7 +101,7 @@ of integration work to get it running in Nancy.
 * Static - The static view engine serves up any static textfile (which includes html files) you have in your project. It is invoked with the virtual path of the file you want to serve. The
 current implementation serves as a proof of concept and needs more work to be stable
 * [Razor](http://weblogs.asp.net/scottgu/archive/2010/07/02/introducing-razor.aspx "Read more about the Razor view engine") - With this view engine you can use views with Nancy. The current implementation serves as a proof of concept and needs more work to be stable
-* [Spark](http://sparkviewengine.com "Read more about the Spark view engine") - Working spike waiting to be cleaned up and pushed into the repository
+* [Spark](http://sparkviewengine.com "Read more about the Spark view engine") - Implemented
 * [NDjango](http://ndjango.org "Read more about the NDjango view engine") - The current implementation serves as a proof of concept and needs more work to be stable
 * [NHaml](http://code.google.com/p/nhaml "Read more about the NHaml view engine") - The current implementation serves as a proof of concept and needs more work to be stable
 * WebForm - In need of integration help
@@ -120,6 +120,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * Mindaugas Mozuras
 * Pedro Felix
 * Phil Haack
+* Robert Greyling
 * Steven Robbins
 
 ## Copyright

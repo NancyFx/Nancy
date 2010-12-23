@@ -1,0 +1,21 @@
+﻿<html>
+  <head>
+    <global title='"Default Title"' type="string"/>
+    <title>${title}</title>
+  </head>
+  <body>
+    <div id="header">
+      <use content="header">
+        <div>no header by default</div>
+      </use>
+    </div>
+    <div id="main">
+      <use content="view"/>
+    </div>
+    <div id="footer">
+      <use content="footer">
+        <div>no footer by default</div>
+      </use>
+    </div>
+  </body>
+</html>

@@ -67,6 +67,7 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\CookieSessionStoreFixture.cs" />
     <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
+    <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
     <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
     <Compile Include="Unit\Hosting\NancyApplicationFixture.cs" />
@@ -79,6 +80,8 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

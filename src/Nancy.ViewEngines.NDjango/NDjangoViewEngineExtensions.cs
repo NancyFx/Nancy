@@ -7,7 +7,7 @@ namespace Nancy.ViewEngines.NDjango
     {
         public static Action<Stream> Django(this IViewEngine source, string name)
         {
-            return Django(source, name, (object)null);
+            return source.Django<object>(name, null);
         }
        
         public static Action<Stream> Django<TModel>(this IViewEngine source, string name, TModel model)

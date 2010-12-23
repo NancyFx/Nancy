@@ -1,0 +1,6 @@
+﻿<ul>
+  <var i='0' styles='new string[] {"even", "odd"}' />
+  <for each='var rowText in new[] {"lion", "hippo"}' i='i+1'>
+    <Row css='styles[i%2]' />
+  </for>
+</ul>

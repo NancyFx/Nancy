@@ -7,7 +7,7 @@ namespace Nancy.ViewEngines.NHaml
     {
         public static Action<Stream> Haml(this IViewEngine source, string name)
         {
-            return Haml(source, name, (object) null);
+            return source.Haml<object>(name, null);
         }
 
         public static Action<Stream> Haml<TModel>(this IViewEngine source, string name, TModel model)

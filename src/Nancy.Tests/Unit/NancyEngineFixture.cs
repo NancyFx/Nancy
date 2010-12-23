@@ -212,7 +212,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/");            
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
             A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).Returns(route);
@@ -279,7 +279,6 @@ namespace Nancy.Tests.Unit
             // Then
             r.Path.ShouldEqual("/");
         }
-        
         
         private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IDictionary<string, IEnumerable<ModuleMeta>> modules)
         {

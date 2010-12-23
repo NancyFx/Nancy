@@ -1,0 +1,9 @@
+﻿
+<div once="carnivor">tiger</div>
+<div once="herbivore">elephant</div>
+<div>The Target</div>
+
+<content name="list"><li>three</li></content>
+
+<content name="chunk1">beta</content>
+<content name="chunk2">gamma</content>

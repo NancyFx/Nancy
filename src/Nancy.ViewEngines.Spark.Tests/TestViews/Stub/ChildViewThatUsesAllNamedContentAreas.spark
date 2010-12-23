@@ -1,0 +1,12 @@
+﻿<div>
+  <content name="footer">
+    <div>Here is some footer stuff defined at the top</div>
+  </content>
+  <div>OK - this is the main content by default because it is not contained</div>
+  <content name="header">
+    <div>Funny, we can put the header anywhere we like with a name</div>
+    <content name="footer">
+      <div>Much better place for footer stuff - or is it?</div>
+    </content>
+  </content>
+</div>

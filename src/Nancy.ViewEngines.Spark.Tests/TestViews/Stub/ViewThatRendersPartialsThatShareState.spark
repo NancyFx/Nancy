@@ -1,0 +1,19 @@
+﻿<div>start</div>
+<div once="carnivor">lion</div>
+<content name="list"><li>one</li></content>
+<content name="chunk1">alpha</content>
+<div><use file='PartialTarget' /></div>
+<content name="chunk2">delta</content>
+<content name="list"><li>two</li></content>
+<div once="herbivore">hippo</div>
+<div once="carnivor">leopard</div>
+<div once="plant">Willow</div>
+<div once="plant">Oak</div>
+<div>middle</div>
+
+<ul>
+<use content="list"/>
+</ul>
+
+<use content="chunk1"/><use content="chunk2"/>
+<div>end</div>
