@@ -12,7 +12,7 @@ namespace Nancy.Sessions
         
         public void Save(ISession session, Response response)
         {
-            if (session == null || session.Count == 0) { return; }
+            if (session == null || !session.HasChanged) { return; }
 
             var sb = new StringBuilder();
             foreach (var kvp in session)

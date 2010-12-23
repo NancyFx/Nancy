@@ -18,10 +18,10 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_save_nothing_if_the_session_is_empty()
+        public void Should_save_nothing_if_the_session_has_not_changed()
         {
             var response = new Response();
-            new CookieSessionStore().Save(new Session(), response);
+            new CookieSessionStore().Save(new Session(new Dictionary<string, object>{{"key","value"}}), response);
             response.Cookies.Count.ShouldEqual(0);
         }
 
@@ -31,9 +31,9 @@ namespace Nancy.Tests.Unit
             var response = new Response();
             var session = new Session(new Dictionary<string, object>
                                       {
-                                          {"key1", "val1"},
-                                          {"key2", "val2"}
+                                          {"key1", "val1"},                                          
                                       });
+            session["key2"] = "val2";
             new CookieSessionStore().Save(session, response);
             response.Cookies.Count.ShouldEqual(1);
             response.Cookies.First().Name.ShouldEqual(CookieSessionStore.CookieName);
@@ -47,7 +47,8 @@ namespace Nancy.Tests.Unit
         public void Should_saves_url_safe_keys_and_values()
         {
             var response = new Response();
-            var session = new Session(new Dictionary<string, object>{ {"key 1", "val=1"} });
+            var session = new Session();
+            session["key 1"] = "val=1";
             new CookieSessionStore().Save(session, response);
             response.Cookies.First().Value.ShouldEqual("key+1=val%3d1;");
         }

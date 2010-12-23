@@ -7,6 +7,7 @@ namespace Nancy.Sessions
     public class Session : ISession
     {
         private readonly IDictionary<string, object> dictionary;
+        private bool hasChanged;
 
         public Session() : this(new Dictionary<string, object>(0)){}
         public Session(IDictionary<string, object> dictionary)
@@ -21,18 +22,28 @@ namespace Nancy.Sessions
 
         public void DeleteAll()
         {
-            throw new NotImplementedException();
+            if (Count > 0) { MarkAsChanged(); }
+            dictionary.Clear();            
         }
 
         public void Delete(string key)
         {
-            throw new NotImplementedException();
+            if (dictionary.Remove(key)) { MarkAsChanged(); }            
         }
 
         public object this[string key]
         {
             get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
-            set { dictionary[key] = value; }
+            set
+            {
+                dictionary[key] = value;
+                MarkAsChanged();
+            }
+        }
+
+        public bool HasChanged
+        {
+            get { return this.hasChanged; }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -42,6 +53,11 @@ namespace Nancy.Sessions
         public IEnumerator<KeyValuePair<string, object>> GetEnumerator()
         {
             return dictionary.GetEnumerator();
+        }
+
+        private void MarkAsChanged()
+        {
+            hasChanged = true;
         }
     }
 }
