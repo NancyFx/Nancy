@@ -18,10 +18,10 @@ namespace Nancy.Tests.Unit
 
         public CookieSessionStoreFixture()
         {
-            passphrase = CookieSessionStore.CookiePassphrase = "the passphrase";
-            CookieSessionStore.CookieSalt = "the salt";
+            passphrase = CookieSessionStore.Passphrase = "the passphrase";
+            CookieSessionStore.Salt = "the salt";
             //must kill someone
-            salt = (byte[]) typeof (CookieSessionStore).GetField("cookieSalt", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
+            salt = (byte[]) typeof (CookieSessionStore).GetField("salt", BindingFlags.Static | BindingFlags.NonPublic).GetValue(null);
             this.encryption = A.Fake<IEncryption>();
             cookieStore = new CookieSessionStore(encryption);
         }

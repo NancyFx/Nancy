@@ -76,9 +76,11 @@ To enable sessions, you must specify two security variables on startup (in your 
 
       protected void Application_Start()
       {
-          CookieSessionStore.CookiePassphrase = "This is my really s349 secure P213#(al passphrase";
-          CookieSessionStore.CookieSalt = "And *232 also 438 my salt!!";
+          CookieSessionStore.Passphrase = "This is my really s349 secure P213#(al passphrase";
+          CookieSessionStore.Salt = "And *232 also 438 my salt!!";
       }
+
+You can also set the name of the cookie via the CookieSessionStore.CookieName field.
 	
 ## Help out
 

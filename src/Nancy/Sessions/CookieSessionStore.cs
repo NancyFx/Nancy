@@ -8,12 +8,12 @@ namespace Nancy.Sessions
 
     public class CookieSessionStore : ISessionStore
     {
-        private static byte[] cookieSalt;        
+        private static byte[] salt;        
         public static string CookieName = "_nc";
-        public static string CookiePassphrase;
-        public static string CookieSalt
+        public static string Passphrase;
+        public static string Salt
         {            
-            set { cookieSalt = Encoding.UTF8.GetBytes(value); }
+            set { salt = Encoding.UTF8.GetBytes(value); }
         }
 
         private readonly IEncryption encryption;
@@ -36,14 +36,14 @@ namespace Nancy.Sessions
                 sb.Append(HttpUtility.UrlEncode(kvp.Value.ToString()));
                 sb.Append(";");
             }
-            response.AddCookie(CookieName, encryption.Encrypt(sb.ToString(), CookiePassphrase, cookieSalt));
+            response.AddCookie(CookieName, encryption.Encrypt(sb.ToString(), Passphrase, salt));
         }
         public ISession Load(IRequest request)
         {
             var dictionary = new Dictionary<string, object>();
             if (request.Cookie.ContainsKey(CookieName))
             {
-                var data = encryption.Decrypt(HttpUtility.UrlDecode(request.Cookie[CookieName]), CookiePassphrase, cookieSalt);
+                var data = encryption.Decrypt(HttpUtility.UrlDecode(request.Cookie[CookieName]), Passphrase, salt);
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
