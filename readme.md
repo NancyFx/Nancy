@@ -67,6 +67,18 @@ Nancy also supports the idea of _module paths_, where you assign a root path for
     }
 
 Notice the _base("/butler")_ call to the NancyModule constructor. Now all action paths that are defined in the module will be relative to _/butler_ so in order to greet someone you could access _/butler/greet/{name}_, for example _/butler/greet/thecodejunkie_
+
+## Sessions
+
+Nancy sessions are completely stored within a client-side cookie. This imposes a number of limitations on session use - which is good because sessions are often abused. Most importantly, session data should be kept extremely small. A user's user id is a good example. Security should also be considered - even though the data is encrypted.
+
+To enable sessions, you must specify two security variables on startup (in your application's Application_Start):
+
+      protected void Application_Start()
+      {
+          CookieSessionStore.CookiePassphrase = "This is my really s349 secure P213#(al passphrase";
+          CookieSessionStore.CookieSalt = "And *232 also 438 my salt!!";
+      }
 	
 ## Help out
 

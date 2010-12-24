@@ -73,6 +73,8 @@
     <Compile Include="Routing\RouteParameters.cs" />
     <Compile Include="Routing\RouteResolver.cs" />
     <Compile Include="Sessions\CookieSessionStore.cs" />
+    <Compile Include="Sessions\Encryption.cs" />
+    <Compile Include="Sessions\IEncryption.cs" />
     <Compile Include="Sessions\ISession.cs" />
     <Compile Include="Sessions\ISessionStore.cs" />
     <Compile Include="Sessions\Session.cs" />
