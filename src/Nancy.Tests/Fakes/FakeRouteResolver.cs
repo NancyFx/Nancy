@@ -10,7 +10,7 @@ namespace Nancy.Tests.Fakes
         {
             var description = (from m in meta
                                from d in m.RouteDescriptions
-                               where d.ModulePath + d.Path == request.Uri
+                               where d.Path == request.Uri
                                select d).First();
 
             this.ModulePath = description.Module.ModulePath;
@@ -18,7 +18,6 @@ namespace Nancy.Tests.Fakes
 
             return new FakeRoute();
         }
-
         
         public string Path { get; private set; }
 

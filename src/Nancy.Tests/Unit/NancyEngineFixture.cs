@@ -293,20 +293,6 @@ namespace Nancy.Tests.Unit
             // Then
             r.Path.ShouldEqual("/");
         }
-
-        [Fact]
-        public void Should_set_request_property_of_loaded_modules()
-        {
-            // Given
-            var request = new Request("GET", "/");
-            A.CallTo(() => this.locator.GetModules()).Returns(this.modules);
-
-            // When
-            this.engine.HandleRequest(request);
-
-            // Then
-            this.modules.First().Request.ShouldNotBeNull();
-        }
         
         private static IEnumerable<RouteDescription> GetRouteDescriptions(IRequest request, IDictionary<string, IEnumerable<ModuleMeta>> modules)
         {

@@ -17,9 +17,10 @@
         public Func<bool> Condition { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the path that this route will match.
         /// </summary>
-        /// <value></value>
+        /// <value>A <see cref="string"/> containing the path of the route.</value>
+        /// <remarks>This will be the module-qualified path, i.e a combination of the <see cref="NancyModule.ModulePath"/>, of the module that the route belogs to, and the registered path.</remarks>
         public string Path { get; set; }
 
         public string Method { get; set; }

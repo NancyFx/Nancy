@@ -14,7 +14,7 @@ namespace Nancy.Tests.Unit.Routing
 
         public RouteDictionaryFixture()
         {
-            this.routes = new RouteDictionary(new FakeNancyModuleWithoutBasePath());
+            this.routes = new RouteDictionary(new FakeNancyModuleWithoutBasePath(), "GET");
             this.path = "/route/path";
             this.condition = () => { return true; };
             this.action = parameters => { return new Response(); };
@@ -30,7 +30,7 @@ namespace Nancy.Tests.Unit.Routing
             var information = this.routes.GetRoute(this.path);
 
             // Then
-            information.Route.ShouldEqual(this.path);
+            information.Path.ShouldEqual(this.path);
         }
 
         [Fact]
@@ -69,7 +69,7 @@ namespace Nancy.Tests.Unit.Routing
             var information = this.routes.GetRoute(this.path);
 
             // Then
-            information.Route.ShouldEqual(this.path);
+            information.Path.ShouldEqual(this.path);
         }
 
         [Fact]
@@ -105,7 +105,7 @@ namespace Nancy.Tests.Unit.Routing
             var module = new FakeNancyModuleWithBasePath();
 
             // When
-            var rootBasedRoutes = new RouteDictionary(module);
+            var rootBasedRoutes = new RouteDictionary(module, "GET");
 
             // Then
             rootBasedRoutes.Module.ShouldBeSameAs(module);
@@ -115,7 +115,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_throw_argumentnullexception_when_initialized_with_null()
         {
             // Given, When
-            var exception = Record.Exception(() => new RouteDictionary(null));
+            var exception = Record.Exception(() => new RouteDictionary(null, "GET"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -126,14 +126,57 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var module = new FakeNancyModuleWithBasePath();
-            var rootBasedRoutes = new RouteDictionary(module);
+            var rootBasedRoutes = new RouteDictionary(module, "GET");
             rootBasedRoutes[this.path] = this.action;
-            
+            var moduleRelativePath = string.Concat(module.ModulePath, this.path);
+
             // When
-            var information = rootBasedRoutes.GetRoute(this.path);
+            var description = rootBasedRoutes.GetRoute(moduleRelativePath);
 
             // Then
-            information.Route.ShouldEqual(string.Concat(rootBasedRoutes.Module.ModulePath, this.path));
+            description.Path.ShouldEqual(moduleRelativePath);
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_initialized_with_null_method()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new RouteDictionary(new FakeNancyModuleWithBasePath(), null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentoutofrangeexception_when_initialized_with_empty_method()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new RouteDictionary(new FakeNancyModuleWithBasePath(), string.Empty));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void Should_set_method_property_to_value_of_method_parameter_when_initialized()
+        {
+            // Given, When, Then
+            this.routes.Method.ShouldEqual("GET");
+        }
+
+        [Fact]
+        public void Should_set_route_dictionary_method_on_retrieved_description()
+        {
+            // Given
+            this.routes[this.path, this.condition] = this.action;
+
+            // When
+            var information = this.routes.GetRoute(this.path);
+
+            // Then
+            information.Method.ShouldEqual(this.routes.Method);
         }
     }
 }

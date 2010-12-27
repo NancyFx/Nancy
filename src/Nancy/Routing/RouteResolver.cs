@@ -37,8 +37,12 @@
             var instance = application.Activator.CreateInstance(selected.Meta.Type);
             instance.Application = application;
             instance.Request = request;
-            var action = instance.GetRoutes(selected.Description.Method)[selected.Description.Path];
-            return new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), instance, action);
+
+            var action = instance
+                .GetRoutes(selected.Description.Method)
+                .GetRoute(selected.Description.Path).Action;
+
+            return new Route(selected.Description.Path, GetParameters(selected.Description, selected.Groups), instance, action);
         }
 
         private static DynamicDictionary GetParameters(RouteDescription description, GroupCollection groups)
@@ -67,7 +71,7 @@
         private static Regex BuildRegexMatcher(RouteDescription description)
         {
             var segments =
-                description.GetModuleQualifiedPath().Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                description.Path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 
             var parameterizedSegments =
                 GetParameterizedSegments(segments);
@@ -97,16 +101,15 @@
 
         private static int GetSegmentCount(RouteDescription description)
         {
-            var moduleQualifiedPath =
-                description.GetModuleQualifiedPath();
+            var workingCopyOfPath = description.Path;
 
             var indexOfFirstParameter =
-                moduleQualifiedPath.IndexOf('{');
+                workingCopyOfPath.IndexOf('{');
 
             if (indexOfFirstParameter > -1)
-                moduleQualifiedPath = moduleQualifiedPath.Substring(0, indexOfFirstParameter);
+                workingCopyOfPath = workingCopyOfPath.Substring(0, indexOfFirstParameter);
 
-            return moduleQualifiedPath.Split('/').Count();
+            return workingCopyOfPath.Split('/').Count();
         }
     }
 }

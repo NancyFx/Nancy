@@ -45,7 +45,6 @@
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultModuleActivator.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
-    <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />

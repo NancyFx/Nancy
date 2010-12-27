@@ -6,13 +6,14 @@ namespace Nancy
 
     public class ModuleMeta
     {
-        public Type Type { get; set; }
-        public IEnumerable<RouteDescription> RouteDescriptions { get; set; }
-
         public ModuleMeta(Type type, IEnumerable<RouteDescription> routeDescriptions)
         {
             Type = type;
             RouteDescriptions = routeDescriptions;
         }
+
+        public IEnumerable<RouteDescription> RouteDescriptions { get; set; }
+
+        public Type Type { get; set; }
     }
 }

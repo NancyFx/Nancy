@@ -117,7 +117,12 @@
         {
             // Given
             var request = new Request("GET", "/fake/should/have/conflicting/route/defined", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
-            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
+            var metas = new[]
+                {
+                    new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")),
+                    new ModuleMeta(typeof(FakeNancyModuleWithoutBasePath), new FakeNancyModuleWithoutBasePath().GetRouteDescription("GET"))
+                };
+
             var route = this.resolver.GetRoute(request, metas, new NancyApplication());
             var response = route.Invoke();
 

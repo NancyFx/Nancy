@@ -21,16 +21,33 @@ namespace Nancy.Routing
         /// Initializes a new instance of the <see cref="RouteDictionary"/> class.
         /// </summary>
         /// <param name="module"></param>
-        public RouteDictionary(NancyModule module)
+        public RouteDictionary(NancyModule module, string method)
         {
             if (module == null)
             {
                 throw new ArgumentNullException("module", "The value of the module parameter cannot be null.");
             }
 
+            if (method == null)
+            {
+                throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
+            }
+
+            if (method.Length == 0)
+            {
+                throw new ArgumentOutOfRangeException("method", string.Empty, "The value of the method parameter cannot be empty.");
+            }
+
+            this.Method = method;
             this.Module = module;
             this.routes = new Dictionary<Tuple<string, Func<bool>>, Func<dynamic, Response>>(new RouteDictionaryEqualityComparer());
         }
+
+        /// <summary>
+        /// Gets the method.
+        /// </summary>
+        /// <value>The method.</value>
+        public string Method { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="NancyModule"/> instance that the routes are registred in.
@@ -77,26 +94,29 @@ namespace Nancy.Routing
                 {
                     Action = this.routes[candidate],
                     Condition = candidate.Item2,
+                    Method = this.Method,
                     Module = this.Module,
-                    Path = candidate.Item1
+                    Path = string.Concat(this.Module.ModulePath, candidate.Item1)
                 };
 
-            return descriptions;
+            return descriptions.ToList();
         }
 
-        public RouteInformation GetRoute(string route)
+        public RouteDescription GetRoute(string route)
         {
-            var matches =
+            var descriptions =
                 from candidate in this.routes.Keys
-                where candidate.Item1.Equals(route, StringComparison.OrdinalIgnoreCase)
-                select new RouteInformation
+                where string.Concat(this.Module.ModulePath, candidate.Item1).Equals(route, StringComparison.OrdinalIgnoreCase)
+                select new RouteDescription()
                 {
                     Action = this.routes[candidate],
                     Condition = candidate.Item2,
-                    Route = string.Concat(this.Module.ModulePath, candidate.Item1)
+                    Method = this.Method,
+                    Module = this.Module,
+                    Path = string.Concat(this.Module.ModulePath, candidate.Item1)
                 };
 
-            return matches.FirstOrDefault();
+            return descriptions.FirstOrDefault();
         }
 
         /// <summary>

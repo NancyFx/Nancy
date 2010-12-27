@@ -45,7 +45,7 @@ namespace Nancy
 
             if (!this.routes.TryGetValue(method, out routesForSpecifiedMethod))
             {
-                routesForSpecifiedMethod = new RouteDictionary(this);
+                routesForSpecifiedMethod = new RouteDictionary(this, method);
                 this.routes[method] = routesForSpecifiedMethod;
             }
 
@@ -110,31 +110,6 @@ namespace Nancy
         /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
         /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
         public IResponseFormatter Response { get; private set; }
-
-        /// <summary>
-        /// Gets all the routes that have been declared for the request <paramref name="method"/>.
-        /// </summary>
-        /// <param name="method">A <see cref="string"/> containing the http request method for which the routes should be returned.</param>
-        /// <returns>An <see cref="IDictionary{TKey,TValue}"/> containing the routes.</returns>
-        /// <remarks>Valid values are delete, get, post and put. The parameter is not case sensitive.</remarks>
-        public IDictionary<string, Func<dynamic, Response>> GetRoutes(string method)
-        {
-            if (method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
-            {
-                method = "GET";
-            }
-
-            IDictionary<string, Func<dynamic, Response>> routes;
-
-            if (!moduleRoutes.TryGetValue(method, out routes))
-            {
-                routes = new Dictionary<string, Func<dynamic, Response>>(StringComparer.OrdinalIgnoreCase);
-                moduleRoutes[method] = routes;
-            }
-
-            return routes;
-        }
-
 
         /// <summary>
         /// Renders the view based on the extension without a model.
