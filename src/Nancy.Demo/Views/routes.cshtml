@@ -9,7 +9,7 @@
 	<p>Below is a list of all of the currently registered routes in this application</p>
 	<ul>
 		@foreach (var route in @Model) {
-			<li><a href="@route.Key">@route.Key</a></li>
+			<li><a href="@route.Path">@route.Path</a></li>
 		}
 	</ul>
 

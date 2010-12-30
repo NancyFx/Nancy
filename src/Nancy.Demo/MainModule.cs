@@ -21,7 +21,7 @@ namespace Nancy.Demo
             };
 
             Get["/routes"] = x => {
-                var routes = GetRoutes("GET");
+                var routes = GetRoutes("GET").GetRouteDescriptions();
                 return View.Razor("~/views/routes.cshtml", routes);
             };
 
