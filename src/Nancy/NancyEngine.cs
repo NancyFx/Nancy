@@ -16,6 +16,7 @@
         /// </summary>
         /// <param name="locator">An <see cref="INancyModuleLocator"/> instance, that will be used to locate <see cref="NancyModule"/> instances</param>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
+        /// <param name="application"></param>
         public NancyEngine(INancyModuleLocator locator, IRouteResolver resolver, INancyApplication application)
         {
             if (locator == null)

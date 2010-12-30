@@ -6,8 +6,6 @@ namespace Nancy
     using System.Linq;
     using System.Web;
 
-    using Nancy.Routing;
-
     public interface IRequest
     {
         string Uri { get; }
