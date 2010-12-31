@@ -1,0 +1,35 @@
+﻿namespace Nancy.Formatters.Responses
+{
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Web.Hosting;
+
+    public class ImageResponse : Response
+    {
+        public ImageResponse(string imagePath)
+        {
+            if (string.IsNullOrEmpty(imagePath) ||
+                !File.Exists(HostingEnvironment.MapPath(imagePath)) ||
+                !Path.HasExtension(imagePath))
+            {
+                this.StatusCode = HttpStatusCode.NotFound;
+            }
+            else
+            {
+                this.Contents = GetImageContent(imagePath);
+                this.ContentType = "image/" + Path.GetExtension(imagePath).Substring(1);
+                this.StatusCode = HttpStatusCode.OK;
+            }
+        }
+
+        private static Action<Stream> GetImageContent(string imagePath)
+        {
+            return stream =>
+            {
+                var image = System.Drawing.Image.FromFile(HostingEnvironment.MapPath(imagePath));
+                image.Save(stream, image.RawFormat);
+            };
+        }
+    }
+}

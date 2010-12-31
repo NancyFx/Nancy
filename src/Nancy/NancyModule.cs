@@ -4,6 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.IO;
     using Nancy.Routing;
+    using Nancy.ViewEngines;
 
     public abstract class NancyModule
     {

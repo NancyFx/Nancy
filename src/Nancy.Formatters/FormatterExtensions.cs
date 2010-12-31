@@ -13,5 +13,10 @@ namespace Nancy.Formatters
         {
             return new XmlResponse<TModel>(model);
         }
+
+        public static Response Image(this IResponseFormatter formatter, string imagePath)
+        {
+            return new ImageResponse(imagePath);
+        }
     }
 }

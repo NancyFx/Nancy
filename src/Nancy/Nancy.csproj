@@ -54,8 +54,8 @@
     <Compile Include="INancyApplication.cs" />
     <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="IResponseFormatter.cs" />
-    <Compile Include="IViewEngine.cs" />
-    <Compile Include="IViewEngineRegistry.cs" />
+    <Compile Include="ViewEngines\IViewEngine.cs" />
+    <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
     <Compile Include="ModuleMeta.cs" />
     <Compile Include="NancyApplication.cs" />
     <Compile Include="NancyModule.cs" />

@@ -33,6 +33,7 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Frank" };
                 return View.Razor("~/views/razor.cshtml", model);
             };
+
             Get["/nhaml"] = x => {
                 var model = new RatPack { FirstName = "Andrew" };
                 return View.Haml("~/views/nhaml.haml", model);
