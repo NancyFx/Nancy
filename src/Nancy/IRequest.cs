@@ -79,10 +79,8 @@ namespace Nancy
                 var contentType = this.Headers["content-type"].First();
                 if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
                 {
-                    var position = this.Body.Position;
                     var reader = new StreamReader(this.Body);
                     var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-                    this.Body.Position = position;
 
                     foreach (var key in coll.AllKeys)
                     {
