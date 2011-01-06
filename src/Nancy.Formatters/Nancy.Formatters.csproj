@@ -49,6 +49,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="FormatterExtensions.cs" />
+    <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
     <Compile Include="Responses\XmlResponse.cs" />
