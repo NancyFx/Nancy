@@ -10,7 +10,7 @@
         public ImageResponse(string imagePath)
         {
             if (string.IsNullOrEmpty(imagePath) ||
-                !File.Exists(HostingEnvironment.MapPath(imagePath)) ||
+                !File.Exists(GenericFileResponse.GetFilePath(imagePath)) ||
                 !Path.HasExtension(imagePath))
             {
                 this.StatusCode = HttpStatusCode.NotFound;
@@ -27,7 +27,7 @@
         {
             return stream =>
             {
-                var image = System.Drawing.Image.FromFile(HostingEnvironment.MapPath(imagePath));
+                var image = System.Drawing.Image.FromFile(GenericFileResponse.GetFilePath(imagePath));
                 image.Save(stream, image.RawFormat);
             };
         }
