@@ -17,7 +17,7 @@ namespace Nancy.ViewEngines
         {
             var result = ViewTemplateLocator.GetTemplateContents(viewTemplate);
 
-            var view = ViewCompiler.GetCompiledView<TModel>(result.Contents);
+            var view = ViewCompiler.GetCompiledView<TModel>(result);
 
             if (view == null)
             {

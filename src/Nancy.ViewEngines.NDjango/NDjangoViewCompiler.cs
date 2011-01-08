@@ -1,15 +1,14 @@
 ﻿namespace Nancy.ViewEngines.NDjango
 {
-    using System.IO;
     using global::NDjango;
     using global::NDjango.Interfaces;
 
     public class NDjangoViewCompiler : IViewCompiler
     {
-        public IView GetCompiledView<TModel>(TextReader textReader)
+        public IView GetCompiledView<TModel>(IViewLocationResult viewLocationResult)
         {
             var templateManagerProvider = new TemplateManagerProvider()
-                .WithLoader(new TemplateLoader(textReader));
+                .WithLoader(new TemplateLoader(viewLocationResult.Contents));
 
             var templateManager = templateManagerProvider.GetNewManager();
 

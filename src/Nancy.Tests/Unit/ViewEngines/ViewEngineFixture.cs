@@ -2,6 +2,7 @@
 {
     using System.IO;
     using FakeItEasy;
+    using Fakes;
     using Nancy.ViewEngines;
     using Xunit;
 
@@ -10,7 +11,7 @@
         private readonly IViewLocator templateLocator;
         private readonly IViewCompiler viewCompiler;
         private readonly IView view;
-        private readonly ViewLocationResult viewLocationResult;
+        private readonly IViewLocationResult viewLocationResult;
         private readonly ViewEngine engine;        
 
         public ViewEngineFixture()
@@ -18,11 +19,11 @@
             this.templateLocator = A.Fake<IViewLocator>();
             this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
-            this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
+            this.viewLocationResult = new FakeViewLocationResult(string.Empty);
 
             A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
-            A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
-            A.CallTo(() => viewCompiler.GetCompiledView<MemoryStream>(null)).Returns(view);
+            A.CallTo(() => viewCompiler.GetCompiledView<object>(viewLocationResult)).Returns(view);
+            A.CallTo(() => viewCompiler.GetCompiledView<MemoryStream>(viewLocationResult)).Returns(view);
 
             this.engine = new ViewEngine(templateLocator, viewCompiler);
         }
@@ -34,7 +35,7 @@
             var result = engine.RenderView<object>("test", null);
 
             // Then
-            result.Location.ShouldEqual(@"c:\some\fake\path");
+            result.Location.ShouldEqual("in/memory");
         }
 
         [Fact]

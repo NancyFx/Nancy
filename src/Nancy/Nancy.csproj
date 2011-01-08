@@ -101,10 +101,11 @@
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />
+    <Compile Include="ViewEngines\IViewLocationResult.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
     <Compile Include="ViewEngines\ViewEngine.cs" />
-    <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\FileViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup>
