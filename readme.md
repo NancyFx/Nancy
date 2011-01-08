@@ -123,6 +123,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * Phil Haack
 * Robert Greyling
 * Steven Robbins
+* Vidar L. Sømme
 
 ## Copyright
 
