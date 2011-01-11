@@ -54,6 +54,7 @@
     <Compile Include="INancyApplication.cs" />
     <Compile Include="INancyModuleLocator.cs" />
     <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
     <Compile Include="ModuleMeta.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="BootStrapper\" />
     <Folder Include="Caching\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
