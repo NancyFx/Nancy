@@ -10,39 +10,40 @@
 
     public class RouteResolver : IRouteResolver
     {
-        public IRoute GetRoute(IRequest request, IEnumerable<ModuleMeta> metas, INancyApplication application)
-        {            
-            var matchingRoutes =
-                from meta in metas
-                from description in meta.RouteDescriptions
-                let matcher = BuildRegexMatcher(description)
-                let result = matcher.Match(request.Uri)
-                where result.Success
-                select new
-                {
-                    Groups = result.Groups,
-                    Meta = meta,
-                    Description = description
-                };
+        public IRoute GetRoute(IRequest request, IEnumerable<NancyModule> modules, ITemplateEngineSelector application)
+        {
+            throw new NotImplementedException();
+            //var matchingRoutes =
+            //    from meta in metas
+            //    from description in meta.RouteDescriptions
+            //    let matcher = BuildRegexMatcher(description)
+            //    let result = matcher.Match(request.Uri)
+            //    where result.Success
+            //    select new
+            //    {
+            //        Groups = result.Groups,
+            //        Meta = meta,
+            //        Description = description
+            //    };
 
-            var selected = matchingRoutes
-                .OrderByDescending(x => GetSegmentCount(x.Description))
-                .FirstOrDefault();            
+            //var selected = matchingRoutes
+            //    .OrderByDescending(x => GetSegmentCount(x.Description))
+            //    .FirstOrDefault();            
 
-            if (selected == null)
-            {
-                return new NoMatchingRouteFoundRoute(request.Uri);
-            }
+            //if (selected == null)
+            //{
+            //    return new NoMatchingRouteFoundRoute(request.Uri);
+            //}
 
-            var instance = application.Activator.CreateInstance(selected.Meta.Type);
-            instance.Application = application;
-            instance.Request = request;
+            //var instance = application.Activator.CreateInstance(selected.Meta.Type);
+            //instance.Application = application;
+            //instance.Request = request;
 
-            var action = instance
-                .GetRoutes(selected.Description.Method)
-                .GetRoute(selected.Description.Path).Action;
+            //var action = instance
+            //    .GetRoutes(selected.Description.Method)
+            //    .GetRoute(selected.Description.Path).Action;
 
-            return new Route(selected.Description.Path, GetParameters(selected.Description, selected.Groups), instance, action);
+            //return new Route(selected.Description.Path, GetParameters(selected.Description, selected.Groups), instance, action);
         }
 
         private static DynamicDictionary GetParameters(RouteDescription description, GroupCollection groups)

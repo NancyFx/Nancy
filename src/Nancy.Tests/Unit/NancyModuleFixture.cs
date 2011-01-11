@@ -11,8 +11,8 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_execute_the_default_processor_unregistered_extension()
         {
-            var application = A.Fake<INancyApplication>();
-            var module = new FakeNancyModuleWithoutBasePath {Application = application};
+            var application = A.Fake<ITemplateEngineSelector>();
+            var module = new FakeNancyModuleWithoutBasePath {TemplateEngineSelector = application};
             var action = new Action<Stream>((s) => { });
             var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 
@@ -25,8 +25,8 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_execute_the_processor_associated_with_the_extension()
         {
-            var application = A.Fake<INancyApplication>();
-            var module = new FakeNancyModuleWithoutBasePath { Application = application };
+            var application = A.Fake<ITemplateEngineSelector>();
+            var module = new FakeNancyModuleWithoutBasePath { TemplateEngineSelector = application };
             var action = new Action<Stream>((s) => { });
             var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 

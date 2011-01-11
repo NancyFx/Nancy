@@ -41,24 +41,26 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BootStrapper\INancyBootStrapper.cs" />
+    <Compile Include="BootStrapper\NancyBootStrapperBase.cs" />
+    <Compile Include="BootStrapper\NancyBootStrapperLocator.cs" />
     <Compile Include="Cookies\NancyCookie.cs" />
     <Compile Include="Cookies\INancyCookie.cs" />
-    <Compile Include="DefaultModuleActivator.cs" />
+    <Compile Include="DefaultNancyBootStrapper.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
-    <Compile Include="IModuleActivator.cs" />
-    <Compile Include="INancyApplication.cs" />
-    <Compile Include="INancyModuleLocator.cs" />
+    <Compile Include="INancyModuleCatalog.cs" />
+    <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
     <Compile Include="ModuleMeta.cs" />
-    <Compile Include="NancyApplication.cs" />
+    <Compile Include="DefaultTemplateEngineSelector.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
@@ -83,7 +85,6 @@
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="BootStrapper\" />
     <Folder Include="Caching\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
