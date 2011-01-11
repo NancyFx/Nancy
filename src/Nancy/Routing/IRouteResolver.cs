@@ -4,6 +4,6 @@
 
     public interface IRouteResolver
     {
-        IRoute GetRoute(IRequest request, IEnumerable<NancyModule> modules, ITemplateEngineSelector application);
+        IRoute GetRoute(IRequest request, IEnumerable<RouteDescription> descriptions);
     }
 }
