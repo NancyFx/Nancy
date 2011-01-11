@@ -5,18 +5,23 @@ namespace Nancy.Hosting
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
-        private readonly static INancyApplication application = new NancyApplication();
+        // TODO - make static?
+        private readonly INancyEngine _Engine;
 
         public bool IsReusable
         {
-            get { return false; }
+            get { return true; }
+        }
+
+        public NancyHttpRequestHandler()
+        {
+            _Engine = BootStrapper.NancyBootStrapperLocator.BootStrapper.GetEngine();
         }
 
         public void ProcessRequest(HttpContext context)
         {
-            var engine = new NancyEngine(application, new RouteResolver(), application);
             var wrappedContext = new HttpContextWrapper(context);
-            var handler = new NancyHandler(engine);
+            var handler = new NancyHandler(_Engine);
             handler.ProcessRequest(wrappedContext);
         }        
     }

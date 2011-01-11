@@ -30,7 +30,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets an <see cref="INancyApplication"/> which represents the current application context
         /// </summary>
-        public INancyApplication Application { get; set; }
+        public ITemplateEngineSelector TemplateEngineSelector { get; set; }
 
         /// <param name="method">A <see cref="string"/> containing the http request method for which the routes should be returned.</param>
         /// <returns>An <see cref="IDictionary{TKey,TValue}"/> containing the routes.</returns>
@@ -128,8 +128,8 @@ namespace Nancy
         /// <param name="model">The model to pass to the view</param>
         public Action<Stream> SmartView<TModel>(string name, TModel model)
         {            
-            var processor = Application.GetTemplateProcessor(Path.GetExtension(name));
-            return processor == null ? Application.DefaultProcessor(name, model) : processor(name, model);            
+            var processor = TemplateEngineSelector.GetTemplateProcessor(Path.GetExtension(name));
+            return processor == null ? TemplateEngineSelector.DefaultProcessor(name, model) : processor(name, model);            
         }
     }
 }

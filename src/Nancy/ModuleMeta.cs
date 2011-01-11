@@ -4,9 +4,9 @@ namespace Nancy
     using System.Collections.Generic;
     using Routing;
 
-    public class ModuleMeta
+    public class ModuleMetaOLD
     {
-        public ModuleMeta(Type type, IEnumerable<RouteDescription> routeDescriptions)
+        public ModuleMetaOLD(Type type, IEnumerable<RouteDescription> routeDescriptions)
         {
             Type = type;
             RouteDescriptions = routeDescriptions;
