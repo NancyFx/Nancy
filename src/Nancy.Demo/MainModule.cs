@@ -20,6 +20,7 @@ namespace Nancy.Demo
                 return "Test";
             };
 
+            // This only returns the routes for the current module - not everything :-)
             Get["/routes"] = x => {
                 var routes = GetRoutes("GET").GetRouteDescriptions();
                 return View.Razor("~/views/routes.cshtml", routes);

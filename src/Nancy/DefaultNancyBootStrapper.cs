@@ -78,9 +78,12 @@ namespace Nancy
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetModules()
         {
-            var childContainer = _Container.GetChildContainer();
-            ConfigureRequestContainer(childContainer);
-            return childContainer.ResolveAll<NancyModule>(false);
+            // TODO - reenable when tinyioc fixed
+            //var childContainer = _Container.GetChildContainer();
+            //ConfigureRequestContainer(childContainer);
+            //return childContainer.ResolveAll<NancyModule>(false);
+
+            return _Container.ResolveAll<NancyModule>(false);
         }
     }
 }
