@@ -17,7 +17,7 @@ namespace Nancy
         /// <summary>
         /// Container instance
         /// </summary>
-        private TinyIoCContainer _Container;
+        protected TinyIoCContainer _Container;
 
         /// <summary>
         /// Resolve INancyEngine
@@ -39,7 +39,7 @@ namespace Nancy
 
             container.AutoRegister();
 
-            RegisterDefaults();
+            RegisterDefaults(container);
         }
 
         /// <summary>
@@ -65,11 +65,12 @@ namespace Nancy
         /// <summary>
         /// Registers default implementations - can be overridden by overriding ConfigureContainer
         /// </summary>
-        private void RegisterDefaults()
+        protected void RegisterDefaults(TinyIoCContainer container)
         {
-            _Container.Register<INancyModuleCatalog>(this);
-            _Container.Register<IRouteResolver, RouteResolver>().AsSingleton();
-            _Container.Register<ITemplateEngineSelector, DefaultTemplateEngineSelector>().AsSingleton();
+            container.Register<INancyModuleCatalog>(this);
+            container.Register<IRouteResolver, RouteResolver>().AsSingleton();
+            container.Register<ITemplateEngineSelector, DefaultTemplateEngineSelector>().AsSingleton();
+            container.Register<INancyEngine, NancyEngine>();
         }
 
         /// <summary>

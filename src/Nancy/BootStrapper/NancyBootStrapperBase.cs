@@ -7,7 +7,25 @@ using Nancy.Routing;
 namespace Nancy.BootStrapper
 {
     /// <summary>
-    /// Base class for container based BootStrappers
+    /// Base class for container based BootStrappers.
+    /// 
+    /// There are two component lifecycles, an application level one which is guaranteed to be generated at least once (on app startup)
+    /// and a request level one which should be guaranteed to be generated per-request. Depending on implementation details the application
+    /// lifecycle components may also be generated per request (without any critical issues), but this isn't ideal.
+    /// 
+    /// Doesn't have to be used (only INancyBootStrapper is required), but does provide a nice consistent base if possible.
+    /// 
+    /// The methods are called as follows:
+    /// 
+    /// * Application Level *
+    /// CreateContainer() - for creating an empty container
+    /// GetModuleTypes() - getting the module types in the application, default implementation grabs from the appdomain
+    /// RegisterModules() - register the modules into the container
+    /// ConfigureApplicationContainer() - register any application lifecycle dependencies
+    /// GetEngineInternal() - construct the container (if required) and resolve INancyEngine
+    /// 
+    /// * Request Level *
+    /// ConfigureRequestContainer() - should be called per-request for registering modules that require request level lifetime.
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
     public abstract class NancyBootStrapperBase<TContainer> : INancyBootStrapper
@@ -20,7 +38,7 @@ namespace Nancy.BootStrapper
         public INancyEngine GetEngine()
         {
             var container = CreateContainer();
-            RegisterModules(GetModulesTypes());
+            RegisterModules(GetModuleTypes());
             ConfigureApplicationContainer(container);
             return GetEngineInternal();
         }
@@ -35,7 +53,7 @@ namespace Nancy.BootStrapper
         /// Returns available NancyModule types
         /// </summary>
         /// <returns>IEnumerable containing all NancyModule Type definitions</returns>
-        protected virtual IEnumerable<Type> GetModulesTypes()
+        protected virtual IEnumerable<Type> GetModuleTypes()
         {
             var moduleType = typeof(NancyModule);
 
@@ -68,6 +86,8 @@ namespace Nancy.BootStrapper
 
         /// <summary>
         /// Configure the container with per-request registrations
+        /// 
+        /// Should be called per-request, usually during INancyModuleCatalog.GetModules()
         /// </summary>
         /// <param name="container"></param>
         protected virtual void ConfigureRequestContainer(TContainer container)

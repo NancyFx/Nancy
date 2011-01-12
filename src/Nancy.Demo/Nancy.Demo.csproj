@@ -65,6 +65,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DemoBootStrapper.cs" />
     <Compile Include="DependencyModule.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\RatPack.cs" />
