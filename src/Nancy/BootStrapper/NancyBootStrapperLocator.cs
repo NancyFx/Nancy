@@ -5,8 +5,16 @@ using System.Text;
 
 namespace Nancy.BootStrapper
 {
+    /// <summary>
+    /// Class for locating an INancyBootstrapper implementation.
+    /// 
+    /// Will search the app domain for a non-abstract one, and if it can't find one
+    /// it will use the default nancy one that uses TinyIoC.
+    /// </summary>
     public class NancyBootStrapperLocator
     {
+        // TODO - not very testable as it is, may be worth pushing the logic into a non-static and making this class have a static singleton of it.
+
         /// <summary>
         /// Gets the located bootstrapper
         /// </summary>
