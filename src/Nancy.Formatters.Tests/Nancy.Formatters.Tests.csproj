@@ -52,6 +52,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="JsonFormatterExtensionsFixturesUsingDataContractJsonSerialization.cs" />
     <Compile Include="JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="XmlFormatterExtensionsFixtures.cs" />
