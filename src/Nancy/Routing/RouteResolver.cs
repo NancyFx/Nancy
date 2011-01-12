@@ -28,11 +28,11 @@
                 .FirstOrDefault();
 
             return selected != null ?
-                new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), selected.Description.Action) : 
+                new Route(selected.Description.Path, GetParameters(selected.Description, selected.Groups), selected.Description.Module, selected.Description.Action) : 
                 new NoMatchingRouteFoundRoute(request.Uri);
         }
 
-        private static RouteParameters GetParameters(RouteDescription description, GroupCollection groups)
+        private static DynamicDictionary GetParameters(RouteDescription description, GroupCollection groups)
         {
             var segments =
                 new ReadOnlyCollection<string>(
@@ -45,7 +45,7 @@
                 select segment.GetParameterName();
 
             dynamic data =
-                new RouteParameters();
+                new DynamicDictionary();
 
             foreach (var parameter in parameters)
             {
@@ -58,7 +58,7 @@
         private static Regex BuildRegexMatcher(RouteDescription description)
         {
             var segments =
-                description.GetModuleQualifiedPath().Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                description.Path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 
             var parameterizedSegments =
                 GetParameterizedSegments(segments);
@@ -89,7 +89,7 @@
         private static int GetSegmentCount(RouteDescription description)
         {
             var moduleQualifiedPath =
-                description.GetModuleQualifiedPath();
+                description.Path;
 
             var indexOfFirstParameter =
                 moduleQualifiedPath.IndexOf('{');
