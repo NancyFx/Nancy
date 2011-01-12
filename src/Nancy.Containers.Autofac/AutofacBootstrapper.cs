@@ -7,7 +7,7 @@ using Nancy.Routing;
 
 namespace Nancy.Containers.Autofac
 {
-    public class AutofacBootStrapper : BootStrapper.NancyBootStrapperBase<ContainerBuilder>, INancyModuleCatalog
+    public abstract class AutofacBootStrapper : BootStrapper.NancyBootStrapperBase<ContainerBuilder>, INancyModuleCatalog
     {
         protected ContainerBuilder _ContainerBuilder;
         protected IContainer _Container;
