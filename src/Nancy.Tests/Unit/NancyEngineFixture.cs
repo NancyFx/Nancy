@@ -20,7 +20,9 @@ namespace Nancy.Tests.Unit
         {
             this.resolver = A.Fake<IRouteResolver>();
             this.route = A.Fake<IRoute>();
-            A.CallTo(() => resolver.GetRoute(new Request("", "", ""))).Returns(route);
+
+            A.CallTo(() => resolver.GetRoute(A<IRequest>.Ignored.Argument)).Returns(route);
+            this.engine = new NancyEngine(resolver);
         }
 
         [Fact]
