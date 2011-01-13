@@ -4,18 +4,9 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.Linq;
 
-    public class RouteInformation
-    {
-        public Func<dynamic, Response> Action { get; set; }
-
-        public Func<bool> Condition { get; set; }
-
-        public string Route { get; set; }
-    }
-
     public class RouteDictionary
     {
-        private readonly Dictionary<Tuple<string, Func<bool>>, Func<dynamic, Response>> routes;
+        private readonly Dictionary<Tuple<string, Func<IRequest, bool>>, Func<dynamic, Response>> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteDictionary"/> class.
@@ -40,7 +31,7 @@ namespace Nancy.Routing
 
             this.Method = method;
             this.Module = module;
-            this.routes = new Dictionary<Tuple<string, Func<bool>>, Func<dynamic, Response>>(new RouteDictionaryEqualityComparer());
+            this.routes = new Dictionary<Tuple<string, Func<IRequest, bool>>, Func<dynamic, Response>>(new RouteDictionaryEqualityComparer());
         }
 
         /// <summary>
@@ -69,15 +60,15 @@ namespace Nancy.Routing
         /// Gets or sets the action for a specific <param name="route"/>.
         /// </summary>
         /// <value>A <see cref="Func{T, K}"/> containing the action declaration for specified <param name="route"/> and <paramref name="condition"/>.</value>
-        public Func<dynamic, Response> this[string route, Func<bool> condition]
+        public Func<dynamic, Response> this[string route, Func<IRequest, bool> condition]
         {
             set { this.AddRoute(route, condition, value); }
         }
 
-        private void AddRoute(string route, Func<bool> condition, Func<dynamic, Response> action)
+        private void AddRoute(string route, Func<IRequest, bool> condition, Func<dynamic, Response> action)
         {
             var compositeKey =
-                new Tuple<string, Func<bool>>(route, condition);
+                new Tuple<string, Func<IRequest, bool>>(route, condition);
 
             this.routes[compositeKey] = action;
         }
@@ -102,6 +93,7 @@ namespace Nancy.Routing
             return descriptions.ToList();
         }
 
+        // TODO - This needs work so it doesn't pick filtered routes
         public RouteDescription GetRoute(string route)
         {
             var descriptions =
@@ -122,14 +114,14 @@ namespace Nancy.Routing
         /// <summary>
         /// Equality comparer for the composite key used in the route dictionary.
         /// </summary>
-        private class RouteDictionaryEqualityComparer : IEqualityComparer<Tuple<string, Func<bool>>>
+        private class RouteDictionaryEqualityComparer : IEqualityComparer<Tuple<string, Func<IRequest, bool>>>
         {
-            public bool Equals(Tuple<string, Func<bool>> x, Tuple<string, Func<bool>> y)
+            public bool Equals(Tuple<string, Func<IRequest, bool>> x, Tuple<string, Func<IRequest, bool>> y)
             {
                 return x.Item1.Equals(y.Item1, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(Tuple<string, Func<bool>> obj)
+            public int GetHashCode(Tuple<string, Func<IRequest, bool>> obj)
             {
                 unchecked
                 {
