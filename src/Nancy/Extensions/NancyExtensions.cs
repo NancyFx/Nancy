@@ -7,13 +7,8 @@ namespace Nancy.Extensions
 
     public static class NancyExtensions
     {
-        public static IEnumerable<RouteDescription> GetRouteDescription(this NancyModule source, IRequest request)
+        public static IEnumerable<RouteDescription> GetRouteDescription(this NancyModule source, string method)
         {
-        	var method = request.Method;
-			if (method.ToUpperInvariant() == "HEAD")
-			{
-				method = "GET";
-			}
             return source.GetRoutes(method).GetRouteDescriptions();
         }
     }

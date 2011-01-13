@@ -56,10 +56,13 @@ namespace Nancy
         /// <summary>
         /// Registers all modules in the container as multi-instance
         /// </summary>
-        /// <param name="moduleTypes">NancyModule types</param>
-        protected override void RegisterModules(IEnumerable<Type> moduleTypes)
+        /// <param name="moduleRegistrations">NancyModule registration types</param>
+        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
         {
-            _Container.RegisterMultiple<NancyModule>(moduleTypes).AsMultiInstance();
+            foreach (var registrationType in moduleRegistrations)
+            {
+                _Container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsMultiInstance();
+            }
         }
 
         /// <summary>
@@ -70,21 +73,30 @@ namespace Nancy
             container.Register<INancyModuleCatalog>(this);
             container.Register<IRouteResolver, RouteResolver>().AsSingleton();
             container.Register<ITemplateEngineSelector, DefaultTemplateEngineSelector>().AsSingleton();
-            container.Register<INancyEngine, NancyEngine>();
+            container.Register<INancyEngine, NancyEngine>().AsSingleton();
+            container.Register<IModuleKeyGenerator, DefaultModuleKeyGenerator>().AsSingleton();
+            container.Register<IRouteCache, RouteCache>().AsSingleton();
+            container.Register<IRouteCacheProvider, DefaultRouteCacheProvider>().AsSingleton();
         }
 
         /// <summary>
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <returns>IEnumerable of NancyModule</returns>
-        public IEnumerable<NancyModule> GetModules()
+        public IEnumerable<NancyModule> GetAllModules()
+        {
+            // Not necessary to be per request now - although not sure if this is transparent enough?
+            return _Container.ResolveAll<NancyModule>(false);
+        }
+
+        public NancyModule GetModuleByKey(string moduleKey)
         {
             // TODO - reenable when tinyioc fixed
             //var childContainer = _Container.GetChildContainer();
             //ConfigureRequestContainer(childContainer);
-            //return childContainer.ResolveAll<NancyModule>(false);
+            //return childContainer.Resolve<NancyModule>(moduleKey);
 
-            return _Container.ResolveAll<NancyModule>(false);
+            return _Container.Resolve<NancyModule>(moduleKey);
         }
     }
 }

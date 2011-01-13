@@ -8,35 +8,62 @@
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
 
-    public class RouteResolver : IRouteResolver
+    public sealed class RouteResolver : IRouteResolver
     {
-        public IRoute GetRoute(IRequest request, IEnumerable<RouteDescription> descriptions)
+        private readonly IRouteCache _RouteCache;
+        private readonly INancyModuleCatalog _ModuleCatalog;
+        private readonly ITemplateEngineSelector _TemplateSelector;
+        
+        /// <summary>
+        /// Initializes a new instance of the RouteResolver class.
+        /// </summary>
+        /// <param name="routeCache">Route cache provider</param>
+        /// <param name="moduleCatalog">Module catalog</param>
+        /// <param name="templateSelector">Template selector</param>
+        public RouteResolver(IRouteCache routeCache, INancyModuleCatalog moduleCatalog, ITemplateEngineSelector templateSelector)
+        {
+            _RouteCache = routeCache;
+            _ModuleCatalog = moduleCatalog;
+            _TemplateSelector = templateSelector;
+        }
+
+        public IRoute GetRoute(IRequest request)
         {
             var matchingRoutes =
-                from description in descriptions
-                let matcher = BuildRegexMatcher(description)
+                from cacheEntry in _RouteCache
+                let matcher = BuildRegexMatcher(cacheEntry.Path)
                 let result = matcher.Match(request.Uri)
                 where result.Success
+                where ((cacheEntry.Condition == null) || (cacheEntry.Condition(request)))
                 select new
                 {
-                    Groups = result.Groups,
-                    Description = description
+                    CacheEntry = cacheEntry,
+                    Groups = result.Groups
                 };
 
             var selected = matchingRoutes
-                .OrderByDescending(x => GetSegmentCount(x.Description))
+                .OrderByDescending(ma => GetSegmentCount(ma.CacheEntry.Path))
                 .FirstOrDefault();
 
-            return selected != null ?
-                new Route(selected.Description.Path, GetParameters(selected.Description, selected.Groups), selected.Description.Module, selected.Description.Action) : 
-                new NoMatchingRouteFoundRoute(request.Uri);
+            if (selected == null)
+                return new NoMatchingRouteFoundRoute(request.Uri);
+
+            var instance = BuildModuleInstance(selected.CacheEntry.ModuleKey, request);
+            if (instance == null)
+                return new NoMatchingRouteFoundRoute(request.Uri);
+
+            var routeAction = instance.GetRoutes(selected.CacheEntry.Method).GetRoute(selected.CacheEntry.Path).Action;
+            if (routeAction == null)
+                return new NoMatchingRouteFoundRoute(request.Uri);
+
+            return new Route(selected.CacheEntry.Path, GetParameters(selected.CacheEntry.Path, selected.Groups), instance, routeAction); 
         }
 
-        private static DynamicDictionary GetParameters(RouteDescription description, GroupCollection groups)
+        private static DynamicDictionary GetParameters(string path, GroupCollection groups)
         {
             var segments =
                 new ReadOnlyCollection<string>(
-                    description.Path.Split(new[] { "/" },
+                    path.Split(new[] { "/" },
                     StringSplitOptions.RemoveEmptyEntries).ToList());
 
             var parameters =
@@ -55,10 +82,10 @@
             return data;
         }
 
-        private static Regex BuildRegexMatcher(RouteDescription description)
+        private static Regex BuildRegexMatcher(string path)
         {
             var segments =
-                description.Path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+                path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
 
             var parameterizedSegments =
                 GetParameterizedSegments(segments);
@@ -86,10 +113,10 @@
             }
         }
 
-        private static int GetSegmentCount(RouteDescription description)
+        private static int GetSegmentCount(string path)
         {
             var moduleQualifiedPath =
-                description.Path;
+                path;
 
             var indexOfFirstParameter =
                 moduleQualifiedPath.IndexOf('{');
@@ -98,6 +125,16 @@
                 moduleQualifiedPath = moduleQualifiedPath.Substring(0, indexOfFirstParameter);
 
             return moduleQualifiedPath.Split('/').Count();
+        }
+
+        private NancyModule BuildModuleInstance(string moduleKey, IRequest request)
+        {
+            var module = _ModuleCatalog.GetModuleByKey(moduleKey);
+
+            module.Request = request;
+            module.TemplateEngineSelector = _TemplateSelector;
+
+            return module;
         }
     }
 }

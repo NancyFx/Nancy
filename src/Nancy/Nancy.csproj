@@ -41,7 +41,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="BootStrapper\DefaultModuleKeyGenerator.cs" />
+    <Compile Include="BootStrapper\IModuleKeyGenerator.cs" />
     <Compile Include="BootStrapper\INancyBootStrapper.cs" />
+    <Compile Include="BootStrapper\ModuleRegistrationType.cs" />
     <Compile Include="BootStrapper\NancyBootStrapperBase.cs" />
     <Compile Include="BootStrapper\NancyBootStrapperLocator.cs" />
     <Compile Include="Cookies\NancyCookie.cs" />
@@ -56,10 +59,14 @@
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="Routing\DefaultRouteCacheProvider.cs" />
+    <Compile Include="Routing\IRouteCache.cs" />
+    <Compile Include="Routing\IRouteCacheProvider.cs" />
+    <Compile Include="Routing\RouteCache.cs" />
+    <Compile Include="Routing\RouteCacheEntry.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
-    <Compile Include="ModuleMeta.cs" />
     <Compile Include="DefaultTemplateEngineSelector.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />

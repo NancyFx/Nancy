@@ -50,12 +50,22 @@ namespace Nancy.BootStrapper
         protected abstract INancyEngine GetEngineInternal();
 
         /// <summary>
+        /// Get the moduleKey generator - defaults to <see cref="DefaultModuleKeyGenerator"/>
+        /// </summary>
+        /// <returns>IModuleKeyGenerator instance</returns>
+        protected virtual Nancy.BootStrapper.IModuleKeyGenerator GetModuleKeyGenerator()
+        {
+            return new Nancy.BootStrapper.DefaultModuleKeyGenerator();
+        }
+
+        /// <summary>
         /// Returns available NancyModule types
         /// </summary>
         /// <returns>IEnumerable containing all NancyModule Type definitions</returns>
-        protected virtual IEnumerable<Type> GetModuleTypes()
+        protected virtual IEnumerable<ModuleRegistration> GetModuleTypes()
         {
             var moduleType = typeof(NancyModule);
+            var moduleKeyGenerator = GetModuleKeyGenerator();
 
             var locatedModuleTypes =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
@@ -63,7 +73,7 @@ namespace Nancy.BootStrapper
                 from type in assembly.GetExportedTypes()
                 where !type.IsAbstract
                 where moduleType.IsAssignableFrom(type)
-                select type;
+                select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));
 
             return locatedModuleTypes;
         }
@@ -98,6 +108,6 @@ namespace Nancy.BootStrapper
         /// Register the given module types into the container
         /// </summary>
         /// <param name="moduleTypes">NancyModule types</param>
-        protected abstract void RegisterModules(IEnumerable<Type> moduleTypes);
+        protected abstract void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes);
     }
 }

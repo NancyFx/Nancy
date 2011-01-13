@@ -28,7 +28,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets or sets an <see cref="INancyApplication"/> which represents the current application context
+        /// Gets or sets an <see cref="ITemplateEngineSelector"/> which represents the current application context
         /// </summary>
         public ITemplateEngineSelector TemplateEngineSelector { get; set; }
 
