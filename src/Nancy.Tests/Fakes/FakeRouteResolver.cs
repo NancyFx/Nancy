@@ -6,21 +6,14 @@ namespace Nancy.Tests.Fakes
 
     public class FakeRouteResolver : IRouteResolver
     {
-        public IRoute GetRoute(IRequest request, IEnumerable<ModuleMeta> meta, ITemplateEngineSelector application)
+        public IRoute GetRoute(IRequest request)
         {
-            var description = (from m in meta
-                               from d in m.RouteDescriptions
-                               where d.Path == request.Uri
-                               select d).First();
-
-            this.ModulePath = description.Module.ModulePath;
-            this.Path = description.Path;            
-
             return new FakeRoute();
         }
         
         public string Path { get; private set; }
 
         public string ModulePath { get; private set; }
+
     }
 }
