@@ -68,7 +68,6 @@
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
     <Compile Include="Unit\Hosting\HancyHandlerFixture.cs" />
-    <Compile Include="Unit\Hosting\NancyApplicationFixture.cs" />
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
