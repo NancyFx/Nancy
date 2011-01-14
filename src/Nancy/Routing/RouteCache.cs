@@ -12,12 +12,12 @@ namespace Nancy.Routing
         private readonly List<RouteCacheEntry> _Cache;
         private readonly IModuleKeyGenerator _ModuleKeyGenerator;
 
-        public RouteCache(IEnumerable<NancyModule> modules, IModuleKeyGenerator moduleKeyGenerator)
+        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
         {
             _ModuleKeyGenerator = moduleKeyGenerator;
             _Cache = new List<RouteCacheEntry>();
 
-            BuildCache(modules);
+            BuildCache(moduleCatalog.GetAllModules());
         }
 
         private void BuildCache(IEnumerable<NancyModule> modules)

@@ -7,6 +7,7 @@ namespace Nancy.Demo.Models
 {
     public class RatPackWithDependencyText : RatPack
     {
-        public string DependencyText { get; set; }
+        public string ApplicationDependencyText { get; set; }
+        public string RequestDependencyText { get; set; }
     }
 }

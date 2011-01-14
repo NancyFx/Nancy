@@ -7,38 +7,29 @@ using Nancy.Demo.Models;
 
 namespace Nancy.Demo
 {
-    public interface IDependency
-    {
-        string GetContent();
-    }
-
-    public class DependencyClass : IDependency
-    {
-        #region IDependency Members
-
-        public string GetContent()
-        {
-            return "And this text comes from a dependency!";
-        }
-
-        #endregion
-    }
-
     public class DependencyModule : NancyModule
     {
-        private IDependency _Dependency;
+        private readonly IApplicationDependency _ApplicationDependency;
+        private readonly IRequestDependency _RequestDependency;
 
         /// <summary>
         /// Initializes a new instance of the DependencyModule class.
         /// </summary>
         /// <param name="dependency"></param>
-        public DependencyModule(IDependency dependency)
+        public DependencyModule(IApplicationDependency applicationDependency, IRequestDependency requestDependency)
         {
-            _Dependency = dependency;
+            _ApplicationDependency = applicationDependency;
+            _RequestDependency = requestDependency;
 
             Get["/dependency"] = x =>
             {
-                var model = new RatPackWithDependencyText() { FirstName = "Bob", DependencyText = _Dependency.GetContent() };
+                var model = new RatPackWithDependencyText() 
+                    { 
+                        FirstName = "Bob", 
+                        ApplicationDependencyText = _ApplicationDependency.GetContent(),
+                        RequestDependencyText = _RequestDependency.GetContent()
+                    };
+
                 return View.Razor("~/views/razor-dependency.cshtml", model);
             };
         }
