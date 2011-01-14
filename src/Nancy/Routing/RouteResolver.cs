@@ -31,6 +31,7 @@
         {
             var matchingRoutes =
                 from cacheEntry in _RouteCache
+                where cacheEntry.Method == request.Method
                 let matcher = BuildRegexMatcher(cacheEntry.Path)
                 let result = matcher.Match(request.Uri)
                 where result.Success
