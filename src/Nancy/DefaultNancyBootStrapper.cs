@@ -8,11 +8,20 @@ using Nancy.Routing;
 
 namespace Nancy
 {
+    public interface INancyBootStrapperPerRequestRegistration<TContainer>
+    {
+        /// <summary>
+        /// Configure the container with per-request registrations
+        /// </summary>
+        /// <param name="container"></param>
+        void ConfigureRequestContainer(TContainer container);
+    }
+
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
     /// </summary>
-    public class DefaultNancyBootStrapper : NancyBootStrapperBase<TinyIoCContainer>, INancyModuleCatalog
+    public class DefaultNancyBootStrapper : NancyBootStrapperBase<TinyIoCContainer>, INancyBootStrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
     {
         /// <summary>
         /// Container instance
@@ -40,6 +49,10 @@ namespace Nancy
             container.AutoRegister();
 
             RegisterDefaults(container);
+        }
+
+        public virtual void ConfigureRequestContainer(TinyIoCContainer container)
+        {
         }
 
         /// <summary>
@@ -85,18 +98,24 @@ namespace Nancy
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetAllModules()
         {
+            // TODO - fix when tinyioc fixed
+            // for now we will just fudge by using the main container here, but this should be
+            // a request container.
+            ConfigureRequestContainer(_Container);
             // Not necessary to be per request now - although not sure if this is transparent enough?
             return _Container.ResolveAll<NancyModule>(false);
         }
 
+        /// <summary>
+        /// Gets a specific, per-request, module instance from the key
+        /// </summary>
+        /// <param name="moduleKey">ModuleKey</param>
+        /// <returns>NancyModule instance</returns>
         public NancyModule GetModuleByKey(string moduleKey)
         {
-            // TODO - reenable when tinyioc fixed
-            //var childContainer = _Container.GetChildContainer();
-            //ConfigureRequestContainer(childContainer);
-            //return childContainer.Resolve<NancyModule>(moduleKey);
-
-            return _Container.Resolve<NancyModule>(moduleKey);
+            var childContainer = _Container.GetChildContainer();
+            ConfigureRequestContainer(childContainer);
+            return childContainer.Resolve<NancyModule>(moduleKey);
         }
     }
 }

@@ -65,11 +65,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApplicationDependencyClass.cs" />
     <Compile Include="DemoBootStrapper.cs" />
     <Compile Include="DependencyModule.cs" />
+    <Compile Include="IApplicationDependency.cs" />
+    <Compile Include="IRequestDependency.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />

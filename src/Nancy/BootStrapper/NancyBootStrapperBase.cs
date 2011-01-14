@@ -15,17 +15,17 @@ namespace Nancy.BootStrapper
     /// 
     /// Doesn't have to be used (only INancyBootStrapper is required), but does provide a nice consistent base if possible.
     /// 
-    /// The methods are called as follows:
+    /// The methods in the base class are all Application level are called as follows:
     /// 
-    /// * Application Level *
     /// CreateContainer() - for creating an empty container
     /// GetModuleTypes() - getting the module types in the application, default implementation grabs from the appdomain
     /// RegisterModules() - register the modules into the container
     /// ConfigureApplicationContainer() - register any application lifecycle dependencies
     /// GetEngineInternal() - construct the container (if required) and resolve INancyEngine
     /// 
-    /// * Request Level *
-    /// ConfigureRequestContainer() - should be called per-request for registering modules that require request level lifetime.
+    /// Request level implementations may use <see cref="INancyBootStrapperPerRequestRegistration<TContainer>"/>, or implement custom
+    /// lifetime logic. It is preferred that users have the ability to register per-request scoped dependencies, and that instances retrieved
+    /// via <see cref="INancyModuleCatalog.GetModuleByKey(string moduleKey)"/> are per-request scoped.
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
     public abstract class NancyBootStrapperBase<TContainer> : INancyBootStrapper
@@ -91,16 +91,6 @@ namespace Nancy.BootStrapper
         /// </summary>
         /// <param name="container">Container instance</param>
         protected virtual void ConfigureApplicationContainer(TContainer container)
-        {
-        }
-
-        /// <summary>
-        /// Configure the container with per-request registrations
-        /// 
-        /// Should be called per-request, usually during INancyModuleCatalog.GetModules()
-        /// </summary>
-        /// <param name="container"></param>
-        protected virtual void ConfigureRequestContainer(TContainer container)
         {
         }
 
