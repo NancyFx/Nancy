@@ -11,7 +11,7 @@ namespace Nancy.Tests.Specifications
         Establish context = () =>
             request = ManufactureGETRequestForRoute("/");
 
-        Because of = () => 
+        Because of = () =>
             response = engine.HandleRequest(request);
 
         It should_set_status_code_to_ok = () =>
