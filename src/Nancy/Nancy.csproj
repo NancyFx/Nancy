@@ -56,6 +56,7 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
+    <Compile Include="BootStrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />

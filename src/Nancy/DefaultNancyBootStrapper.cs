@@ -8,15 +8,6 @@ using Nancy.Routing;
 
 namespace Nancy
 {
-    public interface INancyBootStrapperPerRequestRegistration<TContainer>
-    {
-        /// <summary>
-        /// Configure the container with per-request registrations
-        /// </summary>
-        /// <param name="container"></param>
-        void ConfigureRequestContainer(TContainer container);
-    }
-
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
@@ -98,12 +89,9 @@ namespace Nancy
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetAllModules()
         {
-            // TODO - fix when tinyioc fixed
-            // for now we will just fudge by using the main container here, but this should be
-            // a request container.
-            ConfigureRequestContainer(_Container);
-            // Not necessary to be per request now - although not sure if this is transparent enough?
-            return _Container.ResolveAll<NancyModule>(false);
+            var childContainer = _Container.GetChildContainer();
+            ConfigureRequestContainer(childContainer);
+            return childContainer.ResolveAll<NancyModule>(false);
         }
 
         /// <summary>
