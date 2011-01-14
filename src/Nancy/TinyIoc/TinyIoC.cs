@@ -2608,7 +2608,6 @@ namespace TinyIoC
             ObjectFactoryBase factory;
             if (_Parent._RegisteredTypes.TryGetValue(registration, out factory))
             {
-                // TODO - clone factory so singletons are "reset"
                 return factory.GetFactoryForChildContainer(_Parent, this);
             }
 
