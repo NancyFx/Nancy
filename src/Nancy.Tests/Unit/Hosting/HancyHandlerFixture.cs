@@ -22,7 +22,7 @@ namespace Nancy.Tests.Unit.Hosting
             this.request = A.Fake<HttpRequestBase>();
             this.response = A.Fake<HttpResponseBase>();
             this.engine = A.Fake<INancyEngine>();
-            handler = new NancyHandler(engine);
+            this.handler = new NancyHandler(engine);
 
             A.CallTo(() => this.context.Request).Returns(this.request);
             A.CallTo(() => this.context.Response).Returns(this.response);
@@ -42,13 +42,15 @@ namespace Nancy.Tests.Unit.Hosting
             
             SetupRequestProcess(r);
             
-            handler.ProcessRequest(context);
+            this.handler.ProcessRequest(context);
+
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the second cookie")).MustHaveHappened();
         }
 
         private void SetupRequestProcess(Response response)
         {
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/about");
             A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             A.CallTo(() => this.engine.HandleRequest(A<IRequest>.Ignored.Argument)).Returns(response);
