@@ -67,6 +67,8 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\DefaultModuleKeyGeneratorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootStrapperBaseFixture.cs" />
+    <Compile Include="Unit\DefaultNancyBootStrapperFixture.cs" />
+    <Compile Include="Unit\DefaultTemplateEngineSelectorFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
