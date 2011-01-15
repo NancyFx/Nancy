@@ -65,7 +65,6 @@
     <Compile Include="Specifications\Handling a POST request.cs" />
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
-    <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
@@ -79,7 +78,7 @@
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\RouteFixture.cs" />
-    <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
+    <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
