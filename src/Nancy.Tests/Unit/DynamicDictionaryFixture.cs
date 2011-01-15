@@ -7,28 +7,19 @@ namespace Nancy.Tests.Unit
     public class DynamicDictionaryFixture
     {
         private readonly dynamic dictionary;
-        private dynamic _Dictionary;
 
-        /// <summary>
-        /// Initializes a new instance of the DynamicDictionaryFixture class.
-        /// </summary>
         public DynamicDictionaryFixture()
         {
             this.dictionary = new DynamicDictionary();
             this.dictionary["TestString"] = "Testing";
             this.dictionary["TestInt"] = 2;
-            _Dictionary = new DynamicDictionary();
-            _Dictionary["TestString"] = "Testing";
-            _Dictionary["TestInt"] = 2;
         }
 
         [Fact]
         public void Should_return_actual_string_value_when_tostring_called_on_string_entry()
-        public void Should_Return_Actual_String_Value_When_ToString_Called_On_String_Entry()
         {
             // Given, When
             string result = dictionary.TestString.ToString();
-            string result = _Dictionary.TestString.ToString();
 
             // Then
             result.ShouldEqual("Testing");
@@ -36,11 +27,9 @@ namespace Nancy.Tests.Unit
 
         [Fact]
         public void Should_return_string_representation_of_value_when_tostring_called_on_int_entry()
-        public void Should_Return_String_Representation_Of_Value_When_ToString_Called_On_Int_Entry()
         {
             // Given, When
             string result = dictionary.TestInt.ToString();
-            string result = _Dictionary.TestInt.ToString();
 
             // Then
             result.ShouldEqual("2");
@@ -181,5 +170,4 @@ namespace Nancy.Tests.Unit
 			Assert.True(names.SequenceEqual(new[] {"test", "rest"}));
 		}
 	}
-    }
 }
