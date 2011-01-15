@@ -65,6 +65,7 @@
     <Compile Include="Specifications\Handling a POST request.cs" />
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
+    <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\DefaultModuleActivatorFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />

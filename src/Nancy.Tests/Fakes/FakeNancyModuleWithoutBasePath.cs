@@ -16,6 +16,11 @@
                 return "FakeNancyModuleWithoutBasePath";
             };
 
+            Get["/greet/{name}"] = x =>
+            {
+                return string.Concat("Hello ", x.name);
+            };  
+
             Post["/"] = x => {
                 return "Default post root";
             };
