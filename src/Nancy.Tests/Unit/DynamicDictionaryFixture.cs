@@ -8,9 +8,6 @@ namespace Nancy.Tests.Unit
     {
         private readonly dynamic dictionary;
 
-        /// <summary>
-        /// Initializes a new instance of the DynamicDictionaryFixture class.
-        /// </summary>
         public DynamicDictionaryFixture()
         {
             this.dictionary = new DynamicDictionary();
