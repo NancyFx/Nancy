@@ -1,4 +1,4 @@
-﻿namespace Nancy.Tests.Unit
+namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
@@ -8,6 +8,9 @@
     {
         private readonly dynamic dictionary;
 
+        /// <summary>
+        /// Initializes a new instance of the DynamicDictionaryFixture class.
+        /// </summary>
         public DynamicDictionaryFixture()
         {
             this.dictionary = new DynamicDictionary();
