@@ -165,6 +165,13 @@
                 return base.TryConvert(binder, out result);
             }
 
+            public override string ToString()
+            {
+                if (value == null)
+                    return null;
+
+                return Convert.ToString(value);
+            }
         }
     }
 }
