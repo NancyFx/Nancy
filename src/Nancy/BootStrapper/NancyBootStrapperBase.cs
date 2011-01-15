@@ -38,7 +38,7 @@ namespace Nancy.BootStrapper
         public INancyEngine GetEngine()
         {
             var container = CreateContainer();
-            RegisterModules(GetModuleTypes());
+            RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
             ConfigureApplicationContainer(container);
             return GetEngineInternal();
         }
@@ -62,10 +62,9 @@ namespace Nancy.BootStrapper
         /// Returns available NancyModule types
         /// </summary>
         /// <returns>IEnumerable containing all NancyModule Type definitions</returns>
-        protected virtual IEnumerable<ModuleRegistration> GetModuleTypes()
+        protected virtual IEnumerable<ModuleRegistration> GetModuleTypes(Nancy.BootStrapper.IModuleKeyGenerator moduleKeyGenerator)
         {
             var moduleType = typeof(NancyModule);
-            var moduleKeyGenerator = GetModuleKeyGenerator();
 
             var locatedModuleTypes =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()

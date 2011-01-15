@@ -49,6 +49,14 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => this.route.Invoke()).MustHaveHappened();
         }
 
+        [Fact]
+        public void HandleRequest_Should_Throw_ArgumentNullException_When_Given_A_Null_Request()
+        {
+            var exception = Record.Exception(() => engine.HandleRequest(null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
         //[Fact]
         //public void Should_treat_a_HEAD_request_like_a_GET_when_getting_a_request_to_route_resolver()
         //{
