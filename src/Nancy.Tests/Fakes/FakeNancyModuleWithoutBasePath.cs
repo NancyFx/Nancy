@@ -19,7 +19,17 @@
             Get["/greet/{name}"] = x =>
             {
                 return string.Concat("Hello ", x.name);
-            };  
+            };
+
+            Get["/filtered", req => false] = x =>
+            {
+                return "I should never be run because I am filtered";
+            };
+
+            Get["/notfiltered", req => true] = x =>
+            {
+                return "I should always be fine because my filter returns true";
+            };
 
             Post["/"] = x => {
                 return "Default post root";

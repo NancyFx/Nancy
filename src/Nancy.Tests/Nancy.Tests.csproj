@@ -73,6 +73,8 @@
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
+    <Compile Include="Fakes\FakeModuleKeyGenerator.cs" />
+    <Compile Include="Fakes\FakeModuleCatalog.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteDictionaryFixture.cs" />
