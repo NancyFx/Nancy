@@ -88,7 +88,10 @@ namespace Nancy
 
                     foreach (var key in coll.AllKeys)
                     {
-                        ret[key] = coll[key];
+                        if(key != null)
+                        {
+                            ret[key] = coll[key];
+                        }
                     }        
                 }
             }
