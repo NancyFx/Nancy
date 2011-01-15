@@ -13,6 +13,11 @@
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
 
+// -- MONOTOUCH IMPORTANT -- //
+// If you are intending to use MonoTouch you *must* define MONOTOUCH or the code
+// will not compile.
+// -- MONOTOUCH IMPORTANT -- //
+
 #region Preprocessor Directives
 // Uncomment this line if you want the container to automatically
 // register the TinyMessenger messenger/event aggregator
@@ -24,18 +29,32 @@
 #define EXPRESSIONS                         // Platform supports System.Linq.Expressions
 #define APPDOMAIN_GETASSEMBLIES             // Platform supports getting all assemblies from the AppDomain object
 #define UNBOUND_GENERICS_GETCONSTRUCTORS    // Platform supports GetConstructors on unbound generic types
+#define GETPARAMETERS_OPEN_GENERICS         // Platform supports GetParameters on open generics
+#define ASPNET                              // Adds ASP.Net pre-request singleton support
 
-// CompactFramework
+// CompactFramework / Windows Phone 7
 // By default does not support System.Linq.Expressions.
 // AppDomain object does not support enumerating all assemblies in the app domain.
 #if PocketPC || WINDOWS_PHONE
 #undef EXPRESSIONS
 #undef APPDOMAIN_GETASSEMBLIES
 #undef UNBOUND_GENERICS_GETCONSTRUCTORS
+#undef ASPNET
+#endif
+
+// PocketPC has a bizarre limitation on enumerating parameters on unbound generic methods.
+// We need to use a slower workaround in that case.
+#if PocketPC
+#undef GETPARAMETERS_OPEN_GENERICS
 #endif
 
 #if SILVERLIGHT
 #undef APPDOMAIN_GETASSEMBLIES
+#undef ASPNET
+#endif
+
+#if MONOTOUCH
+#undef ASPNET
 #endif
 #endregion
 namespace TinyIoC
@@ -46,6 +65,9 @@ namespace TinyIoC
     using System.Reflection;
 #if EXPRESSIONS
     using System.Linq.Expressions;
+#endif
+#if ASPNET
+    using System.Web;
 #endif
 
     #region SafeDictionary
@@ -144,6 +166,7 @@ namespace TinyIoC
         /// <exception cref="System.ArgumentException"/>
         public static MethodInfo GetGenericMethod(this Type sourceType, System.Reflection.BindingFlags bindingFlags, string methodName, Type[] genericTypes, Type[] parameterTypes)
         {
+#if GETPARAMETERS_OPEN_GENERICS
             var methods = sourceType.GetMethods(bindingFlags)
                 .Where(mi => string.Equals(methodName, mi.Name, StringComparison.InvariantCulture))
                 .Where(mi => mi.ContainsGenericParameters)
@@ -152,13 +175,24 @@ namespace TinyIoC
                 .Select(mi => mi.MakeGenericMethod(genericTypes))
                 .Where(mi => mi.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(parameterTypes))
                 .ToList();
+#else
+            var validMethods =  from method in sourceType.GetMethods(bindingFlags)
+                                where method.Name == methodName
+                                where method.IsGenericMethod
+                                where method.GetGenericArguments().Length == genericTypes.Length
+                                let genericMethod = method.MakeGenericMethod(genericTypes)
+                                where genericMethod.GetParameters().Count() == parameterTypes.Length
+                                where genericMethod.GetParameters().Select(pi => pi.ParameterType).SequenceEqual(parameterTypes)
+                                select genericMethod;
 
+            var methods = validMethods.ToList();
+#endif
             if (methods.Count > 1)
                 throw new AmbiguousMatchException();
 
-            var method = methods.FirstOrDefault();
+            var actualMethod = methods.FirstOrDefault();
 
-            return method;
+            return actualMethod;
         }
     }
     #endregion
@@ -445,6 +479,18 @@ namespace TinyIoC
 
                 return _Container.AddUpdateRegistration(_Registration, currentFactory.SingletonVariant);
             }
+
+#if ASPNET
+            public RegisterOptions AsPerRequestSingleton()
+            {
+                var currentFactory = _Container.GetCurrentFactory(_Registration);
+
+                if (currentFactory == null)
+                    throw new TinyIoCRegistrationException(_Registration.Type, "singleton");
+
+                return _Container.AddUpdateRegistration(_Registration, currentFactory.PerRequestSingletonVariant);
+            }
+#endif
 
             /// <summary>
             /// Make registration multi-instance if possible
@@ -1859,7 +1905,15 @@ namespace TinyIoC
                     throw new TinyIoCRegistrationException(this.GetType(), "singleton");
                 }
             }
-
+#if ASPNET
+            public virtual TinyIoCContainer.ObjectFactoryBase PerRequestSingletonVariant
+            {
+                get
+                {
+                    throw new TinyIoCRegistrationException(this.GetType(), "per-request-singleton");
+                }
+            }
+#endif
             public virtual ObjectFactoryBase MultiInstanceVariant
             {
                 get
@@ -1932,6 +1986,15 @@ namespace TinyIoC
                 }
             }
 
+#if ASPNET
+            public override ObjectFactoryBase PerRequestSingletonVariant
+            {
+                get
+                {
+                    return new PerRequestSingletonFactory<RegisterType, RegisterImplementation>();
+                }
+            }
+#endif
             public override ObjectFactoryBase MultiInstanceVariant
             {
                 get
@@ -2248,6 +2311,16 @@ namespace TinyIoC
                 }
             }
 
+#if ASPNET
+            public override ObjectFactoryBase PerRequestSingletonVariant
+            {
+                get
+                {
+                    return new PerRequestSingletonFactory<RegisterType, RegisterImplementation>();
+                }
+            }
+#endif
+
             public override ObjectFactoryBase MultiInstanceVariant
             {
                 get
@@ -2276,6 +2349,97 @@ namespace TinyIoC
                 }
             }
         }
+
+#if ASPNET
+        /// <summary>
+        /// A factory that lazy instantiates a type and always returns the same instance
+        /// </summary>
+        /// <typeparam name="RegisterType">Registered type</typeparam>
+        /// <typeparam name="RegisterImplementation">Type to instantiate</typeparam>
+        private class PerRequestSingletonFactory<RegisterType, RegisterImplementation> : ObjectFactoryBase, IDisposable
+            where RegisterType : class
+            where RegisterImplementation : class, RegisterType
+        {
+            private readonly string _KeyName = String.Format("TinyIoC.{0}.{1}", typeof(RegisterType).FullName, Guid.NewGuid());
+            private readonly object SingletonLock = new object();
+
+            public PerRequestSingletonFactory()
+            {
+                if (typeof(RegisterImplementation).IsAbstract || typeof(RegisterImplementation).IsInterface)
+                    throw new TinyIoCRegistrationTypeException(typeof(RegisterImplementation), "SingletonFactory");
+            }
+
+            public override Type CreatesType
+            {
+                get { return typeof(RegisterImplementation); }
+            }
+
+            public override object GetObject(TinyIoCContainer container, NamedParameterOverloads parameters, ResolveOptions options)
+            {
+                if (parameters.Count != 0)
+                    throw new ArgumentException("Cannot specify parameters for singleton types");
+
+                RegisterImplementation current;
+
+                lock (SingletonLock)
+                {
+                    current = HttpContext.Current.Items[_KeyName] as RegisterImplementation;
+                    if (current == null)
+                    {
+                        current = container.ConstructType(typeof(RegisterImplementation), Constructor, options) as RegisterImplementation;
+                        HttpContext.Current.Items[_KeyName] = current;
+                    }
+                }
+
+                return current;
+            }
+
+            public override ObjectFactoryBase SingletonVariant
+            {
+                get
+                {
+                    return new SingletonFactory<RegisterType, RegisterImplementation>();
+                }
+            }
+
+            public override ObjectFactoryBase PerRequestSingletonVariant
+            {
+                get
+                {
+                    return this;
+                }
+            }
+
+            public override ObjectFactoryBase MultiInstanceVariant
+            {
+                get
+                {
+                    return new MultiInstanceFactory<RegisterType, RegisterImplementation>();
+                }
+            }
+
+            public override ObjectFactoryBase GetFactoryForChildContainer(TinyIoCContainer parent, TinyIoCContainer child)
+            {
+                // We make sure that the singleton is constructed before the child container takes the factory.
+                // Otherwise the results would vary depending on whether or not the parent container had resolved
+                // the type before the child container does.
+                GetObject(parent, NamedParameterOverloads.Default, ResolveOptions.Default);
+                return this;
+            }
+
+            public void Dispose()
+            {
+                var current = HttpContext.Current.Items[_KeyName] as RegisterImplementation;
+                if (current != null)
+                {
+                    var disposable = current as IDisposable;
+
+                    if (disposable != null)
+                        disposable.Dispose();
+                }
+            }
+        }
+#endif
         #endregion
 
         #region Singleton Container
@@ -2747,12 +2911,27 @@ namespace TinyIoC
 #endif
         private object GetIEnumerableRequest(Type type)
         {
-            // Using MakeGenericMethod (slow) because we need to
-            // cast the IEnumerable or constructing the type wil fail.
-            // We may as well use the ResolveAll<ResolveType> public
-            // method to do this.
-            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
-            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new Type[] { });
+
+//#if GETPARAMETERS_OPEN_GENERICS
+//            // Using MakeGenericMethod (slow) because we need to
+//            // cast the IEnumerable or constructing the type wil fail.
+//            // We may as well use the ResolveAll<ResolveType> public
+//            // method to do this.
+//            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
+//            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+//#else
+//            var resolveAllMethods =    from member in this.GetType().GetMembers()
+//                                       where member.MemberType == MemberTypes.Method
+//                                       where member.Name == "ResolveAll"
+//                                       let method = member as MethodInfo
+//                                       where method.IsGenericMethod
+//                                       let genericMethod = method.MakeGenericMethod(type.GetGenericArguments()[0])
+//                                       where genericMethod.GetParameters().Count() == 0
+//                                       select genericMethod;
+
+//            var genericResolveAllMethod = resolveAllMethods.First();
+//#endif
             return genericResolveAllMethod.Invoke(this, new object[] { });
         }
 
