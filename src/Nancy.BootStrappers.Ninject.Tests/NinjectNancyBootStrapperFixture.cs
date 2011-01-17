@@ -7,44 +7,50 @@ using TinyIoC;
 using Nancy.Routing;
 using Nancy.BootStrapper;
 using Nancy.Tests.Fakes;
+using Nancy.BootStrappers.Ninject;
+using Ninject;
 
 namespace Nancy.Tests.Unit
 {
-    public class FakeDefaultNancyBootStrapper : DefaultNancyBootStrapper
+    public class FakeNinjectNancyBootStrapper : NinjectNancyBootStrapper
     {
         public bool RequestContainerConfigured { get; set; }
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoC.TinyIoCContainer Container { get { return _Container; } }
+        public IKernel Container { get { return _Kernel; } }
 
-        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)
+        public override void ConfigureRequestContainer(IKernel container)
         {
             base.ConfigureRequestContainer(container);
 
             RequestContainerConfigured = true;
 
-            container.Register<IFoo, Foo>().AsSingleton();
-            container.Register<IDependency, Dependency>().AsSingleton();
+            container.Bind<IFoo>().To<Foo>().InSingletonScope();
+            container.Bind<IDependency>().To<Dependency>().InSingletonScope();
         }
 
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(IKernel container)
         {
             ApplicationContainerConfigured = true;
             base.ConfigureApplicationContainer(container);
+
+            // Ninject child containers can't handle the parent container resolving
+            // types using the child container :-/
+            // Adding these will allow other tests to work, but will fail the lifetime
+            // tests.
+            container.Bind<IFoo>().To<Foo>().InSingletonScope();
+            container.Bind<IDependency>().To<Dependency>().InSingletonScope();
         }
     }
 
-    public class DefaultNancyBootStrapperFixture
+    public class NinjectNancyBootStrapperFixture
     {
-        private FakeDefaultNancyBootStrapper _BootStrapper;
+        private FakeNinjectNancyBootStrapper _BootStrapper;
 
-        /// <summary>
-        /// Initializes a new instance of the DefaultNancyBootStrapperFixture class.
-        /// </summary>
-        public DefaultNancyBootStrapperFixture()
+        public NinjectNancyBootStrapperFixture()
         {
-            _BootStrapper = new FakeDefaultNancyBootStrapper();
+            _BootStrapper = new FakeNinjectNancyBootStrapper();
         }
 
         [Fact]
@@ -115,13 +121,13 @@ namespace Nancy.Tests.Unit
         {
             _BootStrapper.GetEngine();
 
-            _BootStrapper.Container.CanResolve<INancyModuleCatalog>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteResolver>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<ITemplateEngineSelector>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<INancyEngine>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IModuleKeyGenerator>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCache>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCacheProvider>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _BootStrapper.Container.Get<INancyModuleCatalog>();
+            _BootStrapper.Container.Get<IRouteResolver>();
+            _BootStrapper.Container.Get<ITemplateEngineSelector>();
+            _BootStrapper.Container.Get<INancyEngine>();
+            _BootStrapper.Container.Get<IModuleKeyGenerator>();
+            _BootStrapper.Container.Get<IRouteCache>();
+            _BootStrapper.Container.Get<IRouteCacheProvider>();
         }
 
         [Fact]

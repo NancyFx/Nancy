@@ -7,44 +7,46 @@ using TinyIoC;
 using Nancy.Routing;
 using Nancy.BootStrapper;
 using Nancy.Tests.Fakes;
+using Nancy.BootStrappers.StructureMap;
+using StructureMap;
 
 namespace Nancy.Tests.Unit
 {
-    public class FakeDefaultNancyBootStrapper : DefaultNancyBootStrapper
+    public class FakeStructureMapNancyBootStrapper : StructureMapNancyBootStrapper
     {
         public bool RequestContainerConfigured { get; set; }
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoC.TinyIoCContainer Container { get { return _Container; } }
+        public IContainer Container { get { return _Container; } }
 
-        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)
+        public override void ConfigureRequestContainer(IContainer container)
         {
             base.ConfigureRequestContainer(container);
 
             RequestContainerConfigured = true;
 
-            container.Register<IFoo, Foo>().AsSingleton();
-            container.Register<IDependency, Dependency>().AsSingleton();
+            container.Configure(registry =>
+            {
+                registry.For<IFoo>().Singleton().Use<Foo>();
+                registry.For<IDependency>().Singleton().Use<Dependency>();
+            });
         }
 
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(IContainer container)
         {
             ApplicationContainerConfigured = true;
             base.ConfigureApplicationContainer(container);
         }
     }
 
-    public class DefaultNancyBootStrapperFixture
+    public class StructureMapNancyBootStrapperFixture
     {
-        private FakeDefaultNancyBootStrapper _BootStrapper;
+        private FakeStructureMapNancyBootStrapper _BootStrapper;
 
-        /// <summary>
-        /// Initializes a new instance of the DefaultNancyBootStrapperFixture class.
-        /// </summary>
-        public DefaultNancyBootStrapperFixture()
+        public StructureMapNancyBootStrapperFixture()
         {
-            _BootStrapper = new FakeDefaultNancyBootStrapper();
+            _BootStrapper = new FakeStructureMapNancyBootStrapper();
         }
 
         [Fact]
@@ -115,13 +117,13 @@ namespace Nancy.Tests.Unit
         {
             _BootStrapper.GetEngine();
 
-            _BootStrapper.Container.CanResolve<INancyModuleCatalog>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteResolver>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<ITemplateEngineSelector>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<INancyEngine>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IModuleKeyGenerator>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCache>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCacheProvider>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _BootStrapper.Container.GetInstance<INancyModuleCatalog>();
+            _BootStrapper.Container.GetInstance<IRouteResolver>();
+            _BootStrapper.Container.GetInstance<ITemplateEngineSelector>();
+            _BootStrapper.Container.GetInstance<INancyEngine>();
+            _BootStrapper.Container.GetInstance<IModuleKeyGenerator>();
+            _BootStrapper.Container.GetInstance<IRouteCache>();
+            _BootStrapper.Container.GetInstance<IRouteCacheProvider>();
         }
 
         [Fact]
