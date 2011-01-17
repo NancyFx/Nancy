@@ -29,6 +29,15 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Get the moduleKey generator
+        /// </summary>
+        /// <returns>IModuleKeyGenerator instance</returns>
+        protected sealed override IModuleKeyGenerator GetModuleKeyGenerator()
+        {
+            return _Container.Resolve<IModuleKeyGenerator>();
+        }
+
+        /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
@@ -38,8 +47,6 @@ namespace Nancy
             base.ConfigureApplicationContainer(container);
 
             container.AutoRegister();
-
-            RegisterDefaults(container);
         }
 
         public virtual void ConfigureRequestContainer(TinyIoCContainer container)
@@ -70,17 +77,16 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Registers default implementations - can be overridden by overriding ConfigureContainer
+        /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected void RegisterDefaults(TinyIoCContainer container)
+        protected override void RegisterDefaults(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             container.Register<INancyModuleCatalog>(this);
-            container.Register<IRouteResolver, RouteResolver>().AsSingleton();
-            container.Register<ITemplateEngineSelector, DefaultTemplateEngineSelector>().AsSingleton();
-            container.Register<INancyEngine, NancyEngine>().AsSingleton();
-            container.Register<IModuleKeyGenerator, DefaultModuleKeyGenerator>().AsSingleton();
-            container.Register<IRouteCache, RouteCache>().AsSingleton();
-            container.Register<IRouteCacheProvider, DefaultRouteCacheProvider>().AsSingleton();
+
+            foreach (var typeRegistration in typeRegistrations)
+            {
+                container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+            }
         }
 
         /// <summary>

@@ -14,7 +14,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public object FakeContainer { get;set; }
         public object AppContainer { get; set; }
         public List<ModuleRegistration> Modules { get; set; }
-        public IModuleKeyGenerator Generator {get;set;}
+        public IModuleKeyGenerator Generator { get; set; }
+        public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
+
+        protected override Type DefaultModuleKeyGenerator { get { return typeof(Fakes.FakeModuleKeyGenerator); } }
 
         /// <summary>
         /// Initializes a new instance of the TestBootStrapper class.
@@ -23,13 +26,8 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
             FakeContainer = new object();
-        }
 
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            Generator = A.Fake<IModuleKeyGenerator>();
-            A.CallTo(() => Generator.GetKeyForModuleType(A<Type>.Ignored)).Returns("FAKEMODULEKEYGENERATOR");
-            return Generator;
+            Generator = new Fakes.FakeModuleKeyGenerator();
         }
 
         protected override INancyEngine GetEngineInternal()
@@ -37,9 +35,19 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return FakeNancyEngine;
         }
 
+        protected override IModuleKeyGenerator GetModuleKeyGenerator()
+        {
+            return Generator;
+        }
+
         protected override object CreateContainer()
         {
             return FakeContainer;
+        }
+
+        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        {
+            this.TypeRegistrations = typeRegistrations;
         }
 
         protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
@@ -83,9 +91,19 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return A.Fake<INancyEngine>();
         }
 
+        protected override IModuleKeyGenerator GetModuleKeyGenerator()
+        {
+            return new Fakes.FakeModuleKeyGenerator();
+        }
+
         protected override object CreateContainer()
         {
             return new object();
+        }
+
+        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        {
+
         }
     }
 
@@ -133,8 +151,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
             _BootStrapper.GetEngine();
 
             var totalKeyEntries = _BootStrapper.Modules.Count();
+            var called = (_BootStrapper.Generator as Fakes.FakeModuleKeyGenerator).CallCount;
 
-            A.CallTo(() => _BootStrapper.Generator.GetKeyForModuleType(A<Type>.Ignored)).MustHaveHappened(Repeated.Times(totalKeyEntries).Exactly);
+            called.ShouldEqual(totalKeyEntries);
         }
 
         [Fact]
@@ -144,6 +163,16 @@ namespace Nancy.Tests.Unit.Bootstrapper
             bootstrapper.GetEngine();
 
             bootstrapper.RegisterModulesRegistrationTypes.ShouldBeSameAs(bootstrapper.ModuleRegistrations);
+        }
+
+        [Fact]
+        public void RegisterDefaults_Passes_In_User_Types_If_Set_In_Derived_Class_Ctor()
+        {
+            _BootStrapper.GetEngine();
+
+            var moduleKeyGeneratorEntry = _BootStrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
+
+            moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
         }
     }
 }

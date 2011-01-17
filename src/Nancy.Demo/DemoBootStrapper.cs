@@ -14,9 +14,6 @@ namespace Nancy.Demo
             // We don't call base because we don't want autoregister
             // we just register our one known dependency as an application level singleton
             container.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
-            
-            // We do want our internal nancy defaults though
-            RegisterDefaults(container);
         }
 
         public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)

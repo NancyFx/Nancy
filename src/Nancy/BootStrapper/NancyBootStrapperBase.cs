@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Nancy.Routing;
+using System.Threading;
 
 namespace Nancy.BootStrapper
 {
@@ -31,16 +32,60 @@ namespace Nancy.BootStrapper
     public abstract class NancyBootStrapperBase<TContainer> : INancyBootStrapper
         where TContainer: class
     {
+        // Defaults
         /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultRouteResolver { get { return typeof(DefaultRouteResolver); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultTemplateEngineSelector { get { return typeof(DefaultTemplateEngineSelector); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultNancyEngine { get { return typeof(NancyEngine); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultModuleKeyGenerator { get { return typeof(DefaultModuleKeyGenerator); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultRouteCache { get { return typeof(DefaultRouteCache); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultRouteCacheProvider { get { return typeof(DefaultRouteCacheProvider); } }
+
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
         public INancyEngine GetEngine()
         {
             var container = CreateContainer();
+            RegisterDefaults(container, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
             ConfigureApplicationContainer(container);
             return GetEngineInternal();
+        }
+
+        private IEnumerable<TypeRegistration> BuildDefaults()
+        {
+            return new TypeRegistration[]
+            {
+                new TypeRegistration(typeof(IRouteResolver), DefaultRouteResolver),
+                new TypeRegistration(typeof(ITemplateEngineSelector), DefaultTemplateEngineSelector),
+                new TypeRegistration(typeof(INancyEngine), DefaultNancyEngine),
+                new TypeRegistration(typeof(IModuleKeyGenerator), DefaultModuleKeyGenerator),
+                new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),
+                new TypeRegistration(typeof(IRouteCacheProvider), DefaultRouteCacheProvider),
+            };
         }
 
         /// <summary>
@@ -50,19 +95,16 @@ namespace Nancy.BootStrapper
         protected abstract INancyEngine GetEngineInternal();
 
         /// <summary>
-        /// Get the moduleKey generator - defaults to <see cref="DefaultModuleKeyGenerator"/>
+        /// Get the moduleKey generator
         /// </summary>
         /// <returns>IModuleKeyGenerator instance</returns>
-        protected virtual Nancy.BootStrapper.IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return new Nancy.BootStrapper.DefaultModuleKeyGenerator();
-        }
+        protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
 
         /// <summary>
         /// Returns available NancyModule types
         /// </summary>
         /// <returns>IEnumerable containing all NancyModule Type definitions</returns>
-        protected virtual IEnumerable<ModuleRegistration> GetModuleTypes(Nancy.BootStrapper.IModuleKeyGenerator moduleKeyGenerator)
+        protected virtual IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)
         {
             var moduleType = typeof(NancyModule);
 
@@ -82,6 +124,13 @@ namespace Nancy.BootStrapper
         /// </summary>
         /// <returns>Container</returns>
         protected abstract TContainer CreateContainer();
+
+        /// <summary>
+        /// Register the default implementations of internally used types into the container as singletons
+        /// </summary>
+        /// <param name="container">Container</param>
+        /// <param name="typeRegistrations">Type registrations to register</param>
+        protected abstract void RegisterDefaults(TContainer container, IEnumerable<TypeRegistration> typeRegistrations);
 
         /// <summary>
         /// Configure the container (register types) for the application level

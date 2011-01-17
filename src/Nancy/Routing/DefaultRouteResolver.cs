@@ -8,7 +8,7 @@
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
 
-    public sealed class RouteResolver : IRouteResolver
+    public sealed class DefaultRouteResolver : IRouteResolver
     {
         private readonly IRouteCache _RouteCache;
         private readonly INancyModuleCatalog _ModuleCatalog;
@@ -20,7 +20,7 @@
         /// <param name="routeCache">Route cache provider</param>
         /// <param name="moduleCatalog">Module catalog</param>
         /// <param name="templateSelector">Template selector</param>
-        public RouteResolver(IRouteCache routeCache, INancyModuleCatalog moduleCatalog, ITemplateEngineSelector templateSelector)
+        public DefaultRouteResolver(IRouteCache routeCache, INancyModuleCatalog moduleCatalog, ITemplateEngineSelector templateSelector)
         {
             _RouteCache = routeCache;
             _ModuleCatalog = moduleCatalog;
