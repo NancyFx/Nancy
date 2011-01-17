@@ -15,7 +15,7 @@ namespace Nancy.Tests.Unit
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoC.TinyIoCContainer Container { get; set; }
+        public TinyIoC.TinyIoCContainer Container { get { return _Container; } }
 
         public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)
         {
@@ -26,13 +26,6 @@ namespace Nancy.Tests.Unit
         {
             ApplicationContainerConfigured = true;
             base.ConfigureApplicationContainer(container);
-        }
-
-        protected override TinyIoC.TinyIoCContainer CreateContainer()
-        {
-            base.CreateContainer();
-            Container = _Container;
-            return _Container;
         }
     }
 

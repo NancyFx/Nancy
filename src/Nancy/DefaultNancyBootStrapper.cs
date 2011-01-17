@@ -23,7 +23,7 @@ namespace Nancy
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
-        protected override INancyEngine GetEngineInternal()
+        protected sealed override INancyEngine GetEngineInternal()
         {
             return _Container.Resolve<INancyEngine>();
         }
@@ -57,7 +57,7 @@ namespace Nancy
         /// Creates a new container instance
         /// </summary>
         /// <returns>New container</returns>
-        protected override TinyIoCContainer CreateContainer()
+        protected sealed override TinyIoCContainer CreateContainer()
         {
             _Container = new TinyIoCContainer();
 
@@ -68,7 +68,7 @@ namespace Nancy
         /// Registers all modules in the container as multi-instance
         /// </summary>
         /// <param name="moduleRegistrations">NancyModule registration types</param>
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
+        protected sealed override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
         {
             foreach (var registrationType in moduleRegistrations)
             {
@@ -79,7 +79,7 @@ namespace Nancy
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected override void RegisterDefaults(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterDefaults(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             container.Register<INancyModuleCatalog>(this);
 
