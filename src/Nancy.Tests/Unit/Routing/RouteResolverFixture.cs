@@ -17,7 +17,7 @@ namespace Nancy.Tests.Unit.Routing
     {
         private FakeModuleCatalog _FakeModuleCatalog;
         private ITemplateEngineSelector _FakeTemplateSelector;
-        private RouteCache _RouteCache;
+        private DefaultRouteCache _RouteCache;
         private readonly IRouteResolver resolver;
 
         public RouteResolverFixture()
@@ -26,8 +26,8 @@ namespace Nancy.Tests.Unit.Routing
             // unless we hard code it, which will make the tests brittle if the fake modules change.
             _FakeModuleCatalog = new FakeModuleCatalog();
             _FakeTemplateSelector = A.Fake<ITemplateEngineSelector>();
-            _RouteCache = new RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
-            this.resolver = new RouteResolver(_RouteCache, _FakeModuleCatalog, _FakeTemplateSelector);
+            _RouteCache = new DefaultRouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
+            this.resolver = new DefaultRouteResolver(_RouteCache, _FakeModuleCatalog, _FakeTemplateSelector);
         }
 
         [Fact]

@@ -7,12 +7,12 @@ using Nancy.Extensions;
 
 namespace Nancy.Routing
 {
-    public class RouteCache : IRouteCache
+    public class DefaultRouteCache : IRouteCache
     {
         private readonly List<RouteCacheEntry> _Cache;
         private readonly IModuleKeyGenerator _ModuleKeyGenerator;
 
-        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
+        public DefaultRouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
         {
             _ModuleKeyGenerator = moduleKeyGenerator;
             _Cache = new List<RouteCacheEntry>();

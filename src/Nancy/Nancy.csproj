@@ -47,6 +47,7 @@
     <Compile Include="BootStrapper\ModuleRegistrationType.cs" />
     <Compile Include="BootStrapper\NancyBootStrapperBase.cs" />
     <Compile Include="BootStrapper\NancyBootStrapperLocator.cs" />
+    <Compile Include="BootStrapper\TypeRegistration.cs" />
     <Compile Include="Cookies\NancyCookie.cs" />
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultNancyBootStrapper.cs" />
@@ -63,7 +64,7 @@
     <Compile Include="Routing\DefaultRouteCacheProvider.cs" />
     <Compile Include="Routing\IRouteCache.cs" />
     <Compile Include="Routing\IRouteCacheProvider.cs" />
-    <Compile Include="Routing\RouteCache.cs" />
+    <Compile Include="Routing\DefaultRouteCache.cs" />
     <Compile Include="Routing\RouteCacheEntry.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
@@ -82,7 +83,7 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteDictionary.cs" />
     <Compile Include="DynamicDictionary.cs" />
-    <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />
