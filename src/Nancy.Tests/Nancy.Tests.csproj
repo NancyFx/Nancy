@@ -54,6 +54,7 @@
     </Compile>
     <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
+    <Compile Include="Fakes\FakeNancyModuleWithDependency.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
