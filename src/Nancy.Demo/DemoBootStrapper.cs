@@ -15,7 +15,7 @@ namespace Nancy.Demo
             // we just register our one known dependency as an application level singleton
             container.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
         }
-
+        
         public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)
         {
             base.ConfigureRequestContainer(container);
