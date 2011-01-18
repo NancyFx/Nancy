@@ -26,6 +26,7 @@ namespace Nancy.BootStrappers.Ninject
                                             INancyModuleCatalog
     {
         protected IKernel _Kernel;
+        private IEnumerable<ModuleRegistration> _ModuleRegistations;
 
         /// <summary>
         ///   Resolve INancyEngine
@@ -61,9 +62,23 @@ namespace Nancy.BootStrappers.Ninject
         /// <param name = "moduleRegistrations">NancyModule types</param>
         protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
         {
+            // To work around the child container limitations we store these now
+            // to register into the child container later.
+            _ModuleRegistations = moduleRegistrations;
+
+            RegisterModulesInternal(_Kernel, moduleRegistrations);
+        }
+
+        /// <summary>
+        /// Register modules in the given container.
+        /// </summary>
+        /// <param name="kernel">Ninject kernel to register into</param>
+        /// <param name="moduleRegistrations">Module registrations</param>
+        private void RegisterModulesInternal(IKernel kernel, IEnumerable<ModuleRegistration> moduleRegistrations)
+        {
             foreach (var registrationType in moduleRegistrations)
             {
-                _Kernel.Bind(typeof(NancyModule))
+                kernel.Bind(typeof(NancyModule))
                         .To(registrationType.ModuleType)
                         .Named(registrationType.ModuleKey);
             }
@@ -80,6 +95,13 @@ namespace Nancy.BootStrappers.Ninject
             {
                 container.Bind(typeRegistration.RegistrationType).To(typeRegistration.ImplementationType).InSingletonScope();
             }
+
+            container.Bind<Func<IRouteCache>>().ToMethod(ctx =>
+            {
+                Func<IRouteCache> runc =
+                        () => ctx.Kernel.Get<IRouteCache>();
+                return runc;
+            });
         }
 
         /// <summary>
@@ -91,12 +113,26 @@ namespace Nancy.BootStrappers.Ninject
         }
 
         /// <summary>
+        /// Create a child kernel - also registers modules in the child kernel to 
+        /// work around child container limitations.
+        /// </summary>
+        /// <returns>ChildKernel</returns>
+        private IKernel GetChildKernel()
+        {
+            var child = new ChildKernel(_Kernel);
+
+            RegisterModulesInternal(child, _ModuleRegistations);
+
+            return child;
+        }
+
+        /// <summary>
         ///   Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <returns>IEnumerable of NancyModule</returns>
         public virtual IEnumerable<NancyModule> GetAllModules()
         {
-            var child = new ChildKernel(_Kernel);
+            var child = GetChildKernel();
             ConfigureRequestContainer(child);
             return child.GetAll<NancyModule>();
         }
@@ -108,7 +144,7 @@ namespace Nancy.BootStrappers.Ninject
         /// <returns>NancyModule instance</returns>
         public virtual NancyModule GetModuleByKey(string moduleKey)
         {
-            var child = new ChildKernel(_Kernel);
+            var child = GetChildKernel();
             ConfigureRequestContainer(child);
             return child.Get<NancyModule>(moduleKey);
         }
