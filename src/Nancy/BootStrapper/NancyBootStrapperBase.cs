@@ -110,6 +110,7 @@ namespace Nancy.BootStrapper
 
             var locatedModuleTypes =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
                 where !assembly.IsDynamic
                 from type in assembly.GetExportedTypes()
                 where !type.IsAbstract
