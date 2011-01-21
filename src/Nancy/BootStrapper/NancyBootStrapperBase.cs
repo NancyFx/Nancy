@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using Nancy.Routing;
 using System.Threading;
+using System.Reflection;
+using System.IO;
+using Nancy.Extensions;
 
 namespace Nancy.BootStrapper
 {
@@ -30,7 +33,7 @@ namespace Nancy.BootStrapper
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
     public abstract class NancyBootStrapperBase<TContainer> : INancyBootStrapper
-        where TContainer: class
+        where TContainer : class
     {
         // Defaults
         /// <summary>
@@ -69,9 +72,9 @@ namespace Nancy.BootStrapper
         public INancyEngine GetEngine()
         {
             var container = CreateContainer();
+            ConfigureApplicationContainer(container);
             RegisterDefaults(container, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
-            ConfigureApplicationContainer(container);
             return GetEngineInternal();
         }
 
@@ -112,7 +115,7 @@ namespace Nancy.BootStrapper
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 where !assembly.ReflectionOnly
                 where !assembly.IsDynamic
-                from type in assembly.GetExportedTypes()
+                from type in assembly.SafeGetExportedTypes()
                 where !type.IsAbstract
                 where moduleType.IsAssignableFrom(type)
                 select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));

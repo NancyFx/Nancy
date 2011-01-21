@@ -41,6 +41,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="BootStrapper\DefaultModuleKeyGenerator.cs" />
     <Compile Include="BootStrapper\IModuleKeyGenerator.cs" />
     <Compile Include="BootStrapper\INancyBootStrapper.cs" />
