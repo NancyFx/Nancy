@@ -1,4 +1,4 @@
-﻿namespace Nancy.Tests.Fakes
+namespace Nancy.Tests.Fakes
 {    
     using System.Collections.Generic;
     using System.Linq;
@@ -10,15 +10,14 @@
         {
             var description = (from m in meta
                                from d in m.RouteDescriptions
-                               where d.ModulePath + d.Path == request.Uri
+                               where d.Path == request.Uri
                                select d).First();
 
-            this.ModulePath = description.ModulePath;
+            this.ModulePath = description.Module.ModulePath;
             this.Path = description.Path;            
 
             return new FakeRoute();
         }
-
         
         public string Path { get; private set; }
 

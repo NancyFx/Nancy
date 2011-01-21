@@ -52,7 +52,7 @@ namespace Nancy.Tests.Unit
         public void Should_retrieve_modules_from_locator_when_handling_request()
         {
             // Given
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/", "http");
 
             // When
             this.engine.HandleRequest(request);
@@ -65,9 +65,9 @@ namespace Nancy.Tests.Unit
         public void Should_return_not_found_response_when_no_nancy_modules_could_be_found()
         {
             // Given
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/", "http");
 
-            A.CallTo(() => this.application.GetModules()).Returns(new Dictionary<string, IEnumerable<ModuleMeta>>());
+			A.CallTo(() => this.application.GetModules()).Returns(new Dictionary<string, IEnumerable<ModuleMeta>>());
 
             // When
             var response = this.engine.HandleRequest(request);
@@ -80,7 +80,7 @@ namespace Nancy.Tests.Unit
         public void Should_pass_all_registered_route_handlers_for_get_request_to_route_resolver()
         {
             // Given
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/", "http");
 
 
             A.CallTo(() => this.application.GetModules()).Returns(modules);
@@ -94,6 +94,8 @@ namespace Nancy.Tests.Unit
                 A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
+
+        // TODO: This test doesn't belong here?
         [Theory]
         [InlineData("get")]
         [InlineData("GeT")]
@@ -106,7 +108,7 @@ namespace Nancy.Tests.Unit
         public void Should_ignore_case_of_request_verb_when_resolving_route_handlers(string verb)
         {
             // Given
-            var request = new Request(verb, "/");
+            var request = new Request(verb, "/", "http");
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
 
@@ -122,7 +124,7 @@ namespace Nancy.Tests.Unit
         public void Should_treat_a_HEAD_request_like_a_GET_when_getting_a_request_to_route_resolver()
         {
             // Given
-            var request = new Request("HEAD", "/");
+            var request = new Request("HEAD", "/", "http");
 
 
             A.CallTo(() => this.application.GetModules()).Returns(modules);
@@ -139,7 +141,7 @@ namespace Nancy.Tests.Unit
         public void Should_pass_all_registered_route_handlers_for_delete_request_to_route_resolver()
         {
             // Given
-            var request = new Request("DELETE", "/");
+            var request = new Request("DELETE", "/", "http");
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
 
@@ -154,7 +156,7 @@ namespace Nancy.Tests.Unit
         public void Should_call_route_resolver_with_all_route_handlers()
         {
             // Given
-            var request = new Request("PUT", "/");
+            var request = new Request("PUT", "/", "http");
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
 
@@ -169,7 +171,7 @@ namespace Nancy.Tests.Unit
         public void Should_call_route_resolver_with_request()
         {
             // Given
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/", "http");
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
 
@@ -185,7 +187,7 @@ namespace Nancy.Tests.Unit
         public void Should_return_not_found_response_when_no_route_could_be_matched_for_the_request_verb()
         {
             // Given
-            var request = new Request("NOTVALID", "/");
+            var request = new Request("NOTVALID", "/", "http");
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
 
@@ -212,7 +214,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", "/");            
+            var request = new Request("GET", "/", "http");            
 
             A.CallTo(() => this.application.GetModules()).Returns(this.modules);
             A.CallTo(() => this.resolver.GetRoute(request, A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).Returns(route);
@@ -230,7 +232,7 @@ namespace Nancy.Tests.Unit
             // Given
             var expectedResponse = new Response();
             var route = A.Fake<IRoute>();
-            var request = new Request("GET", "/");
+            var request = new Request("GET", "/", "http");
             var descriptions = GetRouteDescriptions(request, this.modules);
 
             A.CallTo(() => route.Invoke()).Returns(expectedResponse);
@@ -248,7 +250,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_base_route_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", "/fake/");
+            var request = new Request("POST", "/fake/", "http");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.application, r);
@@ -266,7 +268,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_path_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", "/");
+            var request = new Request("POST", "/", "http");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.application, r);

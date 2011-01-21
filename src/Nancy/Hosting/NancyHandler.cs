@@ -41,10 +41,11 @@
         {
             return new Request(
                 context.Request.HttpMethod,
-                context.Request.Url.AbsolutePath,
+                context.Request.AppRelativeCurrentExecutionFilePath.Replace("~",""),
                 context.Request.Headers.ToDictionary(),
-                context.Request.InputStream, 
-                sessionStore);
+                context.Request.InputStream,
+				    sessionStore,
+                context.Request.Url.Scheme);
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

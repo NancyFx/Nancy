@@ -4,7 +4,7 @@
 
     public class Route : IRoute
     {
-        public Route(string path, RouteParameters parameters, NancyModule module, Func<object, Response> action)
+        public Route(string path, DynamicDictionary parameters, NancyModule module, Func<object, Response> action)
         {
             if (path == null)
             {
@@ -15,7 +15,6 @@
             {
                 throw new ArgumentNullException("action", "The action parameter cannot be null.");
             }
-
 
             this.Path = path;
             this.Module = module;

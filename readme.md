@@ -122,20 +122,23 @@ current implementation serves as a proof of concept and needs more work to be st
 
 ## Contributors
 
-Nancy is not a one man project and many of the features that are availble would not have been available without the awesome contributions from the community!
+Nancy is not a one man project and many of the features that are availble would not have been possible without the awesome contributions from the community!
 
 * Andy Pike
 * Graeme Foster
 * Karl Seguin
+* James Eggers
 * Jason Mead
 * Jeremy Skinner
 * João Bragança
+* Johan Danforth
 * John Downey
 * Mindaugas Mozuras
 * Pedro Felix
 * Phil Haack
 * Robert Greyling
 * Steven Robbins
+* Vidar L. Sømme
 
 ## Copyright
 

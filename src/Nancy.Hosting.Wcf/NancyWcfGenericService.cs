@@ -52,7 +52,9 @@
                 webRequest.Method,
                 string.Concat("/", relativeUri),
                 webRequest.Headers.ToDictionary(),
-                requestBody, new CookieSessionStore());
+                requestBody, 
+				new CookieSessionStore(),
+				webRequest.UriTemplateMatch.BaseUri.Scheme);
         }
 
         private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)

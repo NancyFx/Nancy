@@ -26,8 +26,8 @@ namespace Nancy.Tests.Unit.Hosting
             this.response = A.Fake<HttpResponseBase>();            
             this.engine = A.Fake<INancyEngine>();
             this.application = A.Fake<INancyApplication>();
-            this.sessionStore = A.Fake<ISessionStore>();
-            handler = new NancyHandler(engine, application);
+            this.sessionStore = A.Fake<ISessionStore>();            
+            this.handler = new NancyHandler(engine, application);
 
             A.CallTo(() => this.context.Request).Returns(this.request);
             A.CallTo(() => this.context.Response).Returns(this.response);
@@ -39,7 +39,7 @@ namespace Nancy.Tests.Unit.Hosting
         public void Should_load_the_session_into_the_request()
         {
             // Given
-            var request = new Request("GET", "http://leto.dune/about");
+            var request = new Request("GET", "http://leto.dune/about", "http");
             var response = new Response();
             var session = new Session();
             
@@ -57,7 +57,7 @@ namespace Nancy.Tests.Unit.Hosting
         public void Should_not_store_the_session_if_it_was_not_even_loaded()
         {
             // Given
-            var request = new Request("GET", "http://leto.dune/about");
+            var request = new Request("GET", "http://leto.dune/about", "http");
             var response = new Response();
             var session = new Session();
 
@@ -76,7 +76,7 @@ namespace Nancy.Tests.Unit.Hosting
         public void Should_store_the_session_if_it_was_loaded()
         {
             // Given
-            var request = new Request("GET", "http://leto.dune/about");
+            var request = new Request("GET", "http://leto.dune/about", "http");
             var response = new Response();
             var session = new Session();            
 
@@ -106,13 +106,15 @@ namespace Nancy.Tests.Unit.Hosting
 
             SetupRequestProcess();
             
-            handler.ProcessRequest(context);
+            this.handler.ProcessRequest(context);
+
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the second cookie")).MustHaveHappened();
         }
 
         private void SetupRequestProcess()
         {
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/about");
             A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             

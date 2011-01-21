@@ -1,7 +1,8 @@
 ﻿namespace Nancy
 {
-    using System;    
-    using System.Linq;    
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Nancy.Routing;
 
     public class NancyEngine : INancyEngine
@@ -14,6 +15,7 @@
         /// </summary>
         /// <param name="application">An <see cref="INancyApplication"/> instance, containing the information about the current application.</param>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
+        /// <param name="application"></param>
         public NancyEngine(INancyApplication application, IRouteResolver resolver)
         {
             if (application == null)

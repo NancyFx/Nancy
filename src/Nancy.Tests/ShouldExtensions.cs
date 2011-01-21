@@ -20,6 +20,11 @@ namespace Nancy.Tests
             Assert.True(string.IsNullOrEmpty(actual));
         }
 
+        public static void ShouldNotBeEmpty(this string actual)
+        {
+            Assert.False(string.IsNullOrEmpty(actual));
+        }
+
         public static void ShouldImplementInterface<T>(this Type actual)
         {
             var found =

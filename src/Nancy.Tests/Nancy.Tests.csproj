@@ -78,8 +78,9 @@
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Unit\Routing\NoMatchingRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
+    <Compile Include="Unit\Routing\RouteDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\RouteFixture.cs" />
-    <Compile Include="Unit\Routing\RouteParametersFixture.cs" />
+    <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />

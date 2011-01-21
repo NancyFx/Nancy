@@ -136,7 +136,7 @@ namespace Nancy.Tests.Unit
             {
                 headers.Add("cookie", new[]{CookieSessionStore.CookieName + "=" + HttpUtility.UrlEncode(sessionValue)});
             }
-            return new Request("GET", "http://goku.power:9001/", headers, new MemoryStream(), new CookieSessionStore());
+            return new Request("GET", "http://goku.power:9001/", headers, new MemoryStream(), new CookieSessionStore(), "http");
         }
     }
 }
