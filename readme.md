@@ -1,6 +1,6 @@
 # Meet Nancy
 
-Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aims to deliver a low ceremony approach to building light, fast web applications. 
+Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aims to deliver a low ceremony approach to building light, fast web applications.
 
 ## Features
 
@@ -67,6 +67,11 @@ Nancy also supports the idea of _module paths_, where you assign a root path for
     }
 
 Notice the _base("/butler")_ call to the NancyModule constructor. Now all action paths that are defined in the module will be relative to _/butler_ so in order to greet someone you could access _/butler/greet/{name}_, for example _/butler/greet/thecodejunkie_
+	
+## Community
+
+You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is were most of the discussions regarding the development and usage of Nancy is taking place. You can also
+find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
 
