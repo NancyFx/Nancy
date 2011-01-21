@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nancy.Extensions;
 
 namespace Nancy.BootStrapper
 {
@@ -29,7 +30,7 @@ namespace Nancy.BootStrapper
 
             var locatedBootStrappers = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                        where !assembly.IsDynamic
-                                       from type in assembly.GetExportedTypes()
+                                       from type in assembly.SafeGetExportedTypes()
                                        where !type.IsAbstract
                                        where bootStrapperInterface.IsAssignableFrom(type)
                                        where type != defaultBootStrapper

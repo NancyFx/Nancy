@@ -13,11 +13,6 @@
 // FITNESS FOR A PARTICULAR PURPOSE.
 //===============================================================================
 
-// -- MONOTOUCH IMPORTANT -- //
-// If you are intending to use MonoTouch you *must* define MONOTOUCH or the code
-// will not compile.
-// -- MONOTOUCH IMPORTANT -- //
-
 #region Preprocessor Directives
 // Uncomment this line if you want the container to automatically
 // register the TinyMessenger messenger/event aggregator
@@ -30,7 +25,6 @@
 #define APPDOMAIN_GETASSEMBLIES             // Platform supports getting all assemblies from the AppDomain object
 #define UNBOUND_GENERICS_GETCONSTRUCTORS    // Platform supports GetConstructors on unbound generic types
 #define GETPARAMETERS_OPEN_GENERICS         // Platform supports GetParameters on open generics
-#define ASPNET                              // Adds ASP.Net pre-request singleton support
 
 // CompactFramework / Windows Phone 7
 // By default does not support System.Linq.Expressions.
@@ -39,7 +33,6 @@
 #undef EXPRESSIONS
 #undef APPDOMAIN_GETASSEMBLIES
 #undef UNBOUND_GENERICS_GETCONSTRUCTORS
-#undef ASPNET
 #endif
 
 // PocketPC has a bizarre limitation on enumerating parameters on unbound generic methods.
@@ -50,12 +43,8 @@
 
 #if SILVERLIGHT
 #undef APPDOMAIN_GETASSEMBLIES
-#undef ASPNET
 #endif
 
-#if MONOTOUCH
-#undef ASPNET
-#endif
 #endregion
 namespace TinyIoC
 {
@@ -65,9 +54,6 @@ namespace TinyIoC
     using System.Reflection;
 #if EXPRESSIONS
     using System.Linq.Expressions;
-#endif
-#if ASPNET
-    using System.Web;
 #endif
 
     #region SafeDictionary
@@ -151,6 +137,29 @@ namespace TinyIoC
     #endregion
 
     #region Extensions
+    public static class AssemblyExtensions
+    {
+        public static Type[] SafeGetTypes(this Assembly assembly)
+        {
+            Type[] assemblies;
+
+            try
+            {
+                assemblies = assembly.GetTypes();
+            }
+            catch (System.IO.FileNotFoundException)
+            {
+                assemblies = new Type[] { };
+            }
+            catch (System.NotSupportedException)
+            {
+                assemblies = new Type[] { };
+            }
+
+            return assemblies;
+        }
+    }
+
     public static class TypeExtensions
     {
         /// <summary>
@@ -480,18 +489,6 @@ namespace TinyIoC
                 return _Container.AddUpdateRegistration(_Registration, currentFactory.SingletonVariant);
             }
 
-#if ASPNET
-            public RegisterOptions AsPerRequestSingleton()
-            {
-                var currentFactory = _Container.GetCurrentFactory(_Registration);
-
-                if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(_Registration.Type, "singleton");
-
-                return _Container.AddUpdateRegistration(_Registration, currentFactory.PerRequestSingletonVariant);
-            }
-#endif
-
             /// <summary>
             /// Make registration multi-instance if possible
             /// </summary>
@@ -561,6 +558,33 @@ namespace TinyIoC
                 return this;
             }
 #endif
+            /// <summary>
+            /// Switches to a custom lifetime manager factory if possible.
+            /// 
+            /// Usually used for RegisterOptions "To*" extension methods such as the ASP.Net per-request one.
+            /// </summary>
+            /// <param name="instance">RegisterOptions instance</param>
+            /// <param name="lifetimeProvider">Custom lifetime manager</param>
+            /// <param name="errorString">Error string to display if switch fails</param>
+            /// <returns>RegisterOptions</returns>
+            public static RegisterOptions ToCustomLifetimeManager(RegisterOptions instance, ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
+            {
+                if (instance == null)
+                    throw new ArgumentNullException("instance", "instance is null.");
+
+                if (lifetimeProvider == null)
+                    throw new ArgumentNullException("lifetimeProvider", "lifetimeProvider is null.");
+
+                if (String.IsNullOrEmpty(errorString))
+                    throw new ArgumentException("errorString is null or empty.", "errorString");
+
+                var currentFactory = instance._Container.GetCurrentFactory(instance._Registration);
+
+                if (currentFactory == null)
+                    throw new TinyIoCRegistrationException(instance._Registration.Type, errorString);
+
+                return instance._Container.AddUpdateRegistration(instance._Registration, currentFactory.GetCustomObjectLifetimeVariant(lifetimeProvider, errorString));
+            }
         }
 
         /// <summary>
@@ -1870,6 +1894,29 @@ namespace TinyIoC
         #endregion
 
         #region Object Factories
+        /// <summary>
+        /// Provides custom lifetime management for ASP.Net per-request lifetimes etc.
+        /// </summary>
+        public interface ITinyIoCObjectLifetimeProvider
+        {
+            /// <summary>
+            /// Gets the stored object if it exists, or null if not
+            /// </summary>
+            /// <returns>Object instance or null</returns>
+            object GetObject();
+
+            /// <summary>
+            /// Store the object
+            /// </summary>
+            /// <param name="value">Object to store</param>
+            void SetObject(object value);
+
+            /// <summary>
+            /// Release the object
+            /// </summary>
+            void ReleaseObject();
+        }
+
         private abstract class ObjectFactoryBase
         {
             /// <summary>
@@ -1905,15 +1952,7 @@ namespace TinyIoC
                     throw new TinyIoCRegistrationException(this.GetType(), "singleton");
                 }
             }
-#if ASPNET
-            public virtual TinyIoCContainer.ObjectFactoryBase PerRequestSingletonVariant
-            {
-                get
-                {
-                    throw new TinyIoCRegistrationException(this.GetType(), "per-request-singleton");
-                }
-            }
-#endif
+
             public virtual ObjectFactoryBase MultiInstanceVariant
             {
                 get
@@ -1936,6 +1975,11 @@ namespace TinyIoC
                 {
                     throw new TinyIoCRegistrationException(this.GetType(), "weak reference");
                 }
+            }
+
+            public virtual ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
+            {
+                throw new TinyIoCRegistrationException(this.GetType(), errorString);
             }
 
             public virtual void SetConstructor(ConstructorInfo constructor)
@@ -1986,15 +2030,11 @@ namespace TinyIoC
                 }
             }
 
-#if ASPNET
-            public override ObjectFactoryBase PerRequestSingletonVariant
+            public override ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
             {
-                get
-                {
-                    return new PerRequestSingletonFactory<RegisterType, RegisterImplementation>();
-                }
+                return new CustomObjectLifetimeFactory<RegisterType, RegisterImplementation>(lifetimeProvider, errorString);
             }
-#endif
+
             public override ObjectFactoryBase MultiInstanceVariant
             {
                 get
@@ -2311,15 +2351,10 @@ namespace TinyIoC
                 }
             }
 
-#if ASPNET
-            public override ObjectFactoryBase PerRequestSingletonVariant
+            public override ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
             {
-                get
-                {
-                    return new PerRequestSingletonFactory<RegisterType, RegisterImplementation>();
-                }
+                return new CustomObjectLifetimeFactory<RegisterType, RegisterImplementation>(lifetimeProvider, errorString);
             }
-#endif
 
             public override ObjectFactoryBase MultiInstanceVariant
             {
@@ -2350,23 +2385,27 @@ namespace TinyIoC
             }
         }
 
-#if ASPNET
         /// <summary>
-        /// A factory that lazy instantiates a type and always returns the same instance
+        /// A factory that offloads lifetime to an external lifetime provider
         /// </summary>
         /// <typeparam name="RegisterType">Registered type</typeparam>
         /// <typeparam name="RegisterImplementation">Type to instantiate</typeparam>
-        private class PerRequestSingletonFactory<RegisterType, RegisterImplementation> : ObjectFactoryBase, IDisposable
+        private class CustomObjectLifetimeFactory<RegisterType, RegisterImplementation> : ObjectFactoryBase, IDisposable
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-            private readonly string _KeyName = String.Format("TinyIoC.{0}.{1}", typeof(RegisterType).FullName, Guid.NewGuid());
             private readonly object SingletonLock = new object();
+            private readonly ITinyIoCObjectLifetimeProvider _LifetimeProvider;
 
-            public PerRequestSingletonFactory()
+            public CustomObjectLifetimeFactory(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorMessage)
             {
+                if (lifetimeProvider == null)
+                    throw new ArgumentNullException("lifetimeProvider", "lifetimeProvider is null.");
+
                 if (typeof(RegisterImplementation).IsAbstract || typeof(RegisterImplementation).IsInterface)
-                    throw new TinyIoCRegistrationTypeException(typeof(RegisterImplementation), "SingletonFactory");
+                    throw new TinyIoCRegistrationTypeException(typeof(RegisterImplementation), errorMessage);
+
+                _LifetimeProvider = lifetimeProvider;
             }
 
             public override Type CreatesType
@@ -2376,18 +2415,15 @@ namespace TinyIoC
 
             public override object GetObject(TinyIoCContainer container, NamedParameterOverloads parameters, ResolveOptions options)
             {
-                if (parameters.Count != 0)
-                    throw new ArgumentException("Cannot specify parameters for singleton types");
-
                 RegisterImplementation current;
 
                 lock (SingletonLock)
                 {
-                    current = HttpContext.Current.Items[_KeyName] as RegisterImplementation;
+                    current = _LifetimeProvider.GetObject() as RegisterImplementation;
                     if (current == null)
                     {
                         current = container.ConstructType(typeof(RegisterImplementation), Constructor, options) as RegisterImplementation;
-                        HttpContext.Current.Items[_KeyName] = current;
+                        _LifetimeProvider.SetObject(current);
                     }
                 }
 
@@ -2398,15 +2434,8 @@ namespace TinyIoC
             {
                 get
                 {
+                    _LifetimeProvider.ReleaseObject();
                     return new SingletonFactory<RegisterType, RegisterImplementation>();
-                }
-            }
-
-            public override ObjectFactoryBase PerRequestSingletonVariant
-            {
-                get
-                {
-                    return this;
                 }
             }
 
@@ -2414,8 +2443,15 @@ namespace TinyIoC
             {
                 get
                 {
+                    _LifetimeProvider.ReleaseObject();
                     return new MultiInstanceFactory<RegisterType, RegisterImplementation>();
                 }
+            }
+
+            public override ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
+            {
+                _LifetimeProvider.ReleaseObject();
+                return new CustomObjectLifetimeFactory<RegisterType, RegisterImplementation>(lifetimeProvider, errorString);
             }
 
             public override ObjectFactoryBase GetFactoryForChildContainer(TinyIoCContainer parent, TinyIoCContainer child)
@@ -2429,17 +2465,9 @@ namespace TinyIoC
 
             public void Dispose()
             {
-                var current = HttpContext.Current.Items[_KeyName] as RegisterImplementation;
-                if (current != null)
-                {
-                    var disposable = current as IDisposable;
-
-                    if (disposable != null)
-                        disposable.Dispose();
-                }
+                _LifetimeProvider.ReleaseObject();
             }
         }
-#endif
         #endregion
 
         #region Singleton Container
@@ -2526,7 +2554,7 @@ namespace TinyIoC
             {
                 var defaultFactoryMethod = this.GetType().GetMethod("GetDefaultObjectFactory", BindingFlags.NonPublic | BindingFlags.Instance);
 
-                var types = assemblies.SelectMany(a => a.GetTypes()).Where(t => !IsIgnoredType(t)).ToList();
+                var types = assemblies.SelectMany(a => a.SafeGetTypes()).Where(t => !IsIgnoredType(t)).ToList();
 
                 var concreteTypes = from type in types
                                     where (type.IsClass == true) && (type.IsAbstract == false) && (type != this.GetType() && (type.DeclaringType != this.GetType()) && (!type.IsGenericTypeDefinition))
