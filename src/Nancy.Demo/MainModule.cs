@@ -1,6 +1,5 @@
 namespace Nancy.Demo
 {
-    using System.Collections.Generic;
     using Nancy.Demo.Models;
     using Nancy.Formatters;
     using Nancy.ViewEngines;
@@ -9,16 +8,12 @@ namespace Nancy.Demo
     using Nancy.ViewEngines.Spark;
     using Nancy.Routing;
 
-    public class Module : NancyModule
+    public class MainModule : NancyModule
     {
-        private readonly IRouteCacheProvider _RouteCacheProvider;
-
-        public Module(IRouteCacheProvider routeCacheProvider)
+        public MainModule(IRouteCacheProvider routeCacheProvider)
         {
-            _RouteCacheProvider = routeCacheProvider;
-
             Get["/"] = x => {
-                return "This is the root! Visit <a href='/routes'>/routes</a> to see all registered routes!";
+                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache());
             };
 
             // TODO - implement filtering at the RouteDictionary GetRoute level
@@ -32,11 +27,6 @@ namespace Nancy.Demo
 
             Get["/test"] = x => {
                 return "Test";
-            };
-
-            Get["/routes"] = x => {
-                var routes = GetAllRouteEntries("GET");
-                return View.Razor("~/views/routes.cshtml", routes);
             };
 
             Get["/static"] = x => {
@@ -67,11 +57,6 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
             };
-        }
-
-        private IEnumerable<RouteCacheEntry> GetAllRouteEntries(string method)
-        {
-            return _RouteCacheProvider.GetCache();
         }
     }
 }
