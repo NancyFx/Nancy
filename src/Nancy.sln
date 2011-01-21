@@ -31,8 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.NDjango.Tests", "Nancy.ViewEngines.NDjango.Tests\Nancy.ViewEngines.NDjango.Tests.csproj", "{E5428285-6584-45D8-B07D-81E1BCD83F33}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0AEBEA80-04B3-416D-87E4-3BA2A167D9C8}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Ninject", "Nancy.BootStrappers.Ninject\Nancy.BootStrappers.Ninject.csproj", "{CC73D142-36A9-4486-8914-418DD0F7B523}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.StructureMap", "Nancy.BootStrappers.StructureMap\Nancy.BootStrappers.StructureMap.csproj", "{EA7F58FE-4BF9-4636-9B9C-E07901187237}"
