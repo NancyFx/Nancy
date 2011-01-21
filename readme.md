@@ -67,7 +67,12 @@ Nancy also supports the idea of _module paths_, where you assign a root path for
     }
 
 Notice the _base("/butler")_ call to the NancyModule constructor. Now all action paths that are defined in the module will be relative to _/butler_ so in order to greet someone you could access _/butler/greet/{name}_, for example _/butler/greet/thecodejunkie_
-	
+
+## Bootstrappers
+
+The bootstrapper projects for third party IoC containers are only temporarily in the source code. These will be removed when the IoC integration design has been proven stable. They will be moving into a contrib-style project and/or the Nancy wiki. The reason they
+won't ship with Nancy is because we do not want to be tasked each time there is a new version of the containers released.
+
 ## Community
 
 You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is were most of the discussions regarding the development and usage of Nancy is taking place. You can also
