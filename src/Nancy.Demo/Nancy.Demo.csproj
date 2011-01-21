@@ -83,10 +83,6 @@
       <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
       <Name>Nancy.ViewEngines.NDjango</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
-      <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
-      <Name>Nancy.ViewEngines.NHaml</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
       <Project>{25643482-07E3-4981-9FBD-210CDF108AA8}</Project>
       <Name>Nancy.Formatters</Name>
