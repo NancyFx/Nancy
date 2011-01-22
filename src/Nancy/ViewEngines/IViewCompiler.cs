@@ -1,7 +1,9 @@
 namespace Nancy.ViewEngines
 {
+    using System.IO;
+
     public interface IViewCompiler
     {
-        IView GetCompiledView<TModel>(IViewLocationResult viewLocationResult);
+        IView GetCompiledView<TModel>(TextReader textReader);
     }
 }

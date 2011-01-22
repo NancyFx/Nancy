@@ -2,7 +2,6 @@ namespace Nancy.ViewEngines.NDjango.Tests
 {
     using System.IO;
     using Nancy.Tests;
-    using Nancy.Tests.Fakes;
     using Xunit;
 
     public class NDjangoViewCompilerFixture
@@ -13,9 +12,8 @@ namespace Nancy.ViewEngines.NDjango.Tests
             // Given
             var compiler = new NDjangoViewCompiler();
 
-            var viewLocationResult = new FakeViewLocationResult(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}");
-
-            var view = compiler.GetCompiledView<object>(viewLocationResult);
+            var reader = new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}");
+            var view = compiler.GetCompiledView<object>(reader);
             view.Writer = new StringWriter();
 
             // When

@@ -5,6 +5,6 @@
     // returns a reader.
     public interface IViewLocator
     {
-        IViewLocationResult GetTemplateContents(string viewTemplate);
+        ViewLocationResult GetTemplateContents(string viewTemplate);
     }
 }
