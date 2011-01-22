@@ -75,7 +75,7 @@ won't ship with Nancy is because we do not want to be tasked each time there is 
 
 ## Community
 
-You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is were most of the discussions regarding the development and usage of Nancy is taking place. You can also
+You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is where most of the discussions regarding the development and usage of Nancy is taking place. You can also
 find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
