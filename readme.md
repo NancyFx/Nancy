@@ -128,7 +128,7 @@ Nancy is not a one man project and many of the features that are availble would 
 
 ## Copyright
 
-Copyright © 2010 Andreas Håkansson
+Copyright © 2010 Andreas Håkansson and contributors
 
 ## License
 
