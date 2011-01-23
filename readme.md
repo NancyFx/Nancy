@@ -75,7 +75,7 @@ won't ship with Nancy is because we do not want to be tasked each time there is 
 
 ## Community
 
-You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is were most of the discussions regarding the development and usage of Nancy is taking place. You can also
+You can find lot of Nancy users on the [Nancy User Group](https://groups.google.com/forum/?fromgroups#forum/nancy-web-framework). That is where most of the discussions regarding the development and usage of Nancy is taking place. You can also
 find Nancy on Twitter using the #NancyFx hashtag.	
 	
 ## Help out
@@ -106,29 +106,29 @@ All view engine integrations are still very early implementations and more work 
 
 Nancy is not a one man project and many of the features that are availble would not have been possible without the awesome contributions from the community!
 
-* Andy Pike
-* Graeme Foster
-* Ian Davis
-* Jonas Cannehag
-* José F. Romaniello
-* Karl Seguin
-* James Eggers
-* Jason Mead
-* Jeremy Skinner
-* João Bragança
-* Johan Danforth
-* John Downey
-* Mindaugas Mozuras
-* Pedro Felix
-* Piotr Wlodek
-* Phil Haack
-* Robert Greyling
-* Steven Robbins
-* Vidar L. Sømme
+* [Andy Pike](http://github.com/andypike)
+* [Graeme Foster](http://github.com/GraemeF)
+* [Ian Davis](http://github.com/innovatian)
+* [Jonas Cannehag]()
+* [José F. Romaniello](http://github.com/jfromaniello)
+* [Karl Seguin](http://github.com/karlseguin)
+* [James Eggers](http://github.com/jameseggers1)
+* [Jason Mead](http://github.com/meadiagenic)
+* [Jeremy Skinner](http://github.com/jeremyskinner)
+* [João Bragança](http://github.com/joaobraganca)
+* [Johan Danforth](http://github.com/johandanforth)
+* [John Downey](http://github.com/jtdowney)
+* [Mindaugas Mozuras](http://github.com/mmozuras)
+* [Pedro Felix](http://github.com/pmhsfelix)
+* [Piotr Wlodek](http://github.com/pwlodek)
+* [Phil Haack](http://github.com/haacked)
+* [Robert Greyling](http://github.com/robertthegrey)
+* [Steven Robbins](http://github.com/grumpydev)
+* [Vidar L. Sømme](http://github.com/vidarls)
 
 ## Copyright
 
-Copyright © 2010 Andreas Håkansson
+Copyright © 2010 Andreas Håkansson and contributors
 
 ## License
 
