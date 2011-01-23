@@ -24,7 +24,6 @@ namespace Nancy.BootStrappers.Windsor
         protected sealed override IWindsorContainer CreateContainer()
         {
             _container = new WindsorContainer();
-            _container.Register(Component.For<IWindsorContainer>().Instance(_container));
             _container.Kernel.Resolver.AddSubResolver(new CollectionResolver(_container.Kernel, true));
             return _container;
         }
