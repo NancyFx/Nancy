@@ -17,18 +17,18 @@ namespace Nancy.BootStrappers.Windsor
 
         #region Overrides of NancyBootStrapperBase<IWindsorContainer>
 
-        protected sealed override INancyEngine GetEngineInternal() { return _container.Resolve<INancyEngine>(); }
+        protected override sealed INancyEngine GetEngineInternal() { return _container.Resolve<INancyEngine>(); }
 
-        protected sealed override IModuleKeyGenerator GetModuleKeyGenerator() { return _container.Resolve<IModuleKeyGenerator>(); }
+        protected override sealed IModuleKeyGenerator GetModuleKeyGenerator() { return _container.Resolve<IModuleKeyGenerator>(); }
 
-        protected sealed override IWindsorContainer CreateContainer()
+        protected override sealed IWindsorContainer CreateContainer()
         {
             _container = new WindsorContainer();
             _container.Kernel.Resolver.AddSubResolver(new CollectionResolver(_container.Kernel, true));
             return _container;
         }
 
-        protected sealed override void RegisterDefaults(IWindsorContainer container,
+        protected override sealed void RegisterDefaults(IWindsorContainer container,
             IEnumerable<TypeRegistration> typeRegistrations)
         {
             _container.Register(Component.For<INancyModuleCatalog>().Instance(this));
@@ -43,12 +43,14 @@ namespace Nancy.BootStrappers.Windsor
             }));
         }
 
-        protected sealed override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes) {
+        protected override sealed void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
             _modulesRegistrationTypes = moduleRegistrationTypes;
-            RegisterModulesInternal(_container, moduleRegistrationTypes);
         }
 
-        static void RegisterModulesInternal(IWindsorContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes) {
+        static void RegisterModulesInternal(IWindsorContainer container,
+            IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
             var components = moduleRegistrationTypes.Select(r => Component.For(typeof (NancyModule))
                 .ImplementedBy(r.ModuleType)
                 .Named(r.ModuleKey)
@@ -70,21 +72,22 @@ namespace Nancy.BootStrappers.Windsor
         {
             var child = GetChild();
             ConfigureRequestContainer(child);
-            return child.ResolveAll<NancyModule>();
+            var modules = child.Kernel.ResolveAll<NancyModule>();
+            return modules;
         }
 
         public NancyModule GetModuleByKey(string moduleKey)
         {
             var child = GetChild();
             ConfigureRequestContainer(child);
-            return child.Resolve<NancyModule>(moduleKey);
+            return child.Kernel.Resolve<NancyModule>(moduleKey);
         }
 
         IWindsorContainer GetChild()
         {
-            var child = new WindsorContainer(); 
+            var child = new WindsorContainer();
             _container.AddChildContainer(child);
-            RegisterModulesInternal(child, _modulesRegistrationTypes); 
+            RegisterModulesInternal(child, _modulesRegistrationTypes);
             return child;
         }
 

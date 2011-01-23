@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using Castle.MicroKernel.Registration;
 using Castle.Windsor;
 using Nancy.BootStrappers.Windsor;
@@ -142,6 +143,19 @@ namespace Nancy.Tests.Unit
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldNotBeSameAs(result2.FooDependency);
+        }
+
+        [Fact]
+        public void Getting_modules_will_not_return_multiple_instances_of_non_dependency_modules()
+        { 
+            _bootStrapper.GetEngine();
+
+            var nancyModules = _bootStrapper.GetAllModules();
+            var modLookup = nancyModules.ToLookup(x => x.GetType());
+
+            var types = nancyModules.Select(x => x.GetType()).Distinct();
+
+            foreach (var type in types) modLookup[type].Count().ShouldEqual(1);
         }
     }
 }
