@@ -8,7 +8,7 @@ using Xunit;
 
 namespace Nancy.Tests.Unit.Bootstrapper
 {
-    public class FakeBootStrapperBaseImplementation : NancyBootStrapperBase<object>
+    internal class FakeBootStrapperBaseImplementation : NancyBootStrapperBase<object>
     {
         public INancyEngine FakeNancyEngine { get; set; }
         public object FakeContainer { get;set; }
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
     }
 
-    public class FakeBootStrapperBaseGetModulesOverride : NancyBootStrapperBase<object>
+    internal class FakeBootStrapperBaseGetModulesOverride : NancyBootStrapperBase<object>
     {
         public bool GetModuleTypesCalled { get; set; }
         public IEnumerable<ModuleRegistration> RegisterModulesRegistrationTypes { get; set; }
