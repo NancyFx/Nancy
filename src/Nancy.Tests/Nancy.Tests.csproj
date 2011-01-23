@@ -89,6 +89,8 @@
     <Compile Include="Unit\Routing\RouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
+    <Compile Include="xUnitExtensions\SkipException.cs" />
+    <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
