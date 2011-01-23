@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{5097FE6B-ED2A-4C6A-8883-A6973FBAB9AC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy", "Nancy\Nancy.csproj", "{34576216-0DCA-4B0F-A0DC-9075E75A676F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Formatters", "Nancy.Formatters\Nancy.Formatters.csproj", "{25643482-07E3-4981-9FBD-210CDF108AA8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark", "Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj", "{4B7E35DF-1569-4346-B180-A09615723095}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.NDjango", "Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj", "{D403684D-D1E1-43B4-B6D5-F67A85F85830}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{59DB00BB-FC00-4C2E-9D8D-DD02A03000F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Mono.Demo", "Nancy.Mono.Demo\Nancy.Mono.Demo.csproj", "{611BA540-C502-47D0-BDC0-672F04AE4853}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{25643482-07E3-4981-9FBD-210CDF108AA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25643482-07E3-4981-9FBD-210CDF108AA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25643482-07E3-4981-9FBD-210CDF108AA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25643482-07E3-4981-9FBD-210CDF108AA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4B7E35DF-1569-4346-B180-A09615723095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4B7E35DF-1569-4346-B180-A09615723095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4B7E35DF-1569-4346-B180-A09615723095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4B7E35DF-1569-4346-B180-A09615723095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{611BA540-C502-47D0-BDC0-672F04AE4853}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{611BA540-C502-47D0-BDC0-672F04AE4853}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{611BA540-C502-47D0-BDC0-672F04AE4853}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{611BA540-C502-47D0-BDC0-672F04AE4853}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D403684D-D1E1-43B4-B6D5-F67A85F85830}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D403684D-D1E1-43B4-B6D5-F67A85F85830}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D403684D-D1E1-43B4-B6D5-F67A85F85830}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D403684D-D1E1-43B4-B6D5-F67A85F85830}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{34576216-0DCA-4B0F-A0DC-9075E75A676F} = {5097FE6B-ED2A-4C6A-8883-A6973FBAB9AC}
+		{25643482-07E3-4981-9FBD-210CDF108AA8} = {5097FE6B-ED2A-4C6A-8883-A6973FBAB9AC}
+		{4B7E35DF-1569-4346-B180-A09615723095} = {5097FE6B-ED2A-4C6A-8883-A6973FBAB9AC}
+		{D403684D-D1E1-43B4-B6D5-F67A85F85830} = {5097FE6B-ED2A-4C6A-8883-A6973FBAB9AC}
+		{611BA540-C502-47D0-BDC0-672F04AE4853} = {59DB00BB-FC00-4C2E-9D8D-DD02A03000F0}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = Nancy.Mono.Demo\Nancy.Mono.Demo.csproj
+	EndGlobalSection
+EndGlobal
