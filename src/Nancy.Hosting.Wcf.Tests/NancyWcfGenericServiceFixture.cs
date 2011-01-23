@@ -24,7 +24,7 @@
             using (CreateAndOpenWebServiceHost())
             {
                 var reader = 
-                    new StreamReader(WebRequest.Create("http://localhost:1234/base/rel").GetResponse().GetResponseStream());
+                    new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
 
                 var response = reader.ReadToEnd();
 
