@@ -7,6 +7,7 @@
     using System.ServiceModel.Web;
     using Nancy.Tests;
     using Xunit;
+    using Nancy.Tests.xUnitExtensions;
 
     /// <remarks>
     /// These tests attempt to listen on port 1234, and so require either administrative 
@@ -19,7 +20,7 @@
     {
         private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
 
-        [Fact(Skip = "Requires administrator priveledges. See test fixture remark for more information.")]
+        [SkippableFact]
         public void Should_be_able_to_get_any_header_from_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
@@ -45,7 +46,7 @@
             }
         }
 
-        [Fact(Skip = "Requires administrator priveledges. See test fixture remark for more information.")]
+        [SkippableFact]
         public void Should_be_able_to_post_body_to_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
@@ -74,7 +75,14 @@
                 BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
+            try
+            {
             host.Open();
+            }
+            catch (System.ServiceModel.AddressAccessDeniedException)
+            {
+                throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
+            }
 
             return host;
         }
