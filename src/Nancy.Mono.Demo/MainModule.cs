@@ -69,6 +69,12 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
             };
+			
+			//Call the following url to test
+			//http://127.0.0.1:8080/access?oauth_token=11111111111111&oauth_verifier=2222222222222222
+			Get["/access"] = x => {
+				return "Success: " + Request.QueryString["oauth_token"] + " = " + Request.QueryString["oauth_verifier"];
+			};
         }
     }
 }
