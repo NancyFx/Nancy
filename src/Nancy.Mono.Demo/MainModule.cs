@@ -31,7 +31,11 @@ namespace Nancy.Demo
             Get["/filtered", r => false] = x => {
                 return "This is also a route, but filtered out so should never be hit.";
             };
-
+			
+			Get["/redirect"] = x => {
+				return new RedirectResponse("http://www.google.com");
+			};
+			
             Get["/test"] = x => {
                 return "Test";
             };
