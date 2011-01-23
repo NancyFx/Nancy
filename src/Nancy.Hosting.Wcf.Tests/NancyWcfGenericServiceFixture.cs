@@ -57,7 +57,7 @@
         private static WebServiceHost CreateAndOpenWebServiceHost()
         {
             var host = new WebServiceHost(
-                new NancyWcfGenericService(),
+                new NancyWcfGenericService(new DefaultNancyBootStrapper()),
                 new Uri("http://localhost:1234/base/"));
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
