@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Html5BoilerPlateTempl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "templates", "templates", "{86FFB551-B069-4B3C-9DE6-2395CB6BCC2D}"
 	ProjectSection(SolutionItems) = preProject
-		..\..\..\..\My Exported Templates\Nancy.Html5BoilerPlate 2010-01-24 v0.1.vsix = ..\..\..\..\My Exported Templates\Nancy.Html5BoilerPlate 2010-01-24 v0.1.vsix
+		TemplatesNotes\Nancy.Html5BoilerPlate 2010-01-24 v0.1.vsix = TemplatesNotes\Nancy.Html5BoilerPlate 2010-01-24 v0.1.vsix
 		TemplatesNotes\Readme.txt = TemplatesNotes\Readme.txt
 	EndProjectSection
 EndProject
