@@ -2,6 +2,7 @@ namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
     using Nancy.Formatters;
+	using Nancy.Extensions;
     using Nancy.ViewEngines;
     using Nancy.ViewEngines.NDjango;
 	//Compiles but does not execute as expected under Mono 2.8
@@ -33,7 +34,7 @@ namespace Nancy.Demo
             };
 			
 			Get["/redirect"] = x => {
-				return new RedirectResponse("http://www.google.com");
+				return Response.AsRedirect("http://www.google.com"); 
 			};
 			
             Get["/test"] = x => {
