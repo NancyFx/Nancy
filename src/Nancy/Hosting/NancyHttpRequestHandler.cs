@@ -4,18 +4,7 @@ namespace Nancy.Hosting
     using Routing;
     using System;
     using Nancy.BootStrapper;
-
-    public sealed class BootStrapperEntry
-    {
-        public string Assembly { get; private set; }
-        public string Name { get; private set; }
-
-        public BootStrapperEntry(string assembly, string name)
-        {
-            Assembly = assembly;
-            Name = name;
-        }
-    }
+    using System.Configuration;
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
@@ -34,7 +23,7 @@ namespace Nancy.Hosting
             var configBootStrapper = GetConfigBootStrapperType();
 
             if (configBootStrapper != null)
-                bootStrapper = (INancyBootStrapper)Activator.CreateInstance(configBootStrapper.Assembly, configBootStrapper.Name);
+                bootStrapper = (INancyBootStrapper)(Activator.CreateInstance(configBootStrapper.Assembly, configBootStrapper.Name).Unwrap());
             else
                 bootStrapper = NancyBootStrapperLocator.BootStrapper;
 
@@ -50,8 +39,17 @@ namespace Nancy.Hosting
 
         private BootStrapperEntry GetConfigBootStrapperType()
         {
-            // TODO - Get a type fullname from the configuration file if one exists, similar to the httphandlers section
-            return null;
+            var configurationSection = System.Configuration.ConfigurationManager.GetSection("nancyFx") as NancyFxSection;
+            if (configurationSection == null)
+                return null;
+
+            var bootStrapperOverrideType = configurationSection.BootStrapper.Type;
+            var bootStrapperOverrideAssembly = configurationSection.BootStrapper.Assembly;
+
+            if (string.IsNullOrWhiteSpace(bootStrapperOverrideType) || string.IsNullOrWhiteSpace(bootStrapperOverrideAssembly))
+                return null;
+
+            return new BootStrapperEntry(bootStrapperOverrideAssembly, bootStrapperOverrideType);
         }
     }
 }
