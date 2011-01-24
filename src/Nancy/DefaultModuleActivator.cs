@@ -26,7 +26,7 @@ namespace Nancy
         /// <returns><see langword="true"/> if this activator can create an instance of the specified module type, otherwise <see langword="false"/>.</returns>
         public virtual bool CanCreateInstance(Type moduleType)
         {
-            return moduleType.GetConstructor(Type.EmptyTypes) != null;
+            return moduleType.GetConstructor(Type.EmptyTypes) != null && typeof (NancyModule).IsAssignableFrom(moduleType);
         }
     }
 }

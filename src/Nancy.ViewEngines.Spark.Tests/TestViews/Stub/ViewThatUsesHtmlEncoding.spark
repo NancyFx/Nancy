@@ -1,0 +1,5 @@
+﻿<div>${H(SomeHtml())}</div>
+
+<macro name="SomeHtml">
+  <div>&lt;&gt;</div>
+</macro>

@@ -1,12 +1,10 @@
 namespace Nancy.Tests.Unit
 {
     using System;
-    using System.Collections.Generic;
-    using System.IO;
+    using System.Collections.Generic;    
     using System.Linq;
     using System.Net;
-    using FakeItEasy;
-    using Nancy.Extensions;
+    using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -22,7 +20,7 @@ namespace Nancy.Tests.Unit
 
         public NancyEngineFixture()
         {
-            this.modules = new AppDomainModuleLocator(new DefaultModuleActivator()).GetModules();
+            this.modules = new NancyApplication(new DefaultModuleActivator()).GetModules();
             this.locator = A.Fake<INancyModuleLocator>();
             this.resolver = A.Fake<IRouteResolver>();
             this.application = A.Fake<INancyApplication>();
@@ -104,7 +102,8 @@ namespace Nancy.Tests.Unit
 
             // Then
             A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument, 
-                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
+                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, 
+                A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Theory]
@@ -129,6 +128,23 @@ namespace Nancy.Tests.Unit
             // Then
             A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument,
                 A<IEnumerable<ModuleMeta>>.Ignored.Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_treat_a_HEAD_request_like_a_GET_when_getting_a_request_to_route_resolver()
+        {
+            // Given
+            var request = new Request("HEAD", "/");
+
+
+            A.CallTo(() => this.locator.GetModules()).Returns(modules);
+
+            // When
+            this.engine.HandleRequest(request);
+
+            // Then
+            A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument,
+                A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, A<INancyApplication>.Ignored.Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -244,7 +260,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_base_route_on_descriptions_that_are_passed_to_resolver()
         {
             // Given
-            var request = new Request("POST", "/");
+            var request = new Request("POST", "/fake/");
 
             var r = new FakeRouteResolver();
             var e = new NancyEngine(this.locator, r, this.application);

@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
+    using Fakes;
     using Nancy.Routing;
     using Xunit;
 
@@ -11,7 +12,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route(null, null, x => null));
+                Record.Exception(() => new Route(null, null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -22,7 +23,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("/", null, null));
+                Record.Exception(() => new Route("/", null, null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -33,7 +34,7 @@
         {
             //Given, When
             const string path = "/dummy/path";
-            var route = new Route(path, null, x => null);
+            var route = new Route(path, null, null, x => null);
 
             // Then
             route.Path.ShouldEqual(path);
@@ -44,7 +45,7 @@
         {
             //Given, When
             Func<dynamic, Response> action = x => null;
-            var route = new Route("/", null, action);
+            var route = new Route("/", null, null, action);
 
             // Then
             route.Action.ShouldBeSameAs(action);
@@ -60,10 +61,24 @@
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = new Route("/", parameters, action);
+            var route = new Route("/", parameters, null, action);
 
             // Then
             ((object)route.Parameters).ShouldBeSameAs((object)parameters);
+        }
+
+        [Fact]
+        public void Should_set_modules_property_when_instantiated()
+        {
+            //Given, When
+            Func<dynamic, Response> action = x => null;
+            var instance = new FakeNancyModuleWithoutBasePath();
+
+
+            var route = new Route("/", null, instance, action);
+
+            // Then
+            route.Module.ShouldBeSameAs(instance);
         }
 
         [Fact]
@@ -81,7 +96,7 @@
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = new Route("/", parameters, action);
+            var route = new Route("/", parameters, null, action);
 
             // When
             route.Invoke();
@@ -97,7 +112,7 @@
             var expectedResponse = new Response();
             Func<object, Response> action = x => expectedResponse;
 
-            var route = new Route("/", null, action);
+            var route = new Route("/", null, null, action);
 
             // When
             var response = route.Invoke();

@@ -3,11 +3,11 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Extensions;
     using Nancy;
     using Nancy.Extensions;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Tests.Extensions;
     using Xunit;
     using Xunit.Extensions;
 
@@ -186,6 +186,52 @@
             // Then
             Record.Exception(() => result = route.Parameters.value).ShouldBeNull();
             Record.Exception(() => result = route.Parameters.capture).ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_pass_a_new_instance_of_the_module()
+        {
+            // Given
+            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };            
+
+            // When
+            var route1 = this.resolver.GetRoute(request, metas, new NancyApplication());
+            var route2 = this.resolver.GetRoute(request, metas, new NancyApplication());
+
+            // Then
+            route1.Module.ShouldBeOfType(typeof(FakeNancyModuleWithBasePath));
+            route2.Module.ShouldBeOfType(typeof(FakeNancyModuleWithBasePath));
+            route1.Module.ShouldNotBeSameAs(route2.Module);
+        }
+
+        [Fact]
+        public void Should_pass_the_application_to_the_module()
+        {
+            // Given
+            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };
+            var application = new NancyApplication();            
+
+            // When
+            var route = this.resolver.GetRoute(request, metas, application);
+
+            // Then
+            route.Module.Application.ShouldBeSameAs(application);
+        }
+
+        [Fact]
+        public void Should_pass_the_request_to_the_module()
+        {
+            // Given
+            var request = new Request("GET", "/fake/foo/some/stuff/not/in/route/bar/more/stuff/not/in/route", new Dictionary<string, IEnumerable<string>>(), new MemoryStream());
+            var metas = new[] { new ModuleMeta(typeof(FakeNancyModuleWithBasePath), new FakeNancyModuleWithBasePath().GetRouteDescription("GET")) };                        
+
+            // When
+            var route = this.resolver.GetRoute(request, metas, new NancyApplication());
+
+            // Then
+            route.Module.Request.ShouldBeSameAs(request);
         }
 
         protected static string GetStringContentsFromResponse(Response response)

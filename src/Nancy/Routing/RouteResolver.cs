@@ -34,10 +34,11 @@
                 return new NoMatchingRouteFoundRoute(request.Uri);
             }
 
-            var instance = (NancyModule)Activator.CreateInstance(selected.Meta.Type);
+            var instance = application.Activator.CreateInstance(selected.Meta.Type);
             instance.Application = application;
+            instance.Request = request;
             var action = instance.GetRoutes(selected.Description.Method)[selected.Description.Path];
-            return new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), action);
+            return new Route(selected.Description.GetModuleQualifiedPath(), GetParameters(selected.Description, selected.Groups), instance, action);
         }
 
         private static RouteParameters GetParameters(RouteDescription description, GroupCollection groups)

@@ -13,9 +13,7 @@ namespace Nancy
         /// </summary>
         protected NancyModule() : this(string.Empty)
         {
-        }
-
-        //DI through the property so that NancyModule constructor stays clean
+        }        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -27,6 +25,9 @@ namespace Nancy
             moduleRoutes = new Dictionary<string, IDictionary<string, Func<dynamic, Response>>>(StringComparer.OrdinalIgnoreCase);
         }
 
+        /// <summary>
+        /// Gets or sets an <see cref="INancyApplication"/> which represents the current application context
+        /// </summary>
         public INancyApplication Application { get; set; }
 
         public IDictionary<string, Func<dynamic, Response>> Delete

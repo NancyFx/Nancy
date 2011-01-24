@@ -3,7 +3,7 @@ namespace Nancy.ViewEngines.NHaml
    using System;
    using System.IO;
 
-   public class NDjangoViewRegistry : IViewEngineRegistry
+   public class NHamlViewRegistry : IViewEngineRegistry
    {
       public string Extension
       {

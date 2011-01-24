@@ -1,0 +1,2 @@
+﻿<div>${#Number "#,##0.00"}</div>
+<div>${#Date 'yyyy/MM/dd'}</div>

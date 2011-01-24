@@ -16,8 +16,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
         /// </summary>
-        public NancyWcfGenericService()
-            : this(new AppDomainModuleLocator(new DefaultModuleActivator()))
+        public NancyWcfGenericService() : this(new NancyApplication(new DefaultModuleActivator()))
         {
         }
 

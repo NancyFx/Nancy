@@ -1,0 +1,11 @@
+﻿<ul>
+	<var x='"lion"'>
+		<use file='partial'/>
+	</var>
+	<for each='var x in new[] {"hippo","elephant","giraffe"}'>
+		<use file='partial'/>
+	</for>
+	<var x='"whale"'>
+		<use file='partial'/>
+	</var>
+</ul>
