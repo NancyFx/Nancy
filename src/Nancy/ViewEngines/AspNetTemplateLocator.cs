@@ -12,6 +12,7 @@
 			{
 				var stream = new MemoryStream();
 				fs.CopyTo(stream);
+			    stream.Position = 0;
 				return new ViewLocationResult(path, new StreamReader(stream));
 			}
         }
