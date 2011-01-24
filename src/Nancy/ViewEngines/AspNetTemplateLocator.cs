@@ -8,7 +8,12 @@
         public ViewLocationResult GetTemplateContents(string viewTemplate)
         {
             var path = HostingEnvironment.MapPath(viewTemplate);
-            return new ViewLocationResult(path, new StreamReader(path));
+			using (var fs = File.OpenRead(path))
+			{
+				var stream = new MemoryStream();
+				fs.CopyTo(stream);
+				return new ViewLocationResult(path, new StreamReader(stream));
+			}
         }
     }
 }
