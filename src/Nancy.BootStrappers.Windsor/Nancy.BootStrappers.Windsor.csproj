@@ -51,6 +51,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="WindsorModuleKeyGenerator.cs" />
     <Compile Include="WindsorNancyBootStrapper.cs" />
   </ItemGroup>
   <ItemGroup>

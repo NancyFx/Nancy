@@ -1,4 +1,4 @@
-﻿namespace Nancy.BootStrappers.Windsor
+namespace Nancy.BootStrappers.Windsor
 {
     using System;
     using System.Collections.Generic;
@@ -32,10 +32,11 @@
         {
             this.container.Register(Component.For<INancyModuleCatalog>().Instance(this));
 
-            var components = typeRegistrations.Select(r => Component.For(r.RegistrationType)
+            var components = typeRegistrations.Where(t => t.RegistrationType != typeof(IModuleKeyGenerator))
+                .Select(r => Component.For(r.RegistrationType)
                 .ImplementedBy(r.ImplementationType));
             this.container.Register(components.ToArray());
-
+            this.container.Register(Component.For<IModuleKeyGenerator>().ImplementedBy<WindsorModuleKeyGenerator>());
             existingContainer.Register(Component.For<Func<IRouteCache>>().UsingFactoryMethod(ctx =>
             {
                 Func<IRouteCache> runc = () => this.container.Resolve<IRouteCache>();
@@ -63,15 +64,12 @@
         public IEnumerable<NancyModule> GetAllModules()
         {
             var child = GetChild();
-            ConfigureRequestContainer(child);
-            var modules = child.Kernel.ResolveAll<NancyModule>();
-            return modules;
+            return child.Kernel.ResolveAll<NancyModule>();
         }
 
         public NancyModule GetModuleByKey(string moduleKey)
         {
             var child = GetChild();
-            ConfigureRequestContainer(child);
             return child.Kernel.Resolve<NancyModule>(moduleKey);
         }
 
@@ -79,6 +77,7 @@
         {
             var child = new WindsorContainer();
             this.container.AddChildContainer(child);
+            ConfigureRequestContainer(child);
             RegisterModulesInternal(child, this.modulesRegistrationTypes);
             return child;
         }
