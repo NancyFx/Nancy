@@ -49,16 +49,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="RazorViewCompilerFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
-      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
-      <Name>Nancy.Tests</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>

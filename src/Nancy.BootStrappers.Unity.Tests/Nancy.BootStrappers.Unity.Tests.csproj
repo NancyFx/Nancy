@@ -52,6 +52,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
+      <Link>Fakes\FakeModuleCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleKeyGenerator.cs">
+      <Link>Fakes\FakeModuleKeyGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithDependency.cs">
+      <Link>Fakes\FakeNancyModuleWithDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithoutBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithoutBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoute.cs">
+      <Link>Fakes\FakeRoute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
+      <Link>Fakes\FakeRouteResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngineRegistry.cs">
+      <Link>Fakes\FakeViewEngineRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
@@ -61,10 +88,6 @@
     <ProjectReference Include="..\Nancy.BootStrappers.Unity\Nancy.BootStrappers.Unity.csproj">
       <Project>{33AC0752-74B3-4D14-AB5C-789B9B11044A}</Project>
       <Name>Nancy.BootStrappers.Unity</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
-      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
-      <Name>Nancy.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
