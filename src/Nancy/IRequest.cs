@@ -1,10 +1,11 @@
+using Nancy.Extensions;
+
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Web;
 
     public interface IRequest
     {
@@ -18,6 +19,8 @@ namespace Nancy
 
         dynamic Form { get; }
 
+        dynamic Query { get; }
+
         string Protocol { get; }
     }
 
@@ -30,7 +33,7 @@ namespace Nancy
         {
         }
 
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol)
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, string query = "")
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -61,7 +64,10 @@ namespace Nancy
             this.Method = method;
             this.Uri = uri;
             this.Protocol = protocol;
+            this.Query = query.AsQueryDictionary();
         }
+
+        public dynamic Query { get; set; }
 
         public Stream Body { get; set; }
 
@@ -72,27 +78,16 @@ namespace Nancy
 
         private dynamic GetFormData()
         {
-            var ret = new DynamicDictionary();
-
             if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
             {
                 var contentType = this.Headers["content-type"].First();
                 if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
                 {
                     var reader = new StreamReader(this.Body);
-                    var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-
-                    foreach (var key in coll.AllKeys)
-                    {
-                        if(key != null)
-                        {
-                            ret[key] = coll[key];
-                        }
-                    }        
+                    return reader.ReadToEnd().AsQueryDictionary();
                 }
             }
-            
-            return ret;
+            return new DynamicDictionary();
         }
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
