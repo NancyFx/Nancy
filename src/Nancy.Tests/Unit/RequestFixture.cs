@@ -11,8 +11,8 @@ namespace Nancy.Tests.Unit
         public void Should_throw_argumentnullexception_when_initialized_with_null_method()
         {
             // Given, When
-            var exception = 
-                Record.Exception(() => new Request(null, "/"));
+            var exception =
+                Record.Exception(() => new Request(null, "/", "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -23,7 +23,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request(string.Empty, "/"));
+                Record.Exception(() => new Request(string.Empty, "/", "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -34,7 +34,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", null));
+                Record.Exception(() => new Request("GET", null, "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -45,7 +45,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", string.Empty));
+                Record.Exception(() => new Request("GET", string.Empty, "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -56,7 +56,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", "/", null, new MemoryStream()));
+                Record.Exception(() => new Request("GET", "/", null, new MemoryStream(), "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -67,7 +67,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), null));
+                Record.Exception(() => new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), null, "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -80,7 +80,7 @@ namespace Nancy.Tests.Unit
             const string method = "GET";
 
             // When
-            var request = new Request(method, "/");
+            var request = new Request(method, "/", "http");
 
             // Then
             request.Method.ShouldEqual(method);
@@ -93,7 +93,7 @@ namespace Nancy.Tests.Unit
             const string uri = "/";
             
             // When
-            var request = new Request("GET", uri);
+            var request = new Request("GET", uri, "http");
 
             // Then
             request.Uri.ShouldEqual(uri);
@@ -109,7 +109,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("GET", "/", headers, new MemoryStream());
+            var request = new Request("GET", "/", headers, new MemoryStream(), "http");
 
             // Then
             request.Headers.Keys.Contains("content-type").ShouldBeTrue();
@@ -122,7 +122,7 @@ namespace Nancy.Tests.Unit
             var body = new MemoryStream();
 
             // When
-            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body);
+            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body, "http");
 
             // Then
             request.Body.ShouldBeSameAs(body);
@@ -146,7 +146,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory);
+            var request = new Request("POST", "/", headers, memory, "http");
 
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
@@ -169,10 +169,45 @@ namespace Nancy.Tests.Unit
                 };
 
 			// When
-			var request = new Request("POST", "/", headers, memory);
+            var request = new Request("POST", "/", headers, memory, "http");
 			request.Form.ToString();
 			// Then
 			((string)request.Form.name).ShouldEqual("John Doe");
 		}
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_initialized_with_null_protocol()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new Request("GET", "/", null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentoutofrangeexception_when_initialized_with_an_empty_protocol()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new Request("GET", "/", string.Empty));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
+        }
+
+        [Fact]
+        public void Should_set_protocol_parameter_value_to_protocol_property_when_initialized()
+        {
+            // Given
+            const string protocol = "http";
+
+            // When
+            var request = new Request("GET", "/", protocol);
+
+            // Then
+            request.Protocol.ShouldEqual(protocol);
+        }
     }
 }

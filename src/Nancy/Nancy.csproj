@@ -34,6 +34,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
   </ItemGroup>
@@ -41,24 +42,38 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\AssemblyExtensions.cs" />
+    <Compile Include="BootStrapper\DefaultModuleKeyGenerator.cs" />
+    <Compile Include="BootStrapper\IModuleKeyGenerator.cs" />
+    <Compile Include="BootStrapper\INancyBootStrapper.cs" />
+    <Compile Include="BootStrapper\ModuleRegistrationType.cs" />
+    <Compile Include="BootStrapper\NancyBootStrapperBase.cs" />
+    <Compile Include="BootStrapper\NancyBootStrapperLocator.cs" />
+    <Compile Include="BootStrapper\TypeRegistration.cs" />
     <Compile Include="Cookies\NancyCookie.cs" />
     <Compile Include="Cookies\INancyCookie.cs" />
-    <Compile Include="DefaultModuleActivator.cs" />
+    <Compile Include="DefaultNancyBootStrapper.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
-    <Compile Include="Extensions\RouteDescriptionExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
+    <Compile Include="Hosting\BootStrapperEntry.cs" />
+    <Compile Include="Hosting\NancyFxSection.cs" />
     <Compile Include="Hosting\NancyHandler.cs" />
     <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
-    <Compile Include="IModuleActivator.cs" />
-    <Compile Include="INancyApplication.cs" />
-    <Compile Include="INancyModuleLocator.cs" />
+    <Compile Include="BootStrapper\INancyBootStrapperPerRequestRegistration.cs" />
+    <Compile Include="INancyModuleCatalog.cs" />
+    <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
-    <Compile Include="IViewEngine.cs" />
-    <Compile Include="IViewEngineRegistry.cs" />
-    <Compile Include="ModuleMeta.cs" />
-    <Compile Include="NancyApplication.cs" />
+    <Compile Include="Routing\DefaultRouteCacheProvider.cs" />
+    <Compile Include="Routing\IRouteCache.cs" />
+    <Compile Include="Routing\IRouteCacheProvider.cs" />
+    <Compile Include="Routing\DefaultRouteCache.cs" />
+    <Compile Include="Routing\RouteCacheEntry.cs" />
+    <Compile Include="TinyIoc\TinyIoC.cs" />
+    <Compile Include="ViewEngines\IViewEngine.cs" />
+    <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
+    <Compile Include="DefaultTemplateEngineSelector.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="IRequest.cs" />
@@ -70,8 +85,9 @@
     <Compile Include="Routing\NoMatchingRouteFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
-    <Compile Include="Routing\RouteParameters.cs" />
-    <Compile Include="Routing\RouteResolver.cs" />
+    <Compile Include="Routing\RouteDictionary.cs" />
+    <Compile Include="DynamicDictionary.cs" />
+    <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />

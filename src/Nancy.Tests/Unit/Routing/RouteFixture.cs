@@ -57,7 +57,7 @@
             //Given, When
             Func<dynamic, Response> action = x => null;
 
-            dynamic parameters = new RouteParameters();
+            dynamic parameters = new DynamicDictionary();
             parameters.foo = 10;
             parameters.bar = "value";
 
@@ -85,14 +85,14 @@
         public void Should_invoke_action_with_parameters_when_invoked()
         {
             //Given
-            RouteParameters capturedParameters = null;
+            DynamicDictionary capturedParameters = null;
 
             Func<dynamic, Response> action = x => {
                 capturedParameters = x;
                 return null;
             };
 
-            dynamic parameters = new RouteParameters();
+            dynamic parameters = new DynamicDictionary();
             parameters.foo = 10;
             parameters.bar = "value";
 

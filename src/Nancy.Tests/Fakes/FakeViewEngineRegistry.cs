@@ -3,6 +3,8 @@ namespace Nancy.Tests.Fakes
     using System;
     using System.IO;
 
+    using Nancy.ViewEngines;
+
     public class FakeViewEngineRegistry : IViewEngineRegistry
     {
         public string Extension

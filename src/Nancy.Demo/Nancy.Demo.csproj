@@ -65,8 +65,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ApplicationDependencyClass.cs" />
+    <Compile Include="DemoBootStrapper.cs" />
+    <Compile Include="DependencyModule.cs" />
+    <Compile Include="IApplicationDependency.cs" />
+    <Compile Include="IRequestDependency.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\RatPack.cs" />
+    <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />
@@ -75,10 +82,6 @@
     <ProjectReference Include="..\Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj">
       <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
       <Name>Nancy.ViewEngines.NDjango</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.NHaml\Nancy.ViewEngines.NHaml.csproj">
-      <Project>{96382631-93B0-4EC6-A412-9C2FA5F1FBEF}</Project>
-      <Name>Nancy.ViewEngines.NHaml</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
       <Project>{25643482-07E3-4981-9FBD-210CDF108AA8}</Project>
@@ -98,11 +101,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Views\razor-dependency.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
     <None Include="Views\nhaml.haml" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <ProjectExtensions>
@@ -111,7 +116,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>4339</DevelopmentServerPort>
+          <DevelopmentServerPort>40965</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>

@@ -1,0 +1,106 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{C7CBC6A9-129E-4AD3-B723-906830091767}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nancy.BootStrappers.Unity.Tests</RootNamespace>
+    <AssemblyName>Nancy.BootStrappers.Unity.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\Nancy.BootStrappers.Unity\Binaries\Microsoft.Practices.ServiceLocation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity">
+      <HintPath>..\Nancy.BootStrappers.Unity\Binaries\Microsoft.Practices.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
+      <Link>Fakes\FakeModuleCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleKeyGenerator.cs">
+      <Link>Fakes\FakeModuleKeyGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithDependency.cs">
+      <Link>Fakes\FakeNancyModuleWithDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithoutBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithoutBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoute.cs">
+      <Link>Fakes\FakeRoute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
+      <Link>Fakes\FakeRouteResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngineRegistry.cs">
+      <Link>Fakes\FakeViewEngineRegistry.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
+    <Compile Include="UnityNancyBootStrapperFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.BootStrappers.Unity\Nancy.BootStrappers.Unity.csproj">
+      <Project>{33AC0752-74B3-4D14-AB5C-789B9B11044A}</Project>
+      <Name>Nancy.BootStrappers.Unity</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -4,29 +4,26 @@
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
+    using Nancy.BootStrapper;
     using Nancy.Extensions;
-    using Nancy.Routing;
 
     [ServiceContract]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
     public class NancyWcfGenericService
     {
-        private readonly NancyEngine engine;
+        private readonly INancyEngine engine;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
+        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class with a default bootstrapper.
         /// </summary>
-        public NancyWcfGenericService() : this(new NancyApplication(new DefaultModuleActivator()))
+        public NancyWcfGenericService()
+            : this(NancyBootStrapperLocator.BootStrapper)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class.
-        /// </summary>
-        /// <param name="moduleLocator">An <see cref="INancyModuleLocator"/> instance that will be used by Nancy to decect available modules.</param>
-        public NancyWcfGenericService(INancyModuleLocator moduleLocator)
+        public NancyWcfGenericService(INancyBootStrapper bootstrapper)
         {
-            engine = new NancyEngine(moduleLocator, new RouteResolver(), new NancyApplication());
+            engine = bootstrapper.GetEngine();
         }
         
         [WebInvoke(UriTemplate = "*", Method = "*")]
@@ -51,13 +48,28 @@
                 webRequest.Method,
                 string.Concat("/", relativeUri),
                 webRequest.Headers.ToDictionary(),
-                requestBody);
+                requestBody,
+                webRequest.UriTemplateMatch.BaseUri.Scheme);
         }
 
         private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)
         {
+            SetHttpResponseHeaders(webResponse, nancyResponse);
+
             webResponse.ContentType = nancyResponse.ContentType;
             webResponse.StatusCode = nancyResponse.StatusCode;
+        }
+
+        private static void SetHttpResponseHeaders(OutgoingWebResponseContext context, Response response)
+        {
+            foreach (var kvp in response.Headers)
+            {
+                context.Headers.Add(kvp.Key, kvp.Value);
+            }
+            foreach (var cookie in response.Cookies)
+            {
+                context.Headers.Add("Set-Cookie", cookie.ToString());
+            }
         }
     }
 }

@@ -5,17 +5,21 @@ namespace Nancy.Cookies
 
     public class NancyCookie : INancyCookie
     {
-        public string Name { get; private set; }
-        public string Value { get; private set; }
-        public string Domain { get; set; }
-        public string Path { get; set; }        
-        public DateTime? Expires { get; set; }
-
         public NancyCookie(string name, string value)
         {
             Name = name;
             Value = value;
         }
+
+        public string Domain { get; set; }
+
+        public DateTime? Expires { get; set; }
+
+        public string Name { get; private set; }
+
+        public string Path { get; set; }
+
+        public string Value { get; private set; }
 
         public override string ToString()
         {

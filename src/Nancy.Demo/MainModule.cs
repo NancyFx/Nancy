@@ -4,25 +4,29 @@ namespace Nancy.Demo
     using Nancy.Formatters;
     using Nancy.ViewEngines;
     using Nancy.ViewEngines.NDjango;
-    using Nancy.ViewEngines.NHaml;
     using Nancy.ViewEngines.Razor;
     using Nancy.ViewEngines.Spark;
+    using Nancy.Routing;
 
-    public class Module : NancyModule
+    public class MainModule : NancyModule
     {
-        public Module()
+        public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x => {
-                return "This is the root! Visit <a href='/routes'>/routes</a> to see all registered routes!";
-            };
-            
-            Get["/test"] = x => {
-                return "Test";
+                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache());
             };
 
-            Get["/routes"] = x => {
-                var routes = GetRoutes("GET");
-                return View.Razor("~/views/routes.cshtml", routes);
+            // TODO - implement filtering at the RouteDictionary GetRoute level
+            Get["/filtered", r => true] = x => {
+                return "This is a route with a filter that always returns true.";
+            };
+
+            Get["/filtered", r => false] = x => {
+                return "This is also a route, but filtered out so should never be hit.";
+            };
+
+            Get["/test"] = x => {
+                return "Test";
             };
 
             Get["/static"] = x => {
@@ -33,20 +37,16 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Frank" };
                 return View.Razor("~/views/razor.cshtml", model);
             };
-            Get["/nhaml"] = x => {
-                var model = new RatPack { FirstName = "Andrew" };
-                return View.Haml("~/views/nhaml.haml", model);
-            };
 
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
                 return View.Django("~/views/ndjango.django", model);
-			};
+            };
 
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
                 return View.Spark("~/views/spark.spark", model);
-			};
+            };
 
             Get["/json"] = x => {
                 var model = new RatPack { FirstName = "Andy" };

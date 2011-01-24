@@ -1,4 +1,4 @@
-﻿namespace Nancy.Hosting.Wcf.Tests
+namespace Nancy.Hosting.Wcf.Tests
 {
     using System;
     using System.IO;
@@ -6,6 +6,7 @@
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     /// <remarks>
@@ -17,13 +18,27 @@
     /// </remarks>
     public class NancyWcfGenericServiceFixture
     {
-        [Fact]
+        private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
+
+        [SkippableFact]
+        public void Should_be_able_to_get_any_header_from_selfhost()
+        {
+            using (CreateAndOpenWebServiceHost())
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "rel/header"));
+                request.Method = "GET";
+
+                request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
+            }
+        }
+
+        [SkippableFact]
         public void Should_be_able_to_get_from_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
             {
-                var reader = 
-                    new StreamReader(WebRequest.Create("http://localhost:1234/base/rel").GetResponse().GetResponseStream());
+                var reader =
+                    new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
 
                 var response = reader.ReadToEnd();
 
@@ -31,7 +46,7 @@
             }
         }
 
-        [Fact]
+        [SkippableFact]
         public void Should_be_able_to_post_body_to_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
@@ -39,7 +54,7 @@
                 const string testBody = "This is the body of the request";
 
                 var request = 
-                    WebRequest.Create("http://localhost:1234/base/rel");
+                    WebRequest.Create(new Uri(BaseUri, "rel"));
                 request.Method = "POST";
 
                 var writer = 
@@ -56,11 +71,18 @@
         private static WebServiceHost CreateAndOpenWebServiceHost()
         {
             var host = new WebServiceHost(
-                new NancyWcfGenericService(),
-                new Uri("http://localhost:1234/base/"));
+                new NancyWcfGenericService(new DefaultNancyBootStrapper()),
+                BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
-            host.Open();
+            try
+            {
+                host.Open();
+            }
+            catch (System.ServiceModel.AddressAccessDeniedException)
+            {
+                throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
+            }
 
             return host;
         }

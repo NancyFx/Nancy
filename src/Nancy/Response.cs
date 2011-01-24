@@ -6,7 +6,6 @@ namespace Nancy
     using System.Net;
     using Cookies;
 
-
     public class Response
     {        
         /// <summary>
