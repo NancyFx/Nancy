@@ -37,7 +37,9 @@
     <Reference Include="Castle.Windsor">
       <HintPath>..\Nancy.BootStrappers.Windsor\Binaries\Castle.Windsor.dll</HintPath>
     </Reference>
-    <Reference Include="FakeItEasy, Version=1.5.3971.200, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL" />
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
@@ -51,7 +53,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="WindsorNancyBootStrapperFixture.cs" />
   </ItemGroup>
   <ItemGroup>

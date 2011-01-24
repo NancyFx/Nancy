@@ -1,23 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.BootStrapper;
-using Nancy.Extensions;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
+    using System.Collections.Generic;
+    using Nancy.BootStrapper;
+    using Nancy.Extensions;
+
     public class DefaultRouteCache : IRouteCache
     {
-        private readonly List<RouteCacheEntry> _Cache;
-        private readonly IModuleKeyGenerator _ModuleKeyGenerator;
+        private readonly List<RouteCacheEntry> cache;
+        private readonly IModuleKeyGenerator moduleKeyGenerator;
 
         public DefaultRouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
         {
-            _ModuleKeyGenerator = moduleKeyGenerator;
-            _Cache = new List<RouteCacheEntry>();
+            this.moduleKeyGenerator = moduleKeyGenerator;
+            this.cache = new List<RouteCacheEntry>();
 
-            BuildCache(moduleCatalog.GetAllModules());
+            this.BuildCache(moduleCatalog.GetAllModules());
         }
 
         private void BuildCache(IEnumerable<NancyModule> modules)
@@ -25,30 +22,30 @@ namespace Nancy.Routing
             foreach (var module in modules)
             {
                 var moduleType = module.GetType();
-                var moduleKey = _ModuleKeyGenerator.GetKeyForModuleType(moduleType);
+                var moduleKey = this.moduleKeyGenerator.GetKeyForModuleType(moduleType);
 
-                AddMethodRoutesToCache(module, moduleKey, "GET");
-                AddMethodRoutesToCache(module, moduleKey, "POST");
-                AddMethodRoutesToCache(module, moduleKey, "PUT");
-                AddMethodRoutesToCache(module, moduleKey, "DELETE");
+                this.AddMethodRoutesToCache(module, moduleKey, "GET");
+                this.AddMethodRoutesToCache(module, moduleKey, "POST");
+                this.AddMethodRoutesToCache(module, moduleKey, "PUT");
+                this.AddMethodRoutesToCache(module, moduleKey, "DELETE");
             }
         }
 
         public IEnumerator<RouteCacheEntry> GetEnumerator()
         {
-            return _Cache.GetEnumerator();
+            return this.cache.GetEnumerator();
         }
 
         System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            return _Cache.GetEnumerator();
+            return this.cache.GetEnumerator();
         }
 
         private void AddMethodRoutesToCache(NancyModule module, string moduleKey, string method)
         {
             foreach (var description in module.GetRouteDescription(method))
             {
-                _Cache.Add(new RouteCacheEntry(moduleKey, method, description.Path, description.Condition));
+                this.cache.Add(new RouteCacheEntry(moduleKey, method, description.Path, description.Condition));
             }
         }
     }

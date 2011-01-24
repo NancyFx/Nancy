@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
+    using System;
+
     /// <summary>
     /// It's not safe for a module to take a dependency on the cache (cyclic dependency)
     /// 
@@ -13,7 +10,7 @@ namespace Nancy.Routing
     /// </summary>
     public class DefaultRouteCacheProvider : IRouteCacheProvider
     {
-        protected readonly Func<IRouteCache> _RouteCacheFactory;
+        protected readonly Func<IRouteCache> RouteCacheFactory;
 
         /// <summary>
         /// Initializes a new instance of the DefaultRouteCacheProvider class.
@@ -21,12 +18,12 @@ namespace Nancy.Routing
         /// <param name="routeCacheFactory"></param>
         public DefaultRouteCacheProvider(Func<IRouteCache> routeCacheFactory)
         {
-            _RouteCacheFactory = routeCacheFactory;
+            this.RouteCacheFactory = routeCacheFactory;
         }
 
         public IRouteCache GetCache()
         {
-            return _RouteCacheFactory();
+            return this.RouteCacheFactory();
         }
     }
 }

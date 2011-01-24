@@ -10,9 +10,9 @@
 
     public sealed class DefaultRouteResolver : IRouteResolver
     {
-        private readonly IRouteCache _RouteCache;
-        private readonly INancyModuleCatalog _ModuleCatalog;
-        private readonly ITemplateEngineSelector _TemplateSelector;
+        private readonly IRouteCache routeCache;
+        private readonly INancyModuleCatalog moduleCatalog;
+        private readonly ITemplateEngineSelector templateSelector;
         
         /// <summary>
         /// Initializes a new instance of the RouteResolver class.
@@ -22,15 +22,15 @@
         /// <param name="templateSelector">Template selector</param>
         public DefaultRouteResolver(IRouteCache routeCache, INancyModuleCatalog moduleCatalog, ITemplateEngineSelector templateSelector)
         {
-            _RouteCache = routeCache;
-            _ModuleCatalog = moduleCatalog;
-            _TemplateSelector = templateSelector;
+            this.routeCache = routeCache;
+            this.moduleCatalog = moduleCatalog;
+            this.templateSelector = templateSelector;
         }
 
         public IRoute GetRoute(IRequest request)
         {
             var matchingRoutes =
-                from cacheEntry in _RouteCache
+                from cacheEntry in this.routeCache
                 where cacheEntry.Method == request.Method
                 let matcher = BuildRegexMatcher(cacheEntry.Path)
                 let result = matcher.Match(request.Uri)
@@ -130,10 +130,10 @@
 
         private NancyModule BuildModuleInstance(string moduleKey, IRequest request)
         {
-            var module = _ModuleCatalog.GetModuleByKey(moduleKey);
+            var module = this.moduleCatalog.GetModuleByKey(moduleKey);
 
             module.Request = request;
-            module.TemplateEngineSelector = _TemplateSelector;
+            module.TemplateEngineSelector = this.templateSelector;
 
             return module;
         }
