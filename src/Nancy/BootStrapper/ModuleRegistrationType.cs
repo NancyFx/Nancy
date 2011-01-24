@@ -1,12 +1,9 @@
-using System;
-
 namespace Nancy.BootStrapper
 {
+    using System;
+
     public sealed class ModuleRegistration
     {
-        public Type ModuleType { get; private set; }
-        public string ModuleKey { get; private set; }
-
         /// <summary>
         /// Represents a module type for registration into a container
         /// </summary>
@@ -17,5 +14,9 @@ namespace Nancy.BootStrapper
             ModuleType = moduleType;
             ModuleKey = moduleKey;
         }
+
+        public string ModuleKey { get; private set; }
+
+        public Type ModuleType { get; private set; }
     }
 }

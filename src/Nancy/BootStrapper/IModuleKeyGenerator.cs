@@ -1,7 +1,7 @@
-using System;
-
 namespace Nancy.BootStrapper
 {
+    using System;
+
     /// <summary>
     /// Generates the a moduleKey for the given moduleType
     /// </summary>

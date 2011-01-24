@@ -1,14 +1,10 @@
 namespace Nancy.Hosting
 {
-    using System.Web;
-    using Routing;
     using System;
-    using Nancy.BootStrapper;
     using System.Configuration;
 
     public class NancyFxSection : ConfigurationSection
     {
-        // Create a "font" element.
         [ConfigurationProperty("bootstrapper")]
         public BootStrapperElement BootStrapper
         {

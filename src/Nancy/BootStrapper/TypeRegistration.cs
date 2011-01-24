@@ -1,22 +1,12 @@
-using System;
-
 namespace Nancy.BootStrapper
 {
+    using System;
+
     /// <summary>
     /// Represents a type to be registered into the container
     /// </summary>
     public sealed class TypeRegistration
     {
-        /// <summary>
-        /// Registration type i.e. IMyInterface
-        /// </summary>
-        public Type RegistrationType { get; private set; }
-
-        /// <summary>
-        /// Implementation type i.e. MyClassThatImplementsIMyInterface
-        /// </summary>
-        public Type ImplementationType { get; private set; }
-
         /// <summary>
         /// Represents a type to be registered into the container
         /// </summary>
@@ -27,5 +17,15 @@ namespace Nancy.BootStrapper
             RegistrationType = registrationType;
             ImplementationType = implementationType;
         }
+
+        /// <summary>
+        /// Implementation type i.e. MyClassThatImplementsIMyInterface
+        /// </summary>
+        public Type ImplementationType { get; private set; }
+
+        /// <summary>
+        /// Registration type i.e. IMyInterface
+        /// </summary>
+        public Type RegistrationType { get; private set; }
     }
 }
