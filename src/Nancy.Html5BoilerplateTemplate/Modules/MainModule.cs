@@ -1,8 +1,10 @@
 namespace Nancy.Html5BoilerPlateTemplate.Modules
 {
+    using Nancy;
     using Nancy.Html5BoilerPlateTemplate.Models;
     using Nancy.Formatters;
     using Nancy.ViewEngines;
+
 
     public class MainModule : NancyModule
     {

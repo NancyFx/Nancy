@@ -67,7 +67,9 @@
   <ItemGroup>
     <Content Include="dependencies\Nancy.dll" />
     <Content Include="dependencies\Nancy.Formatters.dll" />
-    <Content Include="web.config" />
+    <Content Include="web.config">
+      <SubType>Designer</SubType>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="404.html" />
