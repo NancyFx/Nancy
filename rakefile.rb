@@ -9,8 +9,8 @@ SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
 SOLUTION_FILE = 'src/Nancy.sln'
 
 Albacore.configure do |config|
-  config.log_level = :verbose
-  config.msbuild.use :net4
+	config.log_level = :verbose
+	config.msbuild.use :net4
 end
 
 desc "Compiles solution and runs unit tests"
@@ -69,9 +69,9 @@ desc "Zips up the built binaries for easy distribution"
 zip :package => [:publish] do |zip|
 	Dir.mkdir("#{OUTPUT}/packages")
 
-    zip.directories_to_zip "#{OUTPUT}/binaries"
-    zip.output_file = "NancyFx-#{NANCY_VERSION}.zip"
-    zip.output_path = "#{OUTPUT}/packages"
+	zip.directories_to_zip "#{OUTPUT}/binaries"
+	zip.output_file = "NancyFx-#{NANCY_VERSION}.zip"
+	zip.output_path = "#{OUTPUT}/packages"
 end
 
 
