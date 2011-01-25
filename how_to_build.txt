@@ -13,6 +13,10 @@ Prerequisites
 
 	gem install albacore
 
+If you have already installed albacore, please update to the lastest version (0.2.2+):
+
+	gem update albacore
+
 
 Building Nancy
 --------------
@@ -29,3 +33,10 @@ In addition, you can see the full list of all the build tasks by running:
 To run a particular task (compile for example), use the following command:
 
 	rake compile
+
+After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
+
+* binaries -> All the Nancy assembilies and their dependencies
+* documentation -> Generated documentation
+* coverage -> Test coverage reports
+* package -> Zip file containing the binaries
