@@ -22,9 +22,9 @@ namespace Nancy.Formatters.Tests
         }
 
         [Fact]
-        public void Should_return_a_response_with_the_standard_xml_content_type()
+        public void Should_return_a_response_with_the_application_xml_content_type()
         {
-            response.ContentType.ShouldEqual("text/xml");
+            response.ContentType.ShouldEqual("application/xml");
         }
 
         [Fact]
