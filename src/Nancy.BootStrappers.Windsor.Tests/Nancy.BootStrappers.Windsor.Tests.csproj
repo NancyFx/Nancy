@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{3D44A461-3133-4B49-A74B-D25632A12FE5}</ProjectGuid>
+    <ProjectGuid>{C490CBDA-78BA-42BF-98F4-CCA06D09532D}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Hosting.Wcf.Tests</RootNamespace>
-    <AssemblyName>Nancy.Hosting.Wcf.Tests</AssemblyName>
+    <RootNamespace>Nancy.BootStrappers.Windsor.Tests</RootNamespace>
+    <AssemblyName>Nancy.BootStrappers.Windsor.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,10 +31,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core">
+      <HintPath>..\Nancy.BootStrappers.Windsor\Binaries\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor">
+      <HintPath>..\Nancy.BootStrappers.Windsor\Binaries\Castle.Windsor.dll</HintPath>
+    </Reference>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.ServiceModel" />
-    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -43,30 +51,44 @@
     <Reference Include="xunit">
       <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
     </Reference>
-    <Reference Include="xunit.extensions">
-      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
+      <Link>Fakes\FakeModuleCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleKeyGenerator.cs">
+      <Link>Fakes\FakeModuleKeyGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithDependency.cs">
+      <Link>Fakes\FakeNancyModuleWithDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithoutBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithoutBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoute.cs">
+      <Link>Fakes\FakeRoute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
+      <Link>Fakes\FakeRouteResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngineRegistry.cs">
+      <Link>Fakes\FakeViewEngineRegistry.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\xUnitExtensions\SkipException.cs">
-      <Link>SkipException.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\xUnitExtensions\SkippableFactAttribute.cs">
-      <Link>SkippableFactAttribute.cs</Link>
     </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="NancyWcfGenericServiceFixture.cs" />
-    <Compile Include="TestModule.cs" />
+    <Compile Include="WindsorNancyBootStrapperFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj">
-      <Project>{8B7EC9F2-44D2-426C-AE7F-801DC3238259}</Project>
-      <Name>Nancy.Hosting.Wcf</Name>
+    <ProjectReference Include="..\Nancy.BootStrappers.Windsor\Nancy.BootStrappers.Windsor.csproj">
+      <Project>{F4F084BE-E3B3-4BC3-925A-5EB4FC7FA46B}</Project>
+      <Name>Nancy.BootStrappers.Windsor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

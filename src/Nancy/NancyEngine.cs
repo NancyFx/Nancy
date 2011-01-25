@@ -1,12 +1,9 @@
 ﻿namespace Nancy
 {
 	using System;
-	using System.Collections.Generic;
-	using System.Linq;
 	using Nancy.Routing;
-    using Nancy.Extensions;
 
-	public class NancyEngine : INancyEngine
+    public class NancyEngine : INancyEngine
 	{
 		private readonly IRouteResolver resolver;
 

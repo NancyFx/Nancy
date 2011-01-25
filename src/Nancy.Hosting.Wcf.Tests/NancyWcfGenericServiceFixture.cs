@@ -1,4 +1,4 @@
-﻿namespace Nancy.Hosting.Wcf.Tests
+namespace Nancy.Hosting.Wcf.Tests
 {
     using System;
     using System.IO;
@@ -6,8 +6,8 @@
     using System.ServiceModel;
     using System.ServiceModel.Web;
     using Nancy.Tests;
-    using Xunit;
     using Nancy.Tests.xUnitExtensions;
+    using Xunit;
 
     /// <remarks>
     /// These tests attempt to listen on port 1234, and so require either administrative 
@@ -18,13 +18,27 @@
     /// </remarks>
     public class NancyWcfGenericServiceFixture
     {
+        private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
+
+        [SkippableFact]
+        public void Should_be_able_to_get_any_header_from_selfhost()
+        {
+            using (CreateAndOpenWebServiceHost())
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "rel/header"));
+                request.Method = "GET";
+
+                request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
+            }
+        }
+
         [SkippableFact]
         public void Should_be_able_to_get_from_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
             {
                 var reader =
-                    new StreamReader(WebRequest.Create("http://localhost:1234/base/rel").GetResponse().GetResponseStream());
+                    new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
 
                 var response = reader.ReadToEnd();
 
@@ -40,7 +54,7 @@
                 const string testBody = "This is the body of the request";
 
                 var request = 
-                    WebRequest.Create("http://localhost:1234/base/rel");
+                    WebRequest.Create(new Uri(BaseUri, "rel"));
                 request.Method = "POST";
 
                 var writer = 
@@ -58,7 +72,7 @@
         {
             var host = new WebServiceHost(
                 new NancyWcfGenericService(new DefaultNancyBootStrapper()),
-                new Uri("http://localhost:1234/base/"));
+                BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
             try

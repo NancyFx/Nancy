@@ -1,5 +1,3 @@
-using System;
-
 namespace Nancy.BootStrapper
 {
     public interface INancyBootStrapperPerRequestRegistration<TContainer>

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Extensions;
-
-namespace Nancy.BootStrapper
+﻿namespace Nancy.BootStrapper
 {
+    using System;
+    using System.Linq;
+    using Nancy.Extensions;
+
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
     /// 

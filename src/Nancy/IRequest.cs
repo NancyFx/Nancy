@@ -1,11 +1,11 @@
+using Nancy.Extensions;
+
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-	using System.Collections.Specialized;
     using System.IO;
     using System.Linq;
-    using System.Web;
 
     public interface IRequest
     {
@@ -19,21 +19,21 @@ namespace Nancy
 
         dynamic Form { get; }
 
+        dynamic Query { get; }
+
         string Protocol { get; }
-		
-		NameValueCollection QueryString { get ; }
     }
 
     public class Request : IRequest
     {
         private dynamic form;
 
-        public Request(string method, string uri, string protocol, NameValueCollection queryString)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol, queryString)
+        public Request(string method, string uri, string protocol)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol)
         {
         }
 
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, NameValueCollection queryString)
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, string query = "")
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -64,8 +64,10 @@ namespace Nancy
             this.Method = method;
             this.Uri = uri;
             this.Protocol = protocol;
-			this.QueryString = queryString;
+            this.Query = query.AsQueryDictionary();
         }
+
+        public dynamic Query { get; set; }
 
         public Stream Body { get; set; }
 
@@ -76,27 +78,16 @@ namespace Nancy
 
         private dynamic GetFormData()
         {
-            var ret = new DynamicDictionary();
-
             if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
             {
                 var contentType = this.Headers["content-type"].First();
                 if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
                 {
                     var reader = new StreamReader(this.Body);
-                    var coll = HttpUtility.ParseQueryString(reader.ReadToEnd());
-
-                    foreach (var key in coll.AllKeys)
-                    {
-                        if(key != null)
-                        {
-                            ret[key] = coll[key];
-                        }
-                    }        
+                    return reader.ReadToEnd().AsQueryDictionary();
                 }
             }
-            
-            return ret;
+            return new DynamicDictionary();
         }
 
         public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
@@ -106,7 +97,5 @@ namespace Nancy
         public string Uri { get; private set; }
 
         public string Protocol { get; private set; }
-		
-		public NameValueCollection QueryString { get; private set; }
     }
 }

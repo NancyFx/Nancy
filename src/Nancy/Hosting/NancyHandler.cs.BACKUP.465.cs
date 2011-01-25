@@ -1,4 +1,4 @@
-namespace Nancy.Hosting
+﻿namespace Nancy.Hosting
 {
     using System.Web;
     using Nancy.Extensions;
@@ -38,7 +38,11 @@ namespace Nancy.Hosting
                 context.Request.Headers.ToDictionary(),
                 context.Request.InputStream,
                 context.Request.Url.Scheme,
+<<<<<<< HEAD
+			    context.Request.QueryString);
+=======
                 context.Request.Url.Query);
+>>>>>>> 9d6387917b5b65b3defe2024c5211fa682fc0409
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

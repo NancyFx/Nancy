@@ -107,9 +107,11 @@ All view engine integrations are still very early implementations and more work 
 Nancy is not a one man project and many of the features that are availble would not have been possible without the awesome contributions from the community!
 
 * [Andy Pike](http://github.com/andypike)
+* [Bjarte Djuvik Næss](http://github.com/bjartn)
+* [Chris Nicola](http://github.com/lucisferre)
 * [Graeme Foster](http://github.com/GraemeF)
 * [Ian Davis](http://github.com/innovatian)
-* [Jonas Cannehag]()
+* [Jonas Cannehag](http://github.com/knecke)
 * [José F. Romaniello](http://github.com/jfromaniello)
 * [Karl Seguin](http://github.com/karlseguin)
 * [James Eggers](http://github.com/jameseggers1)
@@ -124,6 +126,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Phil Haack](http://github.com/haacked)
 * [Robert Greyling](http://github.com/robertthegrey)
 * [Steven Robbins](http://github.com/grumpydev)
+* [Troels Thomsen](http://github.com/troethom)
 * [Vidar L. Sømme](http://github.com/vidarls)
 
 ## Copyright

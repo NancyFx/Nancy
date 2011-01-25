@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using TinyIoC;
-using Nancy.BootStrapper;
-using Nancy.Routing;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using System.Collections.Generic;
+    using TinyIoC;
+    using Nancy.BootStrapper;
+
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
@@ -17,7 +13,7 @@ namespace Nancy
         /// <summary>
         /// Container instance
         /// </summary>
-        protected TinyIoCContainer _Container;
+        protected TinyIoCContainer container;
 
         /// <summary>
         /// Resolve INancyEngine
@@ -25,7 +21,7 @@ namespace Nancy
         /// <returns>INancyEngine implementation</returns>
         protected sealed override INancyEngine GetEngineInternal()
         {
-            return _Container.Resolve<INancyEngine>();
+            return this.container.Resolve<INancyEngine>();
         }
 
         /// <summary>
@@ -34,22 +30,22 @@ namespace Nancy
         /// <returns>IModuleKeyGenerator instance</returns>
         protected sealed override IModuleKeyGenerator GetModuleKeyGenerator()
         {
-            return _Container.Resolve<IModuleKeyGenerator>();
+            return this.container.Resolve<IModuleKeyGenerator>();
         }
 
         /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
-        /// <param name="container"></param>
-        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        /// <param name="existingContainer"></param>
+        protected override void ConfigureApplicationContainer(TinyIoCContainer existingContainer)
         {
-            base.ConfigureApplicationContainer(container);
+            base.ConfigureApplicationContainer(existingContainer);
 
-            container.AutoRegister();
+            existingContainer.AutoRegister();
         }
 
-        public virtual void ConfigureRequestContainer(TinyIoCContainer container)
+        public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)
         {
         }
 
@@ -59,9 +55,9 @@ namespace Nancy
         /// <returns>New container</returns>
         protected sealed override TinyIoCContainer CreateContainer()
         {
-            _Container = new TinyIoCContainer();
+            this.container = new TinyIoCContainer();
 
-            return _Container;
+            return this.container;
         }
 
         /// <summary>
@@ -72,20 +68,20 @@ namespace Nancy
         {
             foreach (var registrationType in moduleRegistrations)
             {
-                _Container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsMultiInstance();
+                this.container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsMultiInstance();
             }
         }
 
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected sealed override void RegisterDefaults(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterDefaults(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
         {
-            container.Register<INancyModuleCatalog>(this);
+            existingContainer.Register<INancyModuleCatalog>(this);
 
             foreach (var typeRegistration in typeRegistrations)
             {
-                container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                existingContainer.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
             }
         }
 
@@ -95,8 +91,8 @@ namespace Nancy
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetAllModules()
         {
-            var childContainer = _Container.GetChildContainer();
-            ConfigureRequestContainer(childContainer);
+            var childContainer = this.container.GetChildContainer();
+            this.ConfigureRequestContainer(childContainer);
             return childContainer.ResolveAll<NancyModule>(false);
         }
 
@@ -107,8 +103,8 @@ namespace Nancy
         /// <returns>NancyModule instance</returns>
         public NancyModule GetModuleByKey(string moduleKey)
         {
-            var childContainer = _Container.GetChildContainer();
-            ConfigureRequestContainer(childContainer);
+            var childContainer = this.container.GetChildContainer();
+            this.ConfigureRequestContainer(childContainer);
             return childContainer.Resolve<NancyModule>(moduleKey);
         }
     }
