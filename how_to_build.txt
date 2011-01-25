@@ -21,8 +21,8 @@ If you have already installed albacore, please update to the lastest version (0.
 Building Nancy
 --------------
 
-1. At the command prompt, navigate to the Nancy root folder
-2. To run the default build, type the following command:
+1. At the command prompt, navigate to the Nancy root folder (should contain rakefile.rb)
+2. To run the default build (which will compile, test and package Nancy) type the following command:
 
 	rake
 
@@ -30,13 +30,13 @@ In addition, you can see the full list of all the build tasks by running:
 
 	rake -T
 
-To run a particular task (compile for example), use the following command:
+To run a particular task ('test' for example), use the following command:
 
-	rake compile
+	rake test
 
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 
 * binaries -> All the Nancy assembilies and their dependencies
-* documentation -> Generated documentation
-* coverage -> Test coverage reports
-* package -> Zip file containing the binaries
+* packages -> Zip file containing the binaries (other configurations might be added in the future)
+* documentation -> Generated documentation (todo)
+* coverage -> Test coverage reports (todo)

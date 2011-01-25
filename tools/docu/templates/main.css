@@ -1,0 +1,166 @@
+﻿body {
+	margin: 0;
+	padding: 0;
+	font-family: Verdana,Arial,Helvetica,sans-serif;
+	font-size: 90%;
+}
+
+.header {
+	background: #048;
+	border-bottom: 3px solid #006;
+	margin: 0;
+	color: #FFF;
+	padding: 10px;
+	clear: left;
+	font-size: 13px;
+}
+
+.header p 
+{
+	margin: 0 0 4px 0;
+}
+
+.header .class 
+{
+	font-size: 24px;
+	font-weight: bold;
+}
+
+.header strong
+{
+	font-size: 13px;
+	width: 100px;
+	float: left;
+}
+
+.header a 
+{
+	background: transparent;
+	color: #FFF;
+}
+
+.header a:hover
+{
+	background: #FFF;
+	color: #039;
+}
+
+.sub-header {
+	margin:  0 20px;
+}
+
+.sub-header ul 
+{
+	margin: 0 0 0 30px;
+	padding: 0;
+	list-style: none;
+}
+
+.sub-header ul li {
+	float: left;
+	margin: 0 15px 0 0;
+	padding: 0;
+	text-indent: 0;
+}
+
+.section {
+	color: #333;
+	border-bottom: 1px solid #999;
+	margin: 10px 10px 0 10px;
+	padding: 10px 0 0 0;
+	clear: left;
+}
+
+div.method 
+{
+	background: #EFEFEF;
+	border: 1px dotted #CCC;
+	margin: 5px 10px 15px 10px;
+	padding: 0;
+}
+
+div.method h4 
+{
+	background:#CCC;
+	border-bottom:1px solid #666;
+	color:#000;
+	padding:2px 5px;
+	margin:0;
+	font-weight: normal;
+}
+
+div.method .content
+{
+	padding: 0 10px 5px 10px;
+}
+
+#summary 
+{
+	background:#EFEFEF;
+	border:1px dotted #999999;
+	margin: 5px 10px 15px 10px;
+	padding: 5px 10px;
+}
+
+#namespaces, #types
+{
+	width: 50%;
+	float: left;
+	background: #FFF;
+}
+
+h2.fixed {
+	background: #CCC;
+	color: #000;
+	border-top: 1px solid #999;
+	border-bottom: 1px solid #999;
+	margin: 0;
+	padding: 2px 10px;
+	font-size: 12px;
+	font-weight: bold;
+}
+
+div.scroll 
+{
+	overflow: scroll;
+	height: 150px;
+}
+
+#namespaces ul, #types ul
+{
+	list-style: none;
+	margin: 0 0 10px 0;
+	padding: 0;
+}
+
+#namespaces ul li, #types ul li
+{
+	text-indent: 0;
+	padding-left: 10px;
+}
+
+a {
+	background: #eef;
+	color: #039;
+	text-decoration: none;
+}
+
+a:hover {
+	color: #FFF;
+	background: #039;
+}
+
+#namespaces a.current, #types a.current {
+	background: #039;
+	color: #FFF;
+	text-decoration: none;
+}
+
+#footer
+{
+	text-align: center;
+	font-size: 10px;
+	color: #888;
+	clear: left;
+	padding-top: 10px;
+}

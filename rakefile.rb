@@ -2,14 +2,19 @@ require 'rubygems'
 require 'albacore'
 require 'rake/clean'
 
-NANCY_VERSION = "0.1.2.3"
+NANCY_VERSION = "0.1.0.0"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
 SOLUTION_FILE = 'src/Nancy.sln'
 
+Albacore.configure do |config|
+  config.log_level = :verbose
+  config.msbuild.use :net4
+end
+
 desc "Compiles solution and runs unit tests"
-task :default => [:clean, :version, :compile, :publish]
+task :default => [:clean, :version, :compile, :test, :publish, :package]
 
 desc "Executes all MSpec and Xunit tests"
 task :test => [:mspec, :xunit]
@@ -19,25 +24,25 @@ CLEAN.include(OUTPUT)
 CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 
 desc "Update shared assemblyinfo file for the build"
-assemblyinfo :version do |asm|
+assemblyinfo :version => [:clean] do |asm|
 	asm.version = NANCY_VERSION
-	asm.company_name = "a test company"
-	asm.product_name = "a product name goes here"
-	asm.title = "my assembly title"
-	asm.description = "this is the assembly description"
+	asm.company_name = "NancyFx"
+	asm.product_name = "NancyFx"
+	asm.title = "NancyFx"
+	asm.description = "A Sinatra inspired web framework for the .NET platform"
 	asm.copyright = "Copyright (C) Andreas Hakansson and contributors"
 	asm.output_file = SHARED_ASSEMBLY_INFO
 end
 
 desc "Compile solution file"
-msbuild :compile do |msb|
+msbuild :compile => [:version] do |msb|
 	msb.properties :configuration => CONFIGURATION
 	msb.targets :Clean, :Build
 	msb.solution = SOLUTION_FILE
 end
 
 desc "Gathers output files and copies them to the output folder"
-task :publish do
+task :publish => [:compile] do
 	Dir.mkdir(OUTPUT)
 	Dir.mkdir("#{OUTPUT}/binaries")
 
@@ -45,30 +50,44 @@ task :publish do
 end
 
 desc "Executes MSpec tests"
-mspec :mspec do |mspec|
+mspec :mspec => [:compile] do |mspec|
+	#This is a bit fragile but this is the only mspec assembly at present. 
+	#Fails if passed a FileList of all tests. Need to investigate.
+	mspec.command = "tools/mspec/mspec.exe"
+	mspec.assemblies "src/Nancy.Tests/bin/Release/Nancy.Tests.dll"
+end
+
+desc "Executes xUnit tests"
+xunit :xunit => [:compile] do |xunit|
 	tests = FileList["src/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
 
-	mspec.command = "tools/mspec/mspec.exe"
-	mspec.assemblies tests
+	xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
+	xunit.assemblies = tests
+end	
+
+desc "Zips up the built binaries for easy distribution"
+zip :package => [:publish] do |zip|
+	Dir.mkdir("#{OUTPUT}/packages")
+
+    zip.directories_to_zip "#{OUTPUT}/binaries"
+    zip.output_file = "NancyFx-#{NANCY_VERSION}.zip"
+    zip.output_path = "#{OUTPUT}/packages"
 end
 
-testAssemblies = FileList["src/**/#{CONFIGURATION}/*.Tests.dll"].exclude(/obj\//)
-testAssemblies.each do |testAssembly|
-	desc "Executes xUnit tests"
-	xunit :xunit do |xunit|
-		xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
-		xunit.assembly = testAssembly
-	end	
-end
 
 
 #TODO:
 #-----
-# 1. Copy dlls to build folder (not tests or demo files)
-# 2. Fix test tasks
-# 3. TeamCity integration
-# 4. Test coverage report (NCover?)
-# 5. Documemtation (docu?)
-# 5. Zip binaries with docs (named with version number)
-# 6. NuGet task (waiting for albacore pull)
-# 7. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
+#  6. TeamCity integration
+#  7. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation.
+#  8. Test coverage report (NCover?)
+#  9. NuGet task (waiting for albacore pull)
+# 10. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
+
+#DONE:
+#-----
+#  1. Copy dlls to build folder (not tests or demo files) - DONE
+#  2. Fix test tasks - DONE
+#  3. Set task dependencies - DONE
+#  4. Zip binaries with docs (named with version number) - DONE
+#  5. Create a how to build file - DONE
