@@ -49,6 +49,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Windsor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Windsor.Tests", "Nancy.BootStrappers.Windsor.Tests\Nancy.BootStrappers.Windsor.Tests.csproj", "{C490CBDA-78BA-42BF-98F4-CCA06D09532D}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{C83115E9-B3B9-4848-9312-5C298CC1B924}"
+	ProjectSection(SolutionItems) = preProject
+		How to build.txt = How to build.txt
+		rakefile.rb = rakefile.rb
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
