@@ -86,9 +86,9 @@
     <Compile Include="WindsorNancyBootStrapperFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.BootStrappers.Windsor\Nancy.BootStrappers.Windsor.csproj">
+    <ProjectReference Include="..\Nancy.BootStrappers.Windsor\Nancy.Bootstrappers.Windsor.csproj">
       <Project>{F4F084BE-E3B3-4BC3-925A-5EB4FC7FA46B}</Project>
-      <Name>Nancy.BootStrappers.Windsor</Name>
+      <Name>Nancy.Bootstrappers.Windsor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

@@ -5,12 +5,12 @@ using System.Text;
 using Xunit;
 using TinyIoC;
 using Nancy.Routing;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 using Nancy.Tests.Fakes;
 
 namespace Nancy.Tests.Unit
 {
-    public class FakeDefaultNancyBootStrapper : DefaultNancyBootStrapper
+    public class FakeDefaultNancyBootstrapper : DefaultNancyBootstrapper
     {
         public bool RequestContainerConfigured { get; set; }
 
@@ -35,22 +35,22 @@ namespace Nancy.Tests.Unit
         }
     }
 
-    public class DefaultNancyBootStrapperFixture
+    public class DefaultNancyBootstrapperFixture
     {
-        private FakeDefaultNancyBootStrapper _BootStrapper;
+        private FakeDefaultNancyBootstrapper _Bootstrapper;
 
         /// <summary>
-        /// Initializes a new instance of the DefaultNancyBootStrapperFixture class.
+        /// Initializes a new instance of the DefaultNancyBootstrapperFixture class.
         /// </summary>
-        public DefaultNancyBootStrapperFixture()
+        public DefaultNancyBootstrapperFixture()
         {
-            _BootStrapper = new FakeDefaultNancyBootStrapper();
+            _Bootstrapper = new FakeDefaultNancyBootstrapper();
         }
 
         [Fact]
         public void GetEngine_ReturnsEngine()
         {
-            var result = _BootStrapper.GetEngine();
+            var result = _Bootstrapper.GetEngine();
 
             result.ShouldNotBeNull();
             result.ShouldBeOfType<INancyEngine>();
@@ -59,9 +59,9 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void GetAllModules_Returns_As_MultiInstance()
         {
-            _BootStrapper.GetEngine();
-            var output1 = _BootStrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
-            var output2 = _BootStrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
+            _Bootstrapper.GetEngine();
+            var output1 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output2 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -71,9 +71,9 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void GetModuleByKey_Returns_As_MultiInstance()
         {
-            _BootStrapper.GetEngine();
-            var output1 = _BootStrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
-            var output2 = _BootStrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            _Bootstrapper.GetEngine();
+            var output1 = _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            var output2 = _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -83,53 +83,53 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void GetAllModules_Configures_Child_Container()
         {
-            _BootStrapper.GetEngine();
-            _BootStrapper.RequestContainerConfigured = false;
+            _Bootstrapper.GetEngine();
+            _Bootstrapper.RequestContainerConfigured = false;
 
-            _BootStrapper.GetAllModules();
+            _Bootstrapper.GetAllModules();
 
-            _BootStrapper.RequestContainerConfigured.ShouldBeTrue();
+            _Bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
 
         [Fact]
         public void GetModuleByKey_Configures_Child_Container()
         {
-            _BootStrapper.GetEngine();
-            _BootStrapper.RequestContainerConfigured = false;
+            _Bootstrapper.GetEngine();
+            _Bootstrapper.RequestContainerConfigured = false;
 
-            _BootStrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
 
-            _BootStrapper.RequestContainerConfigured.ShouldBeTrue();
+            _Bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
 
         [Fact]
         public void GetEngine_ConfigureApplicationContainer_Should_Be_Called()
         {
-            _BootStrapper.GetEngine();
+            _Bootstrapper.GetEngine();
 
-            _BootStrapper.ApplicationContainerConfigured.ShouldBeTrue();
+            _Bootstrapper.ApplicationContainerConfigured.ShouldBeTrue();
         }
 
         [Fact]
         public void GetEngine_Defaults_Registered_In_Container()
         {
-            _BootStrapper.GetEngine();
+            _Bootstrapper.GetEngine();
 
-            _BootStrapper.Container.CanResolve<INancyModuleCatalog>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteResolver>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<ITemplateEngineSelector>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<INancyEngine>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IModuleKeyGenerator>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCache>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
-            _BootStrapper.Container.CanResolve<IRouteCacheProvider>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<INancyModuleCatalog>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<IRouteResolver>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<ITemplateEngineSelector>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<INancyEngine>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<IModuleKeyGenerator>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<IRouteCache>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
+            _Bootstrapper.Container.CanResolve<IRouteCacheProvider>(ResolveOptions.FailUnregisteredAndNameNotFound).ShouldBeTrue();
         }
 
         [Fact]
         public void Get_Module_By_Key_Gives_Same_Request_Lifetime_Instance_To_Each_Dependency()
         {
-            _BootStrapper.GetEngine();
+            _Bootstrapper.GetEngine();
 
-            var result = _BootStrapper.GetModuleByKey(new Nancy.BootStrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldBeSameAs(result.Dependency.FooDependency);
@@ -138,10 +138,10 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call()
         {
-            _BootStrapper.GetEngine();
+            _Bootstrapper.GetEngine();
 
-            var result = _BootStrapper.GetModuleByKey(new Nancy.BootStrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
-            var result2 = _BootStrapper.GetModuleByKey(new Nancy.BootStrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result2 = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();

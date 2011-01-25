@@ -1,4 +1,4 @@
-namespace Nancy.BootStrappers.Windsor
+namespace Nancy.Bootstrappers.Windsor
 {
     using System;
     using System.Collections.Generic;
@@ -6,11 +6,11 @@ namespace Nancy.BootStrappers.Windsor
     using Castle.MicroKernel.Registration;
     using Castle.MicroKernel.Resolvers.SpecializedResolvers;
     using Castle.Windsor;
-    using Nancy.BootStrapper;
+    using Nancy.Bootstrapper;
     using Nancy.Routing;
 
-    public abstract class WindsorNancyBootStrapper : NancyBootStrapperBase<IWindsorContainer>,
-        INancyBootStrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
+    public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>,
+        INancyBootstrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
     {
         protected IWindsorContainer container;
 

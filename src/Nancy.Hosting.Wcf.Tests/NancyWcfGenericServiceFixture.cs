@@ -71,7 +71,7 @@ namespace Nancy.Hosting.Wcf.Tests
         private static WebServiceHost CreateAndOpenWebServiceHost()
         {
             var host = new WebServiceHost(
-                new NancyWcfGenericService(new DefaultNancyBootStrapper()),
+                new NancyWcfGenericService(new DefaultNancyBootstrapper()),
                 BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");

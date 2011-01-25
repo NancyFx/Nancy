@@ -52,7 +52,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="WindsorModuleKeyGenerator.cs" />
-    <Compile Include="WindsorNancyBootStrapper.cs" />
+    <Compile Include="WindsorNancyBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binaries\Castle.Core.dll" />

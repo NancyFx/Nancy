@@ -1,4 +1,4 @@
-namespace Nancy.BootStrapper
+namespace Nancy.Bootstrapper
 {
     using System;
 

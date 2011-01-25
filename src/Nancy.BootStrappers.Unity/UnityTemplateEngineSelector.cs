@@ -1,7 +1,7 @@
 using Microsoft.Practices.Unity;
 using Nancy.ViewEngines;
 
-namespace Nancy.BootStrappers.Unity
+namespace Nancy.Bootstrappers.Unity
 {
     public class UnityTemplateEngineSelector : DefaultTemplateEngineSelector
     {

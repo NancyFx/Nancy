@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NinjectNancyBootStrapper.cs" />
+    <Compile Include="NinjectNancyBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binaries\Ninject.dll" />

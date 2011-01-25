@@ -31,21 +31,21 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Spark.Tes
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.NDjango.Tests", "Nancy.ViewEngines.NDjango.Tests\Nancy.ViewEngines.NDjango.Tests.csproj", "{E5428285-6584-45D8-B07D-81E1BCD83F33}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Ninject", "Nancy.BootStrappers.Ninject\Nancy.BootStrappers.Ninject.csproj", "{CC73D142-36A9-4486-8914-418DD0F7B523}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Bootstrappers.Ninject", "Nancy.BootStrappers.Ninject\Nancy.Bootstrappers.Ninject.csproj", "{CC73D142-36A9-4486-8914-418DD0F7B523}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.StructureMap", "Nancy.BootStrappers.StructureMap\Nancy.BootStrappers.StructureMap.csproj", "{EA7F58FE-4BF9-4636-9B9C-E07901187237}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Bootstrappers.StructureMap", "Nancy.BootStrappers.StructureMap\Nancy.Bootstrappers.StructureMap.csproj", "{EA7F58FE-4BF9-4636-9B9C-E07901187237}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.StructureMap.Tests", "Nancy.BootStrappers.StructureMap.Tests\Nancy.BootStrappers.StructureMap.Tests.csproj", "{0BC2538C-BAB3-497D-898D-955A3A7A0F64}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Ninject.Tests", "Nancy.BootStrappers.Ninject.Tests\Nancy.BootStrappers.Ninject.Tests.csproj", "{B5144D58-3190-449D-B998-8B5D93E3787C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Unity", "Nancy.BootStrappers.Unity\Nancy.BootStrappers.Unity.csproj", "{33AC0752-74B3-4D14-AB5C-789B9B11044A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Bootstrappers.Unity", "Nancy.BootStrappers.Unity\Nancy.Bootstrappers.Unity.csproj", "{33AC0752-74B3-4D14-AB5C-789B9B11044A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Unity.Tests", "Nancy.BootStrappers.Unity.Tests\Nancy.BootStrappers.Unity.Tests.csproj", "{C7CBC6A9-129E-4AD3-B723-906830091767}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{4A24657F-9695-437B-9702-2541ED280628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Windsor", "Nancy.BootStrappers.Windsor\Nancy.BootStrappers.Windsor.csproj", "{F4F084BE-E3B3-4BC3-925A-5EB4FC7FA46B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Bootstrappers.Windsor", "Nancy.BootStrappers.Windsor\Nancy.Bootstrappers.Windsor.csproj", "{F4F084BE-E3B3-4BC3-925A-5EB4FC7FA46B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.BootStrappers.Windsor.Tests", "Nancy.BootStrappers.Windsor.Tests\Nancy.BootStrappers.Windsor.Tests.csproj", "{C490CBDA-78BA-42BF-98F4-CCA06D09532D}"
 EndProject

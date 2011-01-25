@@ -1,7 +1,7 @@
 ﻿using System;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 
-namespace Nancy.BootStrappers.Windsor
+namespace Nancy.Bootstrappers.Windsor
 {
     /// <summary>
     ///   Windsor ModuleKey generator - handles Castle proxy classes correctly

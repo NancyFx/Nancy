@@ -85,9 +85,9 @@
     <Compile Include="UnityNancyBootStrapperFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.BootStrappers.Unity\Nancy.BootStrappers.Unity.csproj">
+    <ProjectReference Include="..\Nancy.BootStrappers.Unity\Nancy.Bootstrappers.Unity.csproj">
       <Project>{33AC0752-74B3-4D14-AB5C-789B9B11044A}</Project>
-      <Name>Nancy.BootStrappers.Unity</Name>
+      <Name>Nancy.Bootstrappers.Unity</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

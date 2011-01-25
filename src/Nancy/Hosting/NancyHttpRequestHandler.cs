@@ -3,7 +3,7 @@ namespace Nancy.Hosting
     using System.Web;
     using Routing;
     using System;
-    using Nancy.BootStrapper;
+    using Nancy.Bootstrapper;
     using System.Configuration;
 
     public class NancyHttpRequestHandler : IHttpHandler
@@ -18,16 +18,16 @@ namespace Nancy.Hosting
 
         public NancyHttpRequestHandler()
         {
-            INancyBootStrapper bootStrapper = null;
+            INancyBootstrapper bootstrapper = null;
 
-            var configBootStrapper = GetConfigBootStrapperType();
+            var configBootstrapper = GetConfigBootstrapperType();
 
-            if (configBootStrapper != null)
-                bootStrapper = (INancyBootStrapper)(Activator.CreateInstance(configBootStrapper.Assembly, configBootStrapper.Name).Unwrap());
+            if (configBootstrapper != null)
+                bootstrapper = (INancyBootstrapper)(Activator.CreateInstance(configBootstrapper.Assembly, configBootstrapper.Name).Unwrap());
             else
-                bootStrapper = NancyBootStrapperLocator.BootStrapper;
+                bootstrapper = NancyBootstrapperLocator.Bootstrapper;
 
-            _Engine = bootStrapper.GetEngine();
+            _Engine = bootstrapper.GetEngine();
         }
 
         public void ProcessRequest(HttpContext context)
@@ -37,19 +37,19 @@ namespace Nancy.Hosting
             handler.ProcessRequest(wrappedContext);
         }
 
-        private BootStrapperEntry GetConfigBootStrapperType()
+        private BootstrapperEntry GetConfigBootstrapperType()
         {
             var configurationSection = System.Configuration.ConfigurationManager.GetSection("nancyFx") as NancyFxSection;
             if (configurationSection == null)
                 return null;
 
-            var bootStrapperOverrideType = configurationSection.BootStrapper.Type;
-            var bootStrapperOverrideAssembly = configurationSection.BootStrapper.Assembly;
+            var bootstrapperOverrideType = configurationSection.Bootstrapper.Type;
+            var bootstrapperOverrideAssembly = configurationSection.Bootstrapper.Assembly;
 
-            if (string.IsNullOrWhiteSpace(bootStrapperOverrideType) || string.IsNullOrWhiteSpace(bootStrapperOverrideAssembly))
+            if (string.IsNullOrWhiteSpace(bootstrapperOverrideType) || string.IsNullOrWhiteSpace(bootstrapperOverrideAssembly))
                 return null;
 
-            return new BootStrapperEntry(bootStrapperOverrideAssembly, bootStrapperOverrideType);
+            return new BootstrapperEntry(bootstrapperOverrideAssembly, bootstrapperOverrideType);
         }
     }
 }
