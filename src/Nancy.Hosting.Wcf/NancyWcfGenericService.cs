@@ -4,7 +4,7 @@
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
-    using Nancy.BootStrapper;
+    using Nancy.Bootstrapper;
     using Nancy.Extensions;
 
     [ServiceContract]
@@ -17,11 +17,11 @@
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class with a default bootstrapper.
         /// </summary>
         public NancyWcfGenericService()
-            : this(NancyBootStrapperLocator.BootStrapper)
+            : this(NancyBootstrapperLocator.Bootstrapper)
         {
         }
 
-        public NancyWcfGenericService(INancyBootStrapper bootstrapper)
+        public NancyWcfGenericService(INancyBootstrapper bootstrapper)
         {
             engine = bootstrapper.GetEngine();
         }

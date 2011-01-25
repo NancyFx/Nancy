@@ -85,9 +85,9 @@
     <Compile Include="NinjectNancyBootStrapperFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.BootStrappers.Ninject\Nancy.BootStrappers.Ninject.csproj">
+    <ProjectReference Include="..\Nancy.BootStrappers.Ninject\Nancy.Bootstrappers.Ninject.csproj">
       <Project>{CC73D142-36A9-4486-8914-418DD0F7B523}</Project>
-      <Name>Nancy.BootStrappers.Ninject</Name>
+      <Name>Nancy.Bootstrappers.Ninject</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

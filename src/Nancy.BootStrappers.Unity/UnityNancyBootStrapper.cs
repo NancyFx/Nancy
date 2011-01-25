@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using Microsoft.Practices.Unity;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 using Nancy.ViewEngines;
 
-namespace Nancy.BootStrappers.Unity
+namespace Nancy.Bootstrappers.Unity
 {
-    public class UnityNancyBootStrapper : NancyBootStrapperBase<IUnityContainer>,
-                                          INancyBootStrapperPerRequestRegistration<IUnityContainer>,
+    public class UnityNancyBootstrapper : NancyBootstrapperBase<IUnityContainer>,
+                                          INancyBootstrapperPerRequestRegistration<IUnityContainer>,
                                           INancyModuleCatalog
     {
         protected IUnityContainer _UnityContainer;

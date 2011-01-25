@@ -1,6 +1,6 @@
-namespace Nancy.BootStrapper
+namespace Nancy.Bootstrapper
 {
-    public interface INancyBootStrapperPerRequestRegistration<TContainer>
+    public interface INancyBootstrapperPerRequestRegistration<TContainer>
     {
         /// <summary>
         /// Configure the container with per-request registrations

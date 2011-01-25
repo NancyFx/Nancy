@@ -1,8 +1,8 @@
 namespace Nancy.Hosting
 {
-    public sealed class BootStrapperEntry
+    public sealed class BootstrapperEntry
     {
-        public BootStrapperEntry(string assembly, string name)
+        public BootstrapperEntry(string assembly, string name)
         {
             Assembly = assembly;
             Name = name;

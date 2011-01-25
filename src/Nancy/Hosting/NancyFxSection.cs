@@ -6,11 +6,11 @@ namespace Nancy.Hosting
     public class NancyFxSection : ConfigurationSection
     {
         [ConfigurationProperty("bootstrapper")]
-        public BootStrapperElement BootStrapper
+        public BootstrapperElement Bootstrapper
         {
             get
             {
-                return (BootStrapperElement)this["bootstrapper"];
+                return (BootstrapperElement)this["bootstrapper"];
             }
             set
             {
@@ -18,7 +18,7 @@ namespace Nancy.Hosting
             }
         }
 
-        public class BootStrapperElement : ConfigurationElement
+        public class BootstrapperElement : ConfigurationElement
         {
             [ConfigurationProperty("type", DefaultValue = "", IsRequired = true)]
             public String Type

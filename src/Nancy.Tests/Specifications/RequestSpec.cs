@@ -10,7 +10,7 @@ namespace Nancy.Tests.Specifications
 
         protected RequestSpec()
         {
-            engine = new DefaultNancyBootStrapper().GetEngine();
+            engine = new DefaultNancyBootstrapper().GetEngine();
         }
 
         protected static IRequest ManufactureGETRequestForRoute(string route)

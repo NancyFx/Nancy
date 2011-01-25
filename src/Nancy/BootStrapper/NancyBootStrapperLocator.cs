@@ -1,4 +1,4 @@
-﻿namespace Nancy.BootStrapper
+﻿namespace Nancy.Bootstrapper
 {
     using System;
     using System.Linq;
@@ -10,33 +10,33 @@
     /// Will search the app domain for a non-abstract one, and if it can't find one
     /// it will use the default nancy one that uses TinyIoC.
     /// </summary>
-    public class NancyBootStrapperLocator
+    public class NancyBootstrapperLocator
     {
         // TODO - not very testable as it is, may be worth pushing the logic into a non-static and making this class have a static singleton of it.
 
         /// <summary>
         /// Gets the located bootstrapper
         /// </summary>
-        public static INancyBootStrapper BootStrapper;
+        public static INancyBootstrapper Bootstrapper;
 
-        static NancyBootStrapperLocator()
+        static NancyBootstrapperLocator()
         {
-            // Get the first non-abstract implementation of INancyBootStrapper if one exists in the
+            // Get the first non-abstract implementation of INancyBootstrapper if one exists in the
             // app domain. If none exist then just use the default one.
-            var bootStrapperInterface = typeof(INancyBootStrapper);
-            var defaultBootStrapper = typeof(DefaultNancyBootStrapper);
+            var bootstrapperInterface = typeof(INancyBootstrapper);
+            var defaultBootstrapper = typeof(DefaultNancyBootstrapper);
 
-            var locatedBootStrappers = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+            var locatedBootstrappers = from assembly in AppDomain.CurrentDomain.GetAssemblies()
                                        where !assembly.IsDynamic
                                        from type in assembly.SafeGetExportedTypes()
                                        where !type.IsAbstract
-                                       where bootStrapperInterface.IsAssignableFrom(type)
-                                       where type != defaultBootStrapper
+                                       where bootstrapperInterface.IsAssignableFrom(type)
+                                       where type != defaultBootstrapper
                                        select type;
 
-            var bootStrapperType = locatedBootStrappers.FirstOrDefault() ?? defaultBootStrapper;
+            var bootstrapperType = locatedBootstrappers.FirstOrDefault() ?? defaultBootstrapper;
 
-            BootStrapper = (INancyBootStrapper) Activator.CreateInstance(bootStrapperType);
+            Bootstrapper = (INancyBootstrapper) Activator.CreateInstance(bootstrapperType);
         }
     }
 }
