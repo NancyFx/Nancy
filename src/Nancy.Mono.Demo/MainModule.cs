@@ -9,6 +9,7 @@ namespace Nancy.Demo
 //    using Nancy.ViewEngines.Razor;
     using Nancy.ViewEngines.Spark;
     using Nancy.Routing;
+	using System.Linq;
 
     public class MainModule : NancyModule
     {
@@ -20,8 +21,8 @@ namespace Nancy.Demo
 //            };
 			
 			Get["/"] = x => {
-                //return View.Spark("~/views/spark.spark", routeCacheProvider.GetCache());
-				return "Will do some work to return spark view list of routes";
+				var model = routeCacheProvider.GetCache().ToList();
+                return View.Spark("~/views/routes.spark", model);
             };
 
             // TODO - implement filtering at the RouteDictionary GetRoute level
@@ -73,8 +74,14 @@ namespace Nancy.Demo
 			
 			//Call the following url to test
 			//http://127.0.0.1:8080/access?oauth_token=11111111111111&oauth_verifier=2222222222222222
+			//Dynamic cast is for Mono 2.8 only - Fixed in Mono 2.10 Preview
 			Get["/access"] = x => {
-				return "Success: " + Request.QueryString["oauth_token"] + " = " + Request.QueryString["oauth_verifier"];
+				try{
+					return "Success: " + ((dynamic)Request.Query).oauth_token + "; " + ((dynamic)Request.Query).oauth_verifier;
+				}
+				catch {
+					return "Call as: /access?oauth_token=11111111111111&oauth_verifier=2222222222222222";
+				}
 			};
         }
     }
