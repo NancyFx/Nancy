@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 using Nancy;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 using Nancy.Routing;
 using Ninject.Activation.Caching;
 using Ninject.Components;
@@ -19,10 +19,10 @@ using Ninject;
 
 #endregion
 
-namespace Nancy.BootStrappers.Ninject
+namespace Nancy.Bootstrappers.Ninject
 {
-    public class NinjectNancyBootStrapper : NancyBootStrapperBase<IKernel>,
-                                            INancyBootStrapperPerRequestRegistration<IKernel>,
+    public class NinjectNancyBootstrapper : NancyBootstrapperBase<IKernel>,
+                                            INancyBootstrapperPerRequestRegistration<IKernel>,
                                             INancyModuleCatalog
     {
         protected IKernel _Kernel;

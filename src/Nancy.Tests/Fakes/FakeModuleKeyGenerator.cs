@@ -2,7 +2,7 @@ using System;
 
 namespace Nancy.Tests.Fakes
 {
-    public class FakeModuleKeyGenerator : BootStrapper.IModuleKeyGenerator
+    public class FakeModuleKeyGenerator : Bootstrapper.IModuleKeyGenerator
     {
         public int CallCount { get; set; }
 

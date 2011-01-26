@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     using System.Collections.Generic;
-    using Nancy.BootStrapper;
+    using Nancy.Bootstrapper;
     using Nancy.Extensions;
 
     public class DefaultRouteCache : IRouteCache

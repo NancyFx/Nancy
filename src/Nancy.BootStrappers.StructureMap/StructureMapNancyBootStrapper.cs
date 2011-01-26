@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 using StructureMap;
 
-namespace Nancy.BootStrappers.StructureMap
+namespace Nancy.Bootstrappers.StructureMap
 {
-    public abstract class StructureMapNancyBootStrapper : NancyBootStrapperBase<IContainer>, INancyBootStrapperPerRequestRegistration<IContainer>, INancyModuleCatalog
+    public abstract class StructureMapNancyBootstrapper : NancyBootstrapperBase<IContainer>, INancyBootstrapperPerRequestRegistration<IContainer>, INancyModuleCatalog
     {
         /// <summary>
         /// Container instance

@@ -2,13 +2,13 @@
 {
     using System.Collections.Generic;
     using TinyIoC;
-    using Nancy.BootStrapper;
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
     /// </summary>
-    public class DefaultNancyBootStrapper : NancyBootStrapperBase<TinyIoCContainer>, INancyBootStrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
+    public class DefaultNancyBootstrapper : NancyBootstrapperBase<TinyIoCContainer>, INancyBootstrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
     {
         /// <summary>
         /// Container instance

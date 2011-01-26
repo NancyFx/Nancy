@@ -41,7 +41,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="StructureMapNancyBootStrapper.cs" />
+    <Compile Include="StructureMapNancyBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Properties\" />

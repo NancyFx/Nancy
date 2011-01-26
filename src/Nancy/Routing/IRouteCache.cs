@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Nancy.BootStrapper;
+using Nancy.Bootstrapper;
 using Nancy.Extensions;
 
 namespace Nancy.Routing
