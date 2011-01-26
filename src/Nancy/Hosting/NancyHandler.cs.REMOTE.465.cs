@@ -1,4 +1,4 @@
-namespace Nancy.Hosting
+﻿namespace Nancy.Hosting
 {
     using System.Web;
     using Nancy.Extensions;
