@@ -1,9 +1,8 @@
-namespace Nancy
+namespace Nancy.Formatters.Responses
 {
-	using System;
-	using System.Net;
-	
-	public class RedirectResponse :Response
+    using System.Net;
+
+    public class RedirectResponse : Response
 	{
 		public RedirectResponse (string location) 
 		{
@@ -14,4 +13,3 @@ namespace Nancy
 		}
 	}
 }
-
