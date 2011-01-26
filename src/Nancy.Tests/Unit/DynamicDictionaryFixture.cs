@@ -16,6 +16,505 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_implicitly_cast_to_string_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "foo";
+
+            // When
+            string result = GetStringValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual("foo");
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_string_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "foo";
+
+            // When
+            string result = GetStringValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual("foo");
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_integer_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_integer_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_integer_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            int result = GetIntegerValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_integer_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            int result = GetIntegerValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_guid_when_value_is_retrieved_as_member()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            this.dictionary.value = id;
+
+            // When
+            Guid result = GetGuidValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(id);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_guid_when_value_is_retrieved_as_index()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            this.dictionary.value = id;
+
+            // When
+            Guid result = GetGuidValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(id);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_guid_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            this.dictionary.value = id.ToString("N");
+
+            // When
+            Guid result = GetGuidValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(id);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_guid_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            var id = Guid.NewGuid();
+            this.dictionary.value = id.ToString("N");
+
+            // When
+            Guid result = GetGuidValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(id);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_datetime_when_value_is_retrieved_as_member()
+        {
+            // Given
+            var date = DateTime.Now;
+            this.dictionary.value = date;
+
+            // When
+            DateTime result = GetDateTimeValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(date);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_datetime_when_value_is_retrieved_as_index()
+        {
+            // Given
+            var date = DateTime.Now;
+            this.dictionary.value = date;
+
+            // When
+            DateTime result = GetDateTimeValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(date);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_datetime_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            var date = DateTime.Now;
+            this.dictionary.value = date.ToString();
+
+            // When
+            DateTime result = GetDateTimeValue(this.dictionary.value);
+            
+            // Then
+            result.ShouldEqual(date);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_datetime_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            var date = DateTime.Now;
+            this.dictionary.value = date.ToString();
+
+            // When
+            DateTime result = GetDateTimeValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(date);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_timespan_when_value_is_retrieved_as_member()
+        {
+            // Given
+            var span = new TimeSpan(1, 2, 3, 4);
+            this.dictionary.value = span;
+
+            // When
+            TimeSpan result = GetTimeSpanValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(span);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_timespan_when_value_is_retrieved_as_index()
+        {
+            // Given
+            var span = new TimeSpan(1, 2, 3, 4);
+            this.dictionary.value = span;
+
+            // When
+            TimeSpan result = GetTimeSpanValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(span);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_timespan_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            var span = new TimeSpan(1, 2, 3, 4);
+            this.dictionary.value = span.ToString();
+
+            // When
+            TimeSpan result = GetTimeSpanValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(span);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_timespan_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            var span = new TimeSpan(1, 2, 3, 4);
+            this.dictionary.value = span.ToString();
+
+            // When
+            TimeSpan result = GetTimeSpanValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(span);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_long_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = 10l;
+
+            // When
+            long result = GetLongValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10l);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_long_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = 10l;
+
+            // When
+            long result = GetLongValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10l);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_long_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            long result = GetLongValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10l);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_long_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            long result = GetLongValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10l);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_float_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = 10f;
+
+            // When
+            float result = GetFloatValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10f);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_float_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = 10f;
+
+            // When
+            float result = GetFloatValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10f);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_float_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            float result = GetFloatValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10f);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_float_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            float result = GetFloatValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10f);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_decimal_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = 10m;
+
+            // When
+            decimal result = GetDecimalValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10m);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_decimal_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = 10m;
+
+            // When
+            decimal result = GetDecimalValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10m);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_decimal_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            decimal result = GetDecimalValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10m);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_decimal_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            decimal result = GetDecimalValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10m);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_double_when_value_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = 10d;
+
+            // When
+            double result = GetDoubleValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10d);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_double_when_value_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = 10d;
+
+            // When
+            double result = GetDoubleValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10d);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_double_when_value_is_string_and_is_retrieved_as_member()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            double result = GetDoubleValue(this.dictionary.value);
+
+            // Then
+            result.ShouldEqual(10d);
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_double_when_value_is_string_and_is_retrieved_as_index()
+        {
+            // Given
+            this.dictionary.value = "10";
+
+            // When
+            double result = GetDoubleValue(this.dictionary["value"]);
+
+            // Then
+            result.ShouldEqual(10d);
+        }
+
+        private static double GetDoubleValue(double value)
+        {
+            return value;
+        }
+
+        private static decimal GetDecimalValue(decimal value)
+        {
+            return value;
+        }
+
+        private static float GetFloatValue(float value)
+        {
+            return value;
+        }
+
+        private static long GetLongValue(long value)
+        {
+            return value;
+        }
+
+        private static TimeSpan GetTimeSpanValue(TimeSpan value)
+        {
+            return value;
+        }
+
+        private static DateTime GetDateTimeValue(DateTime value)
+        {
+            return value;
+        }
+
+        private static Guid GetGuidValue(Guid value)
+        {
+            return value;
+        }
+
+        private static int GetIntegerValue(int value)
+        {
+            return value;
+        }
+
+        private static string GetStringValue(string value)
+        {
+            return value;
+        }
+
+        [Fact]
         public void Should_return_actual_string_value_when_tostring_called_on_string_entry()
         {
             // Given, When

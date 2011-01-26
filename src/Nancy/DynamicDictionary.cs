@@ -76,102 +76,186 @@
             return (dictionary != null ? dictionary.GetHashCode() : 0);
         }
 
-        internal class DynamicDictionaryValue : DynamicObject
-        {
-            private readonly object value;
+        
+    }
 
-            public DynamicDictionaryValue(object value)
+    public class DynamicDictionaryValue : DynamicObject
+    {
+        private readonly object value;
+
+        public DynamicDictionaryValue(object value)
+        {
+            this.value = value;
+        }
+
+        public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
+        {
+            object resultOfCast;
+            result = null;
+
+            if (binder.Operation != ExpressionType.Equal)
             {
-                this.value = value;
+                return false;
             }
 
-            public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
+            var convert =
+                Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicDictionaryValue));
+
+            if (!TryConvert((ConvertBinder)convert, out resultOfCast))
             {
-                object resultOfCast;
-                result = null;
+                return false;
+            }
 
-                if (binder.Operation != ExpressionType.Equal)
-                {
-                    return false;
-                }
+            result = (resultOfCast == null) ?
+                Equals(arg, resultOfCast) :
+                resultOfCast.Equals(arg);
 
-                var convert =
-                    Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicDictionaryValue));
+            return true;
+        }
 
-                if (!TryConvert((ConvertBinder)convert, out resultOfCast))
-                {
-                    return false;
-                }
+        public override bool TryConvert(ConvertBinder binder, out object result)
+        {
+            result = null;
 
-                result = (resultOfCast == null) ?
-                    Equals(arg, resultOfCast) :
-                    resultOfCast.Equals(arg);
-
+            if (value == null)
+            {
                 return true;
             }
 
-            public override bool TryConvert(ConvertBinder binder, out object result)
+            var binderType = binder.Type;
+            if (binderType == typeof(String))
             {
-                result = null;
-
-                if (value == null)
-                {
-                    return true;
-                }
-
-                var binderType = binder.Type;
-                if (binderType == typeof(String))
-                {
-                    result = Convert.ToString(value);
-                    return true;
-                }
-
-                if (binderType == typeof(Guid) || binderType == typeof(Guid?))
-                {
-                    Guid guid;
-                    if (Guid.TryParse(Convert.ToString(value), out guid))
-                    {
-                        result = guid;
-                        return true;
-                    }
-                }
-                else if (binderType == typeof(TimeSpan) || binderType == typeof(TimeSpan?))
-                {
-                    TimeSpan timespan;
-                    if (TimeSpan.TryParse(Convert.ToString(value), out timespan))
-                    {
-                        result = timespan;
-                        return true;
-                    }
-                }
-                else
-                {
-                    if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                    {
-                        binderType = binderType.GetGenericArguments()[0];
-                    }
-
-                    var typeCode = Type.GetTypeCode(binderType);
-
-                    if (typeCode == TypeCode.Object) // something went wrong here
-                    {
-                        return false;
-                    }
-
-                    result = Convert.ChangeType(value, typeCode);
-
-                    return true;
-                }
-                return base.TryConvert(binder, out result);
+                result = Convert.ToString(value);
+                return true;
             }
 
-            public override string ToString()
+            if (binderType == typeof(Guid) || binderType == typeof(Guid?))
             {
-                if (value == null)
-                    return null;
-
-                return Convert.ToString(value);
+                Guid guid;
+                if (Guid.TryParse(Convert.ToString(value), out guid))
+                {
+                    result = guid;
+                    return true;
+                }
             }
+            else if (binderType == typeof(TimeSpan) || binderType == typeof(TimeSpan?))
+            {
+                TimeSpan timespan;
+                if (TimeSpan.TryParse(Convert.ToString(value), out timespan))
+                {
+                    result = timespan;
+                    return true;
+                }
+            }
+            else
+            {
+                if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                {
+                    binderType = binderType.GetGenericArguments()[0];
+                }
+
+                var typeCode = Type.GetTypeCode(binderType);
+
+                if (typeCode == TypeCode.Object) // something went wrong here
+                {
+                    return false;
+                }
+
+                result = Convert.ChangeType(value, typeCode);
+
+                return true;
+            }
+            return base.TryConvert(binder, out result);
+        }
+
+        public override string ToString()
+        {
+            return this.value == null ? null : Convert.ToString(this.value);
+        }
+
+        public static implicit operator string(DynamicDictionaryValue dynamicValue)
+        {
+            return dynamicValue.ToString();
+        }
+
+        public static implicit operator int(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value.GetType().IsValueType)
+            {
+                return (int)dynamicValue.value;
+            }
+
+            return int.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value is Guid)
+            {
+                return (Guid)dynamicValue.value;
+            }
+
+            return Guid.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value is DateTime)
+            {
+                return (DateTime)dynamicValue.value;
+            }
+
+            return DateTime.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value is TimeSpan)
+            {
+                return (TimeSpan)dynamicValue.value;
+            }
+
+            return TimeSpan.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator long(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value.GetType().IsValueType)
+            {
+                return (long)dynamicValue.value;
+            }
+
+            return long.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator float(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value.GetType().IsValueType)
+            {
+                return (float)dynamicValue.value;
+            }
+
+            return float.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value.GetType().IsValueType)
+            {
+                return (decimal)dynamicValue.value;
+            }
+
+            return decimal.Parse(dynamicValue.ToString());
+        }
+
+        public static implicit operator double(DynamicDictionaryValue dynamicValue)
+        {
+            if (dynamicValue.value.GetType().IsValueType)
+            {
+                return (double)dynamicValue.value;
+            }
+
+            return double.Parse(dynamicValue.ToString());
         }
     }
 }

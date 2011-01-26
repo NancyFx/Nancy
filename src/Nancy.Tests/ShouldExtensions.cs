@@ -84,6 +84,16 @@ namespace Nancy.Tests
             Assert.Equal(expected, actual);
         }
 
+        public static void ShouldEqual(this DateTime actual, DateTime expected)
+        {
+            Assert.Equal(expected.Year, actual.Year);
+            Assert.Equal(expected.Month, actual.Month);
+            Assert.Equal(expected.Day, actual.Day);
+            Assert.Equal(expected.Hour, actual.Hour);
+            Assert.Equal(expected.Minute, actual.Minute);
+            Assert.Equal(expected.Second, actual.Second);
+        }
+
         public static void ShouldBeGreaterThan(this int actual, int smallestValueNotAccepted)
         {
             Assert.True(actual > smallestValueNotAccepted);
