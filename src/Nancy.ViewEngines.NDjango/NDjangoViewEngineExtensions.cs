@@ -20,5 +20,21 @@ namespace Nancy.ViewEngines.NDjango
                 result.Execute(stream);
             };
         }
+
+        public static Action<Stream> DjangoEmbedded(this IViewEngine source, string name)
+        {
+            return source.DjangoEmbedded<object>(name, null);
+        }
+
+        public static Action<Stream> DjangoEmbedded<TModel>(this IViewEngine source, string name, TModel model)
+        {
+            var viewEngine = new NDjangoViewEngine(new ResourceTemplateLocator());
+
+            return stream =>
+            {
+                var result = viewEngine.RenderView(name, model);
+                result.Execute(stream);
+            };
+        }
     }
 }

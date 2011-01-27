@@ -38,9 +38,15 @@ namespace Nancy.Demo
                 return View.Razor("~/views/razor.cshtml", model);
             };
 
-            Get["/ndjango"] = x => {
+            Get["/razor-embedded"] = x =>
+            {
+                var model = new RatPack { FirstName = "Frank" };
+                return View.RazorEmbedded("Nancy.Demo.Views.razorembedded.cshtml", model);
+            };
+
+            Get["/ndjango-embedded"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
-                return View.Django("~/views/ndjango.django", model);
+                return View.DjangoEmbedded("Nancy.Demo.Views.ndjangoembedded.django", model);
             };
 
             Get["/spark"] = x => {

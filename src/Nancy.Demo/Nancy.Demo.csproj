@@ -101,6 +101,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Views\razorembedded.cshtml" />
+    <EmbeddedResource Include="Views\ndjangoembedded.django" />
     <None Include="Views\razor-dependency.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
@@ -116,7 +118,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>40965</DevelopmentServerPort>
+          <DevelopmentServerPort>53155</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
