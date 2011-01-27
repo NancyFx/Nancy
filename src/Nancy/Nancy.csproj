@@ -94,6 +94,7 @@
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
+    <Compile Include="ViewEngines\ResourceTemplateLocator.cs" />
     <Compile Include="ViewEngines\StaticViewEngineExtension.cs" />
     <Compile Include="ViewEngines\ViewEngine.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />

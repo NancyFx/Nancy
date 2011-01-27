@@ -20,5 +20,22 @@
                 result.Execute(stream);
             };
         }
+
+        public static Action<Stream> RazorEmbedded(this IViewEngine source, string name)
+        {
+            return source.RazorEmbedded<object>(name, null);
+        }
+
+        public static Action<Stream> RazorEmbedded<TModel>(this IViewEngine source, string name, TModel model)
+        {
+            var viewEngine = new RazorViewEngine(new ResourceTemplateLocator());
+
+            return stream =>
+            {
+                var result = viewEngine.RenderView(name, model);
+                result.Execute(stream);
+            };
+        }
+
     }
 }
