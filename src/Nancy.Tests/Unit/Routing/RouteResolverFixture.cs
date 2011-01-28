@@ -184,6 +184,22 @@ namespace Nancy.Tests.Unit.Routing
             Record.Exception(() => result = route.Parameters.value).ShouldBeNull();
             Record.Exception(() => result = route.Parameters.capture).ShouldBeNull();
         }
+        
+        [Theory]
+        [InlineData("/fake/foo/value1/bar/value2")]
+        [InlineData("/fake/foo/value1/bar/value2/")]
+        public void Should_ignore_trailing_slash_on_request_url_when_match_was_made_for_parameterized_action_route(string path)
+        {
+            // Given
+            var request = new Request("GET", path, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), "http");
+
+            // When
+            var route = this.resolver.GetRoute(request);
+
+            // Then
+            ((string)route.Parameters.value).ShouldEqual("value1");
+            ((string)route.Parameters.capture).ShouldEqual("value2");
+        }
 
         [Fact]
         public void Should_pass_the_template_selector_to_the_module()

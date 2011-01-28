@@ -33,7 +33,7 @@
                 from cacheEntry in this.routeCache
                 where cacheEntry.Method == request.Method
                 let matcher = BuildRegexMatcher(cacheEntry.Path)
-                let result = matcher.Match(request.Uri)
+                let result = matcher.Match(request.Uri.TrimEnd('/'))
                 where result.Success
                 where ((cacheEntry.Condition == null) || (cacheEntry.Condition(request)))
                 select new
