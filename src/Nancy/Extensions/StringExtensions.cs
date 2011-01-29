@@ -64,5 +64,18 @@ namespace Nancy.Extensions
                 ret[key] = coll[key];
             return ret;
         }
+
+        /// <summary>
+        /// Trims any trailing slash from the path 
+        /// </summary>
+        /// <param name="path">The path to trim</param>
+        /// <returns>A path without trailing slash</returns>
+        public static string TrimTrailingSlash(this string path)
+        {
+            if (path.Length == 1)
+                return path;
+
+            return path.TrimEnd('/');
+        }
     }
 }
