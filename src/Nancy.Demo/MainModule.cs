@@ -10,7 +10,7 @@ namespace Nancy.Demo
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x => {
-                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache().SelectMany(c => c.Value));
+                return View("~/views/routes.cshtml", routeCacheProvider.GetCache());
             };
 
             Get["/style/{file}"] = x => {
