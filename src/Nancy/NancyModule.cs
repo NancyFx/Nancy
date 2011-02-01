@@ -4,7 +4,6 @@ namespace Nancy
     using System.Collections.Generic;
     using System.IO;
     using Nancy.Routing;
-    using Nancy.ViewEngines;
 
     public abstract class NancyModule
     {
@@ -120,13 +119,6 @@ namespace Nancy
         public Request Request { get; set; }
 
         /// <summary>
-        /// An extension point for adding support for view engines.
-        /// </summary>
-        /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
-        /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
-        public IViewEngine View { get; private set; }
-
-        /// <summary>
         /// An extension point for adding support for formatting response contents.
         /// </summary>
         /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
@@ -137,9 +129,9 @@ namespace Nancy
         /// Renders the view based on the extension without a model.
         /// </summary>
         /// <param name="name">The path to the view</param>        
-        public Action<Stream> SmartView(string name)
+        public Action<Stream> View(string name)
         {
-            return SmartView(name, (object)null);
+            return View(name, (object) null);
         }
 
         /// <summary>
@@ -147,10 +139,11 @@ namespace Nancy
         /// </summary>
         /// <param name="name">The path to the view</param>
         /// <param name="model">The model to pass to the view</param>
-        public Action<Stream> SmartView<TModel>(string name, TModel model)
+        public Action<Stream> View<TModel>(string name, TModel model)
         {
-            var processor = TemplateEngineSelector.GetTemplateProcessor(Path.GetExtension(name));
-            return processor == null ? TemplateEngineSelector.DefaultProcessor(name, model) : processor(name, model);
+            var extension = Path.GetExtension(name);
+            var processor = TemplateEngineSelector.GetTemplateProcessor<TModel>(extension);
+            return processor == null ? TemplateEngineSelector.DefaultProcessor<TModel>()(name, model) : processor(name, model);
         }
     }
 }

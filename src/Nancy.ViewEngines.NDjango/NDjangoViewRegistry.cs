@@ -5,14 +5,19 @@ namespace Nancy.ViewEngines.NDjango
 
    public class NDjangoViewRegistry : IViewEngineRegistry
    {
-      public string Extension
-      {
-         get { return ".django"; }
-      }
+       public string Extension
+       {
+           get { return ".django"; }
+       }
 
-      public Func<string, object, Action<Stream>> Executor
-      {
-         get { return (name, model) => NDjangoViewEngineExtensions.Django(null, name, model); }
-      }
+       public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
+       {
+           var viewEngine = new NDjangoViewEngine();
+           return stream =>
+                      {
+                          var result = viewEngine.RenderView(viewTemplate, model);
+                          result.Execute(stream);
+                      };
+       }
    }
 }

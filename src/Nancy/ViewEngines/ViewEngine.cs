@@ -2,7 +2,7 @@ namespace Nancy.ViewEngines
 {
     using System;
 
-    public class ViewEngine
+    public class ViewEngine : IViewEngine
     {
         public ViewEngine(IViewLocator viewTemplateLocator, IViewCompiler viewCompiler)
         {

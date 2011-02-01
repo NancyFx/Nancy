@@ -18,8 +18,6 @@
             return value;
         }
 
-        public string Code { get; set; }
-
         public object Model { get; set; }
 
         public TextWriter Writer { get; set; }

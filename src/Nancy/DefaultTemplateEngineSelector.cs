@@ -8,33 +8,35 @@ namespace Nancy
 
     public class DefaultTemplateEngineSelector : ITemplateEngineSelector
     {
-        private readonly IDictionary<string, Func<string, object, Action<Stream>>> templateProcessors;
+        private readonly IEnumerable<IViewEngineRegistry> viewEngines;
 
         public DefaultTemplateEngineSelector(IEnumerable<IViewEngineRegistry> viewEngines)
         {
-            this.templateProcessors = LoadTemplates(viewEngines);
+            this.viewEngines = viewEngines;
         }
 
-        public Func<string, object, Action<Stream>> DefaultProcessor
+        public Func<string, TModel, Action<Stream>> DefaultProcessor<TModel>()
         {
-            get { return (path, model) => StaticViewEngineExtension.Static(null, path); }
+            return (path, model) =>
+                       {
+                           //TODO - AspNetTemplateLocator -> IViewLocator via constructor parameter
+                           var staticViewEngine = new StaticViewEngine(new AspNetTemplateLocator());
+                           return (Action<Stream>) (stream =>
+                                                        {
+                                                            var result = staticViewEngine.RenderView(path, model);
+                                                            result.Execute(stream);
+                                                        });
+                       };
         }
 
-        public Func<string, object, Action<Stream>> GetTemplateProcessor(string extension)
+        public Func<string, TModel, Action<Stream>> GetTemplateProcessor<TModel>(string extension)
         {
-            return this.templateProcessors.ContainsKey(extension) ? this.templateProcessors[extension] : null;
-        }
-
-        private static IDictionary<string, Func<string, object, Action<Stream>>> LoadTemplates(IEnumerable<IViewEngineRegistry> viewEngines)
-        {
-            var templates = new Dictionary<string, Func<string, object, Action<Stream>>>(viewEngines.Count(), StringComparer.CurrentCultureIgnoreCase);
-
-            foreach (var viewEngine in viewEngines)
+            var viewEngineRegistry = viewEngines.SingleOrDefault(registry => registry.Extension == extension);
+            if (viewEngineRegistry == null)
             {
-                templates.Add(viewEngine.Extension, viewEngine.Executor);
+                return null;
             }
-
-            return templates;
+            return (name, model) => viewEngineRegistry.Execute(name, model);
         }
     }
 }

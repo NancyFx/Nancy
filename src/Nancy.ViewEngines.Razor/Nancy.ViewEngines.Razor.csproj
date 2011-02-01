@@ -51,7 +51,6 @@
     <Compile Include="RazorViewBase.cs" />
     <Compile Include="RazorViewCompiler.cs" />
     <Compile Include="RazorViewEngine.cs" />
-    <Compile Include="RazorViewEngineExtensions.cs" />
     <Compile Include="RazorViewRegistry.cs" />
   </ItemGroup>
   <ItemGroup>

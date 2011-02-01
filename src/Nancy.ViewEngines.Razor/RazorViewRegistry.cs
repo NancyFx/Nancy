@@ -5,14 +5,19 @@ namespace Nancy.ViewEngines.Razor
 
     public class RazorViewRegistry : IViewEngineRegistry
     {
+        public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
+        {
+            var viewEngine = new RazorViewEngine();
+            return stream =>
+                       {
+                           var result = viewEngine.RenderView(viewTemplate, model);
+                           result.Execute(stream);
+                       };
+        }
+
         public string Extension
         {
             get { return ".cshtml"; }
-        }
-
-        public Func<string, object, Action<Stream>> Executor
-        {
-            get { return (name, model) => RazorViewEngineExtensions.Razor(null, name, model); }
         }
     }
 }
