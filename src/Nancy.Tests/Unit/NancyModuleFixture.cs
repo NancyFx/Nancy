@@ -20,14 +20,19 @@ namespace Nancy.Tests.Unit
         {
             var application = A.Fake<ITemplateEngineSelector>();
             var module = new FakeNancyModuleWithoutBasePath {TemplateEngineSelector = application};
+            var action = new Action<Stream>((s) => { });
+            var processor = new Func<string, object, Action<Stream>>((a, b) => action);
             this.module.TemplateEngineSelector = application;
 
             A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
             A.CallTo(() => application.DefaultProcessor).Returns(viewEngine);
 
             module.View("file.txt");
+            A.CallTo(() => application.GetTemplateProcessor<object>(".txt")).Returns(null);
+            A.CallTo(() => application.DefaultProcessor<object>()).Returns(processor);
 
             A.CallTo(() => application.DefaultProcessor).MustHaveHappened();
+            module.View("file.txt").ShouldBeSameAs(action);
         }
 
         [Fact]

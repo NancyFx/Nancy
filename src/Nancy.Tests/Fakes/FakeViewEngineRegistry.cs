@@ -4,9 +4,9 @@ namespace Nancy.Tests.Fakes
 
     public class FakeViewEngineRegistry : IViewEngineRegistry
     {
-        IViewEngine IViewEngineRegistry.ViewEngine
+        public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
         {
-            get { return ViewEngine; }
+            return Executor(viewTemplate, model);
         }
 
         public string Extension
