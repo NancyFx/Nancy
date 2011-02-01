@@ -142,8 +142,12 @@ namespace Nancy
         public Action<Stream> View<TModel>(string name, TModel model)
         {
             var extension = Path.GetExtension(name);
-            var processor = TemplateEngineSelector.GetTemplateProcessor<TModel>(extension);
-            return processor == null ? TemplateEngineSelector.DefaultProcessor<TModel>()(name, model) : processor(name, model);
+            var processor = TemplateEngineSelector.GetTemplateProcessor(extension) ?? TemplateEngineSelector.DefaultProcessor;
+            return stream =>
+                       {
+                           var result = processor.RenderView(name, model);
+                           result.Execute(stream);
+                       };
         }
     }
 }

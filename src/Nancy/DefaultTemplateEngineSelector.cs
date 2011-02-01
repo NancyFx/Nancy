@@ -2,7 +2,6 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;    
     using ViewEngines;
 
@@ -15,28 +14,23 @@ namespace Nancy
             this.viewEngines = viewEngines;
         }
 
-        public Func<string, TModel, Action<Stream>> DefaultProcessor<TModel>()
+        public IViewEngine DefaultProcessor
         {
-            return (path, model) =>
-                       {
-                           //TODO - AspNetTemplateLocator -> IViewLocator via constructor parameter
-                           var staticViewEngine = new StaticViewEngine(new AspNetTemplateLocator());
-                           return (Action<Stream>) (stream =>
-                                                        {
-                                                            var result = staticViewEngine.RenderView(path, model);
-                                                            result.Execute(stream);
-                                                        });
-                       };
+            get
+            {
+                return new StaticViewEngine(new AspNetTemplateLocator());
+            }
+            //TODO - AspNetTemplateLocator -> IViewLocator via constructor parameter
         }
 
-        public Func<string, TModel, Action<Stream>> GetTemplateProcessor<TModel>(string extension)
+        public IViewEngine GetTemplateProcessor(string extension)
         {
-            var viewEngineRegistry = viewEngines.SingleOrDefault(registry => registry.Extension == extension);
-            if (viewEngineRegistry == null)
+            var engineRegistry = viewEngines.SingleOrDefault(e => e.Extension.Equals(extension, StringComparison.CurrentCultureIgnoreCase));
+            if (engineRegistry == null)
             {
                 return null;
             }
-            return (name, model) => viewEngineRegistry.Execute(name, model);
+            return engineRegistry.ViewEngine;
         }
     }
 }

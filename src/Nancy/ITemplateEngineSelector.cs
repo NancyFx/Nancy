@@ -1,11 +1,10 @@
 namespace Nancy
 {
-    using System;    
-    using System.IO;
+    using ViewEngines;
 
     public interface ITemplateEngineSelector
     {
-        Func<string, TModel, Action<Stream>> DefaultProcessor<TModel>();
-        Func<string, TModel, Action<Stream>> GetTemplateProcessor<TModel>(string extension);
+        IViewEngine DefaultProcessor { get; }
+        IViewEngine GetTemplateProcessor(string extension);
     }
 }

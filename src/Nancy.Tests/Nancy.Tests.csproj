@@ -61,6 +61,7 @@
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
+    <Compile Include="Fakes\FakeViewEngine.cs" />
     <Compile Include="Fakes\FakeViewEngineRegistry.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
