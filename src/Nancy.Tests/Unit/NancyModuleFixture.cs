@@ -1,10 +1,9 @@
 namespace Nancy.Tests.Unit
 {
-    using System;
-    using System.IO;
     using System.Linq;
     using FakeItEasy;
     using Fakes;
+    using Nancy.ViewEngines;
     using Xunit;
 
     public class NancyModuleFixture
@@ -20,14 +19,15 @@ namespace Nancy.Tests.Unit
         public void Should_execute_the_default_processor_unregistered_extension()
         {
             var application = A.Fake<ITemplateEngineSelector>();
+            var module = new FakeNancyModuleWithoutBasePath {TemplateEngineSelector = application};
             this.module.TemplateEngineSelector = application;
-            var action = new Action<Stream>(s => { });
-            var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 
-            A.CallTo(() => application.GetTemplateProcessor<object>(".txt")).Returns(null);
-            A.CallTo(() => application.DefaultProcessor<object>()).Returns(processor);
+            A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
+            A.CallTo(() => application.DefaultProcessor).Returns(viewEngine);
 
-            module.View("file.txt").ShouldBeSameAs(action);
+            module.View("file.txt");
+
+            A.CallTo(() => application.DefaultProcessor).MustHaveHappened();
         }
 
         [Fact]
@@ -35,12 +35,14 @@ namespace Nancy.Tests.Unit
         {
             var application = A.Fake<ITemplateEngineSelector>();
             this.module.TemplateEngineSelector = application;
-            var action = new Action<Stream>((s) => { });
-            var processor = new Func<string, object, Action<Stream>>((a, b) => action);
+            var viewEngine = new FakeViewEngine();
 
-            A.CallTo(() => application.GetTemplateProcessor<object>(".razor")).Returns(processor);            
+            A.CallTo(() => application.GetTemplateProcessor(".razor")).Returns(viewEngine);
 
-            module.View("file2.razor").ShouldBeSameAs(action);
+            module.View("file2.razor");
+
+            A.CallTo(() => application.GetTemplateProcessor(".razor")).MustHaveHappened();
+            A.CallTo(() => application.DefaultProcessor).MustNotHaveHappened();
         }
 
         [Fact]

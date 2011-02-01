@@ -1,15 +1,12 @@
 namespace Nancy.Tests.Fakes
 {
-    using System;
-    using System.IO;
-
     using Nancy.ViewEngines;
 
     public class FakeViewEngineRegistry : IViewEngineRegistry
     {
-        public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
+        IViewEngine IViewEngineRegistry.ViewEngine
         {
-            return Executor(viewTemplate, model);
+            get { return ViewEngine; }
         }
 
         public string Extension
@@ -17,11 +14,6 @@ namespace Nancy.Tests.Fakes
             get { return ".leto2"; }
         }
 
-        public static Func<string, object, Action<Stream>> Executor
-        {
-            get { return (s, n) => Stream; }
-        }
-
-        public static Action<Stream> Stream = (s) => {};
+        public static readonly IViewEngine ViewEngine = new FakeViewEngine();
     }
 }
