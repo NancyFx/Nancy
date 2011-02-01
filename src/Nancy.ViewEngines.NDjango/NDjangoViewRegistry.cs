@@ -13,15 +13,4 @@ namespace Nancy.ViewEngines.NDjango
         {
             get { return viewEngine; }
         }
-
-       public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
-       {
-           var viewEngine = new NDjangoViewEngine();
-           return stream =>
-                      {
-                          var result = viewEngine.RenderView(viewTemplate, model);
-                          result.Execute(stream);
-                      };
-       }
-   }
-}
+    }

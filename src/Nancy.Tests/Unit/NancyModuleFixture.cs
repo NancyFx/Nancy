@@ -1,5 +1,7 @@
 namespace Nancy.Tests.Unit
 {
+    using System;
+    using System.IO;
     using System.Linq;
     using FakeItEasy;
     using Fakes;
@@ -19,20 +21,17 @@ namespace Nancy.Tests.Unit
         public void Should_execute_the_default_processor_unregistered_extension()
         {
             var application = A.Fake<ITemplateEngineSelector>();
+            var viewEngine = A.Fake<IViewEngine>();
             var module = new FakeNancyModuleWithoutBasePath {TemplateEngineSelector = application};
             var action = new Action<Stream>((s) => { });
-            var processor = new Func<string, object, Action<Stream>>((a, b) => action);
             this.module.TemplateEngineSelector = application;
 
             A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
             A.CallTo(() => application.DefaultProcessor).Returns(viewEngine);
 
             module.View("file.txt");
-            A.CallTo(() => application.GetTemplateProcessor<object>(".txt")).Returns(null);
-            A.CallTo(() => application.DefaultProcessor<object>()).Returns(processor);
 
             A.CallTo(() => application.DefaultProcessor).MustHaveHappened();
-            module.View("file.txt").ShouldBeSameAs(action);
         }
 
         [Fact]
