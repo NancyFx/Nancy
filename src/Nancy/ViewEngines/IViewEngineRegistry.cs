@@ -5,7 +5,7 @@ namespace Nancy.ViewEngines
 
     public interface IViewEngineRegistry
     {
-        Func<string, object, Action<Stream>> Executor { get; }
+        Action<Stream> Execute<TModel>(string viewTemplate, TModel model);
 
         string Extension { get; }
     }

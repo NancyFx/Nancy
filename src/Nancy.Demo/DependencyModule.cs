@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Demo
 {
-    using Nancy.ViewEngines.Razor;
     using Nancy.Demo.Models;
 
     public class DependencyModule : NancyModule
@@ -15,14 +14,14 @@
 
             Get["/dependency"] = x =>
             {
-                var model = new RatPackWithDependencyText() 
+                var model = new RatPackWithDependencyText
                     { 
                         FirstName = "Bob", 
                         ApplicationDependencyText = this.applicationDependency.GetContent(),
                         RequestDependencyText = this.requestDependency.GetContent()
                     };
 
-                return View.Razor("~/views/razor-dependency.cshtml", model);
+                return View("~/views/razor-dependency.cshtml", model);
             };
         }
     }

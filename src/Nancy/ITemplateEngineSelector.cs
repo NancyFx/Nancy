@@ -5,8 +5,7 @@ namespace Nancy
 
     public interface ITemplateEngineSelector
     {
-        Func<string, object, Action<Stream>> DefaultProcessor { get; }
-
-        Func<string, object, Action<Stream>> GetTemplateProcessor(string extension);
+        Func<string, TModel, Action<Stream>> DefaultProcessor<TModel>();
+        Func<string, TModel, Action<Stream>> GetTemplateProcessor<TModel>(string extension);
     }
 }

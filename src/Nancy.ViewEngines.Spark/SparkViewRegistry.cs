@@ -5,14 +5,19 @@ namespace Nancy.ViewEngines.Spark
 
     public class SparkViewRegistry : IViewEngineRegistry
     {
+        public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
+        {
+            var factory = new ViewFactory();
+            return (Action<Stream>)(stream =>
+            {
+                var result = factory.RenderView(viewTemplate, model);
+                result.Execute(stream);
+            });
+        }
+
         public string Extension
         {
             get { return ".spark"; }
-        }
-
-        public Func<string, object, Action<Stream>> Executor
-        {
-            get { return (name, model) => ViewEngineExtensions.Spark(null, name, model); }
         }
     }
 }

@@ -7,14 +7,14 @@ namespace Nancy.Tests.Fakes
 
     public class FakeViewEngineRegistry : IViewEngineRegistry
     {
+        public Action<Stream> Execute<TModel>(string viewTemplate, TModel model)
+        {
+            return Executor(viewTemplate, model);
+        }
+
         public string Extension
         {
             get { return ".leto2"; }
-        }
-
-        Func<string, object, Action<Stream>> IViewEngineRegistry.Executor
-        {
-            get { return Executor; }
         }
 
         public static Func<string, object, Action<Stream>> Executor

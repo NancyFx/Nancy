@@ -21,13 +21,13 @@ namespace Nancy.Tests.Unit
         {
             var application = A.Fake<ITemplateEngineSelector>();
             this.module.TemplateEngineSelector = application;
-            var action = new Action<Stream>((s) => { });
+            var action = new Action<Stream>(s => { });
             var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 
-            A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
-            A.CallTo(() => application.DefaultProcessor).Returns(processor);
+            A.CallTo(() => application.GetTemplateProcessor<object>(".txt")).Returns(null);
+            A.CallTo(() => application.DefaultProcessor<object>()).Returns(processor);
 
-            module.SmartView("file.txt").ShouldBeSameAs(action);
+            module.View("file.txt").ShouldBeSameAs(action);
         }
 
         [Fact]
@@ -38,9 +38,9 @@ namespace Nancy.Tests.Unit
             var action = new Action<Stream>((s) => { });
             var processor = new Func<string, object, Action<Stream>>((a, b) => action);
 
-            A.CallTo(() => application.GetTemplateProcessor(".razor")).Returns(processor);            
+            A.CallTo(() => application.GetTemplateProcessor<object>(".razor")).Returns(processor);            
 
-            module.SmartView("file2.razor").ShouldBeSameAs(action);
+            module.View("file2.razor").ShouldBeSameAs(action);
         }
 
         [Fact]
