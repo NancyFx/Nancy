@@ -15,6 +15,7 @@
             // we just register our one known dependency as an application level singleton
             container.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
 
+            container.Register<IViewLocator, AspNetTemplateLocator>();
             container.RegisterMultiple<IViewEngineRegistry>(new[]
                                                                 {
                                                                     typeof (SparkViewRegistry),
