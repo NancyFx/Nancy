@@ -2,7 +2,7 @@
 {
     public class NDjangoViewEngine : ViewEngine
     {
-        public NDjangoViewEngine() : base(new AspNetTemplateLocator(), new NDjangoViewCompiler())
+        public NDjangoViewEngine(IViewLocator viewLocator) : base(viewLocator, new NDjangoViewCompiler())
         {
         }
     }

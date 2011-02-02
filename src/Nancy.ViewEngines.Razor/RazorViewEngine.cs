@@ -2,7 +2,7 @@
 {
     public class RazorViewEngine : ViewEngine
     {
-        public RazorViewEngine() : base(new AspNetTemplateLocator(), new RazorViewCompiler())
+        public RazorViewEngine(IViewLocator viewLocator) : base(viewLocator, new RazorViewCompiler())
         {
         }
     }
