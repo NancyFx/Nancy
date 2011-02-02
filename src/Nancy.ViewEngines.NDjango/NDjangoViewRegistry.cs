@@ -2,10 +2,16 @@ namespace Nancy.ViewEngines.NDjango
 {
     public class NDjangoViewRegistry : IViewEngineRegistry
     {
-        //TODO - should not return a new ViewEngine every time.
+        private readonly NDjangoViewEngine viewEngine;
+
+        public NDjangoViewRegistry(IViewLocator viewLocator)
+        {
+            viewEngine = new NDjangoViewEngine(viewLocator);
+        }
+
         public IViewEngine ViewEngine
         {
-            get { return new NDjangoViewEngine(); }
+            get { return viewEngine; }
         }
 
         public string Extension
