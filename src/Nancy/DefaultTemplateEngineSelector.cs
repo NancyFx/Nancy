@@ -8,19 +8,17 @@ namespace Nancy
     public class DefaultTemplateEngineSelector : ITemplateEngineSelector
     {
         private readonly IEnumerable<IViewEngineRegistry> viewEngines;
+        private readonly StaticViewEngine defaultProcessor;
 
-        public DefaultTemplateEngineSelector(IEnumerable<IViewEngineRegistry> viewEngines)
+        public DefaultTemplateEngineSelector(IEnumerable<IViewEngineRegistry> viewEngines, IViewLocator viewLocator)
         {
             this.viewEngines = viewEngines;
+            this.defaultProcessor = new StaticViewEngine(viewLocator);
         }
 
         public IViewEngine DefaultProcessor
         {
-            get
-            {
-                return new StaticViewEngine(new AspNetTemplateLocator());
-            }
-            //TODO - AspNetTemplateLocator -> IViewLocator via constructor parameter
+            get { return defaultProcessor; }
         }
 
         public IViewEngine GetTemplateProcessor(string extension)
