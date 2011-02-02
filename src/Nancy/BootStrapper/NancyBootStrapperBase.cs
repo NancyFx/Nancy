@@ -5,6 +5,7 @@
     using System.Linq;
     using Nancy.Routing;
     using Nancy.Extensions;
+    using ViewEngines;
 
     /// <summary>
     /// Base class for container based Bootstrappers.
@@ -67,6 +68,11 @@
         protected virtual Type DefaultRouteCacheProvider { get { return typeof(DefaultRouteCacheProvider); } }
 
         /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultViewLocator { get { return typeof (AspNetTemplateLocator); } }
+
+        /// <summary>
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
@@ -90,6 +96,7 @@
                 new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), DefaultRouteCacheProvider),
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher)
+                new TypeRegistration(typeof(IViewLocator), DefaultViewLocator), 
             };
         }
 

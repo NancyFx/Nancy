@@ -6,7 +6,7 @@ namespace Nancy.Bootstrappers.Unity
     public class UnityTemplateEngineSelector : DefaultTemplateEngineSelector
     {
         public UnityTemplateEngineSelector(IUnityContainer container)
-            : base(container.ResolveAll<IViewEngineRegistry>())
+            : base(container.ResolveAll<IViewEngineRegistry>(), container.Resolve<IViewLocator>())
         {
         }
     }
