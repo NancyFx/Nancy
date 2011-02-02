@@ -13,7 +13,7 @@
         /// </summary>
         public DefaultTemplateEngineSelectorFixture()
         {
-            templateEngineSelector = new DefaultTemplateEngineSelector(new IViewEngineRegistry[] {new FakeViewEngineRegistry()});
+            templateEngineSelector = new DefaultTemplateEngineSelector(new IViewEngineRegistry[] {new FakeViewEngineRegistry()}, null);
         }
 
         [Fact]
