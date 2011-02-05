@@ -6,7 +6,7 @@ namespace Nancy.Routing
 
     public class RouteDictionary
     {
-        private readonly Dictionary<Tuple<string, Func<IRequest, bool>>, Func<dynamic, Response>> routes;
+        private readonly Dictionary<Tuple<string, Func<Request, bool>>, Func<dynamic, Response>> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteDictionary"/> class.
@@ -31,7 +31,7 @@ namespace Nancy.Routing
 
             this.Method = method;
             this.Module = module;
-            this.routes = new Dictionary<Tuple<string, Func<IRequest, bool>>, Func<dynamic, Response>>(new RouteDictionaryEqualityComparer());
+            this.routes = new Dictionary<Tuple<string, Func<Request, bool>>, Func<dynamic, Response>>(new RouteDictionaryEqualityComparer());
         }
 
         /// <summary>
@@ -60,15 +60,15 @@ namespace Nancy.Routing
         /// Gets or sets the action for a specific <param name="route"/>.
         /// </summary>
         /// <value>A <see cref="Func{T, K}"/> containing the action declaration for specified <param name="route"/> and <paramref name="condition"/>.</value>
-        public Func<dynamic, Response> this[string route, Func<IRequest, bool> condition]
+        public Func<dynamic, Response> this[string route, Func<Request, bool> condition]
         {
             set { this.AddRoute(route, condition, value); }
         }
 
-        private void AddRoute(string route, Func<IRequest, bool> condition, Func<dynamic, Response> action)
+        private void AddRoute(string route, Func<Request, bool> condition, Func<dynamic, Response> action)
         {
             var compositeKey =
-                new Tuple<string, Func<IRequest, bool>>(route, condition);
+                new Tuple<string, Func<Request, bool>>(route, condition);
 
             this.routes[compositeKey] = action;
         }
@@ -114,14 +114,14 @@ namespace Nancy.Routing
         /// <summary>
         /// Equality comparer for the composite key used in the route dictionary.
         /// </summary>
-        private class RouteDictionaryEqualityComparer : IEqualityComparer<Tuple<string, Func<IRequest, bool>>>
+        private class RouteDictionaryEqualityComparer : IEqualityComparer<Tuple<string, Func<Request, bool>>>
         {
-            public bool Equals(Tuple<string, Func<IRequest, bool>> x, Tuple<string, Func<IRequest, bool>> y)
+            public bool Equals(Tuple<string, Func<Request, bool>> x, Tuple<string, Func<Request, bool>> y)
             {
                 return x.Item1.Equals(y.Item1, StringComparison.OrdinalIgnoreCase);
             }
 
-            public int GetHashCode(Tuple<string, Func<IRequest, bool>> obj)
+            public int GetHashCode(Tuple<string, Func<Request, bool>> obj)
             {
                 unchecked
                 {

@@ -265,26 +265,26 @@ namespace Nancy.Tests.Unit
         public void Should_implicitly_cast_to_long_when_value_is_retrieved_as_member()
         {
             // Given
-            this.dictionary.value = 10l;
+            this.dictionary.value = 10L;
 
             // When
             long result = GetLongValue(this.dictionary.value);
 
             // Then
-            result.ShouldEqual(10l);
+            result.ShouldEqual(10L);
         }
 
         [Fact]
         public void Should_implicitly_cast_to_long_when_value_is_retrieved_as_index()
         {
             // Given
-            this.dictionary.value = 10l;
+            this.dictionary.value = 10L;
 
             // When
             long result = GetLongValue(this.dictionary["value"]);
 
             // Then
-            result.ShouldEqual(10l);
+            result.ShouldEqual(10L);
         }
 
         [Fact]
@@ -297,7 +297,7 @@ namespace Nancy.Tests.Unit
             long result = GetLongValue(this.dictionary.value);
 
             // Then
-            result.ShouldEqual(10l);
+            result.ShouldEqual(10L);
         }
 
         [Fact]
@@ -310,7 +310,7 @@ namespace Nancy.Tests.Unit
             long result = GetLongValue(this.dictionary["value"]);
 
             // Then
-            result.ShouldEqual(10l);
+            result.ShouldEqual(10L);
         }
 
         [Fact]

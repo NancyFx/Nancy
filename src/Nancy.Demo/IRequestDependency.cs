@@ -1,6 +1,6 @@
 namespace Nancy.Demo
 {
-    public interface IRequestDependency
+    public interface RequestDependency
     {
         string GetContent();
     }

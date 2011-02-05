@@ -5,13 +5,15 @@
 
     public class NancyEngine : INancyEngine
 	{
-		private readonly IRouteResolver resolver;
+        private readonly IRouteResolver resolver;
+        private readonly IRouteCache routeCache;
 
-		/// <summary>
-		/// Initializes a new instance of the <see cref="NancyEngine"/> class.
-		/// </summary>
-		/// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-		public NancyEngine(IRouteResolver resolver)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyEngine"/> class.
+        /// </summary>
+        /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
+        /// <param name="routeCache"></param>
+        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache)
 		{
 			if (resolver == null)
 			{
@@ -19,9 +21,10 @@
 			}
 
 			this.resolver = resolver;
+		    this.routeCache = routeCache;
 		}
 
-        public Response HandleRequest(IRequest request)
+        public Response HandleRequest(Request request)
         {
             if (request == null)
             {
@@ -29,7 +32,7 @@
             }
 
             // TODO - Head resonse code now missing
-            var resolvedRoute = resolver.GetRoute(request);
+            var resolvedRoute = this.resolver.Resolve(request, this.routeCache);
             var response = resolvedRoute.Invoke();
             return response;
         }

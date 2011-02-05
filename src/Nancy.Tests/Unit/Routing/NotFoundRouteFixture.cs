@@ -3,13 +3,13 @@
     using Nancy.Routing;
     using Xunit;
 
-    public class NoMatchingRouteFixture
+    public class NotFoundRouteFixture
     {
-        public readonly IRoute route;
+        private readonly IRoute route;
 
-        public NoMatchingRouteFixture()
+        public NotFoundRouteFixture()
         {
-            this.route = new NoMatchingRouteFoundRoute("/test");
+            this.route = new NotFoundRoute("/test");
         }
 
         [Fact]

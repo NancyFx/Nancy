@@ -2,7 +2,7 @@ namespace Nancy.Demo
 {
     using System;
 
-    public class RequestDependencyClass : IRequestDependency
+    public class RequestDependencyClass : RequestDependency
     {
         private readonly DateTime currentDateTime;
 

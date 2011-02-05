@@ -5,7 +5,7 @@ namespace Nancy.Tests.Specifications
     public abstract class RequestSpec
     {
         protected static INancyEngine engine;
-        protected static IRequest request;
+        protected static Request request;
         protected static Response response;
 
         protected RequestSpec()
@@ -13,27 +13,27 @@ namespace Nancy.Tests.Specifications
             engine = new DefaultNancyBootstrapper().GetEngine();
         }
 
-        protected static IRequest ManufactureGETRequestForRoute(string route)
+        protected static Request ManufactureGETRequestForRoute(string route)
         {
             return new Request("GET", route, "http");
         }
 
-        protected static IRequest ManufacturePOSTRequestForRoute(string route)
+        protected static Request ManufacturePOSTRequestForRoute(string route)
         {
             return new Request("POST", route, "http");
         }
 
-        protected static IRequest ManufactureDELETERequestForRoute(string route)
+        protected static Request ManufactureDELETERequestForRoute(string route)
         {
             return new Request("DELETE", route, "http");
         }
 
-        protected static IRequest ManufacturePUTRequestForRoute(string route)
+        protected static Request ManufacturePUTRequestForRoute(string route)
         {
             return new Request("PUT", route, "http");
         }
 
-        protected static IRequest ManufactureHEADRequestForRoute(string route)
+        protected static Request ManufactureHEADRequestForRoute(string route)
         {
             return new Request("HEAD", route, "http");
         }

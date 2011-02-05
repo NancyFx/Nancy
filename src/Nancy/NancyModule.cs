@@ -93,10 +93,10 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets or sets an <see cref="IRequest"/> instance that represents the current request.
+        /// Gets or sets an <see cref="Request"/> instance that represents the current request.
         /// </summary>
-        /// <value>An <see cref="IRequest"/> instance.</value>
-        public IRequest Request { get; set; }
+        /// <value>An <see cref="Request"/> instance.</value>
+        public Request Request { get; set; }
 
         /// <summary>
         /// An extension point for adding support for view engines.

@@ -71,6 +71,8 @@
     <Compile Include="Routing\IRouteCache.cs" />
     <Compile Include="Routing\IRouteCacheProvider.cs" />
     <Compile Include="Routing\DefaultRouteCache.cs" />
+    <Compile Include="Routing\IRoutePatternMatcher.cs" />
+    <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteCacheEntry.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
@@ -78,13 +80,13 @@
     <Compile Include="DefaultTemplateEngineSelector.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
-    <Compile Include="IRequest.cs" />
+    <Compile Include="Request.cs" />
     <Compile Include="NancyEngine.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
     <Compile Include="Routing\IRoute.cs" />
     <Compile Include="Routing\IRouteResolver.cs" />
-    <Compile Include="Routing\NoMatchingRouteFoundRoute.cs" />
+    <Compile Include="Routing\NotFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteDictionary.cs" />

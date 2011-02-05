@@ -14,7 +14,7 @@
         /// 
         /// </summary>
         /// <value></value>
-        public Func<IRequest, bool> Condition { get; set; }
+        public Func<Request, bool> Condition { get; set; }
 
         /// <summary>
         /// Gets or sets the path that this route will match.

@@ -1,28 +1,25 @@
 namespace Nancy.Tests.Unit
 {
     using System;
-    using System.Collections.Generic;    
-    using System.Linq;
-    using System.Net;
     using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+
     using Xunit;
-    using Xunit.Extensions;
 
     public class NancyEngineFixture
     {
         private readonly INancyEngine engine;
         private readonly IRouteResolver resolver;
-        private readonly IRoute route;
+        private readonly FakeRoute route;
 
         public NancyEngineFixture()
         {
             this.resolver = A.Fake<IRouteResolver>();
-            this.route = A.Fake<IRoute>();
+            this.route = new FakeRoute();
 
-            A.CallTo(() => resolver.GetRoute(A<IRequest>.Ignored.Argument)).Returns(route);
-            this.engine = new NancyEngine(resolver);
+            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(route);
+            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>());
         }
 
         [Fact]
@@ -30,14 +27,14 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null));
+                Record.Exception(() => new NancyEngine(null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
-        public void Should_invoke_route_returned()
+        public void Should_invoke_resolved_route()
         {
             // Given
             var request = new Request("GET", "/", "http");
@@ -46,7 +43,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.route.Invoke()).MustHaveHappened();
+            this.route.ActionWasInvoked.ShouldBeTrue();
         }
 
         [Fact]

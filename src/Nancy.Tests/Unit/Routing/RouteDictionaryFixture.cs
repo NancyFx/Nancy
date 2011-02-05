@@ -9,7 +9,7 @@ namespace Nancy.Tests.Unit.Routing
     {
         private readonly RouteDictionary routes;
         private readonly string path;
-        private readonly Func<IRequest, bool> condition;
+        private readonly Func<Request, bool> condition;
         private readonly Func<dynamic, Response> action;
 
         public RouteDictionaryFixture()

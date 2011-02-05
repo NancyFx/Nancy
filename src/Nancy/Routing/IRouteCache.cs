@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using Nancy.Extensions;
-
 namespace Nancy.Routing
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Contains a cache of all routes registered in the system
     /// </summary>

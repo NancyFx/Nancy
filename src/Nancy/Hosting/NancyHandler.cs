@@ -30,7 +30,7 @@ namespace Nancy.Hosting
             return context.Request.Url.AbsolutePath.Contains("favicon.ico");
         }
 
-        private static IRequest CreateNancyRequest(HttpContextBase context)
+        private static Request CreateNancyRequest(HttpContextBase context)
         {
             return new Request(
                 context.Request.HttpMethod,

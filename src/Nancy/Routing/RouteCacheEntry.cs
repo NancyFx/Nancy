@@ -4,7 +4,7 @@ namespace Nancy.Routing
 
     public sealed class RouteCacheEntry
     {
-        public RouteCacheEntry(string moduleKey, string method, string path, Func<IRequest, bool> condition)
+        public RouteCacheEntry(string moduleKey, string method, string path, Func<Request, bool> condition)
         {
             ModuleKey = moduleKey;
             Method = method;
@@ -12,7 +12,7 @@ namespace Nancy.Routing
             Condition = condition;
         }
 
-        public Func<IRequest, bool> Condition { get; private set; }
+        public Func<Request, bool> Condition { get; private set; }
 
         public string ModuleKey { get; private set; }
 

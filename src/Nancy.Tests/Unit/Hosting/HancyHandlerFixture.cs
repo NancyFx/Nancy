@@ -53,7 +53,7 @@ namespace Nancy.Tests.Unit.Hosting
             A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/about");
             A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
-            A.CallTo(() => this.engine.HandleRequest(A<IRequest>.Ignored.Argument)).Returns(response);
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(response);
         }
     }
 }

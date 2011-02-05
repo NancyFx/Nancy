@@ -1,30 +1,12 @@
-using Nancy.Extensions;
-
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using Nancy.Extensions;
 
-    public interface IRequest
-    {
-        string Uri { get; }
-
-        string Method { get; }
-
-        IDictionary<string, IEnumerable<string>> Headers { get; }
-
-        Stream Body { get; }
-
-        dynamic Form { get; }
-
-        dynamic Query { get; }
-
-        string Protocol { get; }
-    }
-
-    public class Request : IRequest
+    public class Request
     {
         private dynamic form;
 

@@ -6,9 +6,9 @@
     public class DependencyModule : NancyModule
     {
         private readonly IApplicationDependency applicationDependency;
-        private readonly IRequestDependency requestDependency;
+        private readonly RequestDependency requestDependency;
 
-        public DependencyModule(IApplicationDependency applicationDependency, IRequestDependency requestDependency)
+        public DependencyModule(IApplicationDependency applicationDependency, RequestDependency requestDependency)
         {
             this.applicationDependency = applicationDependency;
             this.requestDependency = requestDependency;

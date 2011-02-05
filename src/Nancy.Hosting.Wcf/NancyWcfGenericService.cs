@@ -39,7 +39,7 @@
             return webContext.CreateStreamResponse(nancyResponse.Contents, nancyResponse.ContentType);
         }
 
-        private static IRequest CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
+        private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
         {
             var relativeUri =
                 webRequest.UriTemplateMatch.BaseUri.MakeRelativeUri(webRequest.UriTemplateMatch.RequestUri);

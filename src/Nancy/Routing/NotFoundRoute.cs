@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Routing
 {
-    public class NoMatchingRouteFoundRoute : Route
+    public class NotFoundRoute : Route
     {
-        public NoMatchingRouteFoundRoute(string route)
+        public NotFoundRoute(string route)
             : base(route, null, null, x => new NotFoundResponse())
         {
         }

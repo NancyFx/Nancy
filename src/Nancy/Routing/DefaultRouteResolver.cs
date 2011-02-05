@@ -2,140 +2,116 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
-    using System.Globalization;
     using System.Linq;
-    using System.Text.RegularExpressions;
-    using Nancy.Extensions;
 
-    public sealed class DefaultRouteResolver : IRouteResolver
+    public class DefaultRouteResolver : IRouteResolver
     {
-        private readonly IRouteCache routeCache;
-        private readonly INancyModuleCatalog moduleCatalog;
-        private readonly ITemplateEngineSelector templateSelector;
-        
-        /// <summary>
-        /// Initializes a new instance of the RouteResolver class.
-        /// </summary>
-        /// <param name="routeCache">Route cache provider</param>
-        /// <param name="moduleCatalog">Module catalog</param>
-        /// <param name="templateSelector">Template selector</param>
-        public DefaultRouteResolver(IRouteCache routeCache, INancyModuleCatalog moduleCatalog, ITemplateEngineSelector templateSelector)
+        private readonly INancyModuleCatalog nancyModuleCatalog;
+        private readonly IRoutePatternMatcher routePatternMatcher;
+        private readonly ITemplateEngineSelector templateEngineSelector;
+
+        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, ITemplateEngineSelector templateEngineSelector)
         {
-            this.routeCache = routeCache;
-            this.moduleCatalog = moduleCatalog;
-            this.templateSelector = templateSelector;
+            this.nancyModuleCatalog = nancyModuleCatalog;
+            this.routePatternMatcher = routePatternMatcher;
+            this.templateEngineSelector = templateEngineSelector;
         }
 
-        public IRoute GetRoute(IRequest request)
+        public Route Resolve(Request request, IRouteCache routeCache)
         {
-            var matchingRoutes =
-                from cacheEntry in this.routeCache
-                where cacheEntry.Method == request.Method
-                let matcher = BuildRegexMatcher(cacheEntry.Path)
-                let result = matcher.Match(request.Uri)
-                where result.Success
-                where ((cacheEntry.Condition == null) || (cacheEntry.Condition(request)))
-                select new
-                {
-                    CacheEntry = cacheEntry,
-                    Groups = result.Groups
-                };
-
-            var selected = matchingRoutes
-                .OrderByDescending(ma => GetSegmentCount(ma.CacheEntry.Path))
-                .FirstOrDefault();
-
-            if (selected == null)
-                return new NoMatchingRouteFoundRoute(request.Uri);
-
-            var instance = BuildModuleInstance(selected.CacheEntry.ModuleKey, request);
-            if (instance == null)
-                return new NoMatchingRouteFoundRoute(request.Uri);
-
-            var routeAction = instance.GetRoutes(selected.CacheEntry.Method).GetRoute(selected.CacheEntry.Path).Action;
-            if (routeAction == null)
-                return new NoMatchingRouteFoundRoute(request.Uri);
-
-            return new Route(selected.CacheEntry.Path, GetParameters(selected.CacheEntry.Path, selected.Groups), instance, routeAction); 
-        }
-
-        private static DynamicDictionary GetParameters(string path, GroupCollection groups)
-        {
-            var segments =
-                new ReadOnlyCollection<string>(
-                    path.Split(new[] { "/" },
-                    StringSplitOptions.RemoveEmptyEntries).ToList());
-
-            var parameters =
-                from segment in segments
-                where segment.IsParameterized()
-                select segment.GetParameterName();
-
-            dynamic data =
-                new DynamicDictionary();
-
-            foreach (var parameter in parameters)
+            if (RouteCacheIsEmpty(routeCache))
             {
-                data[parameter] = groups[parameter].Value;
+                return new NotFoundRoute(request.Uri);
             }
 
-            return data;
-        }
+            var routesThatMatchRequestedPath = 
+                GetRoutesThatMatchRequestedPath(routeCache, request);
 
-        private static Regex BuildRegexMatcher(string path)
-        {
-            var segments =
-                path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
-
-            var parameterizedSegments =
-                GetParameterizedSegments(segments);
-
-            var pattern =
-                string.Concat(@"^/", string.Join("/", parameterizedSegments), @"$");
-
-            return new Regex(pattern, RegexOptions.IgnoreCase);
-        }
-
-        private static IEnumerable<string> GetParameterizedSegments(IEnumerable<string> segments)
-        {
-            foreach (var segment in segments)
+            if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                var current = segment;
-                if (current.IsParameterized())
-                {
-                    var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>[/A-Z0-9._-]*)", segment.GetParameterName());
-
-                    current = segment.Replace(segment, replacement);
-                }
-
-                yield return current;
+                return new NotFoundRoute(request.Uri);
             }
+
+            var routesWithCorrectRequestMethod = 
+                GetRoutesWithCorrectRequestMethod(request, routesThatMatchRequestedPath);
+
+            if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
+            {
+                return new MethodNotAllowedRoute(request.Uri);
+            }
+
+            var routeMatchesWithMostParameterCaptures = 
+                GetRouteMatchesWithMostParameterCaptures(routesWithCorrectRequestMethod);
+
+            var routeMatchToReturn = 
+                GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
+
+            return this.CreateRouteFromMatch(request, routeMatchToReturn);
         }
 
-        private static int GetSegmentCount(string path)
+        private Route CreateRouteFromMatch(Request request, Tuple<RouteCacheEntry, IRoutePatternMatchResult> routeMatchToReturn)
         {
-            var moduleQualifiedPath =
-                path;
+            var associatedModule = 
+                GetInitializedModuleForMatch(request, routeMatchToReturn);
 
-            var indexOfFirstParameter =
-                moduleQualifiedPath.IndexOf('{');
+            var actionToInvokeForRoute =
+                associatedModule.GetRoutes(routeMatchToReturn.Item1.Method).GetRoute(
+                    routeMatchToReturn.Item1.Path).Action;
 
-            if (indexOfFirstParameter > -1)
-                moduleQualifiedPath = moduleQualifiedPath.Substring(0, indexOfFirstParameter);
-
-            return moduleQualifiedPath.Split('/').Count();
+            return new Route(request.Uri, routeMatchToReturn.Item2.Parameters, associatedModule, actionToInvokeForRoute);
         }
 
-        private NancyModule BuildModuleInstance(string moduleKey, IRequest request)
+        private NancyModule GetInitializedModuleForMatch(Request request, Tuple<RouteCacheEntry, IRoutePatternMatchResult> routeMatchToReturn)
         {
-            var module = this.moduleCatalog.GetModuleByKey(moduleKey);
+            var module =
+                this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1.ModuleKey);
 
             module.Request = request;
-            module.TemplateEngineSelector = this.templateSelector;
+            module.TemplateEngineSelector = this.templateEngineSelector;
 
             return module;
+        }
+
+        private static Tuple<RouteCacheEntry, IRoutePatternMatchResult> GetSingleRouteToReturn(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithMostParameterCaptures)
+        {
+            return routesWithMostParameterCaptures.First();
+        }
+
+        private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRouteMatchesWithMostParameterCaptures(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
+        {
+            var maxParameterCount =
+                routesWithCorrectRequestMethod.Max(x => x.Item2.Parameters.GetDynamicMemberNames().Count());
+
+            return routesWithCorrectRequestMethod.Where(
+                x => x.Item2.Parameters.GetDynamicMemberNames().Count() == maxParameterCount);
+        }
+
+        private static bool NoRoutesWereForTheRequestedMethod(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
+        {
+            return !routesWithCorrectRequestMethod.Any();
+        }
+
+        private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesWithCorrectRequestMethod(Request request, IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
+        {
+            return routesThatMatchRequestedPath.Where(x => x.Item1.Method.Equals(request.Method, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        private static bool RouteCacheIsEmpty(IEnumerable<RouteCacheEntry> routeCache)
+        {
+            return !routeCache.Any();
+        }
+
+        private static bool NoRoutesWereAbleToBeMatchedInRouteCache(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
+        {
+            return !routesThatMatchRequestedPath.Any();
+        }
+
+        private IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesThatMatchRequestedPath(IEnumerable<RouteCacheEntry> routeCache, Request request)
+        {
+            return from x in routeCache
+                   let result = this.routePatternMatcher.Match(request.Uri, x.Path)
+                   where result.IsMatch
+                   select new Tuple<RouteCacheEntry, IRoutePatternMatchResult>(x, result);
         }
     }
 }

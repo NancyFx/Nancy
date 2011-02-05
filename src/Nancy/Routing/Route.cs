@@ -4,7 +4,7 @@
 
     public class Route : IRoute
     {
-        public Route(string path, DynamicDictionary parameters, NancyModule module, Func<object, Response> action)
+        public Route(string path, DynamicDictionary parameters, NancyModule module, Func<dynamic, Response> action)
         {
             if (path == null)
             {

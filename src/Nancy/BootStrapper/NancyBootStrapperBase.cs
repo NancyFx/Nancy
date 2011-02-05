@@ -25,18 +25,22 @@
     /// 
     /// Request level implementations may use <see cref="INancyBootstrapperPerRequestRegistration{TContainer}"/>, or implement custom
     /// lifetime logic. It is preferred that users have the ability to register per-request scoped dependencies, and that instances retrieved
-    /// via <see cref="INancyModuleCatalog.GetModuleByKey(string moduleKey)"/> are per-request scoped.
+    /// via <see cref="INancyModuleCatalog.GetModuleByKey"/> are per-request scoped.
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
     public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper
         where TContainer : class
     {
-        // Defaults
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRouteResolver { get { return typeof(DefaultRouteResolver); } }
 
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultRoutePatternMatcher { get { return typeof (DefaultRoutePatternMatcher); } }
+        
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
@@ -77,7 +81,7 @@
 
         private IEnumerable<TypeRegistration> BuildDefaults()
         {
-            return new TypeRegistration[]
+            return new[]
             {
                 new TypeRegistration(typeof(IRouteResolver), DefaultRouteResolver),
                 new TypeRegistration(typeof(ITemplateEngineSelector), DefaultTemplateEngineSelector),
@@ -85,6 +89,7 @@
                 new TypeRegistration(typeof(IModuleKeyGenerator), DefaultModuleKeyGenerator),
                 new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), DefaultRouteCacheProvider),
+                new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher)
             };
         }
 
