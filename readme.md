@@ -126,6 +126,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Phil Haack](http://github.com/haacked)
 * [Robert Greyling](http://github.com/robertthegrey)
 * [Steven Robbins](http://github.com/grumpydev)
+* [Thomas Pedersen](http://github.com/thedersen)
 * [Troels Thomsen](http://github.com/troethom)
 * [Vidar L. Sømme](http://github.com/vidarls)
 
