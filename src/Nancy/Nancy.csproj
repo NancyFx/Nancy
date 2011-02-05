@@ -68,12 +68,15 @@
     <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Routing\DefaultRouteCacheProvider.cs" />
+    <Compile Include="Routing\DefaultRoutePatternMatcher.cs" />
     <Compile Include="Routing\IRouteCache.cs" />
     <Compile Include="Routing\IRouteCacheProvider.cs" />
     <Compile Include="Routing\DefaultRouteCache.cs" />
     <Compile Include="Routing\IRoutePatternMatcher.cs" />
+    <Compile Include="Routing\IRoutePatternMatchResult.cs" />
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteCacheEntry.cs" />
+    <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewEngineRegistry.cs" />

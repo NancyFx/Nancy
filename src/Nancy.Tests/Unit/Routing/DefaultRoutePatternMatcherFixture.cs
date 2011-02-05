@@ -13,6 +13,36 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
+        public void Should_not_trim_trailing_slash_if_requesting_root()
+        {
+            // Given, When
+            var results = this.matcher.Match("/", "/");
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_ignore_trailing_slash_on_route_path()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/bar", "/foo/bar/");
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_ignore_trailing_slash_on_request_uri()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/bar/", "/foo/bar");
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_return_match_result_when_paths_matched()
         {
             // Given, When
