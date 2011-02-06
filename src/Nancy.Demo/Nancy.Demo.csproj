@@ -79,6 +79,10 @@
     <Content Include="Views\razor.cshtml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
+      <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
+      <Name>Nancy.Hosting.Aspnet</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj">
       <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
       <Name>Nancy.ViewEngines.NDjango</Name>

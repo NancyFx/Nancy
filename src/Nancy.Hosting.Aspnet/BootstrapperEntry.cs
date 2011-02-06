@@ -1,4 +1,4 @@
-namespace Nancy.Hosting
+namespace Nancy.Hosting.Aspnet
 {
     public sealed class BootstrapperEntry
     {

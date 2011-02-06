@@ -59,10 +59,6 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Hosting\BootStrapperEntry.cs" />
-    <Compile Include="Hosting\NancyFxSection.cs" />
-    <Compile Include="Hosting\NancyHandler.cs" />
-    <Compile Include="Hosting\NancyHttpRequestHandler.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="ITemplateEngineSelector.cs" />

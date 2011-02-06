@@ -1,11 +1,12 @@
-namespace Nancy.Tests.Unit.Hosting
+namespace Nancy.Hosting.Aspnet.Tests
 {
     using System;
+    using System.Collections.Specialized;
     using System.IO;
     using System.Web;
-    using Cookies;
+    using Nancy.Cookies;
     using FakeItEasy;
-    using Nancy.Hosting;
+    using Nancy.Hosting.Aspnet;
     using Xunit;
 
     public class HancyHandlerFixture
@@ -15,6 +16,7 @@ namespace Nancy.Tests.Unit.Hosting
         private readonly HttpRequestBase request;
         private readonly HttpResponseBase response;
         private readonly INancyEngine engine;
+        private readonly NameValueCollection formData;
 
         public HancyHandlerFixture()
         {
@@ -23,10 +25,44 @@ namespace Nancy.Tests.Unit.Hosting
             this.response = A.Fake<HttpResponseBase>();
             this.engine = A.Fake<INancyEngine>();
             this.handler = new NancyHandler(engine);
+            this.formData = new NameValueCollection();
+
+            A.CallTo(() => this.request.Form).ReturnsLazily(() => this.formData);
+            A.CallTo(() => this.request.Url).Returns(new Uri("http://www.foo.com"));
+            A.CallTo(() => this.request.InputStream).Returns(new MemoryStream());
+            A.CallTo(() => this.request.Headers).Returns(new NameValueCollection());
+            A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/foo");
 
             A.CallTo(() => this.context.Request).Returns(this.request);
             A.CallTo(() => this.context.Response).Returns(this.response);
             A.CallTo(() => this.response.OutputStream).Returns(new MemoryStream());
+        }
+
+        [Fact]
+        public void Should_invoke_engine_with_request_set_to_form_method_value_when_available()
+        {
+            // Given
+            this.formData.Add("_method", "DELETE");
+            A.CallTo(() => this.request.HttpMethod).Returns("POST");
+
+            // When
+            this.handler.ProcessRequest(this.context);
+
+            // Then
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.That.Matches(x => x.Method.Equals("DELETE")))).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_engine_with_requested_method()
+        {
+            // Given
+            A.CallTo(() => this.request.HttpMethod).Returns("POST");
+
+            // When
+            this.handler.ProcessRequest(this.context);
+
+            // Then
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.That.Matches(x => x.Method.Equals("POST")))).MustHaveHappened();
         }
 
         [Fact]

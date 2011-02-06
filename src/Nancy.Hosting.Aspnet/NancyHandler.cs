@@ -1,4 +1,4 @@
-namespace Nancy.Hosting
+namespace Nancy.Hosting.Aspnet
 {
     using System.Web;
     using Nancy.Extensions;
@@ -14,27 +14,17 @@ namespace Nancy.Hosting
 
         public void ProcessRequest(HttpContextBase context)
         {
-            if(IsRequestForFavicon(context))
-            {
-                return;
-            }
-
             var request = CreateNancyRequest(context);
             var response = engine.HandleRequest(request);
 
             SetNancyResponseToHttpResponse(context, response);
         }
 
-        private static bool IsRequestForFavicon(HttpContextBase context)
-        {
-            return context.Request.Url.AbsolutePath.Contains("favicon.ico");
-        }
-
         private static Request CreateNancyRequest(HttpContextBase context)
         {
             return new Request(
-                context.Request.HttpMethod,
-                context.Request.AppRelativeCurrentExecutionFilePath.Replace("~",""),
+                (context.Request.Form["_method"] ?? context.Request.HttpMethod).ToUpperInvariant(),
+                context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
                 context.Request.Headers.ToDictionary(),
                 context.Request.InputStream,
                 context.Request.Url.Scheme,
@@ -52,10 +42,11 @@ namespace Nancy.Hosting
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
-            foreach (var kvp in response.Headers)
+            foreach (var header in response.Headers)
             {
-                context.Response.AddHeader(kvp.Key, kvp.Value);
+                context.Response.AddHeader(header.Key, header.Value);
             }
+
             foreach(var cookie in response.Cookies)
             {
                 context.Response.AddHeader("Set-Cookie", cookie.ToString());
