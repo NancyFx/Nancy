@@ -15,7 +15,7 @@ namespace Nancy.Extensions
         /// <value>A <see cref="Regex"/> object.</value>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Regex ParameterExpression =
-            new Regex(@"\{(?<name>[A-Z0-9]*)\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            new Regex(@"^\{(?<name>[A-Z0-9]*)\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Extracts the name of a parameter from a segment.
