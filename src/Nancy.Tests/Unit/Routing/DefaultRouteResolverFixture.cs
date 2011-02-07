@@ -316,5 +316,39 @@
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
             resolvedRoute.Path.ShouldEqual(request.Uri);
         }
+
+        [Fact]
+        public void Should_ignore_filtered_routes_with_false_filter_result()
+        {
+            // Given
+            var request = new FakeRequest("GET", "/foo/bar");
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/bar", "module-key", f => false);
+            });
+
+            // When
+            var route = this.resolver.Resolve(request, routeCache);
+
+            // Then
+            route.ShouldBeOfType<NotFoundRoute>();
+        }
+
+        [Fact]
+        public void Should_allow_filtered_routes_with_true_filter_result()
+        {
+            // Given
+            var request = new FakeRequest("GET", "/foo/bar");
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/bar", "module-key", f => true);
+            });
+
+            // When
+            var route = this.resolver.Resolve(request, routeCache);
+
+            // Then
+            route.ShouldNotBeOfType<NotFoundRoute>();
+        }
     }
 }
