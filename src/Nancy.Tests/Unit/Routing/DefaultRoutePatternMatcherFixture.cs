@@ -92,5 +92,27 @@ namespace Nancy.Tests.Unit.Routing
             // Then
             ((string)results.Parameters["bar"]).ShouldEqual("bar/baz");
         }
+
+        [Fact]
+        public void Should_allow_regex_in_route_definition_and_capture_specified_parameters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/1234", @"/(?<foo>foo)/(?<bar>\d{4})/");
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+            ((string)results.Parameters["foo"]).ShouldEqual("foo");
+            ((string)results.Parameters["bar"]).ShouldEqual("1234");
+        }
+
+        [Fact]
+        public void Should_allow_regex_in_route_definition_and_return_negative_result_when_it_does_not_match()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/bar", @"/foo/(?<bar>[0-9]*)");
+
+            // Then
+            results.IsMatch.ShouldBeFalse();
+        }
     }
 }

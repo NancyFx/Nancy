@@ -2,9 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Collections.ObjectModel;
     using System.Globalization;
-    using System.Linq;
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
 
@@ -22,7 +20,7 @@
 
             return new RoutePatternMatchResult(
                 match.Success,
-                GetParameters(routePath, match.Groups));
+                GetParameters(routePathPattern, match.Groups));
         }
 
         private static string TrimTrailingSlashFromRequestedPath(string requestedPath)
@@ -49,24 +47,13 @@
             return new Regex(pattern, RegexOptions.IgnoreCase);
         }
 
-        private static DynamicDictionary GetParameters(string path, GroupCollection groups)
+        private static DynamicDictionary GetParameters(Regex regex, GroupCollection groups)
         {
-            var segments =
-                new ReadOnlyCollection<string>(
-                    path.Split(new[] { "/" },
-                        StringSplitOptions.RemoveEmptyEntries).ToList());
+            dynamic data = new DynamicDictionary();
 
-            var parameters =
-                from segment in segments
-                where segment.IsParameterized()
-                select segment.GetParameterName();
-
-            dynamic data =
-                new DynamicDictionary();
-
-            foreach (var parameter in parameters)
+            for (int i = 1; i <= groups.Count; i++)
             {
-                data[parameter] = groups[parameter].Value;
+                data[regex.GroupNameFromNumber(i)] = groups[i].Value;
             }
 
             return data;
