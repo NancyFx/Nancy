@@ -94,8 +94,9 @@
         private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesWithCorrectRequestMethod(Request request, IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
         {
             return  from route in routesThatMatchRequestedPath
-                    where route.Item1.Method.Equals(request.Method, StringComparison.OrdinalIgnoreCase) ||
-                    (route.Item1.Method.Equals("GET", StringComparison.OrdinalIgnoreCase) && request.Method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))                    
+                    let routeMethod = route.Item1.Method.ToUpperInvariant()
+                    let requestMethod = request.Method.ToUpperInvariant()
+                    where routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"))                    
                     select route;
         }
 
