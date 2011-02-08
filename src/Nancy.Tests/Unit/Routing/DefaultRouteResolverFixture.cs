@@ -316,5 +316,21 @@
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
             resolvedRoute.Path.ShouldEqual(request.Uri);
         }
+
+        [Fact]
+        public void Should_allow_head_request_when_route_is_defined_for_get()
+        {
+            var request = new FakeRequest("HEAD", "/foo/bar");
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/bar");
+            });
+
+            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            
+            resolvedRoute.ShouldNotBeNull();
+            resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
+            resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
+        }
     }
 }
