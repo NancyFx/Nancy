@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-
-namespace Nancy.Demo
+﻿namespace Nancy.Demo
 {
     public class DemoBootStrapper : DefaultNancyBootstrapper
     {
