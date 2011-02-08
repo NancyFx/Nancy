@@ -16,6 +16,32 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_retrieving_non_existing_index_should_return_empty_value()
+        {
+            // Given
+            var value = this.dictionary["nonexisting"];
+
+            // When
+            bool result = value.HasValue;
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_retrieving_non_existing_member_should_return_empty_value()
+        {
+            // Given
+            var value = this.dictionary.nonexisting;
+
+            // When
+            bool result = value.HasValue;
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Should_implicitly_cast_to_string_when_value_is_retrieved_as_member()
         {
             // Given

@@ -3,32 +3,61 @@
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
-    using System.Linq.Expressions;
-    using Microsoft.CSharp.RuntimeBinder;
 
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>
     {
         private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Provides the implementation for operations that set member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as setting a value for a property.
+        /// </summary>
+        /// <returns>true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
+        /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member to which the value is being assigned. For example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param><param name="value">The value to set to the member. For example, for sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, the <paramref name="value"/> is "Test".</param>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
         	this[binder.Name] = value;
             return true;
         }
 
+        /// <summary>
+        /// Provides the implementation for operations that get member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as getting a value for a property.
+        /// </summary>
+        /// <returns>true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a run-time exception is thrown.)</returns>
+        /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member on which the dynamic operation is performed. For example, for the Console.WriteLine(sampleObject.SampleProperty) statement, where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param><param name="result">The result of the get operation. For example, if the method is called for a property, you can assign the property value to <paramref name="result"/>.</param>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            return dictionary.TryGetValue(binder.Name, out result);
+            if (!dictionary.TryGetValue(binder.Name, out result))
+            {
+                result = new DynamicDictionaryValue(null);
+            }
+
+            return true;
         }
 
-		public override IEnumerable<string> GetDynamicMemberNames()
+        /// <summary>
+        /// Returns the enumeration of all dynamic member names. </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
+        public override IEnumerable<string> GetDynamicMemberNames()
 		{
 			return dictionary.Keys;
 		}
 
+        /// <summary>
+        /// Gets or sets the <see cref="DynamicDictionaryValue"/> with the specified name.
+        /// </summary>
+        /// <value>A <see cref="DynamicDictionaryValue"/> instance containing a value.</value>
         public dynamic this[string name]
         {
-            get { return dictionary[name]; }
+            get
+            {
+                dynamic member;
+                if (!dictionary.TryGetValue(name, out member))
+                {
+                    member = new DynamicDictionaryValue(null);
+                }
+
+                return member;
+            }
             set { dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value); }
         }
 
@@ -74,188 +103,6 @@
         public override int GetHashCode()
         {
             return (dictionary != null ? dictionary.GetHashCode() : 0);
-        }
-
-        
-    }
-
-    public class DynamicDictionaryValue : DynamicObject
-    {
-        private readonly object value;
-
-        public DynamicDictionaryValue(object value)
-        {
-            this.value = value;
-        }
-
-        public override bool TryBinaryOperation(BinaryOperationBinder binder, object arg, out object result)
-        {
-            object resultOfCast;
-            result = null;
-
-            if (binder.Operation != ExpressionType.Equal)
-            {
-                return false;
-            }
-
-            var convert =
-                Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicDictionaryValue));
-
-            if (!TryConvert((ConvertBinder)convert, out resultOfCast))
-            {
-                return false;
-            }
-
-            result = (resultOfCast == null) ?
-                Equals(arg, resultOfCast) :
-                resultOfCast.Equals(arg);
-
-            return true;
-        }
-
-        public override bool TryConvert(ConvertBinder binder, out object result)
-        {
-            result = null;
-
-            if (value == null)
-            {
-                return true;
-            }
-
-            var binderType = binder.Type;
-            if (binderType == typeof(String))
-            {
-                result = Convert.ToString(value);
-                return true;
-            }
-
-            if (binderType == typeof(Guid) || binderType == typeof(Guid?))
-            {
-                Guid guid;
-                if (Guid.TryParse(Convert.ToString(value), out guid))
-                {
-                    result = guid;
-                    return true;
-                }
-            }
-            else if (binderType == typeof(TimeSpan) || binderType == typeof(TimeSpan?))
-            {
-                TimeSpan timespan;
-                if (TimeSpan.TryParse(Convert.ToString(value), out timespan))
-                {
-                    result = timespan;
-                    return true;
-                }
-            }
-            else
-            {
-                if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
-                {
-                    binderType = binderType.GetGenericArguments()[0];
-                }
-
-                var typeCode = Type.GetTypeCode(binderType);
-
-                if (typeCode == TypeCode.Object) // something went wrong here
-                {
-                    return false;
-                }
-
-                result = Convert.ChangeType(value, typeCode);
-
-                return true;
-            }
-            return base.TryConvert(binder, out result);
-        }
-
-        public override string ToString()
-        {
-            return this.value == null ? null : Convert.ToString(this.value);
-        }
-
-        public static implicit operator string(DynamicDictionaryValue dynamicValue)
-        {
-            return dynamicValue.ToString();
-        }
-
-        public static implicit operator int(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value.GetType().IsValueType)
-            {
-                return (int)dynamicValue.value;
-            }
-
-            return int.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator Guid(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value is Guid)
-            {
-                return (Guid)dynamicValue.value;
-            }
-
-            return Guid.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator DateTime(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value is DateTime)
-            {
-                return (DateTime)dynamicValue.value;
-            }
-
-            return DateTime.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator TimeSpan(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value is TimeSpan)
-            {
-                return (TimeSpan)dynamicValue.value;
-            }
-
-            return TimeSpan.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator long(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value.GetType().IsValueType)
-            {
-                return (long)dynamicValue.value;
-            }
-
-            return long.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator float(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value.GetType().IsValueType)
-            {
-                return (float)dynamicValue.value;
-            }
-
-            return float.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator decimal(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value.GetType().IsValueType)
-            {
-                return (decimal)dynamicValue.value;
-            }
-
-            return decimal.Parse(dynamicValue.ToString());
-        }
-
-        public static implicit operator double(DynamicDictionaryValue dynamicValue)
-        {
-            if (dynamicValue.value.GetType().IsValueType)
-            {
-                return (double)dynamicValue.value;
-            }
-
-            return double.Parse(dynamicValue.ToString());
         }
     }
 }
