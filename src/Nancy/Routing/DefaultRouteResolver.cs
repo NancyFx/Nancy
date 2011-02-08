@@ -93,7 +93,11 @@
 
         private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesWithCorrectRequestMethod(Request request, IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
         {
-            return routesThatMatchRequestedPath.Where(x => x.Item1.Method.Equals(request.Method, StringComparison.OrdinalIgnoreCase)).ToList();
+            return  from route in routesThatMatchRequestedPath
+                    let routeMethod = route.Item1.Method.ToUpperInvariant()
+                    let requestMethod = request.Method.ToUpperInvariant()
+                    where routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"))                    
+                    select route;
         }
 
         private static bool RouteCacheIsEmpty(IEnumerable<RouteCacheEntry> routeCache)

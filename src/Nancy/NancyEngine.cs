@@ -1,10 +1,10 @@
 ﻿namespace Nancy
 {
-	using System;
-	using Nancy.Routing;
+    using System;
+    using Nancy.Routing;
 
     public class NancyEngine : INancyEngine
-	{
+    {
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
 
@@ -14,15 +14,15 @@
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache"></param>
         public NancyEngine(IRouteResolver resolver, IRouteCache routeCache)
-		{
-			if (resolver == null)
-			{
-				throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
-			}
+        {
+            if (resolver == null)
+            {
+                throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
+            }
 
-			this.resolver = resolver;
-		    this.routeCache = routeCache;
-		}
+            this.resolver = resolver;
+            this.routeCache = routeCache;
+        }
 
         public Response HandleRequest(Request request)
         {
@@ -31,9 +31,14 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            // TODO - Head resonse code now missing
             var resolvedRoute = this.resolver.Resolve(request, this.routeCache);
             var response = resolvedRoute.Invoke();
+            
+            if (request.Method.ToUpperInvariant() == "HEAD")
+            {
+                response = new HeadResponse(response);
+            }
+
             return response;
         }
     }
