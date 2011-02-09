@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Web.Hosting;
-
-namespace Nancy.Formatters.Responses
+﻿namespace Nancy.Formatters.Responses
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using System.Web.Hosting;
+
     public class GenericFileResponse : Response
     {
         public static string GetFilePath(string filePath)

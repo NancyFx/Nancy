@@ -50,6 +50,9 @@
     <Reference Include="System.Web.ApplicationServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\main.css" />
+    <Content Include="Content\scripts.js" />
+    <Content Include="Views\javascript.html" />
     <Content Include="Views\static.htm" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -119,7 +122,7 @@
       <FlavorProperties GUID="{349C5851-65DF-11DA-9384-00065B846F21}">
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
+          <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40965</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
