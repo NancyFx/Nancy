@@ -25,6 +25,10 @@ namespace Nancy.Demo
                 return "This is also a route, but filtered out so should never be hit.";
             };
 
+            Get[@"/(?<foo>\d{2,4})/{bar}"] = x => {
+                return string.Format("foo: {0}<br/>bar: {1}", x.foo, x.bar);
+            };
+
             Get["/test"] = x => {
                 return "Test";
             };
