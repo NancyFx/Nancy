@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Nancy.Hosting.Aspnet
 {
     using System.Web;
@@ -28,7 +30,9 @@ namespace Nancy.Hosting.Aspnet
                 context.Request.Headers.ToDictionary(),
                 context.Request.InputStream,
                 context.Request.Url.Scheme,
-                context.Request.Url.Query);
+                context.Request.Url.Query,
+                context.Request.Files.Convert,
+                context.Request.Form.ToDynamicDictionary);
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

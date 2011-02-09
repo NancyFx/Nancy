@@ -9,13 +9,17 @@ namespace Nancy
     public class Request
     {
         private dynamic form;
+        readonly Func<dynamic> formData;
+        readonly Func<PostedFileCollection> filesData;
+        PostedFileCollection files;
 
         public Request(string method, string uri, string protocol)
             : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol)
         {
         }
 
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, string query = "")
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, 
+            string protocol, string query = "", Func<PostedFileCollection> getFiles = null, Func<dynamic> getFormData = null)
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -47,6 +51,13 @@ namespace Nancy
             this.Uri = uri;
             this.Protocol = protocol;
             this.Query = query.AsQueryDictionary();
+            this.filesData = getFiles ?? (() => { return null; });
+            this.formData = getFormData ?? GetFormData;
+        }
+
+        public PostedFileCollection Files
+        {
+            get { return this.files ?? (this.files = this.filesData()); }
         }
 
         public dynamic Query { get; set; }
@@ -55,7 +66,7 @@ namespace Nancy
 
         public dynamic Form
         {
-            get { return this.form ?? (this.form = this.GetFormData()); }
+            get { return this.form ?? (this.form = this.formData()); }
         }
 
         private dynamic GetFormData()
