@@ -1,7 +1,6 @@
 namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
-    using Nancy.Formatters;
     using Nancy.ViewEngines;
     using Nancy.ViewEngines.NDjango;
     using Nancy.ViewEngines.Razor;

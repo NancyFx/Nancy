@@ -38,7 +38,10 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
+    <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -58,12 +61,19 @@
     <Compile Include="DefaultNancyBootstrapper.cs" />
     <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="Responses\GenericFileResponse.cs" />
+    <Compile Include="Responses\ImageResponse.cs" />
+    <Compile Include="Responses\JsonResponse.cs" />
+    <Compile Include="Responses\RedirectResponse.cs" />
+    <Compile Include="Responses\StaticFileResponse.cs" />
+    <Compile Include="Responses\XmlResponse.cs" />
     <Compile Include="Routing\DefaultRouteCacheProvider.cs" />
     <Compile Include="Routing\DefaultRoutePatternMatcher.cs" />
     <Compile Include="Routing\IRouteCache.cs" />
