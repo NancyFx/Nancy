@@ -1,3 +1,5 @@
+using Castle.MicroKernel.Releasers;
+
 namespace Nancy.Bootstrappers.Windsor
 {
     using System;
@@ -9,8 +11,7 @@ namespace Nancy.Bootstrappers.Windsor
     using Nancy.Bootstrapper;
     using Nancy.Routing;
 
-    public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>,
-        INancyBootstrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
+    public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>, INancyModuleCatalog
     {
         protected IWindsorContainer container;
 
@@ -46,40 +47,21 @@ namespace Nancy.Bootstrappers.Windsor
 
         protected override sealed void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
-            this.modulesRegistrationTypes = moduleRegistrationTypes;
-        }
-
-        static void RegisterModulesInternal(IWindsorContainer existingContainer,
-            IEnumerable<ModuleRegistration> moduleRegistrationTypes)
-        {
-            var components = moduleRegistrationTypes.Select(r => Component.For(typeof (NancyModule))
+            var components = moduleRegistrationTypes.Select(r => Component.For(typeof(NancyModule))
                 .ImplementedBy(r.ModuleType)
                 .Named(r.ModuleKey)
-                .LifeStyle.Transient);
-            existingContainer.Register(components.ToArray());
+                .LifeStyle.PerWebRequest);
+            this.container.Register(components.ToArray());
         }
-
-        public virtual void ConfigureRequestContainer(IWindsorContainer container) { }
 
         public IEnumerable<NancyModule> GetAllModules()
         {
-            var child = GetChild();
-            return child.Kernel.ResolveAll<NancyModule>();
+            return container.Kernel.ResolveAll<NancyModule>();
         }
 
         public NancyModule GetModuleByKey(string moduleKey)
         {
-            var child = GetChild();
-            return child.Kernel.Resolve<NancyModule>(moduleKey);
-        }
-
-        IWindsorContainer GetChild()
-        {
-            var child = new WindsorContainer();
-            this.container.AddChildContainer(child);
-            ConfigureRequestContainer(child);
-            RegisterModulesInternal(child, this.modulesRegistrationTypes);
-            return child;
+            return container.Kernel.Resolve<NancyModule>(moduleKey);
         }
     }
 }
