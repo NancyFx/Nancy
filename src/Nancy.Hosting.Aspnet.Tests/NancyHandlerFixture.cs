@@ -9,7 +9,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using Nancy.Hosting.Aspnet;
     using Xunit;
 
-    public class HancyHandlerFixture
+    public class NancyHandlerFixture
     {
         private readonly NancyHandler handler;
         private readonly HttpContextBase context;
