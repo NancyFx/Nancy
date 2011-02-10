@@ -4,10 +4,9 @@ namespace Nancy.SelfHosting.Demo
     {
         public TestModule()
         {
-            Get["/"] = request =>
-                           {
-                               return "Hello world";
-                           };
+            Get["/"] = parameters => {
+                return "Hello world";
+            };
         }
     }
 }

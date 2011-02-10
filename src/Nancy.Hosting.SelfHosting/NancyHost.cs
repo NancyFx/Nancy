@@ -3,10 +3,9 @@
     using System;
     using System.Net;
     using System.Threading;
-    using BootStrapper;
+    using Bootstrapper;
     using Cookies;
     using Extensions;
-
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -18,49 +17,49 @@
     /// </remarks>
     public class NancyHost
     {
-        private readonly Uri _baseUri;
-        private readonly HttpListener _listener;
-        private readonly INancyEngine _engine;
-        private Thread _thread;
-        private bool _shouldContinue;
+        private readonly Uri baseUri;
+        private readonly HttpListener listener;
+        private readonly INancyEngine engine;
+        private Thread thread;
+        private bool shouldContinue;
 
         public NancyHost(Uri baseUri)
-            : this(baseUri, NancyBootStrapperLocator.BootStrapper)
+            : this(baseUri, NancyBootstrapperLocator.Bootstrapper)
         {
         }
 
-        public NancyHost(Uri baseUri, INancyBootStrapper bootStrapper)
+        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper)
         {
-            _baseUri = baseUri;
-            _listener = new HttpListener();
-            _listener.Prefixes.Add(baseUri.ToString());
+            this.baseUri = baseUri;
+            listener = new HttpListener();
+            listener.Prefixes.Add(baseUri.ToString());
 
-            _engine = bootStrapper.GetEngine();
+            engine = bootStrapper.GetEngine();
         }
 
         public void Start()
         {
-            _shouldContinue = true;
+            shouldContinue = true;
 
-            _listener.Start();
-            _thread = new Thread(Listen);
-            _thread.Start();
+            listener.Start();
+            thread = new Thread(Listen);
+            thread.Start();
         }
 
         public void Stop()
         {
-            _shouldContinue = false;
-            _listener.Stop();
+            shouldContinue = false;
+            listener.Stop();
         }
 
         private void Listen()
         {
-            while (_shouldContinue)
+            while (shouldContinue)
             {
                 HttpListenerContext requestContext;
                 try
                 {
-                    requestContext = _listener.GetContext();
+                    requestContext = listener.GetContext();
                 }
                 catch (HttpListenerException)
                 {
@@ -68,42 +67,55 @@
                     return;
                 }
                 var nancyRequest = ConvertRequestToNancyRequest(requestContext.Request);
-                var nancyResponse = _engine.HandleRequest(nancyRequest);
+                var nancyResponse = engine.HandleRequest(nancyRequest);
                 ConvertNancyResponseToResponse(nancyResponse, requestContext.Response);
             }
         }
 
-        private IRequest ConvertRequestToNancyRequest(HttpListenerRequest request)
+        private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = "/" + _baseUri.MakeRelativeUri(request.Url);
+            var relativeUrl = "/" + baseUri.MakeRelativeUri(request.Url);
 
             return new Request(
                 request.HttpMethod,
                 relativeUrl,
                 request.Headers.ToDictionary(),
                 request.InputStream,
-                request.Url.Scheme
-                );
+                request.Url.Scheme,
+                request.Url.Query);
         }
 
         private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
         {
             foreach (var header in nancyResponse.Headers)
+            {
                 response.AddHeader(header.Key, header.Value);
+            }
+
             foreach (var nancyCookie in nancyResponse.Cookies)
+            {
                 response.Cookies.Add(ConvertCookie(nancyCookie));
+            }
 
             response.ContentType = nancyResponse.ContentType;
+            response.StatusCode = (int)nancyResponse.StatusCode;
 
             using (var output = response.OutputStream)
-                nancyResponse.Contents(output);
+            {
+                nancyResponse.Contents.Invoke(output);
+            }
         }
 
         private static Cookie ConvertCookie(INancyCookie nancyCookie)
         {
-            var cookie = new Cookie(nancyCookie.Name, nancyCookie.Value, nancyCookie.Path, nancyCookie.Domain);
+            var cookie = 
+                new Cookie(nancyCookie.Name, nancyCookie.Value, nancyCookie.Path, nancyCookie.Domain);
+
             if (nancyCookie.Expires.HasValue)
+            {
                 cookie.Expires = nancyCookie.Expires.Value;
+            }
+
             return cookie;
         }
     }
