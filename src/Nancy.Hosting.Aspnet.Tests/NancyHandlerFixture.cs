@@ -151,10 +151,10 @@ namespace Nancy.Hosting.Aspnet.Tests
             for (int i = 0; i < this.files.Count; i++)
             {
                 var content = new MemoryStream(Encoding.UTF8.GetBytes("Some test context text"));
-                A.CallTo(() => this.files[0].FileName).Returns("TestFile" + i);
-                A.CallTo(() => this.files[0].ContentType).Returns("text/html");
-                A.CallTo(() => this.files[0].ContentLength).Returns((int)content.Length);
-                A.CallTo(() => this.files[0].InputStream).Returns(content);
+                A.CallTo(() => this.files[i].FileName).Returns("TestFile" + i);
+                A.CallTo(() => this.files[i].ContentType).Returns("text/html");
+                A.CallTo(() => this.files[i].ContentLength).Returns((int)content.Length);
+                A.CallTo(() => this.files[i].InputStream).Returns(content);
             }
 
             A.CallTo(() => this.fileCollection.GetEnumerator()).Returns(this.files.GetEnumerator());
