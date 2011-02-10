@@ -121,7 +121,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_properly_handle_uri_escaped_route_parameters_that_were_matched()
         {
             // Given
-            var parameter = "baa ram ewe";
+            var parameter = "baa ram ewe{}";
             var escapedParameter = Uri.EscapeUriString(parameter);
             
             // When
@@ -142,6 +142,19 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             results.IsMatch.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_uri()
+        {
+            // Given
+            var parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual(parameter);
         }
     }
 }
