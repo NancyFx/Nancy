@@ -38,7 +38,7 @@ namespace Nancy.Demo
             };
 
             Get["/javascript"] = x => {
-                return View.Static("~/views/javascript.html");
+                return View("~/views/javascript.html");
             };
 
             Get["/static"] = x => {
