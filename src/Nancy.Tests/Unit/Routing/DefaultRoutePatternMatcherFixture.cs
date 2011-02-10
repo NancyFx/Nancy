@@ -130,5 +130,18 @@ namespace Nancy.Tests.Unit.Routing
             //Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);
         }
+
+        [Fact]
+        public void Should_not_allow_percent_to_be_used_outside_of_escape_sequences()
+        {
+            // Given
+            var parameter = "%gh";
+            
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
+
+            // Then
+            results.IsMatch.ShouldBeFalse();
+        }
     }
 }
