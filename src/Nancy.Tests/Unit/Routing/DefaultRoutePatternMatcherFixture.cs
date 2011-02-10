@@ -1,3 +1,5 @@
+using System;
+
 namespace Nancy.Tests.Unit.Routing
 {
     using Nancy.Routing;
@@ -113,6 +115,20 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             results.IsMatch.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_properly_handle_uri_escaped_route_parameters_that_were_matched()
+        {
+            // Given
+            var parameter = "baa ram ewe";
+            var escapedParameter = Uri.EscapeUriString(parameter);
+            
+            // When
+            var results = this.matcher.Match("/foo/" + escapedParameter, "/foo/{bar}");
+
+            //Then
+            ((string)results.Parameters["bar"]).ShouldEqual(parameter);
         }
     }
 }

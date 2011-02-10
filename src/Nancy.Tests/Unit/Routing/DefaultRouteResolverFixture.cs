@@ -332,5 +332,6 @@
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
         }
+
     }
 }
