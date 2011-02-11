@@ -59,7 +59,7 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultRouteCache { get { return typeof(DefaultRouteCache); } }
+        protected virtual Type DefaultRouteCache { get { return typeof(RouteCache); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations

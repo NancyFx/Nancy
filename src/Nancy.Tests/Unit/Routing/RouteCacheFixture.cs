@@ -19,7 +19,7 @@ namespace Nancy.Tests.Unit.Routing
         {
              _FakeModuleCatalog = new FakeModuleCatalog();
 
-             _RouteCache = new Nancy.Routing.DefaultRouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
+             _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
         }
 
         [Fact]

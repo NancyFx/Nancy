@@ -59,7 +59,6 @@
     <Compile Include="Cookies\NancyCookie.cs" />
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultNancyBootstrapper.cs" />
-    <Compile Include="Extensions\NancyExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
@@ -78,7 +77,7 @@
     <Compile Include="Routing\DefaultRoutePatternMatcher.cs" />
     <Compile Include="Routing\IRouteCache.cs" />
     <Compile Include="Routing\IRouteCacheProvider.cs" />
-    <Compile Include="Routing\DefaultRouteCache.cs" />
+    <Compile Include="Routing\RouteCache.cs" />
     <Compile Include="Routing\IRoutePatternMatcher.cs" />
     <Compile Include="Routing\IRoutePatternMatchResult.cs" />
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
@@ -97,7 +96,7 @@
     <Compile Include="Routing\IRouteResolver.cs" />
     <Compile Include="Routing\NotFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
-    <Compile Include="Routing\RouteDictionary.cs" />
+    <Compile Include="Routing\RouteCollection.cs" />
     <Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />

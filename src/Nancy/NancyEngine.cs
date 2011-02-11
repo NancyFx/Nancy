@@ -6,14 +6,14 @@
     public class NancyEngine : INancyEngine
     {
         private readonly IRouteResolver resolver;
-        private readonly IRouteCache routeCache;
+        private readonly RouteCache routeCache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache"></param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache)
+        public NancyEngine(IRouteResolver resolver, RouteCache routeCache)
         {
             if (resolver == null)
             {

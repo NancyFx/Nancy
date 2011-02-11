@@ -2,8 +2,8 @@
 {
     public class NotFoundRoute : Route
     {
-        public NotFoundRoute(string route)
-            : base(route, null, null, x => new NotFoundResponse())
+        public NotFoundRoute(string method, string path)
+            : base(method, path, null, x => new NotFoundResponse(), new DynamicDictionary())
         {
         }
     }
