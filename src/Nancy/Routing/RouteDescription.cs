@@ -2,14 +2,14 @@ namespace Nancy.Routing
 {
     using System;
 
-    public sealed class RouteCacheEntry
+    public sealed class RouteDescription
     {
-        public RouteCacheEntry(string moduleKey, string method, string path, Func<Request, bool> condition)
+        public RouteDescription(string moduleKey, string method, string path, Func<Request, bool> condition)
         {
-            ModuleKey = moduleKey;
-            Method = method;
-            Path = path;
-            Condition = condition;
+            this.ModuleKey = moduleKey;
+            this.Method = method;
+            this.Path = path;
+            this.Condition = condition;
         }
 
         public Func<Request, bool> Condition { get; private set; }
