@@ -17,11 +17,11 @@
             this.templateEngineSelector = templateEngineSelector;
         }
 
-        public Route Resolve(Request request, IRouteCache routeCache)
+        public Route Resolve(Request request, RouteCache routeCache)
         {
-            if (RouteCacheIsEmpty(routeCache))
+            if (routeCache.IsEmpty())
             {
-                return new NotFoundRoute(request.Uri);
+                return new NotFoundRoute(request.Uri, request.Method);
             }
 
             var routesThatMatchRequestedPath = 
@@ -29,7 +29,7 @@
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new NotFoundRoute(request.Uri);
+                return new NotFoundRoute(request.Uri, request.Method);
             }
 
             var routesWithCorrectRequestMethod = 
@@ -98,11 +98,6 @@
                     let requestMethod = request.Method.ToUpperInvariant()
                     where routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"))                    
                     select route;
-        }
-
-        private static bool RouteCacheIsEmpty(IEnumerable<RouteDescription> routeCache)
-        {
-            return !routeCache.Any();
         }
 
         private static bool NoRoutesWereAbleToBeMatchedInRouteCache(IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesThatMatchRequestedPath)

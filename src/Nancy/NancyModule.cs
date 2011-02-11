@@ -8,7 +8,7 @@ namespace Nancy
 
     public abstract class NancyModule
     {
-        private readonly IDictionary<string, RouteDictionary> routes;
+        private readonly IDictionary<string, RouteCollection> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -24,7 +24,7 @@ namespace Nancy
         protected NancyModule(string modulePath)
         {
             this.ModulePath = modulePath;
-            this.routes = new Dictionary<string, RouteDictionary>(StringComparer.OrdinalIgnoreCase);
+            this.routes = new Dictionary<string, RouteCollection>(StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -35,18 +35,18 @@ namespace Nancy
         /// <param name="method">A <see cref="string"/> containing the http request method for which the routes should be returned.</param>
         /// <returns>An <see cref="IDictionary{TKey,TValue}"/> containing the routes.</returns>
         /// <remarks>Valid values are delete, get, post and put. The parameter is not case sensitive.</remarks>
-        public RouteDictionary GetRoutes(string method)
+        public RouteCollection GetRoutes(string method)
         {
             if (method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
             {
                 method = "GET";
             }
 
-            RouteDictionary routesForSpecifiedMethod;
+            RouteCollection routesForSpecifiedMethod;
 
             if (!this.routes.TryGetValue(method, out routesForSpecifiedMethod))
             {
-                routesForSpecifiedMethod = new RouteDictionary(this, method);
+                routesForSpecifiedMethod = new RouteCollection(this, method);
                 this.routes[method] = routesForSpecifiedMethod;
             }
 
@@ -54,20 +54,20 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for DELETE requests.
+        /// Gets <see cref="RouteCollection"/> for declaring actions for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Delete
+        /// <value>A <see cref="RouteCollection"/> instance.</value>
+        public RouteCollection Delete
         {
             get { return this.GetRoutes("DELETE"); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for GET requests.
+        /// Gets <see cref="RouteCollection"/> for declaring actions for GET requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        /// <value>A <see cref="RouteCollection"/> instance.</value>
         /// <remarks>These actions will also be used when a HEAD request is recieved.</remarks>
-        public RouteDictionary Get
+        public RouteCollection Get
         {
             get { return this.GetRoutes("GET"); }
         }
@@ -75,19 +75,19 @@ namespace Nancy
         public string ModulePath { get; private set; }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for POST requests.
+        /// Gets <see cref="RouteCollection"/> for declaring actions for POST requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Post
+        /// <value>A <see cref="RouteCollection"/> instance.</value>
+        public RouteCollection Post
         {
             get { return this.GetRoutes("POST"); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for PUT requests.
+        /// Gets <see cref="RouteCollection"/> for declaring actions for PUT requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Put
+        /// <value>A <see cref="RouteCollection"/> instance.</value>
+        public RouteCollection Put
         {
             get { return this.GetRoutes("PUT"); }
         }

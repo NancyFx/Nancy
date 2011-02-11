@@ -7,14 +7,14 @@ namespace Nancy.Tests.Unit.Routing
 
     public class RouteDictionaryFixture
     {
-        private readonly RouteDictionary routes;
+        private readonly RouteCollection routes;
         private readonly string path;
         private readonly Func<Request, bool> condition;
         private readonly Func<dynamic, Response> action;
 
         public RouteDictionaryFixture()
         {
-            this.routes = new RouteDictionary(new FakeNancyModuleWithoutBasePath(), "GET");
+            this.routes = new RouteCollection(new FakeNancyModuleWithoutBasePath(), "GET");
             this.path = "/route/path";
             this.condition = ir => { return true; };
             this.action = parameters => { return new Response(); };
@@ -105,7 +105,7 @@ namespace Nancy.Tests.Unit.Routing
             var module = new FakeNancyModuleWithBasePath();
 
             // When
-            var rootBasedRoutes = new RouteDictionary(module, "GET");
+            var rootBasedRoutes = new RouteCollection(module, "GET");
 
             // Then
             rootBasedRoutes.Module.ShouldBeSameAs(module);
@@ -115,7 +115,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_throw_argumentnullexception_when_initialized_with_null()
         {
             // Given, When
-            var exception = Record.Exception(() => new RouteDictionary(null, "GET"));
+            var exception = Record.Exception(() => new RouteCollection(null, "GET"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -126,7 +126,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var module = new FakeNancyModuleWithBasePath();
-            var rootBasedRoutes = new RouteDictionary(module, "GET");
+            var rootBasedRoutes = new RouteCollection(module, "GET");
             rootBasedRoutes[this.path] = this.action;
             var moduleRelativePath = string.Concat(module.ModulePath, this.path);
 
@@ -142,7 +142,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given, When
             var exception =
-                Record.Exception(() => new RouteDictionary(new FakeNancyModuleWithBasePath(), null));
+                Record.Exception(() => new RouteCollection(new FakeNancyModuleWithBasePath(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -153,7 +153,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given, When
             var exception =
-                Record.Exception(() => new RouteDictionary(new FakeNancyModuleWithBasePath(), string.Empty));
+                Record.Exception(() => new RouteCollection(new FakeNancyModuleWithBasePath(), string.Empty));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();

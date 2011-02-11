@@ -11,8 +11,8 @@
             this.Action = action;
         }
 
-        public Route (string moduleKey, string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action, DynamicDictionary parameters)
-            : this(new RouteDescription(moduleKey, method, path, condition), action, parameters)
+        public Route (string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action, DynamicDictionary parameters)
+            : this(new RouteDescription(method, path, condition), action, parameters)
         {
         }
 

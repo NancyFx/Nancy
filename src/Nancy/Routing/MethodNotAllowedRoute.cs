@@ -4,8 +4,8 @@
 
     public class MethodNotAllowedRoute : Route
     {
-        public MethodNotAllowedRoute(string path)
-            : base(path, null, null, x => HttpStatusCode.MethodNotAllowed)
+        public MethodNotAllowedRoute(string path, string method)
+            : base(method, path, null, x => HttpStatusCode.MethodNotAllowed, new DynamicDictionary())
         {
         }
     }

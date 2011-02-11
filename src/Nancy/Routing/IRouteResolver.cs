@@ -2,6 +2,6 @@
 {
     public interface IRouteResolver
     {
-        Route Resolve(Request request, IRouteCache cache);
+        Route Resolve(Request request, RouteCache cache);
     }
 }
