@@ -82,7 +82,7 @@
     <Compile Include="Routing\IRoutePatternMatcher.cs" />
     <Compile Include="Routing\IRoutePatternMatchResult.cs" />
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
-    <Compile Include="Routing\RouteCacheEntry.cs" />
+    <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
@@ -94,11 +94,9 @@
     <Compile Include="NancyEngine.cs" />
     <Compile Include="Response.cs" />
     <Compile Include="NotFoundResponse.cs" />
-    <Compile Include="Routing\IRoute.cs" />
     <Compile Include="Routing\IRouteResolver.cs" />
     <Compile Include="Routing\NotFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
-    <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RouteDictionary.cs" />
     <Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />

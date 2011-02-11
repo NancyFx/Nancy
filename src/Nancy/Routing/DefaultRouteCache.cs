@@ -6,13 +6,13 @@
 
     public class DefaultRouteCache : IRouteCache
     {
-        private readonly List<RouteCacheEntry> cache;
+        private readonly List<RouteDescription> cache;
         private readonly IModuleKeyGenerator moduleKeyGenerator;
 
         public DefaultRouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
-            this.cache = new List<RouteCacheEntry>();
+            this.cache = new List<RouteDescription>();
 
             this.BuildCache(moduleCatalog.GetAllModules());
         }
@@ -31,7 +31,7 @@
             }
         }
 
-        public IEnumerator<RouteCacheEntry> GetEnumerator()
+        public IEnumerator<RouteDescription> GetEnumerator()
         {
             return this.cache.GetEnumerator();
         }
@@ -45,7 +45,7 @@
         {
             foreach (var description in module.GetRouteDescription(method))
             {
-                this.cache.Add(new RouteCacheEntry(moduleKey, method, description.Path, description.Condition));
+                this.cache.Add(new RouteDescription(moduleKey, method, description.Path, description.Condition));
             }
         }
     }

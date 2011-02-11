@@ -49,7 +49,7 @@
             return this.CreateRouteFromMatch(request, routeMatchToReturn);
         }
 
-        private Route CreateRouteFromMatch(Request request, Tuple<RouteCacheEntry, IRoutePatternMatchResult> routeMatchToReturn)
+        private Route CreateRouteFromMatch(Request request, Tuple<RouteDescription, IRoutePatternMatchResult> routeMatchToReturn)
         {
             var associatedModule = 
                 GetInitializedModuleForMatch(request, routeMatchToReturn);
@@ -61,7 +61,7 @@
             return new Route(request.Uri, routeMatchToReturn.Item2.Parameters, associatedModule, actionToInvokeForRoute);
         }
 
-        private NancyModule GetInitializedModuleForMatch(Request request, Tuple<RouteCacheEntry, IRoutePatternMatchResult> routeMatchToReturn)
+        private NancyModule GetInitializedModuleForMatch(Request request, Tuple<RouteDescription, IRoutePatternMatchResult> routeMatchToReturn)
         {
             var module =
                 this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1.ModuleKey);
@@ -72,12 +72,12 @@
             return module;
         }
 
-        private static Tuple<RouteCacheEntry, IRoutePatternMatchResult> GetSingleRouteToReturn(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithMostParameterCaptures)
+        private static Tuple<RouteDescription, IRoutePatternMatchResult> GetSingleRouteToReturn(IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesWithMostParameterCaptures)
         {
             return routesWithMostParameterCaptures.First();
         }
 
-        private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRouteMatchesWithMostParameterCaptures(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
+        private static IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> GetRouteMatchesWithMostParameterCaptures(IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
         {
             var maxParameterCount =
                 routesWithCorrectRequestMethod.Max(x => x.Item2.Parameters.GetDynamicMemberNames().Count());
@@ -86,12 +86,12 @@
                 x => x.Item2.Parameters.GetDynamicMemberNames().Count() == maxParameterCount);
         }
 
-        private static bool NoRoutesWereForTheRequestedMethod(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
+        private static bool NoRoutesWereForTheRequestedMethod(IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesWithCorrectRequestMethod)
         {
             return !routesWithCorrectRequestMethod.Any();
         }
 
-        private static IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesWithCorrectRequestMethod(Request request, IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
+        private static IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> GetRoutesWithCorrectRequestMethod(Request request, IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
         {
             return  from route in routesThatMatchRequestedPath
                     let routeMethod = route.Item1.Method.ToUpperInvariant()
@@ -100,22 +100,22 @@
                     select route;
         }
 
-        private static bool RouteCacheIsEmpty(IEnumerable<RouteCacheEntry> routeCache)
+        private static bool RouteCacheIsEmpty(IEnumerable<RouteDescription> routeCache)
         {
             return !routeCache.Any();
         }
 
-        private static bool NoRoutesWereAbleToBeMatchedInRouteCache(IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
+        private static bool NoRoutesWereAbleToBeMatchedInRouteCache(IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> routesThatMatchRequestedPath)
         {
             return !routesThatMatchRequestedPath.Any();
         }
 
-        private IEnumerable<Tuple<RouteCacheEntry, IRoutePatternMatchResult>> GetRoutesThatMatchRequestedPath(IEnumerable<RouteCacheEntry> routeCache, Request request)
+        private IEnumerable<Tuple<RouteDescription, IRoutePatternMatchResult>> GetRoutesThatMatchRequestedPath(IEnumerable<RouteDescription> routeCache, Request request)
         {
             return from x in routeCache
                    let result = this.routePatternMatcher.Match(request.Uri, x.Path)
                    where result.IsMatch
-                   select new Tuple<RouteCacheEntry, IRoutePatternMatchResult>(x, result);
+                   select new Tuple<RouteDescription, IRoutePatternMatchResult>(x, result);
         }
     }
 }

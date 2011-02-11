@@ -5,7 +5,7 @@ namespace Nancy.Routing
     /// <summary>
     /// Contains a cache of all routes registered in the system
     /// </summary>
-    public interface IRouteCache : IEnumerable<RouteCacheEntry>
+    public interface IRouteCache : IEnumerable<RouteDescription>
     {
     }
 }

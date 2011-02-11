@@ -9,7 +9,7 @@
     public class FakeRouteCache : IRouteCache
     {
         public static FakeRouteCache Empty = new FakeRouteCache();
-        private readonly List<RouteCacheEntry> cache = new List<RouteCacheEntry>();
+        private readonly List<RouteDescription> cache = new List<RouteDescription>();
 
         public FakeRouteCache()
         {
@@ -23,7 +23,7 @@
             closure.Invoke(configurator);
         }
 
-        public IEnumerator<RouteCacheEntry> GetEnumerator()
+        public IEnumerator<RouteDescription> GetEnumerator()
         {
             return this.cache.GetEnumerator();
         }
@@ -44,7 +44,7 @@
 
             public FakeRouteCacheConfigurator AddDeleteRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
+                this.routeCache.cache.Add(new RouteDescription(
                     string.Empty, "DELETE", path, x => true));
 
                 return this;
@@ -62,7 +62,7 @@
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey, Func<Request, bool> condition)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
+                this.routeCache.cache.Add(new RouteDescription(
                     moduleKey, "GET", path, condition));
 
                 return this;
@@ -70,7 +70,7 @@
 
             public FakeRouteCacheConfigurator AddPostRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
+                this.routeCache.cache.Add(new RouteDescription(
                     string.Empty, "POST", path, x => true));
 
                 return this;
@@ -78,7 +78,7 @@
 
             public FakeRouteCacheConfigurator AddPutRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
+                this.routeCache.cache.Add(new RouteDescription(
                     string.Empty, "PUT", path, x => true));
 
                 return this;
