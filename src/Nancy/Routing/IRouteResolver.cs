@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Routing
 {
+    using System;
+
     public interface IRouteResolver
     {
-        Route Resolve(Request request, RouteCache cache);
+        Tuple<Route, DynamicDictionary> Resolve(Request request, RouteCache cache);
     }
 }

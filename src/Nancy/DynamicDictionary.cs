@@ -8,6 +8,14 @@
     {
         private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
+        public static DynamicDictionary Empty
+        {
+            get
+            {
+                return new DynamicDictionary();
+            }
+        }
+
         /// <summary>
         /// Provides the implementation for operations that set member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as setting a value for a property.
         /// </summary>

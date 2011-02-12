@@ -17,18 +17,18 @@
             this.templateEngineSelector = templateEngineSelector;
         }
 
-        public Route Resolve(Request request, RouteCache routeCache)
+        public Tuple<Route, DynamicDictionary> Resolve(Request request, RouteCache routeCache)
         {
             if (routeCache.IsEmpty())
             {
-                return new NotFoundRoute(request.Uri, request.Method);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Uri, request.Method), DynamicDictionary.Empty);
             }
 
             var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, request);
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new NotFoundRoute(request.Uri, request.Method);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Uri, request.Method), DynamicDictionary.Empty);
             }
 
             var routesWithCorrectRequestMethod = 
@@ -36,7 +36,7 @@
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-                return new MethodNotAllowedRoute(request.Uri, request.Method);
+                return new Tuple<Route, DynamicDictionary>(new MethodNotAllowedRoute(request.Uri, request.Method), DynamicDictionary.Empty);
             }
 
             var routeMatchesWithMostParameterCaptures = 
@@ -45,18 +45,17 @@
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
 
-            return this.CreateRouteFromMatch(request, routeMatchToReturn);
+            return this.CreateRouteAndParametersFromMatch(request, routeMatchToReturn);
         }
 
-        private Route CreateRouteFromMatch(Request request, Tuple<string, RouteDescription, IRoutePatternMatchResult> routeMatchToReturn)
+        private Tuple<Route, DynamicDictionary> CreateRouteAndParametersFromMatch(Request request, Tuple<string, RouteDescription, IRoutePatternMatchResult> routeMatchToReturn)
         {
             var associatedModule =
                 this.GetInitializedModuleForMatch(request, routeMatchToReturn);
 
             var route = associatedModule.GetRoutes(routeMatchToReturn.Item2.Method).GetRouteByIndex(routeMatchToReturn.Item2.Index);
-            route.Parameters = routeMatchToReturn.Item3.Parameters;
 
-            return route;
+            return new Tuple<Route, DynamicDictionary>(route, routeMatchToReturn.Item3.Parameters);
         }
 
         private NancyModule GetInitializedModuleForMatch(Request request, Tuple<string, RouteDescription, IRoutePatternMatchResult> routeMatchToReturn)
