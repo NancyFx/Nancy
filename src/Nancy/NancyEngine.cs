@@ -31,8 +31,8 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            var resolvedRoute = this.resolver.Resolve(request, this.routeCache);
-            var response = resolvedRoute.Invoke();
+            var resolvedRouteAndParameters = this.resolver.Resolve(request, this.routeCache);
+            var response = resolvedRouteAndParameters.Item1.Invoke(resolvedRouteAndParameters.Item2);
             
             if (request.Method.ToUpperInvariant() == "HEAD")
             {
