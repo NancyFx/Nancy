@@ -6,13 +6,14 @@ namespace Nancy.Demo
     using Nancy.ViewEngines.Razor;
     using Nancy.ViewEngines.Spark;
     using Nancy.Routing;
+    using System.Linq;
 
     public class MainModule : NancyModule
     {
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x => {
-                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache());
+                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache().SelectMany(c => c.Value));
             };
 
             Get["/style/{file}"] = x => {

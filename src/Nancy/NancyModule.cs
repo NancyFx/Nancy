@@ -46,7 +46,7 @@ namespace Nancy
 
             if (!this.routes.TryGetValue(method, out routesForSpecifiedMethod))
             {
-                routesForSpecifiedMethod = new RouteCollection(this, method);
+                routesForSpecifiedMethod = new RouteCollection(method);
                 this.routes[method] = routesForSpecifiedMethod;
             }
 
