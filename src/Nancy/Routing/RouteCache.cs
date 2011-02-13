@@ -3,8 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using Nancy.Bootstrapper;
+    using System;
 
-    public class RouteCache : Dictionary<string, List<RouteDescription>>
+    public class RouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>
     {
         private readonly IModuleKeyGenerator moduleKeyGenerator;
 
@@ -35,10 +36,10 @@
             
             if (!this.ContainsKey(moduleKey))
             {
-                this[moduleKey] = new List<RouteDescription>();
+                this[moduleKey] = new List<Tuple<int, RouteDescription>>();
             }
 
-            this[moduleKey].AddRange(routes.Select(r => r.Description));
+            this[moduleKey].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r.Description)));
         }
 
         public bool IsEmpty()

@@ -36,9 +36,7 @@ namespace Nancy.Routing
 
         private void AddRoute(string route, Func<Request, bool> condition, Func<dynamic, Response> action)
         {
-            var newRoute = new Route(this.Method, -1, route, condition, action, new DynamicDictionary());
-            this.routes.Add(newRoute);
-            newRoute.Description.Index = this.routes.IndexOf(newRoute);
+            this.routes.Add(new Route(this.Method, route, condition, action, new DynamicDictionary()));
         }
 
         public Route GetRouteByIndex(int index)
