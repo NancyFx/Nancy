@@ -100,6 +100,7 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
@@ -111,6 +112,9 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -20,7 +20,7 @@
             this.view = A.Fake<IView>();
             this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
 
-            A.CallTo(() => templateLocator.GetTemplateContents("test")).Returns(viewLocationResult);
+            A.CallTo(() => templateLocator.GetViewLocation("test")).Returns(viewLocationResult);
             A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
             A.CallTo(() => viewCompiler.GetCompiledView<MemoryStream>(null)).Returns(view);
 

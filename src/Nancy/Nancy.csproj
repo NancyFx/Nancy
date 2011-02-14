@@ -47,6 +47,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Diagnostics\DiagnosticsModule.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
