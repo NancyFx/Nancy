@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+
+    using Nancy.Diagnostics;
     using Nancy.Routing;
     using Nancy.Extensions;
     using ViewEngines;
@@ -126,10 +129,21 @@
                 where !assembly.IsDynamic
                 from type in assembly.SafeGetExportedTypes()
                 where !type.IsAbstract
+                where RegisterDiagnostics(type)
                 where moduleType.IsAssignableFrom(type)
                 select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));
 
             return locatedModuleTypes;
+        }
+
+        private static bool RegisterDiagnostics(Type typeToCheck)
+        {
+            if (typeToCheck.Equals(typeof(DiagnosticsModule)))
+            {
+                return (Debugger.IsAttached);
+            }
+
+            return true;
         }
 
         /// <summary>

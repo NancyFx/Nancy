@@ -5,9 +5,9 @@
 
     public class AspNetTemplateLocator : IViewLocator
     {
-        public ViewLocationResult GetTemplateContents(string viewTemplate)
+        public ViewLocationResult GetViewLocation(string viewName)
         {
-            var path = HostingEnvironment.MapPath(viewTemplate);
+            var path = HostingEnvironment.MapPath(viewName);
 			using (var fs = File.OpenRead(path))
 			{
 				var stream = new MemoryStream();
