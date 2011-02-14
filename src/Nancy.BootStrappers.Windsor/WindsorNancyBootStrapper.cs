@@ -1,4 +1,6 @@
+using Castle.MicroKernel.Lifestyle;
 using Castle.MicroKernel.Releasers;
+using Nancy.BootStrappers.Windsor;
 
 namespace Nancy.Bootstrappers.Windsor
 {
@@ -50,7 +52,7 @@ namespace Nancy.Bootstrappers.Windsor
             var components = moduleRegistrationTypes.Select(r => Component.For(typeof(NancyModule))
                 .ImplementedBy(r.ModuleType)
                 .Named(r.ModuleKey)
-                .LifeStyle.PerWebRequest);
+                .LifeStyle.Custom<HybridPerWebRequestLifestyleManager<TransientLifestyleManager>>());
             this.container.Register(components.ToArray());
         }
 
