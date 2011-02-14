@@ -53,7 +53,7 @@
 
             for (int i = 1; i <= groups.Count; i++)
             {
-                data[regex.GroupNameFromNumber(i)] = Uri.UnescapeDataString(groups[i].Value);
+                data[regex.GroupNameFromNumber(i)] = groups[i].Value;
             }
 
             return data;
@@ -67,7 +67,7 @@
                 if (current.IsParameterized())
                 {
                     var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>([/A-Z0-9()*!'._-]|%[0-9A-F]{{2}})*)", segment.GetParameterName());
+                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>(.*))", segment.GetParameterName());
 
                     current = segment.Replace(segment, replacement);
                 }
