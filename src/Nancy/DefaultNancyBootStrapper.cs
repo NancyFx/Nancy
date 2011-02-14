@@ -1,6 +1,11 @@
 ﻿namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
+
+    using Nancy.ViewEngines;
+
     using TinyIoC;
     using Nancy.Bootstrapper;
 
@@ -47,6 +52,11 @@
 
         public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)
         {
+        }
+
+        protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            //this.container.RegisterMultiple<IFooBar>(viewEngineTypes).AsMultiInstance();
         }
 
         /// <summary>

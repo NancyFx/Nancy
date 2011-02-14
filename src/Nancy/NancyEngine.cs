@@ -1,7 +1,10 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
+
     using Nancy.Routing;
+    using Nancy.ViewEngines;
 
     public class NancyEngine : INancyEngine
     {
@@ -13,6 +16,7 @@
         /// </summary>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache"></param>
+        /// <param name="viewEngines"></param>
         public NancyEngine(IRouteResolver resolver, IRouteCache routeCache)
         {
             if (resolver == null)

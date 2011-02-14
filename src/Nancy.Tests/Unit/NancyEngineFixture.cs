@@ -1,9 +1,12 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Linq;
+
     using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
 
     using Xunit;
 

@@ -2941,25 +2941,25 @@ namespace TinyIoC
         {
             var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new Type[] { });
 
-//#if GETPARAMETERS_OPEN_GENERICS
-//            // Using MakeGenericMethod (slow) because we need to
-//            // cast the IEnumerable or constructing the type wil fail.
-//            // We may as well use the ResolveAll<ResolveType> public
-//            // method to do this.
-//            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
-//            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
-//#else
-//            var resolveAllMethods =    from member in this.GetType().GetMembers()
-//                                       where member.MemberType == MemberTypes.Method
-//                                       where member.Name == "ResolveAll"
-//                                       let method = member as MethodInfo
-//                                       where method.IsGenericMethod
-//                                       let genericMethod = method.MakeGenericMethod(type.GetGenericArguments()[0])
-//                                       where genericMethod.GetParameters().Count() == 0
-//                                       select genericMethod;
+            //#if GETPARAMETERS_OPEN_GENERICS
+            //            // Using MakeGenericMethod (slow) because we need to
+            //            // cast the IEnumerable or constructing the type wil fail.
+            //            // We may as well use the ResolveAll<ResolveType> public
+            //            // method to do this.
+            //            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
+            //            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+            //#else
+            //            var resolveAllMethods =    from member in this.GetType().GetMembers()
+            //                                       where member.MemberType == MemberTypes.Method
+            //                                       where member.Name == "ResolveAll"
+            //                                       let method = member as MethodInfo
+            //                                       where method.IsGenericMethod
+            //                                       let genericMethod = method.MakeGenericMethod(type.GetGenericArguments()[0])
+            //                                       where genericMethod.GetParameters().Count() == 0
+            //                                       select genericMethod;
 
-//            var genericResolveAllMethod = resolveAllMethods.First();
-//#endif
+            //            var genericResolveAllMethod = resolveAllMethods.First();
+            //#endif
             return genericResolveAllMethod.Invoke(this, new object[] { });
         }
 
