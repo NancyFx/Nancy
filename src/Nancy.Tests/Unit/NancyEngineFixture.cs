@@ -18,7 +18,7 @@ namespace Nancy.Tests.Unit
             this.resolver = A.Fake<IRouteResolver>();
             this.route = new FakeRoute();
 
-            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(route);
+            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, new DynamicDictionary()));
             this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>());
         }
 
