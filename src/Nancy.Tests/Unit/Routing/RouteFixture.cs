@@ -37,7 +37,7 @@
             var route = new Route(path, null, null, x => null);
 
             // Then
-            route.Path.ShouldEqual(path);
+            route.Description.Path.ShouldEqual(path);
         }
 
         [Fact]
@@ -51,35 +51,35 @@
             route.Action.ShouldBeSameAs(action);
         }
 
-        [Fact]
-        public void Should_set_paramters_property_when_instantiated()
-        {
-            //Given, When
-            Func<dynamic, Response> action = x => null;
+        //[Fact]
+        //public void Should_set_paramters_property_when_instantiated()
+        //{
+        //    //Given, When
+        //    Func<dynamic, Response> action = x => null;
 
-            dynamic parameters = new DynamicDictionary();
-            parameters.foo = 10;
-            parameters.bar = "value";
+        //    dynamic parameters = new DynamicDictionary();
+        //    parameters.foo = 10;
+        //    parameters.bar = "value";
 
-            var route = new Route("/", parameters, null, action);
+        //    var route = new Route("/", parameters, null, action);
 
-            // Then
-            ((object)route.Parameters).ShouldBeSameAs((object)parameters);
-        }
+        //    // Then
+        //    ((object)route.Parameters).ShouldBeSameAs((object)parameters);
+        //}
 
-        [Fact]
-        public void Should_set_modules_property_when_instantiated()
-        {
-            //Given, When
-            Func<dynamic, Response> action = x => null;
-            var instance = new FakeNancyModuleWithoutBasePath();
+        //[Fact]
+        //public void Should_set_modules_property_when_instantiated()
+        //{
+        //    //Given, When
+        //    Func<dynamic, Response> action = x => null;
+        //    var instance = new FakeNancyModuleWithoutBasePath();
 
 
-            var route = new Route("/", null, instance, action);
+        //    var route = new Route("/", null, instance, action);
 
-            // Then
-            route.Module.ShouldBeSameAs(instance);
-        }
+        //    // Then
+        //    route.Module.ShouldBeSameAs(instance);
+        //}
 
         [Fact]
         public void Should_invoke_action_with_parameters_when_invoked()
@@ -99,7 +99,7 @@
             var route = new Route("/", parameters, null, action);
 
             // When
-            route.Invoke();
+            route.Invoke(parameters);
 
             // Then
             capturedParameters.ShouldBeSameAs((object)parameters);
@@ -115,7 +115,7 @@
             var route = new Route("/", null, null, action);
 
             // When
-            var response = route.Invoke();
+            var response = route.Invoke(new DynamicDictionary());
 
             // Then
             response.ShouldBeSameAs(expectedResponse);

@@ -5,25 +5,25 @@
 
     public class NotFoundRouteFixture
     {
-        private readonly IRoute route;
+        private readonly Route route;
 
         public NotFoundRouteFixture()
         {
-            this.route = new NotFoundRoute("/test");
+            this.route = new NotFoundRoute("GET", "/test");
         }
 
         [Fact]
         public void Should_set_route_property_when_instantiated()
         {
             //Given, When, Then
-            route.Path.ShouldEqual("/test");
+            route.Description.Path.ShouldEqual("/test");
         }
 
         [Fact]
         public void Should_set_action_that_returns_not_found_when_instantiated()
         {
             //Given, When
-            var response = route.Invoke();
+            var response = route.Invoke(new DynamicDictionary());
 
             // Then
             response.ShouldBeOfType<NotFoundResponse>();

@@ -58,7 +58,7 @@
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
-            ((string)resolvedRoute.Parameters["foo"]).ShouldEqual("bar");
+            ((string)resolvedRoute.Item2["foo"]).ShouldEqual("bar");
         }
 
         [Fact]
@@ -77,7 +77,7 @@
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
-            resolvedRoute.Action.ShouldBeSameAs(expectedAction);
+            resolvedRoute.Item1.ShouldBeSameAs(expectedAction);
         }
 
         [Fact]
@@ -207,7 +207,7 @@
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<MethodNotAllowedRoute>();
-            route.Path.ShouldEqual(request.Uri);
+            route.Item1.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -224,7 +224,8 @@
             var resolvedRoute = this.resolver.Resolve(request, routeCache);
 
             // Then
-            resolvedRoute.Module.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
+            //resolvedRoute.Module.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -241,7 +242,8 @@
             var resolvedRoute = this.resolver.Resolve(request, routeCache);
 
             // Then
-            resolvedRoute.Module.Request.ShouldBeSameAs(request);
+            //resolvedRoute.Module.Request.ShouldBeSameAs(request);
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -260,7 +262,8 @@
             // Then
             resolvedRoute.ShouldNotBeNull();
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.Module.ShouldBeSameAs(expectedModule);
+            //resolvedRoute.Module.ShouldBeSameAs(expectedModule);
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -278,7 +281,7 @@
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -293,7 +296,7 @@
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -314,7 +317,7 @@
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
