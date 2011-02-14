@@ -96,7 +96,6 @@
     <Compile Include="Routing\IRouteResolver.cs" />
     <Compile Include="Routing\NotFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
-    <Compile Include="Routing\RouteCollection.cs" />
     <Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
