@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Bootstrappers.Windsor.Tests
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Castle.MicroKernel.Registration;
@@ -29,6 +31,11 @@
                 Component.For<IFoo>().ImplementedBy<Foo>(),
                 Component.For<IDependency>().ImplementedBy<Dependency>());
             base.ConfigureRequestContainer(existingContainer);
+        }
+
+        protected override void RegisterViewEngines(IWindsorContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
         }
 
         protected override void ConfigureApplicationContainer(IWindsorContainer existingContainer)

@@ -102,6 +102,7 @@
     <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />
+    <Compile Include="ViewEngines\IViewFactory.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticView.cs" />
     <Compile Include="ViewEngines\StaticViewEngine.cs" />

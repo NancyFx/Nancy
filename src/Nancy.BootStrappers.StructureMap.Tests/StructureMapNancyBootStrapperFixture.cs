@@ -33,6 +33,11 @@ namespace Nancy.Tests.Unit
             });
         }
 
+        protected override void RegisterViewEngines(IContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void ConfigureApplicationContainer(IContainer container)
         {
             ApplicationContainerConfigured = true;

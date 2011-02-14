@@ -5,6 +5,8 @@ using Nancy.ViewEngines;
 
 namespace Nancy.Bootstrappers.Unity
 {
+    using System;
+
     public class UnityNancyBootstrapper : NancyBootstrapperBase<IUnityContainer>,
                                           INancyBootstrapperPerRequestRegistration<IUnityContainer>,
                                           INancyModuleCatalog
@@ -21,6 +23,11 @@ namespace Nancy.Bootstrappers.Unity
         protected override INancyEngine GetEngineInternal()
         {
             return _UnityContainer.Resolve<INancyEngine>();
+        }
+
+        protected override void RegisterViewEngines(IUnityContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -23,6 +23,11 @@
             return _Kernel.Get<INancyEngine>();
         }
 
+        protected override void RegisterViewEngines(IKernel container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///   Create a default, unconfigured, container
         /// </summary>

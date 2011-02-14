@@ -83,8 +83,11 @@
         {
             var container = CreateContainer();
             ConfigureApplicationContainer(container);
+            
             RegisterDefaults(container, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
+            RegisterViewEngines(container, GetViewEngineTypes());
+
             return GetEngineInternal();
         }
 
@@ -129,22 +132,28 @@
                 where !assembly.IsDynamic
                 from type in assembly.SafeGetExportedTypes()
                 where !type.IsAbstract
-                where RegisterDiagnostics(type)
                 where moduleType.IsAssignableFrom(type)
                 select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));
 
             return locatedModuleTypes;
         }
 
-        private static bool RegisterDiagnostics(Type typeToCheck)
+        protected virtual IEnumerable<Type> GetViewEngineTypes()
         {
-            if (typeToCheck.Equals(typeof(DiagnosticsModule)))
-            {
-                return (Debugger.IsAttached);
-            }
+            //var viewEngineTypes =
+            //    from assembly in AppDomain.CurrentDomain.GetAssemblies()
+            //    where !assembly.ReflectionOnly
+            //    where !assembly.IsDynamic
+            //    from type in assembly.SafeGetExportedTypes()
+            //    where !type.IsAbstract
+            //    where typeof(IFooBar).IsAssignableFrom(type)
+            //    select type;
 
-            return true;
+            //return viewEngineTypes;
+            return Enumerable.Empty<Type>();
         }
+
+        protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
 
         /// <summary>
         /// Create a default, unconfigured, container

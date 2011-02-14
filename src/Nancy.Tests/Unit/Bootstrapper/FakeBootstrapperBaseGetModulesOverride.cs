@@ -40,6 +40,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return Generator;
         }
 
+        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override object CreateContainer()
         {
             return FakeContainer;
@@ -94,6 +99,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
             return new Fakes.FakeModuleKeyGenerator();
+        }
+
+        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
+        {
+            throw new NotImplementedException();
         }
 
         protected override object CreateContainer()

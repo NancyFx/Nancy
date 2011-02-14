@@ -11,7 +11,7 @@ namespace Nancy.ViewEngines
 
         public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
         {
-            var result = viewTemplateLocator.GetTemplateContents(viewTemplate);
+            var result = viewTemplateLocator.GetViewLocation(viewTemplate);
 
             var view = new StaticView(result.Contents);
             return new ViewResult(view, result.Location);
