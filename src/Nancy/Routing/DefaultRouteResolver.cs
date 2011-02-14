@@ -54,7 +54,7 @@
             var associatedModule =
                 this.GetInitializedModuleForMatch(request, routeMatchToReturn);
 
-            var route = associatedModule.GetRoutes(routeMatchToReturn.Item3.Method).GetRouteByIndex(routeMatchToReturn.Item2);
+            var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
             return new Tuple<Route, DynamicDictionary>(route, routeMatchToReturn.Item4.Parameters);
         }

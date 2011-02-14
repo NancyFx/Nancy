@@ -23,23 +23,18 @@
                 var moduleType = module.GetType();
                 var moduleKey = this.moduleKeyGenerator.GetKeyForModuleType(moduleType);
 
-                this.AddMethodRoutesToCache(module, moduleKey, "GET");
-                this.AddMethodRoutesToCache(module, moduleKey, "POST");
-                this.AddMethodRoutesToCache(module, moduleKey, "PUT");
-                this.AddMethodRoutesToCache(module, moduleKey, "DELETE");
+                this.AddRoutesToCache(module.Routes.Select(r => r.Description), moduleKey);
             }
         }
 
-        private void AddMethodRoutesToCache(NancyModule module, string moduleKey, string method)
+        private void AddRoutesToCache(IEnumerable<RouteDescription> routes, string moduleKey)
         {
-            var routes = module.GetRoutes(method);
-            
             if (!this.ContainsKey(moduleKey))
             {
                 this[moduleKey] = new List<Tuple<int, RouteDescription>>();
             }
 
-            this[moduleKey].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r.Description)));
+            this[moduleKey].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
         }
 
         public bool IsEmpty()

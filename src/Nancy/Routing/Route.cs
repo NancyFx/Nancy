@@ -10,7 +10,7 @@
             this.Action = action;
         }
 
-        public Route (string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action, DynamicDictionary parameters)
+        public Route (string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action)
             : this(new RouteDescription(method, path, condition), action)
         {
         }
