@@ -13,6 +13,6 @@
         /// <param name="request">Incoming request</param>
         /// <param name="cache">Route cache</param>
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary</returns>
-        Tuple<Route, DynamicDictionary> Resolve(Request request, RouteCache cache);
+        Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache cache);
     }
 }
