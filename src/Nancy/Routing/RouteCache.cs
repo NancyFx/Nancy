@@ -5,7 +5,7 @@
     using Nancy.Bootstrapper;
     using System;
 
-    public class RouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>
+    public class RouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>, IRouteCache
     {
         private readonly IModuleKeyGenerator moduleKeyGenerator;
 

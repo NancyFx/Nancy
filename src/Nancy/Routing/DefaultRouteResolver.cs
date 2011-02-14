@@ -18,7 +18,7 @@
             this.templateEngineSelector = templateEngineSelector;
         }
 
-        public Tuple<Route, DynamicDictionary> Resolve(Request request, RouteCache routeCache)
+        public Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache routeCache)
         {
             if (routeCache.IsEmpty())
             {
@@ -103,7 +103,7 @@
             return !routesThatMatchRequestedPath.Any();
         }
 
-        private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(RouteCache routeCache, Request request)
+        private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(IRouteCache routeCache, Request request)
         {
             return from cacheEntry in routeCache
                    from cacheEntryRoutes in cacheEntry.Value

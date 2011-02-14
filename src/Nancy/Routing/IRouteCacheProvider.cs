@@ -14,6 +14,6 @@ namespace Nancy.Routing
     /// </summary>
     public interface IRouteCacheProvider
     {
-        RouteCache GetCache();
+        IRouteCache GetCache();
     }
 }

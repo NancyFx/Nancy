@@ -87,7 +87,7 @@
                 new TypeRegistration(typeof(ITemplateEngineSelector), DefaultTemplateEngineSelector),
                 new TypeRegistration(typeof(INancyEngine), DefaultNancyEngine),
                 new TypeRegistration(typeof(IModuleKeyGenerator), DefaultModuleKeyGenerator),
-                new TypeRegistration(typeof(RouteCache), DefaultRouteCache),
+                new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), DefaultRouteCacheProvider),
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher)
             };
