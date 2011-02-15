@@ -22,14 +22,14 @@
         {
             if (routeCache.IsEmpty())
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Uri, request.Method), DynamicDictionary.Empty);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
             }
 
             var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, request);
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Uri, request.Method), DynamicDictionary.Empty);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
             }
 
             var routesWithCorrectRequestMethod = 
