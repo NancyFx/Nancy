@@ -21,7 +21,7 @@
             this.templateEngineSelector = A.Fake<ITemplateEngineSelector>();
 
             this.catalog = A.Fake<INancyModuleCatalog>();
-            A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored)).Returns(new FakeNancyModule());
+            A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored)).Returns(expectedModule);
 
             this.expectedAction = x => HttpStatusCode.OK;
             this.expectedModule = new FakeNancyModule(x =>
@@ -72,12 +72,12 @@
             });
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
-            resolvedRoute.Item1.ShouldBeSameAs(expectedAction);
+            resolvedRoute.Action.ShouldBeSameAs(this.expectedAction);
         }
 
         [Fact]
@@ -202,12 +202,12 @@
             });
 
             // When
-            var route = this.resolver.Resolve(request, routeCache);
+            var route = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<MethodNotAllowedRoute>();
-            route.Item1.Description.Path.ShouldEqual(request.Uri);
+            route.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -224,8 +224,7 @@
             var resolvedRoute = this.resolver.Resolve(request, routeCache);
 
             // Then
-            //resolvedRoute.Module.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
-            throw new NotImplementedException();
+            expectedModule.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
         }
 
         [Fact]
@@ -242,28 +241,7 @@
             var resolvedRoute = this.resolver.Resolve(request, routeCache);
 
             // Then
-            //resolvedRoute.Module.Request.ShouldBeSameAs(request);
-            throw new NotImplementedException();
-        }
-
-        [Fact]
-        public void Should_return_route_with_module_set_to_module_associated_with_resolved_route()
-        {
-            // Given
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x =>
-            {
-                x.AddGetRoute("/foo/bar", "module-key");
-            });
-
-            // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
-
-            // Then
-            resolvedRoute.ShouldNotBeNull();
-            resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            //resolvedRoute.Module.ShouldBeSameAs(expectedModule);
-            throw new NotImplementedException();
+            expectedModule.Request.ShouldBeSameAs(request);
         }
 
         [Fact]
@@ -285,18 +263,18 @@
         }
 
         [Fact]
-        public void Should_return_notfoundroute_with_path_set_to_request_uri_when_route_cache_is_empty()
+        public void should_return_notfoundroute_with_path_set_to_request_uri_when_route_cache_is_empty()
         {
             // Given
             var request = new FakeRequest("GET", "/foo/bar");
             var routeCache = FakeRouteCache.Empty;
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -313,11 +291,11 @@
                 new FakeRoutePatternMatchResult(x => x.IsMatch(false)));
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
