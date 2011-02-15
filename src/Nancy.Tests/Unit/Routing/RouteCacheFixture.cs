@@ -35,9 +35,9 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Should_Contain_Entries_For_All_Routes()
         {
-            var total = _FakeModuleCatalog.GetAllModules().Select(nm => nm.Routes.Count());
+            var total = _FakeModuleCatalog.GetAllModules().Sum(nm => nm.Routes.Count());
 
-            var cacheEntriesTotal = _RouteCache.Count();
+            var cacheEntriesTotal = _RouteCache.Values.Sum(c => c.Count());
 
             cacheEntriesTotal.ShouldEqual(total);
         }
@@ -71,12 +71,25 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Sets_Method()
         {
-            var methods = from cacheEntry in _RouteCache.Values
+            var methods = (from cacheEntry in _RouteCache.Values
                           from route in cacheEntry
-                          select route.Item2.Method;
+                          select route.Item2.Method).Distinct();
 
             methods.Count().ShouldEqual(4);
         }
 
+        [Fact]
+        public void Index_Set_Correctly_In_Cache()
+        {
+            var routes = _FakeModuleCatalog.GetModuleByKey("1").Routes.Select(r => r.Description);
+
+            var cachedRoutes = _RouteCache["1"];
+
+            foreach (var cachedRoute in cachedRoutes)
+            {
+                var index = cachedRoute.Item1;
+                cachedRoute.Item2.ShouldBeSameAs(routes.ElementAt(index));
+            }
+        }
     }
 }
