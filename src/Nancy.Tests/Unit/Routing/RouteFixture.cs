@@ -8,14 +8,47 @@
     public class RouteFixture
     {
         [Fact]
-        public void Should_throw_argumentnullexception_when_instantiated_with_null_path()
+        public void Should_throw_argumentexception_when_instantiated_with_null_method()
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route(null, null, null, x => null));
+                Record.Exception(() => new Route(null, "", null, x => null));
 
             // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
+            exception.ShouldBeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentexception_when_instantiated_with_empty_method()
+        {
+            //Given, When
+            var exception =
+                Record.Exception(() => new Route("", "/", null, x => null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentexception_when_instantiated_with_null_path()
+        {
+            //Given, When
+            var exception =
+                Record.Exception(() => new Route("GET", null, null, x => null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentexception_when_instantiated_with_empty_path()
+        {
+            //Given, When
+            var exception =
+                Record.Exception(() => new Route("GET", null, null, x => null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentException>();
         }
 
         [Fact]
@@ -23,63 +56,11 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("/", null, null, null));
+                Record.Exception(() => new Route("GET", "/", null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
-
-        [Fact]
-        public void Should_set_path_property_when_instantiated()
-        {
-            //Given, When
-            const string path = "/dummy/path";
-            var route = new Route(path, null, null, x => null);
-
-            // Then
-            route.Description.Path.ShouldEqual(path);
-        }
-
-        [Fact]
-        public void Should_set_action_property_when_instantiated()
-        {
-            //Given, When
-            Func<dynamic, Response> action = x => null;
-            var route = new Route("/", null, null, action);
-
-            // Then
-            route.Action.ShouldBeSameAs(action);
-        }
-
-        //[Fact]
-        //public void Should_set_paramters_property_when_instantiated()
-        //{
-        //    //Given, When
-        //    Func<dynamic, Response> action = x => null;
-
-        //    dynamic parameters = new DynamicDictionary();
-        //    parameters.foo = 10;
-        //    parameters.bar = "value";
-
-        //    var route = new Route("/", parameters, null, action);
-
-        //    // Then
-        //    ((object)route.Parameters).ShouldBeSameAs((object)parameters);
-        //}
-
-        //[Fact]
-        //public void Should_set_modules_property_when_instantiated()
-        //{
-        //    //Given, When
-        //    Func<dynamic, Response> action = x => null;
-        //    var instance = new FakeNancyModuleWithoutBasePath();
-
-
-        //    var route = new Route("/", null, instance, action);
-
-        //    // Then
-        //    route.Module.ShouldBeSameAs(instance);
-        //}
 
         [Fact]
         public void Should_invoke_action_with_parameters_when_invoked()
@@ -96,7 +77,7 @@
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = new Route("/", parameters, null, action);
+            var route = new Route("GET", "/", null, action);
 
             // When
             route.Invoke(parameters);
@@ -112,7 +93,7 @@
             var expectedResponse = new Response();
             Func<object, Response> action = x => expectedResponse;
 
-            var route = new Route("/", null, null, action);
+            var route = new Route("GET", "/", null, action);
 
             // When
             var response = route.Invoke(new DynamicDictionary());
