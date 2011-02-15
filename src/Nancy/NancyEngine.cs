@@ -20,6 +20,11 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
+            if (routeCache == null)
+            {
+                throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
+            }
+
             this.resolver = resolver;
             this.routeCache = routeCache;
         }

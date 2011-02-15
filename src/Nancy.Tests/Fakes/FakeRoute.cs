@@ -7,7 +7,7 @@ namespace Nancy.Tests.Fakes
         public bool ActionWasInvoked;
 
         public FakeRoute() 
-            : base(string.Empty, null, null, x => new Response())
+            : base("GET", "/", null, x => new Response())
         {
             this.Action = x => {
                 this.ActionWasInvoked = true;
