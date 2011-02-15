@@ -142,5 +142,15 @@ namespace Nancy.Tests.Unit
 
             module.Routes.First().Description.Method.ShouldEqual("DELETE");
         }
+
+        [Fact]
+        public void Should_store_route_combine_with_base_path_if_one_specified()
+        {
+            var moduleWithBasePath = new FakeNancyModuleWithBasePath();
+
+            moduleWithBasePath.Get["/NewRoute"] = d => null;
+
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/NewRoute");
+        }
     }
 }
