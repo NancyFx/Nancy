@@ -27,7 +27,18 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, null));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_routecache()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
