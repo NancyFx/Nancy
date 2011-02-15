@@ -6,6 +6,11 @@
     {
         public Route(RouteDescription description, Func<dynamic, Response> action)
         {
+            if (action == null)
+            {
+                throw new ArgumentNullException("action");
+            }
+
             this.Description = description;
             this.Action = action;
         }
