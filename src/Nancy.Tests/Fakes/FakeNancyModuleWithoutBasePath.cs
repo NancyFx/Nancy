@@ -38,6 +38,21 @@
             Put["/"] = x => {
                 return "Default put root";
             };
+
+            Get["/filt", req => false] = x =>
+            {
+                return "false";
+            };
+
+            Get["/filt", req => true] = x =>
+            {
+                return "true";
+            };
+
+            Get["/filt", req => false] = x =>
+            {
+                return "false";
+            };
         }
     }
 }

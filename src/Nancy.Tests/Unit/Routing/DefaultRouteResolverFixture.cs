@@ -6,6 +6,7 @@
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using System.IO;
 
     public class RouteResolverFixture
     {
@@ -314,5 +315,43 @@
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
         }
 
+        [Fact]
+        public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
+        {
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var request = new FakeRequest("GET", "/filtered");
+
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.ShouldBeOfType(typeof(NotFoundRoute));
+        }
+
+        [Fact]
+        public void Should_return_a_route_if_matching_and_the_filter_returns_true()
+        {
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var request = new FakeRequest("GET", "/notfiltered");
+
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.ShouldBeOfType(typeof (Route));
+        }
+
+        [Fact]
+        public void Should_return_route_whos_filter_returns_true_when_there_is_also_a_matching_route_with_a_failing_filter()
+        {
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var request = new FakeRequest("GET", "/filt");
+
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.Description.Condition(request).ShouldBeTrue();
+        }
     }
 }
