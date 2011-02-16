@@ -4,14 +4,10 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
 
-    // Notice that the template might not have a "Path".
-    // For example, it could be embedded. So that's why this 
-    // returns a reader.
     public interface IViewLocator
     {
-        ViewLocationResult GetViewLocation(string viewName);
+        ViewLocationResult GetViewLocation(string viewName, IEnumerable<string> supportedViewEngineExtensions);
     }
 
     public class ViewLocator : IViewLocator
@@ -32,33 +28,47 @@
             this.viewSourceProviders = viewSourceProviders;
         }
 
-        public ViewLocationResult GetViewLocation(string viewName)
+        public ViewLocationResult GetViewLocation(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
-            if(this.NotEnoughInformationAvailableToLocateView(viewName))
+            if(this.NotEnoughInformationAvailableToLocateView(viewName, supportedViewEngineExtensions))
             {
                 return null;
             }
 
-            return this.LocateView(viewName);
+            return this.LocateView(viewName, supportedViewEngineExtensions);
         }
 
-        private bool NotEnoughInformationAvailableToLocateView(string viewName)
+        private bool NotEnoughInformationAvailableToLocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             if (viewName == null)
+            {
                 return true;
+            }
 
             if (viewName.Length == 0)
+            {
                 return true;
+            }
+
+            if (supportedViewEngineExtensions == null)
+            {
+                return true;
+            }
+
+            if (!supportedViewEngineExtensions.Any())
+            {
+                return true;
+            }
 
             return !this.viewSourceProviders.Any();
         }
 
-        private ViewLocationResult LocateView(string viewName)
+        private ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             foreach (var viewSourceProvider in viewSourceProviders)
             {
                 var result =
-                    LocateViewAndSupressExceptions(viewSourceProvider, viewName);
+                    LocateViewAndSupressExceptions(viewSourceProvider, viewName, supportedViewEngineExtensions);
 
                 if (result != null)
                 {
@@ -69,11 +79,11 @@
             return null;
         }
 
-        private static ViewLocationResult LocateViewAndSupressExceptions(IViewSourceProvider viewSourceProvider, string viewName)
+        private static ViewLocationResult LocateViewAndSupressExceptions(IViewSourceProvider viewSourceProvider, string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             try
             {
-                return viewSourceProvider.LocateView(viewName);
+                return viewSourceProvider.LocateView(viewName, supportedViewEngineExtensions);
             }
             catch (Exception)
             {
@@ -84,33 +94,44 @@
 
     public interface IViewSourceProvider
     {
-        ViewLocationResult LocateView(string viewName);
+        ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions);
     }
 
     public class ResourceViewSourceProvider : IViewSourceProvider
     {
-        public ViewLocationResult LocateView(string viewName)
+        public ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
-            var resourceStream =
-                GetResourceStream(viewName);
+            var resourceStreamMatch =
+                GetResourceStreamMatch(viewName, supportedViewEngineExtensions);
 
-            if (resourceStream == null)
+            if (resourceStreamMatch == null)
             {
                 return null;
             }
 
             return new ViewLocationResult(
-                resourceStream.Item1,
-                new StreamReader(resourceStream.Item2)
+                resourceStreamMatch.Item1,
+                GetResourceNameExtension(resourceStreamMatch.Item1),
+                new StreamReader(resourceStreamMatch.Item2)
             );
         }
 
-        private static Tuple<string, Stream> GetResourceStream(string viewName)
+        private static string GetResourceNameExtension(string resourceName)
+        {
+            var extension =
+                Path.GetExtension(resourceName);
+
+            return string.IsNullOrEmpty(extension) ? string.Empty : extension.TrimStart('.');
+        }
+
+        private static Tuple<string, Stream> GetResourceStreamMatch(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             var resourceStreams =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
                 from resourceName in assembly.GetManifestResourceNames()
-                where resourceName.EndsWith(viewName, StringComparison.OrdinalIgnoreCase)
+                from viewEngineExtension in supportedViewEngineExtensions
+                let inspectedResourceName = string.Concat(viewName, ".", viewEngineExtension)
+                where resourceName.EndsWith(inspectedResourceName, StringComparison.OrdinalIgnoreCase)
                 select new Tuple<string, Stream>(
                     resourceName,
                     assembly.GetManifestResourceStream(resourceName)

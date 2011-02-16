@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System;
+    using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.IO;
     using System.Linq;
@@ -24,13 +25,39 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
+        public void Should_return_null_when_getting_view_location_with_null_supported_view_engine_extensions()
+        {
+            // Given
+            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+
+            // When
+            var result = locator.GetViewLocation("viewName", null);
+
+            // Then
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_null_when_getting_view_location_with_empty_supported_view_engine_extensions()
+        {
+            // Given
+            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+
+            // When
+            var result = locator.GetViewLocation("viewName", Enumerable.Empty<string>());
+
+            // Then
+            result.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_return_null_when_getting_view_location_with_null_view_null()
         {
             // Given
             var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
-            var result = locator.GetViewLocation(null);
+            var result = locator.GetViewLocation(null, Enumerable.Empty<string>());
 
             // Then
             result.ShouldBeNull();
@@ -43,7 +70,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
-            var result = locator.GetViewLocation(string.Empty);
+            var result = locator.GetViewLocation(string.Empty, Enumerable.Empty<string>());
 
             // Then
             result.ShouldBeNull();
@@ -56,34 +83,55 @@ namespace Nancy.Tests.Unit.ViewEngines
             var locator = new ViewLocator(new IViewSourceProvider[] { });
 
             // When
-            var result = locator.GetViewLocation("viewName");
+            var result = locator.GetViewLocation("viewName", Enumerable.Empty<string>());
 
             // Then
             result.ShouldBeNull();
         }
 
         [Fact]
-        public void Should_call_locateview_with_view_name_on_all_view_source_providers()
+        public void Should_call_locateview_with_view_name_on_view_source_provider()
         {
             // Given
             const string viewname = "view name";
 
             var viewSourceProviders = new[] {
-                A.Fake<IViewSourceProvider>(),
                 A.Fake<IViewSourceProvider>()
             };
 
-            A.CallTo(() => viewSourceProviders[0].LocateView(viewname)).Returns(null);
-            A.CallTo(() => viewSourceProviders[1].LocateView(viewname)).Returns(null);
+            A.CallTo(() => viewSourceProviders[0].LocateView(viewname, Enumerable.Empty<string>())).Returns(null);
 
             var locator = new ViewLocator(viewSourceProviders);
 
             // When
-            locator.GetViewLocation(viewname);
+            locator.GetViewLocation(viewname, new[] { "html" });
+
+            // Then
+            A.CallTo(() => viewSourceProviders[0].LocateView(viewname, A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_call_locateview_with_supported_view_engine_extensions_on_view_source_provider()
+        {
+            // Given
+            const string viewname = "view name";
+
+            var expectedViewEngineExtensions = new[] { "html" };
+
+            var viewSourceProviders = new[] {
+                A.Fake<IViewSourceProvider>()
+            };
+
+            A.CallTo(() => viewSourceProviders[0].LocateView(A<string>.Ignored, Enumerable.Empty<string>())).Returns(null);
+
+            var locator = new ViewLocator(viewSourceProviders);
+
+            // When
+            locator.GetViewLocation(viewname, new[] { "html" });
 
             // Then)
-            A.CallTo(() => viewSourceProviders[0].LocateView(viewname)).MustHaveHappened();
-            A.CallTo(() => viewSourceProviders[1].LocateView(viewname)).MustHaveHappened();
+            A.CallTo(() => viewSourceProviders[0].LocateView(A<string>.Ignored,
+                A<IEnumerable<string>>.That.IsSameSequenceAs(expectedViewEngineExtensions).Argument)).MustHaveHappened();
         }
 
         [Fact]
@@ -91,13 +139,13 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewSourceProvider = A.Fake<IViewSourceProvider>();
-            var viewLocationResult = new ViewLocationResult(null, null);
+            var viewLocationResult = new ViewLocationResult(null, string.Empty, null);
             var locator = new ViewLocator(new[] { viewSourceProvider });
 
-            A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored)).Returns(viewLocationResult);
+            A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Returns(viewLocationResult);
 
             // When
-            var result = locator.GetViewLocation("view name");
+            var result = locator.GetViewLocation("view name", new[] { "html" });
 
             // Then
             result.ShouldBeSameAs(viewLocationResult);
@@ -108,21 +156,16 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewSourceProvider = A.Fake<IViewSourceProvider>();
-            A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored)).Throws(new Exception());
+            A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Throws(new Exception());
 
             var locator = new ViewLocator(new[] { viewSourceProvider });
 
             // When
-            var result = locator.GetViewLocation("view name");
+            var result = locator.GetViewLocation("view name", new[] { "html" });
 
             // Then
             result.ShouldBeNull();
         }
-    }
-
-    public class ResourceViewSourceProviderFixture
-    {
-        
     }
 
     public class FakeAssembly : Assembly

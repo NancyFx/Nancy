@@ -15,7 +15,7 @@
     using Nancy.ViewEngines.Spark.Caching;
     using Nancy.ViewEngines.Spark.Descriptors;
 
-    public class ViewFactory : ISparkServiceInitialize, IViewEngine
+    public class ViewFactory : ISparkServiceInitialize, IViewEngineEx, IViewEngine
     {
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
         private readonly ViewEngineResult cacheMissResult = new ViewEngineResult(new List<string>());
@@ -382,10 +382,14 @@
 
         public ViewResult RenderView<TModel>(string path, TModel model)
         {
-            var viewName = path.Substring(path.LastIndexOf('/') + 1).Replace(".spark", string.Empty);
-            var viewPath = path.Substring(0, path.LastIndexOf('/'));
+            //var viewName = path.Substring(path.LastIndexOf('/') + 1).Replace(".spark", string.Empty);
+            //var viewPath = path.Substring(0, path.LastIndexOf('/'));
+
+            var viewName = Path.GetFileNameWithoutExtension(path);
+            var viewPath = Path.GetDirectoryName(path);
+
             var targetNamespace = string.Empty; //TODO Rob G: This can be used to support things like areas or features
-            ViewFolder = new FileSystemViewFolder(HostingEnvironment.MapPath(viewPath));
+            ViewFolder = new FileSystemViewFolder(viewPath);
             HttpContextBase httpContext = null; //TODO Rob G: figure out how to get httpcontext passed in so that we can support view and partial caching.
             var actionContext = new ActionContext(httpContext, targetNamespace);
             var result = FindView(actionContext, viewName, null);
@@ -396,7 +400,28 @@
                 viewWithModel.SetModel(model);
             }
 
-            return new ViewResult(result.View as SparkView, HostingEnvironment.MapPath(path));
+            return new ViewResult(result.View as SparkView, path);
+        }
+
+        public IEnumerable<string> Extensions
+        {
+            get { yield return "spark"; }
+        }
+
+        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
+        {
+            return stream =>
+            {
+                ViewResult view =
+                    this.RenderView(viewLocationResult.Location, model);
+                
+                using (var writer = new StreamWriter(stream))
+                {
+                    view.View.Writer = writer;
+                    view.View.Model = model;
+                    view.View.Execute();
+                }
+            };
         }
     }
 }

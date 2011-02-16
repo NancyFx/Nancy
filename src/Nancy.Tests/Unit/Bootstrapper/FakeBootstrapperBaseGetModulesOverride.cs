@@ -40,6 +40,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return Generator;
         }
 
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviders)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
         {
             throw new NotImplementedException();
@@ -79,6 +84,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviders)
+        {
+            throw new NotImplementedException();
         }
 
         protected override IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)

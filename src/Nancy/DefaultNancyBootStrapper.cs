@@ -2,12 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-
-    using Nancy.ViewEngines;
-
-    using TinyIoC;
     using Nancy.Bootstrapper;
+    using Nancy.ViewEngines;
+    using TinyIoC;
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
@@ -38,6 +35,11 @@
             return this.container.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviders)
+        {
+            this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviders).AsSingleton();
+        }
+
         /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
@@ -56,7 +58,7 @@
 
         protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
         {
-            //this.container.RegisterMultiple<IFooBar>(viewEngineTypes).AsMultiInstance();
+            this.container.RegisterMultiple<IViewEngineEx>(viewEngineTypes).AsSingleton();
         }
 
         /// <summary>

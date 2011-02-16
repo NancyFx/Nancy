@@ -16,7 +16,6 @@
         /// </summary>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache"></param>
-        /// <param name="viewEngines"></param>
         public NancyEngine(IRouteResolver resolver, IRouteCache routeCache)
         {
             if (resolver == null)

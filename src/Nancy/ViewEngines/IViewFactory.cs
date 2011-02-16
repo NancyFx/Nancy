@@ -7,7 +7,9 @@
 
     public interface IViewFactory
     {
-        Action<Stream> GetRenderedView<TModel>(string viewName, TModel model);
+        Action<Stream> this[string viewName] { get; }
+
+        Action<Stream> this[string viewName, dynamic model] { get; }
     }
 
     public class DefaultViewFactory : IViewFactory
@@ -22,7 +24,17 @@
             this.viewEngines = viewEngines;
         }
 
-        public Action<Stream> GetRenderedView<TModel>(string viewName, TModel model)
+        public Action<Stream> this[string viewName]
+        {
+            get { return this.GetRenderedView(viewName, null); }
+        }
+
+        public Action<Stream> this[string viewName, dynamic model]
+        {
+            get { return this.GetRenderedView(viewName, model); }
+        }
+
+        private Action<Stream> GetRenderedView(string viewName, dynamic model)
         {
             if (viewName == null)
             {
@@ -30,9 +42,12 @@
             }
 
             var viewLocationResult =
-                this.viewLocator.GetViewLocation(viewName);
+                this.viewLocator.GetViewLocation(Path.GetFileNameWithoutExtension(viewName), this.GetExtensionsToUseForViewLookup(viewName));
 
-            var resolvedViewEngine = GetViewEngine(viewName);
+            // CHECK FOR NULL LOCATION!
+
+            var resolvedViewEngine = 
+                GetViewEngine(viewLocationResult.Extension);
 
             if (resolvedViewEngine == null)
             {
@@ -46,20 +61,41 @@
             );
         }
 
-        private IViewEngineEx GetViewEngine(string viewName)
+        private IEnumerable<string> GetExtensionsToUseForViewLookup(string viewName)
         {
-            var viewExtension =
-                Path.GetExtension(viewName).TrimStart('.');
+            var extensions =
+                GetViewExtension(viewName) ?? GetSupportedViewEngineExtensions();
 
+            return extensions;
+        }
+
+        private static IEnumerable<string> GetViewExtension(string viewName)
+        {
+            var extension =
+                Path.GetExtension(viewName);
+
+            return string.IsNullOrEmpty(extension) ? null : new[] {extension.TrimStart('.') };
+        }
+
+        private IEnumerable<string> GetSupportedViewEngineExtensions()
+        {
+            var viewEngineExtensions =
+                this.viewEngines.SelectMany(x => x.Extensions);
+
+            return viewEngineExtensions.Distinct(StringComparer.OrdinalIgnoreCase);
+        }
+
+        private IViewEngineEx GetViewEngine(string extension)
+        {
             var viewEngiens = 
                 from viewEngine in this.viewEngines
-                where viewEngine.Extensions.Any(x => x.Equals(viewExtension, StringComparison.InvariantCultureIgnoreCase))
+                where viewEngine.Extensions.Any(x => x.Equals(extension, StringComparison.InvariantCultureIgnoreCase))
                 select viewEngine;
 
             return viewEngiens.FirstOrDefault();
         }
 
-        private static Action<Stream> SafeInvokeViewEngine<TModel>(IViewEngineEx viewEngine, ViewLocationResult locationResult, TModel model)
+        private static Action<Stream> SafeInvokeViewEngine(IViewEngineEx viewEngine, ViewLocationResult locationResult, dynamic model)
         {
             try
             {
@@ -76,6 +112,6 @@
     {
         IEnumerable<string> Extensions { get; }
 
-        Action<Stream> RenderView<TModel>(ViewLocationResult viewLocationResult, TModel model);
+        Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model);
     }
 }

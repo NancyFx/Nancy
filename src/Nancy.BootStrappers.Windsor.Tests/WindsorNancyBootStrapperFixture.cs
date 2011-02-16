@@ -33,6 +33,11 @@
             base.ConfigureRequestContainer(existingContainer);
         }
 
+        protected override void RegisterViewSourceProviders(IWindsorContainer container, IEnumerable<Type> viewSourceProviders)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void RegisterViewEngines(IWindsorContainer container, IEnumerable<Type> viewEngineTypes)
         {
             throw new NotImplementedException();
