@@ -109,6 +109,7 @@
                    from cacheEntryRoutes in cacheEntry.Value
                    let routeIndex = cacheEntryRoutes.Item1
                    let routeDescription = cacheEntryRoutes.Item2
+                   where ((routeDescription.Condition == null) || (routeDescription.Condition(request)))
                    let result = this.routePatternMatcher.Match(request.Uri, routeDescription.Path)
                    where result.IsMatch
                    select new RouteCandidate(cacheEntry.Key, routeIndex, routeDescription, result);
