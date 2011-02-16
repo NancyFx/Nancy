@@ -2,8 +2,8 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using Nancy.Routing;
+    using ViewEngines;
 
     public abstract class NancyModule
     {
@@ -68,10 +68,7 @@ namespace Nancy
             this.routes = new List<Route>();
         }
 
-        /// <summary>
-        /// Gets or sets an <see cref="ITemplateEngineSelector"/> which represents the current application context
-        /// </summary>
-        public ITemplateEngineSelector TemplateEngineSelector { get; set; }
+        public IViewFactory View { get; set; }
 
         /// <summary>
         /// Gets <see cref="RouteIndexer"/> for declaring actions for DELETE requests.
@@ -125,29 +122,31 @@ namespace Nancy
         /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
         public IResponseFormatter Response { get; private set; }
 
-        /// <summary>
-        /// Renders the view based on the extension without a model.
-        /// </summary>
-        /// <param name="name">The path to the view</param>        
-        public Action<Stream> View(string name)
-        {
-            return View(name, (object) null);
-        }
+        ///// <summary>
+        ///// Renders the view based on the extension without a model.
+        ///// </summary>
+        ///// <param name="name">The path to the view</param>        
+        //public Action<Stream> View(string name)
+        //{
+        //    return View(name, (object) null);
+        //}
 
-        /// <summary>
-        /// Renders the view based on the extension with a model.
-        /// </summary>
-        /// <param name="name">The path to the view</param>
-        /// <param name="model">The model to pass to the view</param>
-        public Action<Stream> View<TModel>(string name, TModel model)
-        {
-            var extension = Path.GetExtension(name);
-            var processor = TemplateEngineSelector.GetTemplateProcessor(extension) ?? TemplateEngineSelector.DefaultProcessor;
-            return stream =>
-                       {
-                           var result = processor.RenderView(name, model);
-                           result.Execute(stream);
-                       };
-        }
+        ///// <summary>
+        ///// Renders the view based on the extension with a model.
+        ///// </summary>
+        ///// <param name="name">The path to the view</param>
+        ///// <param name="model">The model to pass to the view</param>
+        //public Action<Stream> View<TModel>(string name, TModel model)
+        //{
+        //    return this.ViewFactory[name, model];
+
+        //    //var extension = Path.GetExtension(name);
+        //    //var processor = TemplateEngineSelector.GetTemplateProcessor(extension) ?? TemplateEngineSelector.DefaultProcessor;
+        //    //return stream =>
+        //    //           {
+        //    //               var result = processor.RenderView(name, model);
+        //    //               result.Execute(stream);
+        //    //           };
+        //}
     }
 }

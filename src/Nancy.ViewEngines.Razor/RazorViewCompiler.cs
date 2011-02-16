@@ -2,13 +2,14 @@
 {
     using System;
     using System.CodeDom.Compiler;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Web.Razor;
     using Microsoft.CSharp;
 
-    public class RazorViewCompiler : IViewCompiler
+    public class RazorViewCompiler : IViewCompiler, IViewEngineEx
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
@@ -118,6 +119,27 @@
 
         private static string GetAssemblyPath(Assembly assembly) {
             return new Uri(assembly.CodeBase).LocalPath;
+        }
+
+        public IEnumerable<string> Extensions
+        {
+            get { return new[] { "cshtml", "vbhtml" }; }
+        }
+
+        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
+        {
+            return stream =>
+            {
+                var view = 
+                    GetCompiledView<dynamic>(viewLocationResult.Contents);
+
+                using (var writer = new StreamWriter(stream))
+                {
+                    view.Model = model;
+                    view.Writer = writer;
+                    view.Execute();
+                }
+            };
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Nancy.Demo
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x => {
-                return View("~/views/routes.cshtml", routeCacheProvider.GetCache());
+                return View["routes.cshtml", routeCacheProvider.GetCache()];
             };
 
             Get["/style/{file}"] = x => {
@@ -38,26 +38,36 @@ namespace Nancy.Demo
             };
 
             Get["/javascript"] = x => {
-                return View("~/views/javascript.html");
+                return View["~/views/javascript.html"];
             };
 
             Get["/static"] = x => {
-                return View("~/views/static.htm");
+                return View["~/views/static.htm"];
             };
 
             Get["/razor"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
-                return View("~/views/razor.cshtml", model);
+                return View["~/views/razor.cshtml", model];
+            };
+
+            Get["/embedded"] = x => {
+                var model = new RatPack { FirstName = "Embedded" };
+                return View["embedded", model];
+            };
+
+            Get["/embedded2"] = x => {
+                var model = new RatPack { FirstName = "Embedded" };
+                return View["embedded.django", model];
             };
 
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
-                return View("~/views/ndjango.django", model);
+                return View["~/views/ndjango.django", model];
             };
 
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
-                return View("~/views/spark.spark", model);
+                return View["~/views/spark.spark", model];
             };
 
             Get["/json"] = x => {

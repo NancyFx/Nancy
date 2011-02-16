@@ -49,6 +49,11 @@ namespace Nancy.Bootstrappers.Unity
             return _UnityContainer.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviders)
+        {
+            throw new NotImplementedException();
+        }
+
         /// <summary>
         ///   Register the given module types into the container
         /// </summary>

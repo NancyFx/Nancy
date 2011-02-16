@@ -21,7 +21,7 @@
                         RequestDependencyText = this.requestDependency.GetContent()
                     };
 
-                return View("~/views/razor-dependency.cshtml", model);
+                return View["~/views/razor-dependency.cshtml", model];
             };
         }
     }

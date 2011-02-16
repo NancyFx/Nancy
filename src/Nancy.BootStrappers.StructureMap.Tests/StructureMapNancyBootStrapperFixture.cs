@@ -33,6 +33,11 @@ namespace Nancy.Tests.Unit
             });
         }
 
+        protected override void RegisterViewSourceProviders(IContainer container, IEnumerable<Type> viewSourceProviders)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override void RegisterViewEngines(IContainer container, IEnumerable<Type> viewEngineTypes)
         {
             throw new NotImplementedException();

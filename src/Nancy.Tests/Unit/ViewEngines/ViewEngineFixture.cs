@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.IO;
+    using System.Linq;
     using FakeItEasy;
     using Nancy.ViewEngines;
     using Xunit;
@@ -18,9 +19,9 @@
             this.templateLocator = A.Fake<IViewLocator>();
             this.viewCompiler = A.Fake<IViewCompiler>();
             this.view = A.Fake<IView>();
-            this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", null);
+            this.viewLocationResult = new ViewLocationResult(@"c:\some\fake\path", string.Empty, null);
 
-            A.CallTo(() => templateLocator.GetViewLocation("test")).Returns(viewLocationResult);
+            A.CallTo(() => templateLocator.GetViewLocation("test", Enumerable.Empty<string>())).Returns(viewLocationResult);
             A.CallTo(() => viewCompiler.GetCompiledView<object>(null)).Returns(view);
             A.CallTo(() => viewCompiler.GetCompiledView<MemoryStream>(null)).Returns(view);
 

@@ -1,6 +1,7 @@
 namespace Nancy.ViewEngines
 {
     using System;
+    using System.Linq;
 
     public class ViewEngine : IViewEngine
     {
@@ -15,7 +16,7 @@ namespace Nancy.ViewEngines
 
         public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
         {
-            var result = ViewTemplateLocator.GetViewLocation(viewTemplate);
+            var result = ViewTemplateLocator.GetViewLocation(viewTemplate, Enumerable.Empty<string>());
 
             var view = ViewCompiler.GetCompiledView<TModel>(result.Contents);
 
