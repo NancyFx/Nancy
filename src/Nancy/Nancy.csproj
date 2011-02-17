@@ -94,15 +94,18 @@
     <Compile Include="Routing\Route.cs" />
     <Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />
-    <Compile Include="ViewEngines\AspNetTemplateLocator.cs" />
+    <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\IView.cs" />
     <Compile Include="ViewEngines\IViewCompiler.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
+    <Compile Include="ViewEngines\IViewSourceProvider.cs" />
+    <Compile Include="ViewEngines\ResourceViewSourceProvider.cs" />
     <Compile Include="ViewEngines\StaticView.cs" />
     <Compile Include="ViewEngines\StaticViewEngine.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
   <ItemGroup>
