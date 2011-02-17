@@ -1,51 +1,17 @@
 namespace Nancy.Tests.Unit
 {
     using System;
-    using System.IO;
     using System.Linq;
-    using FakeItEasy;
     using Fakes;
-    using Nancy.ViewEngines;
     using Xunit;
 
     public class NancyModuleFixture
     {
-        private NancyModule module;
-        // TODO: Andreas - Fix removed tests
-        //[Fact]
-        //public void Should_execute_the_default_processor_unregistered_extension()
-        //{
-        //    var application = A.Fake<ITemplateEngineSelector>();
-        //    var viewEngine = A.Fake<IViewEngine>();
-        //    var module = new FakeNancyModuleWithoutBasePath {TemplateEngineSelector = application};
+        private readonly NancyModule module;
 
         public NancyModuleFixture()
         {
             this.module = new FakeNancyModuleNoRoutes();
-        }
-
-            var action = new Action<Stream>((s) => { });
-            this.module.TemplateEngineSelector = application;
-
-        //    A.CallTo(() => application.GetTemplateProcessor(".txt")).Returns(null);
-        //    A.CallTo(() => application.DefaultProcessor).Returns(viewEngine);
-
-        //    module.View("file.txt");
-
-        //    A.CallTo(() => application.DefaultProcessor).MustHaveHappened();
-        //}
-
-        [Fact]
-        public void Should_execute_the_processor_associated_with_the_extension()
-        {
-            var application = A.Fake<ITemplateEngineSelector>();
-            this.module.TemplateEngineSelector = application;
-            var viewEngine = new FakeViewEngine();
-
-            module.View("file2.razor");
-
-            A.CallTo(() => application.GetTemplateProcessor(".razor")).MustHaveHappened();
-            A.CallTo(() => application.DefaultProcessor).MustNotHaveHappened();
         }
 
         [Fact]

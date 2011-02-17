@@ -19,7 +19,7 @@ namespace Nancy.Tests.Unit
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public IUnityContainer Container { get { return _UnityContainer; } }
+        public IUnityContainer Container { get { return unityContainer; } }
 
         public override void ConfigureRequestContainer(IUnityContainer container)
         {
