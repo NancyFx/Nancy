@@ -75,7 +75,6 @@
     <Compile Include="Unit\Bootstrapper\DefaultModuleKeyGeneratorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\FakeBootstrapperBaseGetModulesOverride.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
-    <Compile Include="Unit\DefaultTemplateEngineSelectorFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Fakes\FakeDefaultNancyBootstrapper.cs" />

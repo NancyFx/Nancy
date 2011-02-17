@@ -119,7 +119,6 @@ namespace Nancy.Tests.Unit
 
             _Bootstrapper.Container.GetInstance<INancyModuleCatalog>();
             _Bootstrapper.Container.GetInstance<IRouteResolver>();
-            _Bootstrapper.Container.GetInstance<ITemplateEngineSelector>();
             _Bootstrapper.Container.GetInstance<INancyEngine>();
             _Bootstrapper.Container.GetInstance<IModuleKeyGenerator>();
             _Bootstrapper.Container.GetInstance<IRouteCache>();

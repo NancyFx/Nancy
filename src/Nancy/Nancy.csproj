@@ -65,7 +65,6 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
-    <Compile Include="ITemplateEngineSelector.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
@@ -86,7 +85,6 @@
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
-    <Compile Include="DefaultTemplateEngineSelector.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="Request.cs" />

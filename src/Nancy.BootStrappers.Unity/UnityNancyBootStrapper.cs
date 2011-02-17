@@ -12,11 +12,6 @@
     {
         protected IUnityContainer unityContainer;
 
-        protected override Type DefaultTemplateEngineSelector
-        {
-            get { return UnityTemplateEngineSelector.UnityTemplateEngineSelectorType; }
-        }
-
         protected override Type DefaultViewFactory
         {
             get { return UnityViewFactory.UnityViewFactoryType; }
