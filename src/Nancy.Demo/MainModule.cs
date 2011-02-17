@@ -56,7 +56,7 @@ namespace Nancy.Demo
             };
 
             Get["/embedded2"] = x => {
-                var model = new RatPack { FirstName = "Embedded" };
+                var model = new RatPack { FirstName = "Embedded2" };
                 return View["embedded.django", model];
             };
 

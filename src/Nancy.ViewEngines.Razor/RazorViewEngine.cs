@@ -62,6 +62,7 @@
             var view = 
                 GenerateRazorView(this.codeDomProvider, razorResult);
             // TODO DEBUG ONLY
+
             view.Code = code;
 
             return view;
