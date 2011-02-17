@@ -1,33 +1,47 @@
-﻿using System.Collections.Generic;
-using Microsoft.Practices.Unity;
-using Nancy.Bootstrapper;
-using Nancy.ViewEngines;
-
-namespace Nancy.Bootstrappers.Unity
+﻿namespace Nancy.Bootstrappers.Unity
 {
     using System;
+    using System.Collections.Generic;
+    using Microsoft.Practices.Unity;
+    using Nancy.Bootstrapper;
+    using Nancy.ViewEngines;
 
     public class UnityNancyBootstrapper : NancyBootstrapperBase<IUnityContainer>,
                                           INancyBootstrapperPerRequestRegistration<IUnityContainer>,
                                           INancyModuleCatalog
     {
-        protected IUnityContainer _UnityContainer;
+        protected IUnityContainer unityContainer;
 
-        // We override this with a wrapper to work around the lack of IEnumerable<T> dependency support
-        protected override System.Type DefaultTemplateEngineSelector { get { return typeof(UnityTemplateEngineSelector); } }
+        protected override Type DefaultTemplateEngineSelector
+        {
+            get { return UnityTemplateEngineSelector.UnityTemplateEngineSelectorType; }
+        }
+
+        protected override Type DefaultViewFactory
+        {
+            get { return UnityViewFactory.UnityViewFactoryType; }
+        }
+
+        protected override Type DefaultViewLocator
+        {
+            get { return UnityViewLocator.UnityViewLocatorType; }
+        }
 
         /// <summary>
-        ///   Resolve INancyEngine
+        ///  Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
         protected override INancyEngine GetEngineInternal()
         {
-            return _UnityContainer.Resolve<INancyEngine>();
+            return unityContainer.Resolve<INancyEngine>();
         }
 
         protected override void RegisterViewEngines(IUnityContainer container, IEnumerable<Type> viewEngineTypes)
         {
-            throw new NotImplementedException();
+            foreach (var viewEngineType in viewEngineTypes)
+            {
+                unityContainer.RegisterType(typeof(IViewEngineEx), viewEngineType, new ContainerControlledLifetimeManager());
+            }
         }
 
         /// <summary>
@@ -36,8 +50,8 @@ namespace Nancy.Bootstrappers.Unity
         /// <returns>Container</returns>
         protected override IUnityContainer CreateContainer()
         {
-            _UnityContainer = new UnityContainer();
-            return _UnityContainer;
+            unityContainer = new UnityContainer();
+            return unityContainer;
         }
 
         /// <summary>
@@ -46,12 +60,15 @@ namespace Nancy.Bootstrappers.Unity
         /// <returns>IModuleKeyGenerator instance</returns>
         protected sealed override IModuleKeyGenerator GetModuleKeyGenerator()
         {
-            return _UnityContainer.Resolve<IModuleKeyGenerator>();
+            return unityContainer.Resolve<IModuleKeyGenerator>();
         }
 
-        protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviders)
+        protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
-            throw new NotImplementedException();
+            foreach (var viewSourceProvider in viewSourceProviderTypes)
+            {
+                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager()) ;
+            }
         }
 
         /// <summary>
@@ -62,7 +79,7 @@ namespace Nancy.Bootstrappers.Unity
         {
             foreach (var registrationType in moduleRegistrations)
             {
-                _UnityContainer.RegisterType(
+                unityContainer.RegisterType(
                     typeof(NancyModule),
                     registrationType.ModuleType,
                     registrationType.ModuleKey);
@@ -99,7 +116,7 @@ namespace Nancy.Bootstrappers.Unity
         /// <returns>IEnumerable of NancyModule</returns>
         public virtual IEnumerable<NancyModule> GetAllModules()
         {
-            var child = _UnityContainer.CreateChildContainer();
+            var child = unityContainer.CreateChildContainer();
             ConfigureRequestContainer(child);
             return child.ResolveAll<NancyModule>();
         }
@@ -111,7 +128,7 @@ namespace Nancy.Bootstrappers.Unity
         /// <returns>NancyModule instance</returns>
         public virtual NancyModule GetModuleByKey(string moduleKey)
         {
-            var child = _UnityContainer.CreateChildContainer();
+            var child = unityContainer.CreateChildContainer();
             ConfigureRequestContainer(child);
             return child.Resolve<NancyModule>(moduleKey);
         }

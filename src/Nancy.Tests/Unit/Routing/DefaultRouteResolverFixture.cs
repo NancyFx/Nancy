@@ -7,7 +7,6 @@
     using Nancy.Tests.Fakes;
     using Nancy.ViewEngines;
     using Xunit;
-    using System.IO;
 
     public class RouteResolverFixture
     {
@@ -322,7 +321,7 @@
         {
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
             var request = new FakeRequest("GET", "/filtered");
 
             var route = specificResolver.Resolve(request, routeCache).Item1;
@@ -335,7 +334,7 @@
         {
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
             var request = new FakeRequest("GET", "/notfiltered");
 
             var route = specificResolver.Resolve(request, routeCache).Item1;
@@ -348,7 +347,7 @@
         {
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.templateEngineSelector);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
             var request = new FakeRequest("GET", "/filt");
 
             var route = specificResolver.Resolve(request, routeCache).Item1;

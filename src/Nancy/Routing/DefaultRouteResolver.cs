@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.ViewEngines;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
 
     public class DefaultRouteResolver : IRouteResolver

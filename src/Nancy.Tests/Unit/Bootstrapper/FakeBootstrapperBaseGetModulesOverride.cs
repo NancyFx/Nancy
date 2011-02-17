@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using FakeItEasy;
-using Xunit;
-
-namespace Nancy.Tests.Unit.Bootstrapper
+﻿namespace Nancy.Tests.Unit.Bootstrapper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nancy.Bootstrapper;
+    using FakeItEasy;
+    using Xunit;
+
     internal class FakeBootstrapperBaseImplementation : NancyBootstrapperBase<object>
     {
         public INancyEngine FakeNancyEngine { get; set; }
@@ -40,7 +39,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return Generator;
         }
 
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviders)
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
             throw new NotImplementedException();
         }
@@ -86,7 +85,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
         }
 
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviders)
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
             throw new NotImplementedException();
         }

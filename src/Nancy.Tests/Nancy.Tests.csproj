@@ -65,7 +65,6 @@
     <Compile Include="Fakes\FakeViewEngineRegistry.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
-    <Compile Include="Fakes\FakeViewLocationResult.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
     <Compile Include="Specifications\Handling a GET request.cs" />

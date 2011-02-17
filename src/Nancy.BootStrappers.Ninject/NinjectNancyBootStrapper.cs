@@ -6,6 +6,7 @@
     using global::Ninject.Extensions.ChildKernel;
     using Nancy.Bootstrapper;
     using Nancy.Routing;
+    using Nancy.ViewEngines;
 
     public class NinjectNancyBootstrapper : NancyBootstrapperBase<IKernel>,
                                             INancyBootstrapperPerRequestRegistration<IKernel>,
@@ -25,7 +26,10 @@
 
         protected override void RegisterViewEngines(IKernel container, IEnumerable<Type> viewEngineTypes)
         {
-            throw new NotImplementedException();
+            foreach (var viewEngineType in viewEngineTypes)
+            {
+                container.Bind(typeof(IViewEngineEx)).To(viewEngineType).InSingletonScope();
+            }
         }
 
         /// <summary>
@@ -47,9 +51,12 @@
             return _Kernel.Get<IModuleKeyGenerator>();
         }
 
-        protected override void RegisterViewSourceProviders(IKernel container, IEnumerable<Type> viewSourceProviders)
+        protected override void RegisterViewSourceProviders(IKernel container, IEnumerable<Type> viewSourceProviderTypes)
         {
-            throw new NotImplementedException();
+            foreach (var viewSourceProvider in viewSourceProviderTypes)
+            {
+                container.Bind(typeof(IViewSourceProvider)).To(viewSourceProvider).InSingletonScope();
+            }
         }
 
         /// <summary>

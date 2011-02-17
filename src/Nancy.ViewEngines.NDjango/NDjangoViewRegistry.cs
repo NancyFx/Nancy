@@ -16,6 +16,7 @@ namespace Nancy.ViewEngines.NDjango
 
         public string Extension
         {
-            get { return viewEngine; }
+            get { return ""; }
         }
     }
+}

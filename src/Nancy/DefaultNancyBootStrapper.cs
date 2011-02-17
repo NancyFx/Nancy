@@ -35,9 +35,9 @@
             return this.container.Resolve<IModuleKeyGenerator>();
         }
 
-        protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviders)
+        protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
-            this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviders).AsSingleton();
+            this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
         }
 
         /// <summary>

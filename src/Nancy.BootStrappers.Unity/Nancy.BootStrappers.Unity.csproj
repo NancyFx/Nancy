@@ -47,6 +47,8 @@
   <ItemGroup>
     <Compile Include="UnityNancyBootStrapper.cs" />
     <Compile Include="UnityTemplateEngineSelector.cs" />
+    <Compile Include="UnityViewFactory.cs" />
+    <Compile Include="UnityViewLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

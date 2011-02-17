@@ -2,10 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Linq;
-
-    using Nancy.Diagnostics;
     using Nancy.Routing;
     using Nancy.Extensions;
     using ViewEngines;
@@ -139,7 +136,7 @@
             return viewSourceProviders;
         }
 
-        protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviders);
+        protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
 
         /// <summary>
         /// Returns available NancyModule types
