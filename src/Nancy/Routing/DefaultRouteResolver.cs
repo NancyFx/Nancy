@@ -11,14 +11,12 @@
         private readonly INancyModuleCatalog nancyModuleCatalog;
         private readonly IRoutePatternMatcher routePatternMatcher;
         private readonly IViewFactory viewFactory;
-        private readonly ITemplateEngineSelector templateEngineSelector;
 
         public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, IViewFactory viewFactory)
         {
             this.nancyModuleCatalog = nancyModuleCatalog;
             this.routePatternMatcher = routePatternMatcher;
             this.viewFactory = viewFactory;
-            this.templateEngineSelector = templateEngineSelector;
         }
 
         public Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache routeCache)

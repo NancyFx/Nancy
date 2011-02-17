@@ -123,7 +123,6 @@ namespace Nancy.Tests.Unit
 
             _Bootstrapper.Container.Get<INancyModuleCatalog>();
             _Bootstrapper.Container.Get<IRouteResolver>();
-            _Bootstrapper.Container.Get<ITemplateEngineSelector>();
             _Bootstrapper.Container.Get<INancyEngine>();
             _Bootstrapper.Container.Get<IModuleKeyGenerator>();
             _Bootstrapper.Container.Get<IRouteCache>();

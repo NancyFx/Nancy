@@ -117,7 +117,6 @@ namespace Nancy.Tests.Unit
 
             _Bootstrapper.Container.Resolve<INancyModuleCatalog>();
             _Bootstrapper.Container.Resolve<IRouteResolver>();
-            _Bootstrapper.Container.Resolve<ITemplateEngineSelector>();
             _Bootstrapper.Container.Resolve<INancyEngine>();
             _Bootstrapper.Container.Resolve<IModuleKeyGenerator>();
             _Bootstrapper.Container.Resolve<IRouteCache>();

@@ -41,11 +41,6 @@
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRoutePatternMatcher { get { return typeof (DefaultRoutePatternMatcher); } }
-        
-        /// <summary>
-        /// Type passed into RegisterDefaults - override this to switch out default implementations
-        /// </summary>
-        protected virtual Type DefaultTemplateEngineSelector { get { return typeof(DefaultTemplateEngineSelector); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -99,7 +94,6 @@
             return new[]
             {
                 new TypeRegistration(typeof(IRouteResolver), DefaultRouteResolver),
-                new TypeRegistration(typeof(ITemplateEngineSelector), DefaultTemplateEngineSelector),
                 new TypeRegistration(typeof(INancyEngine), DefaultNancyEngine),
                 new TypeRegistration(typeof(IModuleKeyGenerator), DefaultModuleKeyGenerator),
                 new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),

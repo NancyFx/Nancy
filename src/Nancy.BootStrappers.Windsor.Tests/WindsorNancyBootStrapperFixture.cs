@@ -119,7 +119,6 @@
 
             this.bootstrapper.Container.Resolve<INancyModuleCatalog>();
             this.bootstrapper.Container.Resolve<IRouteResolver>();
-            this.bootstrapper.Container.Resolve<ITemplateEngineSelector>();
             this.bootstrapper.Container.Resolve<INancyEngine>();
             this.bootstrapper.Container.Resolve<IModuleKeyGenerator>();
             this.bootstrapper.Container.Resolve<IRouteCache>();
