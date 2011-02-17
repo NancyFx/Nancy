@@ -51,7 +51,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="NDjangoView.cs" />
     <Compile Include="NDjangoViewEngine.cs" />
     <Compile Include="TemplateLoader.cs" />
   </ItemGroup>
