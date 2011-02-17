@@ -379,20 +379,21 @@
             public ViewFactory Factory { get; set; }
         }
 
-        public ViewResult RenderView<TModel>(string path, TModel model)
+        private ViewResult RenderView(string path, dynamic model)
         {
-            //var viewName = path.Substring(path.LastIndexOf('/') + 1).Replace(".spark", string.Empty);
-            //var viewPath = path.Substring(0, path.LastIndexOf('/'));
+            var viewName = 
+                Path.GetFileNameWithoutExtension(path);
 
-            var viewName = Path.GetFileNameWithoutExtension(path);
-            var viewPath = Path.GetDirectoryName(path);
+            var viewPath = 
+                Path.GetDirectoryName(path);
 
             var targetNamespace = string.Empty; //TODO Rob G: This can be used to support things like areas or features
-            ViewFolder = new FileSystemViewFolder(viewPath);
+            this.ViewFolder = new FileSystemViewFolder(viewPath);
             HttpContextBase httpContext = null; //TODO Rob G: figure out how to get httpcontext passed in so that we can support view and partial caching.
+            
             var actionContext = new ActionContext(httpContext, targetNamespace);
             var result = FindView(actionContext, viewName, null);
-            var viewWithModel = result.View as SparkView<TModel>;
+            var viewWithModel = result.View as SparkView<dynamic>;
 
             if (viewWithModel != null)
             {
@@ -402,6 +403,11 @@
             return new ViewResult(result.View as SparkView, path);
         }
 
+        /// <summary>
+        /// Gets the extensions file extensions that are supported by the view engine.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
             get { yield return "spark"; }

@@ -13,7 +13,7 @@
         /// Gets the extensions file extensions that are supported by the view engine.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
-        /// <remarks>The extensions should not having a leading dot in the name.</remarks>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         IEnumerable<string> Extensions { get; }
 
         /// <summary>

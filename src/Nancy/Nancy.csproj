@@ -102,15 +102,12 @@
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewSourceProvider.cs" />
     <Compile Include="ViewEngines\ResourceViewSourceProvider.cs" />
-    <Compile Include="ViewEngines\StaticView.cs" />
     <Compile Include="ViewEngines\StaticViewEngine.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Caching\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
