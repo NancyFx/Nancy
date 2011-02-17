@@ -14,7 +14,7 @@
     using Nancy.ViewEngines.Spark.Caching;
     using Nancy.ViewEngines.Spark.Descriptors;
 
-    public class ViewFactory : ISparkServiceInitialize, IViewEngine
+    public class SparkViewEngine : ISparkServiceInitialize, IViewEngine
     {
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
         private readonly ViewEngineResult cacheMissResult = new ViewEngineResult(new List<string>());
@@ -24,14 +24,14 @@
         private ISparkViewEngine engine;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewFactory"/> class.
+        /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
         /// </summary>
-        public ViewFactory()
+        public SparkViewEngine()
             : this(null)
         {
         }
 
-        public ViewFactory(ISparkSettings settings)
+        public SparkViewEngine(ISparkSettings settings)
         {
             this.Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
@@ -44,7 +44,7 @@
             {
                 if (engine == null)
                 {
-                    this.SetEngine(new SparkViewEngine(Settings));
+                    this.SetEngine(new global::Spark.SparkViewEngine(Settings));
                 }
 
                 return engine;
@@ -357,10 +357,10 @@
 
         public class ViewEngineResult
         {
-            public ViewEngineResult(ISparkView view, ViewFactory factory)
+            public ViewEngineResult(ISparkView view, SparkViewEngine engine)
             {
                 View = view;
-                Factory = factory;
+                Engine = engine;
             }
 
             public ViewEngineResult(List<string> searchedLocations)
@@ -376,7 +376,7 @@
 
             public ISparkView View { get; set; }
 
-            public ViewFactory Factory { get; set; }
+            public SparkViewEngine Engine { get; set; }
         }
 
         private ViewResult RenderView(string path, dynamic model)
@@ -419,13 +419,15 @@
             {
                 ViewResult view =
                     this.RenderView(viewLocationResult.Location, model);
-                
-                using (var writer = new StreamWriter(stream))
-                {
-                    view.View.Writer = writer;
-                    view.View.Model = model;
-                    view.View.Execute();
-                }
+
+                var writer =
+                    new StreamWriter(stream);
+
+                view.View.Writer = writer;
+                view.View.Model = model;
+                view.View.Execute();
+
+                writer.Flush();
             };
         }
     }

@@ -3,6 +3,7 @@ namespace Nancy.ViewEngines
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
 
     /// <summary>
     /// View engine for rendering static html files.
@@ -29,11 +30,11 @@ namespace Nancy.ViewEngines
         {
             return stream =>
             {
-                using (var writer = new StreamWriter(stream))
-                {
-                    writer.Write(viewLocationResult.Contents.ReadToEnd());
-                    writer.Flush();
-                }
+                var writer =
+                    new StreamWriter(stream);
+
+                writer.Write(viewLocationResult.Contents.ReadToEnd());
+                writer.Flush();
             };
         }
     }

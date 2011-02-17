@@ -13,20 +13,20 @@
     using Xunit;
     using global::Spark;
     using global::Spark.FileSystem;
+    using SparkViewEngine = Spark.SparkViewEngine;
 
     public class DescriptorBuildingFixture
     {
         private readonly ActionContext actionContext;
-        private readonly ViewFactory factory;
+        private readonly SparkViewEngine engine;
         private readonly InMemoryViewFolder viewFolder;
 
         public DescriptorBuildingFixture()
         {
             this.viewFolder = new InMemoryViewFolder();
-            this.factory = new ViewFactory(null) {ViewFolder = viewFolder};
+            this.engine = new SparkViewEngine(null) {ViewFolder = viewFolder};
             this.actionContext = new ActionContext(A.Fake<HttpContextBase>(), "Bar");
         }
-
         
         [Fact]
         public void Build_descriptor_extra_params_set_to_null_should_acts_as_empty()
@@ -77,10 +77,10 @@
         public void Custom_descriptor_builders_should_not_be_able_to_use_descriptor_filters()
         {
             //Given
-            factory.DescriptorBuilder = A.Fake<IDescriptorBuilder>();
+            engine.DescriptorBuilder = A.Fake<IDescriptorBuilder>();
 
             //When
-            var exception = Record.Exception(() => factory.AddFilter(A.Fake<IDescriptorFilter>()));
+            var exception = Record.Exception(() => engine.AddFilter(A.Fake<IDescriptorFilter>()));
 
             //Then
             exception.ShouldBeOfType<InvalidCastException>();
@@ -90,7 +90,7 @@
         public void Descriptors_with_custom_parameter_should_be_added_to_the_view_search_path()
         {
             //Given
-            factory.DescriptorBuilder = new ExtendedDescriptorBuilder(factory.Engine);
+            engine.DescriptorBuilder = new ExtendedDescriptorBuilder(engine.Engine);
             actionContext.ExtraData.Add("language", "en-gb");
             viewFolder.Add(@"Bar\Index.en-gb.spark", "");
             viewFolder.Add(@"Bar\Index.en.spark", "");
@@ -100,7 +100,7 @@
             viewFolder.Add(@"Layouts\Application.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.en-gb.spark", @"Layouts\Application.en.spark");
@@ -118,7 +118,7 @@
             viewFolder.Add(@"Layouts\Bar.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", "Elephant", true, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", "Elephant", true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Elephant.spark", @"Layouts\Whale.spark");
@@ -132,7 +132,7 @@
             viewFolder.Add(@"Layouts\Application.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Application.spark");
@@ -148,7 +148,7 @@
             viewFolder.Add(@"Layouts\Site.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", "Site", true, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", "Site", true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark", @"Layouts\Site.spark");
@@ -161,7 +161,7 @@
             viewFolder.Add(@"Bar\Index.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", null, true, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark");
@@ -178,7 +178,7 @@
             viewFolder.Add(@"Shared\Home.spark", "");
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", null, false, new List<string>());
+            var result = engine.CreateDescriptor(actionContext, "Index", null, false, new List<string>());
 
             //Then
             AssertDescriptorTemplates(result, new List<string>(), @"Bar\Index.spark");
@@ -197,7 +197,7 @@
 
             //When
             var searchedLocations = new List<string>();
-            var result = factory.CreateDescriptor(actionContext, "Index", null, false, searchedLocations);
+            var result = engine.CreateDescriptor(actionContext, "Index", null, false, searchedLocations);
 
             //Then
             AssertDescriptorTemplates(result, searchedLocations, @"Bar\Index.spark");
@@ -239,7 +239,7 @@
             var searchedLocations = new List<string>();
 
             //When
-            var result = factory.CreateDescriptor(actionContext, "Index", null, true, searchedLocations);
+            var result = engine.CreateDescriptor(actionContext, "Index", null, true, searchedLocations);
 
             //Then
             AssertDescriptorTemplates(result, searchedLocations, @"Bar\Index.spark", @"Layouts\Lion.spark", @"Layouts\Elephant.spark", @"Layouts\Whale.spark");
