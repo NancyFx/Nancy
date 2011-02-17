@@ -36,7 +36,7 @@
             var host = 
                 new RazorEngineHost(new CSharpRazorCodeLanguage())
                 {
-                    DefaultBaseClass = typeof(RazorViewBase).FullName,
+                    DefaultBaseClass = typeof(NancyRazorViewBase).FullName,
                     DefaultNamespace = "RazorOutput",
                     DefaultClassName = "RazorView"
                 };
@@ -68,7 +68,7 @@
             return view;
         }
 
-        private static RazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult)
+        private static NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult)
         {
             // Compile the generated code into an assembly
 
@@ -92,14 +92,14 @@
 
                 var error = String.Format("Error Compiling Template: ({0}, {1}) {2})", err.Line, err.Column, err.ErrorText);
 
-                return new ErrorView(error);
+                return new NancyRazorErrorView(error);
             }
             // Load the assembly
             var assembly = Assembly.LoadFrom(outputAssemblyName);
             if (assembly == null)
             {
                 const string error = "Error loading template assembly";
-                return new ErrorView(error);
+                return new NancyRazorErrorView(error);
             }
 
             // Get the template type
@@ -107,14 +107,14 @@
             if (type == null) 
             {
                 var error = String.Format("Could not find type RazorOutput.Template in assembly {0}", assembly.FullName);
-                return new ErrorView(error);
+                return new NancyRazorErrorView(error);
             }
 
-            var view = Activator.CreateInstance(type) as RazorViewBase;
+            var view = Activator.CreateInstance(type) as NancyRazorViewBase;
             if (view == null)
             {
                 const string error = "Could not construct RazorOutput.Template or it does not inherit from RazorViewBase";
-                return new ErrorView(error);
+                return new NancyRazorErrorView(error);
             }
 
             return view;
