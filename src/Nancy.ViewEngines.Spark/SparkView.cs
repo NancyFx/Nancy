@@ -4,7 +4,7 @@
     using System.Web;
     using global::Spark;
 
-    public abstract class SparkView : SparkViewBase, IView
+    public abstract class SparkView : SparkViewBase
     {
         public ViewContext ViewContext { get; set; }
 
