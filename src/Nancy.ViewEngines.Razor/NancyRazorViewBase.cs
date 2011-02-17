@@ -3,7 +3,7 @@
     using System.IO;
     using System.Web;
 
-    public abstract class NancyRazorViewBase : IView
+    public abstract class NancyRazorViewBase
     {
         public TextWriter Writer { get; set; }
 

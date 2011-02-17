@@ -48,7 +48,7 @@
             return new RazorTemplateEngine(host);
         }
 
-        private IView GetCompiledView<TModel>(TextReader reader) 
+        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
@@ -77,7 +77,6 @@
 
             var results = codeProvider.CompileAssemblyFromDom(
                 new CompilerParameters(new [] {
-                    GetAssemblyPath(typeof(IView)),
                     GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
                     GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
                     GetAssemblyPath(Assembly.GetExecutingAssembly())}, outputAssemblyName),
