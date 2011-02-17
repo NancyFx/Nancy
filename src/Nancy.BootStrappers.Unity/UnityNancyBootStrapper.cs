@@ -12,16 +12,6 @@
     {
         protected IUnityContainer unityContainer;
 
-        protected override Type DefaultViewFactory
-        {
-            get { return UnityViewFactory.UnityViewFactoryType; }
-        }
-
-        protected override Type DefaultViewLocator
-        {
-            get { return UnityViewLocator.UnityViewLocatorType; }
-        }
-
         /// <summary>
         ///  Resolve INancyEngine
         /// </summary>
@@ -95,6 +85,9 @@
                     typeRegistration.ImplementationType,
                     new ContainerControlledLifetimeManager());
             }
+
+            container.RegisterType(typeof(IEnumerable<IViewSourceProvider>), typeof(UnityEnumerableShim<IViewSourceProvider>));
+            container.RegisterType(typeof(IEnumerable<IViewEngineEx>), typeof(UnityEnumerableShim<IViewEngineEx>));
         }
 
         /// <summary>
