@@ -289,7 +289,7 @@
         private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
         {
             var result = engine.FindView(actionContext, viewName, null);
-            var viewWithModel = result.View as SparkView<T>;
+            var viewWithModel = result.View as NancySparkView<T>;
 
             if (viewWithModel != null)
             {
