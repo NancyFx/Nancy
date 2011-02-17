@@ -393,6 +393,9 @@
             
             var actionContext = new ActionContext(httpContext, targetNamespace);
             var result = FindView(actionContext, viewName, null);
+
+            // THIS IS THE LINE THAT RESULTS IN NULL AND THE MODEL WILL NEVER BE ASSIGNED TO THE VIEW
+
             var viewWithModel = result.View as SparkView<dynamic>;
 
             if (viewWithModel != null)
