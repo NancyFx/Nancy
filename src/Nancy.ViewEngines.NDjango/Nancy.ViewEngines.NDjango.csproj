@@ -53,8 +53,6 @@
     </Compile>
     <Compile Include="NDjangoView.cs" />
     <Compile Include="NDjangoViewCompiler.cs" />
-    <Compile Include="NDjangoViewEngine.cs" />
-    <Compile Include="NDjangoViewRegistry.cs" />
     <Compile Include="TemplateLoader.cs" />
   </ItemGroup>
   <ItemGroup>

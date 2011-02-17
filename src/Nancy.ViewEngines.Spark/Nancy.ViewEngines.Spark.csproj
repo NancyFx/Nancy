@@ -56,7 +56,6 @@
     <Compile Include="Caching\ICacheServiceProvider.cs" />
     <Compile Include="Descriptors\IDescriptorBuilder.cs" />
     <Compile Include="Descriptors\DefaultDescriptorBuilder.cs" />
-    <Compile Include="SparkViewRegistry.cs" />
     <Compile Include="SparkView.cs" />
     <Compile Include="ViewContext.cs" />
     <Compile Include="ViewFactory.cs" />

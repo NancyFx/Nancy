@@ -36,10 +36,10 @@ namespace Nancy.Bootstrappers.StructureMap
         /// <summary>
         /// Configures the container with defaults for application scope
         /// </summary>
-        /// <param name="container"></param>
-        protected override void ConfigureApplicationContainer(IContainer container)
+        /// <param name="existingContainer"></param>
+        protected override void ConfigureApplicationContainer(IContainer existingContainer)
         {
-            base.ConfigureApplicationContainer(container);
+            base.ConfigureApplicationContainer(existingContainer);
         }
 
         protected override void RegisterViewSourceProviders(IContainer container, IEnumerable<Type> viewSourceProviderTypes)

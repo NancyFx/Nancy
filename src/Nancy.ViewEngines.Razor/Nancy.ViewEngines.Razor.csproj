@@ -50,8 +50,6 @@
     <Compile Include="ErrorView.cs" />
     <Compile Include="RazorViewBase.cs" />
     <Compile Include="RazorViewCompiler.cs" />
-    <Compile Include="RazorViewEngine.cs" />
-    <Compile Include="RazorViewRegistry.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

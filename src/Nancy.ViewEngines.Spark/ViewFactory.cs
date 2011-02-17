@@ -8,14 +8,13 @@
     using System.Reflection;
     using System.Threading;
     using System.Web;
-    using System.Web.Hosting;
     using global::Spark;
     using global::Spark.Compiler;
     using global::Spark.FileSystem;
     using Nancy.ViewEngines.Spark.Caching;
     using Nancy.ViewEngines.Spark.Descriptors;
 
-    public class ViewFactory : ISparkServiceInitialize, IViewEngineEx, IViewEngine
+    public class ViewFactory : ISparkServiceInitialize, IViewEngineEx
     {
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
         private readonly ViewEngineResult cacheMissResult = new ViewEngineResult(new List<string>());
