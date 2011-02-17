@@ -2,8 +2,12 @@
 {
     public class NancyRazorErrorView : NancyRazorViewBase
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyRazorErrorView"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
         public NancyRazorErrorView(string message) {
-            Message = message;
+            this.Message = message;
         }
 
         public string Message { get; private set; }
@@ -15,9 +19,9 @@
 
         public override void Execute()
         {
-            base.WriteLiteral(Message);
+            base.WriteLiteral(this.Message);
             base.WriteLiteral("<hr />");
-            base.WriteLiteral(Code);
+            base.WriteLiteral(this.Code);
         }
     }
 }
