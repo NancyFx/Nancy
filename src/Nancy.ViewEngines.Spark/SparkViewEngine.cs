@@ -379,7 +379,7 @@
             public SparkViewEngine Engine { get; set; }
         }
 
-        private ViewResult RenderView(string path, dynamic model)
+        private ViewResult RenderView<TModel>(string path, TModel model)
         {
             var viewName = 
                 Path.GetFileNameWithoutExtension(path);
@@ -396,7 +396,7 @@
 
             // THIS IS THE LINE THAT RESULTS IN NULL AND THE MODEL WILL NEVER BE ASSIGNED TO THE VIEW
 
-            var viewWithModel = result.View as SparkView<dynamic>;
+            var viewWithModel = result.View as SparkView<TModel>;
 
             if (viewWithModel != null)
             {
