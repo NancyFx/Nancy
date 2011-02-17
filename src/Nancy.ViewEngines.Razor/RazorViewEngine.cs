@@ -9,17 +9,23 @@
     using System.Web.Razor;
     using Microsoft.CSharp;
 
-    public class RazorViewCompiler : IViewCompiler, IViewEngine
+    /// <summary>
+    /// View engine for rendering razor views.
+    /// </summary>
+    public class RazorViewEngine : IViewEngine
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
 
-        public RazorViewCompiler()
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
+        /// </summary>
+        public RazorViewEngine()
             : this(GetRazorTemplateEngine(), new CSharpCodeProvider())
         {
         }
 
-        public RazorViewCompiler(RazorTemplateEngine razorTemplateEngine, CodeDomProvider codeDomProvider)
+        public RazorViewEngine(RazorTemplateEngine razorTemplateEngine, CodeDomProvider codeDomProvider)
         {
             this.engine = razorTemplateEngine;
             this.codeDomProvider = codeDomProvider;
@@ -42,7 +48,7 @@
             return new RazorTemplateEngine(host);
         }
 
-        public IView GetCompiledView<TModel>(TextReader reader) 
+        private IView GetCompiledView<TModel>(TextReader reader) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
@@ -121,11 +127,22 @@
             return new Uri(assembly.CodeBase).LocalPath;
         }
 
+        /// <summary>
+        /// Gets the extensions file extensions that are supported by the view engine.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
             get { return new[] { "cshtml", "vbhtml" }; }
         }
 
+        /// <summary>
+        /// Renders the view.
+        /// </summary>
+        /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
+        /// <param name="model">The model that should be passed into the view</param>
+        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
         {
             return stream =>
@@ -133,12 +150,13 @@
                 var view = 
                     GetCompiledView<dynamic>(viewLocationResult.Contents);
 
-                using (var writer = new StreamWriter(stream))
-                {
-                    view.Model = model;
-                    view.Writer = writer;
-                    view.Execute();
-                }
+                var writer = 
+                    new StreamWriter(stream);
+
+                view.Model = model;
+                view.Writer = writer;
+                view.Execute();
+                writer.Flush();
             };
         }
     }

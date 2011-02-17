@@ -1,14 +1,14 @@
-namespace Nancy.ViewEngines
+﻿namespace Nancy.ViewEngines.NDjango
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
+    using global::NDjango;
 
     /// <summary>
-    /// View engine for rendering static html files.
+    /// View engine for rendering django views.
     /// </summary>
-    public class StaticViewEngine : IViewEngine
+    public class NDjangoViewEngine : IViewEngine
     {
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -17,7 +17,7 @@ namespace Nancy.ViewEngines
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get { return new[] { "html", "htm" }; }
+            get { yield return "django"; }
         }
 
         /// <summary>
@@ -30,10 +30,23 @@ namespace Nancy.ViewEngines
         {
             return stream =>
             {
+                var templateManagerProvider = 
+                    new TemplateManagerProvider()
+                    .WithLoader(new TemplateLoader(viewLocationResult.Contents));
+
+                var templateManager = 
+                    templateManagerProvider.GetNewManager();
+
+                var template = 
+                    templateManager.GetTemplate(string.Empty);
+
+                var context = new Dictionary<string, object> { { "Model", model } };
+                var reader = template.Walk(templateManager, context);
+
                 var writer =
                     new StreamWriter(stream);
 
-                writer.Write(viewLocationResult.Contents.ReadToEnd());
+                writer.Write(reader.ReadToEnd());           
                 writer.Flush();
             };
         }

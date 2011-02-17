@@ -6,21 +6,31 @@ namespace Nancy.ViewEngines.NDjango.Tests
 
     public class NDjangoViewCompilerFixture
     {
+        private readonly NDjangoViewEngine engine;
+
+        public NDjangoViewCompilerFixture()
+        {
+            this.engine = new NDjangoViewEngine();
+        }
+
         [Fact]
         public void GetCompiledView_should_render_to_stream()
         {
             // Given
-            var compiler = new NDjangoViewCompiler();
+            var location = new ViewLocationResult(
+                string.Empty,
+                "django",
+                new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
+            );
 
-            var reader = new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}");
-            var view = compiler.GetCompiledView<object>(reader);
-            view.Writer = new StringWriter();
+            var stream = new MemoryStream();
 
             // When
-            view.Execute();
+            var action = engine.RenderView(location, null);
+            action.Invoke(stream);
 
             // Then
-            view.Writer.ToString().ShouldEqual("<h1>Hello Mr. test</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
     }
 }

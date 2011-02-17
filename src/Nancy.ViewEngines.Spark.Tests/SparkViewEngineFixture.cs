@@ -12,21 +12,22 @@
     using Xunit;
     using global::Spark;
     using global::Spark.FileSystem;
+    using SparkViewEngine = Spark.SparkViewEngine;
 
-    public class ViewFactoryFixture
+    public class SparkViewEngineFixture
     {
         private readonly ActionContext actionContext;
-        private readonly ViewFactory factory;
+        private readonly SparkViewEngine engine;
         private readonly HttpContextBase httpContext;
         private readonly TextWriter output;
         private readonly HttpResponseBase response;
 
-        public ViewFactoryFixture()
+        public SparkViewEngineFixture()
         {
             var settings = new SparkSettings();
 
             this.actionContext = new ActionContext(httpContext, "Stub");
-            this.factory = new ViewFactory(settings) {ViewFolder = new FileSystemViewFolder("TestViews")};
+            this.engine = new SparkViewEngine(settings) {ViewFolder = new FileSystemViewFolder("TestViews")};
             this.httpContext = MockHttpContextBase.Generate("/", new StringWriter());
             this.response = httpContext.Response;
             this.output = response.Output;
@@ -36,10 +37,10 @@
         public void Application_dot_spark_should_be_used_as_the_master_layout_if_present()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""}, {"Shared\\Application.spark", ""} };
+            engine.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""}, {"Shared\\Application.spark", ""} };
 
             //When
-            var descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
+            var descriptor = engine.CreateDescriptor(actionContext, "baz", null, true, null);
 
             //Then
             descriptor.Templates.ShouldHaveCount(2);
@@ -54,28 +55,28 @@
             var replacement = A.Fake<IViewFolder>();
 
             //When
-            var existing = factory.ViewFolder;
+            var existing = engine.ViewFolder;
 
             //Then
             existing.ShouldNotBeSameAs(replacement);
-            existing.ShouldBeSameAs(factory.ViewFolder);
+            existing.ShouldBeSameAs(engine.ViewFolder);
 
             //When
-            factory.ViewFolder = replacement;
+            engine.ViewFolder = replacement;
 
             //Then
-            replacement.ShouldBeSameAs(factory.ViewFolder);
-            existing.ShouldNotBeSameAs(factory.ViewFolder);
+            replacement.ShouldBeSameAs(engine.ViewFolder);
+            existing.ShouldNotBeSameAs(engine.ViewFolder);
         }
 
         [Fact]
         public void Should_be_able_to_get_the_target_namespace_from_the_action_context()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\Foo.spark", ""}, {"Layouts\\Home.spark", ""} };
+            engine.ViewFolder = new InMemoryViewFolder { {"Stub\\Foo.spark", ""}, {"Layouts\\Home.spark", ""} };
 
             //When
-            var descriptor = factory.CreateDescriptor(actionContext, "Foo", null, true, null);
+            var descriptor = engine.CreateDescriptor(actionContext, "Foo", null, true, null);
 
             //Then
             Assert.Equal("Stub", descriptor.TargetNamespace);
@@ -122,7 +123,7 @@
         public void Should_be_able_to_render_a_plain_view()
         {
             //Given
-            var viewEngineResult = factory.FindView(actionContext, "index", null);
+            var viewEngineResult = engine.FindView(actionContext, "index", null);
 
             //When
             viewEngineResult.View.RenderView(output);
@@ -275,10 +276,10 @@
         public void The_master_layout_should_be_empty_by_default()
         {
             //Given
-            factory.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""} };
+            engine.ViewFolder = new InMemoryViewFolder { {"Stub\\baz.spark", ""} };
 
             //When
-            var descriptor = factory.CreateDescriptor(actionContext, "baz", null, true, null);
+            var descriptor = engine.CreateDescriptor(actionContext, "baz", null, true, null);
 
             //Then
             descriptor.Templates.ShouldHaveCount(1);
@@ -287,7 +288,7 @@
 
         private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
         {
-            var result = factory.FindView(actionContext, viewName, null);
+            var result = engine.FindView(actionContext, viewName, null);
             var viewWithModel = result.View as SparkView<T>;
 
             if (viewWithModel != null)
@@ -300,7 +301,7 @@
 
         private void FindViewAndRender(string viewName, string masterName = null)
         {
-            var result = factory.FindView(actionContext, viewName, masterName);
+            var result = engine.FindView(actionContext, viewName, masterName);
             result.View.RenderView(output);
         }
 

@@ -64,7 +64,7 @@
     </Compile>
     <Compile Include="DescriptorBuildingFixture.cs" />
     <Compile Include="ViewModels\FakeViewModel.cs" />
-    <Compile Include="ViewFactoryFixture.cs" />
+    <Compile Include="SparkViewEngineFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
