@@ -47,8 +47,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="ErrorView.cs" />
-    <Compile Include="RazorViewBase.cs" />
+    <Compile Include="NancyRazorErrorView.cs" />
+    <Compile Include="NancyRazorViewBase.cs" />
     <Compile Include="RazorViewEngine.cs" />
   </ItemGroup>
   <ItemGroup>
