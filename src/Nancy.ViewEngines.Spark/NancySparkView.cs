@@ -1,11 +1,21 @@
 ﻿namespace Nancy.ViewEngines.Spark
 {
+    using System.IO;
     using System.Web;
     using global::Spark;
 
     public abstract class NancySparkView : SparkViewBase
     {
+        public object Model { get; set; }
+
         public ViewContext ViewContext { get; set; }
+
+        public TextWriter Writer { get; set; }
+
+        public void Execute()
+        {
+            base.RenderView(Writer);
+        }
 
         public string H(object value)
         {
@@ -16,8 +26,6 @@
         {
             return value;
         }
-
-        public object Model { get; set; }
     }
 
     public abstract class NancySparkView<TModel> : NancySparkView
@@ -26,7 +34,7 @@
 
         public void SetModel(object model)
         {
-            this.Model = (model is TModel) ? (TModel)model : default(TModel);
+            Model = (model is TModel) ? (TModel)model : default(TModel);
         }
     }
 }

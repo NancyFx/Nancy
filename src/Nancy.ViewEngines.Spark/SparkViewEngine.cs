@@ -106,7 +106,7 @@
 
             if (this.engine != null)
             {
-                this.engine.DefaultPageBaseType = typeof(SparkView).FullName;
+                this.engine.DefaultPageBaseType = typeof(NancySparkView).FullName;
             }
         }
 
@@ -191,12 +191,12 @@
         private ViewEngineResult BuildResult(HttpContextBase httpContext, ISparkViewEntry entry)
         {
             var view = entry.CreateInstance();
-            if (view is SparkView)
+            if (view is NancySparkView)
             {
-                ((SparkView)view).CacheService = this.CacheServiceProvider.GetCacheService(httpContext);
+                ((NancySparkView)view).CacheService = this.CacheServiceProvider.GetCacheService(httpContext);
             }
 
-            return new ViewEngineResult(view as SparkView, this);
+            return new ViewEngineResult(view as NancySparkView, this);
         }
 
         public SparkViewDescriptor CreateDescriptor(
@@ -357,7 +357,7 @@
 
         public class ViewEngineResult
         {
-            public ViewEngineResult(SparkView view, SparkViewEngine engine)
+            public ViewEngineResult(NancySparkView view, SparkViewEngine engine)
             {
                 View = view;
                 Engine = engine;
@@ -374,7 +374,7 @@
                 }
             }
 
-            public SparkView View { get; set; }
+            public NancySparkView View { get; set; }
 
             public SparkViewEngine Engine { get; set; }
         }
@@ -396,7 +396,7 @@
 
             // THIS IS THE LINE THAT RESULTS IN NULL AND THE MODEL WILL NEVER BE ASSIGNED TO THE VIEW
 
-            var viewWithModel = result.View as SparkView<TModel>;
+            var viewWithModel = result.View as NancySparkView<TModel>;
 
             if (viewWithModel != null)
             {
