@@ -96,7 +96,6 @@
     <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\IView.cs" />
-    <Compile Include="ViewEngines\IViewCompiler.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
