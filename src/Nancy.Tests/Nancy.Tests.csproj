@@ -98,7 +98,6 @@
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
-    <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
     <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />

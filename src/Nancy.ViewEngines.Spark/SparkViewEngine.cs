@@ -196,7 +196,7 @@
                 ((SparkView)view).CacheService = this.CacheServiceProvider.GetCacheService(httpContext);
             }
 
-            return new ViewEngineResult(view, this);
+            return new ViewEngineResult(view as SparkView, this);
         }
 
         public SparkViewDescriptor CreateDescriptor(
@@ -357,7 +357,7 @@
 
         public class ViewEngineResult
         {
-            public ViewEngineResult(ISparkView view, SparkViewEngine engine)
+            public ViewEngineResult(SparkView view, SparkViewEngine engine)
             {
                 View = view;
                 Engine = engine;
@@ -374,12 +374,12 @@
                 }
             }
 
-            public ISparkView View { get; set; }
+            public SparkView View { get; set; }
 
             public SparkViewEngine Engine { get; set; }
         }
 
-        private ViewResult RenderView<TModel>(string path, TModel model)
+        private ViewEngineResult RenderView<TModel>(string path, TModel model)
         {
             var viewName = 
                 Path.GetFileNameWithoutExtension(path);
@@ -403,7 +403,7 @@
                 viewWithModel.SetModel(model);
             }
 
-            return new ViewResult(result.View as SparkView, path);
+            return result;
         }
 
         /// <summary>
@@ -420,7 +420,7 @@
         {
             return stream =>
             {
-                ViewResult view =
+                ViewEngineResult view =
                     this.RenderView(viewLocationResult.Location, model);
 
                 var writer =
