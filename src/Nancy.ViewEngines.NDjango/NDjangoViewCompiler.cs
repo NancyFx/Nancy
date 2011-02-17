@@ -6,7 +6,7 @@
     using global::NDjango;
     using global::NDjango.Interfaces;
 
-    public class NDjangoViewCompiler : IViewCompiler, IViewEngineEx
+    public class NDjangoViewCompiler : IViewCompiler, IViewEngine
     {
         public IView GetCompiledView<TModel>(TextReader textReader)
         {

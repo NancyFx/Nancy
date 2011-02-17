@@ -25,7 +25,7 @@
         {
             foreach (var viewEngineType in viewEngineTypes)
             {
-                unityContainer.RegisterType(typeof(IViewEngineEx), viewEngineType, new ContainerControlledLifetimeManager());
+                unityContainer.RegisterType(typeof(IViewEngine), viewEngineType, new ContainerControlledLifetimeManager());
             }
         }
 
@@ -87,7 +87,7 @@
             }
 
             container.RegisterType(typeof(IEnumerable<IViewSourceProvider>), typeof(UnityEnumerableShim<IViewSourceProvider>));
-            container.RegisterType(typeof(IEnumerable<IViewEngineEx>), typeof(UnityEnumerableShim<IViewEngineEx>));
+            container.RegisterType(typeof(IEnumerable<IViewEngine>), typeof(UnityEnumerableShim<IViewEngine>));
         }
 
         /// <summary>

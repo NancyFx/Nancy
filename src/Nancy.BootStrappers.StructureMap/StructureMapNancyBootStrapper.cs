@@ -59,7 +59,7 @@ namespace Nancy.Bootstrappers.StructureMap
             {
                 foreach (var viewEngineType in viewEngineTypes)
                 {
-                    registry.For(typeof(IViewEngineEx)).LifecycleIs(InstanceScope.Singleton).Use(viewEngineType);
+                    registry.For(typeof(IViewEngine)).LifecycleIs(InstanceScope.Singleton).Use(viewEngineType);
                 }
             });
         }

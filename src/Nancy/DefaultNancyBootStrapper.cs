@@ -58,7 +58,7 @@
 
         protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
         {
-            this.container.RegisterMultiple<IViewEngineEx>(viewEngineTypes).AsSingleton();
+            this.container.RegisterMultiple<IViewEngine>(viewEngineTypes).AsSingleton();
         }
 
         /// <summary>

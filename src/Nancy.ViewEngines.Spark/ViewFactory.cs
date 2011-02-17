@@ -14,7 +14,7 @@
     using Nancy.ViewEngines.Spark.Caching;
     using Nancy.ViewEngines.Spark.Descriptors;
 
-    public class ViewFactory : ISparkServiceInitialize, IViewEngineEx
+    public class ViewFactory : ISparkServiceInitialize, IViewEngine
     {
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
         private readonly ViewEngineResult cacheMissResult = new ViewEngineResult(new List<string>());

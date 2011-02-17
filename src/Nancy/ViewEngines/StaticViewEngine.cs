@@ -5,7 +5,7 @@ namespace Nancy.ViewEngines
     using System.IO;
     using System.Linq;
 
-    public class StaticViewEngine : IViewEngineEx
+    public class StaticViewEngine : IViewEngine
     {
         private readonly IViewLocator viewTemplateLocator;
 

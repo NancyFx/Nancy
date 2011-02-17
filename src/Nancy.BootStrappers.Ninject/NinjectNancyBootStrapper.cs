@@ -28,7 +28,7 @@
         {
             foreach (var viewEngineType in viewEngineTypes)
             {
-                container.Bind(typeof(IViewEngineEx)).To(viewEngineType).InSingletonScope();
+                container.Bind(typeof(IViewEngine)).To(viewEngineType).InSingletonScope();
             }
         }
 

@@ -65,7 +65,7 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultViewLocator { get { return typeof (ViewLocator); } }
+        protected virtual Type DefaultViewLocator { get { return typeof (DefaultViewLocator); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -160,7 +160,7 @@
                 where !assembly.IsDynamic
                 from type in assembly.SafeGetExportedTypes()
                 where !type.IsAbstract
-                where typeof(IViewEngineEx).IsAssignableFrom(type)
+                where typeof(IViewEngine).IsAssignableFrom(type)
                 select type;
 
             return viewEngineTypes;
