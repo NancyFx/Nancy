@@ -74,12 +74,6 @@
     <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
       <Link>Fakes\FakeRouteResolver.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngine.cs">
-      <Link>Fakes\FakeViewEngine.cs</Link>
-    </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeViewEngineRegistry.cs">
-      <Link>Fakes\FakeViewEngineRegistry.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>

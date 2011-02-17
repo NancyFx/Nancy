@@ -45,9 +45,8 @@
     <Folder Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnityEnumerableShim.cs" />
     <Compile Include="UnityNancyBootStrapper.cs" />
-    <Compile Include="UnityViewFactory.cs" />
-    <Compile Include="UnityViewLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

@@ -61,8 +61,6 @@
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
-    <Compile Include="Fakes\FakeViewEngine.cs" />
-    <Compile Include="Fakes\FakeViewEngineRegistry.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
@@ -100,7 +98,6 @@
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
-    <Compile Include="Unit\ViewEngines\ViewEngineFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewResultFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />

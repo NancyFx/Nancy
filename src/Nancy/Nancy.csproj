@@ -83,8 +83,6 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
-    <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\IViewEngineRegistry.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />
     <Compile Include="Request.cs" />
@@ -103,7 +101,6 @@
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\StaticView.cs" />
     <Compile Include="ViewEngines\StaticViewEngine.cs" />
-    <Compile Include="ViewEngines\ViewEngine.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewResult.cs" />
   </ItemGroup>

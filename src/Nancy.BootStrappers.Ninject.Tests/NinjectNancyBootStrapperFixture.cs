@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Xunit;
-using TinyIoC;
-using Nancy.Routing;
-using Nancy.Bootstrapper;
-using Nancy.Tests.Fakes;
-using Nancy.Bootstrappers.Ninject;
-using Ninject;
-
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.BootStrappers.Ninject.Tests
 {
+    using System.Linq;
+    using global::Ninject;
+    using Nancy.Tests;
+    using Xunit;
+    using Nancy.Routing;
+    using Nancy.Bootstrapper;
+    using Nancy.Tests.Fakes;
+    using Nancy.Bootstrappers.Ninject;
+
     public class FakeNinjectNancyBootstrapper : NinjectNancyBootstrapper
     {
         public bool RequestContainerConfigured { get; set; }
@@ -30,23 +27,23 @@ namespace Nancy.Tests.Unit
             container.Bind<IDependency>().To<Dependency>().InSingletonScope();
         }
 
-        protected override void ConfigureApplicationContainer(IKernel container)
+        protected override void ConfigureApplicationContainer(IKernel existingContainer)
         {
             ApplicationContainerConfigured = true;
-            base.ConfigureApplicationContainer(container);
+            base.ConfigureApplicationContainer(existingContainer);
 
             // Ninject child containers can't handle the parent container resolving
             // types using the child container :-/
             // Adding these will allow other tests to work, but will fail the lifetime
             // tests.
-            container.Bind<IFoo>().To<Foo>().InSingletonScope();
-            container.Bind<IDependency>().To<Dependency>().InSingletonScope();
+            existingContainer.Bind<IFoo>().To<Foo>().InSingletonScope();
+            existingContainer.Bind<IDependency>().To<Dependency>().InSingletonScope();
         }
     }
 
     public class NinjectNancyBootstrapperFixture
     {
-        private FakeNinjectNancyBootstrapper _Bootstrapper;
+        private readonly FakeNinjectNancyBootstrapper _Bootstrapper;
 
         public NinjectNancyBootstrapperFixture()
         {
@@ -66,8 +63,8 @@ namespace Nancy.Tests.Unit
         public void GetAllModules_Returns_As_MultiInstance()
         {
             _Bootstrapper.GetEngine();
-            var output1 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
-            var output2 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output1 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output2 = _Bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -78,8 +75,8 @@ namespace Nancy.Tests.Unit
         public void GetModuleByKey_Returns_As_MultiInstance()
         {
             _Bootstrapper.GetEngine();
-            var output1 = _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
-            var output2 = _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            var output1 = _Bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
+            var output2 = _Bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -103,7 +100,7 @@ namespace Nancy.Tests.Unit
             _Bootstrapper.GetEngine();
             _Bootstrapper.RequestContainerConfigured = false;
 
-            _Bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            _Bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
 
             _Bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -134,7 +131,7 @@ namespace Nancy.Tests.Unit
         {
             _Bootstrapper.GetEngine();
 
-            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldBeSameAs(result.Dependency.FooDependency);
@@ -145,8 +142,8 @@ namespace Nancy.Tests.Unit
         {
             _Bootstrapper.GetEngine();
 
-            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
-            var result2 = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
+            var result2 = _Bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();

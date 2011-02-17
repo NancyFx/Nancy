@@ -64,10 +64,10 @@
             Modules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
-        protected override void ConfigureApplicationContainer(object container)
+        protected override void ConfigureApplicationContainer(object existingContainer)
         {
-            base.ConfigureApplicationContainer(container);
-            AppContainer = container;
+            base.ConfigureApplicationContainer(existingContainer);
+            AppContainer = existingContainer;
         }
     }
 

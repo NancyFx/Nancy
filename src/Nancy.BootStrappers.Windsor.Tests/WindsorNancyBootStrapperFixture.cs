@@ -33,10 +33,10 @@
             base.ConfigureRequestContainer(existingContainer);
         }
 
-        protected override void ConfigureApplicationContainer(IWindsorContainer existingContainer)
+        protected override void ConfigureApplicationContainer(IWindsorContainer existingExistingContainer)
         {
             ApplicationContainerConfigured = true;
-            base.ConfigureApplicationContainer(existingContainer);
+            base.ConfigureApplicationContainer(existingExistingContainer);
         }
     }
 

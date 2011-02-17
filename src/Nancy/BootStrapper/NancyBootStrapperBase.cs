@@ -185,8 +185,8 @@
         /// Configure the container (register types) for the application level
         /// <seealso cref="ConfigureRequestContainer"/>
         /// </summary>
-        /// <param name="container">Container instance</param>
-        protected virtual void ConfigureApplicationContainer(TContainer container)
+        /// <param name="existingContainer">Container instance</param>
+        protected virtual void ConfigureApplicationContainer(TContainer existingContainer)
         {
         }
 
