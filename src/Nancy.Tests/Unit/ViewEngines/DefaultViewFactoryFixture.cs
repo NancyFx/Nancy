@@ -18,11 +18,11 @@ namespace Nancy.Tests.Unit.ViewEngines
             this.locator = A.Fake<IViewLocator>();
         }
 
-        private DefaultViewFactory CreateFactory(params IViewEngineEx[] viewEngines)
+        private DefaultViewFactory CreateFactory(params IViewEngine[] viewEngines)
         {
             if (viewEngines == null)
             {
-                viewEngines = new IViewEngineEx[] { };
+                viewEngines = new IViewEngine[] { };
             }
 
             return new DefaultViewFactory(this.locator, viewEngines);
@@ -33,8 +33,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
@@ -56,8 +56,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
@@ -137,8 +137,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
             };
 
             var expectedViewEngineExtensions = new[] { "bar" };
@@ -157,8 +157,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
@@ -181,7 +181,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "HTML" });
@@ -221,7 +221,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
             };
 
             Action<Stream> actionReturnedFromEngine = x => { };
@@ -245,7 +245,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_empty_action_when_view_engine_throws_exception()
         {
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
@@ -270,7 +270,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngines = new[] {
-              A.Fake<IViewEngineEx>(),
+              A.Fake<IViewEngine>(),
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });

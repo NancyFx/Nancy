@@ -117,7 +117,7 @@ namespace Nancy.Bootstrappers.Windsor
 
         private static void RegisterViewEnginesInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
         {
-            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngineEx))
+            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
                 .ImplementedBy(r)
                 .LifeStyle.Singleton);
 

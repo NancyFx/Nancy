@@ -9,7 +9,7 @@
     using System.Web.Razor;
     using Microsoft.CSharp;
 
-    public class RazorViewCompiler : IViewCompiler, IViewEngineEx
+    public class RazorViewCompiler : IViewCompiler, IViewEngine
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
