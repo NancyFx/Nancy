@@ -18,7 +18,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given, When
             var exception =
-                Record.Exception(() => new ViewLocator(null));
+                Record.Exception(() => new DefaultViewLocator(null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -28,7 +28,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_getting_view_location_with_null_supported_view_engine_extensions()
         {
             // Given
-            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+            var locator = new DefaultViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
             var result = locator.GetViewLocation("viewName", null);
@@ -41,7 +41,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_getting_view_location_with_empty_supported_view_engine_extensions()
         {
             // Given
-            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+            var locator = new DefaultViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
             var result = locator.GetViewLocation("viewName", Enumerable.Empty<string>());
@@ -54,7 +54,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_getting_view_location_with_null_view_null()
         {
             // Given
-            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+            var locator = new DefaultViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
             var result = locator.GetViewLocation(null, Enumerable.Empty<string>());
@@ -67,7 +67,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_getting_view_location_with_empty_view_null()
         {
             // Given
-            var locator = new ViewLocator(new[] { A.Fake<IViewSourceProvider>() });
+            var locator = new DefaultViewLocator(new[] { A.Fake<IViewSourceProvider>() });
 
             // When
             var result = locator.GetViewLocation(string.Empty, Enumerable.Empty<string>());
@@ -80,7 +80,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_getting_view_location_with_no_view_source_provider()
         {
             // Given
-            var locator = new ViewLocator(new IViewSourceProvider[] { });
+            var locator = new DefaultViewLocator(new IViewSourceProvider[] { });
 
             // When
             var result = locator.GetViewLocation("viewName", Enumerable.Empty<string>());
@@ -101,7 +101,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             A.CallTo(() => viewSourceProviders[0].LocateView(viewname, Enumerable.Empty<string>())).Returns(null);
 
-            var locator = new ViewLocator(viewSourceProviders);
+            var locator = new DefaultViewLocator(viewSourceProviders);
 
             // When
             locator.GetViewLocation(viewname, new[] { "html" });
@@ -124,7 +124,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             A.CallTo(() => viewSourceProviders[0].LocateView(A<string>.Ignored, Enumerable.Empty<string>())).Returns(null);
 
-            var locator = new ViewLocator(viewSourceProviders);
+            var locator = new DefaultViewLocator(viewSourceProviders);
 
             // When
             locator.GetViewLocation(viewname, new[] { "html" });
@@ -140,7 +140,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Given
             var viewSourceProvider = A.Fake<IViewSourceProvider>();
             var viewLocationResult = new ViewLocationResult(null, string.Empty, null);
-            var locator = new ViewLocator(new[] { viewSourceProvider });
+            var locator = new DefaultViewLocator(new[] { viewSourceProvider });
 
             A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Returns(viewLocationResult);
 
@@ -158,7 +158,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var viewSourceProvider = A.Fake<IViewSourceProvider>();
             A.CallTo(() => viewSourceProvider.LocateView(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Throws(new Exception());
 
-            var locator = new ViewLocator(new[] { viewSourceProvider });
+            var locator = new DefaultViewLocator(new[] { viewSourceProvider });
 
             // When
             var result = locator.GetViewLocation("view name", new[] { "html" });
