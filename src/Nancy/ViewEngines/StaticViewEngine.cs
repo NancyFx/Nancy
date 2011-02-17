@@ -3,30 +3,28 @@ namespace Nancy.ViewEngines
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
+    /// <summary>
+    /// View engine for rendering static html files.
+    /// </summary>
     public class StaticViewEngine : IViewEngine
     {
-        private readonly IViewLocator viewTemplateLocator;
-
-        public StaticViewEngine(IViewLocator viewTemplateLocator)
-        {
-            this.viewTemplateLocator = viewTemplateLocator;
-        }
-
-        public ViewResult RenderView<TModel>(string viewTemplate, TModel model)
-        {
-            var result = viewTemplateLocator.GetViewLocation(viewTemplate, Enumerable.Empty<string>());
-
-            var view = new StaticView(result.Contents);
-            return new ViewResult(view, result.Location);
-        }
-
+        /// <summary>
+        /// Gets the extensions file extensions that are supported by the view engine.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
             get { return new[] { "html", "htm" }; }
         }
 
+        /// <summary>
+        /// Renders the view.
+        /// </summary>
+        /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
+        /// <param name="model">The model that should be passed into the view</param>
+        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
         {
             return stream =>
