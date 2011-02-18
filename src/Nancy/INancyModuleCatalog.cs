@@ -3,21 +3,21 @@ namespace Nancy
     using System.Collections.Generic;
 
     /// <summary>
-    /// Catalog of NancyModule instances
+    /// Catalog of <see cref="NancyModule"/> instances.
     /// </summary>
     public interface INancyModuleCatalog
     {
         /// <summary>
         /// Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
-        /// <returns>IEnumerable of NancyModule</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
         IEnumerable<NancyModule> GetAllModules();
 
         /// <summary>
-        /// Retrieves a specific NancyModule implementation based on its key - should be multi-instance and per-request
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be multi-instance and per-request
         /// </summary>
         /// <param name="moduleKey">Module key</param>
-        /// <returns>NancyModule instance</returns>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
         NancyModule GetModuleByKey(string moduleKey);
     }
 }
