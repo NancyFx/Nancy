@@ -211,24 +211,6 @@
             route.Description.Path.ShouldEqual(request.Uri);
         }
 
-        // TODO: Andreas - Fix removed test
-        //[Fact]
-        //public void Should_set_template_engine_selector_on_module_associated_with_resolved_route()
-        //{
-        //    // Given
-        //    var request = new FakeRequest("GET", "/foo/bar");
-        //    var routeCache = new FakeRouteCache(x =>
-        //    {
-        //        x.AddGetRoute("/foo/bar", "module-key");
-        //    });
-
-        //    // When
-        //    var resolvedRoute = this.resolver.Resolve(request, routeCache);
-
-        //    // Then
-        //    resolvedRoute.Module.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
-        //}
-
         [Fact]
         public void Should_set_request_on_module_associated_with_resolved_route()
         {
