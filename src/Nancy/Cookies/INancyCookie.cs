@@ -12,6 +12,7 @@ namespace Nancy.Cookies
         /// <summary>
         /// When the cookie should expire
         /// </summary>
+        /// <value>A <see cref="DateTime"/> instance containing the date and time when the cookie should expire; otherwise <see langword="null"/> if it should never expire.</value>
         DateTime? Expires { get; set; }
 
         /// <summary>
