@@ -33,7 +33,7 @@
             );
         }
 
-        public static string GetResourceFileName(string resourceName)
+        private static string GetResourceFileName(string resourceName)
         {
             var nameSegments =
                 resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
