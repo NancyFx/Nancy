@@ -5,7 +5,7 @@ namespace Nancy.SelfHosting.Demo
         public TestModule()
         {
             Get["/"] = parameters => {
-                return "Hello world";
+                return View["staticview"];
             };
         }
     }
