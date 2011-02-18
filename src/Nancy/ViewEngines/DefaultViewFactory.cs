@@ -58,18 +58,11 @@
 
         private Action<Stream> GetRenderedView(string viewName, dynamic model)
         {
-            if (viewName == null)
-            {
-                return EmptyView;
-            }
-
             var viewLocationResult =
                 this.viewLocator.GetViewLocation(Path.GetFileNameWithoutExtension(viewName), this.GetExtensionsToUseForViewLookup(viewName));
 
-            // TODO: Andreas - CHECK FOR NULL LOCATION!
-
             var resolvedViewEngine = 
-                GetViewEngine(viewLocationResult.Extension);
+                GetViewEngine(viewLocationResult);
 
             if (resolvedViewEngine == null)
             {
@@ -80,7 +73,7 @@
                 resolvedViewEngine,
                 viewLocationResult,
                 model
-                );
+            );
         }
 
         private IEnumerable<string> GetSupportedViewEngineExtensions()
@@ -91,11 +84,16 @@
             return viewEngineExtensions.Distinct(StringComparer.OrdinalIgnoreCase);
         }
 
-        private IViewEngine GetViewEngine(string extension)
+        private IViewEngine GetViewEngine(ViewLocationResult viewLocationResult)
         {
+            if (viewLocationResult == null)
+            {
+                return null;
+            }
+
             var viewEngiens = 
                 from viewEngine in this.viewEngines
-                where viewEngine.Extensions.Any(x => x.Equals(extension, StringComparison.InvariantCultureIgnoreCase))
+                where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.InvariantCultureIgnoreCase))
                 select viewEngine;
 
             return viewEngiens.FirstOrDefault();

@@ -88,6 +88,23 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
+        public void Should_return_empty_action_when_view_could_not_be_located()
+        {
+            var factory = this.CreateFactory();
+            
+            A.CallTo(() => this.locator.GetViewLocation(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Returns(null);
+
+            var action = factory["foo"];
+            var stream = new MemoryStream();
+
+            // When
+            action.Invoke(stream);
+
+            // Then
+            stream.Length.ShouldEqual(0L);
+        }
+
+        [Fact]
         public void Should_return_empty_action_when_view_name_is_null()
         {
             // Given
