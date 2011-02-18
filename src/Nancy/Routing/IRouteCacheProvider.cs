@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
     /// <summary>
     /// It's not safe for a module to take a dependency on the cache (cyclic dependency)

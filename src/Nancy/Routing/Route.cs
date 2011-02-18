@@ -20,9 +20,9 @@
         {
         }
 
-        public RouteDescription Description { get; private set; }
-
         public Func<dynamic, Response> Action { get; set; }
+
+        public RouteDescription Description { get; private set; }
 
         public Response Invoke(DynamicDictionary parameters)
         {
