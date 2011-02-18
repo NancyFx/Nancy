@@ -30,7 +30,20 @@
                 resourceStreamMatch.Item1,
                 GetResourceNameExtension(resourceStreamMatch.Item1),
                 new StreamReader(resourceStreamMatch.Item2)
-                );
+            );
+        }
+
+        public static string GetResourceFileName(string resourceName)
+        {
+            var nameSegments =
+                resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+
+            var segmentCount =
+                nameSegments.Count();
+
+            return (segmentCount < 2) ?
+                string.Empty :
+                string.Format("{0}.{1}", nameSegments.ElementAt(segmentCount - 2), nameSegments.Last());
         }
 
         private static string GetResourceNameExtension(string resourceName)
@@ -48,7 +61,7 @@
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
                 let inspectedResourceName = string.Concat(viewName, ".", viewEngineExtension)
-                where resourceName.EndsWith(inspectedResourceName, StringComparison.OrdinalIgnoreCase)
+                where GetResourceFileName(resourceName).Equals(inspectedResourceName, StringComparison.OrdinalIgnoreCase)
                 select new Tuple<string, Stream>(
                     resourceName,
                     assembly.GetManifestResourceStream(resourceName)
