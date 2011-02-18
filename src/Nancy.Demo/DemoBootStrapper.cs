@@ -15,7 +15,7 @@
         {
             base.ConfigureRequestContainer(existingContainer);
 
-            existingContainer.Register<RequestDependency, RequestDependencyClass>().AsSingleton();
+            existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
         }
     }
 }
