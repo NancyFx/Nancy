@@ -418,15 +418,15 @@
         {
             return stream =>
             {
-                ViewEngineResult view =
+                ViewEngineResult viewEngineResult =
                     this.RenderView(viewLocationResult.Location, model);
 
                 var writer =
                     new StreamWriter(stream);
 
-                view.View.Writer = writer;
-                view.View.Model = model;
-                view.View.Execute();
+                viewEngineResult.View.Writer = writer;
+                viewEngineResult.View.Model = model;
+                viewEngineResult.View.Execute();
 
                 writer.Flush();
             };
