@@ -41,12 +41,10 @@
 
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
-            throw new NotImplementedException();
         }
 
         protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
         {
-            throw new NotImplementedException();
         }
 
         protected override object CreateContainer()
@@ -87,7 +85,6 @@
 
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
-            throw new NotImplementedException();
         }
 
         protected override IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)
@@ -112,7 +109,6 @@
 
         protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
         {
-            throw new NotImplementedException();
         }
 
         protected override object CreateContainer()
