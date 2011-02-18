@@ -6,8 +6,17 @@ namespace Nancy.Hosting.SelfHosting
     using System.Linq;
     using Nancy.ViewEngines;
 
+    /// <summary>
+    /// Contains the functionality for locating a view that is located on the file system.
+    /// </summary>
     public class FileSystemViewSourceProvider : IViewSourceProvider
     {
+        /// <summary>
+        /// Attemptes to locate the view, specified by the <paramref name="viewName"/> parameter, in the underlaying source.
+        /// </summary>
+        /// <param name="viewName">The name of the view that should be located.</param>
+        /// <param name="supportedViewEngineExtensions">The supported view engine extensions that the view is allowed to use.</param>
+        /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise <see langword="null"/>.</returns>
         public ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             var viewFolder =
