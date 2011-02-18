@@ -25,7 +25,7 @@ namespace Nancy.Hosting.Wcf.Tests
         {
             using (CreateAndOpenWebServiceHost())
             {
-                var request = WebRequest.Create(new Uri(BaseUri, "rel/header"));
+                var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
                 request.Method = "GET";
 
                 request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");

@@ -75,13 +75,20 @@
             }
         }
 
+        private static Uri GetUrlAndPathComponents(Uri uri) 
+        {
+            // ensures that for a given url only the
+            //  scheme://host:port/paths/somepath
+            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
+        }
+
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = "/" + baseUri.MakeRelativeUri(request.Url);
+            var relativeUrl = GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
 
             return new Request(
                 request.HttpMethod,
-                relativeUrl,
+                string.Concat("/", relativeUrl),
                 request.Headers.ToDictionary(),
                 request.InputStream,
                 request.Url.Scheme,
