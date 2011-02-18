@@ -6,6 +6,9 @@ namespace Nancy
     using System.Net;
     using Cookies;
 
+    /// <summary>
+    /// Encapsulates HTTP-response information from an Nancy operation.
+    /// </summary>
     public class Response
     {        
         /// <summary>
@@ -20,12 +23,30 @@ namespace Nancy
             this.Cookies = new List<INancyCookie>(2);
         }
 
+        /// <summary>
+        /// Gets or sets the type of the content.
+        /// </summary>
+        /// <value>The type of the content.</value>
+        /// <remarks>The default value is <c>text/html</c>.</remarks>
         public string ContentType { get; set; }
 
-        public Action<Stream> Contents { get; set; }        
+        /// <summary>
+        /// Gets the delegate that will render contents to the response stream.
+        /// </summary>
+        /// <value>An <see cref="Action{T}"/> delegate, containing the code that will render contents to the response stream.</value>
+        /// <remarks>The host of Nancy will pass in the output stream after the response has been handed back to it by Nancy.</remarks>
+        public Action<Stream> Contents { get; set; }
 
+        /// <summary>
+        /// Gets the collection of HTTP response headers that should be sent back to the client.
+        /// </summary>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance, contaning the key/value pair of headers.</value>
         public IDictionary<string, string> Headers { get; set; }
 
+        /// <summary>
+        /// Gets or sets the HTTP status code that should be sent back to the client.
+        /// </summary>
+        /// <value>A <see cref="HttpStatusCode"/> value.</value>
         public HttpStatusCode StatusCode { get; set; }
 
         public IList<INancyCookie> Cookies { get; private set; }
