@@ -1,11 +1,10 @@
-using System.Linq;
-using System.Web;
-
 namespace Nancy.Extensions
 {
     using System;
     using System.Diagnostics;
+    using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Web;
 
     public static class StringExtensions
     {
