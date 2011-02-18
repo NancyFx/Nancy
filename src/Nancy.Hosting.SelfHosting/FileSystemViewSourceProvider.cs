@@ -1,10 +1,9 @@
-namespace Nancy.SelfHosting.Demo
+namespace Nancy.Hosting.SelfHosting
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
     using Nancy.ViewEngines;
 
     public class FileSystemViewSourceProvider : IViewSourceProvider

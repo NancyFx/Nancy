@@ -50,7 +50,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="FileSystemViewSourceProvider.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestModule.cs" />
   </ItemGroup>
@@ -65,7 +64,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\staticview.html">
