@@ -44,9 +44,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\Nancy.Hosting.SelfHosting\FileSystemViewSourceProvider.cs">
-      <Link>FileSystemViewSourceProvider.cs</Link>
-    </Compile>
     <Compile Include="MainModule.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
