@@ -2,6 +2,9 @@ namespace Nancy.Demo
 {
     using System;
 
+    /// <summary>
+    /// A module dependency that will have an application lifetime scope.
+    /// </summary>
     public class ApplicationDependencyClass : IApplicationDependency
     {
         private readonly DateTime currentDateTime;

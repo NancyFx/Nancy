@@ -2,7 +2,10 @@ namespace Nancy.Demo
 {
     using System;
 
-    public class RequestDependencyClass : RequestDependency
+    /// <summary>
+    /// A module dependency that will have a per-request lifetime scope.
+    /// </summary>
+    public class RequestDependencyClass : IRequestDependency
     {
         private readonly DateTime currentDateTime;
 
