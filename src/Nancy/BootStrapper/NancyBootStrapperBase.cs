@@ -38,6 +38,7 @@
         protected NancyBootstrapperBase()
         {
             this.PreRequestHooks = new PreRequestHooksPipeline();
+            this.PostRequestHooks = new PostRequestHooksPipeline();
         }
 
         /// <summary>
@@ -98,6 +99,17 @@
         protected PreRequestHooksPipeline PreRequestHooks { get; set; }
 
         /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created. It can be used
+        /// to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        protected PostRequestHooksPipeline PostRequestHooks { get; set; }
+
+        /// <summary>
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
@@ -113,6 +125,7 @@
 
             var engine = GetEngineInternal();
             engine.PreRequestHook = this.PreRequestHooks;
+            engine.PostRequestHook = this.PostRequestHooks;
 
             return engine;
         }

@@ -73,6 +73,12 @@
             get { return this.PreRequestHooks; }
             set { this.PreRequestHooks = value; }
         }
+
+        public PostRequestHooksPipeline PostRequest
+        {
+            get { return this.PostRequestHooks; }
+            set { this.PostRequestHooks = value; }
+        }
     }
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
@@ -204,6 +210,16 @@
             var result = _Bootstrapper.GetEngine();
 
             result.PreRequestHook.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GetEngine_sets_post_request_hook()
+        {
+            _Bootstrapper.PostRequest += ctx => { };
+
+            var result = _Bootstrapper.GetEngine();
+
+            result.PostRequestHook.ShouldNotBeNull();
         }
     }
 }

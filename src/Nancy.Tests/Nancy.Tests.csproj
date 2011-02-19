@@ -64,6 +64,7 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="NancyContextFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\PostRequestHooksPipelineFixture.cs" />
     <Compile Include="Unit\Bootstrapper\PreRequestHooksPipelineFixture.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />

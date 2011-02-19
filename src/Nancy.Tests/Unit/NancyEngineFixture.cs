@@ -108,7 +108,18 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void HandleRequest_Null_PreRequest_Should_Not_Throw()
         {
-            engine.PreRequestHook = (req) => null;
+            engine.PreRequestHook = null;
+            
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+        }
+
+        [Fact]
+        public void HandleRequest_Null_PostRequest_Should_Not_Throw()
+        {
+            engine.PostRequestHook = null;
+
             var request = new Request("GET", "/", "http");
 
             this.engine.HandleRequest(request);
@@ -140,6 +151,29 @@ namespace Nancy.Tests.Unit
             var result = this.engine.HandleRequest(request);
 
             result.Response.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public void HandleRequest_should_allow_post_request_hook_to_modify_context_items()
+        {
+            engine.PostRequestHook = ctx => ctx.Items.Add("PostReqTest", new object());
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.Items.ContainsKey("PostReqTest").ShouldBeTrue();
+        }
+
+        [Fact]
+        public void HandleRequest_should_allow_post_request_hook_to_replace_response()
+        {
+            var newResponse = new Response();
+            engine.PreRequestHook = ctx => ctx.Response = newResponse;
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.Response.ShouldBeSameAs(newResponse);
         }
     }
 }
