@@ -1,9 +1,12 @@
-﻿namespace Nancy.ViewEngines
+﻿
+
+namespace Nancy.ViewEngines
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.
@@ -46,6 +49,17 @@
         public Action<Stream> this[string viewName, dynamic model]
         {
             get { return this.GetRenderedView(viewName, model); }
+        }
+
+        /// <summary>
+        /// Renders the view with its name resolved from the model type, and model defined by the <paramref name="model"/> parameter.
+        /// </summary>
+        /// <param name="model">The model that should be passed into the view.</param>
+        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
+        /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
+        public Action<Stream> this[dynamic model]
+        {
+            get { return this.GetRenderedView(GetViewNameFromModel(model), model); }
         }
 
         private IEnumerable<string> GetExtensionsToUseForViewLookup(string viewName)
@@ -117,6 +131,11 @@
             {
                 return EmptyView;
             }
+        }
+
+        private static string GetViewNameFromModel(dynamic model)
+        {
+            return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }
     }
 }

@@ -1,10 +1,11 @@
+using Nancy.Tests.Fakes;
+
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Nancy;
     using FakeItEasy;
     using Nancy.ViewEngines;
     using Xunit;
@@ -109,7 +110,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var factory = this.CreateFactory();
-            var action = factory[null];
+            var action = factory[(string)null];
             var stream = new MemoryStream();
 
             // When
@@ -304,6 +305,32 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, model)).MustHaveHappened();
+        }
+        
+        [Fact]
+        public void Should_use_the_name_of_the_model_type_as_view_name_when_only_model_is_specified()
+        {
+            // Given
+            var factory = this.CreateFactory();
+
+            // When
+            var action = factory[new object()];
+
+            // Then
+            A.CallTo(() => this.locator.GetViewLocation("Object", A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_use_the_name_of_the_model_type_without_model_suffix_as_view_name_when_only_model_is_specified()
+        {
+            // Given
+            var factory = this.CreateFactory();
+
+            // When
+            var action = factory[new ViewModel()];
+
+            // Then
+            A.CallTo(() => this.locator.GetViewLocation("View", A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
         }
     }
 }
