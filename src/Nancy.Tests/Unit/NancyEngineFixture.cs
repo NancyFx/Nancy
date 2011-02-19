@@ -1,13 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System;
-    using System.Linq;
-
     using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
-    using Nancy.ViewEngines;
-
     using Xunit;
 
     public class NancyEngineFixture
@@ -107,6 +103,43 @@ namespace Nancy.Tests.Unit
             var result = this.engine.HandleRequest(request);
 
             result.Response.ShouldBeSameAs(this.response);
+        }
+
+        [Fact]
+        public void HandleRequest_Null_PreRequest_Should_Not_Throw()
+        {
+            engine.PreRequestHook = (req) => null;
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+        }
+
+        [Fact]
+        public void HandleRequest_NonNull_PreRequest_Should_Call_PreRequest_With_Request_In_Context()
+        {
+            Request passedReqest = null;
+            engine.PreRequestHook = (ctx) =>
+            {
+                passedReqest = ctx.Request;
+                return null;
+            };
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+
+            passedReqest.ShouldBeSameAs(request);
+        }
+
+        [Fact]
+        public void HandleRequest_PreRequest_Returns_NonNull_Response_Should_Return_That_Response()
+        {
+            var response = A.Fake<Response>();
+            engine.PreRequestHook = req => response;
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.Response.ShouldBeSameAs(response);
         }
     }
 }

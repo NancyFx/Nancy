@@ -33,6 +33,14 @@
         where TContainer : class
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
+        /// </summary>
+        protected NancyBootstrapperBase()
+        {
+            this.PreRequestHooks = new PreRequestHooksPipeline();
+        }
+
+        /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRouteResolver { get { return typeof(DefaultRouteResolver); } }
@@ -78,6 +86,18 @@
         protected virtual Type DefaultViewFactory { get { return typeof(DefaultViewFactory); } }
 
         /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        protected PreRequestHooksPipeline PreRequestHooks { get; set; }
+
+        /// <summary>
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
@@ -91,7 +111,10 @@
             RegisterViewEngines(container, GetViewEngineTypes());
             RegisterViewSourceProviders(container, GetViewSourceProviders());
 
-            return GetEngineInternal();
+            var engine = GetEngineInternal();
+            engine.PreRequestHook = this.PreRequestHooks;
+
+            return engine;
         }
 
         private IEnumerable<TypeRegistration> BuildDefaults()

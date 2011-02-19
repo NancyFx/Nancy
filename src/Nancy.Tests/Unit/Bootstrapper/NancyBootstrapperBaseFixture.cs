@@ -67,6 +67,12 @@
             base.ConfigureApplicationContainer(existingContainer);
             AppContainer = existingContainer;
         }
+
+        public PreRequestHooksPipeline PreRequest
+        {
+            get { return this.PreRequestHooks; }
+            set { this.PreRequestHooks = value; }
+        }
     }
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
@@ -188,6 +194,16 @@
             var moduleKeyGeneratorEntry = _Bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
 
             moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
+        }
+
+        [Fact]
+        public void GetEngine_sets_pre_request_hook()
+        {
+            _Bootstrapper.PreRequest += ctx => null;
+
+            var result = _Bootstrapper.GetEngine();
+
+            result.PreRequestHook.ShouldNotBeNull();
         }
     }
 }
