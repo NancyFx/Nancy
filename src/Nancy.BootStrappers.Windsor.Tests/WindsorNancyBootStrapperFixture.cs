@@ -62,8 +62,9 @@
         public void GetAllModules_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
-            var output2 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var context = new NancyContext();
+            var output1 = this.bootstrapper.GetAllModules(context).Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output2 = this.bootstrapper.GetAllModules(context).Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -74,8 +75,9 @@
         public void GetModuleByKey_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
-            var output2 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
+            var context = new NancyContext();
+            var output1 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, context);
+            var output2 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, context);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -88,7 +90,7 @@
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetAllModules();
+            this.bootstrapper.GetAllModules(new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -99,7 +101,7 @@
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
+            this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -130,7 +132,7 @@
         {
             this.bootstrapper.GetEngine();
 
-            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldBeSameAs(result.Dependency.FooDependency);
@@ -141,8 +143,9 @@
         {
             this.bootstrapper.GetEngine();
 
-            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
-            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
+            var context = new NancyContext();
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), context) as FakeNancyModuleWithDependency;
+            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), context) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();
@@ -154,7 +157,7 @@
         { 
             this.bootstrapper.GetEngine();
 
-            var nancyModules = this.bootstrapper.GetAllModules();
+            var nancyModules = this.bootstrapper.GetAllModules(new NancyContext());
             var modLookup = nancyModules.ToLookup(x => x.GetType());
 
             var types = nancyModules.Select(x => x.GetType()).Distinct();

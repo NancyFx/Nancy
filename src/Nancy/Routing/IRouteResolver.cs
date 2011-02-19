@@ -10,9 +10,9 @@
         /// <summary>
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
-        /// <param name="request">Incoming request</param>
+        /// <param name="context">Current context</param>
         /// <param name="cache">Route cache</param>
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary</returns>
-        Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache cache);
+        Tuple<Route, DynamicDictionary> Resolve(NancyContext context, IRouteCache cache);
     }
 }

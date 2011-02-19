@@ -32,8 +32,8 @@
         public void GetAllModules_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
-            var output2 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output1 = this.bootstrapper.GetAllModules(new NancyContext()).Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output2 = this.bootstrapper.GetAllModules(new NancyContext()).Where(nm => nm.GetType() == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault();
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -44,8 +44,9 @@
         public void GetModuleByKey_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
-            var output2 = this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            var context = new NancyContext();
+            var output1 = this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context);
+            var output2 = this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -58,7 +59,7 @@
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetAllModules();
+            this.bootstrapper.GetAllModules(new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -69,7 +70,7 @@
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName);
+            this.bootstrapper.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -100,7 +101,7 @@
         {
             this.bootstrapper.GetEngine();
 
-            var result = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency)), new NancyContext()) as Fakes.FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldBeSameAs(result.Dependency.FooDependency);
@@ -110,9 +111,10 @@
         public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call()
         {
             this.bootstrapper.GetEngine();
+            var context = new NancyContext();
 
-            var result = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
-            var result2 = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency))) as Fakes.FakeNancyModuleWithDependency;
+            var result = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency)), context) as Fakes.FakeNancyModuleWithDependency;
+            var result2 = this.bootstrapper.GetModuleByKey(new Nancy.Bootstrapper.DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(Fakes.FakeNancyModuleWithDependency)), context) as Fakes.FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();

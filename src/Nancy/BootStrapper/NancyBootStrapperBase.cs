@@ -45,6 +45,11 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
+        protected virtual Type DefaultContextFactory { get { return typeof(DefaultNancyContextFactory); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
         protected virtual Type DefaultNancyEngine { get { return typeof(NancyEngine); } }
 
         /// <summary>
@@ -101,6 +106,7 @@
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher),
                 new TypeRegistration(typeof(IViewLocator), DefaultViewLocator),
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
+                new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory), 
             };
         }
 

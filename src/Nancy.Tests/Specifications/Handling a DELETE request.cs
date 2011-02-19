@@ -12,7 +12,7 @@ namespace Nancy.Tests.Specifications
             request = ManufactureDELETERequestForRoute("/");
 
         Because of = () =>
-            response = engine.HandleRequest(request);
+            response = engine.HandleRequest(request).Response;
 
         It should_set_status_code_to_ok = () =>
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -31,7 +31,7 @@ namespace Nancy.Tests.Specifications
             request = ManufactureDELETERequestForRoute("/invalid");
 
         Because of = () =>
-            response = engine.HandleRequest(request);
+            response = engine.HandleRequest(request).Response;
 
         It should_set_status_code_to_not_found = () =>
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);

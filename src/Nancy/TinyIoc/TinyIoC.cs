@@ -155,6 +155,10 @@ namespace TinyIoC
             {
                 assemblies = new Type[] { };
             }
+            catch (ReflectionTypeLoadException)
+            {
+                assemblies = new Type[] { };
+            }
 
             return assemblies;
         }

@@ -119,7 +119,7 @@ namespace Nancy.Bootstrappers.StructureMap
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <returns>IEnumerable of NancyModule</returns>
-        public IEnumerable<NancyModule> GetAllModules()
+        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
             var childContainer = _Container.GetNestedContainer();
             ConfigureRequestContainer(childContainer);
@@ -131,8 +131,9 @@ namespace Nancy.Bootstrappers.StructureMap
         /// </summary>
         /// <param name="moduleKey">ModuleKey</param>
         /// <returns>NancyModule instance</returns>
-        public NancyModule GetModuleByKey(string moduleKey)
+        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
+            // TODO - add child container to context so it's disposed?
             var childContainer = _Container.GetNestedContainer();
             ConfigureRequestContainer(childContainer);
             return childContainer.TryGetInstance<NancyModule>(moduleKey);

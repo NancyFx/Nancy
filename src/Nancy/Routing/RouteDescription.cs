@@ -4,7 +4,7 @@ namespace Nancy.Routing
 
     public sealed class RouteDescription
     {
-        public RouteDescription(string method, string path, Func<Request, bool> condition)
+        public RouteDescription(string method, string path, Func<NancyContext, bool> condition)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -21,7 +21,7 @@ namespace Nancy.Routing
             this.Condition = condition;
         }
 
-        public Func<Request, bool> Condition { get; private set; }
+        public Func<NancyContext, bool> Condition { get; private set; }
 
         public string Method { get; private set; }
 
