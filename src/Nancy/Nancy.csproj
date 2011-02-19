@@ -47,6 +47,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Bootstrapper\PostRequestHooksPipeline.cs" />
     <Compile Include="Bootstrapper\PreRequestHooksPipeline.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />

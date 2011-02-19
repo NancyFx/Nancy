@@ -15,7 +15,18 @@ namespace Nancy
         /// </para>
         /// </summary>
         Func<NancyContext, Response> PreRequestHook { get; set; }
-        
+
+        /// <summary>
+        /// <para>
+        /// Gets or sets the post-requets hook.
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after a route is located and invoked. The post
+        /// request hook can rewrite the response or add/remove items from the context
+        /// </para>
+        /// </summary>
+        Action<NancyContext> PostRequestHook { get; set; }
+
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>

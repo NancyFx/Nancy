@@ -52,6 +52,22 @@
         /// </summary>
         public Func<NancyContext, Response> PreRequestHook { get; set; }
 
+        /// <summary>
+        /// <para>
+        /// Gets or sets the post-requets hook.
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after a route is located and invoked. The post
+        /// request hook can rewrite the response or add/remove items from the context
+        /// </para>
+        /// </summary>
+        public Action<NancyContext> PostRequestHook { get; set; }
+
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/>.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
         public NancyContext HandleRequest(Request request)
         {
             if (request == null)
@@ -82,6 +98,11 @@
             }
 
             context.Response = response;
+
+            if (this.PostRequestHook != null)
+            {
+                this.PostRequestHook.Invoke(context);
+            }
 
             return context;
         }

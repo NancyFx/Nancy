@@ -43,42 +43,42 @@ namespace Nancy
         public IViewFactory View { get; set; }
 
         /// <summary>
-        /// Gets <see cref="RouteIndexer"/> for declaring actions for DELETE requests.
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteIndexer"/> instance.</value>
-        public RouteIndexer Delete
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Delete
         {
-            get { return new RouteIndexer("DELETE", this); }
+            get { return new RouteBuilder("DELETE", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteIndexer"/> for declaring actions for GET requests.
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for GET requests.
         /// </summary>
-        /// <value>A <see cref="RouteIndexer"/> instance.</value>
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
         /// <remarks>These actions will also be used when a HEAD request is recieved.</remarks>
-        public RouteIndexer Get
+        public RouteBuilder Get
         {
-            get { return new RouteIndexer("GET", this); }
+            get { return new RouteBuilder("GET", this); }
         }
 
         public string ModulePath { get; private set; }
 
         /// <summary>
-        /// Gets <see cref="RouteIndexer"/> for declaring actions for POST requests.
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for POST requests.
         /// </summary>
-        /// <value>A <see cref="RouteIndexer"/> instance.</value>
-        public RouteIndexer Post
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Post
         {
-            get { return new RouteIndexer("POST", this); }
+            get { return new RouteBuilder("POST", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteIndexer"/> for declaring actions for PUT requests.
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for PUT requests.
         /// </summary>
-        /// <value>A <see cref="RouteIndexer"/> instance.</value>
-        public RouteIndexer Put
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Put
         {
-            get { return new RouteIndexer("PUT", this); }
+            get { return new RouteBuilder("PUT", this); }
         }
 
         /// <summary>
@@ -109,12 +109,12 @@ namespace Nancy
         /// </summary>
         public NancyContext Context { get; set; }
 
-        public class RouteIndexer
+        public class RouteBuilder
         {
             private readonly string method;
             private readonly NancyModule parentModule;
 
-            public RouteIndexer(string method, NancyModule parentModule)
+            public RouteBuilder(string method, NancyModule parentModule)
             {
                 this.method = method;
                 this.parentModule = parentModule;
