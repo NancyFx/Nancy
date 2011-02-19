@@ -16,12 +16,12 @@ namespace Nancy.Tests.Fakes
             _Modules = new Dictionary<String, NancyModule>() { { "1", new FakeNancyModuleWithBasePath() }, { "2", new FakeNancyModuleWithoutBasePath() } };
         }
 
-        public IEnumerable<NancyModule> GetAllModules()
+        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
             return _Modules.Values.AsEnumerable();
         }
 
-        public NancyModule GetModuleByKey(string moduleKey)
+        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
             return _Modules[moduleKey];
         }

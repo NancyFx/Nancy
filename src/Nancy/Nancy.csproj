@@ -47,6 +47,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
@@ -65,8 +66,10 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="HttpStatusCode.cs" />
+    <Compile Include="INancyContextFactory.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="NancyContext.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />

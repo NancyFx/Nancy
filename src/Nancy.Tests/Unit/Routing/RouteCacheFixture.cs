@@ -7,6 +7,8 @@ using Xunit;
 
 namespace Nancy.Tests.Unit.Routing
 {
+    using FakeItEasy;
+
     public class RouteCacheFixture
     {
         private Nancy.INancyModuleCatalog _FakeModuleCatalog;
@@ -19,7 +21,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             _FakeModuleCatalog = new FakeModuleCatalog();
 
-            _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
+            _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
         }
 
         [Fact]
@@ -35,7 +37,7 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Should_Contain_Entries_For_All_Routes()
         {
-            var total = _FakeModuleCatalog.GetAllModules().Sum(nm => nm.Routes.Count());
+            var total = _FakeModuleCatalog.GetAllModules(new NancyContext()).Sum(nm => nm.Routes.Count());
 
             var cacheEntriesTotal = _RouteCache.Values.Sum(c => c.Count());
 
@@ -81,7 +83,7 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Index_Set_Correctly_In_Cache()
         {
-            var routes = _FakeModuleCatalog.GetModuleByKey("1").Routes.Select(r => r.Description);
+            var routes = _FakeModuleCatalog.GetModuleByKey("1", new NancyContext()).Routes.Select(r => r.Description);
 
             var cachedRoutes = _RouteCache["1"];
 

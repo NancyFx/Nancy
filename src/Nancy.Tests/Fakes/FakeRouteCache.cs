@@ -66,7 +66,7 @@
                 return this;
             }
 
-            public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey, Func<Request, bool> condition)
+            public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey, Func<NancyContext, bool> condition)
             {
                 this.AddRoutesToCache(new[] { new RouteDescription("GET", path, condition) }, moduleKey);
 

@@ -67,8 +67,10 @@
                     return;
                 }
                 var nancyRequest = ConvertRequestToNancyRequest(requestContext.Request);
-                var nancyResponse = engine.HandleRequest(nancyRequest);
-                ConvertNancyResponseToResponse(nancyResponse, requestContext.Response);
+                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                {
+                    ConvertNancyResponseToResponse(nancyContext.Response, requestContext.Response);
+                }
             }
         }
 

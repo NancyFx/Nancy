@@ -13,6 +13,11 @@ namespace Nancy.Bootstrappers.Windsor
     public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>,
         INancyBootstrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
     {
+        /// <summary>
+        /// Key for storing the child container in the context items
+        /// </summary>
+        private const string CONTEXT_KEY = "WindsorNancyBootStrapperChildContainer";
+
         protected IWindsorContainer container;
 
         private IEnumerable<ModuleRegistration> modulesRegistrationTypes;
@@ -83,27 +88,36 @@ namespace Nancy.Bootstrappers.Windsor
         {
         }
 
-        public IEnumerable<NancyModule> GetAllModules()
+        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var child = GetChild();
+            var child = GetChild(context);
             return child.Kernel.ResolveAll<NancyModule>();
         }
 
-        public NancyModule GetModuleByKey(string moduleKey)
+        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var child = GetChild();
+            var child = GetChild(context);
             return child.Kernel.Resolve<NancyModule>(moduleKey);
         }
 
-        private IWindsorContainer GetChild()
+        IWindsorContainer GetChild(NancyContext context)
         {
-            var child = new WindsorContainer();
-            this.container.AddChildContainer(child);
-            ConfigureRequestContainer(child);
-            RegisterModulesInternal(child, this.modulesRegistrationTypes);
-            RegisterViewEnginesInternal(child, this.viewEngines);
-            RegisterViewSourceProvidersInternal(child, this.viewSourceProviders);
-            return child;
+            object contextObject;
+            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
+            var childContainer = contextObject as IWindsorContainer;
+
+            if (childContainer == null)
+            {
+                childContainer = new WindsorContainer();
+                this.container.AddChildContainer(childContainer);
+                this.ConfigureRequestContainer(childContainer);
+                RegisterModulesInternal(childContainer, this.modulesRegistrationTypes);
+                RegisterViewEnginesInternal(childContainer, this.viewEngines);
+                RegisterViewSourceProvidersInternal(childContainer, this.viewSourceProviders);
+                context.Items[CONTEXT_KEY] = childContainer;
+            }
+
+            return childContainer;
         }
 
         private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)

@@ -6,12 +6,18 @@ namespace Nancy.Tests.Fakes
     {
         public bool ActionWasInvoked;
 
-        public FakeRoute() 
-            : base("GET", "/", null, x => new Response())
+        public FakeRoute()
+            : this(new Response())
+        {
+
+        }
+
+        public FakeRoute(Response response)
+            : base("GET", "/", null, x => response)
         {
             this.Action = x => {
                 this.ActionWasInvoked = true;
-                return new Response();
+                return response;
             };
         }
     }

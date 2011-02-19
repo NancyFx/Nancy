@@ -19,26 +19,26 @@
             this.viewFactory = viewFactory;
         }
 
-        public Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache routeCache)
+        public Tuple<Route, DynamicDictionary> Resolve(NancyContext context, IRouteCache routeCache)
         {
             if (routeCache.IsEmpty())
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty);
             }
 
-            var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, request);
+            var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, context);
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
+                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty);
             }
 
-            var routesWithCorrectRequestMethod = 
-                GetRoutesWithCorrectRequestMethod(request, routesThatMatchRequestedPath);
+            var routesWithCorrectRequestMethod =
+                GetRoutesWithCorrectRequestMethod(context.Request, routesThatMatchRequestedPath);
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-                return new Tuple<Route, DynamicDictionary>(new MethodNotAllowedRoute(request.Uri, request.Method), DynamicDictionary.Empty);
+                return new Tuple<Route, DynamicDictionary>(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty);
             }
 
             var routeMatchesWithMostParameterCaptures = 
@@ -47,25 +47,25 @@
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
 
-            return this.CreateRouteAndParametersFromMatch(request, routeMatchToReturn);
+            return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
         }
 
-        private Tuple<Route, DynamicDictionary> CreateRouteAndParametersFromMatch(Request request, RouteCandidate routeMatchToReturn)
+        private Tuple<Route, DynamicDictionary> CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
             var associatedModule =
-                this.GetInitializedModuleForMatch(request, routeMatchToReturn);
+                this.GetInitializedModuleForMatch(context, routeMatchToReturn);
 
             var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
             return new Tuple<Route, DynamicDictionary>(route, routeMatchToReturn.Item4.Parameters);
         }
 
-        private NancyModule GetInitializedModuleForMatch(Request request, RouteCandidate routeMatchToReturn)
+        private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
             var module =
-                this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1);
+                this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1, context);
 
-            module.Request = request;
+            module.Context = context;
             module.View = viewFactory;
 
             return module;
@@ -104,14 +104,14 @@
             return !routesThatMatchRequestedPath.Any();
         }
 
-        private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(IRouteCache routeCache, Request request)
+        private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(IRouteCache routeCache, NancyContext context)
         {
             return from cacheEntry in routeCache
                    from cacheEntryRoutes in cacheEntry.Value
                    let routeIndex = cacheEntryRoutes.Item1
                    let routeDescription = cacheEntryRoutes.Item2
-                   where ((routeDescription.Condition == null) || (routeDescription.Condition(request)))
-                   let result = this.routePatternMatcher.Match(request.Uri, routeDescription.Path)
+                   where ((routeDescription.Condition == null) || (routeDescription.Condition(context)))
+                   let result = this.routePatternMatcher.Match(context.Request.Uri, routeDescription.Path)
                    where result.IsMatch
                    select new RouteCandidate(cacheEntry.Key, routeIndex, routeDescription, result);
         }

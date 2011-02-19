@@ -15,14 +15,23 @@ namespace Nancy.Tests.Unit
         private readonly INancyEngine engine;
         private readonly IRouteResolver resolver;
         private readonly FakeRoute route;
+        private readonly NancyContext context;
+        private readonly INancyContextFactory contextFactory;
+        private readonly Response response;
 
         public NancyEngineFixture()
         {
             this.resolver = A.Fake<IRouteResolver>();
-            this.route = new FakeRoute();
+            this.response = new Response();
+            this.route = new FakeRoute(response);
+            this.context = new NancyContext();
 
-            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, new DynamicDictionary()));
-            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>());
+            contextFactory = A.Fake<INancyContextFactory>();
+            A.CallTo(() => contextFactory.Create()).Returns(context);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, DynamicDictionary.Empty));
+
+            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory);
         }
 
         [Fact]
@@ -30,7 +39,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -41,7 +50,18 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_context_factory()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -68,21 +88,25 @@ namespace Nancy.Tests.Unit
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
         }
-        //[Fact]
-        //public void Should_treat_a_HEAD_request_like_a_GET_when_getting_a_request_to_route_resolver()
-        //{
-        //    // Given
-        //    var request = new Request("HEAD", "/", "http");
 
+        [Fact]
+        public void HandleRequest_should_get_context_from_context_factory()
+        {
+            var request = new Request("GET", "/", "http");
 
-        //    A.CallTo(() => this.locator.GetModules()).Returns(modules);
+            this.engine.HandleRequest(request);
 
-        //    // When
-        //    this.engine.HandleRequest(request);
+            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Once);
+        }
 
-        //    // Then
-        //    A.CallTo(() => this.resolver.GetRoute(A<Request>.Ignored.Argument,
-        //        A<IEnumerable<ModuleMeta>>.That.Matches(x => x.SequenceEqual(this.modules["GET"])).Argument, A<ITemplateEngineSelector>.Ignored.Argument)).MustHaveHappened();
-        //}
+        [Fact]
+        public void HandleRequest_should_set_correct_response_on_returned_context()
+        {
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.Response.ShouldBeSameAs(this.response);
+        }
     }
 }

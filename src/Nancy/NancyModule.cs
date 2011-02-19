@@ -85,7 +85,17 @@ namespace Nancy
         /// Gets or sets an <see cref="Request"/> instance that represents the current request.
         /// </summary>
         /// <value>An <see cref="Request"/> instance.</value>
-        public Request Request { get; set; }
+        public Request Request
+        {
+            get
+            {
+                return this.Context.Request;   
+            }
+            set
+            { 
+                this.Context.Request = value;
+            }
+        }
 
         /// <summary>
         /// An extension point for adding support for formatting response contents.
@@ -93,6 +103,11 @@ namespace Nancy
         /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
         /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
         public IResponseFormatter Response { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the current Nancy context
+        /// </summary>
+        public NancyContext Context { get; set; }
 
         public class RouteIndexer
         {
@@ -110,12 +125,12 @@ namespace Nancy
                 set { this.AddRoute(path, null, value); }
             }
 
-            public Func<dynamic, Response> this[string path, Func<Request, bool> condition]
+            public Func<dynamic, Response> this[string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(path, condition, value); }
             }
 
-            private void AddRoute(string path, Func<Request, bool> condition, Func<object, Response> value)
+            private void AddRoute(string path, Func<NancyContext, bool> condition, Func<object, Response> value)
             {
                 var fullPath = string.Concat(this.parentModule.ModulePath, path);
 
