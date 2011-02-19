@@ -40,6 +40,18 @@
             this.contextFactory = contextFactory;
         }
 
+        /// <summary>
+        /// <para>
+        /// Gets or sets the pre-request hook.
+        /// </para>
+        /// <para>
+        /// The Pre-request hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        public Func<NancyContext, Response> PreRequestHook { get; set; }
+
         public NancyContext HandleRequest(Request request)
         {
             if (request == null)
@@ -49,6 +61,17 @@
 
             var context = this.contextFactory.Create();
             context.Request = request;
+
+            if (this.PreRequestHook != null)
+            {
+                var preRequestResponse = this.PreRequestHook.Invoke(context);
+
+                if (preRequestResponse != null)
+                {
+                    context.Response = preRequestResponse;
+                    return context;
+                }
+            }
 
             var resolvedRouteAndParameters = this.resolver.Resolve(context, this.routeCache);
             var response = resolvedRouteAndParameters.Item1.Invoke(resolvedRouteAndParameters.Item2);
