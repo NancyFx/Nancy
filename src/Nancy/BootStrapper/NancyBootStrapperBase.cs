@@ -33,6 +33,12 @@
         where TContainer : class
     {
         /// <summary>
+        /// Stores whether the bootstrapper has been initialised
+        /// prior to calling GetEngine.
+        /// </summary>
+        private bool initialised = false;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -40,6 +46,11 @@
             this.PreRequestHooks = new PreRequestHooksPipeline();
             this.PostRequestHooks = new PostRequestHooksPipeline();
         }
+
+        /// <summary>
+        /// Gets the Container instance - automatically set during initialise.
+        /// </summary>
+        protected TContainer ApplicationContainer { get; private set; }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -110,18 +121,34 @@
         protected PostRequestHooksPipeline PostRequestHooks { get; set; }
 
         /// <summary>
+        /// Initialise the bootstrapper. Must be called prior to GetEngine.
+        /// </summary>
+        public void Initialise()
+        {
+            this.initialised = true;
+
+            this.ApplicationContainer = this.CreateContainer();
+
+            this.InitialiseInternal(this.ApplicationContainer);
+        }
+
+        /// <summary>
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
         public INancyEngine GetEngine()
         {
-            var container = CreateContainer();
-            ConfigureApplicationContainer(container);
+            if (!this.initialised)
+            {
+                throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
+            }
+
+            ConfigureApplicationContainer(this.ApplicationContainer);
             
-            RegisterDefaults(container, BuildDefaults());
+            RegisterDefaults(this.ApplicationContainer, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
-            RegisterViewEngines(container, GetViewEngineTypes());
-            RegisterViewSourceProviders(container, GetViewSourceProviders());
+            RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
+            RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
 
             var engine = GetEngineInternal();
             engine.PreRequestHook = this.PreRequestHooks;
@@ -144,6 +171,16 @@
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
                 new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory), 
             };
+        }
+
+        /// <summary>
+        /// Initialise the bootstrapper - can be used for adding pre/post hooks and
+        /// any other initialisation tasks that aren't specifically container setup
+        /// related
+        /// </summary>
+        /// <param name="container">Container instance for resolving types if required.</param>
+        protected virtual void InitialiseInternal(TContainer container)
+        {
         }
 
         /// <summary>

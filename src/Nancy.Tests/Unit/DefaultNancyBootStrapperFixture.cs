@@ -17,6 +17,7 @@
         public DefaultNancyBootstrapperFixture()
         {
             this.bootstrapper = new FakeDefaultNancyBootstrapper();
+            this.bootstrapper.Initialise();
         }
 
         [Fact]

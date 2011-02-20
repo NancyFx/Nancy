@@ -144,6 +144,7 @@
         public NancyBootstrapperBaseFixture()
         {
             _Bootstrapper = new FakeBootstrapperBaseImplementation();
+            _Bootstrapper.Initialise();
         }
 
         [Fact]
@@ -187,6 +188,7 @@
         public void Overridden_GetModules_Is_Used_For_Getting_ModuleTypes()
         {
             var bootstrapper = new FakeBootstrapperBaseGetModulesOverride();
+            bootstrapper.Initialise();
             bootstrapper.GetEngine();
 
             bootstrapper.RegisterModulesRegistrationTypes.ShouldBeSameAs(bootstrapper.ModuleRegistrations);

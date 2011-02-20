@@ -34,6 +34,7 @@
             listener = new HttpListener();
             listener.Prefixes.Add(baseUri.ToString());
 
+            bootStrapper.Initialise();
             engine = bootStrapper.GetEngine();
         }
 

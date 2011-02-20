@@ -44,6 +44,7 @@
         public StructureMapNancyBootstrapperFixture()
         {
             _Bootstrapper = new FakeStructureMapNancyBootstrapper();
+            _Bootstrapper.Initialise();
         }
 
         [Fact]
