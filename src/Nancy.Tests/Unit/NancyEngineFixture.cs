@@ -1,10 +1,13 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     public class NancyEngineFixture
     {
@@ -25,7 +28,7 @@ namespace Nancy.Tests.Unit
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
 
-            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, DynamicDictionary.Empty));
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
 
             this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory);
         }
@@ -174,6 +177,86 @@ namespace Nancy.Tests.Unit
             var result = this.engine.HandleRequest(request);
 
             result.Response.ShouldBeSameAs(newResponse);
+        }
+
+        [Fact]
+        public void HandleRequest_should_call_route_prereq_then_invoke_route_then_call_route_postreq()
+        {
+            var executionOrder = new List<String>();
+            Func<NancyContext, Response> preHook = (ctx) => { executionOrder.Add("Prehook"); return null; };
+            Action<NancyContext> postHook = (ctx) => { executionOrder.Add("Posthook"); };
+            this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            localEngine.HandleRequest(request);
+
+            executionOrder.Count().ShouldEqual(3);
+            executionOrder.SequenceEqual(new[] { "Prehook", "RouteInvoke", "Posthook" }).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void HandleRequest_should_not_invoke_route_or_call_route_postreq_if_route_prereq_returns_response()
+        {
+            var executionOrder = new List<String>();
+            Func<NancyContext, Response> preHook = (ctx) => { executionOrder.Add("Prehook"); return new Response(); };
+            Action<NancyContext> postHook = (ctx) => { executionOrder.Add("Posthook"); };
+            this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            localEngine.HandleRequest(request);
+
+            executionOrder.Count().ShouldEqual(1);
+            executionOrder.SequenceEqual(new[] { "Prehook" }).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void HandleRequest_should_return_response_from_route_prereq_if_one_returned()
+        {
+            var preResponse = new Response();
+            Func<NancyContext, Response> preHook = (ctx) => preResponse;
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, null));
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            var result = localEngine.HandleRequest(request);
+            
+            result.Response.ShouldBeSameAs(preResponse);
+        }
+
+        [Fact]
+        public void HandleRequest_should_allow_route_postreq_to_change_response()
+        {
+            var postResponse = new Response();
+            Action<NancyContext> postHook = (ctx) => ctx.Response = postResponse;
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            var result = localEngine.HandleRequest(request);
+
+            result.Response.ShouldBeSameAs(postResponse);
+        }
+
+        [Fact]
+        public void HandleRequest_should_allow_route_postreq_to_add_items_to_context()
+        {
+            Action<NancyContext> postHook = (ctx) => ctx.Items.Add("RoutePostReq", new object());
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            var result = localEngine.HandleRequest(request);
+
+            result.Items.ContainsKey("RoutePostReq").ShouldBeTrue();
         }
     }
 }

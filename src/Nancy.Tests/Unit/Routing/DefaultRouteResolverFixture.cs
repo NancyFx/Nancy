@@ -7,7 +7,7 @@
     using Nancy.ViewEngines;
     using Xunit;
 
-    public class RouteResolverFixture
+    public class DefaultRouteResolverFixture
     {
         private readonly DefaultRouteResolver resolver;
         private readonly IRoutePatternMatcher matcher;
@@ -16,7 +16,7 @@
         private readonly IViewFactory viewFactory;
         private FakeNancyModule expectedModule;
 
-        public RouteResolverFixture()
+        public DefaultRouteResolverFixture()
         {
             this.viewFactory = A.Fake<IViewFactory>();
 
@@ -366,6 +366,12 @@
             var route = specificResolver.Resolve(context, routeCache).Item1;
 
             route.Description.Condition(context).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_prereq_and_postreq_from_module()
+        {
+            throw new NotImplementedException();
         }
     }
 }

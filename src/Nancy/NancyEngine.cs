@@ -89,15 +89,31 @@
                 }
             }
 
-            var resolvedRouteAndParameters = this.resolver.Resolve(context, this.routeCache);
-            var response = resolvedRouteAndParameters.Item1.Invoke(resolvedRouteAndParameters.Item2);
+            var resolveResult = this.resolver.Resolve(context, this.routeCache);
+            var resolveResultPreReq = resolveResult.Item3;
+            var resolveResultPostReq = resolveResult.Item4;
+
+            if (resolveResultPreReq != null)
+            {
+                var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
+
+                if (resolveResultPreReqResponse != null)
+                {
+                    context.Response = resolveResultPreReqResponse;
+                    return context;
+                }
+            }
             
+            context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
             if (request.Method.ToUpperInvariant() == "HEAD")
             {
-                response = new HeadResponse(response);
+                context.Response = new HeadResponse(context.Response);
             }
 
-            context.Response = response;
+            if (resolveResultPostReq != null)
+            {
+                resolveResultPostReq.Invoke(context);
+            }
 
             if (this.PostRequestHook != null)
             {
