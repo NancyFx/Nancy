@@ -41,6 +41,7 @@
         public UnityNancyBootstrapperFixture()
         {
             _Bootstrapper = new FakeUnityNancyBootstrapper();
+            _Bootstrapper.Initialise();
         }
 
         [Fact]

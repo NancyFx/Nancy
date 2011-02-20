@@ -47,6 +47,7 @@
         public WindsorNancyBootstrapperFixture()
         {
             this.bootstrapper = new FakeWindsorNancyBootstrapper();
+            this.bootstrapper.Initialise();
         }
 
         [Fact]

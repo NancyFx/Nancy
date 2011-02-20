@@ -23,6 +23,7 @@
 
         public NancyWcfGenericService(INancyBootstrapper bootstrapper)
         {
+            bootstrapper.Initialise();
             engine = bootstrapper.GetEngine();
         }
         

@@ -48,6 +48,7 @@
         public NinjectNancyBootstrapperFixture()
         {
             _Bootstrapper = new FakeNinjectNancyBootstrapper();
+            _Bootstrapper.Initialise();
         }
 
         [Fact]
