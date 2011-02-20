@@ -23,7 +23,9 @@ namespace Nancy.Hosting.SelfHosting
                 Path.Combine(Environment.CurrentDirectory, "views");
 
             if (string.IsNullOrEmpty(viewFolder))
+            {
                 return null;
+            }
 
             var filesInViewFolder =
                 Directory.GetFiles(viewFolder);
