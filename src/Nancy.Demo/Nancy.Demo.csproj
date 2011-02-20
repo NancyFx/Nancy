@@ -77,6 +77,7 @@
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -106,6 +107,7 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Views\embedded.django" />
+    <Content Include="Views\someview.cshtml" />
     <None Include="Views\razor-dependency.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
