@@ -60,6 +60,10 @@ namespace Nancy.Demo
                 return View["embedded.django", model];
             };
 
+            Get["/viewmodelconvention"] = x => {
+                return View[new SomeViewModel()];
+            };
+
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
                 return View["~/views/ndjango.django", model];
