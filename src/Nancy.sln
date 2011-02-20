@@ -59,6 +59,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.WcfHosting.Demo", "Na
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyAuthenticationDemo", "NancyAuthenticationDemo\NancyAuthenticationDemo.csproj", "{5F2DD52D-471B-4946-8F7B-F050C88EFC52}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NancyCachingDemo", "NancyCachingDemo\NancyCachingDemo.csproj", "{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -313,6 +315,16 @@ Global
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52}.Release|x86.ActiveCfg = Release|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Release|Any CPU.Build.0 = Release|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -343,5 +355,6 @@ Global
 		{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1} = {4A24657F-9695-437B-9702-2541ED280628}
 		{EBB6F597-3273-4972-8B25-A809D2FC1F24} = {4A24657F-9695-437B-9702-2541ED280628}
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52} = {4A24657F-9695-437B-9702-2541ED280628}
+		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 EndGlobal
