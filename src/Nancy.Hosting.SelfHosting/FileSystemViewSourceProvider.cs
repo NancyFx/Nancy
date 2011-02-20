@@ -41,10 +41,12 @@ namespace Nancy.Hosting.SelfHosting
             var selectedView =
                 viewsFiles.FirstOrDefault();
 
+            var fileStream = new FileStream(selectedView.file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+
             return new ViewLocationResult(
                 selectedView.file,
                 selectedView.extension,
-                new StreamReader(selectedView.file)
+                new StreamReader(fileStream)
             );
         }
     }
