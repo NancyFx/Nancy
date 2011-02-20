@@ -25,7 +25,9 @@ namespace Nancy.Hosting.Aspnet
                 HostingEnvironment.MapPath("~/views");
 
             if (string.IsNullOrEmpty(viewFolder))
+            {
                 return null;
+            }
 
             var filesInViewFolder =
                 Directory.GetFiles(viewFolder);
