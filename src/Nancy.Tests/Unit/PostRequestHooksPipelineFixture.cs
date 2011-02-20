@@ -1,8 +1,7 @@
-namespace Nancy.Tests.Unit.Bootstrapper
+﻿namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
-    using Nancy.Bootstrapper;
     using Xunit;
 
     public class PostRequestHooksPipelineFixture

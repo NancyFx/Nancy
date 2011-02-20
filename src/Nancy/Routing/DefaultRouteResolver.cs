@@ -63,7 +63,7 @@
 
             var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
-            return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, null, null);
+            return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, associatedModule.PreRequestHooks, associatedModule.PostRequestHooks);
         }
 
         private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)

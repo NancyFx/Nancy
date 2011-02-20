@@ -1,12 +1,10 @@
-namespace Pipelines
+﻿namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
-    using Nancy;
-    using Nancy.Bootstrapper;
     using Xunit;
 
-    public class PreRequestHooksPipelineTests
+    public class PreRequestHooksPipelineFixture
     {
         private PreRequestHooksPipeline pipeline;
 
@@ -20,7 +18,7 @@ namespace Pipelines
             return new NancyContext();
         }
 
-        public PreRequestHooksPipelineTests()
+        public PreRequestHooksPipelineFixture()
         {
             this.pipeline = new PreRequestHooksPipeline();
         }

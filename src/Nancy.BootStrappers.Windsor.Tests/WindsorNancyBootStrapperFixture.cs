@@ -139,7 +139,20 @@
         }
 
         [Fact]
-        public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call()
+        public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call_With_Different_Context()
+        {
+            this.bootstrapper.GetEngine();
+
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
+            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
+
+            result.FooDependency.ShouldNotBeNull();
+            result2.FooDependency.ShouldNotBeNull();
+            result.FooDependency.ShouldNotBeSameAs(result2.FooDependency);
+        }
+
+        [Fact]
+        public void Get_Module_By_Key_Gives_Same_Request_Lifetime_Instance_To_Each_Call_With_Same_Context()
         {
             this.bootstrapper.GetEngine();
 
@@ -149,7 +162,7 @@
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();
-            result.FooDependency.ShouldNotBeSameAs(result2.FooDependency);
+            result.FooDependency.ShouldBeSameAs(result2.FooDependency);
         }
 
         [Fact]
