@@ -1,10 +1,10 @@
 ﻿namespace Nancy.Routing
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nancy.ViewEngines;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
+    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     public class DefaultRouteResolver : IRouteResolver
     {
@@ -19,18 +19,24 @@
             this.viewFactory = viewFactory;
         }
 
-        public Tuple<Route, DynamicDictionary> Resolve(NancyContext context, IRouteCache routeCache)
+        /// <summary>
+        /// Gets the route, and the corresponding parameter dictionary from the URL
+        /// </summary>
+        /// <param name="context">Current context</param>
+        /// <param name="routeCache">Route cache</param>
+        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
+        public ResolveResult Resolve(NancyContext context, IRouteCache routeCache)
         {
             if (routeCache.IsEmpty())
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty);
+                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty, null, null);
             }
 
             var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, context);
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty);
+                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty, null, null);
             }
 
             var routesWithCorrectRequestMethod =
@@ -38,7 +44,7 @@
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-                return new Tuple<Route, DynamicDictionary>(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty);
+                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty, null, null);
             }
 
             var routeMatchesWithMostParameterCaptures = 
@@ -50,14 +56,14 @@
             return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
         }
 
-        private Tuple<Route, DynamicDictionary> CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
+        private ResolveResult CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
             var associatedModule =
                 this.GetInitializedModuleForMatch(context, routeMatchToReturn);
 
             var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
-            return new Tuple<Route, DynamicDictionary>(route, routeMatchToReturn.Item4.Parameters);
+            return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, null, null);
         }
 
         private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)
