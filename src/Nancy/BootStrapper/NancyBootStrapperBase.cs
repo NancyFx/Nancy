@@ -158,6 +158,10 @@
         /// <returns>IModuleKeyGenerator instance</returns>
         protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
 
+        /// <summary>
+        /// Get all view source provider types
+        /// </summary>
+        /// <returns>Enumerable of types that implement IViewSourceProvider</returns>
         protected virtual IEnumerable<Type> GetViewSourceProviders()
         {
             var viewSourceProviders =
@@ -172,6 +176,11 @@
             return viewSourceProviders;
         }
 
+        /// <summary>
+        /// Register the view source providers into the container
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        /// <param name="viewSourceProviderTypes">Enumerable of types that implement IViewSourceProvider</param>
         protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
 
         /// <summary>
@@ -194,6 +203,10 @@
             return locatedModuleTypes;
         }
 
+        /// <summary>
+        /// Get all view engine types
+        /// </summary>
+        /// <returns>Enumerable of types that implement IViewEngine</returns>
         protected virtual IEnumerable<Type> GetViewEngineTypes()
         {
             var viewEngineTypes =
@@ -208,6 +221,11 @@
             return viewEngineTypes;
         }
 
+        /// <summary>
+        /// Register view engines into the container
+        /// </summary>
+        /// <param name="container">Container Instance</param>
+        /// <param name="viewEngineTypes">Enumerable of types that implement IViewEngine</param>
         protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
 
         /// <summary>
