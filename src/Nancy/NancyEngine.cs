@@ -78,41 +78,11 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
-            if (this.PreRequestHook != null)
+            this.InvokePreRequestHook(context);
+
+            if (context.Response == null)
             {
-                var preRequestResponse = this.PreRequestHook.Invoke(context);
-
-                if (preRequestResponse != null)
-                {
-                    context.Response = preRequestResponse;
-                    return context;
-                }
-            }
-
-            var resolveResult = this.resolver.Resolve(context, this.routeCache);
-            var resolveResultPreReq = resolveResult.Item3;
-            var resolveResultPostReq = resolveResult.Item4;
-
-            if (resolveResultPreReq != null)
-            {
-                var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
-
-                if (resolveResultPreReqResponse != null)
-                {
-                    context.Response = resolveResultPreReqResponse;
-                    return context;
-                }
-            }
-            
-            context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
-            if (request.Method.ToUpperInvariant() == "HEAD")
-            {
-                context.Response = new HeadResponse(context.Response);
-            }
-
-            if (resolveResultPostReq != null)
-            {
-                resolveResultPostReq.Invoke(context);
+                this.ResolveAndInvokeRoute(context);
             }
 
             if (this.PostRequestHook != null)
@@ -121,6 +91,58 @@
             }
 
             return context;
+        }
+
+        private void InvokePreRequestHook(NancyContext context)
+        {
+            if (this.PreRequestHook != null)
+            {
+                var preRequestResponse = this.PreRequestHook.Invoke(context);
+
+                if (preRequestResponse != null)
+                {
+                    context.Response = preRequestResponse;
+                }
+            }
+        }
+
+        private void ResolveAndInvokeRoute(NancyContext context)
+        {
+            var resolveResult = this.resolver.Resolve(context, this.routeCache);
+            var resolveResultPreReq = resolveResult.Item3;
+            var resolveResultPostReq = resolveResult.Item4;
+
+            this.ExecuteRoutePreReq(context, resolveResultPreReq);
+
+            if (context.Response == null)
+            {
+                context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+            }
+
+            if (context.Request.Method.ToUpperInvariant() == "HEAD")
+            {
+                context.Response = new HeadResponse(context.Response);
+            }
+
+            if (resolveResultPostReq != null)
+            {
+                resolveResultPostReq.Invoke(context);
+            }
+        }
+
+        private void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        {
+            if (resolveResultPreReq == null)
+            {
+                return;
+            }
+
+            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
+
+            if (resolveResultPreReqResponse != null)
+            {
+                context.Response = resolveResultPreReqResponse;
+            }
         }
     }
 }
