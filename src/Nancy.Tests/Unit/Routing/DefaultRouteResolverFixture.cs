@@ -371,7 +371,19 @@
         [Fact]
         public void Should_return_prereq_and_postreq_from_module()
         {
-            throw new NotImplementedException();
+            var moduleCatalog = A.Fake<INancyModuleCatalog>();
+            A.CallTo(() => moduleCatalog.GetAllModules(A<NancyContext>.Ignored)).Returns(new[] { new FakeNancyModuleWithPreAndPostHooks() });
+            A.CallTo(() => moduleCatalog.GetModuleByKey(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(
+                new FakeNancyModuleWithPreAndPostHooks());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
+            var request = new FakeRequest("GET", "/PrePost");
+            var context = new NancyContext { Request = request };
+
+            var result = specificResolver.Resolve(context, routeCache);
+
+            result.Item3.ShouldNotBeNull();
+            result.Item4.ShouldNotBeNull();
         }
     }
 }

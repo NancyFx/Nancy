@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using Bootstrapper;
     using Nancy.Routing;
     using ViewEngines;
 
@@ -29,7 +30,32 @@ namespace Nancy
         {
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
+            this.PreRequestHooks = new PreRequestHooksPipeline();
+            this.PostRequestHooks = new PostRequestHooksPipeline();
         }
+
+        /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to executing a route. If any item in the
+        /// pre-request pipeline returns a response then the route is not executed and the
+        /// response is returned.
+        /// </para>
+        /// </summary>
+        public PreRequestHooksPipeline PreRequestHooks { get; protected set; }
+
+        /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created by the route execution.
+        /// It can be used to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        public PostRequestHooksPipeline PostRequestHooks { get; protected set; }
 
         /// <summary>
         /// Gets all declared routes by the module.

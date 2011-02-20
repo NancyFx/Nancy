@@ -47,8 +47,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Bootstrapper\PostRequestHooksPipeline.cs" />
-    <Compile Include="Bootstrapper\PreRequestHooksPipeline.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
@@ -72,6 +70,8 @@
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="NancyContext.cs" />
+    <Compile Include="PostRequestHooksPipeline.cs" />
+    <Compile Include="PreRequestHooksPipeline.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
