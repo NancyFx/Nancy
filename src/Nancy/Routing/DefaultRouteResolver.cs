@@ -114,7 +114,8 @@
         {
             return from x in routeCache
                    let result = this.routePatternMatcher.Match(request.Uri, x.Path)
-                   where result.IsMatch
+                   where result.IsMatch 
+                   where (x.Condition == null || x.Condition(request))
                    select new Tuple<RouteCacheEntry, IRoutePatternMatchResult>(x, result);
         }
     }

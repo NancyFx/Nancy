@@ -25,7 +25,7 @@ namespace Nancy.Demo
             };
 
             // TODO - implement filtering at the RouteDictionary GetRoute level
-            Get["/filtered", r => true] = x => {
+            Get["/filtered", r => false] = x => {
                 return "This is a route with a filter that always returns true.";
             };
 

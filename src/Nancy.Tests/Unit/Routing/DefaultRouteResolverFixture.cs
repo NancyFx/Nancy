@@ -333,5 +333,29 @@
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
         }
 
+        [Fact]
+        public void Should_return_not_found_for_a_match_with_a_route_condition_returning_false()
+        {
+            var request = new FakeRequest("GET", "/foo/bar");
+            var routeCache = new FakeRouteCache(x => x.AddGetRoute("/foo/bar", "module", r => false));
+
+            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            
+            resolvedRoute.ShouldBeOfType<NotFoundRoute>();
+            resolvedRoute.Path.ShouldEqual(request.Uri);
+        }
+
+        [Fact]
+        public void Should_return_a_route_for_a_match_with_a_route_condition_returning_true()
+        {
+            var request = new FakeRequest("GET", "/foo/bar");
+            var routeCache = new FakeRouteCache(x => x.AddGetRoute("/foo/bar", "module", r => true));
+
+            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            
+            resolvedRoute.ShouldNotBeNull();
+            resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
+            resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
+        }
     }
 }
