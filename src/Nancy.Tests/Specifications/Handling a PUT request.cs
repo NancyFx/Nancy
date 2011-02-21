@@ -1,8 +1,6 @@
 namespace Nancy.Tests.Specifications
 {
-    using System.Net;
     using Machine.Specifications;
-
     using Nancy.Tests.Extensions;
 
     [Subject("Handling a PUT request")]

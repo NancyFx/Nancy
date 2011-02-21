@@ -1,12 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System.IO;
-    using System.Net;
     using System.Xml;
     using FakeItEasy;
-
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class XmlFormatterExtensionsFixtures

@@ -1,7 +1,6 @@
 namespace Nancy.Tests.Unit
 {
     using System.IO;
-    using System.Net;
     using FakeItEasy;
     using Nancy.Tests.Fakes;
     using Xunit;

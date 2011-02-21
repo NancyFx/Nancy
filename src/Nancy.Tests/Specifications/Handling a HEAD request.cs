@@ -1,6 +1,5 @@
 namespace Nancy.Tests.Specifications
 {
-    using System.Net;
     using Machine.Specifications;
     using Nancy.Tests.Extensions;
 
