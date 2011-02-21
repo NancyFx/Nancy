@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
-    using System.Net;
     using FakeItEasy;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;

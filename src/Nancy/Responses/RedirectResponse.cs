@@ -1,7 +1,5 @@
 namespace Nancy.Responses
 {
-    using System.Net;
-
     public class RedirectResponse : Response
 	{
 		public RedirectResponse (string location) 

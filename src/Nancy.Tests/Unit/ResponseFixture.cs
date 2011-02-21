@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Net;
     using Nancy;
     using Nancy.Tests.Extensions;
 

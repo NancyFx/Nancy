@@ -64,6 +64,7 @@
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
+    <Compile Include="HttpStatusCode.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />

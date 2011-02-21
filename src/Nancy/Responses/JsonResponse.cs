@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Net;
     using System.Web.Script.Serialization;
 
     public class JsonResponse<TModel> : Response

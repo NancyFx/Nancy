@@ -57,7 +57,7 @@
             SetHttpResponseHeaders(webResponse, nancyResponse);
 
             webResponse.ContentType = nancyResponse.ContentType;
-            webResponse.StatusCode = nancyResponse.StatusCode;
+            webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
         }
 
         private static void SetHttpResponseHeaders(OutgoingWebResponseContext context, Response response)
