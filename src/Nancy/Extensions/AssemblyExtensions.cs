@@ -1,6 +1,5 @@
 using System;
 using System.Reflection;
-using System.IO;
 
 namespace Nancy.Extensions
 {
@@ -14,7 +13,7 @@ namespace Nancy.Extensions
             {
                 assemblies = assembly.GetExportedTypes();
             }
-            catch (FileNotFoundException)
+            catch (Exception)
             {
                 assemblies = new Type[] { };
             }
