@@ -4,6 +4,10 @@ using StructureMap;
 
 namespace Nancy.Bootstrappers.StructureMap
 {
+    using System;
+
+    using Nancy.ViewEngines;
+
     public abstract class StructureMapNancyBootstrapper : NancyBootstrapperBase<IContainer>, INancyBootstrapperPerRequestRegistration<IContainer>, INancyModuleCatalog
     {
         /// <summary>
@@ -32,10 +36,32 @@ namespace Nancy.Bootstrappers.StructureMap
         /// <summary>
         /// Configures the container with defaults for application scope
         /// </summary>
-        /// <param name="container"></param>
-        protected override void ConfigureApplicationContainer(IContainer container)
+        /// <param name="existingContainer"></param>
+        protected override void ConfigureApplicationContainer(IContainer existingContainer)
         {
-            base.ConfigureApplicationContainer(container);
+            base.ConfigureApplicationContainer(existingContainer);
+        }
+
+        protected override void RegisterViewSourceProviders(IContainer container, IEnumerable<Type> viewSourceProviderTypes)
+        {
+            _Container.Configure(registry =>
+            {
+                foreach (var viewSourceProvider in viewSourceProviderTypes)
+                {
+                    registry.For(typeof(IViewSourceProvider)).LifecycleIs(InstanceScope.Singleton).Use(viewSourceProvider);
+                }
+            });
+        }
+
+        protected override void RegisterViewEngines(IContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            _Container.Configure(registry =>
+            {
+                foreach (var viewEngineType in viewEngineTypes)
+                {
+                    registry.For(typeof(IViewEngine)).LifecycleIs(InstanceScope.Singleton).Use(viewEngineType);
+                }
+            });
         }
 
         public virtual void ConfigureRequestContainer(IContainer container)

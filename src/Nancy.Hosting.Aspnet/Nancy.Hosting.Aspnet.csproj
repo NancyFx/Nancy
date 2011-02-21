@@ -46,6 +46,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AspnetExtensions.cs" />
+    <Compile Include="AspNetViewSourceProvider.cs" />
     <Compile Include="BootstrapperEntry.cs" />
     <Compile Include="NancyFxSection.cs" />
     <Compile Include="NancyHandler.cs" />

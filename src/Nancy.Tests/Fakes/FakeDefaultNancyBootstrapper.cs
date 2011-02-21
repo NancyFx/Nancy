@@ -8,20 +8,20 @@
 
         public TinyIoC.TinyIoCContainer Container { get { return this.container; } }
 
-        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer container)
+        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
         {
-            base.ConfigureRequestContainer(container);
+            base.ConfigureRequestContainer(existingContainer);
 
             RequestContainerConfigured = true;
 
-            container.Register<IFoo, Foo>().AsSingleton();
-            container.Register<IDependency, Dependency>().AsSingleton();
+            existingContainer.Register<IFoo, Foo>().AsSingleton();
+            existingContainer.Register<IDependency, Dependency>().AsSingleton();
         }
 
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer existingContainer)
         {
             ApplicationContainerConfigured = true;
-            base.ConfigureApplicationContainer(container);
+            base.ConfigureApplicationContainer(existingContainer);
         }
     }
 }

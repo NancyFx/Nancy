@@ -1,0 +1,10 @@
+﻿{% model Model:Nancy.Demo.Models.RatPack %}
+<html>
+<head>
+	<title>{% block title %}Django View Engine Demo{% endblock title %}</title>
+</head>
+<body>
+	<h1>Hello {{ Model.FirstName }}</h1>
+	<p>This is a sample NDjango view!</p>
+</body>
+</html>

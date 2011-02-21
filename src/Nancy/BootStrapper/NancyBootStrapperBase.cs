@@ -5,6 +5,7 @@
     using System.Linq;
     using Nancy.Routing;
     using Nancy.Extensions;
+    using ViewEngines;
 
     /// <summary>
     /// Base class for container based Bootstrappers.
@@ -40,11 +41,6 @@
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRoutePatternMatcher { get { return typeof (DefaultRoutePatternMatcher); } }
-        
-        /// <summary>
-        /// Type passed into RegisterDefaults - override this to switch out default implementations
-        /// </summary>
-        protected virtual Type DefaultTemplateEngineSelector { get { return typeof(DefaultTemplateEngineSelector); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -59,12 +55,22 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultRouteCache { get { return typeof(DefaultRouteCache); } }
+        protected virtual Type DefaultRouteCache { get { return typeof(RouteCache); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRouteCacheProvider { get { return typeof(DefaultRouteCacheProvider); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultViewLocator { get { return typeof (DefaultViewLocator); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultViewFactory { get { return typeof(DefaultViewFactory); } }
 
         /// <summary>
         /// Gets the configured INancyEngine
@@ -74,8 +80,12 @@
         {
             var container = CreateContainer();
             ConfigureApplicationContainer(container);
+            
             RegisterDefaults(container, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
+            RegisterViewEngines(container, GetViewEngineTypes());
+            RegisterViewSourceProviders(container, GetViewSourceProviders());
+
             return GetEngineInternal();
         }
 
@@ -84,12 +94,13 @@
             return new[]
             {
                 new TypeRegistration(typeof(IRouteResolver), DefaultRouteResolver),
-                new TypeRegistration(typeof(ITemplateEngineSelector), DefaultTemplateEngineSelector),
                 new TypeRegistration(typeof(INancyEngine), DefaultNancyEngine),
                 new TypeRegistration(typeof(IModuleKeyGenerator), DefaultModuleKeyGenerator),
                 new TypeRegistration(typeof(IRouteCache), DefaultRouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), DefaultRouteCacheProvider),
-                new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher)
+                new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher),
+                new TypeRegistration(typeof(IViewLocator), DefaultViewLocator),
+                new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
             };
         }
 
@@ -104,6 +115,22 @@
         /// </summary>
         /// <returns>IModuleKeyGenerator instance</returns>
         protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
+
+        protected virtual IEnumerable<Type> GetViewSourceProviders()
+        {
+            var viewSourceProviders =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IViewSourceProvider).IsAssignableFrom(type)
+                select type;
+
+            return viewSourceProviders;
+        }
+
+        protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
 
         /// <summary>
         /// Returns available NancyModule types
@@ -125,6 +152,22 @@
             return locatedModuleTypes;
         }
 
+        protected virtual IEnumerable<Type> GetViewEngineTypes()
+        {
+            var viewEngineTypes =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IViewEngine).IsAssignableFrom(type)
+                select type;
+
+            return viewEngineTypes;
+        }
+
+        protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
+
         /// <summary>
         /// Create a default, unconfigured, container
         /// </summary>
@@ -142,8 +185,8 @@
         /// Configure the container (register types) for the application level
         /// <seealso cref="ConfigureRequestContainer"/>
         /// </summary>
-        /// <param name="container">Container instance</param>
-        protected virtual void ConfigureApplicationContainer(TContainer container)
+        /// <param name="existingContainer">Container instance</param>
+        protected virtual void ConfigureApplicationContainer(TContainer existingContainer)
         {
         }
 

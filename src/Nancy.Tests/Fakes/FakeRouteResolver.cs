@@ -1,5 +1,6 @@
 namespace Nancy.Tests.Fakes
 {
+    using System;
     using Nancy.Routing;
 
     public class FakeRouteResolver : IRouteResolver
@@ -8,9 +9,9 @@ namespace Nancy.Tests.Fakes
 
         public string ModulePath { get; private set; }
 
-        public Route Resolve(Request request, IRouteCache cache)
+        Tuple<Route, DynamicDictionary> IRouteResolver.Resolve(Request request, IRouteCache cache)
         {
-            return new FakeRoute();
+            return new Tuple<Route, DynamicDictionary>(new FakeRoute(), new DynamicDictionary());
         }
     }
 }

@@ -2,20 +2,24 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using Nancy.Routing;
-    using Nancy.ViewEngines;
+    using ViewEngines;
 
+    /// <summary>
+    /// Contains the functionality for defining routes and actions in Nancy. 
+    /// </summary>
+    /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
     public abstract class NancyModule
     {
-        private readonly IDictionary<string, RouteDictionary> routes;
+        private readonly List<Route> routes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
-        protected NancyModule() : this(string.Empty)
+        protected NancyModule()
+            : this(string.Empty)
         {
-        }        
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -24,72 +28,57 @@ namespace Nancy
         protected NancyModule(string modulePath)
         {
             this.ModulePath = modulePath;
-            this.routes = new Dictionary<string, RouteDictionary>(StringComparer.OrdinalIgnoreCase);
+            this.routes = new List<Route>();
         }
 
         /// <summary>
-        /// Gets or sets an <see cref="ITemplateEngineSelector"/> which represents the current application context
+        /// Gets all declared routes by the module.
         /// </summary>
-        public ITemplateEngineSelector TemplateEngineSelector { get; set; }
-
-        /// <param name="method">A <see cref="string"/> containing the http request method for which the routes should be returned.</param>
-        /// <returns>An <see cref="IDictionary{TKey,TValue}"/> containing the routes.</returns>
-        /// <remarks>Valid values are delete, get, post and put. The parameter is not case sensitive.</remarks>
-        public RouteDictionary GetRoutes(string method)
+        /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
+        public IEnumerable<Route> Routes
         {
-            if (method.Equals("HEAD", StringComparison.OrdinalIgnoreCase))
-            {
-                method = "GET";
-            }
-
-            RouteDictionary routesForSpecifiedMethod;
-
-            if (!this.routes.TryGetValue(method, out routesForSpecifiedMethod))
-            {
-                routesForSpecifiedMethod = new RouteDictionary(this, method);
-                this.routes[method] = routesForSpecifiedMethod;
-            }
-
-            return routesForSpecifiedMethod;
+            get { return this.routes.AsReadOnly(); }
         }
 
+        public IViewFactory View { get; set; }
+
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for DELETE requests.
+        /// Gets <see cref="RouteIndexer"/> for declaring actions for DELETE requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Delete
+        /// <value>A <see cref="RouteIndexer"/> instance.</value>
+        public RouteIndexer Delete
         {
-            get { return this.GetRoutes("DELETE"); }
+            get { return new RouteIndexer("DELETE", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for GET requests.
+        /// Gets <see cref="RouteIndexer"/> for declaring actions for GET requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
+        /// <value>A <see cref="RouteIndexer"/> instance.</value>
         /// <remarks>These actions will also be used when a HEAD request is recieved.</remarks>
-        public RouteDictionary Get
+        public RouteIndexer Get
         {
-            get { return this.GetRoutes("GET"); }
+            get { return new RouteIndexer("GET", this); }
         }
 
         public string ModulePath { get; private set; }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for POST requests.
+        /// Gets <see cref="RouteIndexer"/> for declaring actions for POST requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Post
+        /// <value>A <see cref="RouteIndexer"/> instance.</value>
+        public RouteIndexer Post
         {
-            get { return this.GetRoutes("POST"); }
+            get { return new RouteIndexer("POST", this); }
         }
 
         /// <summary>
-        /// Gets <see cref="RouteDictionary"/> for declaring actions for PUT requests.
+        /// Gets <see cref="RouteIndexer"/> for declaring actions for PUT requests.
         /// </summary>
-        /// <value>A <see cref="RouteDictionary"/> instance.</value>
-        public RouteDictionary Put
+        /// <value>A <see cref="RouteIndexer"/> instance.</value>
+        public RouteIndexer Put
         {
-            get { return this.GetRoutes("PUT"); }
+            get { return new RouteIndexer("PUT", this); }
         }
 
         /// <summary>
@@ -99,37 +88,39 @@ namespace Nancy
         public Request Request { get; set; }
 
         /// <summary>
-        /// An extension point for adding support for view engines.
-        /// </summary>
-        /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
-        /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
-        public IViewEngine View { get; private set; }
-
-        /// <summary>
         /// An extension point for adding support for formatting response contents.
         /// </summary>
         /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
         /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
         public IResponseFormatter Response { get; private set; }
 
-        /// <summary>
-        /// Renders the view based on the extension without a model.
-        /// </summary>
-        /// <param name="name">The path to the view</param>        
-        public Action<Stream> SmartView(string name)
+        public class RouteIndexer
         {
-            return SmartView(name, (object) null);
-        }
+            private readonly string method;
+            private readonly NancyModule parentModule;
 
-        /// <summary>
-        /// Renders the view based on the extension with a model.
-        /// </summary>
-        /// <param name="name">The path to the view</param>
-        /// <param name="model">The model to pass to the view</param>
-        public Action<Stream> SmartView<TModel>(string name, TModel model)
-        {            
-            var processor = TemplateEngineSelector.GetTemplateProcessor(Path.GetExtension(name));
-            return processor == null ? TemplateEngineSelector.DefaultProcessor(name, model) : processor(name, model);            
+            public RouteIndexer(string method, NancyModule parentModule)
+            {
+                this.method = method;
+                this.parentModule = parentModule;
+            }
+
+            public Func<dynamic, Response> this[string path]
+            {
+                set { this.AddRoute(path, null, value); }
+            }
+
+            public Func<dynamic, Response> this[string path, Func<Request, bool> condition]
+            {
+                set { this.AddRoute(path, condition, value); }
+            }
+
+            private void AddRoute(string path, Func<Request, bool> condition, Func<object, Response> value)
+            {
+                var fullPath = string.Concat(this.parentModule.ModulePath, path);
+
+                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+            }
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Bootstrappers.Windsor.Tests
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Castle.MicroKernel.Registration;
@@ -31,10 +33,10 @@
             base.ConfigureApplicationContainer(existingContainer);
         }
 
-        protected override void ConfigureApplicationContainer(IWindsorContainer existingContainer)
+        protected override void ConfigureApplicationContainer(IWindsorContainer existingExistingContainer)
         {
             ApplicationContainerConfigured = true;
-            base.ConfigureApplicationContainer(existingContainer);
+            base.ConfigureApplicationContainer(existingExistingContainer);
         }
     }
 
@@ -117,7 +119,6 @@
 
             this.bootstrapper.Container.Resolve<INancyModuleCatalog>();
             this.bootstrapper.Container.Resolve<IRouteResolver>();
-            this.bootstrapper.Container.Resolve<ITemplateEngineSelector>();
             this.bootstrapper.Container.Resolve<INancyEngine>();
             this.bootstrapper.Container.Resolve<IModuleKeyGenerator>();
             this.bootstrapper.Container.Resolve<IRouteCache>();

@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using FakeItEasy;
-using Xunit;
-
-namespace Nancy.Tests.Unit.Bootstrapper
+﻿namespace Nancy.Tests.Unit.Bootstrapper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nancy.Bootstrapper;
+    using FakeItEasy;
+    using Xunit;
+
     internal class FakeBootstrapperBaseImplementation : NancyBootstrapperBase<object>
     {
         public INancyEngine FakeNancyEngine { get; set; }
@@ -40,6 +39,14 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return Generator;
         }
 
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
+        {
+        }
+
+        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
+        {
+        }
+
         protected override object CreateContainer()
         {
             return FakeContainer;
@@ -55,10 +62,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
             Modules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
-        protected override void ConfigureApplicationContainer(object container)
+        protected override void ConfigureApplicationContainer(object existingContainer)
         {
-            base.ConfigureApplicationContainer(container);
-            AppContainer = container;
+            base.ConfigureApplicationContainer(existingContainer);
+            AppContainer = existingContainer;
         }
     }
 
@@ -74,6 +81,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
+        {
         }
 
         protected override IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)
@@ -94,6 +105,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
             return new Fakes.FakeModuleKeyGenerator();
+        }
+
+        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
+        {
         }
 
         protected override object CreateContainer()

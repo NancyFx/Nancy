@@ -1,9 +1,12 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Linq;
+
     using FakeItEasy;    
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
 
     using Xunit;
 
@@ -18,7 +21,7 @@ namespace Nancy.Tests.Unit
             this.resolver = A.Fake<IRouteResolver>();
             this.route = new FakeRoute();
 
-            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(route);
+            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, new DynamicDictionary()));
             this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>());
         }
 
@@ -27,7 +30,18 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, null));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_routecache()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();

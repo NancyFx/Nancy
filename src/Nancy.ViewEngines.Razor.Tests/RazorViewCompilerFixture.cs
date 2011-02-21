@@ -4,24 +4,33 @@
     using Nancy.Tests;
     using Xunit;
 
-    // TODO All the error test cases.
     public class RazorViewCompilerFixture
     {
+        private readonly RazorViewEngine engine;
+
+        public RazorViewCompilerFixture()
+        {
+            this.engine = new RazorViewEngine();            
+        }
+
         [Fact]
         public void GetCompiledView_should_render_to_stream()
         {
             // Given
-            var compiler = new RazorViewCompiler();
+            var location = new ViewLocationResult(
+                string.Empty,
+                "cshtml",
+                new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
+            );
 
-            var reader = new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
-            var view = compiler.GetCompiledView<object>(reader);
-            view.Writer = new StringWriter();
+            var stream = new MemoryStream();
 
             // When
-            view.Execute();
+            var action = this.engine.RenderView(location, null);
+            action.Invoke(stream);
 
             // Then
-            view.Writer.ToString().ShouldEqual("<h1>Hello Mr. test</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
     }
 }

@@ -2,37 +2,31 @@
 {
     using System;
 
-    public class Route : IRoute
+    public class Route
     {
-        public Route(string path, DynamicDictionary parameters, NancyModule module, Func<dynamic, Response> action)
+        public Route(RouteDescription description, Func<dynamic, Response> action)
         {
-            if (path == null)
-            {
-                throw new ArgumentNullException("path", "The path parameter cannot be null.");
-            }
-
             if (action == null)
             {
-                throw new ArgumentNullException("action", "The action parameter cannot be null.");
+                throw new ArgumentNullException("action");
             }
 
-            this.Path = path;
-            this.Module = module;
-            this.Parameters = parameters;
+            this.Description = description;
             this.Action = action;
+        }
+
+        public Route (string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action)
+            : this(new RouteDescription(method, path, condition), action)
+        {
         }
 
         public Func<dynamic, Response> Action { get; set; }
 
-        public string Path { get; private set; }
+        public RouteDescription Description { get; private set; }
 
-        public NancyModule Module { get; set; }
-
-        public dynamic Parameters { get; private set; }
-
-        public Response Invoke()
+        public Response Invoke(DynamicDictionary parameters)
         {
-            return this.Action.Invoke(this.Parameters);
+            return this.Action.Invoke(parameters);
         }
     }
 }

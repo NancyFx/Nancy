@@ -17,15 +17,16 @@ namespace Nancy.Tests.Unit.Routing
         /// </summary>
         public RouteCacheFixture()
         {
-             _FakeModuleCatalog = new FakeModuleCatalog();
+            _FakeModuleCatalog = new FakeModuleCatalog();
 
-             _RouteCache = new Nancy.Routing.DefaultRouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
+            _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
         }
 
         [Fact]
         public void Should_Contain_Entries_For_All_Modules()
         {
-            var routes = _RouteCache.Select(ce => ce.ModuleKey).Distinct();
+            var routes = from cacheEntry in _RouteCache.Keys
+                         select cacheEntry;
 
             routes.Contains("1").ShouldBeTrue();
             routes.Contains("2").ShouldBeTrue();
@@ -34,13 +35,9 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Should_Contain_Entries_For_All_Routes()
         {
-            var total = _FakeModuleCatalog.GetAllModules().Select(nm => nm.Get.GetRouteDescriptions().Count()
-                                                                + nm.Delete.GetRouteDescriptions().Count() 
-                                                                + nm.Post.GetRouteDescriptions().Count() 
-                                                                + nm.Put.GetRouteDescriptions().Count())
-                                                                .Sum();
+            var total = _FakeModuleCatalog.GetAllModules().Sum(nm => nm.Routes.Count());
 
-            var cacheEntriesTotal = _RouteCache.Count();
+            var cacheEntriesTotal = _RouteCache.Values.Sum(c => c.Count());
 
             cacheEntriesTotal.ShouldEqual(total);
         }
@@ -48,7 +45,12 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Sets_Filter_If_Specified()
         {
-            var filteredRoute = _RouteCache.Where(rc => rc.Path == "/filtered").First();
+            var routes = from cacheEntry in _RouteCache.Values
+                         from route in cacheEntry
+                         where route.Item2.Path == "/filtered"
+                         select route.Item2;
+
+            var filteredRoute = routes.First();
 
             filteredRoute.Condition.ShouldNotBeNull();
         }
@@ -56,7 +58,12 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Filter_Is_Null_If_Not_Specified()
         {
-            var filteredRoute = _RouteCache.Where(rc => rc.Path == "/").First();
+            var routes = from cacheEntry in _RouteCache.Values
+                         from route in cacheEntry
+                         where route.Item2.Path == "/"
+                         select route.Item2;
+
+            var filteredRoute = routes.First();
 
             filteredRoute.Condition.ShouldBeNull();
         }
@@ -64,10 +71,25 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Sets_Method()
         {
-            var methods = _RouteCache.Select(rc => rc.Method).Distinct();
+            var methods = (from cacheEntry in _RouteCache.Values
+                          from route in cacheEntry
+                          select route.Item2.Method).Distinct();
 
             methods.Count().ShouldEqual(4);
         }
 
+        [Fact]
+        public void Index_Set_Correctly_In_Cache()
+        {
+            var routes = _FakeModuleCatalog.GetModuleByKey("1").Routes.Select(r => r.Description);
+
+            var cachedRoutes = _RouteCache["1"];
+
+            foreach (var cachedRoute in cachedRoutes)
+            {
+                var index = cachedRoute.Item1;
+                cachedRoute.Item2.ShouldBeSameAs(routes.ElementAt(index));
+            }
+        }
     }
 }

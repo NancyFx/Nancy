@@ -1,19 +1,16 @@
 namespace Nancy.Demo
 {
     using Nancy.Demo.Models;
-    using Nancy.Formatters;
     using Nancy.ViewEngines;
-    using Nancy.ViewEngines.NDjango;
-    using Nancy.ViewEngines.Razor;
-    using Nancy.ViewEngines.Spark;
     using Nancy.Routing;
+    using System.Linq;
 
     public class MainModule : NancyModule
     {
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x => {
-                return View.Razor("~/views/routes.cshtml", routeCacheProvider.GetCache());
+                return View["routes.cshtml", routeCacheProvider.GetCache()];
             };
 
             Get["/style/{file}"] = x => {
@@ -24,7 +21,6 @@ namespace Nancy.Demo
                 return Response.AsJs("~/Content/" + (string)x.file);
             };
 
-            // TODO - implement filtering at the RouteDictionary GetRoute level
             Get["/filtered", r => false] = x => {
                 return "This is a route with a filter that always returns true.";
             };
@@ -42,26 +38,40 @@ namespace Nancy.Demo
             };
 
             Get["/javascript"] = x => {
-                return View.Static("~/views/javascript.html");
+                return View["~/views/javascript.html"];
             };
 
             Get["/static"] = x => {
-                return View.Static("~/views/static.htm");
+                return View["~/views/static.htm"];
             };
 
             Get["/razor"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
-                return View.Razor("~/views/razor.cshtml", model);
+                return View["~/views/razor.cshtml", model];
+            };
+
+            Get["/embedded"] = x => {
+                var model = new RatPack { FirstName = "Embedded" };
+                return View["embedded", model];
+            };
+
+            Get["/embedded2"] = x => {
+                var model = new RatPack { FirstName = "Embedded2" };
+                return View["embedded.django", model];
+            };
+
+            Get["/viewmodelconvention"] = x => {
+                return View[new SomeViewModel()];
             };
 
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
-                return View.Django("~/views/ndjango.django", model);
+                return View["~/views/ndjango.django", model];
             };
 
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
-                return View.Spark("~/views/spark.spark", model);
+                return View["~/views/spark.spark", model];
             };
 
             Get["/json"] = x => {

@@ -1,8 +1,10 @@
 ﻿namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
-    using TinyIoC;
     using Nancy.Bootstrapper;
+    using Nancy.ViewEngines;
+    using TinyIoC;
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
@@ -33,20 +35,30 @@
             return this.container.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
+        {
+            this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
+        }
+
         /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
-        /// <param name="existingContainer"></param>
-        protected override void ConfigureApplicationContainer(TinyIoCContainer existingContainer)
+        /// <param name="existingExistingContainer"></param>
+        protected override void ConfigureApplicationContainer(TinyIoCContainer existingExistingContainer)
         {
-            base.ConfigureApplicationContainer(existingContainer);
+            base.ConfigureApplicationContainer(existingExistingContainer);
 
-            existingContainer.AutoRegister();
+            existingExistingContainer.AutoRegister();
         }
 
         public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)
         {
+        }
+
+        protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
+        {
+            this.container.RegisterMultiple<IViewEngine>(viewEngineTypes).AsSingleton();
         }
 
         /// <summary>

@@ -1,7 +1,10 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
+
     using Nancy.Routing;
+    using Nancy.ViewEngines;
 
     public class NancyEngine : INancyEngine
     {
@@ -20,6 +23,11 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
+            if (routeCache == null)
+            {
+                throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
+            }
+
             this.resolver = resolver;
             this.routeCache = routeCache;
         }
@@ -31,8 +39,8 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            var resolvedRoute = this.resolver.Resolve(request, this.routeCache);
-            var response = resolvedRoute.Invoke();
+            var resolvedRouteAndParameters = this.resolver.Resolve(request, this.routeCache);
+            var response = resolvedRouteAndParameters.Item1.Invoke(resolvedRouteAndParameters.Item2);
             
             if (request.Method.ToUpperInvariant() == "HEAD")
             {

@@ -1,6 +1,7 @@
 using Castle.MicroKernel.Lifestyle;
 using Castle.MicroKernel.Releasers;
 using Nancy.BootStrappers.Windsor;
+using Nancy.ViewEngines;
 
 namespace Nancy.Bootstrappers.Windsor
 {
@@ -16,8 +17,6 @@ namespace Nancy.Bootstrappers.Windsor
     public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>, INancyModuleCatalog
     {
         protected IWindsorContainer container;
-
-        IEnumerable<ModuleRegistration> modulesRegistrationTypes;
 
         protected override sealed INancyEngine GetEngineInternal() { return this.container.Resolve<INancyEngine>(); }
 
@@ -56,6 +55,21 @@ namespace Nancy.Bootstrappers.Windsor
             this.container.Register(components.ToArray());
         }
 
+        protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
+        {
+            var components = viewSourceProviderTypes.Select(r => Component.For(typeof(IViewSourceProvider))
+                .ImplementedBy(r)
+                .LifeStyle.Custom<HybridPerWebRequestLifestyleManager<TransientLifestyleManager>>());
+            this.container.Register(components.ToArray());
+        }
+
+        protected override void RegisterViewEngines(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
+        {
+            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
+                .ImplementedBy(r)
+                .LifeStyle.Custom<HybridPerWebRequestLifestyleManager<TransientLifestyleManager>>());
+            this.container.Register(components.ToArray());
+        }
         public IEnumerable<NancyModule> GetAllModules()
         {
             return container.Kernel.ResolveAll<NancyModule>();

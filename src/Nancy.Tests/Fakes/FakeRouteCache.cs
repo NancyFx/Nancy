@@ -3,13 +3,12 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
-
+    using System.Linq;
     using Nancy.Routing;
 
-    public class FakeRouteCache : IRouteCache
+    public class FakeRouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>, IRouteCache
     {
         public static FakeRouteCache Empty = new FakeRouteCache();
-        private readonly List<RouteCacheEntry> cache = new List<RouteCacheEntry>();
 
         public FakeRouteCache()
         {
@@ -23,14 +22,9 @@
             closure.Invoke(configurator);
         }
 
-        public IEnumerator<RouteCacheEntry> GetEnumerator()
+        public bool IsEmpty()
         {
-            return this.cache.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return this.cache.GetEnumerator();
+            return false;
         }
 
         public class FakeRouteCacheConfigurator
@@ -42,44 +36,53 @@
                 this.routeCache = routeCache;
             }
 
+            private void AddRoutesToCache(IEnumerable<RouteDescription> routes, string moduleKey)
+            {
+                if (!this.routeCache.ContainsKey(moduleKey))
+                {
+                    this.routeCache[moduleKey] = new List<Tuple<int, RouteDescription>>();
+                }
+
+                this.routeCache[moduleKey].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
+            }
+
             public FakeRouteCacheConfigurator AddDeleteRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
-                    string.Empty, "DELETE", path, x => true));
-
+                this.AddRoutesToCache(new[] { new RouteDescription("DELETE", path, null) }, String.Empty);
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path)
             {
-                return this.AddGetRoute(path, string.Empty);
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null) }, String.Empty);
+                
+                return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey)
             {
-                return this.AddGetRoute(path, moduleKey, x => true);
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null) }, moduleKey);
+
+                return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey, Func<Request, bool> condition)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
-                    moduleKey, "GET", path, condition));
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, condition) }, moduleKey);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddPostRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
-                    string.Empty, "POST", path, x => true));
+                this.AddRoutesToCache(new[] { new RouteDescription("POST", path, null) }, String.Empty);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddPutRoute(string path)
             {
-                this.routeCache.cache.Add(new RouteCacheEntry(
-                    string.Empty, "PUT", path, x => true));
+                this.AddRoutesToCache(new[] { new RouteDescription("PUT", path, null) }, String.Empty);
 
                 return this;
             }

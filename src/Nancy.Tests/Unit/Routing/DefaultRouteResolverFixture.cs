@@ -5,6 +5,7 @@
     using FakeItEasy;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
     using Xunit;
 
     public class RouteResolverFixture
@@ -13,15 +14,15 @@
         private readonly IRoutePatternMatcher matcher;
         private readonly INancyModuleCatalog catalog;
         private readonly Func<dynamic, Response> expectedAction;
-        private readonly ITemplateEngineSelector templateEngineSelector;
+        private readonly IViewFactory viewFactory;
         private FakeNancyModule expectedModule;
 
         public RouteResolverFixture()
         {
-            this.templateEngineSelector = A.Fake<ITemplateEngineSelector>();
+            this.viewFactory = A.Fake<IViewFactory>();
 
             this.catalog = A.Fake<INancyModuleCatalog>();
-            A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored)).Returns(new FakeNancyModule());
+            A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored)).Returns(expectedModule);
 
             this.expectedAction = x => HttpStatusCode.OK;
             this.expectedModule = new FakeNancyModule(x =>
@@ -39,7 +40,7 @@
                     c.AddParameter("foo", "bar");
                 }));
 
-            this.resolver = new DefaultRouteResolver(this.catalog, this.matcher, this.templateEngineSelector);
+            this.resolver = new DefaultRouteResolver(this.catalog, this.matcher, this.viewFactory);
         }
 
         [Fact]
@@ -58,7 +59,7 @@
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
-            ((string)resolvedRoute.Parameters["foo"]).ShouldEqual("bar");
+            ((string)resolvedRoute.Item2["foo"]).ShouldEqual("bar");
         }
 
         [Fact]
@@ -72,12 +73,12 @@
             });
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
             resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
-            resolvedRoute.Action.ShouldBeSameAs(expectedAction);
+            resolvedRoute.Action.ShouldBeSameAs(this.expectedAction);
         }
 
         [Fact]
@@ -202,29 +203,12 @@
             });
 
             // When
-            var route = this.resolver.Resolve(request, routeCache);
+            var route = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<MethodNotAllowedRoute>();
-            route.Path.ShouldEqual(request.Uri);
-        }
-
-        [Fact]
-        public void Should_set_template_engine_selector_on_module_associated_with_resolved_route()
-        {
-            // Given
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x =>
-            {
-                x.AddGetRoute("/foo/bar", "module-key");
-            });
-
-            // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
-
-            // Then
-            resolvedRoute.Module.TemplateEngineSelector.ShouldBeSameAs(this.templateEngineSelector);
+            route.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -241,26 +225,7 @@
             var resolvedRoute = this.resolver.Resolve(request, routeCache);
 
             // Then
-            resolvedRoute.Module.Request.ShouldBeSameAs(request);
-        }
-
-        [Fact]
-        public void Should_return_route_with_module_set_to_module_associated_with_resolved_route()
-        {
-            // Given
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x =>
-            {
-                x.AddGetRoute("/foo/bar", "module-key");
-            });
-
-            // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
-
-            // Then
-            resolvedRoute.ShouldNotBeNull();
-            resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.Module.ShouldBeSameAs(expectedModule);
+            expectedModule.Request.ShouldBeSameAs(request);
         }
 
         [Fact]
@@ -278,22 +243,22 @@
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
-        public void Should_return_notfoundroute_with_path_set_to_request_uri_when_route_cache_is_empty()
+        public void should_return_notfoundroute_with_path_set_to_request_uri_when_route_cache_is_empty()
         {
             // Given
             var request = new FakeRequest("GET", "/foo/bar");
             var routeCache = FakeRouteCache.Empty;
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -310,11 +275,11 @@
                 new FakeRoutePatternMatchResult(x => x.IsMatch(false)));
 
             // When
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
+            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
         }
 
         [Fact]
@@ -334,28 +299,42 @@
         }
 
         [Fact]
-        public void Should_return_not_found_for_a_match_with_a_route_condition_returning_false()
+        public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
         {
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x => x.AddGetRoute("/foo/bar", "module", r => false));
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
+            var request = new FakeRequest("GET", "/filtered");
 
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
-            
-            resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Path.ShouldEqual(request.Uri);
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.ShouldBeOfType(typeof(NotFoundRoute));
         }
 
         [Fact]
-        public void Should_return_a_route_for_a_match_with_a_route_condition_returning_true()
+        public void Should_return_a_route_if_matching_and_the_filter_returns_true()
         {
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x => x.AddGetRoute("/foo/bar", "module", r => true));
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
+            var request = new FakeRequest("GET", "/notfiltered");
 
-            var resolvedRoute = this.resolver.Resolve(request, routeCache);
-            
-            resolvedRoute.ShouldNotBeNull();
-            resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.ShouldNotBeOfType<MethodNotAllowedRoute>();
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.ShouldBeOfType(typeof (Route));
+        }
+
+        [Fact]
+        public void Should_return_route_whos_filter_returns_true_when_there_is_also_a_matching_route_with_a_failing_filter()
+        {
+            var moduleCatalog = new FakeModuleCatalog();
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
+            var request = new FakeRequest("GET", "/filt");
+
+            var route = specificResolver.Resolve(request, routeCache).Item1;
+
+            route.Description.Condition(request).ShouldBeTrue();
         }
     }
 }
