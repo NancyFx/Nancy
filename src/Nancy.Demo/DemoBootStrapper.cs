@@ -17,5 +17,20 @@
 
             existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
         }
+
+        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        {
+            base.InitialiseInternal(container);
+
+            this.PostRequestHooks += (ctx) =>
+                {
+                    var username = ctx.Request.Query.pirate;
+
+                    if (username.HasValue)
+                    {
+                        ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
+                    }
+                };
+        }
     }
 }

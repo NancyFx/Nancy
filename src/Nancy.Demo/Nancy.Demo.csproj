@@ -70,6 +70,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
+    <Compile Include="HereBeAResponseYouScurvyDog.cs" />
     <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="DependencyModule.cs" />
     <Compile Include="IApplicationDependency.cs" />
@@ -78,6 +79,7 @@
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
+    <Compile Include="Piratizer4000.cs" />
     <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
