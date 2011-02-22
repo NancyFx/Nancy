@@ -1,4 +1,4 @@
-﻿namespace NancyCachineDemo
+﻿namespace NancyCachingDemo
 {
     using System;
     using System.IO;

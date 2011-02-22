@@ -1,4 +1,4 @@
-namespace NancyCachineDemo
+namespace NancyCachingDemo
 {
     using System;
     using System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace NancyCachineDemo
     {
         private const int CACHE_SECONDS = 30;
 
-        private Dictionary<string, Tuple<DateTime, Response>> cachedResponses = new Dictionary<string, Tuple<DateTime, Response>>();
+        private Dictionary<string, Tuple<DateTime, Response, int>> cachedResponses = new Dictionary<string, Tuple<DateTime, Response, int>>();
 
         protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
         {
@@ -21,19 +21,19 @@ namespace NancyCachineDemo
         }
 
         /// <summary>
-        /// Check to see if we have a cache entry.
+        /// Check to see if we have a cache entry - if we do, see if it has expired or not,
+        /// if it hasn't then return it, otherwise return null;
         /// </summary>
         /// <param name="context">Current context</param>
         /// <returns>Request or null</returns>
         public Response CheckCache(NancyContext context)
         {
-            Tuple<DateTime, Response> cacheEntry = null;
+            Tuple<DateTime, Response, int> cacheEntry = null;
 
             if (this.cachedResponses.TryGetValue(context.Request.Uri, out cacheEntry))
             {
-                if (cacheEntry.Item1.AddSeconds(CACHE_SECONDS) > DateTime.Now)
+                if (cacheEntry.Item1.AddSeconds(cacheEntry.Item3) > DateTime.Now)
                 {
-                    context.Items["Cached"] = true;
                     return cacheEntry.Item2;
                 }
             }
@@ -42,27 +42,35 @@ namespace NancyCachineDemo
         }
 
         /// <summary>
-        /// Adds the current response to the cache
+        /// Adds the current response to the cache if required
         /// Only stores by Uri and stores the response in a dictionary.
         /// Do not use this as an actual cache :-)
         /// </summary>
         /// <param name="context">Current context</param>
         public void SetCache(NancyContext context)
         {
-            // If response was returned from the cache, don't store it again
-            if (context.Items.ContainsKey("Cached"))
+            if (context.Response.StatusCode != HttpStatusCode.OK)
             {
                 return;
             }
 
-            if (context.Response.StatusCode == HttpStatusCode.OK)
+            object cacheSecondsObject;
+            if (!context.Items.TryGetValue(CachingExtensions.ContextExtensions.OUTPUT_CACHE_TIME_KEY, out cacheSecondsObject))
             {
-                var cachedResponse = new CachedResponse(context.Response);
-
-                this.cachedResponses[context.Request.Uri] = new Tuple<DateTime, Response>(DateTime.Now, cachedResponse);
-
-                context.Response = cachedResponse;
+                return;
             }
+
+            int cacheSeconds;
+            if (!int.TryParse(cacheSecondsObject.ToString(), out cacheSeconds))
+            {       
+                return;
+            }
+
+            var cachedResponse = new CachedResponse(context.Response);
+
+            this.cachedResponses[context.Request.Uri] = new Tuple<DateTime, Response, int>(DateTime.Now, cachedResponse, cacheSeconds);
+
+            context.Response = cachedResponse;
         }
     }
 }
