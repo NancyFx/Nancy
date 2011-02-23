@@ -2,7 +2,6 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
-    using Bootstrapper;
     using Nancy.Routing;
     using ViewEngines;
 
@@ -10,7 +9,7 @@ namespace Nancy
     /// Contains the functionality for defining routes and actions in Nancy. 
     /// </summary>
     /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
-    public abstract class NancyModule
+    public abstract class NancyModule : IHideObjectMembers
     {
         private readonly List<Route> routes;
 
@@ -135,7 +134,7 @@ namespace Nancy
         /// </summary>
         public NancyContext Context { get; set; }
 
-        public class RouteBuilder
+        public class RouteBuilder : IHideObjectMembers
         {
             private readonly string method;
             private readonly NancyModule parentModule;

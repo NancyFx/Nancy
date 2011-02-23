@@ -5,7 +5,7 @@
     using System.Linq.Expressions;
     using Microsoft.CSharp.RuntimeBinder;
 
-    public class DynamicDictionaryValue : DynamicObject, IEquatable<DynamicDictionaryValue>
+    public class DynamicDictionaryValue : DynamicObject, IEquatable<DynamicDictionaryValue>, IHideObjectMembers
     {
         private readonly object value;
 
