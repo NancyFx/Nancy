@@ -12,7 +12,7 @@ namespace NancyAuthenticationDemo
     {
         public VerySecureModule() : base("/superSecure")
         {
-            this.PreRequestHooks += ctx =>
+            this.Before += ctx =>
             {
                 if (!ctx.Items.ContainsKey("username"))
                 {

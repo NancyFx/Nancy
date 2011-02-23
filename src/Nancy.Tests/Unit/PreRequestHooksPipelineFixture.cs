@@ -6,7 +6,7 @@
 
     public class PreRequestHooksPipelineFixture
     {
-        private PreRequestHooksPipeline pipeline;
+        private BeforePipeline pipeline;
 
         private static Response CreateResponse()
         {
@@ -20,7 +20,7 @@
 
         public PreRequestHooksPipelineFixture()
         {
-            this.pipeline = new PreRequestHooksPipeline();
+            this.pipeline = new BeforePipeline();
         }
 
         [Fact]
@@ -138,7 +138,7 @@
             pipeline.AddItemToEndOfPipeline(item2);
             Func<NancyContext, Response> item3 = (r) => { return null; };
             Func<NancyContext, Response> item4 = (r) => { return CreateResponse(); };
-            var pipeline2 = new PreRequestHooksPipeline();
+            var pipeline2 = new BeforePipeline();
             pipeline2.AddItemToEndOfPipeline(item3);
             pipeline2.AddItemToEndOfPipeline(item4);
 
@@ -175,7 +175,7 @@
         {
             Func<NancyContext, Response> item1 = (r) => null;
 
-            PreRequestHooksPipeline castPipeline = item1;
+            BeforePipeline castPipeline = item1;
 
             Assert.Equal(1, castPipeline.PipelineItems.Count());
             Assert.Same(item1, castPipeline.PipelineItems.First());
@@ -194,7 +194,7 @@
             Func<NancyContext, Response> item4 = (r) => { item4Called = true; return null; };
             pipeline += item1;
             pipeline += item2;
-            var subPipeline = new PreRequestHooksPipeline();
+            var subPipeline = new BeforePipeline();
             subPipeline += item3;
             subPipeline += item4;
 

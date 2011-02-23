@@ -6,7 +6,7 @@
 
     public class PostRequestHooksPipelineFixture
     {
-        private PostRequestHooksPipeline pipeline;
+        private AfterPipeline pipeline;
 
         private static NancyContext CreateContext()
         {
@@ -15,7 +15,7 @@
 
         public PostRequestHooksPipelineFixture()
         {
-            pipeline = new PostRequestHooksPipeline();
+            pipeline = new AfterPipeline();
         }
 
         [Fact]
@@ -81,7 +81,7 @@
             pipeline.AddItemToEndOfPipeline(item2);
             Action<NancyContext> item3 = (r) => { };
             Action<NancyContext> item4 = (r) => { };
-            var pipeline2 = new PostRequestHooksPipeline();
+            var pipeline2 = new AfterPipeline();
             pipeline2.AddItemToEndOfPipeline(item3);
             pipeline2.AddItemToEndOfPipeline(item4);
 
@@ -118,7 +118,7 @@
         {
             Action<NancyContext> item1 = (r) => { };
 
-            PostRequestHooksPipeline castPipeline = item1;
+            AfterPipeline castPipeline = item1;
 
             Assert.Equal(1, castPipeline.PipelineItems.Count());
             Assert.Same(item1, castPipeline.PipelineItems.First());
@@ -137,7 +137,7 @@
             Action<NancyContext> item4 = (r) => { item4Called = true; };
             pipeline += item1;
             pipeline += item2;
-            var subPipeline = new PostRequestHooksPipeline();
+            var subPipeline = new AfterPipeline();
             subPipeline += item3;
             subPipeline += item4;
 

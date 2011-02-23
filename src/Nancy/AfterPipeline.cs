@@ -13,7 +13,7 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class PostRequestHooksPipeline
+    public class AfterPipeline
     {
         /// <summary>
         /// Pipeline items to execute
@@ -21,9 +21,9 @@
         private List<Action<NancyContext>> pipelineItems;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PostRequestHooksPipeline"/> class.
+        /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
         /// </summary>
-        public PostRequestHooksPipeline()
+        public AfterPipeline()
         {
             this.pipelineItems = new List<Action<NancyContext>>();
         }
@@ -39,25 +39,25 @@
             }
         }
 
-        public static implicit operator Action<NancyContext>(PostRequestHooksPipeline pipeline)
+        public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
-        public static implicit operator PostRequestHooksPipeline(Action<NancyContext> action)
+        public static implicit operator AfterPipeline(Action<NancyContext> action)
         {
-            var pipeline = new PostRequestHooksPipeline();
+            var pipeline = new AfterPipeline();
             pipeline.AddItemToEndOfPipeline(action);
             return pipeline;
         }
 
-        public static PostRequestHooksPipeline operator +(PostRequestHooksPipeline pipeline, Action<NancyContext> action)
+        public static AfterPipeline operator +(AfterPipeline pipeline, Action<NancyContext> action)
         {
             pipeline.AddItemToEndOfPipeline(action);
             return pipeline;
         }
 
-        public static PostRequestHooksPipeline operator +(PostRequestHooksPipeline pipelineToAddTo, PostRequestHooksPipeline pipelineToAdd)
+        public static AfterPipeline operator +(AfterPipeline pipelineToAddTo, AfterPipeline pipelineToAdd)
         {
             pipelineToAddTo.pipelineItems.AddRange(pipelineToAdd.pipelineItems);
             return pipelineToAddTo;

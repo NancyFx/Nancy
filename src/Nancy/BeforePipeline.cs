@@ -15,7 +15,7 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class PreRequestHooksPipeline
+    public class BeforePipeline
     {
         /// <summary>
         /// Pipeline items to execute
@@ -23,9 +23,9 @@
         private List<Func<NancyContext, Response>> pipelineItems;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="PreRequestHooksPipeline"/> class.
+        /// Initializes a new instance of the <see cref="BeforePipeline"/> class.
         /// </summary>
-        public PreRequestHooksPipeline()
+        public BeforePipeline()
         {
             this.pipelineItems = new List<Func<NancyContext, Response>>();
         }
@@ -41,25 +41,25 @@
             }
         }
 
-        public static implicit operator Func<NancyContext, Response>(PreRequestHooksPipeline pipeline)
+        public static implicit operator Func<NancyContext, Response>(BeforePipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
-        public static implicit operator PreRequestHooksPipeline(Func<NancyContext, Response> func)
+        public static implicit operator BeforePipeline(Func<NancyContext, Response> func)
         {
-            var pipeline = new PreRequestHooksPipeline();
+            var pipeline = new BeforePipeline();
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
-        public static PreRequestHooksPipeline operator +(PreRequestHooksPipeline pipeline, Func<NancyContext, Response> func)
+        public static BeforePipeline operator +(BeforePipeline pipeline, Func<NancyContext, Response> func)
         {
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
-        public static PreRequestHooksPipeline operator +(PreRequestHooksPipeline pipelineToAddTo, PreRequestHooksPipeline pipelineToAdd)
+        public static BeforePipeline operator +(BeforePipeline pipelineToAddTo, BeforePipeline pipelineToAdd)
         {
             pipelineToAddTo.pipelineItems.AddRange(pipelineToAdd.pipelineItems);
             return pipelineToAddTo;

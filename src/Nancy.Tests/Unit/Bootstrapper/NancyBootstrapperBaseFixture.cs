@@ -68,16 +68,16 @@
             AppContainer = existingContainer;
         }
 
-        public PreRequestHooksPipeline PreRequest
+        public BeforePipeline PreRequest
         {
-            get { return this.PreRequestHooks; }
-            set { this.PreRequestHooks = value; }
+            get { return this.Before; }
+            set { this.Before = value; }
         }
 
-        public PostRequestHooksPipeline PostRequest
+        public AfterPipeline PostRequest
         {
-            get { return this.PostRequestHooks; }
-            set { this.PostRequestHooks = value; }
+            get { return this.After; }
+            set { this.After = value; }
         }
     }
 

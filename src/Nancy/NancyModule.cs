@@ -30,8 +30,8 @@ namespace Nancy
         {
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
-            this.PreRequestHooks = new PreRequestHooksPipeline();
-            this.PostRequestHooks = new PostRequestHooksPipeline();
+            this.Before = new BeforePipeline();
+            this.After = new AfterPipeline();
         }
 
         /// <summary>
@@ -44,7 +44,7 @@ namespace Nancy
         /// response is returned.
         /// </para>
         /// </summary>
-        public PreRequestHooksPipeline PreRequestHooks { get; protected set; }
+        public BeforePipeline Before { get; protected set; }
 
         /// <summary>
         /// <para>
@@ -55,7 +55,7 @@ namespace Nancy
         /// It can be used to rewrite the response or add/remove items from the context.
         /// </para>
         /// </summary>
-        public PostRequestHooksPipeline PostRequestHooks { get; protected set; }
+        public AfterPipeline After { get; protected set; }
 
         /// <summary>
         /// Gets all declared routes by the module.

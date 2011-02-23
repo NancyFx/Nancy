@@ -4,8 +4,8 @@
     {
         public FakeNancyModuleWithPreAndPostHooks()
         {
-            this.PreRequestHooks += (c) => null;
-            this.PostRequestHooks += (c) => { };
+            this.Before += (c) => null;
+            this.After += (c) => { };
 
             Get["/PrePost"] = x =>
             {

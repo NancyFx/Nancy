@@ -15,9 +15,9 @@ namespace NancyCachingDemo
         {
             base.InitialiseInternal(container);
 
-            this.PreRequestHooks += CheckCache;
+            this.Before += CheckCache;
 
-            this.PostRequestHooks += SetCache;
+            this.After += SetCache;
         }
 
         /// <summary>

@@ -8,7 +8,7 @@ namespace NancyAuthenticationDemo
     {
         public SecureModule() : base("/secure")
         {
-            this.PreRequestHooks += ctx =>
+            this.Before += ctx =>
             {
                 if (!ctx.Items.ContainsKey("username"))
                 {

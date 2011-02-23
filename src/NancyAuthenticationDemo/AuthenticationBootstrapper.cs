@@ -10,7 +10,7 @@ namespace NancyAuthenticationDemo
         {
             base.InitialiseInternal(container);
 
-            this.PreRequestHooks += (ctx) =>
+            this.Before += (ctx) =>
             {
                 // World's-worse-authentication (TM)
                 // Pull the username out of the querystring if it exists
@@ -24,7 +24,7 @@ namespace NancyAuthenticationDemo
                 return null;
             };
 
-            this.PostRequestHooks += (ctx) =>
+            this.After += (ctx) =>
             {
                 // If status code comes back as Unauthorized then
                 // forward the user to the login page
