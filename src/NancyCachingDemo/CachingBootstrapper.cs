@@ -2,7 +2,6 @@ namespace NancyCachingDemo
 {
     using System;
     using System.Collections.Generic;
-    using System.Net;
     using Nancy;
 
     public class CachingBootstrapper : DefaultNancyBootstrapper

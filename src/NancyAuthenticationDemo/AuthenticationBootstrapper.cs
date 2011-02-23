@@ -2,7 +2,6 @@ namespace NancyAuthenticationDemo
 {
     using System;
     using System.Collections.Generic;
-    using System.Net;
     using Extensions;
     using Nancy;
     using Nancy.Responses;
