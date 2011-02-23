@@ -70,14 +70,14 @@
 
         public BeforePipeline PreRequest
         {
-            get { return this.Before; }
-            set { this.Before = value; }
+            get { return this.BeforeRequest; }
+            set { this.BeforeRequest = value; }
         }
 
         public AfterPipeline PostRequest
         {
-            get { return this.After; }
-            set { this.After = value; }
+            get { return this.AfterRequest; }
+            set { this.AfterRequest = value; }
         }
     }
 

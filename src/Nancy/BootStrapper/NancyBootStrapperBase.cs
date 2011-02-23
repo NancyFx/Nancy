@@ -43,8 +43,8 @@
         /// </summary>
         protected NancyBootstrapperBase()
         {
-            this.Before = new BeforePipeline();
-            this.After = new AfterPipeline();
+            this.BeforeRequest = new BeforePipeline();
+            this.AfterRequest = new AfterPipeline();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@
         /// returned.
         /// </para>
         /// </summary>
-        protected BeforePipeline Before { get; set; }
+        protected BeforePipeline BeforeRequest { get; set; }
 
         /// <summary>
         /// <para>
@@ -118,7 +118,7 @@
         /// to rewrite the response or add/remove items from the context.
         /// </para>
         /// </summary>
-        protected AfterPipeline After { get; set; }
+        protected AfterPipeline AfterRequest { get; set; }
 
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
@@ -151,8 +151,8 @@
             RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
 
             var engine = GetEngineInternal();
-            engine.PreRequestHook = this.Before;
-            engine.PostRequestHook = this.After;
+            engine.PreRequestHook = this.BeforeRequest;
+            engine.PostRequestHook = this.AfterRequest;
 
             return engine;
         }

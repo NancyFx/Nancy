@@ -22,7 +22,7 @@
         {
             base.InitialiseInternal(container);
 
-            this.After += (ctx) =>
+            this.AfterRequest += (ctx) =>
                 {
                     var username = ctx.Request.Query.pirate;
 
