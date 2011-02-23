@@ -1,32 +1,18 @@
 namespace NancyAuthenticationDemo
 {
-    using System;
-    using System.Net;
+    using Extensions;
     using Models;
     using Nancy;
 
     /// <summary>
-    /// A module that only bob is allowed into
+    /// A module that only people with SuperSecure clearance are allowed to access
     /// </summary>
     public class VerySecureModule : NancyModule
     {
         public VerySecureModule() : base("/superSecure")
         {
-            this.Before += ctx =>
-            {
-                if (!ctx.Items.ContainsKey("username"))
-                {
-                    return new Response() { StatusCode = HttpStatusCode.Unauthorized };
-                }
-
-                // Only bob is allowed in here!
-                if (!String.Equals(ctx.Items["username"].ToString(), "bob", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    return new Response() { StatusCode = HttpStatusCode.Forbidden };
-                }
-
-                return null;
-            };
+            this.Before += SecurityExtensions.RequiresAuthentication;
+            this.Before += SecurityExtensions.RequiresClaims(new[] { "SuperSecure" });
 
             Get["/"] = x =>
             {

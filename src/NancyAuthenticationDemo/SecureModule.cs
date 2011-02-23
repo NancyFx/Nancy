@@ -1,22 +1,14 @@
 namespace NancyAuthenticationDemo
 {
+    using Extensions;
     using Models;
     using Nancy;
-    using System.Net;
 
     public class SecureModule : NancyModule
     {
         public SecureModule() : base("/secure")
         {
-            this.Before += ctx =>
-            {
-                if (!ctx.Items.ContainsKey("username"))
-                {
-                    return new Response() { StatusCode = HttpStatusCode.Unauthorized };
-                }
-
-                return null;
-            };
+            this.Before += SecurityExtensions.RequiresAuthentication;
 
             Get["/"] = x =>
             {
