@@ -8,7 +8,7 @@ namespace NancyAuthenticationDemo
     {
         public SecureModule() : base("/secure")
         {
-            this.Before += SecurityExtensions.RequiresAuthentication;
+            this.Before += Security.RequiresAuthentication;
 
             Get["/"] = x =>
             {

@@ -22,8 +22,8 @@ namespace NancyAuthenticationDemo
 
                 if (username.HasValue)
                 {
-                    ctx.Items[SecurityExtensions.USERNAME_KEY] = username.ToString();
-                    ctx.Items[SecurityExtensions.CLAIMS_KEY] = BuildClaims(username.ToString());
+                    ctx.Items[Security.USERNAME_KEY] = username.ToString();
+                    ctx.Items[Security.CLAIMS_KEY] = BuildClaims(username.ToString());
                 }
 
                 return null;

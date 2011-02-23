@@ -11,8 +11,8 @@ namespace NancyAuthenticationDemo
     {
         public VerySecureModule() : base("/superSecure")
         {
-            this.Before += SecurityExtensions.RequiresAuthentication;
-            this.Before += SecurityExtensions.RequiresClaims(new[] { "SuperSecure" });
+            this.Before += Security.RequiresAuthentication;
+            this.Before += Security.RequiresClaims(new[] { "SuperSecure" });
 
             Get["/"] = x =>
             {
