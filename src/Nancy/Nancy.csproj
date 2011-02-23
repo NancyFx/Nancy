@@ -66,6 +66,7 @@
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="HttpStatusCode.cs" />
+    <Compile Include="IHideObjectMembers.cs" />
     <Compile Include="INancyContextFactory.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="IResponseFormatter.cs" />
