@@ -113,6 +113,8 @@
     <Compile Include="ViewEngines\IViewSourceProvider.cs" />
     <Compile Include="ViewEngines\ResourceViewSourceProvider.cs" />
     <Compile Include="ViewEngines\StaticViewEngine.cs" />
+    <Compile Include="ViewEngines\SuperSimpleViewEngine.cs" />
+    <Compile Include="ViewEngines\SuperSimpleViewEngineWrapper.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
   </ItemGroup>

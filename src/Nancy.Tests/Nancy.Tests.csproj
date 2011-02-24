@@ -104,6 +104,7 @@
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
+    <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
     <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
