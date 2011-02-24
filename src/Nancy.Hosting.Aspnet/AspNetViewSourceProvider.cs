@@ -4,7 +4,6 @@ namespace Nancy.Hosting.Aspnet
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Web.Hosting;
     using ViewEngines;
 
     /// <summary>
@@ -12,6 +11,13 @@ namespace Nancy.Hosting.Aspnet
     /// </summary>
     public class AspNetViewSourceProvider : IViewSourceProvider
     {
+        private readonly IRootPathProvider rootPathProvider;
+
+        public AspNetViewSourceProvider(IRootPathProvider rootPathProvider)
+        {
+            this.rootPathProvider = rootPathProvider;
+        }
+
         /// <summary>
         /// Attemptes to locate the view, specified by the <paramref name="viewName"/> parameter, in the underlaying source.
         /// </summary>
@@ -22,7 +28,7 @@ namespace Nancy.Hosting.Aspnet
         public ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             var viewFolder =
-                HostingEnvironment.MapPath("~/views");
+                Path.Combine(this.rootPathProvider.GetRootPath(), "views");
 
             if (string.IsNullOrEmpty(viewFolder))
             {

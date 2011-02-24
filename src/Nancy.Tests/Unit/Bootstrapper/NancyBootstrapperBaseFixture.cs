@@ -39,6 +39,10 @@
             return Generator;
         }
 
+        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        {
+        }
+
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
         }
@@ -93,6 +97,10 @@
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        {
         }
 
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)

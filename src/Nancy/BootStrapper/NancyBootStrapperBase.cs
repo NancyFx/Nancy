@@ -147,6 +147,7 @@
             
             RegisterDefaults(this.ApplicationContainer, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
+            RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
             RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
             RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
 
@@ -194,6 +195,27 @@
         /// </summary>
         /// <returns>IModuleKeyGenerator instance</returns>
         protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
+
+        /// <summary>
+        /// Get root path provider type.
+        /// </summary>
+        /// <returns>The type that implements <see cref="IRootPathProvider"/> or if no implementation could be found, the type of <see cref="DefaultRootPathProvider"/>.</returns>
+        protected virtual Type GetRootPathProvider()
+        {
+            var providers =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IRootPathProvider).IsAssignableFrom(type)
+                where !type.Equals(typeof(DefaultRootPathProvider))
+                select type;
+
+            return providers.FirstOrDefault() ?? typeof(DefaultRootPathProvider);
+        }
+        
+        protected abstract void RegisterRootPathProvider(TContainer container, Type rootPathProviderType);
 
         /// <summary>
         /// Get all view source provider types

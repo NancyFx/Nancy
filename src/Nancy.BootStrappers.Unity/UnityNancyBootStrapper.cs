@@ -48,11 +48,16 @@
             return unityContainer.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterRootPathProvider(IUnityContainer container, Type rootPathProviderType)
+        {
+            unityContainer.RegisterType(typeof(IRootPathProvider), rootPathProviderType, new ContainerControlledLifetimeManager());
+        }
+
         protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             foreach (var viewSourceProvider in viewSourceProviderTypes)
             {
-                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager()) ;
+                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager());
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿namespace Nancy.BootStrappers.StructureMap.Tests
 {
+    using System;
     using System.Linq;
     using global::StructureMap;
     using Nancy.Tests;
@@ -27,6 +28,13 @@
             {
                 registry.For<IFoo>().Singleton().Use<Foo>();
                 registry.For<IDependency>().Singleton().Use<Dependency>();
+            });
+        }
+
+        protected override void RegisterRootPathProvider(IContainer container, Type rootPathProviderType)
+        {
+            container.Configure(registry => {
+                registry.For(typeof(IRootPathProvider)).Singleton().Use(rootPathProviderType);
             });
         }
 

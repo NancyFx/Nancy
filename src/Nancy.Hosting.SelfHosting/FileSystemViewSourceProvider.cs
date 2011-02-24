@@ -11,6 +11,13 @@ namespace Nancy.Hosting.SelfHosting
     /// </summary>
     public class FileSystemViewSourceProvider : IViewSourceProvider
     {
+        private readonly IRootPathProvider rootPathProvider;
+
+        public FileSystemViewSourceProvider(IRootPathProvider rootPathProvider)
+        {
+            this.rootPathProvider = rootPathProvider;
+        }
+
         /// <summary>
         /// Attemptes to locate the view, specified by the <paramref name="viewName"/> parameter, in the underlaying source.
         /// </summary>
@@ -20,7 +27,7 @@ namespace Nancy.Hosting.SelfHosting
         public ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             var viewFolder =
-                Path.Combine(Environment.CurrentDirectory, "views");
+                Path.Combine(this.rootPathProvider.GetRootPath(), "views");
 
             if (string.IsNullOrEmpty(viewFolder))
             {

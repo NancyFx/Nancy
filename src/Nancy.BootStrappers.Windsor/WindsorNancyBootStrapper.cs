@@ -59,6 +59,15 @@ namespace Nancy.Bootstrappers.Windsor
             }));
         }
 
+        protected override void RegisterRootPathProvider(IWindsorContainer existingContainer, Type rootPathProviderType)
+        {
+            var component = Component.For(typeof(IViewEngine))
+                .ImplementedBy(rootPathProviderType)
+                .LifeStyle.Singleton;
+
+            existingContainer.Register(component);
+        }
+
         protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.viewSourceProviders = viewSourceProviderTypes;

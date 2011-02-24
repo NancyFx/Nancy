@@ -40,6 +40,11 @@
             return this.container.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterRootPathProvider(TinyIoCContainer container, Type rootPathProviderType)
+        {
+            this.container.Register(typeof(IRootPathProvider), rootPathProviderType).AsSingleton();
+        }
+
         protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
