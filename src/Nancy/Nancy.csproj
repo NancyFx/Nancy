@@ -61,6 +61,7 @@
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultNancyBootstrapper.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="FileSystemViewSourceProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />

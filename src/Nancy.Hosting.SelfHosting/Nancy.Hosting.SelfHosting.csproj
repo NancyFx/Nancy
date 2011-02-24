@@ -40,10 +40,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Hosting.Wcf\FileSystemRootPathProvider.cs">
+      <Link>FileSystemRootPathProvider.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="FileSystemViewSourceProvider.cs" />
     <Compile Include="NancyHost.cs" />
   </ItemGroup>
   <ItemGroup>
