@@ -1,10 +1,40 @@
 ﻿namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nancy.ViewEngines;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
+
+    /// <summary>
+    /// Defines the functionality to build a fully configured NancyModule instance.
+    /// </summary>
+    public interface INancyModuleBuilder
+    {
+        /// <summary>
+        /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="moduleKey"/>.
+        /// </summary>
+        /// <param name="moduleKey">The key of the module to build.</param>
+        /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
+        NancyModule GetConfiguredModule(string moduleKey);
+    }
+
+    /// <summary>
+    /// Default implementation for building a full configured <see cref="NancyModule"/> instance.
+    /// </summary>
+    public class DefaultNancyModuleBuilders : INancyModuleBuilder
+    {
+        /// <summary>
+        /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="moduleKey"/>.
+        /// </summary>
+        /// <param name="moduleKey">The key of the module to build.</param>
+        /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
+        public NancyModule GetConfiguredModule(string moduleKey)
+        {
+            throw new NotImplementedException();
+        }
+    }
 
     public class DefaultRouteResolver : IRouteResolver
     {
