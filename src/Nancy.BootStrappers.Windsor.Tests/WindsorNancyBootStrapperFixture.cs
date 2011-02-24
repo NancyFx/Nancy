@@ -1,17 +1,13 @@
 ﻿namespace Nancy.Bootstrappers.Windsor.Tests
 {
-    using System;
     using System.Linq;
-
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
-
     using Nancy.Bootstrappers.Windsor;
     using Nancy.Routing;
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class FakeWindsorNancyBootstrapper : WindsorNancyBootstrapper

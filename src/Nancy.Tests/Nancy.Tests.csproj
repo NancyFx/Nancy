@@ -88,6 +88,8 @@
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleKeyGenerator.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
+    <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
+    <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRoutePatternMatcherFixture.cs" />
     <Compile Include="Fakes\FakeRoutePatternMatchResult.cs" />

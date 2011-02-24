@@ -2,26 +2,19 @@
 {
     using System;
     using System.IO;
-    using System.Web.Hosting;
-
+    
     public class StaticFileResponse : Response
     {
         public StaticFileResponse(string filePath, string contentType)
         {
             this.StatusCode = HttpStatusCode.NotFound;
 
-            var expandedFilePath = GetExpandedFilePath(filePath);
-            if (IsValidFilePath(expandedFilePath))
+            if (IsValidFilePath(filePath))
             {
-                this.Contents = GetFileContent(expandedFilePath);
+                this.Contents = GetFileContent(filePath);
                 this.ContentType = contentType;
                 this.StatusCode = HttpStatusCode.OK;
             }
-        }
-
-        private static string GetExpandedFilePath(string filePath)
-        {
-            return HostingEnvironment.MapPath(filePath);
         }
 
         private static Action<Stream> GetFileContent(string filePath)

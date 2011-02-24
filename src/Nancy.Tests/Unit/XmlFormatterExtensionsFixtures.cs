@@ -8,15 +8,18 @@ namespace Nancy.Tests.Unit
 
     public class XmlFormatterExtensionsFixtures
     {
-        private readonly IResponseFormatter formatter;
+        private readonly DefaultResponseFormatter responseFormatter;
         private readonly Person model;
         private readonly Response response;
+        private readonly IRootPathProvider rootPathProvider;
+
 
         public XmlFormatterExtensionsFixtures()
         {
-            this.formatter = A.Fake<IResponseFormatter>();
+            this.rootPathProvider = A.Fake<IRootPathProvider>();
+            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
-            this.response = this.formatter.AsXml(model);
+            this.response = this.responseFormatter.AsXml(model);
         }
 
         [Fact]
@@ -52,7 +55,7 @@ namespace Nancy.Tests.Unit
         {
             using (var stream = new MemoryStream())
             {
-                formatter.AsXml<Person>(null).Contents(stream);
+                responseFormatter.AsXml<Person>(null).Contents(stream);
 
                 var root = GetXmlRoot(stream);
                 root.GetAttribute("nil", "http://www.w3.org/2001/XMLSchema-instance").ShouldEqual("true");

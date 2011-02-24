@@ -35,6 +35,17 @@ namespace Nancy
 
         /// <summary>
         /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created by the route execution.
+        /// It can be used to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        public AfterPipeline After { get; protected set; }
+
+        /// <summary>
+        /// <para>
         /// The pre-request hook
         /// </para>
         /// <para>
@@ -46,17 +57,6 @@ namespace Nancy
         public BeforePipeline Before { get; protected set; }
 
         /// <summary>
-        /// <para>
-        /// The post-request hook
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after the response is created by the route execution.
-        /// It can be used to rewrite the response or add/remove items from the context.
-        /// </para>
-        /// </summary>
-        public AfterPipeline After { get; protected set; }
-
-        /// <summary>
         /// Gets all declared routes by the module.
         /// </summary>
         /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
@@ -65,6 +65,11 @@ namespace Nancy
             get { return this.routes.AsReadOnly(); }
         }
 
+        /// <summary>
+        /// The extension point for accessing the view engines in Nancy.
+        /// </summary>
+        /// <value>An <see cref="IViewFactory"/> instance.</value>
+        /// <remarks>This is automatically set by Nancy at runtime.</remarks>
         public IViewFactory View { get; set; }
 
         /// <summary>
@@ -86,6 +91,11 @@ namespace Nancy
             get { return new RouteBuilder("GET", this); }
         }
 
+        /// <summary>
+        /// Get the root path of the routes in the current module.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the root path of the module or <see langword="null"/> if no root path should be used.</value>
+        /// <remarks>All routes will be relative to this root path.</remarks>
         public string ModulePath { get; private set; }
 
         /// <summary>
@@ -112,14 +122,8 @@ namespace Nancy
         /// <value>An <see cref="Request"/> instance.</value>
         public Request Request
         {
-            get
-            {
-                return this.Context.Request;   
-            }
-            set
-            { 
-                this.Context.Request = value;
-            }
+            get { return this.Context.Request; }
+            set { this.Context.Request = value; }
         }
 
         /// <summary>
@@ -127,11 +131,12 @@ namespace Nancy
         /// </summary>
         /// <value>This property will always return <see langword="null" /> because it acts as an extension point.</value>
         /// <remarks>Extension methods to this property should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
-        public IResponseFormatter Response { get; private set; }
+        public IResponseFormatter Response { get; set; }
 
         /// <summary>
         /// Gets or sets the current Nancy context
         /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
         public NancyContext Context { get; set; }
 
         public class RouteBuilder : IHideObjectMembers

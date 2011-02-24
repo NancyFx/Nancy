@@ -1,52 +1,31 @@
 ﻿namespace Nancy.Routing
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.ViewEngines;
+
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     /// <summary>
-    /// Defines the functionality to build a fully configured NancyModule instance.
+    /// The default implementation for deciding if any of the available routes is a match for the incoming HTTP request.
     /// </summary>
-    public interface INancyModuleBuilder
-    {
-        /// <summary>
-        /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="moduleKey"/>.
-        /// </summary>
-        /// <param name="moduleKey">The key of the module to build.</param>
-        /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
-        NancyModule GetConfiguredModule(string moduleKey);
-    }
-
-    /// <summary>
-    /// Default implementation for building a full configured <see cref="NancyModule"/> instance.
-    /// </summary>
-    public class DefaultNancyModuleBuilders : INancyModuleBuilder
-    {
-        /// <summary>
-        /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="moduleKey"/>.
-        /// </summary>
-        /// <param name="moduleKey">The key of the module to build.</param>
-        /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
-        public NancyModule GetConfiguredModule(string moduleKey)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
     public class DefaultRouteResolver : IRouteResolver
     {
         private readonly INancyModuleCatalog nancyModuleCatalog;
         private readonly IRoutePatternMatcher routePatternMatcher;
-        private readonly IViewFactory viewFactory;
+        private readonly INancyModuleBuilder moduleBuilder;
 
-        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, IViewFactory viewFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class.
+        /// </summary>
+        /// <param name="nancyModuleCatalog">The module catalog that modules should be</param>
+        /// <param name="routePatternMatcher">The route pattern matcher that should be used to verify if the route is a match to any of the registered routes.</param>
+        /// <param name="moduleBuilder">The module builder that will make sure that the resolved module is full configured.</param>
+        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, INancyModuleBuilder moduleBuilder)
         {
             this.nancyModuleCatalog = nancyModuleCatalog;
             this.routePatternMatcher = routePatternMatcher;
-            this.viewFactory = viewFactory;
+            this.moduleBuilder = moduleBuilder;
         }
 
         /// <summary>
@@ -101,10 +80,7 @@
             var module =
                 this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1, context);
 
-            module.Context = context;
-            module.View = viewFactory;
-
-            return module;
+            return this.moduleBuilder.BuildModule(module, context);
         }
 
         private static RouteCandidate GetSingleRouteToReturn(IEnumerable<RouteCandidate> routesWithMostParameterCaptures)

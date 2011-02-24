@@ -12,11 +12,11 @@ namespace Nancy.Demo
             };
 
             Get["/style/{file}"] = x => {
-                return Response.AsCss("~/Content/" + (string)x.file);
+                return Response.AsCss("Content/" + (string)x.file);
             };
 
             Get["/scripts/{file}"] = x => {
-                return Response.AsJs("~/Content/" + (string)x.file);
+                return Response.AsJs("Content/" + (string)x.file);
             };
 
             Get["/filtered", r => true] = x => {

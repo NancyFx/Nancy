@@ -1,12 +1,16 @@
 namespace Nancy
 {
+    using System.IO;
     using Nancy.Responses;
 
     public static class FormatterExtensions
     {
         public static Response AsCss(this IResponseFormatter formatter, string filePath)
         {
-            return new StaticFileResponse(filePath, "text/css");
+            var resourcePath =
+                Path.Combine(formatter.RootPath, filePath);
+
+            return new StaticFileResponse(resourcePath, "text/css");
         }
 
         public static Response AsImage(this IResponseFormatter formatter, string imagePath)
@@ -16,7 +20,10 @@ namespace Nancy
 
         public static Response AsJs(this IResponseFormatter formatter, string filePath)
         {
-            return new StaticFileResponse(filePath, "text/javascript");
+            var resourcePath =
+                Path.Combine(formatter.RootPath, filePath);
+
+            return new StaticFileResponse(resourcePath, "text/javascript");
         }
 
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model)

@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Web.Hosting;
 
     public class GenericFileResponse : Response
     {
@@ -16,17 +15,11 @@
             InitializeGenericFileResonse(filePath, contentType);
         }
 
-        public static string GetFilePath(string filePath)
-        {
-            return HostingEnvironment.IsHosted ?
-                HostingEnvironment.MapPath(filePath) : filePath;
-        }
-
         private static Action<Stream> GetFileContent(string filePath)
         {
             return stream =>
             {
-                using (var file = File.OpenRead(GetFilePath(filePath)))
+                using (var file = File.OpenRead(filePath))
                 {
                     var buffer = new byte[4096];
                     var read = 0;
@@ -43,7 +36,7 @@
         private void InitializeGenericFileResonse(string filePath, string contentType)
         {
             if (string.IsNullOrEmpty(filePath) ||
-                !File.Exists(GetFilePath(filePath)) ||
+                !File.Exists(filePath) ||
                 !Path.HasExtension(filePath))
             {
                 this.StatusCode = HttpStatusCode.NotFound;

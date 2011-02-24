@@ -61,7 +61,7 @@ namespace Nancy.Bootstrappers.Windsor
 
         protected override void RegisterRootPathProvider(IWindsorContainer existingContainer, Type rootPathProviderType)
         {
-            var component = Component.For(typeof(IViewEngine))
+            var component = Component.For(typeof(IRootPathProvider))
                 .ImplementedBy(rootPathProviderType)
                 .LifeStyle.Singleton;
 

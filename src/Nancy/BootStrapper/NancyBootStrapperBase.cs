@@ -98,6 +98,16 @@
         protected virtual Type DefaultViewFactory { get { return typeof(DefaultViewFactory); } }
 
         /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultNancyModuleBuilder { get { return typeof(DefaultNancyModuleBuilder); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultResponseFormatter { get { return typeof(DefaultResponseFormatter); } }
+
+        /// <summary>
         /// <para>
         /// The pre-request hook
         /// </para>
@@ -170,7 +180,9 @@
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher),
                 new TypeRegistration(typeof(IViewLocator), DefaultViewLocator),
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
-                new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory), 
+                new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory),
+                new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
+                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter)
             };
         }
 
