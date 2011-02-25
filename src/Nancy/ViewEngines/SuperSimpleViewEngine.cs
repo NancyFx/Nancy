@@ -31,12 +31,7 @@ namespace Nancy.ViewEngines
         /// <summary>
         /// Compiled Regex for if blocks
         /// </summary>
-        private Regex ifSubstitutionRegEx = new Regex(@"@If\.(?<ParameterName>[a-zA-Z0-9-_]*)(?<Contents>.*?)@EndIf", RegexOptions.Compiled | RegexOptions.Singleline);
-
-        /// <summary>
-        /// Compiled Regex for ifnot blocks
-        /// </summary>
-        private Regex ifNotSubstitutionRegEx = new Regex(@"@IfNot\.(?<ParameterName>[a-zA-Z0-9-_]*)(?<Contents>.*?)@EndIf", RegexOptions.Compiled | RegexOptions.Singleline);
+        private Regex conditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?\.(?<ParameterName>[a-zA-Z0-9-_]*)(?<Contents>.*?)@EndIf", RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// View engine transform processors
@@ -249,22 +244,18 @@ namespace Nancy.ViewEngines
         {
             var result = template;
 
-            result = this.ifSubstitutionRegEx.Replace(
+            result = this.conditionalSubstitutionRegEx.Replace(
                 result,
                 (m) =>
                 {
                     var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
 
-                    return !predicateResult ? String.Empty : m.Groups["Contents"].Value;
-                });
+                    if (m.Groups["Not"].Value == "Not")
+                    {
+                        predicateResult = !predicateResult;
+                    }
 
-            result = this.ifNotSubstitutionRegEx.Replace(
-                result,
-                (m) =>
-                {
-                    var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
-
-                    return predicateResult ? String.Empty : m.Groups["Contents"].Value;
+                    return predicateResult ? m.Groups["Contents"].Value : String.Empty;
                 });
 
             return result;
