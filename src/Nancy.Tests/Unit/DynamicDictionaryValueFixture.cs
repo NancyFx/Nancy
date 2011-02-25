@@ -163,18 +163,22 @@
         [Fact]
         public void Should_return_false_when_value_is_null_and_implicitly_cast_to_bool()
         {
+            // Given, When
             dynamic value = new DynamicDictionaryValue(null);
 
+            // Then
             Assert.False(value);
         }
 
         [Fact]
         public void Should_return_false_when_value_is_0_and_implicitly_cast_to_bool()
         {
+            // Given, When
             dynamic valueInt = new DynamicDictionaryValue(0);
             dynamic valueFloat = new DynamicDictionaryValue(0.0);
             dynamic valueDec = new DynamicDictionaryValue(0.0M);
 
+            // Then
             Assert.False(valueInt);
             Assert.False(valueFloat);
             Assert.False(valueDec);
@@ -183,10 +187,12 @@
         [Fact]
         public void Should_return_true_when_value_is_non_zero_and_implicitly_cast_to_bool()
         {
+            // Given, When
             dynamic valueInt = new DynamicDictionaryValue(8);
             dynamic valueFloat = new DynamicDictionaryValue(0.1);
             dynamic valueDec = new DynamicDictionaryValue(0.1M);
 
+            // Then
             Assert.True(valueInt);
             Assert.True(valueFloat);
             Assert.True(valueDec);
@@ -195,9 +201,23 @@
         [Fact]
         public void Should_return_true_when_value_is_a_not_null_reference_type()
         {
+            // Given, When
             dynamic value = new DynamicDictionaryValue(new object());
 
+            // Then
             Assert.True(value);
+        }
+
+        [Fact]
+        public void Should_return_true_and_false_for_true_false_strings()
+        {
+            // Given, When
+            dynamic valueTrue = new DynamicDictionaryValue("true");
+            dynamic valueFalse = new DynamicDictionaryValue("false");
+
+            // Then
+            Assert.True(valueTrue);
+            Assert.False(valueFalse);
         }
     }
 }

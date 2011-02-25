@@ -186,14 +186,20 @@
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
         {
             if (!dynamicValue.HasValue)
+            {
                 return false;
+            }
 
             if (dynamicValue.value.GetType().IsValueType)
+            {
                 return (Convert.ToBoolean(dynamicValue.value));
+            }
 
             bool result;
             if (bool.TryParse(dynamicValue.ToString(), out result))
+            {
                 return result;
+            }
 
             return true;
         }
