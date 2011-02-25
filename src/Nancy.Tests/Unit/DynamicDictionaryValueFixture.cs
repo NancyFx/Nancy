@@ -159,5 +159,45 @@
             // Then
             result.ShouldBeTrue();
         }
+
+        [Fact]
+        public void Should_return_false_when_value_is_null_and_implicitly_cast_to_bool()
+        {
+            dynamic value = new DynamicDictionaryValue(null);
+
+            Assert.False(value);
+        }
+
+        [Fact]
+        public void Should_return_false_when_value_is_0_and_implicitly_cast_to_bool()
+        {
+            dynamic valueInt = new DynamicDictionaryValue(0);
+            dynamic valueFloat = new DynamicDictionaryValue(0.0);
+            dynamic valueDec = new DynamicDictionaryValue(0.0M);
+
+            Assert.False(valueInt);
+            Assert.False(valueFloat);
+            Assert.False(valueDec);
+        }
+
+        [Fact]
+        public void Should_return_true_when_value_is_non_zero_and_implicitly_cast_to_bool()
+        {
+            dynamic valueInt = new DynamicDictionaryValue(8);
+            dynamic valueFloat = new DynamicDictionaryValue(0.1);
+            dynamic valueDec = new DynamicDictionaryValue(0.1M);
+
+            Assert.True(valueInt);
+            Assert.True(valueFloat);
+            Assert.True(valueDec);
+        }
+
+        [Fact]
+        public void Should_return_true_when_value_is_a_not_null_reference_type()
+        {
+            dynamic value = new DynamicDictionaryValue(new object());
+
+            Assert.True(value);
+        }
     }
 }
