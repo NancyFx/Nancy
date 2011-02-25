@@ -43,7 +43,7 @@ namespace Nancy.ViewEngines
         /// </summary>
         public SuperSimpleViewEngine()
         {
-            this.processors = new List<Func<string, object, Func<object, string, object>, string>>()
+            this.processors = new List<Func<string, object, Func<object, string, object>, string>>
                 {
                     this.PerformSingleSubstitutions,
                     this.PerformEachSubstitutions,
@@ -173,7 +173,7 @@ namespace Nancy.ViewEngines
         {
             return this.singleSubstitutionsRegEx.Replace(
                 template,
-                (m) =>
+                m =>
                 {
                     var substitution = propertyExtractor(model, m.Groups["ParameterName"].Value);
 
@@ -200,7 +200,7 @@ namespace Nancy.ViewEngines
         {
             return this.eachSubstitutionRegEx.Replace(
                 template,
-                (m) =>
+                m =>
                 {
                     var substitutionObject = propertyExtractor(model, m.Groups["ParameterName"].Value);
 
@@ -246,7 +246,7 @@ namespace Nancy.ViewEngines
 
             result = this.conditionalSubstitutionRegEx.Replace(
                 result,
-                (m) =>
+                m =>
                 {
                     var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
 
