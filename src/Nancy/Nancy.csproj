@@ -12,6 +12,7 @@
     <AssemblyName>Nancy</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -39,8 +40,6 @@
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
-    <Reference Include="System.Web" />
-    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
@@ -66,11 +65,22 @@
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
+    <Compile Include="Helpers\HttpEncoder.cs" />
+    <Compile Include="Helpers\HttpUtility.cs" />
     <Compile Include="HttpStatusCode.cs" />
     <Compile Include="IHideObjectMembers.cs" />
     <Compile Include="INancyContextFactory.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
     <Compile Include="IResponseFormatter.cs" />
+    <Compile Include="Json\JavaScriptConverter.cs" />
+    <Compile Include="Json\JavaScriptSerializer.cs" />
+    <Compile Include="Json\JavaScriptTypeResolver.cs" />
+    <Compile Include="Json\Json.cs" />
+    <Compile Include="Json\JsonDeserializer.cs" />
+    <Compile Include="Json\JsonSerializer.cs" />
+    <Compile Include="Helpers\ReflectionUtils.cs" />
+    <Compile Include="Json\ScriptIgnoreAttribute.cs" />
+    <Compile Include="Json\StringBuilderExtensions.cs" />
     <Compile Include="NancyContext.cs" />
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />
