@@ -253,17 +253,7 @@ namespace Nancy.ViewEngines
                 result,
                 (m) =>
                 {
-                    var predicateResult = false;
-                    var substitutionObject = propertyExtractor(model, m.Groups["ParameterName"].Value);
-
-                    if (substitutionObject != null)
-                    {
-                        var substitutionBool = substitutionObject as bool?;
-                        if (substitutionBool != null)
-                        {
-                            predicateResult = substitutionBool.Value;
-                        }
-                    }
+                    var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
 
                     return !predicateResult ? String.Empty : m.Groups["Contents"].Value;
                 });
@@ -272,22 +262,73 @@ namespace Nancy.ViewEngines
                 result,
                 (m) =>
                 {
-                    var predicateResult = true;
-                    var substitutionObject = propertyExtractor(model, m.Groups["ParameterName"].Value);
+                    var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
 
-                    if (substitutionObject != null)
-                    {
-                        var substitutionBool = substitutionObject as bool?;
-                        if (substitutionBool != null)
-                        {
-                            predicateResult = !substitutionBool.Value;
-                        }
-                    }
-
-                    return !predicateResult ? String.Empty : m.Groups["Contents"].Value;
+                    return predicateResult ? String.Empty : m.Groups["Contents"].Value;
                 });
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets the predicate result for an If or IfNot block
+        /// </summary>
+        /// <param name="parameterName">The parameter name</param>
+        /// <param name="propertyExtractor">The property extractor function</param>
+        /// <param name="model">The model.</param>
+        /// <returns>A bool representing the predicate result</returns>
+        private bool GetPredicateResult(string parameterName, Func<object, string, object> propertyExtractor, object model)
+        {
+            var predicateResult = false;
+            var substitutionObject = propertyExtractor(model, parameterName);
+
+            if (substitutionObject != null)
+            {
+                predicateResult = this.GetPredicateResultFromSubstitutionObject(substitutionObject);
+            }
+            else if (parameterName.StartsWith("Has"))
+            {
+                substitutionObject = propertyExtractor(model, parameterName.Substring(3));
+                predicateResult = this.GetHasPredicateResultFromSubstitutionObject(substitutionObject);
+            }
+
+            return predicateResult;
+        }
+
+        /// <summary>
+        /// Returns the predicate result if the substitionObject is a valid bool
+        /// </summary>
+        /// <param name="substitutionObject">The substitution object.</param>
+        /// <returns>Bool value of the substitutionObject, or false if unable to cast.</returns>
+        private bool GetPredicateResultFromSubstitutionObject(object substitutionObject)
+        {
+            var predicateResult = false;
+
+            var substitutionBool = substitutionObject as bool?;
+            if (substitutionBool != null)
+            {
+                predicateResult = substitutionBool.Value;
+            }
+
+            return predicateResult;
+        }
+
+        /// <summary>
+        /// Returns the predicate result if the substitionObject is a valid ICollection
+        /// </summary>
+        /// <param name="substitutionObject">The substitution object.</param>
+        /// <returns>Bool value of the whether the ICollection has items, or false if unable to cast.</returns>
+        private bool GetHasPredicateResultFromSubstitutionObject(object substitutionObject)
+        {
+            var predicateResult = false;
+
+            var substitutionCollection = substitutionObject as ICollection;
+            if (substitutionCollection != null)
+            {
+                predicateResult = substitutionCollection.Count != 0;
+            }
+
+            return predicateResult;
         }
     }
 }
