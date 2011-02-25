@@ -12,10 +12,32 @@
         }
 
         public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
+<<<<<<< HEAD
         {
             base.ConfigureRequestContainer(existingContainer);
 
             existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
+=======
+        {
+            base.ConfigureRequestContainer(existingContainer);
+
+            existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
+        }
+
+        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        {
+            base.InitialiseInternal(container);
+
+            this.AfterRequest += (ctx) =>
+                {
+                    var username = ctx.Request.Query.pirate;
+
+                    if (username.HasValue)
+                    {
+                        ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
+                    }
+                };
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
     }
 }

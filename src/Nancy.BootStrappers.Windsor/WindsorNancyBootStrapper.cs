@@ -13,6 +13,11 @@ namespace Nancy.Bootstrappers.Windsor
     public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>,
         INancyBootstrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
     {
+        /// <summary>
+        /// Key for storing the child container in the context items
+        /// </summary>
+        private const string CONTEXT_KEY = "WindsorNancyBootStrapperChildContainer";
+
         protected IWindsorContainer container;
 
         private IEnumerable<ModuleRegistration> modulesRegistrationTypes;
@@ -54,6 +59,18 @@ namespace Nancy.Bootstrappers.Windsor
             }));
         }
 
+<<<<<<< HEAD
+=======
+        protected override void RegisterRootPathProvider(IWindsorContainer existingContainer, Type rootPathProviderType)
+        {
+            var component = Component.For(typeof(IRootPathProvider))
+                .ImplementedBy(rootPathProviderType)
+                .LifeStyle.Singleton;
+
+            existingContainer.Register(component);
+        }
+
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.viewSourceProviders = viewSourceProviderTypes;
@@ -83,18 +100,19 @@ namespace Nancy.Bootstrappers.Windsor
         {
         }
 
-        public IEnumerable<NancyModule> GetAllModules()
+        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var child = GetChild();
+            var child = GetChild(context);
             return child.Kernel.ResolveAll<NancyModule>();
         }
 
-        public NancyModule GetModuleByKey(string moduleKey)
+        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var child = GetChild();
+            var child = GetChild(context);
             return child.Kernel.Resolve<NancyModule>(moduleKey);
         }
 
+<<<<<<< HEAD
         private IWindsorContainer GetChild()
         {
             var child = new WindsorContainer();
@@ -104,6 +122,44 @@ namespace Nancy.Bootstrappers.Windsor
             RegisterViewEnginesInternal(child, this.viewEngines);
             RegisterViewSourceProvidersInternal(child, this.viewSourceProviders);
             return child;
+=======
+        IWindsorContainer GetChild(NancyContext context)
+        {
+            object contextObject;
+            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
+            var childContainer = contextObject as IWindsorContainer;
+
+            if (childContainer == null)
+            {
+                childContainer = new WindsorContainer();
+                this.container.AddChildContainer(childContainer);
+                this.ConfigureRequestContainer(childContainer);
+                RegisterModulesInternal(childContainer, this.modulesRegistrationTypes);
+                RegisterViewEnginesInternal(childContainer, this.viewEngines);
+                RegisterViewSourceProvidersInternal(childContainer, this.viewSourceProviders);
+                context.Items[CONTEXT_KEY] = childContainer;
+            }
+
+            return childContainer;
+        }
+
+        private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
+        {
+            var components = viewSourceProviderTypes.Select(r => Component.For(typeof(IViewSourceProvider))
+                .ImplementedBy(r)
+                .LifeStyle.Singleton);
+
+            existingContainer.Register(components.ToArray());
+        }
+
+        private static void RegisterViewEnginesInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
+        {
+            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
+                .ImplementedBy(r)
+                .LifeStyle.Singleton);
+
+            existingContainer.Register(components.ToArray());
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)

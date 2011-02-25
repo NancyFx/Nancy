@@ -45,7 +45,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="AspNetViewSourceProvider.cs" />
+=======
+    <Compile Include="AspNetRootSourceProvider.cs" />
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     <Compile Include="BootstrapperEntry.cs" />
     <Compile Include="NancyFxSection.cs" />
     <Compile Include="NancyHandler.cs" />

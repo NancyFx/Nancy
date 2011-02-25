@@ -33,6 +33,26 @@
         where TContainer : class
     {
         /// <summary>
+        /// Stores whether the bootstrapper has been initialised
+        /// prior to calling GetEngine.
+        /// </summary>
+        private bool initialised = false;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
+        /// </summary>
+        protected NancyBootstrapperBase()
+        {
+            this.BeforeRequest = new BeforePipeline();
+            this.AfterRequest = new AfterPipeline();
+        }
+
+        /// <summary>
+        /// Gets the Container instance - automatically set during initialise.
+        /// </summary>
+        protected TContainer ApplicationContainer { get; private set; }
+
+        /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRouteResolver { get { return typeof(DefaultRouteResolver); } }
@@ -41,6 +61,14 @@
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRoutePatternMatcher { get { return typeof (DefaultRoutePatternMatcher); } }
+<<<<<<< HEAD
+=======
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultContextFactory { get { return typeof(DefaultNancyContextFactory); } }
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -73,11 +101,60 @@
         protected virtual Type DefaultViewFactory { get { return typeof(DefaultViewFactory); } }
 
         /// <summary>
+<<<<<<< HEAD
+=======
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultNancyModuleBuilder { get { return typeof(DefaultNancyModuleBuilder); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultResponseFormatter { get { return typeof(DefaultResponseFormatter); } }
+
+        /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        protected BeforePipeline BeforeRequest { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created. It can be used
+        /// to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        protected AfterPipeline AfterRequest { get; set; }
+
+        /// <summary>
+        /// Initialise the bootstrapper. Must be called prior to GetEngine.
+        /// </summary>
+        public void Initialise()
+        {
+            this.initialised = true;
+
+            this.ApplicationContainer = this.CreateContainer();
+
+            this.InitialiseInternal(this.ApplicationContainer);
+        }
+
+        /// <summary>
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
         public INancyEngine GetEngine()
         {
+<<<<<<< HEAD
             var container = CreateContainer();
             ConfigureApplicationContainer(container);
             
@@ -87,6 +164,26 @@
             RegisterViewSourceProviders(container, GetViewSourceProviders());
 
             return GetEngineInternal();
+=======
+            if (!this.initialised)
+            {
+                throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
+            }
+
+            ConfigureApplicationContainer(this.ApplicationContainer);
+            
+            RegisterDefaults(this.ApplicationContainer, BuildDefaults());
+            RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
+            RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
+            RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
+            RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
+
+            var engine = GetEngineInternal();
+            engine.PreRequestHook = this.BeforeRequest;
+            engine.PostRequestHook = this.AfterRequest;
+
+            return engine;
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         private IEnumerable<TypeRegistration> BuildDefaults()
@@ -101,7 +198,23 @@
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher),
                 new TypeRegistration(typeof(IViewLocator), DefaultViewLocator),
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
+<<<<<<< HEAD
+=======
+                new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory),
+                new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
+                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter)
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             };
+        }
+
+        /// <summary>
+        /// Initialise the bootstrapper - can be used for adding pre/post hooks and
+        /// any other initialisation tasks that aren't specifically container setup
+        /// related
+        /// </summary>
+        /// <param name="container">Container instance for resolving types if required.</param>
+        protected virtual void InitialiseInternal(TContainer container)
+        {
         }
 
         /// <summary>
@@ -130,6 +243,52 @@
             return viewSourceProviders;
         }
 
+        protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
+
+        /// <summary>
+        /// Get root path provider type.
+        /// </summary>
+        /// <returns>The type that implements <see cref="IRootPathProvider"/> or if no implementation could be found, the type of <see cref="DefaultRootPathProvider"/>.</returns>
+        protected virtual Type GetRootPathProvider()
+        {
+            var providers =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IRootPathProvider).IsAssignableFrom(type)
+                where !type.Equals(typeof(DefaultRootPathProvider))
+                select type;
+
+            return providers.FirstOrDefault() ?? typeof(DefaultRootPathProvider);
+        }
+        
+        protected abstract void RegisterRootPathProvider(TContainer container, Type rootPathProviderType);
+
+        /// <summary>
+        /// Get all view source provider types
+        /// </summary>
+        /// <returns>Enumerable of types that implement IViewSourceProvider</returns>
+        protected virtual IEnumerable<Type> GetViewSourceProviders()
+        {
+            var viewSourceProviders =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IViewSourceProvider).IsAssignableFrom(type)
+                select type;
+
+            return viewSourceProviders;
+        }
+
+        /// <summary>
+        /// Register the view source providers into the container
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        /// <param name="viewSourceProviderTypes">Enumerable of types that implement IViewSourceProvider</param>
         protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
 
         /// <summary>
@@ -166,6 +325,31 @@
             return viewEngineTypes;
         }
 
+        protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
+
+        /// <summary>
+        /// Get all view engine types
+        /// </summary>
+        /// <returns>Enumerable of types that implement IViewEngine</returns>
+        protected virtual IEnumerable<Type> GetViewEngineTypes()
+        {
+            var viewEngineTypes =
+                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.ReflectionOnly
+                where !assembly.IsDynamic
+                from type in assembly.SafeGetExportedTypes()
+                where !type.IsAbstract
+                where typeof(IViewEngine).IsAssignableFrom(type)
+                select type;
+
+            return viewEngineTypes;
+        }
+
+        /// <summary>
+        /// Register view engines into the container
+        /// </summary>
+        /// <param name="container">Container Instance</param>
+        /// <param name="viewEngineTypes">Enumerable of types that implement IViewEngine</param>
         protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
 
         /// <summary>

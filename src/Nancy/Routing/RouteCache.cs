@@ -9,11 +9,19 @@
     {
         private readonly IModuleKeyGenerator moduleKeyGenerator;
 
+<<<<<<< HEAD
         public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator)
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
 
             this.BuildCache(moduleCatalog.GetAllModules());
+=======
+        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory)
+        {
+            this.moduleKeyGenerator = moduleKeyGenerator;
+
+            this.BuildCache(moduleCatalog.GetAllModules(contextFactory.Create()));
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         private void BuildCache(IEnumerable<NancyModule> modules)

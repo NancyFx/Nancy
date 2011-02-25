@@ -23,6 +23,7 @@
 
         public NancyWcfGenericService(INancyBootstrapper bootstrapper)
         {
+            bootstrapper.Initialise();
             engine = bootstrapper.GetEngine();
         }
         
@@ -32,11 +33,11 @@
             var webContext = WebOperationContext.Current;
 
             var nancyRequest = CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
-            var nancyResponse = engine.HandleRequest(nancyRequest);
+            var nancyContext = engine.HandleRequest(nancyRequest);
 
-            SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyResponse);
+            SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyContext.Response);
             
-            return webContext.CreateStreamResponse(nancyResponse.Contents, nancyResponse.ContentType);
+            return webContext.CreateStreamResponse(nancyContext.Response.Contents, nancyContext.Response.ContentType);
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
@@ -57,7 +58,7 @@
             SetHttpResponseHeaders(webResponse, nancyResponse);
 
             webResponse.ContentType = nancyResponse.ContentType;
-            webResponse.StatusCode = nancyResponse.StatusCode;
+            webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
         }
 
         private static void SetHttpResponseHeaders(OutgoingWebResponseContext context, Response response)

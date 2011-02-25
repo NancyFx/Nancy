@@ -59,10 +59,15 @@
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithDependency.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithoutBasePath.cs" />
+    <Compile Include="Fakes\FakeNancyModuleWithPreAndPostHooks.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="NancyContextFixture.cs" />
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
@@ -72,7 +77,7 @@
     <Compile Include="Specifications\Handling a PUT request.cs" />
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\DefaultModuleKeyGeneratorFixture.cs" />
-    <Compile Include="Unit\Bootstrapper\FakeBootstrapperBaseGetModulesOverride.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
@@ -81,9 +86,13 @@
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
+    <Compile Include="Unit\PostRequestHooksPipelineFixture.cs" />
+    <Compile Include="Unit\PreRequestHooksPipelineFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleKeyGenerator.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
+    <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
+    <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRoutePatternMatcherFixture.cs" />
     <Compile Include="Fakes\FakeRoutePatternMatchResult.cs" />

@@ -13,6 +13,11 @@
     public class DefaultNancyBootstrapper : NancyBootstrapperBase<TinyIoCContainer>, INancyBootstrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
     {
         /// <summary>
+        /// Key for storing the child container in the context items
+        /// </summary>
+        private const string CONTEXT_KEY = "DefaultNancyBootStrapperChildContainer";
+
+        /// <summary>
         /// Container instance
         /// </summary>
         protected TinyIoCContainer container;
@@ -35,6 +40,14 @@
             return this.container.Resolve<IModuleKeyGenerator>();
         }
 
+<<<<<<< HEAD
+=======
+        protected override void RegisterRootPathProvider(TinyIoCContainer container, Type rootPathProviderType)
+        {
+            this.container.Register(typeof(IRootPathProvider), rootPathProviderType).AsSingleton();
+        }
+
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
@@ -98,12 +111,14 @@
         }
 
         /// <summary>
-        /// Get all NancyModule implementation instances
+        /// Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
+        /// <param name="context">Current request context</param>
         /// <returns>IEnumerable of NancyModule</returns>
-        public IEnumerable<NancyModule> GetAllModules()
+        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var childContainer = this.container.GetChildContainer();
+            var childContainer = this.GetChildContainer(context);
+
             this.ConfigureRequestContainer(childContainer);
             return childContainer.ResolveAll<NancyModule>(false);
         }
@@ -111,13 +126,35 @@
         /// <summary>
         /// Gets a specific, per-request, module instance from the key
         /// </summary>
-        /// <param name="moduleKey">ModuleKey</param>
+        /// <param name="moduleKey">Module key of the module to retrieve</param>
+        /// <param name="context">Current request context</param>
         /// <returns>NancyModule instance</returns>
-        public NancyModule GetModuleByKey(string moduleKey)
+        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var childContainer = this.container.GetChildContainer();
+            var childContainer = this.GetChildContainer(context);
+
             this.ConfigureRequestContainer(childContainer);
             return childContainer.Resolve<NancyModule>(moduleKey);
+        }
+
+        /// <summary>
+        /// Gets the per-request child container
+        /// </summary>
+        /// <param name="context">Current context</param>
+        /// <returns>Child container</returns>
+        private TinyIoCContainer GetChildContainer(NancyContext context)
+        {
+            object contextObject;
+            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
+            var childContainer = contextObject as TinyIoCContainer;
+
+            if (childContainer == null)
+            {
+                childContainer = this.container.GetChildContainer();
+                context.Items[CONTEXT_KEY] = childContainer;
+            }
+
+            return childContainer;
         }
     }
 }

@@ -1,7 +1,6 @@
 namespace Nancy.Tests.Unit
 {
     using System.Collections.Generic;
-    using System.Net;
     using Tests.Extensions;
     using Xunit;
 

@@ -3,7 +3,6 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Net;
     using Cookies;
 
     /// <summary>

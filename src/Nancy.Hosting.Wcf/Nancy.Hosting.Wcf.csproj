@@ -49,6 +49,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="NancyWcfGenericService.cs" />
   </ItemGroup>
   <ItemGroup>

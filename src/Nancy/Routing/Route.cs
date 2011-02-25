@@ -15,7 +15,11 @@
             this.Action = action;
         }
 
+<<<<<<< HEAD
         public Route (string method, string path, Func<Request, bool> condition, Func<dynamic, Response> action)
+=======
+        public Route (string method, string path, Func<NancyContext, bool> condition, Func<dynamic, Response> action)
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             : this(new RouteDescription(method, path, condition), action)
         {
         }

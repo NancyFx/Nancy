@@ -1,7 +1,10 @@
 ﻿namespace Nancy.Routing
 {
+<<<<<<< HEAD
     using System.Net;
 
+=======
+>>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     /// <summary>
     /// Route that is returned when the path could be matched but it was for the wrong request method.
     /// </summary>

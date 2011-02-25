@@ -15,9 +15,11 @@ namespace Nancy.Hosting.Aspnet
         public void ProcessRequest(HttpContextBase context)
         {
             var request = CreateNancyRequest(context);
-            var response = engine.HandleRequest(request);
 
-            SetNancyResponseToHttpResponse(context, response);
+            using (var nancyContext = this.engine.HandleRequest(request))
+            {
+                SetNancyResponseToHttpResponse(context, nancyContext.Response);
+            }
         }
 
         private static Request CreateNancyRequest(HttpContextBase context)

@@ -19,6 +19,8 @@ namespace Nancy.Hosting.Aspnet
             var bootstrapper = 
                 GetBootstrapper();
 
+            bootstrapper.Initialise();
+
             this.engine = 
                 bootstrapper.GetEngine();
         }

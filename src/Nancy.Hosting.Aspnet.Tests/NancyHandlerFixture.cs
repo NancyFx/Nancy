@@ -9,7 +9,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using Nancy.Hosting.Aspnet;
     using Xunit;
 
-    public class HancyHandlerFixture
+    public class NancyHandlerFixture
     {
         private readonly NancyHandler handler;
         private readonly HttpContextBase context;
@@ -18,7 +18,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         private readonly INancyEngine engine;
         private readonly NameValueCollection formData;
 
-        public HancyHandlerFixture()
+        public NancyHandlerFixture()
         {
             this.context = A.Fake<HttpContextBase>();
             this.request = A.Fake<HttpRequestBase>();
@@ -44,6 +44,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             // Given
             this.formData.Add("_method", "DELETE");
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(new NancyContext() { Response = new Response() });
 
             // When
             this.handler.ProcessRequest(this.context);
@@ -57,6 +58,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         {
             // Given
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(new NancyContext() { Response = new Response() });
 
             // When
             this.handler.ProcessRequest(this.context);
@@ -72,24 +74,39 @@ namespace Nancy.Hosting.Aspnet.Tests
             var cookie2 = A.Fake<INancyCookie>();
             var r = new Response();
             r.AddCookie(cookie1).AddCookie(cookie2);
+            var nancyContext = new NancyContext { Response = r };
 
             A.CallTo(() => cookie1.ToString()).Returns("the first cookie");
             A.CallTo(() => cookie2.ToString()).Returns("the second cookie");
-            
-            SetupRequestProcess(r);
-            
+
+            SetupRequestProcess(nancyContext);
+
             this.handler.ProcessRequest(context);
 
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the second cookie")).MustHaveHappened();
         }
 
-        private void SetupRequestProcess(Response response)
+        [Fact]
+        public void Should_dispose_the_context()
+        {
+            var disposable = A.Fake<IDisposable>();
+            var nancyContext = new NancyContext() { Response = new Response() };
+            nancyContext.Items.Add("Disposable", disposable);
+            A.CallTo(() => this.request.HttpMethod).Returns("GET");
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(nancyContext);
+
+            this.handler.ProcessRequest(this.context);
+
+            A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Once);
+        }
+
+        private void SetupRequestProcess(NancyContext nancyContext)
         {
             A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/about");
             A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(response);
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(nancyContext);
         }
     }
 }
