@@ -280,5 +280,49 @@
 
             Assert.Equal(@"<li>1</li><li>2</li> <li>3</li><li>4</li>", output);
         }
+
+        [Fact]
+        public void If_model_has_a_collection_with_items_but_no_bool_then_If_HasCollection_returns_true()
+        {
+            var input = @"<html><head></head><body>@If.HasUsers<ul>@Each.Users<li>Hello @Current, @Model.Name says hello!</li>@EndEach</ul>@EndIf</body></html>";
+            var model = new { Users = new List<string>() { "Bob", "Jim", "Bill" }, Name = "Nancy" };
+
+            var output = viewEngine.Render(input, model);
+
+            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+        }
+
+        [Fact]
+        public void If_model_has_a_collection_with_items_but_no_bool_then_IfNot_HasCollection_returns_false()
+        {
+            var input = @"<html><head></head><body>@IfNot.HasUsers<p>No Users!</p>@EndIf</body></html>";
+            var model = new { Users = new List<string>() { "Bob", "Jim", "Bill" } };
+
+            var output = viewEngine.Render(input, model);
+
+            Assert.Equal(@"<html><head></head><body></body></html>", output);
+        }
+
+        [Fact]
+        public void Implicit_has_support_ignores_item_if_item_isnt_a_collection()
+        {
+            var input = @"<html><head></head><body>@If.HasUsers<p>Users!</p>@EndIf</body></html>";
+            var model = new { Users = new object() };
+
+            var output = viewEngine.Render(input, model);
+
+            Assert.Equal(@"<html><head></head><body></body></html>", output);
+        }
+
+        [Fact]
+        public void If_model_has_HasItem_bool_then_it_takes_precedence_over_implcit_has_support()
+        {
+            var input = @"<html><head></head><body>@If.HasUsers<ul>@Each.Users<li>Hello @Current, @Model.Name says hello!</li>@EndEach</ul>@EndIf</body></html>";
+            var model = new { HasUsers = false, Users = new List<string>() { "Bob", "Jim", "Bill" }, Name = "Nancy" };
+
+            var output = viewEngine.Render(input, model);
+
+            Assert.Equal(@"<html><head></head><body></body></html>", output);
+        }
     }
 }

@@ -17,7 +17,7 @@
         /// <summary>
         /// Extensions that the view engine supports
         /// </summary>
-        private readonly string[] extensions = new string[] { "sshtml" };
+        private readonly string[] extensions = new string[] { "sshtml", "html" };
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
