@@ -4,7 +4,7 @@ namespace Nancy.Extensions
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using System.Web;
+    using Nancy.Helpers;
 
     public static class StringExtensions
     {
