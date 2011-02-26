@@ -98,7 +98,7 @@ namespace Nancy.Hosting.Aspnet.Tests
 
             this.handler.ProcessRequest(this.context);
 
-            A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private void SetupRequestProcess(NancyContext nancyContext)

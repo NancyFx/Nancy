@@ -95,7 +95,7 @@ namespace Nancy.Tests.Unit
 
             this.engine.HandleRequest(request);
 
-            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
