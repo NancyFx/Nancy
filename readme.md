@@ -109,6 +109,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Andy Pike](http://github.com/andypike)
 * [Bjarte Djuvik Næss](http://github.com/bjartn)
 * [Chris Nicola](http://github.com/lucisferre)
+* [David Hong](http://github.com/davidhong)
 * [Graeme Foster](http://github.com/GraemeF)
 * [Ian Davis](http://github.com/innovatian)
 * [Jonas Cannehag](http://github.com/knecke)
