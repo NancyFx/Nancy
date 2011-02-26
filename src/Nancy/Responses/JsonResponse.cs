@@ -1,9 +1,8 @@
-﻿using Nancy.Json;
-
-namespace Nancy.Responses
+﻿namespace Nancy.Responses
 {
     using System;
     using System.IO;
+    using Nancy.Json;
 
     public class JsonResponse<TModel> : Response
     {

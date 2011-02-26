@@ -17,7 +17,7 @@
         /// <summary>
         /// Extensions that the view engine supports
         /// </summary>
-        private readonly string[] extensions = new string[] { "sshtml", "html" };
+        private readonly string[] extensions = new[] { "sshtml", "html", "html" };
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -37,12 +37,12 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
         {
-            return (s) =>
-                       {
-                           var writer = new StreamWriter(s);
-                           writer.Write(this.viewEngine.Render(viewLocationResult.Contents.ReadToEnd(), model));
-                           writer.Flush();
-                       };
+            return s =>
+            {
+                var writer = new StreamWriter(s);
+                writer.Write(this.viewEngine.Render(viewLocationResult.Contents.ReadToEnd(), model));
+                writer.Flush();
+            };
         }
     }
 }

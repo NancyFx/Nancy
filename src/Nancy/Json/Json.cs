@@ -26,14 +26,13 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-
-using System;
-using System.IO;
-using System.Text;
-
 namespace Nancy.Json
 {
-	internal static class Json
+    using System;
+    using System.IO;
+    using System.Text;
+    
+    internal static class Json
 	{
         public static void Serialize (object obj, StringBuilder output)
         {

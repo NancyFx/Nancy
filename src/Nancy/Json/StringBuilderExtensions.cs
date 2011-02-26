@@ -26,11 +26,11 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Text;
-
 namespace Nancy.Json
 {
+    using System;
+    using System.Text;
+
 	internal static class StringBuilderExtensions 
 	{
 		static void CheckCount (StringBuilder sb, int maxCount)
