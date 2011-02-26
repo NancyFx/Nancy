@@ -58,6 +58,11 @@ namespace Nancy.ViewEngines
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model)
         {
+            if (model == null)
+            {
+                model = new object();
+            }
+
             var propertyExtractor = this.GetPropertyExtractor(model);
 
             return this.processors.Aggregate(template, (current, processor) => processor(current, model, propertyExtractor));
