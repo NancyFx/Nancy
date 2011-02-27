@@ -16,18 +16,17 @@
         }
 
         [Fact]
-        public void Should_not_throw_exception_when_model_it_null()
+        public void Should_return_straight_template_if_model_is_null()
         {
             // Given
-            const string input = @"<html><head></head><body>Hello</body></html>";
+            const string input = @"<html><head></head><body>Hello @Model.Name</body></html>";
             dynamic model = null;
 
             // When
-            var exception =
-                Record.Exception(() => this.viewEngine.Render(input, model));
+            var result = this.viewEngine.Render(input, model);
 
             // Then
-            exception.ShouldBeNull();
+            Assert.Equal(input, result);
         }
 
         [Fact]

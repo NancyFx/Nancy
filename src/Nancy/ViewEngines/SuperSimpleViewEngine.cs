@@ -53,14 +53,15 @@ namespace Nancy.ViewEngines
 
         /// <summary>
         /// Renders a template
-        /// </summary><param name="template">The template to render.</param>
+        /// </summary>
+        /// <param name="template">The template to render.</param>
         /// <param name="model">The model to user for rendering.</param>
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model)
         {
             if (model == null)
             {
-                model = new object();
+                return template;
             }
 
             var propertyExtractor = this.GetPropertyExtractor(model);
