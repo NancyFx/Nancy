@@ -16,34 +16,34 @@ namespace Nancy.ViewEngines
         /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
-        private readonly Regex singleSubstitutionsRegEx = new Regex(@"@Model\.(?<ParameterName>[a-zA-Z0-9-_]*)", RegexOptions.Compiled);
+        private readonly Regex singleSubstitutionsRegEx = new Regex(@"@Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for each blocks
         /// </summary>
-        private readonly Regex eachSubstitutionRegEx = new Regex(@"@Each\.(?<ParameterName>[a-zA-Z0-9-_]*)(?<Contents>.*?)@EndEach", RegexOptions.Compiled | RegexOptions.Singleline);
+        private readonly Regex eachSubstitutionRegEx = new Regex(@"@Each(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndEach;?", RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Compiled Regex for each block current substitutions
         /// </summary>
-        private readonly Regex eachItemSubstitutionRegEx = new Regex("@Current", RegexOptions.Compiled);
+        private readonly Regex eachItemSubstitutionRegEx = new Regex(@"@Current(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for if blocks
         /// </summary>
-        private readonly Regex conditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?\.(?<ParameterName>[a-zA-Z0-9-_]*)(?<Contents>.*?)@EndIf", RegexOptions.Compiled | RegexOptions.Singleline);
+        private readonly Regex conditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndIf;?", RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// View engine transform processors
         /// </summary>
-        private readonly List<Func<string, object, Func<object, string, object>, string>> processors;
+        private readonly List<Func<string, object, string>> processors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperSimpleViewEngine"/> class.
         /// </summary>
         public SuperSimpleViewEngine()
         {
-            this.processors = new List<Func<string, object, Func<object, string, object>, string>>
+            this.processors = new List<Func<string, object, string>>
                 {
                     this.PerformSingleSubstitutions,
                     this.PerformEachSubstitutions,
@@ -64,14 +64,12 @@ namespace Nancy.ViewEngines
                 return template;
             }
 
-            var propertyExtractor = this.GetPropertyExtractor(model);
-
-            return this.processors.Aggregate(template, (current, processor) => processor(current, model, propertyExtractor));
+            return this.processors.Aggregate(template, (current, processor) => processor(current, model));
         }
 
         /// <summary>
         /// <para>
-        /// Gets the correct property extractor for the given model.
+        /// Gets a property value from the given model.
         /// </para>
         /// <para>
         /// Anonymous types, standard types and ExpandoObject are supported.
@@ -80,41 +78,44 @@ namespace Nancy.ViewEngines
         /// </para>
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Delegate for getting properties - delegate returns a value or null if not there.</returns>
+        /// <param name="propertyName">The property name to evaluate.</param>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
         /// <exception cref="ArgumentException">Model type is not supported.</exception>
-        private Func<object, string, object> GetPropertyExtractor(object model)
+        private static Tuple<bool, object> GetPropertyValue(object model, string propertyName)
         {
+            if (model == null || String.IsNullOrEmpty(propertyName))
+            {
+                return new Tuple<bool, object>(false, null);
+            }
+
             if (!typeof(IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
             {
-                return GetStandardTypePropertyExtractor(model);
+                return StandardTypePropertyEvaluator(model, propertyName);
             }
 
             if (typeof(IDictionary<string, object>).IsAssignableFrom(model.GetType()))
             {
-                return DynamicDictionaryPropertyExtractor;
+                return DynamicDictionaryPropertyEvaluator(model, propertyName);
             }
 
             throw new ArgumentException("model must be a standard type or implement IDictionary<string, object>", "model");
         }
 
         /// <summary>
-        /// <para>Returns the standard property extractor.</para>
-        /// <para>Model properties are enumerated once and a closure is returned that captures them.</para>
+        /// A property extractor for standard types.
         /// </summary>
         /// <param name="model">The model.</param>
-        /// <returns>Delegate for getting properties - delegate returns a value or null if not there.</returns>
-        private static Func<object, string, object> GetStandardTypePropertyExtractor(object model)
+        /// <param name="propertyName">The property name.</param>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        private static Tuple<bool, object> StandardTypePropertyEvaluator(object model, string propertyName)
         {
             var properties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static);
 
-            return (mdl, propName) =>
-            {
-                var property =
-                    properties.Where(p => String.Equals(p.Name, propName, StringComparison.InvariantCulture)).
-                        FirstOrDefault();
+            var property =
+                properties.Where(p => String.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
+                FirstOrDefault();
 
-                return property == null ? null : property.GetValue(mdl, null);
-            };
+            return property == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, property.GetValue(model, null));
         }
 
         /// <summary>
@@ -124,123 +125,83 @@ namespace Nancy.ViewEngines
         /// </summary>
         /// <param name="model">The model.</param>
         /// <param name="propertyName">The property name.</param>
-        /// <returns>Object if property is found, <see langword="null"/> if not.</returns>
-        private static object DynamicDictionaryPropertyExtractor(object model, string propertyName)
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        private static Tuple<bool, object> DynamicDictionaryPropertyEvaluator(object model, string propertyName)
         {
             var dictionaryModel = (IDictionary<string, object>)model;
 
             object output;
-            dictionaryModel.TryGetValue(propertyName, out output);
-
-            return output;
+            return !dictionaryModel.TryGetValue(propertyName, out output) ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, output);
         }
 
         /// <summary>
-        /// Performs single @Model.PropertyName substitutions.
+        /// Gets an IEnumerable of capture group values
         /// </summary>
-        /// <param name="template">The template.</param>
-        /// <param name="model">The model.</param>
-        /// <param name="propertyExtractor">The property extractor.</param>
-        /// <returns>Template with @Model.PropertyName blocks expanded.</returns>
-        private string PerformSingleSubstitutions(string template, object model, Func<object, string, object> propertyExtractor)
+        /// <param name="m">The match to use.</param>
+        /// <param name="groupName">Group name containing the capture group.</param>
+        /// <returns>IEnumerable of capture group values as strings.</returns>
+        private static IEnumerable<string> GetCaptureGroupValues(Match m, string groupName)
         {
-            return this.singleSubstitutionsRegEx.Replace(
-                template,
-                m =>
-                {
-                    var substitution = propertyExtractor(model, m.Groups["ParameterName"].Value);
-
-                    return substitution == null ? "[ERR!]" : substitution.ToString();
-                });
+            return m.Groups[groupName].Captures.Cast<Capture>().Select(c => c.Value);
         }
 
         /// <summary>
-        /// Performs @Each.PropertyName substitutions
+        /// Gets a property value from a collection of nested parameter names
         /// </summary>
-        /// <param name="template">The template.</param>
-        /// <param name="model">The model.</param>
-        /// <param name="propertyExtractor">The property extractor.</param>
-        /// <returns>Template with @Each.PropertyName blocks expanded.</returns>
-        private string PerformEachSubstitutions(string template, object model, Func<object, string, object> propertyExtractor)
+        /// <param name="model">The model containing properties.</param>
+        /// <param name="parameters">A collection of nested parameters (e.g. User, Name</param>
+        /// <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        private static Tuple<bool, object> GetPropertyValueFromParameterCollection(object model, IEnumerable<string> parameters)
         {
-            return this.eachSubstitutionRegEx.Replace(
-                template,
-                m =>
+            if (parameters == null)
+            {
+                return new Tuple<bool, object>(true, model);
+            }
+
+            var currentObject = model;
+            Tuple<bool, object> currentResult;
+
+            foreach (var parameter in parameters)
+            {
+                currentResult = GetPropertyValue(currentObject, parameter);
+
+                if (currentResult.Item1 == false)
                 {
-                    var substitutionObject = propertyExtractor(model, m.Groups["ParameterName"].Value);
+                    return new Tuple<bool, object>(false, null);
+                }
 
-                    if (substitutionObject == null)
-                    {
-                        return "[ERR!]";
-                    }
+                currentObject = currentResult.Item2;
+            }
 
-                    var substitutionEnumerable = substitutionObject as IEnumerable;
-                    if (substitutionEnumerable == null)
-                    {
-                        return "[ERR!]";
-                    }
-
-                    var result = string.Empty;
-                    foreach (var item in substitutionEnumerable)
-                    {
-                        result += eachItemSubstitutionRegEx.Replace(m.Groups["Contents"].Value, item.ToString());
-                    }
-
-                    return result;
-                });
-        }
-
-        /// <summary>
-        /// Performs @If.PropertyName and @IfNot.PropertyName substitutions
-        /// </summary>
-        /// <param name="template">The template.</param>
-        /// <param name="model">The model.</param>
-        /// <param name="propertyExtractor">The property extractor.</param>
-        /// <returns>Template with @If.PropertyName @IfNot.PropertyName blocks removed/expanded.</returns>
-        private string PerformConditionalSubstitutions(string template, object model, Func<object, string, object> propertyExtractor)
-        {
-            var result = template;
-
-            result = this.conditionalSubstitutionRegEx.Replace(
-                result,
-                m =>
-                {
-                    var predicateResult = GetPredicateResult(m.Groups["ParameterName"].Value, propertyExtractor, model);
-
-                    if (m.Groups["Not"].Value == "Not")
-                    {
-                        predicateResult = !predicateResult;
-                    }
-
-                    return predicateResult ? m.Groups["Contents"].Value : String.Empty;
-                });
-
-            return result;
+            return new Tuple<bool, object>(true, currentObject);
         }
 
         /// <summary>
         /// Gets the predicate result for an If or IfNot block
         /// </summary>
-        /// <param name="parameterName">The parameter name.</param>
-        /// <param name="propertyExtractor">The property extractor function.</param>
-        /// <param name="model">The model.</param>
-        /// <returns>A bool representing the predicate result.</returns>
-        private static bool GetPredicateResult(string parameterName, Func<object, string, object> propertyExtractor, object model)
+        /// <param name="item">The item to evaluate</param>
+        /// <param name="properties">Property list to evaluate</param>
+        /// <returns>Bool representing the predicate result</returns>
+        private static bool GetPredicateResult(object item, IEnumerable<string> properties)
         {
-            var predicateResult = false;
-            var substitutionObject = propertyExtractor(model, parameterName);
+            var substitutionObject = GetPropertyValueFromParameterCollection(item, properties);
 
-            if (substitutionObject != null)
+            if (substitutionObject.Item1 == false && properties.Last().StartsWith("Has"))
             {
-                predicateResult = GetPredicateResultFromSubstitutionObject(substitutionObject);
-            }
-            else if (parameterName.StartsWith("Has"))
-            {
-                substitutionObject = propertyExtractor(model, parameterName.Substring(3));
-                predicateResult = GetHasPredicateResultFromSubstitutionObject(substitutionObject);
+                var newProperties =
+                    properties.Take(properties.Count() - 1).Concat(new[] { properties.Last().Substring(3) });
+
+                substitutionObject = GetPropertyValueFromParameterCollection(item, newProperties);
+
+                return GetHasPredicateResultFromSubstitutionObject(substitutionObject.Item2);
             }
 
-            return predicateResult;
+            if (substitutionObject.Item2 == null)
+            {
+                return false;
+            }
+
+            return GetPredicateResultFromSubstitutionObject(substitutionObject.Item2);
         }
 
         /// <summary>
@@ -277,6 +238,133 @@ namespace Nancy.ViewEngines
             }
 
             return predicateResult;
+        }
+
+        /// <summary>
+        /// Performs single @Model.PropertyName substitutions.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with @Model.PropertyName blocks expanded.</returns>
+        private string PerformSingleSubstitutions(string template, object model)
+        {
+            return this.singleSubstitutionsRegEx.Replace(
+                template,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var substitution = GetPropertyValueFromParameterCollection(model, properties);
+
+                    if (!substitution.Item1)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    return substitution.Item2 == null ? String.Empty : substitution.Item2.ToString();
+                });
+        }
+
+        /// <summary>
+        /// Performs @Each.PropertyName substitutions
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with @Each.PropertyName blocks expanded.</returns>
+        private string PerformEachSubstitutions(string template, object model)
+        {
+            return this.eachSubstitutionRegEx.Replace(
+                template,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var substitutionObject = GetPropertyValueFromParameterCollection(model, properties);
+
+                    if (substitutionObject.Item1 == false)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    if (substitutionObject.Item2 == null)
+                    {
+                        return String.Empty;
+                    }
+
+                    var substitutionEnumerable = substitutionObject.Item2 as IEnumerable;
+                    if (substitutionEnumerable == null)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    var contents = m.Groups["Contents"].Value;
+                    var result = string.Empty;
+                    foreach (var item in substitutionEnumerable)
+                    {
+                        result += ReplaceCurrentMatch(contents, item);
+                    }
+
+                    return result;
+                });
+        }
+
+        /// <summary>
+        /// Expand a @Current match inside an @Each iterator
+        /// </summary>
+        /// <param name="contents">Contents of the @Each block</param>
+        /// <param name="item">Current item from the @Each enumerable</param>
+        /// <returns>String result of the expansion of the @Each.</returns>
+        private string ReplaceCurrentMatch(string contents, object item)
+        {
+            return this.eachItemSubstitutionRegEx.Replace(
+                contents,
+                eachMatch =>
+                {
+                    if (String.IsNullOrEmpty(eachMatch.Groups["ParameterName"].Value))
+                    {
+                        return item.ToString();
+                    }
+
+                    var properties = GetCaptureGroupValues(eachMatch, "ParameterName");
+
+                    var substitution = GetPropertyValueFromParameterCollection(item, properties);
+
+                    if (!substitution.Item1)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    return substitution.Item2 == null ? String.Empty : substitution.Item2.ToString();
+                });
+        }
+
+        /// <summary>
+        /// Performs @If.PropertyName and @IfNot.PropertyName substitutions
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with @If.PropertyName @IfNot.PropertyName blocks removed/expanded.</returns>
+        private string PerformConditionalSubstitutions(string template, object model)
+        {
+            var result = template;
+
+            result = this.conditionalSubstitutionRegEx.Replace(
+                result,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var predicateResult = GetPredicateResult(model, properties);
+
+                    if (m.Groups["Not"].Value == "Not")
+                    {
+                        predicateResult = !predicateResult;
+                    }
+
+                    return predicateResult ? m.Groups["Contents"].Value : String.Empty;
+                });
+
+            return result;
         }
     }
 }

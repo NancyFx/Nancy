@@ -8,6 +8,8 @@
 
 	<p>Hello there @Model.Name!</p>
 
+	<p>@Model.Complex.Item1;. @Model.Complex.Item2;.</p>
+
 	<h2>Users:</h2>
 	@IfNot.HasUsers
 	<p>No users found</p>
@@ -16,7 +18,7 @@
 	@If.HasUsers
 	<ul id="users">
 		@Each.Users
-		<li>@Current</li>
+		<li>@Current.Name - @Current.Age</li>
 		@EndEach
 	</ul>
 	@EndIf

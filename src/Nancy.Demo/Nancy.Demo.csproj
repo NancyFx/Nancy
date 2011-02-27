@@ -81,6 +81,7 @@
     <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="RequestDependencyClass.cs" />
+    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />
