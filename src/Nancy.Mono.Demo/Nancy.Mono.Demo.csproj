@@ -57,12 +57,19 @@
     <Compile Include="RequestDependencyClass.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="Models\SomeViewModel.cs" />
+    <Compile Include="Piratizer4000.cs" />
+    <Compile Include="HereBeAResponseYouScurvyDog.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config" />
     <Content Include="Web.Release.config" />
     <Content Include="Views\static.htm" />
+    <Content Include="Content\main.css" />
+    <Content Include="Content\script.js" />
+    <Content Include="Views\javascript.html" />
+    <Content Include="Views\static-embedded.html" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\ndjango.django" />
@@ -73,6 +80,7 @@
     <None Include="Views\spark.spark" />
     <None Include="Views\routes.spark" />
     <None Include="Views\spark-dependency.spark" />
+    <None Include="Views\embedded.django" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Formatters\Nancy.Formatters.csproj">
@@ -99,5 +107,8 @@
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Content\" />
   </ItemGroup>
 </Project>

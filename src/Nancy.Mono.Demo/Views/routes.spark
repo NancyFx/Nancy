@@ -1,6 +1,6 @@
 <use namespace="Nancy.Routing" />
 <use namespace="System.Collections.Generic" />
-<viewdata model="List[[RouteCacheEntry]]" />
+<viewdata model="List[[IRouteCache]]" />
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -14,7 +14,7 @@
 	<ul>
 		${Model.Count}
 		<for each="var item in Model" >
-			<li><a href="${item.Path}">${item.Path}</a></li>
+			<li><a href="${item.Item2.Path}">${item.Item2.Path}</a></li>
 		</for>
 	</ul>
 

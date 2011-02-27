@@ -1,13 +1,6 @@
 namespace Nancy.Demo
 {
-	using System.Linq;
     using Nancy.Demo.Models;
-    using Nancy.Formatters;
-	using Nancy.Extensions;
-    using Nancy.ViewEngines;
-    using Nancy.ViewEngines.NDjango;
-    using Nancy.ViewEngines.Razor;
-    using Nancy.ViewEngines.Spark;
     using Nancy.Routing;
 
     public class MainModule : NancyModule
@@ -16,16 +9,27 @@ namespace Nancy.Demo
         {
 			
 			Get["/"] = x => {
-                return View.Spark("~/views/routes.spark", routeCacheProvider.GetCache().ToList());
+                return View["routes.cshtml", routeCacheProvider.GetCache()];
             };
 
-            // TODO - implement filtering at the RouteDictionary GetRoute level
+            Get["/style/{file}"] = x => {
+                return Response.AsCss("Content/" + (string)x.file);
+            };
+
+            Get["/scripts/{file}"] = x => {
+                return Response.AsJs("Content/" + (string)x.file);
+            };
+
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };
 
             Get["/filtered", r => false] = x => {
                 return "This is also a route, but filtered out so should never be hit.";
+            };
+
+            Get[@"/(?<foo>\d{2,4})/{bar}"] = x => {
+                return string.Format("foo: {0}<br/>bar: {1}", x.foo, x.bar);
             };
 			
 			Get["/redirect"] = x => {
@@ -35,24 +39,42 @@ namespace Nancy.Demo
             Get["/test"] = x => {
                 return "Test";
             };
+			
+			Get["/javascript"] = x => {
+                return View["~/views/javascript.html"];
+            };
 
             Get["/static"] = x => {
-                return View.Static("~/views/static.htm");
+                return View["~/views/static.htm"];
             };
-			
+
             Get["/razor"] = x => {
                 var model = new RatPack { FirstName = "Frank" };
-                return View.Razor("~/views/razor.cshtml", model);
+                return View["~/views/razor.cshtml", model];
+            };
+
+            Get["/embedded"] = x => {
+                var model = new RatPack { FirstName = "Embedded" };
+                return View["embedded", model];
+            };
+
+            Get["/embedded2"] = x => {
+                var model = new RatPack { FirstName = "Embedded2" };
+                return View["embedded.django", model];
+            };
+
+            Get["/viewmodelconvention"] = x => {
+                return View[new SomeViewModel()];
             };
 
             Get["/ndjango"] = x => {
                 var model = new RatPack { FirstName = "Michael" };
-                return View.Django("~/views/ndjango.django", model);
+                return View["~/views/ndjango.django", model];
             };
 
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
-                return View.Spark("~/views/spark.spark", model);
+                return View["~/views/spark.spark", model];
             };
 
             Get["/json"] = x => {
@@ -65,13 +87,11 @@ namespace Nancy.Demo
                 return Response.AsXml(model);
             };
 			
-			//Call the following url to test
-			//http://127.0.0.1:8080/access?oauth_token=11111111111111&oauth_verifier=2222222222222222
 			Get["/access"] = x => {
-				try{
+				if (Request.Query.oauth_token.HasValue && Request.Query.oauth_verifier.HasValue){
 					return "Success: " + Request.Query.oauth_token + "; " + Request.Query.oauth_verifier;
 				}
-				catch {
+				else {
 					return "Call as: /access?oauth_token=11111111111111&oauth_verifier=2222222222222222";
 				}
 			};

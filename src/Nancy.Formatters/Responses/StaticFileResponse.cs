@@ -2,8 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Net;
-    using System.Web.Hosting;
 
     public class StaticFileResponse : Response
     {
@@ -11,23 +9,12 @@
         {
             this.StatusCode = HttpStatusCode.NotFound;
 
-            var expandedFilePath = GetExpandedFilePath(filePath);
-            if (IsValidFilePath(expandedFilePath))
+            if (IsValidFilePath(filePath))
             {
-                this.Contents = GetFileContent(expandedFilePath);
+                this.Contents = GetFileContent(filePath);
                 this.ContentType = contentType;
                 this.StatusCode = HttpStatusCode.OK;
             }
-        }
-
-        private static bool IsValidFilePath(string filePath)
-        {
-            return !(string.IsNullOrEmpty(filePath) || !File.Exists(filePath) || !Path.HasExtension(filePath));
-        }
-
-        private static string GetExpandedFilePath(string filePath)
-        {
-            return HostingEnvironment.MapPath(filePath);
         }
 
         private static Action<Stream> GetFileContent(string filePath)
@@ -41,6 +28,11 @@
                     writer.Flush();
                 }
             };
+        }
+		
+		private static bool IsValidFilePath(string filePath)
+        {
+            return !(string.IsNullOrEmpty(filePath) || !File.Exists(filePath) || !Path.HasExtension(filePath));
         }
     }
 }

@@ -2,8 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.ViewEngines;
-    using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
 
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
@@ -15,29 +13,6 @@
     {
         private readonly INancyModuleCatalog nancyModuleCatalog;
         private readonly IRoutePatternMatcher routePatternMatcher;
-<<<<<<< HEAD
-        private readonly IViewFactory viewFactory;
-
-        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, IViewFactory viewFactory)
-        {
-            this.nancyModuleCatalog = nancyModuleCatalog;
-            this.routePatternMatcher = routePatternMatcher;
-            this.viewFactory = viewFactory;
-        }
-
-        public Tuple<Route, DynamicDictionary> Resolve(Request request, IRouteCache routeCache)
-        {
-            if (routeCache.IsEmpty())
-            {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
-            }
-
-            var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, request);
-
-            if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
-            {
-                return new Tuple<Route, DynamicDictionary>(new NotFoundRoute(request.Method, request.Uri), DynamicDictionary.Empty);
-=======
         private readonly INancyModuleBuilder moduleBuilder;
 
         /// <summary>
@@ -71,7 +46,6 @@
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
                 return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty, null, null);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             }
 
             var routesWithCorrectRequestMethod =
@@ -79,11 +53,7 @@
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-<<<<<<< HEAD
-                return new Tuple<Route, DynamicDictionary>(new MethodNotAllowedRoute(request.Uri, request.Method), DynamicDictionary.Empty);
-=======
                 return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty, null, null);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             }
 
             var routeMatchesWithMostParameterCaptures = 
@@ -92,28 +62,6 @@
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
 
-<<<<<<< HEAD
-            return this.CreateRouteAndParametersFromMatch(request, routeMatchToReturn);
-        }
-
-        private Tuple<Route, DynamicDictionary> CreateRouteAndParametersFromMatch(Request request, RouteCandidate routeMatchToReturn)
-        {
-            var associatedModule =
-                this.GetInitializedModuleForMatch(request, routeMatchToReturn);
-
-            var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
-
-            return new Tuple<Route, DynamicDictionary>(route, routeMatchToReturn.Item4.Parameters);
-        }
-
-        private NancyModule GetInitializedModuleForMatch(Request request, RouteCandidate routeMatchToReturn)
-        {
-            var module =
-                this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1);
-
-            module.Request = request;
-            module.View = viewFactory;
-=======
             return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
         }
 
@@ -131,7 +79,6 @@
         {
             var module =
                 this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1, context);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             return this.moduleBuilder.BuildModule(module, context);
         }
@@ -169,23 +116,14 @@
             return !routesThatMatchRequestedPath.Any();
         }
 
-<<<<<<< HEAD
-        private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(IRouteCache routeCache, Request request)
-=======
         private IEnumerable<RouteCandidate> GetRoutesThatMatchRequestedPath(IRouteCache routeCache, NancyContext context)
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         {
             return from cacheEntry in routeCache
                    from cacheEntryRoutes in cacheEntry.Value
                    let routeIndex = cacheEntryRoutes.Item1
                    let routeDescription = cacheEntryRoutes.Item2
-<<<<<<< HEAD
-                   where ((routeDescription.Condition == null) || (routeDescription.Condition(request)))
-                   let result = this.routePatternMatcher.Match(request.Uri, routeDescription.Path)
-=======
                    where ((routeDescription.Condition == null) || (routeDescription.Condition(context)))
                    let result = this.routePatternMatcher.Match(context.Request.Uri, routeDescription.Path)
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
                    where result.IsMatch
                    select new RouteCandidate(cacheEntry.Key, routeIndex, routeDescription, result);
         }

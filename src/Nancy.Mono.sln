@@ -84,6 +84,6 @@ Global
 		{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1} = {59DB00BB-FC00-4C2E-9D8D-DD02A03000F0}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Nancy.SelfHosting.Demo\Nancy.SelfHosting.Demo.csproj
+		StartupItem = Nancy.Mono.Demo\Nancy.Mono.Demo.csproj
 	EndGlobalSection
 EndGlobal

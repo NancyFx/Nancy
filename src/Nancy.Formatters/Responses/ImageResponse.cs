@@ -2,16 +2,12 @@
 {
     using System;
     using System.IO;
-    using System.Net;
-    using System.Web.Hosting;
 
     public class ImageResponse : Response
     {
         public ImageResponse(string imagePath)
         {
-            if (string.IsNullOrEmpty(imagePath) ||
-                !File.Exists(GenericFileResponse.GetFilePath(imagePath)) ||
-                !Path.HasExtension(imagePath))
+            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath) || !Path.HasExtension(imagePath))
             {
                 this.StatusCode = HttpStatusCode.NotFound;
             }
@@ -27,7 +23,7 @@
         {
             return stream =>
             {
-                var image = System.Drawing.Image.FromFile(GenericFileResponse.GetFilePath(imagePath));
+                var image = System.Drawing.Image.FromFile(imagePath);
                 image.Save(stream, image.RawFormat);
             };
         }

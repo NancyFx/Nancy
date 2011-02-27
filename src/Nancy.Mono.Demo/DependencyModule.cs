@@ -23,10 +23,8 @@
                         ApplicationDependencyText = _ApplicationDependency.GetContent(),
                         RequestDependencyText = _RequestDependency.GetContent()
                     };
-				//Compiles but does not execute as expected under Mono 2.8
-                return View.Razor("~/views/razor-dependency.cshtml", model);
-				//Switching to Spark for demo
-				//return View.Spark("~/views/spark-dependency.spark", model);
+				
+				return View["~/views/razor-dependency.cshtml", model];
             };
         }
     }

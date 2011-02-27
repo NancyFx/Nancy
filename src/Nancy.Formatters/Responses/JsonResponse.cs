@@ -2,8 +2,7 @@
 {
     using System;
     using System.IO;
-    using System.Net;
-    using Newtonsoft.Json;
+    using System.Web.Script.Serialization;
 
     public class JsonResponse<TModel> : Response
     {
@@ -18,16 +17,13 @@
         {
             return stream =>
             {
-                var serializer = new JsonSerializer();
+                var serializer = new JavaScriptSerializer();
+                var json = serializer.Serialize(model);
 
-                //The caller will close the stream (needed for tests), do not dispose these writers here as this will close the stream 
-                var sw = new StreamWriter(stream);
-                var writer = new JsonTextWriter(sw);
-                           
-                serializer.Serialize(writer, model);
-                           
+                var writer = new StreamWriter(stream);
+
+                writer.Write(json);
                 writer.Flush();
-                sw.Flush();
             };
         }
     }

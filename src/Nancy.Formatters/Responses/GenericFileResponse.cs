@@ -2,17 +2,9 @@
 {
     using System;
     using System.IO;
-    using System.Net;
-    using System.Web.Hosting;
 
     public class GenericFileResponse : Response
     {
-        public static string GetFilePath(string filePath)
-        {
-            return HostingEnvironment.IsHosted ?
-                HostingEnvironment.MapPath(filePath) : filePath;
-        }
-
         public GenericFileResponse(string filePath)
         {
             InitializeGenericFileResonse(filePath, "application/octet-stream");
@@ -22,28 +14,12 @@
         {
             InitializeGenericFileResonse(filePath, contentType);
         }
-
-        private void InitializeGenericFileResonse(string filePath, string contentType)
-        {
-            if (string.IsNullOrEmpty(filePath) ||
-                !File.Exists(GetFilePath(filePath)) ||
-                !Path.HasExtension(filePath))
-            {
-                this.StatusCode = HttpStatusCode.NotFound;
-            }
-            else
-            {
-                this.Contents = GetFileContent(filePath);
-                this.ContentType = contentType;
-                this.StatusCode = HttpStatusCode.OK;
-            }
-        }
-
-        private static Action<Stream> GetFileContent(string filePath)
+		
+		private static Action<Stream> GetFileContent(string filePath)
         {
             return stream =>
                        {
-                           using (var file = File.OpenRead(GetFilePath(filePath)))
+                           using (var file = File.OpenRead(filePath))
                            {
                                var buffer = new byte[4096];
                                var read = 0;
@@ -55,6 +31,22 @@
                                }
                            }
                        };
+        }
+
+        private void InitializeGenericFileResonse(string filePath, string contentType)
+        {
+            if (string.IsNullOrEmpty(filePath) ||
+                !File.Exists(filePath) ||
+                !Path.HasExtension(filePath))
+            {
+                this.StatusCode = HttpStatusCode.NotFound;
+            }
+            else
+            {
+                this.Contents = GetFileContent(filePath);
+                this.ContentType = contentType;
+                this.StatusCode = HttpStatusCode.OK;
+            }
         }
     }
 }

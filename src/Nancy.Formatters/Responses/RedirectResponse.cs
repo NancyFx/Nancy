@@ -1,6 +1,5 @@
 namespace Nancy.Formatters.Responses
 {
-    using System.Net;
 
     public class RedirectResponse : Response
 	{

@@ -30,14 +30,11 @@
                 throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
             }
 
-<<<<<<< HEAD
-=======
             if (contextFactory == null)
             {
                 throw new ArgumentNullException("contextFactory");
             }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             this.resolver = resolver;
             this.routeCache = routeCache;
             this.contextFactory = contextFactory;
@@ -78,12 +75,6 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-<<<<<<< HEAD
-            var resolvedRouteAndParameters = this.resolver.Resolve(request, this.routeCache);
-            var response = resolvedRouteAndParameters.Item1.Invoke(resolvedRouteAndParameters.Item2);
-            
-            if (request.Method.ToUpperInvariant() == "HEAD")
-=======
             var context = this.contextFactory.Create();
             context.Request = request;
 
@@ -142,7 +133,6 @@
         private void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
         {
             if (resolveResultPreReq == null)
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             {
                 return;
             }

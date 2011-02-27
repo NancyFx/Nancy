@@ -61,14 +61,11 @@
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultRoutePatternMatcher { get { return typeof (DefaultRoutePatternMatcher); } }
-<<<<<<< HEAD
-=======
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultContextFactory { get { return typeof(DefaultNancyContextFactory); } }
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
@@ -101,8 +98,6 @@
         protected virtual Type DefaultViewFactory { get { return typeof(DefaultViewFactory); } }
 
         /// <summary>
-<<<<<<< HEAD
-=======
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
         protected virtual Type DefaultNancyModuleBuilder { get { return typeof(DefaultNancyModuleBuilder); } }
@@ -148,23 +143,11 @@
         }
 
         /// <summary>
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         /// Gets the configured INancyEngine
         /// </summary>
         /// <returns>Configured INancyEngine</returns>
         public INancyEngine GetEngine()
         {
-<<<<<<< HEAD
-            var container = CreateContainer();
-            ConfigureApplicationContainer(container);
-            
-            RegisterDefaults(container, BuildDefaults());
-            RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
-            RegisterViewEngines(container, GetViewEngineTypes());
-            RegisterViewSourceProviders(container, GetViewSourceProviders());
-
-            return GetEngineInternal();
-=======
             if (!this.initialised)
             {
                 throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
@@ -183,7 +166,6 @@
             engine.PostRequestHook = this.AfterRequest;
 
             return engine;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         private IEnumerable<TypeRegistration> BuildDefaults()
@@ -198,12 +180,9 @@
                 new TypeRegistration(typeof(IRoutePatternMatcher), DefaultRoutePatternMatcher),
                 new TypeRegistration(typeof(IViewLocator), DefaultViewLocator),
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
-<<<<<<< HEAD
-=======
                 new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory),
                 new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
                 new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter)
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             };
         }
 
@@ -228,22 +207,6 @@
         /// </summary>
         /// <returns>IModuleKeyGenerator instance</returns>
         protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
-
-        protected virtual IEnumerable<Type> GetViewSourceProviders()
-        {
-            var viewSourceProviders =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
-                where typeof(IViewSourceProvider).IsAssignableFrom(type)
-                select type;
-
-            return viewSourceProviders;
-        }
-
-        protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
 
         /// <summary>
         /// Get root path provider type.
@@ -310,22 +273,6 @@
 
             return locatedModuleTypes;
         }
-
-        protected virtual IEnumerable<Type> GetViewEngineTypes()
-        {
-            var viewEngineTypes =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
-                where typeof(IViewEngine).IsAssignableFrom(type)
-                select type;
-
-            return viewEngineTypes;
-        }
-
-        protected abstract void RegisterViewEngines(TContainer container, IEnumerable<Type> viewEngineTypes);
 
         /// <summary>
         /// Get all view engine types
