@@ -5,6 +5,7 @@
     using System.Dynamic;
     using System.Linq;
     using Nancy.ViewEngines;
+    using Resources.Views;
     using Xunit;
 
     public class SuperSimpleViewEngineTests
@@ -569,6 +570,23 @@
             // Then
             Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
         }
+
+        [Fact]
+        public void Should_correctly_expand_sample_file()
+        {
+            var input = SuperSimpleViewEngineSampleContent.testFileInput;
+            dynamic model = new ExpandoObject();
+            model.Title = "Demonstration of Nancy's SuperSimple ViewEngine";
+            model.Complex = new Tuple<string, string>("This is a nested property", "Oh yes it is");
+            model.Name = "Frankie";
+            model.Users = new List<DemoFileUser>() { new DemoFileUser("Bob Smith", 27), new DemoFileUser("Jim Jones", 42), new DemoFileUser("Bill Bobson", 78) };
+            model.Admins = new List<string>();
+
+            var result = viewEngine.Render(input, model);
+
+            Assert.Equal(SuperSimpleViewEngineSampleContent.ExpectedOutput, result);
+        }
+
     }
 
     public class User
@@ -608,4 +626,18 @@
             }
         }
     }
+
+    public class DemoFileUser
+    {
+        public string Name { get; private set; }
+
+        public int Age { get; private set; }
+
+        public DemoFileUser(string name, int age)
+        {
+            this.Name = name;
+            this.Age = age;
+        }
+    }
+
 }

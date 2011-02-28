@@ -81,7 +81,6 @@
     <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="RequestDependencyClass.cs" />
-    <Compile Include="User.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />
@@ -115,7 +114,6 @@
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
-    <None Include="Views\SuperSimple.sshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

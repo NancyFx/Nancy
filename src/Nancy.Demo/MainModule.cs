@@ -84,17 +84,6 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
             };
-
-            Get["superSimple"] = x => {
-                dynamic model = new ExpandoObject();
-                model.Title = "Demonstration of Nancy's SuperSimple ViewEngine";
-                model.Complex = new Tuple<string, string>("This is a nested property", "Oh yes it is");
-                model.Name = "Frankie";
-                model.Users = new List<User>() { new User("Bob Smith", 27), new User("Jim Jones", 42), new User("Bill Bobson", 78) };
-                model.Admins = new List<string>();
-
-                return View["SuperSimple.sshtml", model];
-            };
         }
     }
 }
