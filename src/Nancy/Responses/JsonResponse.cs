@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using System.Web.Script.Serialization;
+    using Nancy.Json;
 
     public class JsonResponse<TModel> : Response
     {

@@ -7,7 +7,9 @@
     {
         public ImageResponse(string imagePath)
         {
-            if (string.IsNullOrEmpty(imagePath) || !File.Exists(imagePath) || !Path.HasExtension(imagePath))
+            if (string.IsNullOrEmpty(imagePath) ||
+                !File.Exists(imagePath) ||
+                !Path.HasExtension(imagePath))
             {
                 this.StatusCode = HttpStatusCode.NotFound;
             }

@@ -13,28 +13,17 @@
         private readonly IRoutePatternMatcher matcher;
         private readonly INancyModuleCatalog catalog;
         private readonly Func<dynamic, Response> expectedAction;
-<<<<<<< HEAD
-        private readonly IViewFactory viewFactory;
-=======
         private readonly INancyModuleBuilder moduleBuilder;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         private FakeNancyModule expectedModule;
 
         public DefaultRouteResolverFixture()
         {
-<<<<<<< HEAD
-            this.viewFactory = A.Fake<IViewFactory>();
-
-            this.catalog = A.Fake<INancyModuleCatalog>();
-            A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored)).Returns(expectedModule);
-=======
             this.moduleBuilder = A.Fake<INancyModuleBuilder>();
             A.CallTo(() => this.moduleBuilder.BuildModule(A<NancyModule>.Ignored, A<NancyContext>.Ignored)).
                 ReturnsLazily(r => r.Arguments[0] as NancyModule);
 
             this.catalog = A.Fake<INancyModuleCatalog>();
             A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(expectedModule);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             this.expectedAction = x => HttpStatusCode.OK;
             this.expectedModule = new FakeNancyModule(x =>
@@ -52,11 +41,7 @@
                     c.AddParameter("foo", "bar");
                 }));
 
-<<<<<<< HEAD
-            this.resolver = new DefaultRouteResolver(this.catalog, this.matcher, this.viewFactory);
-=======
             this.resolver = new DefaultRouteResolver(this.catalog, this.matcher, this.moduleBuilder);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         [Fact]
@@ -93,11 +78,7 @@
             });
 
             // When
-<<<<<<< HEAD
-            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
-=======
             var resolvedRoute = this.resolver.Resolve(context, routeCache).Item1;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
@@ -239,11 +220,7 @@
             });
 
             // When
-<<<<<<< HEAD
-            var route = this.resolver.Resolve(request, routeCache).Item1;
-=======
             var route = this.resolver.Resolve(context, routeCache).Item1;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             route.ShouldNotBeNull();
@@ -252,31 +229,17 @@
         }
 
         [Fact]
-<<<<<<< HEAD
-        public void Should_set_request_on_module_associated_with_resolved_route()
-        {
-            // Given
-            var request = new FakeRequest("GET", "/foo/bar");
-            var routeCache = new FakeRouteCache(x =>
-            {
-                x.AddGetRoute("/foo/bar", "module-key");
-            });
-=======
         public void Should_invoke_module_builder_with_context_and_resolved_module()
         {
             // Given
             var request = new FakeRequest("GET", "/foo/bar");
             var context = new NancyContext { Request = request };
             var routeCache = new FakeRouteCache(x => x.AddGetRoute("/foo/bar"));
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // When
             this.resolver.Resolve(context, routeCache);
 
             // Then
-<<<<<<< HEAD
-            expectedModule.Request.ShouldBeSameAs(request);
-=======
             A.CallTo(() => this.moduleBuilder.BuildModule(this.expectedModule, context)).MustHaveHappened();
         }
 
@@ -297,7 +260,6 @@
 
             // Then
             route.Item1.Description.Path.ShouldEqual("/bar/foo");
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         [Fact]
@@ -330,11 +292,7 @@
             var routeCache = FakeRouteCache.Empty;
 
             // When
-<<<<<<< HEAD
-            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
-=======
             var resolvedRoute = this.resolver.Resolve(context, routeCache).Item1;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
@@ -357,11 +315,7 @@
                 new FakeRoutePatternMatchResult(x => x.IsMatch(false)));
 
             // When
-<<<<<<< HEAD
-            var resolvedRoute = this.resolver.Resolve(request, routeCache).Item1;
-=======
             var resolvedRoute = this.resolver.Resolve(context, routeCache).Item1;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
@@ -392,15 +346,6 @@
         [Fact]
         public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
         {
-<<<<<<< HEAD
-            var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
-            var request = new FakeRequest("GET", "/filtered");
-
-            var route = specificResolver.Resolve(request, routeCache).Item1;
-
-=======
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
@@ -412,22 +357,12 @@
             var route = specificResolver.Resolve(context, routeCache).Item1;
 
             // Then
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             route.ShouldBeOfType(typeof(NotFoundRoute));
         }
 
         [Fact]
         public void Should_return_a_route_if_matching_and_the_filter_returns_true()
         {
-<<<<<<< HEAD
-            var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
-            var request = new FakeRequest("GET", "/notfiltered");
-
-            var route = specificResolver.Resolve(request, routeCache).Item1;
-
-=======
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
@@ -439,23 +374,12 @@
             var route = specificResolver.Resolve(context, routeCache).Item1;
 
             // Then
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             route.ShouldBeOfType(typeof (Route));
         }
 
         [Fact]
         public void Should_return_route_whos_filter_returns_true_when_there_is_also_a_matching_route_with_a_failing_filter()
         {
-<<<<<<< HEAD
-            var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, A.Fake<IViewFactory>());
-            var request = new FakeRequest("GET", "/filt");
-
-            var route = specificResolver.Resolve(request, routeCache).Item1;
-
-            route.Description.Condition(request).ShouldBeTrue();
-=======
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
@@ -490,7 +414,6 @@
             // Then
             result.Item3.ShouldNotBeNull();
             result.Item4.ShouldNotBeNull();
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
     }
 }

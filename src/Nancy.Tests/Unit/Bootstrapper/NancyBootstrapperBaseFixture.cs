@@ -39,13 +39,10 @@
             return Generator;
         }
 
-<<<<<<< HEAD:src/Nancy.Tests/Unit/Bootstrapper/FakeBootstrapperBaseGetModulesOverride.cs
-=======
         protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
         {
         }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147:src/Nancy.Tests/Unit/Bootstrapper/NancyBootstrapperBaseFixture.cs
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
         }
@@ -73,8 +70,6 @@
         {
             base.ConfigureApplicationContainer(existingContainer);
             AppContainer = existingContainer;
-<<<<<<< HEAD:src/Nancy.Tests/Unit/Bootstrapper/FakeBootstrapperBaseGetModulesOverride.cs
-=======
         }
 
         public BeforePipeline PreRequest
@@ -87,7 +82,6 @@
         {
             get { return this.AfterRequest; }
             set { this.AfterRequest = value; }
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147:src/Nancy.Tests/Unit/Bootstrapper/NancyBootstrapperBaseFixture.cs
         }
     }
 
@@ -105,13 +99,10 @@
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
         }
 
-<<<<<<< HEAD:src/Nancy.Tests/Unit/Bootstrapper/FakeBootstrapperBaseGetModulesOverride.cs
-=======
         protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
         {
         }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147:src/Nancy.Tests/Unit/Bootstrapper/NancyBootstrapperBaseFixture.cs
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
         }

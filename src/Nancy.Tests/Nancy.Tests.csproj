@@ -64,10 +64,7 @@
     <Compile Include="Fakes\FakeRouteResolver.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
-<<<<<<< HEAD
-=======
     <Compile Include="NancyContextFixture.cs" />
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
@@ -107,6 +104,7 @@
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
+    <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
     <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />

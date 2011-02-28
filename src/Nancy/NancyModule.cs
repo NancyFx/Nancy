@@ -6,7 +6,7 @@ namespace Nancy
     using ViewEngines;
 
     /// <summary>
-    /// Contains the functionality for defining routes and actions in Nancy.
+    /// Contains the functionality for defining routes and actions in Nancy. 
     /// </summary>
     /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
     public abstract class NancyModule : IHideObjectMembers

@@ -57,11 +57,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_store_route_with_specified_path_when_route_indexer_is_invoked_with_a_path_and_condition()
         {
-<<<<<<< HEAD
-            Func<Request, bool> condition = r => true;
-=======
             Func<NancyContext, bool> condition = r => true;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             this.module.Get["/test", condition] = d => null;
 
@@ -79,11 +75,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_store_route_with_condition_when_route_indexer_is_invoked_with_a_condition()
         {
-<<<<<<< HEAD
-            Func<Request, bool> condition = r => true;
-=======
             Func<NancyContext, bool> condition = r => true;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             
             this.module.Get["/test", condition] = d => null;
 

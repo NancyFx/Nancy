@@ -1,4 +1,6 @@
-﻿namespace Nancy.Hosting.Wcf
+﻿using System;
+
+namespace Nancy.Hosting.Wcf
 {
     using System.IO;
     using System.ServiceModel;
@@ -40,17 +42,24 @@
             return webContext.CreateStreamResponse(nancyContext.Response.Contents, nancyContext.Response.ContentType);
         }
 
+        private static Uri GetUrlAndPathComponents(Uri uri) 
+        {
+            // ensures that for a given url only the
+            //  scheme://host:port/paths/somepath
+            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
+        }
+
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
         {
-            var relativeUri =
-                webRequest.UriTemplateMatch.BaseUri.MakeRelativeUri(webRequest.UriTemplateMatch.RequestUri);
+            var relativeUri = GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri).MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
 
             return new Request(
                 webRequest.Method,
                 string.Concat("/", relativeUri),
                 webRequest.Headers.ToDictionary(),
                 requestBody,
-                webRequest.UriTemplateMatch.BaseUri.Scheme);
+                webRequest.UriTemplateMatch.RequestUri.Scheme,
+                webRequest.UriTemplateMatch.RequestUri.Query);
         }
 
         private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)

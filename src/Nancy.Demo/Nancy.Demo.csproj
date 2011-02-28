@@ -79,10 +79,7 @@
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
-<<<<<<< HEAD
-=======
     <Compile Include="Piratizer4000.cs" />
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +114,7 @@
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
+    <None Include="Views\SuperSimple.sshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

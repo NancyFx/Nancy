@@ -59,8 +59,6 @@ namespace Nancy.Bootstrappers.Windsor
             }));
         }
 
-<<<<<<< HEAD
-=======
         protected override void RegisterRootPathProvider(IWindsorContainer existingContainer, Type rootPathProviderType)
         {
             var component = Component.For(typeof(IRootPathProvider))
@@ -70,7 +68,6 @@ namespace Nancy.Bootstrappers.Windsor
             existingContainer.Register(component);
         }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.viewSourceProviders = viewSourceProviderTypes;
@@ -112,17 +109,6 @@ namespace Nancy.Bootstrappers.Windsor
             return child.Kernel.Resolve<NancyModule>(moduleKey);
         }
 
-<<<<<<< HEAD
-        private IWindsorContainer GetChild()
-        {
-            var child = new WindsorContainer();
-            this.container.AddChildContainer(child);
-            ConfigureRequestContainer(child);
-            RegisterModulesInternal(child, this.modulesRegistrationTypes);
-            RegisterViewEnginesInternal(child, this.viewEngines);
-            RegisterViewSourceProvidersInternal(child, this.viewSourceProviders);
-            return child;
-=======
         IWindsorContainer GetChild(NancyContext context)
         {
             object contextObject;
@@ -141,25 +127,6 @@ namespace Nancy.Bootstrappers.Windsor
             }
 
             return childContainer;
-        }
-
-        private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
-        {
-            var components = viewSourceProviderTypes.Select(r => Component.For(typeof(IViewSourceProvider))
-                .ImplementedBy(r)
-                .LifeStyle.Singleton);
-
-            existingContainer.Register(components.ToArray());
-        }
-
-        private static void RegisterViewEnginesInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
-        {
-            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
-                .ImplementedBy(r)
-                .LifeStyle.Singleton);
-
-            existingContainer.Register(components.ToArray());
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)

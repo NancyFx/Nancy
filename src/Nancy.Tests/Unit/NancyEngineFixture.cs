@@ -1,21 +1,11 @@
 namespace Nancy.Tests.Unit
 {
     using System;
-<<<<<<< HEAD
-    using System.Linq;
-
-    using FakeItEasy;    
-    using Nancy.Routing;
-    using Nancy.Tests.Fakes;
-    using Nancy.ViewEngines;
-
-=======
     using System.Collections.Generic;
     using System.Linq;
     using FakeItEasy;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
     using Xunit;
     using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
@@ -38,14 +28,9 @@ namespace Nancy.Tests.Unit
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
 
-<<<<<<< HEAD
-            A.CallTo(() => resolver.Resolve(A<Request>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new Tuple<Route, DynamicDictionary>(route, new DynamicDictionary()));
-            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>());
-=======
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
 
             this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory);
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         }
 
         [Fact]
@@ -53,11 +38,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-<<<<<<< HEAD
-                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>()));
-=======
                 Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>()));
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -68,9 +49,6 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-<<<<<<< HEAD
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null));
-=======
                 Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>()));
 
             // Then
@@ -83,7 +61,6 @@ namespace Nancy.Tests.Unit
             // Given, When
             var exception =
                 Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null));
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -118,7 +95,7 @@ namespace Nancy.Tests.Unit
 
             this.engine.HandleRequest(request);
 
-            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Once);
+            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

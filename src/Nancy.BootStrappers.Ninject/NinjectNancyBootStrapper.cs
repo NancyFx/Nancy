@@ -51,8 +51,6 @@
             return _Kernel.Get<IModuleKeyGenerator>();
         }
 
-<<<<<<< HEAD
-=======
         protected override void RegisterRootPathProvider(IKernel container, Type rootPathProviderType)
         {
             container.Bind(typeof(IRootPathProvider))
@@ -60,7 +58,6 @@
                 .InSingletonScope();
         }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         protected override void RegisterViewSourceProviders(IKernel container, IEnumerable<Type> viewSourceProviderTypes)
         {
             foreach (var viewSourceProvider in viewSourceProviderTypes)

@@ -48,23 +48,16 @@
             return unityContainer.Resolve<IModuleKeyGenerator>();
         }
 
-<<<<<<< HEAD
-=======
         protected override void RegisterRootPathProvider(IUnityContainer container, Type rootPathProviderType)
         {
             unityContainer.RegisterType(typeof(IRootPathProvider), rootPathProviderType, new ContainerControlledLifetimeManager());
         }
 
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
         protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             foreach (var viewSourceProvider in viewSourceProviderTypes)
             {
-<<<<<<< HEAD
-                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager()) ;
-=======
                 unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager());
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             }
         }
 
@@ -128,10 +121,7 @@
         /// <returns>NancyModule instance</returns>
         public virtual NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-<<<<<<< HEAD
-=======
             // TODO - add child container to context so it's disposed?
->>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
             var child = unityContainer.CreateChildContainer();
             ConfigureRequestContainer(child);
             return child.Resolve<NancyModule>(moduleKey);

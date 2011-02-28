@@ -8,7 +8,6 @@
     {
         public MethodNotAllowedRoute(string path, string method)
             : base(method, path, null, x => HttpStatusCode.MethodNotAllowed)
-
         {
         }
     }

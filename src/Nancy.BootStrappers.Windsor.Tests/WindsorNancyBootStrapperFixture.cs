@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Bootstrappers.Windsor.Tests
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;

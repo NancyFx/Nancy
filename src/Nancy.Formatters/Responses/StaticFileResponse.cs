@@ -9,12 +9,18 @@
         {
             this.StatusCode = HttpStatusCode.NotFound;
 
-            if (IsValidFilePath(filePath))
+            var expandedFilePath = filePath;
+            if (IsValidFilePath(expandedFilePath))
             {
-                this.Contents = GetFileContent(filePath);
+                this.Contents = GetFileContent(expandedFilePath);
                 this.ContentType = contentType;
                 this.StatusCode = HttpStatusCode.OK;
             }
+        }
+
+        private static bool IsValidFilePath(string filePath)
+        {
+            return !(string.IsNullOrEmpty(filePath) || !File.Exists(filePath) || !Path.HasExtension(filePath));
         }
 
         private static Action<Stream> GetFileContent(string filePath)
@@ -28,11 +34,6 @@
                     writer.Flush();
                 }
             };
-        }
-		
-		private static bool IsValidFilePath(string filePath)
-        {
-            return !(string.IsNullOrEmpty(filePath) || !File.Exists(filePath) || !Path.HasExtension(filePath));
         }
     }
 }
