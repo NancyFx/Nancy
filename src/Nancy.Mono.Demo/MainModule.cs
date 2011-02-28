@@ -1,5 +1,6 @@
 namespace Nancy.Demo
 {
+	using System.Linq;
     using Nancy.Demo.Models;
     using Nancy.Routing;
 
@@ -18,6 +19,7 @@ namespace Nancy.Demo
 
             Get["/scripts/{file}"] = x => {
                 return Response.AsJs("Content/" + (string)x.file);
+
             };
 
             Get["/filtered", r => true] = x => {
@@ -86,7 +88,7 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
             };
-			
+
 			Get["/access"] = x => {
 				if (Request.Query.oauth_token.HasValue && Request.Query.oauth_verifier.HasValue){
 					return "Success: " + Request.Query.oauth_token + "; " + Request.Query.oauth_verifier;
