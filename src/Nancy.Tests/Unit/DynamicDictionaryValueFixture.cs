@@ -159,5 +159,17 @@
             // Then
             result.ShouldBeTrue();
         }
+
+        [Fact]
+        public void Should_be_able_to_implictly_cast_long_to_other_value_types()
+        {
+            // Given 
+            dynamic valueLong = new DynamicDictionaryValue((long)10);
+
+            // Then
+            Assert.Equal(10, valueLong);
+            Assert.Equal(10.0, valueLong);
+            Assert.Equal(10M, valueLong);
+        }
     }
 }
