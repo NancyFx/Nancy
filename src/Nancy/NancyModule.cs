@@ -6,10 +6,9 @@ namespace Nancy
     using ViewEngines;
 
     /// <summary>
-    /// Contains the functionality for defining routes and actions in Nancy. 
+    /// Contains the functionality for defining routes and actions in Nancy.
     /// </summary>
     /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
-
     public abstract class NancyModule : IHideObjectMembers
     {
         private readonly List<Route> routes;
@@ -56,6 +55,7 @@ namespace Nancy
         /// </para>
         /// </summary>
         public BeforePipeline Before { get; protected set; }
+
         /// <summary>
         /// Gets all declared routes by the module.
         /// </summary>
@@ -120,7 +120,6 @@ namespace Nancy
         /// Gets or sets an <see cref="Request"/> instance that represents the current request.
         /// </summary>
         /// <value>An <see cref="Request"/> instance.</value>
-
         public Request Request
         {
             get { return this.Context.Request; }

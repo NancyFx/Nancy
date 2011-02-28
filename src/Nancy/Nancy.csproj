@@ -104,7 +104,7 @@
     <Compile Include="Routing\IRouteResolver.cs" />
     <Compile Include="Routing\NotFoundRoute.cs" />
     <Compile Include="Routing\Route.cs" />
-    <Compile Include="DynamicDictionary.cs" />
+	<Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />

@@ -56,10 +56,10 @@
                 return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty, null, null);
             }
 
-            var routeMatchesWithMostParameterCaptures = 
+            var routeMatchesWithMostParameterCaptures =
                 GetRouteMatchesWithMostParameterCaptures(routesWithCorrectRequestMethod);
 
-            var routeMatchToReturn = 
+            var routeMatchToReturn =
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
 
             return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
@@ -107,7 +107,7 @@
             return from route in routesThatMatchRequestedPath
                    let routeMethod = route.Item3.Method.ToUpperInvariant()
                    let requestMethod = request.Method.ToUpperInvariant()
-                   where routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"))                    
+                   where routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"))
                    select route;
         }
 

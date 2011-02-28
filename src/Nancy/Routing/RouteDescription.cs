@@ -21,6 +21,7 @@ namespace Nancy.Routing
             this.Condition = condition;
         }
 
+
         public Func<NancyContext, bool> Condition { get; private set; }
 
         public string Method { get; private set; }

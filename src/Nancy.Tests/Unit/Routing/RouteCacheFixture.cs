@@ -22,10 +22,14 @@ namespace Nancy.Tests.Unit.Routing
             _FakeModuleCatalog = new FakeModuleCatalog();
 
 <<<<<<< HEAD
+<<<<<<< HEAD
             _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
 =======
             _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
 >>>>>>> 4db860ef0fe65aa3c4b5ed52625c5ec03e369147
+=======
+             _RouteCache = new Nancy.Routing.RouteCache(_FakeModuleCatalog, new FakeModuleKeyGenerator());
+>>>>>>> more route refactoring - broken
         }
 
         [Fact]

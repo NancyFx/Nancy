@@ -24,6 +24,10 @@ namespace Nancy.Demo
                 return Response.AsJs("Content/" + (string)x.file);
             };
 
+<<<<<<< HEAD
+=======
+            // TODO - implement filtering at the RouteCollection GetRoute level
+>>>>>>> more route refactoring - broken
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };

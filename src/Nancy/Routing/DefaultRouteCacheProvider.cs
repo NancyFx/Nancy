@@ -10,18 +10,18 @@
     /// </summary>
     public class DefaultRouteCacheProvider : IRouteCacheProvider
     {
-        protected readonly Func<IRouteCache> RouteCacheFactory;
+        protected readonly Func<RouteCache> RouteCacheFactory;
 
         /// <summary>
         /// Initializes a new instance of the DefaultRouteCacheProvider class.
         /// </summary>
         /// <param name="routeCacheFactory"></param>
-        public DefaultRouteCacheProvider(Func<IRouteCache> routeCacheFactory)
+        public DefaultRouteCacheProvider(Func<RouteCache> routeCacheFactory)
         {
             this.RouteCacheFactory = routeCacheFactory;
         }
 
-        public IRouteCache GetCache()
+        public RouteCache GetCache()
         {
             return this.RouteCacheFactory();
         }

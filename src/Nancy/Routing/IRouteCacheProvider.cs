@@ -9,6 +9,6 @@
     /// </summary>
     public interface IRouteCacheProvider
     {
-        IRouteCache GetCache();
+        RouteCache GetCache();
     }
 }
