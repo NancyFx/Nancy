@@ -7,7 +7,7 @@ namespace Nancy.Hosting.Aspnet
     {
         public static PostedFileCollection Convert(this HttpFileCollectionBase files)
         {
-            var convertedFiles = files.Cast<HttpPostedFileBase>().Select(file => file.Convert());
+            var convertedFiles = files.AllKeys.Select(fileName => files[fileName].Convert());
             return new PostedFileCollection(convertedFiles);
         }
 
