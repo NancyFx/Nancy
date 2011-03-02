@@ -93,6 +93,15 @@ namespace Nancy.Demo
 
                 return View["SuperSimple.sshtml", model];
             };
+
+            Get["session"] = x =>
+                { 
+                    var output = "Current session value is: " + Session["moo"];
+
+                    Session["moo"] = "I've created a session!";
+
+                    return output;
+                };
         }
     }
 }

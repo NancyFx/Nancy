@@ -1,7 +1,10 @@
 namespace Nancy.Cookies
 {
     using System;
+    using System.Globalization;
     using System.Text;
+
+    using Nancy.Helpers;
 
     public class NancyCookie : INancyCookie
     {
@@ -40,22 +43,17 @@ namespace Nancy.Cookies
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}", Name, Value);
+            sb.AppendFormat("{0}={1}; path={2}", HttpUtility.UrlEncode(Name), HttpUtility.UrlEncode(Value), Path ?? "/");
             if (Expires != null)
             {
                 sb.Append("; expires=");
-                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss"));
+                sb.Append(Expires.Value.ToUniversalTime().ToString("ddd, dd-MMM-yyyy HH:mm:ss", DateTimeFormatInfo.InvariantInfo));
                 sb.Append(" GMT");
             }
             if (Domain != null)
             {
                 sb.Append("; domain=");
                 sb.Append(Domain);
-            }
-            if (Path != null)
-            {
-                sb.Append("; path=");
-                sb.Append(Path);
             }
             return sb.ToString();
         }

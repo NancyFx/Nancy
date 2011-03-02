@@ -5,6 +5,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using Nancy.Extensions;
+    using Nancy.Sessions;
 
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
@@ -13,6 +14,12 @@ namespace Nancy
     {
         private dynamic form;
 
+        private IDictionary<string, string> cookie;
+
+        private ISession session;
+
+        private readonly ISessionStore sessionStore;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
@@ -20,7 +27,7 @@ namespace Nancy
         /// <param name="uri">The absolute path of the requested resource. This shold not not include the scheme, host name, or query portion of the URI.</param>
         /// <param name="protocol">The HTTP protocol that was used by the client.</param>
         public Request(string method, string uri, string protocol)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol, new CookieSessionStore())
         {
         }
 
@@ -34,6 +41,21 @@ namespace Nancy
         /// <param name="protocol">The HTTP protocol that was used by the client.</param>
         /// <param name="query">The querystring data that was sent by the client.</param>
         public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, string query = "")
+            : this(method, uri, headers, body, protocol, new CookieSessionStore(), query)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Request"/> class.
+        /// </summary>
+        /// <param name="method">The HTTP data transfer method used by the client.</param>
+        /// <param name="uri">The absolute path of the requested resource. This shold not not include the scheme, host name, or query portion of the URI</param>
+        /// <param name="headers">The headers that was passed in by the client.</param>
+        /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
+        /// <param name="protocol">The HTTP protocol that was used by the client.</param>
+        /// <param name="sessionStore">A cookie session store</param>
+        /// <param name="query">The querystring data that was sent by the client.</param>
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, ISessionStore sessionStore, string query = "")
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -59,12 +81,16 @@ namespace Nancy
             if (protocol.Length == 0)
                 throw new ArgumentOutOfRangeException("protocol", protocol, "The value of the protocol parameter cannot be empty.");
 
+            if (sessionStore == null)
+                throw new ArgumentNullException("sessionStore", "The value of the sessionStore parameter cannot be null.");
+
             this.Body = body;
             this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
             this.Method = method;
             this.Uri = uri;
             this.Protocol = protocol;
             this.Query = query.AsQueryDictionary();
+            this.sessionStore = sessionStore;
         }
 
         /// <summary>
@@ -72,6 +98,58 @@ namespace Nancy
         /// </summary>
         /// <value>A <see cref="Stream"/> object representing the incoming HTTP body.</value>
         public Stream Body { get; private set; }
+
+        /// <summary>
+        /// Gets the request cookies.
+        /// </summary>
+        public IDictionary<string, string> Cookie
+        {
+            get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
+        }
+
+        /// <summary>
+        /// Gets the current session.
+        /// </summary>
+        public ISession Session
+        {
+            get
+            {
+                if (this.session == null)
+                {
+                    this.SessionWasLoaded = true;
+                    this.session = this.sessionStore.Load(this);
+                }
+
+                return this.session;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the Session was loaded or not.
+        /// </summary>
+        public bool SessionWasLoaded { get; set; }
+
+        /// <summary>
+        /// Gets the cookie data from the request header if it exists
+        /// </summary>
+        /// <returns>Cookie dictionary</returns>
+        private IDictionary<string, string> GetCookieData()
+        {
+            var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            if (!this.Headers.ContainsKey("cookie"))
+            {
+                return cookieDictionary;
+            }
+
+            var cookies = this.Headers["cookie"].First().Split(';');
+            foreach (var parts in cookies.Select(c => c.Split('=')))
+            {
+                cookieDictionary[parts[0].Trim()] = parts[1];
+            }
+
+            return cookieDictionary;
+        }
 
         /// <summary>
         /// Gets the form data of the request.

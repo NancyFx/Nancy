@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Demo
 {
+    using Nancy.Sessions;
+
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
         // Overriding this just to show how it works, not actually necessary as autoregister
@@ -21,6 +23,9 @@
         protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
         {
             base.InitialiseInternal(container);
+
+            CookieSessionStore.Passphrase = "This is my really s349 secure P213#(al passphrase";
+            CookieSessionStore.Salt = "And *232 also 438 my salt!!";
 
             this.AfterRequest += (ctx) =>
                 {

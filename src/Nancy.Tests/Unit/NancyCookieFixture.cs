@@ -15,9 +15,9 @@ namespace Nancy.Tests.Unit
 
             // When
             var stringified = cookie.ToString();
-            
+
             // Then
-            stringified.ShouldEqual("leto=worm");
+            stringified.ShouldEqual("leto=worm; path=/");
         }
 
         [Fact]
@@ -25,14 +25,34 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
-            var thursday = GetLocalizedAbbreviatedWeekdayName(date);
-            var october = GetLocalizedAbbreviatedMonthName(date);
 
             // When
             var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
-            
+
             // Then
-            cookie.ShouldEqual(string.Format("leto=worm; expires={0}, 08-{1}-2015 09:10:11 GMT", thursday, october));
+            cookie.ShouldEqual("leto=worm; path=/; expires=Thu, 08-Oct-2015 09:10:11 GMT");
+        }
+
+        [Fact]
+        public void Should_stringify_an_expiry_to_english()
+        {
+            var originalCulture = System.Threading.Thread.CurrentThread.CurrentCulture;
+            try
+            {
+                // Given
+                System.Threading.Thread.CurrentThread.CurrentCulture = new CultureInfo("fr-FR");
+                var date = new DateTime(2015, 10, 8, 9, 10, 11, DateTimeKind.Utc);
+
+                // When
+                var cookie = new NancyCookie("leto", "worm") { Expires = date }.ToString();
+
+                // Then
+                cookie.ShouldEqual("leto=worm; path=/; expires=Thu, 08-Oct-2015 09:10:11 GMT");
+            }
+            finally
+            {
+                System.Threading.Thread.CurrentThread.CurrentCulture = originalCulture;
+            }
         }
 
         [Fact]
@@ -45,7 +65,7 @@ namespace Nancy.Tests.Unit
             var stringified = cookie.ToString();
 
             // Then
-            stringified.ShouldEqual("leto=worm; domain=google.com");
+            stringified.ShouldEqual("leto=worm; path=/; domain=google.com");
         }
 
         [Fact]
@@ -69,12 +89,12 @@ namespace Nancy.Tests.Unit
             var tuesday = GetLocalizedAbbreviatedWeekdayName(date);
             var november = GetLocalizedAbbreviatedMonthName(date);
             var cookie = new NancyCookie("paul", "blind") { Expires = date, Path = "/frank", Domain = "gmail.com" };
-                
+
             // When
             var stringified = cookie.ToString();
-                
+
             // Then
-            stringified.ShouldEqual(string.Format("paul=blind; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com; path=/frank", tuesday, november));
+            stringified.ShouldEqual(string.Format("paul=blind; path=/frank; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com", tuesday, november));
         }
 
         public static string GetLocalizedAbbreviatedMonthName(DateTime dateTime)
