@@ -29,7 +29,7 @@
     /// via <see cref="INancyModuleCatalog.GetModuleByKey"/> are per-request scoped.
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines 
         where TContainer : class
     {
         /// <summary>
@@ -117,7 +117,7 @@
         /// returned.
         /// </para>
         /// </summary>
-        protected BeforePipeline BeforeRequest { get; set; }
+        public BeforePipeline BeforeRequest { get; set; }
 
         /// <summary>
         /// <para>
@@ -128,7 +128,7 @@
         /// to rewrite the response or add/remove items from the context.
         /// </para>
         /// </summary>
-        protected AfterPipeline AfterRequest { get; set; }
+        public AfterPipeline AfterRequest { get; set; }
 
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.

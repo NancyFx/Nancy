@@ -24,8 +24,7 @@
         {
             base.InitialiseInternal(container);
 
-            CookieSessionStore.Passphrase = "This is my really s349 secure P213#(al passphrase";
-            CookieSessionStore.Salt = "And *232 also 438 my salt!!";
+            CookieBasedSessions.Enable(this, "MyPassPhrase", "MySaltIsReallyGood");
 
             this.AfterRequest += (ctx) =>
                 {
@@ -36,8 +35,6 @@
                         ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
                     }
                 };
-
-            this.AfterRequest += (ctx) => new CookieSessionStore().Save(ctx.Request.Session, ctx.Response);
         }
     }
 }

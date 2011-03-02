@@ -46,6 +46,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
@@ -104,11 +105,10 @@
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
-    <Compile Include="Session\CookieSessionStore.cs" />
-    <Compile Include="Session\Encryption.cs" />
-    <Compile Include="Session\IEncryption.cs" />
+    <Compile Include="Session\CookieBasedSessions.cs" />
+    <Compile Include="Session\DefaultEncryptionProvider.cs" />
+    <Compile Include="Session\IEncryptionProvider.cs" />
     <Compile Include="Session\ISession.cs" />
-    <Compile Include="Session\ISessionStore.cs" />
     <Compile Include="Session\Session.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="NancyModule.cs" />
