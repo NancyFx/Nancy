@@ -68,6 +68,7 @@ namespace Nancy
             this.Uri = uri;
             this.Protocol = protocol;
             this.Query = query.AsQueryDictionary();
+            this.Session = new NullSessionProvider();
         }
 
         /// <summary>

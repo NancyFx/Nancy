@@ -151,11 +151,6 @@ namespace Nancy.Session
                 return null;
             }
 
-            if (context.Request.Session != null)
-            {
-                return null;
-            }
-
             context.Request.Session = sessionStore.Load(context.Request);
 
             return null;
