@@ -34,6 +34,7 @@
             listener = new HttpListener();
             listener.Prefixes.Add(baseUri.ToString());
 
+            bootStrapper.Initialise();
             engine = bootStrapper.GetEngine();
         }
 
@@ -67,18 +68,27 @@
                     return;
                 }
                 var nancyRequest = ConvertRequestToNancyRequest(requestContext.Request);
-                var nancyResponse = engine.HandleRequest(nancyRequest);
-                ConvertNancyResponseToResponse(nancyResponse, requestContext.Response);
+                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                {
+                    ConvertNancyResponseToResponse(nancyContext.Response, requestContext.Response);
+                }
             }
+        }
+
+        private static Uri GetUrlAndPathComponents(Uri uri) 
+        {
+            // ensures that for a given url only the
+            //  scheme://host:port/paths/somepath
+            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
         }
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = "/" + baseUri.MakeRelativeUri(request.Url);
+            var relativeUrl = GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
 
             return new Request(
                 request.HttpMethod,
-                relativeUrl,
+                string.Concat("/", relativeUrl),
                 request.Headers.ToDictionary(),
                 request.InputStream,
                 request.Url.Scheme,

@@ -1,15 +1,24 @@
-namespace Nancy.ViewEngines
+﻿namespace Nancy.ViewEngines
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
 
     /// <summary>
-    /// View engine for rendering static html files.
+    /// Nancy IViewEngine wrapper for the super simple view engine
     /// </summary>
-    public class StaticViewEngine : IViewEngine
+    public class SuperSimpleViewEngineWrapper : IViewEngine
     {
+        /// <summary>
+        /// The actual view engine
+        /// </summary>
+        private readonly SuperSimpleViewEngine viewEngine = new SuperSimpleViewEngine();
+
+        /// <summary>
+        /// Extensions that the view engine supports
+        /// </summary>
+        private readonly string[] extensions = new[] { "sshtml", "html", "htm" };
+
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
         /// </summary>
@@ -17,7 +26,7 @@ namespace Nancy.ViewEngines
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get { return new[] { "html", "htm" }; }
+            get { return this.extensions; }
         }
 
         /// <summary>
@@ -28,12 +37,10 @@ namespace Nancy.ViewEngines
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
         {
-            return stream =>
+            return s =>
             {
-                var writer =
-                    new StreamWriter(stream);
-
-                writer.Write(viewLocationResult.Contents.ReadToEnd());
+                var writer = new StreamWriter(s);
+                writer.Write(this.viewEngine.Render(viewLocationResult.Contents.ReadToEnd(), model));
                 writer.Flush();
             };
         }

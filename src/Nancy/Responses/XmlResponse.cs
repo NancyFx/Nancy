@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Net;
     using System.Xml.Serialization;
 
     public class XmlResponse<TModel> : Response

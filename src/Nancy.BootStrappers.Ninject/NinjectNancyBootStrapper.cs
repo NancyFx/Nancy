@@ -51,6 +51,13 @@
             return _Kernel.Get<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterRootPathProvider(IKernel container, Type rootPathProviderType)
+        {
+            container.Bind(typeof(IRootPathProvider))
+                .To(rootPathProviderType)
+                .InSingletonScope();
+        }
+
         protected override void RegisterViewSourceProviders(IKernel container, IEnumerable<Type> viewSourceProviderTypes)
         {
             foreach (var viewSourceProvider in viewSourceProviderTypes)
@@ -122,6 +129,7 @@
         /// <returns>ChildKernel</returns>
         private IKernel GetChildKernel()
         {
+            // TODO - add kernal to context so it's disposed?
             var child = new ChildKernel(_Kernel);
 
             RegisterModulesInternal(child, _ModuleRegistations);
@@ -133,7 +141,7 @@
         ///   Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <returns>IEnumerable of NancyModule</returns>
-        public virtual IEnumerable<NancyModule> GetAllModules()
+        public virtual IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
             var child = GetChildKernel();
             ConfigureRequestContainer(child);
@@ -145,51 +153,11 @@
         /// </summary>
         /// <param name = "moduleKey">Module key</param>
         /// <returns>NancyModule instance</returns>
-        public virtual NancyModule GetModuleByKey(string moduleKey)
+        public virtual NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
             var child = GetChildKernel();
             ConfigureRequestContainer(child);
             return child.Get<NancyModule>(moduleKey);
         }
-
-        //private class RequestKernel : ChildKernel
-        //{
-        //    public RequestKernel(IResolutionRoot resolutionRoot)
-        //        : base(resolutionRoot)
-        //    {
-        //    }
-
-        //    /// <summary>
-        //    ///   Creates a request for the specified service.
-        //    /// </summary>
-        //    /// <param name = "service">The service that is being requested.</param>
-        //    /// <param name = "constraint">The constraint to apply to the bindings to determine if they match the request.</param>
-        //    /// <param name = "parameters">The parameters to pass to the resolution.</param>
-        //    /// <param name = "isOptional"><c>True</c> if the request is optional; otherwise, <c>false</c>.</param>
-        //    /// <param name = "isUnique"><c>True</c> if the request should return a unique result; otherwise, <c>false</c>.</param>
-        //    /// <returns>The created request.</returns>
-        //    public override Request CreateRequest(Type service,
-        //                                            Func<IBindingMetadata, bool> constraint,
-        //                                            IEnumerable<IParameter> parameters,
-        //                                            bool isOptional,
-        //                                            bool isUnique)
-        //    {
-        //        if (service == null)
-        //        {
-        //            throw new ArgumentNullException("service");
-        //        }
-        //        if (parameters == null)
-        //        {
-        //            throw new ArgumentNullException("parameters");
-        //        }
-
-        //        return new Request(service,
-        //                            constraint,
-        //                            parameters,
-        //                            () => StandardScopeCallbacks.Request(null),
-        //                            isOptional,
-        //                            isUnique);
-        //    }
-        //}
     }
 }

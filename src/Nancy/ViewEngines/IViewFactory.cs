@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the functionality used by a <see cref="NancyModule"/> to render a view to the response.
     /// </summary>
-    public interface IViewFactory
+    public interface IViewFactory : IHideObjectMembers
     {
         /// <summary>
         /// Renders the view with its name resolved from the model type, and model defined by the <paramref name="model"/> parameter.

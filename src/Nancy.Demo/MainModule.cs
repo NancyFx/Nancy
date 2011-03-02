@@ -1,9 +1,9 @@
 namespace Nancy.Demo
 {
+    using System.Collections.Generic;
+    using System.Dynamic;
     using Nancy.Demo.Models;
-    using Nancy.ViewEngines;
     using Nancy.Routing;
-    using System.Linq;
 
     public class MainModule : NancyModule
     {
@@ -14,11 +14,11 @@ namespace Nancy.Demo
             };
 
             Get["/style/{file}"] = x => {
-                return Response.AsCss("~/Content/" + (string)x.file);
+                return Response.AsCss("Content/" + (string)x.file);
             };
 
             Get["/scripts/{file}"] = x => {
-                return Response.AsJs("~/Content/" + (string)x.file);
+                return Response.AsJs("Content/" + (string)x.file);
             };
 
             Get["/filtered", r => false] = x => {
@@ -82,6 +82,16 @@ namespace Nancy.Demo
             Get["/xml"] = x => {
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
+            };
+
+            Get["superSimple"] = x => {
+                dynamic model = new ExpandoObject();
+                model.Title = "Demonstration of Nancy's SuperSimple ViewEngine";
+                model.Name = "Frankie";
+                model.Users = new List<string>() { "Bob Smith", "Jim Jones", "Bill Bobson" };
+                model.Admins = new List<string>();
+
+                return View["SuperSimple.sshtml", model];
             };
         }
     }

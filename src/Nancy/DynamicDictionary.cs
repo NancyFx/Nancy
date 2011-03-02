@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Dynamic;
 
-    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>
+    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers
     {
         private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
 

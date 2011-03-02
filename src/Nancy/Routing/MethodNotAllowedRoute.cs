@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Routing
 {
-    using System.Net;
-
     /// <summary>
     /// Route that is returned when the path could be matched but it was for the wrong request method.
     /// </summary>

@@ -39,6 +39,10 @@
             return Generator;
         }
 
+        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        {
+        }
+
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
         {
         }
@@ -67,6 +71,18 @@
             base.ConfigureApplicationContainer(existingContainer);
             AppContainer = existingContainer;
         }
+
+        public BeforePipeline PreRequest
+        {
+            get { return this.BeforeRequest; }
+            set { this.BeforeRequest = value; }
+        }
+
+        public AfterPipeline PostRequest
+        {
+            get { return this.AfterRequest; }
+            set { this.AfterRequest = value; }
+        }
     }
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
@@ -81,6 +97,10 @@
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        {
         }
 
         protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
@@ -132,6 +152,7 @@
         public NancyBootstrapperBaseFixture()
         {
             _Bootstrapper = new FakeBootstrapperBaseImplementation();
+            _Bootstrapper.Initialise();
         }
 
         [Fact]
@@ -175,6 +196,7 @@
         public void Overridden_GetModules_Is_Used_For_Getting_ModuleTypes()
         {
             var bootstrapper = new FakeBootstrapperBaseGetModulesOverride();
+            bootstrapper.Initialise();
             bootstrapper.GetEngine();
 
             bootstrapper.RegisterModulesRegistrationTypes.ShouldBeSameAs(bootstrapper.ModuleRegistrations);
@@ -188,6 +210,26 @@
             var moduleKeyGeneratorEntry = _Bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
 
             moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
+        }
+
+        [Fact]
+        public void GetEngine_sets_pre_request_hook()
+        {
+            _Bootstrapper.PreRequest += ctx => null;
+
+            var result = _Bootstrapper.GetEngine();
+
+            result.PreRequestHook.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void GetEngine_sets_post_request_hook()
+        {
+            _Bootstrapper.PostRequest += ctx => { };
+
+            var result = _Bootstrapper.GetEngine();
+
+            result.PostRequestHook.ShouldNotBeNull();
         }
     }
 }

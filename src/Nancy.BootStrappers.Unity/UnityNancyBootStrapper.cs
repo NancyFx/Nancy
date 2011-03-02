@@ -48,11 +48,16 @@
             return unityContainer.Resolve<IModuleKeyGenerator>();
         }
 
+        protected override void RegisterRootPathProvider(IUnityContainer container, Type rootPathProviderType)
+        {
+            unityContainer.RegisterType(typeof(IRootPathProvider), rootPathProviderType, new ContainerControlledLifetimeManager());
+        }
+
         protected override void RegisterViewSourceProviders(IUnityContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             foreach (var viewSourceProvider in viewSourceProviderTypes)
             {
-                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager()) ;
+                unityContainer.RegisterType(typeof(IViewSourceProvider), viewSourceProvider, new ContainerControlledLifetimeManager());
             }
         }
 
@@ -102,7 +107,7 @@
         ///   Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <returns>IEnumerable of NancyModule</returns>
-        public virtual IEnumerable<NancyModule> GetAllModules()
+        public virtual IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
             var child = unityContainer.CreateChildContainer();
             ConfigureRequestContainer(child);
@@ -114,8 +119,9 @@
         /// </summary>
         /// <param name = "moduleKey">Module key</param>
         /// <returns>NancyModule instance</returns>
-        public virtual NancyModule GetModuleByKey(string moduleKey)
+        public virtual NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
+            // TODO - add child container to context so it's disposed?
             var child = unityContainer.CreateChildContainer();
             ConfigureRequestContainer(child);
             return child.Resolve<NancyModule>(moduleKey);

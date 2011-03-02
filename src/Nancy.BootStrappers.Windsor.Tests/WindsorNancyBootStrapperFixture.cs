@@ -1,18 +1,13 @@
 ﻿namespace Nancy.Bootstrappers.Windsor.Tests
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
-
     using Castle.MicroKernel.Registration;
     using Castle.Windsor;
-
     using Nancy.Bootstrappers.Windsor;
     using Nancy.Routing;
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
-
     using Xunit;
 
     public class FakeWindsorNancyBootstrapper : WindsorNancyBootstrapper
@@ -23,14 +18,14 @@
 
         public IWindsorContainer Container { get { return this.container; } }
 
-        public void ConfigureRequestContainer(IWindsorContainer existingContainer)
+        public override void ConfigureRequestContainer(IWindsorContainer existingContainer)
         {
             RequestContainerConfigured = true;
 
             existingContainer.Register(
                 Component.For<IFoo>().ImplementedBy<Foo>(),
                 Component.For<IDependency>().ImplementedBy<Dependency>());
-            base.ConfigureApplicationContainer(existingContainer);
+            base.ConfigureRequestContainer(existingContainer);
         }
 
         protected override void ConfigureApplicationContainer(IWindsorContainer existingExistingContainer)
@@ -47,6 +42,7 @@
         public WindsorNancyBootstrapperFixture()
         {
             this.bootstrapper = new FakeWindsorNancyBootstrapper();
+            this.bootstrapper.Initialise();
         }
 
         [Fact]
@@ -62,8 +58,9 @@
         public void GetAllModules_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
-            var output2 = this.bootstrapper.GetAllModules().Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var context = new NancyContext();
+            var output1 = this.bootstrapper.GetAllModules(context).Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
+            var output2 = this.bootstrapper.GetAllModules(context).Where(nm => nm.GetType() == typeof(FakeNancyModuleWithBasePath)).FirstOrDefault();
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -74,32 +71,33 @@
         public void GetModuleByKey_Returns_As_MultiInstance()
         {
             this.bootstrapper.GetEngine();
-            var output1 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
-            var output2 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
+            var context = new NancyContext();
+            var output1 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, context);
+            var output2 = this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, context);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
             output1.ShouldNotBeSameAs(output2);
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void GetAllModules_Configures_Child_Container()
         {
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetAllModules();
+            this.bootstrapper.GetAllModules(new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void GetModuleByKey_Configures_Child_Container()
         {
             this.bootstrapper.GetEngine();
             this.bootstrapper.RequestContainerConfigured = false;
 
-            this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName);
+            this.bootstrapper.GetModuleByKey(typeof(FakeNancyModuleWithBasePath).FullName, new NancyContext());
 
             this.bootstrapper.RequestContainerConfigured.ShouldBeTrue();
         }
@@ -125,24 +123,24 @@
             this.bootstrapper.Container.Resolve<IRouteCacheProvider>();
         }
 
-        [Fact(Skip = "Not implemented")]
+        [Fact]
         public void Get_Module_By_Key_Gives_Same_Request_Lifetime_Instance_To_Each_Dependency()
         {
             this.bootstrapper.GetEngine();
 
-            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result.FooDependency.ShouldBeSameAs(result.Dependency.FooDependency);
         }
 
-        [Fact(Skip = "Not implemented")]
-        public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call()
+        [Fact]
+        public void Get_Module_By_Key_Gives_Different_Request_Lifetime_Instance_To_Each_Call_With_Different_Context()
         {
             this.bootstrapper.GetEngine();
 
-            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
-            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency))) as FakeNancyModuleWithDependency;
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
+            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), new NancyContext()) as FakeNancyModuleWithDependency;
 
             result.FooDependency.ShouldNotBeNull();
             result2.FooDependency.ShouldNotBeNull();
@@ -150,11 +148,25 @@
         }
 
         [Fact]
+        public void Get_Module_By_Key_Gives_Same_Request_Lifetime_Instance_To_Each_Call_With_Same_Context()
+        {
+            this.bootstrapper.GetEngine();
+
+            var context = new NancyContext();
+            var result = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), context) as FakeNancyModuleWithDependency;
+            var result2 = this.bootstrapper.GetModuleByKey(new DefaultModuleKeyGenerator().GetKeyForModuleType(typeof(FakeNancyModuleWithDependency)), context) as FakeNancyModuleWithDependency;
+
+            result.FooDependency.ShouldNotBeNull();
+            result2.FooDependency.ShouldNotBeNull();
+            result.FooDependency.ShouldBeSameAs(result2.FooDependency);
+        }
+
+        [Fact]
         public void Getting_modules_will_not_return_multiple_instances_of_non_dependency_modules()
         { 
             this.bootstrapper.GetEngine();
 
-            var nancyModules = this.bootstrapper.GetAllModules();
+            var nancyModules = this.bootstrapper.GetAllModules(new NancyContext());
             var modLookup = nancyModules.ToLookup(x => x.GetType());
 
             var types = nancyModules.Select(x => x.GetType()).Distinct();
