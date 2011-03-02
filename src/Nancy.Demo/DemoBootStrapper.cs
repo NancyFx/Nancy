@@ -36,6 +36,9 @@
                         ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
                     }
                 };
+
+
+            this.AfterRequest += (ctx) => new CookieSessionStore().Save(ctx.Request.Session, ctx.Response);
         }
     }
 }

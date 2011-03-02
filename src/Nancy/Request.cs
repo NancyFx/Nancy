@@ -102,7 +102,7 @@ namespace Nancy
         /// <summary>
         /// Gets the request cookies.
         /// </summary>
-        public IDictionary<string, string> Cookie
+        public IDictionary<string, string> Cookies
         {
             get { return this.cookie ?? (this.cookie = this.GetCookieData()); }
         }
@@ -114,25 +114,14 @@ namespace Nancy
         {
             get
             {
-                if (this.session == null)
-                {
-                    this.SessionWasLoaded = true;
-                    this.session = this.sessionStore.Load(this);
-                }
-
-                return this.session;
+                return this.session ?? (this.session = this.sessionStore.Load(this));
             }
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether the Session was loaded or not.
-        /// </summary>
-        public bool SessionWasLoaded { get; set; }
-
-        /// <summary>
         /// Gets the cookie data from the request header if it exists
         /// </summary>
-        /// <returns>Cookie dictionary</returns>
+        /// <returns>Cookies dictionary</returns>
         private IDictionary<string, string> GetCookieData()
         {
             var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);

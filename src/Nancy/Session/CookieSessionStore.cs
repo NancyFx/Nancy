@@ -43,9 +43,9 @@ namespace Nancy.Sessions
         public ISession Load(Request request)
         {
             var dictionary = new Dictionary<string, object>();
-            if (request.Cookie.ContainsKey(CookieName))
+            if (request.Cookies.ContainsKey(CookieName))
             {
-                var data = encryption.Decrypt(HttpUtility.UrlDecode(request.Cookie[CookieName]), Passphrase, salt);
+                var data = encryption.Decrypt(HttpUtility.UrlDecode(request.Cookies[CookieName]), Passphrase, salt);
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
