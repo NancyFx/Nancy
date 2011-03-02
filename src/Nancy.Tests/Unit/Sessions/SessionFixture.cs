@@ -1,7 +1,7 @@
 namespace Nancy.Tests
 {
     using System.Collections.Generic;
-    using Sessions;
+    using Session;
     using Xunit;
 
     public class SessionFixture

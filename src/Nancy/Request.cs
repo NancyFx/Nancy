@@ -5,7 +5,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using Nancy.Extensions;
-    using Nancy.Sessions;
+    using Session;
 
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.

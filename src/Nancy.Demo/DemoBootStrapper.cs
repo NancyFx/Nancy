@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Demo
 {
-    using Nancy.Sessions;
+    using Session;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
@@ -36,7 +36,6 @@
                         ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
                     }
                 };
-
 
             this.AfterRequest += (ctx) => new CookieSessionStore().Save(ctx.Request.Session, ctx.Response);
         }

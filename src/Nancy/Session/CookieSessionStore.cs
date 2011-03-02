@@ -1,10 +1,10 @@
-namespace Nancy.Sessions
+namespace Nancy.Session
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
+    using Bootstrapper;
     using Nancy.Helpers;
 
     public class CookieSessionStore : ISessionStore

@@ -1,4 +1,4 @@
-namespace Nancy.Sessions
+namespace Nancy.Session
 {
     using System.Collections.Generic;
 

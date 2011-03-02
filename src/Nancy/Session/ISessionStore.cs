@@ -1,4 +1,4 @@
-namespace Nancy.Sessions
+namespace Nancy.Session
 {
     /// <summary>
     /// Defines the interface for storing and retrieving session information

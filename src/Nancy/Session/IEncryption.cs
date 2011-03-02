@@ -1,4 +1,4 @@
-namespace Nancy.Sessions
+namespace Nancy.Session
 {
     public interface IEncryption
     {

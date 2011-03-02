@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
 
-    using Nancy.Sessions;
+    using Session;
 
     public class FakeRequest : Request
     {

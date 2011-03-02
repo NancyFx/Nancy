@@ -3,7 +3,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using Nancy.Routing;
-    using Nancy.Sessions;
+    using Session;
 
     using ViewEngines;
 
