@@ -47,6 +47,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Adds_route_when_options_indexer_userd()
+        {
+            this.module.Options["/test"] = d => null;
+
+            this.module.Routes.Count().ShouldEqual(1);
+        }
+
+        [Fact]
         public void Should_store_route_with_specified_path_when_route_indexer_is_invoked_with_a_path_but_no_condition()
         {
             this.module.Get["/test"] = d => null;
