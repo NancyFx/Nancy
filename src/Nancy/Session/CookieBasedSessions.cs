@@ -5,6 +5,8 @@ namespace Nancy.Session
     using System.Linq;
     using System.Text;
     using Bootstrapper;
+
+    using Nancy.Cookies;
     using Nancy.Helpers;
 
     /// <summary>
@@ -102,7 +104,8 @@ namespace Nancy.Session
             }
 
             // TODO - configurable path?
-            response.AddCookie(cookieName, this.encryptionProvider.Encrypt(sb.ToString(), this.passPhrase, this.salt));
+            var cookie = new NancyCookie(cookieName, this.encryptionProvider.Encrypt(sb.ToString(), this.passPhrase, this.salt), true);
+            response.AddCookie(cookie);
         }
 
         /// <summary>

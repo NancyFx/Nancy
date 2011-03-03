@@ -97,6 +97,26 @@ namespace Nancy.Tests.Unit
             stringified.ShouldEqual(string.Format("paul=blind; path=/frank; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com", tuesday, november));
         }
 
+        [Fact]
+        public void Should_not_add_http_only_if_set_to_false()
+        {
+            var cookie = new NancyCookie("Test", "Value", false);
+
+            var result = cookie.ToString();
+
+            result.ShouldNotContain("HttpOnly");
+        }
+
+        [Fact]
+        public void Should_add_http_only_if_set_to_true()
+        {
+            var cookie = new NancyCookie("Test", "Value", true);
+
+            var result = cookie.ToString();
+
+            result.ShouldContain("HttpOnly");
+        }
+
         public static string GetInvariantAbbreviatedMonthName(DateTime dateTime)
         {
             return CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames[dateTime.Month - 1];

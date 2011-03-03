@@ -64,6 +64,19 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_save_cookie_as_http_only()
+        {
+            var response = new Response();
+            var session = new Session();
+            session["key 1"] = "val=1";
+            A.CallTo(() => this.encryptionProvider.Encrypt("key+1=val%3d1;", A<string>.Ignored, A<byte[]>.Ignored)).Returns("encryptedkey+1=val%3d1;");
+
+            cookieStore.Save(session, response);
+
+            response.Cookies.First().HttpOnly.ShouldEqual(true);
+        }
+
+        [Fact]
         public void Should_saves_url_safe_keys_and_values()
         {
             var response = new Response();
@@ -144,6 +157,47 @@ namespace Nancy.Tests.Unit
 
             beforePipeline.PipelineItems.Count().ShouldEqual(1);
             afterPipeline.PipelineItems.Count().ShouldEqual(1);
+        }
+
+        [Fact]
+        public void Should_only_not_add_response_cookie_if_it_has_not_changed()
+        {
+            var beforePipeline = new BeforePipeline();
+            var afterPipeline = new AfterPipeline();
+            var hooks = A.Fake<IApplicationPipelines>();
+            A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
+            A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
+            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt");
+            var request = CreateRequest("encryptedkey1=value1");
+            A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
+            var response = A.Fake<Response>();
+            var nancyContext = new NancyContext() { Request = request, Response = response };
+            beforePipeline.Invoke(nancyContext);
+
+            afterPipeline.Invoke(nancyContext);
+
+            response.Cookies.Count.ShouldEqual(0);
+        }
+
+        [Fact]
+        public void Should_add_response_cookie_if_it_has_changed()
+        {
+            var beforePipeline = new BeforePipeline();
+            var afterPipeline = new AfterPipeline();
+            var hooks = A.Fake<IApplicationPipelines>();
+            A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
+            A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
+            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt");
+            var request = CreateRequest("encryptedkey1=value1");
+            A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
+            var response = A.Fake<Response>();
+            var nancyContext = new NancyContext() { Request = request, Response = response };
+            beforePipeline.Invoke(nancyContext);
+            request.Session["Testing"] = "Test";
+
+            afterPipeline.Invoke(nancyContext);
+
+            response.Cookies.Count.ShouldEqual(1);
         }
 
         private Request CreateRequest(string sessionValue)

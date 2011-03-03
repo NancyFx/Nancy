@@ -29,5 +29,10 @@ namespace Nancy.Cookies
         /// The value of the cookie
         /// </summary>
         string Value { get;  }
+
+        /// <summary>
+        /// Whether the cookie is http only
+        /// </summary>
+        bool HttpOnly { get; }
     }
 }

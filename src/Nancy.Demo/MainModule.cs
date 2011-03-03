@@ -86,10 +86,15 @@ namespace Nancy.Demo
             };
 
             Get["session"] = x =>
-                { 
-                    var output = "Current session value is: " + Session["moo"];
+                {
+                    var value = Session["moo"] ?? "";
 
-                    Session["moo"] = "I've created a session!";
+                    var output = "Current session value is: " + value;
+
+                    if (String.IsNullOrEmpty(value.ToString()))
+                    {
+                        Session["moo"] = "I've created a session!";
+                    }
 
                     return output;
                 };
