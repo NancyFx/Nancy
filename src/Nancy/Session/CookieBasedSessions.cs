@@ -99,6 +99,7 @@ namespace Nancy.Session
             {
                 sb.Append(HttpUtility.UrlEncode(kvp.Key));
                 sb.Append("=");
+                // TODO - serialize objects rather than just using tostring
                 sb.Append(HttpUtility.UrlEncode(kvp.Value.ToString()));
                 sb.Append(";");
             }

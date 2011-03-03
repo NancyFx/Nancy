@@ -107,8 +107,10 @@
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Session\DefaultEncryptionProvider.cs" />
+    <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
     <Compile Include="Session\IEncryptionProvider.cs" />
     <Compile Include="Session\ISession.cs" />
+    <Compile Include="Session\ISessionObjectFormatter.cs" />
     <Compile Include="Session\NullSessionProvider.cs" />
     <Compile Include="Session\Session.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
