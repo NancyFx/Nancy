@@ -21,7 +21,7 @@ namespace Nancy.Tests.Unit.Sessions
             var input = @"This is a sample string";
             var serialised = this.formatter.Serialize(input);
 
-            var output = this.formatter.Deserialize<string>(serialised);
+            var output = (string)this.formatter.Deserialize(serialised);
 
             output.ShouldEqual(input);
         }
@@ -32,9 +32,39 @@ namespace Nancy.Tests.Unit.Sessions
             var input = new Payload(27, true, "This is some text");
             var serialised = this.formatter.Serialize(input);
 
-            var output = this.formatter.Deserialize<Payload>(serialised);
+            var output = (Payload)this.formatter.Deserialize(serialised);
 
             output.ShouldEqual(input);
+        }
+
+        [Fact]
+        public void Should_return_empty_string_when_serializing_null()
+        {
+            object input = null;
+            
+            var output = this.formatter.Serialize(input);
+
+            output.ShouldEqual(string.Empty);
+        }
+
+        [Fact]
+        public void Should_return_null_when_deserializing_null()
+        {
+            string input = null;
+
+            var output = this.formatter.Deserialize(input);
+
+            output.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_return_null_when_deserializing_empty_string()
+        {
+            var input = String.Empty;
+
+            var output = this.formatter.Deserialize(input);
+
+            output.ShouldBeNull();
         }
 
         [Serializable]

@@ -7,6 +7,8 @@ namespace Nancy.Tests.Unit
     using System.Web;
     using FakeItEasy;
     using Nancy.Bootstrapper;
+    using Nancy.Tests.Unit.Sessions;
+
     using Session;
     using Xunit;
 
@@ -18,7 +20,7 @@ namespace Nancy.Tests.Unit
         public CookieBasedSessionsFixture()
         {
             this.encryptionProvider = A.Fake<IEncryptionProvider>();
-            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt");
+            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", new DefaultSessionObjectFormatter());
         }
 
         [Fact]
@@ -139,7 +141,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_throw_if_salt_too_short()
         {
-            var exception = Record.Exception(() => new CookieBasedSessions(encryptionProvider, "pass", "short"));
+            var exception = Record.Exception(() => new CookieBasedSessions(this.encryptionProvider, "pass", "short", A.Fake<ISessionObjectFormatter>()));
 
             exception.ShouldBeOfType(typeof(ArgumentException));
         }
@@ -200,7 +202,70 @@ namespace Nancy.Tests.Unit
             response.Cookies.Count.ShouldEqual(1);
         }
 
-        private Request CreateRequest(string sessionValue)
+        [Fact]
+        public void Should_call_formatter_on_load()
+        {
+            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
+            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", fakeFormatter);
+            var request = CreateRequest("encryptedkey1=value1", false);
+
+            store.Load(request);
+
+            A.CallTo(() => fakeFormatter.Deserialize("value1")).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_call_the_formatter_on_save()
+        {
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>());
+            session["key1"] = "value1";
+            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", fakeFormatter);
+
+            store.Save(session, response);
+
+            A.CallTo(() => fakeFormatter.Serialize("value1")).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+
+        [Fact]
+        public void Should_be_able_to_save_a_complex_object_to_session()
+        {
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>());
+            var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), "the passphrase", "the salt", new DefaultSessionObjectFormatter());
+            session["testObject"] = payload;
+
+            store.Save(session, response);
+
+            response.Cookies.Count.ShouldEqual(1);
+            var cookie = response.Cookies.First();
+            cookie.Name.ShouldEqual(Nancy.Session.CookieBasedSessions.GetCookieName());
+            cookie.Value.ShouldNotBeNull();
+            cookie.Value.ShouldNotBeEmpty();
+        }
+
+        [Fact]
+        public void Should_be_able_to_load_an_object_previously_saved_to_session()
+        {
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>());
+            var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), "the passphrase", "the salt", new DefaultSessionObjectFormatter());
+            session["testObject"] = payload;
+            store.Save(session, response);
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(Helpers.HttpUtility.UrlEncode(response.Cookies.First().Name), Helpers.HttpUtility.UrlEncode(response.Cookies.First().Value));
+
+            var result = store.Load(request);
+
+            result["testObject"].ShouldEqual(payload);
+        }
+
+        private Request CreateRequest(string sessionValue, bool load = true)
         {
             var headers = new Dictionary<string, IEnumerable<string>>(1);
 
@@ -211,7 +276,10 @@ namespace Nancy.Tests.Unit
 
             var request = new Request("GET", "http://goku.power:9001/", headers, new MemoryStream(), "http");
 
-            cookieStore.Load(request);
+            if (load)
+            {
+                cookieStore.Load(request);
+            }
 
             return request;
         }

@@ -10,9 +10,21 @@ namespace Nancy.Session
     using Nancy.Helpers;
 
     /// <summary>
+    /// Allows setting of the formatter for session object storage
+    /// </summary>
+    public interface IFormatterSelector : IHideObjectMembers
+    {
+        /// <summary>
+        /// Using the specified formatter
+        /// </summary>
+        /// <param name="newFormatter">Formatter to use</param>
+        void WithFormatter(ISessionObjectFormatter newFormatter);
+    }
+
+    /// <summary>
     /// Cookie based session storage
     /// </summary>
-    public class CookieBasedSessions
+    public class CookieBasedSessions : IFormatterSelector
     {
         /// <summary>
         /// Encryption pass phrase
@@ -30,6 +42,11 @@ namespace Nancy.Session
         private readonly IEncryptionProvider encryptionProvider;
 
         /// <summary>
+        /// Formatter for de/serializing the session objects
+        /// </summary>
+        private ISessionObjectFormatter formatter;
+
+        /// <summary>
         /// Cookie name for storing session information
         /// </summary>
         private static string cookieName = "_nc";
@@ -40,11 +57,13 @@ namespace Nancy.Session
         /// <param name="encryptionProvider">The encryption provider.</param>
         /// <param name="passPhrase">The encryption pass phrase.</param>
         /// <param name="salt">The encryption salt.</param>
-        public CookieBasedSessions(IEncryptionProvider encryptionProvider, string passPhrase, string salt)
+        /// <param name="sessionObjectFormatter">Session object formatter to use</param>
+        public CookieBasedSessions(IEncryptionProvider encryptionProvider, string passPhrase, string salt, ISessionObjectFormatter sessionObjectFormatter)
         {
             this.encryptionProvider = encryptionProvider;
             this.passPhrase = passPhrase;
             this.salt = CreateSalt(salt);
+            this.formatter = sessionObjectFormatter;
         }
 
         /// <summary>
@@ -63,12 +82,15 @@ namespace Nancy.Session
         /// <param name="encryptionProvider">Encryption provider for encrypting cookies</param>
         /// <param name="passPhrase">Encryption pass phrase</param>
         /// <param name="salt">Encryption salt</param>
-        public static void Enable(IApplicationPipelines applicationPipelines, IEncryptionProvider encryptionProvider, string passPhrase, string salt)
+        /// <returns>Formatter selector for choosing a non-default formatter</returns>
+        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, IEncryptionProvider encryptionProvider, string passPhrase, string salt)
         {
-            var sessionStore = new CookieBasedSessions(encryptionProvider, passPhrase, salt);
+            var sessionStore = new CookieBasedSessions(encryptionProvider, passPhrase, salt, new DefaultSessionObjectFormatter());
 
             applicationPipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
             applicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
+
+            return sessionStore;
         }
 
         /// <summary>
@@ -77,9 +99,19 @@ namespace Nancy.Session
         /// <param name="applicationPipelines">Application pipelines</param>
         /// <param name="passPhrase">Encryption pass phrase</param>
         /// <param name="salt">Encryption salt</param>
-        public static void Enable(IApplicationPipelines applicationPipelines, string passPhrase, string salt)
+        /// <returns>Formatter selector for choosing a non-default formatter</returns>
+        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, string passPhrase, string salt)
         {
-            Enable(applicationPipelines, new DefaultEncryptionProvider(), passPhrase, salt);
+            return Enable(applicationPipelines, new DefaultEncryptionProvider(), passPhrase, salt);
+        }
+
+        /// <summary>
+        /// Using the specified formatter
+        /// </summary>
+        /// <param name="newFormatter">Formatter to use</param>
+        public void WithFormatter(ISessionObjectFormatter newFormatter)
+        {
+            this.formatter = newFormatter;
         }
 
         /// <summary>
@@ -99,8 +131,10 @@ namespace Nancy.Session
             {
                 sb.Append(HttpUtility.UrlEncode(kvp.Key));
                 sb.Append("=");
-                // TODO - serialize objects rather than just using tostring
-                sb.Append(HttpUtility.UrlEncode(kvp.Value.ToString()));
+                
+                var objectString = this.formatter.Serialize(kvp.Value);
+
+                sb.Append(HttpUtility.UrlEncode(objectString));
                 sb.Append(";");
             }
 
@@ -125,7 +159,9 @@ namespace Nancy.Session
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
-                    dictionary[HttpUtility.UrlDecode(part[0])] = HttpUtility.UrlDecode(part[1]);
+                    var valueObject = this.formatter.Deserialize(HttpUtility.UrlDecode(part[1]));
+
+                    dictionary[HttpUtility.UrlDecode(part[0])] = valueObject;
                 }
             }
 
