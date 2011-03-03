@@ -17,7 +17,7 @@
         {
             return stream =>
             {
-                var serializer = new JavaScriptSerializer();
+                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
                 var json = serializer.Serialize(model);
 
                 var writer = new StreamWriter(stream);

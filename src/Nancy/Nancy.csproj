@@ -89,6 +89,7 @@
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
+    <Compile Include="Responses\JsonSettings.cs" />
     <Compile Include="Responses\RedirectResponse.cs" />
     <Compile Include="Responses\StaticFileResponse.cs" />
     <Compile Include="Responses\XmlResponse.cs" />
