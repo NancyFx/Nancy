@@ -104,6 +104,10 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
+    <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
+    <Compile Include="Unit\Sessions\DefaultEncryptionProviderFixture.cs" />
+    <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
+    <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
     <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
     <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />

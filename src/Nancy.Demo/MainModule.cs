@@ -84,6 +84,15 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsXml(model);
             };
+
+            Get["session"] = x =>
+                { 
+                    var output = "Current session value is: " + Session["moo"];
+
+                    Session["moo"] = "I've created a session!";
+
+                    return output;
+                };
         }
     }
 }

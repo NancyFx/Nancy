@@ -3,6 +3,8 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using Nancy.Routing;
+    using Session;
+
     using ViewEngines;
 
     /// <summary>
@@ -124,6 +126,17 @@ namespace Nancy
         {
             get { return this.Context.Request; }
             set { this.Context.Request = value; }
+        }
+
+        /// <summary>
+        /// Gets the current session.
+        /// </summary>
+        public ISession Session
+        {
+            get
+            {
+                return this.Request.Session;
+            }
         }
 
         /// <summary>

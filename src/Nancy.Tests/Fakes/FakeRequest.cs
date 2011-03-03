@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using System.IO;
 
+    using Session;
+
     public class FakeRequest : Request
     {
         public FakeRequest(string method, string uri)

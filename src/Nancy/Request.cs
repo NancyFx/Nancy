@@ -5,6 +5,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using Nancy.Extensions;
+    using Session;
 
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
@@ -12,6 +13,8 @@ namespace Nancy
     public class Request
     {
         private dynamic form;
+
+        private IDictionary<string, string> cookies;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Request"/> class.
@@ -65,6 +68,7 @@ namespace Nancy
             this.Uri = uri;
             this.Protocol = protocol;
             this.Query = query.AsQueryDictionary();
+            this.Session = new NullSessionProvider();
         }
 
         /// <summary>
@@ -72,6 +76,41 @@ namespace Nancy
         /// </summary>
         /// <value>A <see cref="Stream"/> object representing the incoming HTTP body.</value>
         public Stream Body { get; private set; }
+
+        /// <summary>
+        /// Gets the request cookies.
+        /// </summary>
+        public IDictionary<string, string> Cookies
+        {
+            get { return this.cookies ?? (this.cookies = this.GetCookieData()); }
+        }
+
+        /// <summary>
+        /// Gets the current session.
+        /// </summary>
+        public ISession Session { get; set; }
+
+        /// <summary>
+        /// Gets the cookie data from the request header if it exists
+        /// </summary>
+        /// <returns>Cookies dictionary</returns>
+        private IDictionary<string, string> GetCookieData()
+        {
+            var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+            if (!this.Headers.ContainsKey("cookie"))
+            {
+                return cookieDictionary;
+            }
+
+            var cookies = this.Headers["cookie"].First().Split(';');
+            foreach (var parts in cookies.Select(c => c.Split('=')))
+            {
+                cookieDictionary[parts[0].Trim()] = parts[1];
+            }
+
+            return cookieDictionary;
+        }
 
         /// <summary>
         /// Gets the form data of the request.
