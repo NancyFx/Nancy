@@ -109,6 +109,7 @@
     <Compile Include="Session\DefaultEncryptionProvider.cs" />
     <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
     <Compile Include="Session\IEncryptionProvider.cs" />
+    <Compile Include="Session\IFormatterSelector.cs" />
     <Compile Include="Session\ISession.cs" />
     <Compile Include="Session\ISessionObjectFormatter.cs" />
     <Compile Include="Session\NullSessionProvider.cs" />

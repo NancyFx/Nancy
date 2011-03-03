@@ -98,6 +98,20 @@ namespace Nancy.Demo
 
                     return output;
                 };
+
+            Get["sessionObject"] = x =>
+            {
+                var value = Session["baa"] ?? "null";
+
+                var output = "Current session value is: " + value;
+
+                if (value.ToString() == "null")
+                {
+                    Session["baa"] = new Payload(27, true, "some random string value");
+                }
+
+                return output;
+            };
         }
     }
 }

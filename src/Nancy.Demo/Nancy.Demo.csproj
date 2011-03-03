@@ -76,6 +76,7 @@
     <Compile Include="IApplicationDependency.cs" />
     <Compile Include="IRequestDependency.cs" />
     <Compile Include="MainModule.cs" />
+    <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
     <Compile Include="Models\SomeViewModel.cs" />

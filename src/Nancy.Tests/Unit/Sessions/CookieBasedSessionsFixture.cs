@@ -20,7 +20,7 @@ namespace Nancy.Tests.Unit
         public CookieBasedSessionsFixture()
         {
             this.encryptionProvider = A.Fake<IEncryptionProvider>();
-            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", new DefaultSessionObjectFormatter());
+            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", new Fakes.FakeSessionObjectFormatter());
         }
 
         [Fact]
@@ -169,7 +169,7 @@ namespace Nancy.Tests.Unit
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt");
+            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(new Fakes.FakeSessionObjectFormatter());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -189,7 +189,7 @@ namespace Nancy.Tests.Unit
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt");
+            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(new Fakes.FakeSessionObjectFormatter());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -229,6 +229,24 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => fakeFormatter.Serialize("value1")).MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public void Should_set_formatter_when_using_formatter_selector()
+        {
+            var beforePipeline = new BeforePipeline();
+            var afterPipeline = new AfterPipeline();
+            var hooks = A.Fake<IApplicationPipelines>();
+            A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
+            A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
+            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
+            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(fakeFormatter);
+            var request = CreateRequest("encryptedkey1=value1");
+            var nancyContext = new NancyContext() { Request = request };
+
+            beforePipeline.Invoke(nancyContext);
+
+            A.CallTo(() => fakeFormatter.Deserialize(A<string>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+        }
 
         [Fact]
         public void Should_be_able_to_save_a_complex_object_to_session()
