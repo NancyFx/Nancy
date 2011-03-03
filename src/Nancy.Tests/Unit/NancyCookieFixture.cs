@@ -86,8 +86,8 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var date = new DateTime(2016, 11, 8, 9, 10, 11, DateTimeKind.Utc);
-            var tuesday = GetLocalizedAbbreviatedWeekdayName(date);
-            var november = GetLocalizedAbbreviatedMonthName(date);
+            var tuesday = GetInvariantAbbreviatedWeekdayName(date);
+            var november = GetInvariantAbbreviatedMonthName(date);
             var cookie = new NancyCookie("paul", "blind") { Expires = date, Path = "/frank", Domain = "gmail.com" };
 
             // When
@@ -97,14 +97,14 @@ namespace Nancy.Tests.Unit
             stringified.ShouldEqual(string.Format("paul=blind; path=/frank; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com", tuesday, november));
         }
 
-        public static string GetLocalizedAbbreviatedMonthName(DateTime dateTime)
+        public static string GetInvariantAbbreviatedMonthName(DateTime dateTime)
         {
-            return CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedMonthNames[dateTime.Month - 1];
+            return CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames[dateTime.Month - 1];
         }
 
-        public static string GetLocalizedAbbreviatedWeekdayName(DateTime dateTime)
+        public static string GetInvariantAbbreviatedWeekdayName(DateTime dateTime)
         {
-            return CultureInfo.CurrentCulture.DateTimeFormat.AbbreviatedDayNames[(int)dateTime.DayOfWeek];
+            return CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedDayNames[(int)dateTime.DayOfWeek];
         }
 
     }
