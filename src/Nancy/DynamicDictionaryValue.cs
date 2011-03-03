@@ -213,7 +213,7 @@
         {
             if (dynamicValue.value.GetType().IsValueType)
             {
-                return (int)dynamicValue.value;
+                return Convert.ToInt32(dynamicValue.value);
             }
 
             return int.Parse(dynamicValue.ToString());
@@ -253,7 +253,7 @@
         {
             if (dynamicValue.value.GetType().IsValueType)
             {
-                return (long)dynamicValue.value;
+                return Convert.ToInt64(dynamicValue.value);
             }
 
             return long.Parse(dynamicValue.ToString());
@@ -263,7 +263,7 @@
         {
             if (dynamicValue.value.GetType().IsValueType)
             {
-                return (float)dynamicValue.value;
+                return Convert.ToSingle(dynamicValue.value);
             }
 
             return float.Parse(dynamicValue.ToString());
@@ -273,7 +273,7 @@
         {
             if (dynamicValue.value.GetType().IsValueType)
             {
-                return (decimal)dynamicValue.value;
+                return Convert.ToDecimal(dynamicValue.value);
             }
 
             return decimal.Parse(dynamicValue.ToString());
@@ -283,7 +283,7 @@
         {
             if (dynamicValue.value.GetType().IsValueType)
             {
-                return (double)dynamicValue.value;
+                return Convert.ToDouble(dynamicValue.value);
             }
 
             return double.Parse(dynamicValue.ToString());
