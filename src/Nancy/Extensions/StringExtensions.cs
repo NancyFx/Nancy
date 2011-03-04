@@ -59,8 +59,14 @@ namespace Nancy.Extensions
         {
             var coll = HttpUtility.ParseQueryString(queryString);
             var ret = new DynamicDictionary();
-            foreach (var key in coll.AllKeys.Where(key => key != null)) 
-                ret[key] = coll[key];
+            foreach (var key in coll.AllKeys.Where(key => key != null))
+            {
+                var values = coll.GetValues(key);
+                if (values.Length == 1)
+                    ret[key] = values[0];
+                else
+                    ret[key] = values;
+            }
             return ret;
         }
     }

@@ -1,3 +1,5 @@
+using Machine.Specifications;
+
 namespace Nancy.Tests.Unit
 {
     using System;
@@ -150,6 +152,30 @@ namespace Nancy.Tests.Unit
 
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
+        }
+
+        [Fact]
+        public void Should_correctly_extract_array_from_form_data_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            const string bodyContent = "names=John&names=Paul&names=George&names=Ringo";
+            var memory = new MemoryStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers = 
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            ((string[])request.Form.names).ShouldContain("John", "Paul", "George", "Ringo");
         }
 
 		[Fact]

@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿using System.Collections;
+
+namespace Nancy
 {
     using System;
     using System.Dynamic;
@@ -131,8 +133,12 @@
             {
                 return true;
             }
-
             var binderType = binder.Type;
+            if (value.GetType() == binderType)
+            {
+                result = value;
+                return true;
+            }
             if (binderType == typeof(String))
             {
                 result = Convert.ToString(value);
