@@ -62,7 +62,7 @@ namespace Nancy.Json
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer();
 
         public JavaScriptSerializer()
-            : this(null, false, Int32.MaxValue, 100)
+            : this(null, false, new StringBuilder().MaxCapacity, 100)
         {
         }
 
