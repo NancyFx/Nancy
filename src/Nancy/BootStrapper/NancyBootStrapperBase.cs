@@ -45,6 +45,7 @@
         {
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();
+            this.OnError = new ErrorPipeline();
         }
 
         /// <summary>
@@ -131,15 +132,42 @@
         protected AfterPipeline AfterRequest { get; set; }
 
         /// <summary>
+        /// <para>
+        /// The error-handling hook
+        /// </para>
+        /// <para>
+        /// The error-handling hook is called if an uncaught exception is throw during the request.
+        /// The error can happen at any time in the request handling, including the Before and After pipelines.
+        /// I can be used to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        protected ErrorPipeline OnError { get; set; }
+
+        /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
         {
-            this.initialised = true;
+            if (this.initialised) return;
 
             this.ApplicationContainer = this.CreateContainer();
 
             this.InitialiseInternal(this.ApplicationContainer);
+
+            this.initialised = true;
+
+            ConfigureApplicationContainer(this.ApplicationContainer);
+            
+            RegisterDefaults(this.ApplicationContainer, BuildDefaults());
+            RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
+            RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
+            RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
+            RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
+
+            var engine = GetEngineInternal();
+            engine.PreRequestHook = this.BeforeRequest;
+            engine.PostRequestHook = this.AfterRequest;
+            engine.OnErrorHook = this.OnError;
         }
 
         /// <summary>
@@ -153,19 +181,7 @@
                 throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
             }
 
-            ConfigureApplicationContainer(this.ApplicationContainer);
-            
-            RegisterDefaults(this.ApplicationContainer, BuildDefaults());
-            RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
-            RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
-            RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
-            RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
-
-            var engine = GetEngineInternal();
-            engine.PreRequestHook = this.BeforeRequest;
-            engine.PostRequestHook = this.AfterRequest;
-
-            return engine;
+            return GetEngineInternal();
         }
 
         private IEnumerable<TypeRegistration> BuildDefaults()

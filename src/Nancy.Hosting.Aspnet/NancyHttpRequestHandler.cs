@@ -9,10 +9,7 @@ namespace Nancy.Hosting.Aspnet
     {
         private readonly INancyEngine engine;
 
-        public bool IsReusable
-        {
-            get { return true; }
-        }
+        public static INancyBootstrapper bootstrapper;
 
         public NancyHttpRequestHandler()
         {
@@ -32,6 +29,8 @@ namespace Nancy.Hosting.Aspnet
 
         private static INancyBootstrapper GetConfigurationBootstrapper()
         {
+            if (bootstrapper != null) return bootstrapper;
+
             var configurationBootstrapperType = 
                 GetConfigurationBootstrapperType();
 
@@ -39,7 +38,8 @@ namespace Nancy.Hosting.Aspnet
             {
                 var bootstrapperType =
                     Type.GetType(configurationBootstrapperType.Name);
-                return (Activator.CreateInstance(bootstrapperType)) as INancyBootstrapper;
+                bootstrapper = (Activator.CreateInstance(bootstrapperType)) as INancyBootstrapper;
+                return bootstrapper;
             }
 
             return null;
@@ -74,6 +74,21 @@ namespace Nancy.Hosting.Aspnet
             var wrappedContext = new HttpContextWrapper(context);
             var handler = new NancyHandler(this.engine);
             handler.ProcessRequest(wrappedContext);
+        }
+
+        public bool IsReusable { get { return true; } }
+
+        public void Init(HttpApplication context)
+        {
+            context.BeginRequest += new EventHandler(context_BeginRequest);
+        }
+
+        void context_BeginRequest(object sender, EventArgs e)
+        {
+            ProcessRequest(HttpContext.Current);
+        }
+        public void Dispose()
+        {
         }
     }
 }

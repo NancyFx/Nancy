@@ -64,6 +64,18 @@
         public Action<NancyContext> PostRequestHook { get; set; }
 
         /// <summary>
+        /// <para>
+        /// Gets or sets the error handling hook.
+        /// </para>
+        /// <para>
+        /// The error handling hook is called if an uncaught exception occurs during the handling of a request.
+        /// This includes exceptions thrown during the Before/After pipline.  It can be used to rewrite the 
+        /// response or add/remove items from the context
+        /// </para>
+        /// </summary>
+        public Func<NancyContext, Exception, Response> OnErrorHook { get; set; } 
+
+        /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
@@ -78,16 +90,23 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
-            this.InvokePreRequestHook(context);
-
-            if (context.Response == null)
+            try
             {
-                this.ResolveAndInvokeRoute(context);
+                this.InvokePreRequestHook(context);
+
+                if (context.Response == null)
+                {
+                    this.ResolveAndInvokeRoute(context);
+                }
+
+                if (this.PostRequestHook != null)
+                {
+                    this.PostRequestHook.Invoke(context);
+                }
             }
-
-            if (this.PostRequestHook != null)
+            catch (Exception ex)
             {
-                this.PostRequestHook.Invoke(context);
+                this.InvokeOnErrorHook(context, ex);
             }
 
             return context;
@@ -104,6 +123,17 @@
                     context.Response = preRequestResponse;
                 }
             }
+        }
+
+        private void InvokeOnErrorHook(NancyContext context, Exception ex)
+        {
+            if (this.OnErrorHook == null) throw ex;
+            
+            var onErrorResponse = this.OnErrorHook.Invoke(context, ex);
+
+            if (onErrorResponse == null) throw ex;
+            
+            context.Response = onErrorResponse;
         }
 
         private void ResolveAndInvokeRoute(NancyContext context)

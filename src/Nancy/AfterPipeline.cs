@@ -13,7 +13,7 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class AfterPipeline
+    public class AfterPipeline 
     {
         /// <summary>
         /// Pipeline items to execute

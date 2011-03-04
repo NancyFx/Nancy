@@ -46,7 +46,7 @@ namespace Nancy.Json
         int _recursionLimit;
         JavaScriptTypeResolver _typeResolver;
 
-#if NET_3_5
+#if NET_
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 2097152, 100);
 
         public JavaScriptSerializer()
@@ -59,15 +59,15 @@ namespace Nancy.Json
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer();
 
         public JavaScriptSerializer()
-            : this(null, false, 102400, 100)
+            : this(null, false, Int32.MaxValue, 100)
         {
         }
 
         public JavaScriptSerializer(JavaScriptTypeResolver resolver)
-            : this(resolver, false, 102400, 100)
+            : this(resolver, false, Int32.MaxValue, 100)
         {
         }
 #endif
