@@ -106,6 +106,8 @@
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
+    <Compile Include="Security\SecurityConventions.cs" />
+    <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Session\DefaultEncryptionProvider.cs" />
     <Compile Include="Session\DefaultSessionObjectFormatter.cs" />

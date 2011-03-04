@@ -2,7 +2,6 @@ namespace NancyAuthenticationDemo
 {
     using System;
     using System.Collections.Generic;
-    using Extensions;
     using Nancy;
     using Nancy.Responses;
 
@@ -12,6 +11,7 @@ namespace NancyAuthenticationDemo
         {
             base.InitialiseInternal(container);
 
+            // In reality you would use a pre-built authentication/claims provider
             this.BeforeRequest += (ctx) =>
             {
                 // World's-worse-authentication (TM)
@@ -21,8 +21,8 @@ namespace NancyAuthenticationDemo
 
                 if (username.HasValue)
                 {
-                    ctx.Items[Security.USERNAME_KEY] = username.ToString();
-                    ctx.Items[Security.CLAIMS_KEY] = BuildClaims(username.ToString());
+                    ctx.Items[Nancy.Security.SecurityConventions.AuthenticatedUsernameKey] = username.ToString();
+                    ctx.Items[Nancy.Security.SecurityConventions.AuthenticatedClaimsKey] = BuildClaims(username.ToString());
                 }
 
                 return null;

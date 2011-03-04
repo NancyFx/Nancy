@@ -63,7 +63,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AuthenticationBootstrapper.cs" />
-    <Compile Include="Extensions\Security.cs" />
+    <Compile Include="AnotherVerySecureModule.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="SecureModule.cs" />

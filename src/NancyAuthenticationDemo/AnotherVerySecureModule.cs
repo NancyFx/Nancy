@@ -1,7 +1,5 @@
 namespace NancyAuthenticationDemo
 {
-    using System.Linq;
-
     using Nancy.Security;
     using Models;
     using Nancy;
@@ -9,11 +7,11 @@ namespace NancyAuthenticationDemo
     /// <summary>
     /// A module that only people with SuperSecure clearance are allowed to access
     /// </summary>
-    public class AnotherVerySecureModule : NancyModule
+    public class VerySecureModule : NancyModule
     {
-        public AnotherVerySecureModule() : base("/superSecureToo")
+        public VerySecureModule() : base("/superSecure")
         {
-            this.RequiresValidatedClaims(c => c.Contains("SuperSecure"));
+            this.RequiresClaims(new[] { "SuperSecure" });
 
             Get["/"] = x =>
             {

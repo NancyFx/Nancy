@@ -18,7 +18,7 @@
         /// <summary>
         /// Pipeline items to execute
         /// </summary>
-        private List<Action<NancyContext>> pipelineItems;
+        protected List<Action<NancyContext>> pipelineItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
@@ -75,7 +75,7 @@
         /// Add an item to the start of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void AddItemToStartOfPipeline(Action<NancyContext> item)
+        public virtual void AddItemToStartOfPipeline(Action<NancyContext> item)
         {
             this.InsertItemAtPipelineIndex(0, item);
         }
@@ -84,7 +84,7 @@
         /// Add an item to the end of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void AddItemToEndOfPipeline(Action<NancyContext> item)
+        public virtual void AddItemToEndOfPipeline(Action<NancyContext> item)
         {
             this.pipelineItems.Add(item);
         }
@@ -94,7 +94,7 @@
         /// </summary>
         /// <param name="index">Index to add at</param>
         /// <param name="item">Item to add</param>
-        public void InsertItemAtPipelineIndex(int index, Action<NancyContext> item)
+        public virtual void InsertItemAtPipelineIndex(int index, Action<NancyContext> item)
         {
             this.pipelineItems.Insert(index, item);
         }
