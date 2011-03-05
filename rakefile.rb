@@ -2,7 +2,7 @@ require 'rubygems'
 require 'albacore'
 require 'rake/clean'
 
-NANCY_VERSION = "0.0.2.0"
+NANCY_VERSION = "0.4.0"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
@@ -26,9 +26,9 @@ CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 desc "Update shared assemblyinfo file for the build"
 assemblyinfo :version => [:clean] do |asm|
 	asm.version = NANCY_VERSION
-	asm.company_name = "NancyFx"
-	asm.product_name = "NancyFx"
-	asm.title = "NancyFx"
+	asm.company_name = "Nancy"
+	asm.product_name = "Nancy"
+	asm.title = "Nancy"
 	asm.description = "A Sinatra inspired web framework for the .NET platform"
 	asm.copyright = "Copyright (C) Andreas Hakansson and contributors"
 	asm.output_file = SHARED_ASSEMBLY_INFO
