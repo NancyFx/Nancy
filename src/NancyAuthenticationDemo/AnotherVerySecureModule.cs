@@ -7,9 +7,9 @@ namespace NancyAuthenticationDemo
     /// <summary>
     /// A module that only people with SuperSecure clearance are allowed to access
     /// </summary>
-    public class VerySecureModule : NancyModule
+    public class AnotherVerySecureModule : NancyModule
     {
-        public VerySecureModule() : base("/superSecure")
+        public AnotherVerySecureModule() : base("/superSecure")
         {
             this.RequiresClaims(new[] { "SuperSecure" });
 
