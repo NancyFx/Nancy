@@ -6,11 +6,16 @@ namespace Nancy.Cryptography
     public interface IHmacProvider
     {
         /// <summary>
+        /// Gets the length of the HMAC signature in bytes
+        /// </summary>
+        int HmacLength { get; }
+
+        /// <summary>
         /// Create a hmac from the given data using the given passPhrase
         /// </summary>
         /// <param name="data">Data to create hmac from</param>
         /// <param name="passPhrase">Passphrase to use</param>
         /// <returns>String representation of the hmac</returns>
-        string GenerateHmac(string data, string passPhrase);
+        byte[] GenerateHmac(string data, string passPhrase);
     }
 }

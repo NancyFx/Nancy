@@ -1,13 +1,15 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-    using System.Security.Cryptography;
-    using System.Text;
     using Bootstrapper;
     using Cookies;
+    using Cryptography;
     using Responses;
     using Security;
 
+    /// <summary>
+    /// Nancy forms authentication implementation
+    /// </summary>
     public static class FormsAuthentication
     {
         /// <summary>
@@ -213,9 +215,10 @@ namespace Nancy.Authentication.Forms
             var encryptionProvider = configuration.EncryptionProvider;
 
             var encryptedCookie = encryptionProvider.Encrypt(cookieValue, passPhrase, salt);
-            var hmac = GenerateHmac(encryptedCookie, configuration);
+            var hmacBytes = GenerateHmac(encryptedCookie, configuration);
+            var hmacString = Convert.ToBase64String(hmacBytes);
 
-            return String.Format("{0}@||@{1}", encryptedCookie, hmac);
+            return String.Format("{1}{0}", encryptedCookie, hmacString);
         }
 
         /// <summary>
@@ -223,8 +226,8 @@ namespace Nancy.Authentication.Forms
         /// </summary>
         /// <param name="encryptedCookie">Encrypted cookie string</param>
         /// <param name="configuration">Current configuration</param>
-        /// <returns>Hmac string</returns>
-        private static string GenerateHmac(string encryptedCookie, FormsAuthenticationConfiguration configuration)
+        /// <returns>Hmac byte array</returns>
+        private static byte[] GenerateHmac(string encryptedCookie, FormsAuthenticationConfiguration configuration)
         {
             return configuration.HmacProvider.GenerateHmac(encryptedCookie, configuration.HmacPassphrase);
         }
@@ -239,26 +242,37 @@ namespace Nancy.Authentication.Forms
         {
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
             var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
-            var cookieSections = decodedCookie.Split(new[] { "@||@" }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (cookieSections.Length != 2)
-            {
-                return String.Empty;
-            }
+            var hmacStringLength = GetBase64Length(configuration.HmacProvider.HmacLength);
 
-            var encryptedCookie = cookieSections[0];
-            var hmac = cookieSections[1];
+            var encryptedCookie = decodedCookie.Substring(hmacStringLength);
+            var hmacString = decodedCookie.Substring(0, hmacStringLength);
 
             var passPhrase = configuration.Passphrase;
             var salt = configuration.SaltBytes;
             var encryptionProvider = configuration.EncryptionProvider;
 
-            if (hmac != GenerateHmac(encryptedCookie, configuration))
-            {
-                return String.Empty;
-            }
+            // Check the hmacs, but don't early exit if they don't match
+            var hmacBytes = Convert.FromBase64String(hmacString);
+            var newHmac = GenerateHmac(encryptedCookie, configuration);
+            var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, configuration.HmacProvider.HmacLength);
 
-            return encryptionProvider.Decrypt(encryptedCookie, passPhrase, salt);
+            var decrypted = encryptionProvider.Decrypt(encryptedCookie, passPhrase, salt);
+
+            // Only return the decrypted result if the hmac was ok
+            return hmacValid ? decrypted : String.Empty;
+        }
+
+        /// <summary>
+        /// Calculates how long a byte array of X length will be after base64 encoding
+        /// </summary>
+        /// <param name="normalLength">The normal, 8bit per byte, length of the byte array</param>
+        /// <returns>Base64 encoded length</returns>
+        private static int GetBase64Length(int normalLength)
+        {
+            var inputPadding = (normalLength % 3 != 0) ? (3 - (normalLength % 3)) : 0;
+
+            return (int)Math.Ceiling((normalLength + inputPadding) * 4.0 / 3.0);
         }
     }
 }
