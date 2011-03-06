@@ -63,7 +63,7 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Gets a value indicating whether the configuration is valid or not.
         /// </summary>
-        public bool IsValid
+        public virtual bool IsValid
         {
             get
             {
