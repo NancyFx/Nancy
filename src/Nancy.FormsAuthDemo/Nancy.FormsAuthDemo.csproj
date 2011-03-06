@@ -59,11 +59,13 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\NancyAuthenticationDemo\SecureModule.cs">
+      <Link>SecureModule.cs</Link>
+    </Compile>
     <Compile Include="FormsAuthBootstrapper.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SecureModule.cs" />
     <Compile Include="UserDatabase.cs" />
   </ItemGroup>
   <ItemGroup>

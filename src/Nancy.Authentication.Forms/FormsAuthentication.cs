@@ -43,6 +43,11 @@ namespace Nancy.Authentication.Forms
         /// <param name="configuration">Forms authentication configuration</param>
         public static void Enable(IApplicationPipelines applicationPipelines, FormsAuthenticationConfiguration configuration)
         {
+            if (applicationPipelines == null)
+            {
+                throw new ArgumentNullException("applicationPipelines");
+            }
+
             if (configuration == null)
             {
                 throw new ArgumentNullException("configuration");

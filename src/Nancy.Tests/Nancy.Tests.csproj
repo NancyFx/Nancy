@@ -68,6 +68,7 @@
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
+    <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
     <Compile Include="Unit\HttpMultipartBufferFixture.cs" />
     <Compile Include="Unit\HttpMultipartFixture.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
-    <Compile Include="Unit\Sessions\DefaultEncryptionProviderFixture.cs" />
+    <Compile Include="Unit\Cryptography\DefaultEncryptionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
