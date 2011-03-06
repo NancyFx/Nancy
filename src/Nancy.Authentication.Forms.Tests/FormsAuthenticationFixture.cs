@@ -17,19 +17,19 @@ namespace Nancy.Authentication.Forms.Tests
         private Guid userGuid;
 
         private string validCookieValue =
-            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z@||@fEdpkYCBsurZRZhQNco9ztwtfok=");
+            HttpUtility.UrlEncode("fEdpkYCBsurZRZhQNco9ztwtfok=scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
 
         private string cookieWithNoHmac =
             HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
 
         private string cookieWithEmptyHmac =
-            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z@||@");
+            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
 
         private string cookieWithInvalidHmac =
-            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z@||@fEdpjYCBsurZRZhQNco9ztwtfok=");
+            HttpUtility.UrlEncode("fEdpjYCBsurZRZhQNco9ztwtfok=scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
 
         private string cookieWithBrokenEncryptedData =
-            HttpUtility.UrlEncode("scuTY57jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z@||@fEdpkYCBsurZRZhQNco9ztwtfok=");
+            HttpUtility.UrlEncode("fEdpkYCBsurZRZhQNco9ztwtfok=scuTY57jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
 
         public FormsAuthenticationFixture()
         {
