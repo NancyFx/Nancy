@@ -1,4 +1,4 @@
-namespace Nancy.Session
+namespace Nancy.Cryptography
 {
     using System;
     using System.Security.Cryptography;
@@ -25,7 +25,7 @@ namespace Nancy.Session
                 var input = Encoding.UTF8.GetBytes(data);
                 var output = encryptor.TransformFinalBlock(input, 0, input.Length);
 
-                return Convert.ToBase64String(output, 0, output.Length);
+                return Convert.ToBase64String(output);
             }
         }
 
@@ -47,7 +47,7 @@ namespace Nancy.Session
                     var input = Convert.FromBase64String(data);
                     var output = decryptor.TransformFinalBlock(input, 0, input.Length);
 
-                    return Encoding.UTF8.GetString(output, 0, output.Length);
+                    return Encoding.UTF8.GetString(output);
                 }
             }
             catch (CryptographicException)

@@ -5,7 +5,7 @@ namespace Nancy.Session
     using System.Linq;
     using System.Text;
     using Bootstrapper;
-
+    using Cryptography;
     using Nancy.Cookies;
     using Nancy.Helpers;
 

@@ -139,6 +139,8 @@
 
             this.ApplicationContainer = this.CreateContainer();
 
+            this.ConfigureApplicationContainer(this.ApplicationContainer);
+            
             this.InitialiseInternal(this.ApplicationContainer);
         }
 
@@ -153,8 +155,6 @@
                 throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
             }
 
-            ConfigureApplicationContainer(this.ApplicationContainer);
-            
             RegisterDefaults(this.ApplicationContainer, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
             RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());

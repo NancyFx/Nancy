@@ -1,5 +1,6 @@
 namespace Nancy.Tests.Unit.Sessions
 {
+    using Cryptography;
     using Session;
     using Xunit;
 

@@ -1,4 +1,4 @@
-namespace Nancy.Session
+namespace Nancy.Cryptography
 {
     /// <summary>
     /// Provides symetrical encryption support
