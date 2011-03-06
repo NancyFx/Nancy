@@ -47,6 +47,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
+    <Compile Include="Cryptography\DefaultHmacProvider.cs" />
+    <Compile Include="Cryptography\IHmacProvider.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
@@ -113,9 +115,9 @@
     <Compile Include="Security\SecurityConventions.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
-    <Compile Include="Session\DefaultEncryptionProvider.cs" />
+    <Compile Include="Cryptography\DefaultEncryptionProvider.cs" />
     <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
-    <Compile Include="Session\IEncryptionProvider.cs" />
+    <Compile Include="Cryptography\IEncryptionProvider.cs" />
     <Compile Include="Session\IFormatterSelector.cs" />
     <Compile Include="Session\ISession.cs" />
     <Compile Include="Session\ISessionObjectFormatter.cs" />

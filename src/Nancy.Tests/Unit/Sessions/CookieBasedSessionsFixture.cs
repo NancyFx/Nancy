@@ -5,6 +5,7 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Linq;
     using System.Web;
+    using Cryptography;
     using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Tests.Unit.Sessions;
