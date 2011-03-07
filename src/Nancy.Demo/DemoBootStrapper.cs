@@ -24,7 +24,7 @@
         {
             base.InitialiseInternal(container);
 
-            CookieBasedSessions.Enable(this, "MyPassPhrase", "MySaltIsReallyGood");
+            CookieBasedSessions.Enable(this, "MyPassPhrase", "MySaltIsReallyGood", "MyHmacPassphrase");
 
             this.AfterRequest += (ctx) =>
                 {

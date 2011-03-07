@@ -243,7 +243,7 @@ namespace Nancy.Authentication.Forms
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
             var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
 
-            var hmacStringLength = GetBase64Length(configuration.HmacProvider.HmacLength);
+            var hmacStringLength = Base64Helpers.GetBase64Length(configuration.HmacProvider.HmacLength);
 
             var encryptedCookie = decodedCookie.Substring(hmacStringLength);
             var hmacString = decodedCookie.Substring(0, hmacStringLength);
@@ -263,16 +263,5 @@ namespace Nancy.Authentication.Forms
             return hmacValid ? decrypted : String.Empty;
         }
 
-        /// <summary>
-        /// Calculates how long a byte array of X length will be after base64 encoding
-        /// </summary>
-        /// <param name="normalLength">The normal, 8bit per byte, length of the byte array</param>
-        /// <returns>Base64 encoded length</returns>
-        private static int GetBase64Length(int normalLength)
-        {
-            var inputPadding = (normalLength % 3 != 0) ? (3 - (normalLength % 3)) : 0;
-
-            return (int)Math.Ceiling((normalLength + inputPadding) * 4.0 / 3.0);
-        }
-    }
+     }
 }

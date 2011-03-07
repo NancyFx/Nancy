@@ -47,6 +47,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
+    <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\DefaultHmacProvider.cs" />
     <Compile Include="Cryptography\HmacComparer.cs" />
     <Compile Include="Cryptography\IHmacProvider.cs" />

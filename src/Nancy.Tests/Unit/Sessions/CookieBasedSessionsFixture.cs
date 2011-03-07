@@ -17,11 +17,13 @@ namespace Nancy.Tests.Unit
     {
         private readonly IEncryptionProvider encryptionProvider;
         private readonly Nancy.Session.CookieBasedSessions cookieStore;
+        private readonly IHmacProvider hmacProvider;
 
         public CookieBasedSessionsFixture()
         {
             this.encryptionProvider = A.Fake<IEncryptionProvider>();
-            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", new Fakes.FakeSessionObjectFormatter());
+            this.hmacProvider = A.Fake<IHmacProvider>();
+            this.cookieStore = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, this.hmacProvider, "the passphrase", "the salt", "hmac passphrase", new Fakes.FakeSessionObjectFormatter());
         }
 
         [Fact]
@@ -142,7 +144,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_throw_if_salt_too_short()
         {
-            var exception = Record.Exception(() => new CookieBasedSessions(this.encryptionProvider, "pass", "short", A.Fake<ISessionObjectFormatter>()));
+            var exception = Record.Exception(() => new CookieBasedSessions(this.encryptionProvider, this.hmacProvider, "pass", "short", "hmac", A.Fake<ISessionObjectFormatter>()));
 
             exception.ShouldBeOfType(typeof(ArgumentException));
         }
@@ -156,7 +158,7 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
 
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt");
+            CookieBasedSessions.Enable(hooks, encryptionProvider, hmacProvider, "this passphrase", "this is a salt", "this hmac passphrase");
 
             beforePipeline.PipelineItems.Count().ShouldEqual(1);
             afterPipeline.PipelineItems.Count().ShouldEqual(1);
@@ -170,7 +172,7 @@ namespace Nancy.Tests.Unit
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(new Fakes.FakeSessionObjectFormatter());
+            CookieBasedSessions.Enable(hooks, encryptionProvider, hmacProvider, "this passphrase", "this is a salt", "hmac passphrase").WithFormatter(new Fakes.FakeSessionObjectFormatter());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -190,7 +192,7 @@ namespace Nancy.Tests.Unit
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(new Fakes.FakeSessionObjectFormatter());
+            CookieBasedSessions.Enable(hooks, encryptionProvider, hmacProvider, "this passphrase", "this is a salt", "hmac passphrase").WithFormatter(new Fakes.FakeSessionObjectFormatter());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -208,7 +210,7 @@ namespace Nancy.Tests.Unit
         {
             var fakeFormatter = A.Fake<ISessionObjectFormatter>();
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
-            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", fakeFormatter);
+            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, this.hmacProvider, "the passphrase", "the salt", "hmac passphrase", fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1", false);
 
             store.Load(request);
@@ -223,7 +225,7 @@ namespace Nancy.Tests.Unit
             var session = new Session(new Dictionary<string, object>());
             session["key1"] = "value1";
             var fakeFormatter = A.Fake<ISessionObjectFormatter>();
-            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, "the passphrase", "the salt", fakeFormatter);
+            var store = new Nancy.Session.CookieBasedSessions(this.encryptionProvider, this.hmacProvider, "the passphrase", "the salt", "hmac passphrase", fakeFormatter);
 
             store.Save(session, response);
 
@@ -240,7 +242,7 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             var fakeFormatter = A.Fake<ISessionObjectFormatter>();
             A.CallTo(() => this.encryptionProvider.Decrypt("encryptedkey1=value1", A<string>.Ignored, A<byte[]>.Ignored)).Returns("key1=value1;");
-            CookieBasedSessions.Enable(hooks, encryptionProvider, "this passphrase", "this is a salt").WithFormatter(fakeFormatter);
+            CookieBasedSessions.Enable(hooks, encryptionProvider, hmacProvider, "this passphrase", "this is a salt", "hmac passphrase").WithFormatter(fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1");
             var nancyContext = new NancyContext() { Request = request };
 
@@ -255,7 +257,7 @@ namespace Nancy.Tests.Unit
             var response = new Response();
             var session = new Session(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
-            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), "the passphrase", "the salt", new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), "the passphrase", "the salt", "hmac passphrase", new DefaultSessionObjectFormatter());
             session["testObject"] = payload;
 
             store.Save(session, response);
@@ -273,7 +275,7 @@ namespace Nancy.Tests.Unit
             var response = new Response();
             var session = new Session(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
-            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), "the passphrase", "the salt", new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), "the passphrase", "the salt", "hmac passphrase", new DefaultSessionObjectFormatter());
             session["testObject"] = payload;
             store.Save(session, response);
             var request = new Request("GET", "/", "http");
@@ -282,6 +284,36 @@ namespace Nancy.Tests.Unit
             var result = store.Load(request);
 
             result["testObject"].ShouldEqual(payload);
+        }
+
+        [Fact]
+        public void Should_encrypt_data()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Should_generate_hmac()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Should_return_blank_session_if_hmac_changed()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Should_return_blank_session_if_hmac_missing()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
+        public void Should_return_blank_session_if_encrypted_data_modified()
+        {
+            throw new NotImplementedException();    
         }
 
         private Request CreateRequest(string sessionValue, bool load = true)
