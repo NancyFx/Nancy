@@ -68,6 +68,9 @@
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
+    <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
+    <Compile Include="Unit\HttpMultipartBufferFixture.cs" />
+    <Compile Include="Unit\HttpMultipartFixture.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />

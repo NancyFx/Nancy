@@ -68,6 +68,9 @@
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="Helpers\HttpEncoder.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
+    <Compile Include="HttpMultipart.cs" />
+    <Compile Include="HttpMultipartBoundary.cs" />
+    <Compile Include="HttpMultipartBuffer.cs" />
     <Compile Include="HttpStatusCode.cs" />
     <Compile Include="IHideObjectMembers.cs" />
     <Compile Include="INancyContextFactory.cs" />
@@ -117,6 +120,7 @@
     <Compile Include="Session\ISessionObjectFormatter.cs" />
     <Compile Include="Session\NullSessionProvider.cs" />
     <Compile Include="Session\Session.cs" />
+    <Compile Include="HttpMultiparSubStream.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />

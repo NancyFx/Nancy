@@ -3,6 +3,8 @@ namespace Nancy.Tests.Unit
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Text;
     using Xunit;
 
     public class RequestFixture
@@ -150,6 +152,184 @@ namespace Nancy.Tests.Unit
 
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
+        }
+
+        [Fact]
+        public void Should_set_extracted_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>
+                {
+                    { "name", "John Doe"},
+                    { "age", "42"}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            ((string)request.Form.name).ShouldEqual("John Doe");
+            ((string)request.Form.age).ShouldEqual("42");
+        }
+
+        [Fact]
+        public void Should_set_extracted_files_to_files_collection_when_body_content_type_is_multipart_form_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "test", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            request.Files.ShouldHaveCount(1);
+        }
+
+        [Fact]
+        public void Should_set_content_type_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            request.Files.First().ContentType.ShouldEqual("content/type");
+        }
+
+        [Fact]
+        public void Should_set_name_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            request.Files.First().Name.ShouldEqual("sample.txt");
+        }
+
+        [Fact]
+        public void Should_value_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            GetStringValue(request.Files.First().Value).ShouldEqual("some test content");
+        }
+
+        private static string GetStringValue(Stream stream)
+        {
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
+        }
+
+        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key]);
+            }
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
+        }
+
+        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string>> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"whatever\"; filename=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Type: {0}", formValues[key].Item1);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key].Item2);
+            }
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
         }
 
 		[Fact]

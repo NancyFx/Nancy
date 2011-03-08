@@ -4,6 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Nancy.Extensions;
     using Session;
 
@@ -12,7 +13,7 @@ namespace Nancy
     /// </summary>
     public class Request
     {
-        private dynamic form;
+        private dynamic form = new DynamicDictionary();
 
         private IDictionary<string, string> cookies;
 
@@ -69,6 +70,7 @@ namespace Nancy
             this.Protocol = protocol;
             this.Query = query.AsQueryDictionary();
             this.Session = new NullSessionProvider();
+            this.ParseFormData();
         }
 
         /// <summary>
@@ -119,7 +121,7 @@ namespace Nancy
         /// <remarks>Currently Nancy will only parse form data sent using the application/x-www-url-encoded mime-type.</remarks>
         public dynamic Form
         {
-            get { return this.form ?? (this.form = this.GetFormData()); }
+            get { return this.form; }
         }
 
         /// <summary>
@@ -153,19 +155,59 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the absolute path of the requested resource.</value>
         /// <remarks>This does not include the scheme, host name, or query portion of the URI.</remarks>
         public string Uri { get; private set; }
-        
-        private dynamic GetFormData()
+
+        public IEnumerable<HttpFile> Files
         {
-            if (this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
+            get { return this.files; }
+        }
+
+        private List<HttpFile> files = new List<HttpFile>();
+
+        private void ParseFormData()
+        {
+            if (!this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
             {
-                var contentType = this.Headers["content-type"].First();
-                if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+                return;
+            }
+
+            var contentType = this.Headers["content-type"].First();
+            if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+            {
+                var reader = new StreamReader(this.Body);
+                this.form = reader.ReadToEnd().AsQueryDictionary();
+            }
+
+            if (contentType.StartsWith("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            {
+                var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
+                var multipart = new HttpMultipart(this.Body, boundary);
+
+                foreach (var httpMultipartBoundary in multipart.GetBoundaries())
                 {
-                    var reader = new StreamReader(this.Body);
-                    return reader.ReadToEnd().AsQueryDictionary();
+                    if (string.IsNullOrEmpty(httpMultipartBoundary.Filename))
+                    {
+                        var reader = new StreamReader(httpMultipartBoundary.Value);
+                        this.form[httpMultipartBoundary.Name] = reader.ReadToEnd();
+                    }
+                    else
+                    {
+                        this.files.Add(new HttpFile {
+                            ContentType = httpMultipartBoundary.ContentType,
+                            Name = httpMultipartBoundary.Filename,
+                            Value = httpMultipartBoundary.Value
+                        });
+                    }
                 }
             }
-            return new DynamicDictionary();
         }
+    }
+
+    public class HttpFile
+    {
+        public string ContentType { get; set; }
+
+        public string Name { get; set; }
+
+        public Stream Value { get; set; }
     }
 }
