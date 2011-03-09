@@ -15,6 +15,12 @@ namespace Nancy.Tests.Unit
 
     public class CookieBasedSessionsFixture
     {
+        private const string ValidDataPass = "the passphrase";
+        private const string ValidDataSalt = "the salt";
+        private const string ValidDataHmacPassphrase = "hmac passphrase";
+        private const string ValidData = "+MWfFNoAFzbASDYNlp+GGd8mcbab32gvDSt1flTfmawf5CE3HU3eaAiFGyiOrF/x0L7pcv5D22acU5/kTTq2W8ohuR0omhIZaK3L3O/8IJl3y1ZbeA+cChL4As+89XPwuK9e82AHpdeGpc12gcS0dfKfLL6yHsJGj7EB0sBWNUPqhQ84KaMb1G9zU/XzNv6dP+ishG+cqvpOYJ7UBRxdED/PZAWJKst2wBylOYNriI5vPRd3UtnxQWQRmCoF4Vo/7h2r01VKnE3Jl6HZQuEM2qEaxMgjcJ5/39Em7+XHwwiLUc5nYhisTmFWzjslpChuZVCIKbNp2cLxNPdk1CnwVcOIoNF96qAyNJeP1B1v4c3PZv3LY+/w8AwFLIwTEqgM44410pm/YQ1g0wg768eifaQoLur8G1mL4GXzqL984w05dNjGyeuw1sBntelYlpPuB7JFy9kCXi9sI5xrSeSKRv2u4mf7Y4cvPanDliTnpew05F1tT0vKEAYAc/PONvkcuVrfjUThP3hbCChyFAhD8r0ZHyduaJ3Ur2zcLqQtXz2CQFdfOU0hujzhS9fHhcEvMF7JKMnuToCeVwSW4/dSizIV+JGaac7heHxuOiHq7bbI7XS8gN91PxV24jfVrRH97tXY0eegfqCAYcvBjI9cTWywb4LUVeDyF/O/3VCq9Wz3bRJP6icIoKxsY1wiMDlYTUb+gpJpJmQwQLrCvZO/4GayBp3FuPy8yCq2rcxEMHKzQ5U1h+I3kqrWk7Tj+A6MRvoE8W8ZAyZQ1bBZ0JxvjSQlKUbrwSrZEbR3/8jMfiJ7lyYrxT31GKnaO8fTGP3oEVzV2WSXdK6CbgUtNvLgMxbQ3+9h+53ahK237U7Vdz9S8lDfizstMoXid9kaHPHJUw/dHZD4OOceNn+R3ANjQU8qRYIaxKBeTpFi1/F3zAaxIvDdpbQnde+wYboHXEAX";
+        private const string ValidHmac = "EExp1f28ZU+kkJ/MNAZ4755fgtA=";
+
         private readonly IEncryptionProvider encryptionProvider;
         private readonly Nancy.Session.CookieBasedSessions cookieStore;
         private readonly IHmacProvider hmacProvider;
@@ -289,31 +295,90 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_encrypt_data()
         {
-            throw new NotImplementedException();
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>
+                                      {
+                                          {"key1", "val1"},                                          
+                                      });
+            session["key2"] = "val2";
+
+            cookieStore.Save(session, response);
+
+            A.CallTo(() => this.encryptionProvider.Encrypt(A<string>.Ignored, A<string>.Ignored, A<byte[]>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Should_generate_hmac()
         {
-            throw new NotImplementedException();
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>
+                                      {
+                                          {"key1", "val1"},                                          
+                                      });
+            session["key2"] = "val2";
+
+            cookieStore.Save(session, response);
+
+            A.CallTo(() => this.hmacProvider.GenerateHmac(A<string>.Ignored, A<string>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_load_valid_test_data()
+        {
+            var inputValue = ValidHmac + ValidData;
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), ValidDataPass, ValidDataSalt, ValidDataHmacPassphrase, new DefaultSessionObjectFormatter());
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+
+            var result = store.Load(request);
+
+            result.Count.ShouldEqual(1);
+            result.First().Value.ShouldBeOfType(typeof(DefaultSessionObjectFormatterFixture.Payload));
         }
 
         [Fact]
         public void Should_return_blank_session_if_hmac_changed()
         {
-            throw new NotImplementedException();
+            var inputValue = "b" + ValidHmac.Substring(1) + ValidData;
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), ValidDataPass, ValidDataSalt, ValidDataHmacPassphrase, new DefaultSessionObjectFormatter());
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+
+            var result = store.Load(request);
+
+            result.Count.ShouldEqual(0);
         }
 
         [Fact]
         public void Should_return_blank_session_if_hmac_missing()
         {
-            throw new NotImplementedException();
+            var inputValue = ValidData;
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), ValidDataPass, ValidDataSalt, ValidDataHmacPassphrase, new DefaultSessionObjectFormatter());
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+
+            var result = store.Load(request);
+
+            result.Count.ShouldEqual(0);
         }
 
         [Fact]
         public void Should_return_blank_session_if_encrypted_data_modified()
         {
-            throw new NotImplementedException();    
+            var inputValue = ValidHmac + ValidData.Substring(0, ValidData.Length - 1) + "Z";
+            inputValue = HttpUtility.UrlEncode(inputValue);
+            var store = new CookieBasedSessions(new DefaultEncryptionProvider(), new DefaultHmacProvider(), ValidDataPass, ValidDataSalt, ValidDataHmacPassphrase, new DefaultSessionObjectFormatter());
+            var request = new Request("GET", "/", "http");
+            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+
+            var result = store.Load(request);
+
+            result.Count.ShouldEqual(0);
         }
 
         private Request CreateRequest(string sessionValue, bool load = true)
