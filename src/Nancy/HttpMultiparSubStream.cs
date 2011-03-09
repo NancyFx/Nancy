@@ -161,7 +161,12 @@
 
         private void ThrowExceptionIsPositionIsOutOfBounds(long subStreamRelativePosition)
         {
-            if (subStreamRelativePosition < 0 || subStreamRelativePosition > this.Length)
+            if (subStreamRelativePosition > this.Length)
+            {
+                var ingdfgd = 10;
+            }
+
+            if (subStreamRelativePosition < 0 || subStreamRelativePosition > this.end)
                 throw new InvalidOperationException();
         }
     }

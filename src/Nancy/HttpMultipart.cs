@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Text;
 
+    /// <summary>
+    /// Retrieves <see cref="HttpMultipartBoundary"/> instances from a request stream.
+    /// </summary>
     public class HttpMultipart
     {
         private const byte LF = (byte)'\n';
@@ -12,6 +15,11 @@
         private readonly HttpMultipartBuffer readBuffer;
         private readonly Stream requestStream;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpMultipart"/> class.
+        /// </summary>
+        /// <param name="requestStream">The request stream to parse.</param>
+        /// <param name="boundary">The boundary marker to look for.</param>
         public HttpMultipart(Stream requestStream, string boundary)
         {
             this.requestStream = requestStream;
@@ -19,11 +27,15 @@
             this.readBuffer = new HttpMultipartBuffer(this.boundaryAsBytes);
         }
 
+        /// <summary>
+        /// Gets the <see cref="HttpMultipartBoundary"/> instances from the request stream.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing the found <see cref="HttpMultipartBoundary"/> instances.</returns>
         public IEnumerable<HttpMultipartBoundary> GetBoundaries()
         {
             return
-                from boundaryStream in this.GetBoundarySubStreams()
-                select new HttpMultipartBoundary(boundaryStream);
+                (from boundaryStream in this.GetBoundarySubStreams()
+                select new HttpMultipartBoundary(boundaryStream)).ToList();
         }
 
         private IEnumerable<HttpMultiparSubStream> GetBoundarySubStreams()
@@ -50,7 +62,7 @@
         {
             if (this.CheckIfFoundEndOfStream())
             {
-                return this.requestStream.Position;
+                return this.requestStream.Position - (this.readBuffer.Length + 4);
             }
 
             return boundaryEnd - (this.readBuffer.Length + 2);
@@ -79,7 +91,6 @@
         private long GetNextBoundaryPosition()
         {
             this.readBuffer.Reset();
-
             while(true)
             {
                 var byteReadFromStream = this.requestStream.ReadByte();

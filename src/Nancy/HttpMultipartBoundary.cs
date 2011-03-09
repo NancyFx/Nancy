@@ -102,11 +102,5 @@ namespace Nancy
 
             return lineReadFromStream;
         }
-
-        public override string ToString()
-        {
-            var reader = new StreamReader(this.Value);
-            return string.Concat("###", Environment.NewLine, reader.ReadToEnd());
-        }
     }
 }
