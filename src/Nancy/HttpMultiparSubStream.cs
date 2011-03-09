@@ -84,7 +84,6 @@
         {
         }
 
-        /// <remarks>Will reposition the wrapped stream.</remarks>
         public override int Read(byte[] buffer, int offset, int count)
         {
             if (count > (this.end - this.position))
@@ -107,11 +106,6 @@
             return bytesReadFromStream;
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
-        /// <remarks>Will reposition the wrapped stream.</remarks>
         public override int ReadByte()
         {
             if (this.position >= this.end)
