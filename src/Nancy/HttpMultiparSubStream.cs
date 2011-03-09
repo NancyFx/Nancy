@@ -3,6 +3,9 @@
     using System;
     using System.IO;
 
+    /// <summary>
+    /// A decorator stream that sits on top of an existing stream and appears as a unique stream.
+    /// </summary>
     public class HttpMultiparSubStream : Stream
     {
         private readonly Stream stream;
@@ -161,11 +164,6 @@
 
         private void ThrowExceptionIsPositionIsOutOfBounds(long subStreamRelativePosition)
         {
-            if (subStreamRelativePosition > this.Length)
-            {
-                var ingdfgd = 10;
-            }
-
             if (subStreamRelativePosition < 0 || subStreamRelativePosition > this.end)
                 throw new InvalidOperationException();
         }
