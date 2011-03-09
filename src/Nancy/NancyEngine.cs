@@ -1,10 +1,7 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
-
     using Nancy.Routing;
-    using Nancy.ViewEngines;
 
     public class NancyEngine : INancyEngine
     {
@@ -78,6 +75,13 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
+            this.InvokeRequestLifeCycle(context);
+
+            return context;
+        }
+
+        private void InvokeRequestLifeCycle(NancyContext context)
+        {
             this.InvokePreRequestHook(context);
 
             if (context.Response == null)
@@ -89,8 +93,6 @@
             {
                 this.PostRequestHook.Invoke(context);
             }
-
-            return context;
         }
 
         private void InvokePreRequestHook(NancyContext context)
