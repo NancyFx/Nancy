@@ -277,61 +277,6 @@ namespace Nancy.Tests.Unit
             return reader.ReadToEnd();
         }
 
-        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
-        {
-            var boundaryBuilder = new StringBuilder();
-
-            foreach (var key in formValues.Keys)
-            {
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append("--");
-                boundaryBuilder.Append("----NancyFormBoundary");
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append(formValues[key]);
-            }
-
-            var bytes =
-                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
-
-            return bytes;
-        }
-
-        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string>> formValues)
-        {
-            var boundaryBuilder = new StringBuilder();
-
-            foreach (var key in formValues.Keys)
-            {
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append("--");
-                boundaryBuilder.Append("----NancyFormBoundary");
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"whatever\"; filename=\"{0}\"", key);
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Type: {0}", formValues[key].Item1);
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');
-                boundaryBuilder.Append(formValues[key].Item2);
-            }
-
-            var bytes =
-                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
-
-            return bytes;
-        }
-
 		[Fact]
 		public void Should_be_able_to_invoke_form_repeatedly()
 		{
@@ -388,6 +333,69 @@ namespace Nancy.Tests.Unit
 
             // Then
             request.Protocol.ShouldEqual(protocol);
+        }
+
+        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key]);
+            }
+
+            boundaryBuilder.Append('\r');
+            boundaryBuilder.Append('\n');
+            boundaryBuilder.Append("------NancyFormBoundary--");
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
+        }
+
+        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string>> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"whatever\"; filename=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Type: {0}", formValues[key].Item1);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key].Item2);
+            }
+
+            boundaryBuilder.Append('\r');
+            boundaryBuilder.Append('\n');
+            boundaryBuilder.Append("------NancyFormBoundary--");
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
         }
     }
 }

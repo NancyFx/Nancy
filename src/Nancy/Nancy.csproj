@@ -68,6 +68,7 @@
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="Helpers\HttpEncoder.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
+    <Compile Include="HttpFile.cs" />
     <Compile Include="HttpMultipart.cs" />
     <Compile Include="HttpMultipartBoundary.cs" />
     <Compile Include="HttpMultipartBuffer.cs" />

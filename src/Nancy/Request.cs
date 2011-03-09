@@ -13,6 +13,7 @@ namespace Nancy
     /// </summary>
     public class Request
     {
+        private readonly List<HttpFile> files = new List<HttpFile>();
         private dynamic form = new DynamicDictionary();
 
         private IDictionary<string, string> cookies;
@@ -115,6 +116,15 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Gets a collection of files sent by the client-
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance, containing an <see cref="HttpFile"/> instance for each uploaded file.</value>
+        public IEnumerable<HttpFile> Files
+        {
+            get { return this.files; }
+        }
+
+        /// <summary>
         /// Gets the form data of the request.
         /// </summary>
         /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of form data.</value>
@@ -156,13 +166,6 @@ namespace Nancy
         /// <remarks>This does not include the scheme, host name, or query portion of the URI.</remarks>
         public string Uri { get; private set; }
 
-        public IEnumerable<HttpFile> Files
-        {
-            get { return this.files; }
-        }
-
-        private List<HttpFile> files = new List<HttpFile>();
-
         private void ParseFormData()
         {
             if (!this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
@@ -177,37 +180,30 @@ namespace Nancy
                 this.form = reader.ReadToEnd().AsQueryDictionary();
             }
 
-            if (contentType.StartsWith("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            if (!contentType.StartsWith("multipart/form-data", StringComparison.OrdinalIgnoreCase))
             {
-                var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
-                var multipart = new HttpMultipart(this.Body, boundary);
+                return;
+            }
+            
+            var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
+            var multipart = new HttpMultipart(this.Body, boundary);
 
-                foreach (var httpMultipartBoundary in multipart.GetBoundaries())
+            foreach (var httpMultipartBoundary in multipart.GetBoundaries())
+            {
+                if (string.IsNullOrEmpty(httpMultipartBoundary.Filename))
                 {
-                    if (string.IsNullOrEmpty(httpMultipartBoundary.Filename))
-                    {
-                        var reader = new StreamReader(httpMultipartBoundary.Value);
-                        this.form[httpMultipartBoundary.Name] = reader.ReadToEnd();
-                    }
-                    else
-                    {
-                        this.files.Add(new HttpFile {
-                            ContentType = httpMultipartBoundary.ContentType,
-                            Name = httpMultipartBoundary.Filename,
-                            Value = httpMultipartBoundary.Value
-                        });
-                    }
+                    var reader = new StreamReader(httpMultipartBoundary.Value);
+                    this.form[httpMultipartBoundary.Name] = reader.ReadToEnd();
+                }
+                else
+                {
+                    this.files.Add(new HttpFile(
+                                       httpMultipartBoundary.ContentType,
+                                       httpMultipartBoundary.Filename,
+                                       httpMultipartBoundary.Value
+                                       ));
                 }
             }
         }
-    }
-
-    public class HttpFile
-    {
-        public string ContentType { get; set; }
-
-        public string Name { get; set; }
-
-        public Stream Value { get; set; }
     }
 }

@@ -151,11 +151,6 @@
         {
             var boundaryBuilder = new StringBuilder();
 
-            boundaryBuilder.Append("--");
-            boundaryBuilder.Append("----NancyFormBoundary");
-            boundaryBuilder.Append('\r');
-            boundaryBuilder.Append('\n');
-
             boundaryBuilder.AppendFormat(
                 !string.IsNullOrEmpty(filename)
                     ? "Content-Disposition: form-data; name=\"{0}\"; filename=\"{1}\")"

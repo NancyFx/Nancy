@@ -11,10 +11,6 @@ namespace Nancy.Tests.Unit
     {
         private const string Boundary = "----NancyFormBoundary";
 
-        public HttpMultipartFixture()
-        {
-        }
-
         [Fact]
         public void Should_locate_all_boundaries()
         {
@@ -74,6 +70,10 @@ namespace Nancy.Tests.Unit
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
             }
+
+            boundaryBuilder.Append('\r');
+            boundaryBuilder.Append('\n');
+            boundaryBuilder.Append("------NancyFormBoundary--");
 
             var bytes =
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());

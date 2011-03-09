@@ -62,7 +62,7 @@
         {
             if (this.CheckIfFoundEndOfStream())
             {
-                return this.requestStream.Position - (this.readBuffer.Length + 4);
+                return this.requestStream.Position - (this.readBuffer.Length + 2);
             }
 
             return boundaryEnd - (this.readBuffer.Length + 2);
