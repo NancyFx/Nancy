@@ -77,7 +77,22 @@
 
             this.InvokeRequestLifeCycle(context);
 
+            AddNancyVersionHeaderToResponse(context);
+
             return context;
+        }
+
+        private static void AddNancyVersionHeaderToResponse(NancyContext context)
+        {
+            if (context.Response == null)
+            {
+                return;
+            }
+
+            var version =
+                typeof(INancyEngine).Assembly.GetName().Version;
+
+            context.Response.Headers.Add("Nancy-Version", version.ToString());
         }
 
         private void InvokeRequestLifeCycle(NancyContext context)
