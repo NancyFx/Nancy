@@ -49,6 +49,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
@@ -59,10 +62,6 @@
     <ProjectReference Include="..\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj">
       <Project>{E8B18958-7C8A-4FBA-AF00-3041C34A20CE}</Project>
       <Name>Nancy.Authentication.Forms</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
-      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
-      <Name>Nancy.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
