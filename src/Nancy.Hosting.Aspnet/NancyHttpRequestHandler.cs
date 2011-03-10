@@ -7,22 +7,20 @@ namespace Nancy.Hosting.Aspnet
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
-        private readonly INancyEngine engine;
+        private static INancyEngine engine;
 
         public bool IsReusable
         {
             get { return true; }
         }
 
-        public NancyHttpRequestHandler()
+        static NancyHttpRequestHandler()
         {
-            var bootstrapper = 
-                GetBootstrapper();
+            var bootstrapper = GetBootstrapper();
 
             bootstrapper.Initialise();
 
-            this.engine = 
-                bootstrapper.GetEngine();
+            engine = bootstrapper.GetEngine();
         }
 
         private static INancyBootstrapper GetBootstrapper()
@@ -39,7 +37,8 @@ namespace Nancy.Hosting.Aspnet
             {
                 var bootstrapperType =
                     Type.GetType(configurationBootstrapperType.Name);
-                return (Activator.CreateInstance(bootstrapperType)) as INancyBootstrapper;
+
+                return Activator.CreateInstance(bootstrapperType) as INancyBootstrapper;
             }
 
             return null;
@@ -72,7 +71,7 @@ namespace Nancy.Hosting.Aspnet
         public void ProcessRequest(HttpContext context)
         {
             var wrappedContext = new HttpContextWrapper(context);
-            var handler = new NancyHandler(this.engine);
+            var handler = new NancyHandler(engine);
             handler.ProcessRequest(wrappedContext);
         }
     }
