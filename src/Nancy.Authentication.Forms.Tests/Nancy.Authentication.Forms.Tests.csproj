@@ -49,6 +49,60 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeDefaultNancyBootstrapper.cs">
+      <Link>Fakes\FakeDefaultNancyBootstrapper.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeHookedModule.cs">
+      <Link>Fakes\FakeHookedModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
+      <Link>Fakes\FakeModuleCatalog.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleKeyGenerator.cs">
+      <Link>Fakes\FakeModuleKeyGenerator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModule.cs">
+      <Link>Fakes\FakeNancyModule.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleNoRoutes.cs">
+      <Link>Fakes\FakeNancyModuleNoRoutes.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithDependency.cs">
+      <Link>Fakes\FakeNancyModuleWithDependency.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithoutBasePath.cs">
+      <Link>Fakes\FakeNancyModuleWithoutBasePath.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModuleWithPreAndPostHooks.cs">
+      <Link>Fakes\FakeNancyModuleWithPreAndPostHooks.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRequest.cs">
+      <Link>Fakes\FakeRequest.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoute.cs">
+      <Link>Fakes\FakeRoute.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteCache.cs">
+      <Link>Fakes\FakeRouteCache.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRoutePatternMatchResult.cs">
+      <Link>Fakes\FakeRoutePatternMatchResult.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeRouteResolver.cs">
+      <Link>Fakes\FakeRouteResolver.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeSessionObjectFormatter.cs">
+      <Link>Fakes\FakeSessionObjectFormatter.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\Person.cs">
+      <Link>Fakes\Person.cs</Link>
+    </Compile>
+    <Compile Include="..\Nancy.Tests\Fakes\ViewModel.cs">
+      <Link>Fakes\ViewModel.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
