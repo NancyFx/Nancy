@@ -58,6 +58,7 @@
         {
             var resourceStreams =
                 from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                where !assembly.IsDynamic
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
                 let inspectedResourceName = string.Concat(viewName, ".", viewEngineExtension)

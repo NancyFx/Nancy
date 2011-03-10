@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.FormsAuthDemo", "Nanc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Authentication.Forms.Tests", "Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.csproj", "{4E974051-38C2-4B5D-A6B1-F265A428A673}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.AspNetBootstrapperDemo", "Nancy.AspNetBootstrapperDemo\Nancy.AspNetBootstrapperDemo.csproj", "{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -305,6 +307,14 @@ Global
 		{4E974051-38C2-4B5D-A6B1-F265A428A673}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4E974051-38C2-4B5D-A6B1-F265A428A673}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{4E974051-38C2-4B5D-A6B1-F265A428A673}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -339,5 +349,6 @@ Global
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52} = {4A24657F-9695-437B-9702-2541ED280628}
 		{28F9EA8B-90F7-4974-BB40-0B7FA9309D02} = {4A24657F-9695-437B-9702-2541ED280628}
 		{98940A30-1B48-4F71-A6BA-85F0AAF31A2F} = {4A24657F-9695-437B-9702-2541ED280628}
+		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 EndGlobal

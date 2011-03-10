@@ -47,9 +47,11 @@
     </Compile>
     <Compile Include="AspNetRootSourceProvider.cs" />
     <Compile Include="BootstrapperEntry.cs" />
+    <Compile Include="DefaultNancyAspNetBootstrapper.cs" />
     <Compile Include="NancyFxSection.cs" />
     <Compile Include="NancyHandler.cs" />
     <Compile Include="NancyHttpRequestHandler.cs" />
+    <Compile Include="TinyIoCAspNetExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

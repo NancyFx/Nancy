@@ -1,22 +1,19 @@
-﻿namespace Nancy
+﻿namespace Nancy.Hosting.Aspnet
 {
     using System;
     using System.Collections.Generic;
+
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
+
     using TinyIoC;
 
     /// <summary>
-    /// TinyIoC bootstrapper - registers default route resolver and registers itself as
-    /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
+    /// TinyIoC ASP.Net Bootstrapper
+    /// No child container support because per-request is handled by the AsPerRequestSingleton option
     /// </summary>
-    public class DefaultNancyBootstrapper : NancyBootstrapperBase<TinyIoCContainer>, INancyBootstrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
+    public abstract class DefaultNancyAspNetBootstrapper : NancyBootstrapperBase<TinyIoCContainer>, INancyModuleCatalog
     {
-        /// <summary>
-        /// Key for storing the child container in the context items
-        /// </summary>
-        private const string CONTEXT_KEY = "DefaultNancyBootStrapperChildContainer";
-
         /// <summary>
         /// Container instance
         /// </summary>
@@ -62,10 +59,6 @@
             container.AutoRegister();
         }
 
-        public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)
-        {
-        }
-
         protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
         {
             this.container.RegisterMultiple<IViewEngine>(viewEngineTypes).AsSingleton();
@@ -90,7 +83,7 @@
         {
             foreach (var registrationType in moduleRegistrations)
             {
-                this.container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsMultiInstance();
+                this.container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsPerRequestSingleton();
             }
         }
 
@@ -114,10 +107,7 @@
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var childContainer = this.GetChildContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-            return childContainer.ResolveAll<NancyModule>(false);
+            return this.container.ResolveAll<NancyModule>(false);
         }
 
         /// <summary>
@@ -128,30 +118,7 @@
         /// <returns>NancyModule instance</returns>
         public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var childContainer = this.GetChildContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-            return childContainer.Resolve<NancyModule>(moduleKey);
+            return this.container.Resolve<NancyModule>(moduleKey);
         }
-
-        /// <summary>
-        /// Gets the per-request child container
-        /// </summary>
-        /// <param name="context">Current context</param>
-        /// <returns>Child container</returns>
-        private TinyIoCContainer GetChildContainer(NancyContext context)
-        {
-            object contextObject;
-            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
-            var childContainer = contextObject as TinyIoCContainer;
-
-            if (childContainer == null)
-            {
-                childContainer = this.container.GetChildContainer();
-                context.Items[CONTEXT_KEY] = childContainer;
-            }
-
-            return childContainer;
-        }
-    }
+   }
 }
