@@ -3,12 +3,11 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Diagnostics;
     using System.IO;
-    using Nancy.Routing;
-    using Session;
 
-    using ViewEngines;
+    using Nancy.Routing;
+    using Nancy.Session;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
@@ -146,9 +145,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// 
+        /// Renders a view from inside a route handler.
         /// </summary>
-        /// <value></value>
+        /// <value>A <see cref="ViewRenderer"/> instance that is used to determin which view that should be rendered.</value>
         public ViewRenderer View
         {
             get { return new ViewRenderer(this); }
@@ -162,22 +161,38 @@ namespace Nancy
         [EditorBrowsable(EditorBrowsableState.Never)]
         public IViewFactory ViewFactory { get; set; }
 
+        /// <summary>
+        /// Helper class for configuring a route handler in a module.
+        /// </summary>
         public class RouteBuilder : IHideObjectMembers
         {
             private readonly string method;
             private readonly NancyModule parentModule;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
+            /// </summary>
+            /// <param name="method">The HTTP request method that the route should be available for.</param>
+            /// <param name="parentModule">The <see cref="NancyModule"/> that the route is being configured for.</param>
             public RouteBuilder(string method, NancyModule parentModule)
             {
                 this.method = method;
                 this.parentModule = parentModule;
             }
 
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>.
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, Response> this[string path]
             {
                 set { this.AddRoute(path, null, value); }
             }
 
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="condition"/>.
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, Response> this[string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(path, condition, value); }
@@ -191,10 +206,17 @@ namespace Nancy
             }
         }
 
+        /// <summary>
+        /// Helper class for rendering a view from a route handler.
+        /// </summary>
         public class ViewRenderer : IHideObjectMembers
         {
             private readonly NancyModule module;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ViewRenderer"/> class.
+            /// </summary>
+            /// <param name="module">The <see cref="NancyModule"/> instance that is rendering the view.</param>
             public ViewRenderer(NancyModule module)
             {
                 this.module = module;
