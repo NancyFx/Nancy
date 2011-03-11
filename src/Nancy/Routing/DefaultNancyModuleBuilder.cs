@@ -31,7 +31,7 @@
         {
             module.Context = context;
             module.Response = this.responseFormatter;
-            module.View = this.viewFactory;
+            module.ViewFactory = this.viewFactory;
 
             return module;
         }

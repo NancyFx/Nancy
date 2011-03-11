@@ -2,6 +2,9 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.IO;
     using Nancy.Routing;
     using Session;
 
@@ -59,20 +62,10 @@ namespace Nancy
         public BeforePipeline Before { get; protected set; }
 
         /// <summary>
-        /// Gets all declared routes by the module.
+        /// Gets or sets the current Nancy context
         /// </summary>
-        /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
-        public IEnumerable<Route> Routes
-        {
-            get { return this.routes.AsReadOnly(); }
-        }
-
-        /// <summary>
-        /// The extension point for accessing the view engines in Nancy.
-        /// </summary>
-        /// <value>An <see cref="IViewFactory"/> instance.</value>
-        /// <remarks>This is automatically set by Nancy at runtime.</remarks>
-        public IViewFactory View { get; set; }
+        /// <value>A <see cref="NancyContext"/> instance.</value>
+        public NancyContext Context { get; set; }
 
         /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
@@ -129,14 +122,12 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the current session.
+        /// Gets all declared routes by the module.
         /// </summary>
-        public ISession Session
+        /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
+        public IEnumerable<Route> Routes
         {
-            get
-            {
-                return this.Request.Session;
-            }
+            get { return this.routes.AsReadOnly(); }
         }
 
         /// <summary>
@@ -147,10 +138,29 @@ namespace Nancy
         public IResponseFormatter Response { get; set; }
 
         /// <summary>
-        /// Gets or sets the current Nancy context
+        /// Gets the current session.
         /// </summary>
-        /// <value>A <see cref="NancyContext"/> instance.</value>
-        public NancyContext Context { get; set; }
+        public ISession Session
+        {
+            get { return this.Request.Session; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public ViewRenderer View
+        {
+            get { return new ViewRenderer(this); }
+        }
+
+        /// <summary>
+        /// The extension point for accessing the view engines in Nancy.
+        /// </summary>
+        /// <value>An <see cref="IViewFactory"/> instance.</value>
+        /// <remarks>This is automatically set by Nancy at runtime.</remarks>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IViewFactory ViewFactory { get; set; }
 
         public class RouteBuilder : IHideObjectMembers
         {
@@ -178,6 +188,50 @@ namespace Nancy
                 var fullPath = string.Concat(this.parentModule.ModulePath, path);
 
                 this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+            }
+        }
+
+        public class ViewRenderer : IHideObjectMembers
+        {
+            private readonly NancyModule module;
+
+            public ViewRenderer(NancyModule module)
+            {
+                this.module = module;
+            }
+
+            /// <summary>
+            /// Renders the view with its name resolved from the model type, and model defined by the <paramref name="model"/> parameter.
+            /// </summary>
+            /// <param name="model">The model that should be passed into the view.</param>
+            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
+            /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
+            public Action<Stream> this[dynamic model]
+            {
+                get { return this.module.ViewFactory.RenderView(module, null, model); }
+            }
+
+            /// <summary>
+            /// Renders the view with the name defined by the <paramref name="viewName"/> parameter.
+            /// </summary>
+            /// <param name="viewName">The name of the view to render.</param>
+            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
+            /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
+            public Action<Stream> this[string viewName]
+            {
+                get { return this.module.ViewFactory.RenderView(module, viewName, null); }
+            }
+
+            /// <summary>
+            /// Renders the view with the name and model defined by the <paramref name="viewName"/> and <paramref name="model"/> parameters.
+            /// </summary>
+            /// <param name="viewName">The name of the view to render.</param>
+            /// <param name="model">The model that should be passed into the view.</param>
+            /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
+            /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
+            public Action<Stream> this[string viewName, dynamic model]
+            {
+                get { return this.module.ViewFactory.RenderView(module, viewName, model); }
             }
         }
     }

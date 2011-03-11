@@ -50,7 +50,7 @@
         }
 
         [Fact]
-        public void Should_set_view_on_module_to_resolved_view_factory()
+        public void Should_set_view_factory_on_module_to_resolved_view_factory()
         {
             // Given
             var context = new NancyContext();
@@ -59,7 +59,7 @@
             var result = this.builder.BuildModule(this.module, context);
 
             // Then
-            result.View.ShouldBeSameAs(this.viewFactory);
+            result.ViewFactory.ShouldBeSameAs(this.viewFactory);
         }
 
         [Fact]

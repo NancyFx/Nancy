@@ -1,5 +1,3 @@
-using Nancy.Tests.Fakes;
-
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System;
@@ -8,6 +6,7 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.Linq;
     using FakeItEasy;
     using Nancy.ViewEngines;
+    using Nancy.Tests.Fakes;
     using Xunit;
 
     public class DefaultViewFactoryFixture
@@ -27,6 +26,48 @@ namespace Nancy.Tests.Unit.ViewEngines
             }
 
             return new DefaultViewFactory(this.locator, viewEngines);
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_rendering_view_and_module_is_null()
+        {
+            // Given
+            var factory = this.CreateFactory(null);
+
+            // When
+            var exception =
+                Record.Exception(() => factory.RenderView(null, "foobar", new object()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentexception_when_rendering_view_and_view_name_is_empty_and_model_is_null()
+        {
+            // Given
+            var factory = this.CreateFactory(null);
+
+            // When
+            var exception =
+                Record.Exception(() => factory.RenderView(new FakeNancyModule(), string.Empty, null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentexception_when_rendering_view_and_both_viewname_and_model_is_null()
+        {
+            // Given
+            var factory = this.CreateFactory(null);
+
+            // When
+            var exception =
+                Record.Exception(() => factory.RenderView(new FakeNancyModule(), null, null));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentException>();
         }
 
         [Fact]
