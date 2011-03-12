@@ -1,11 +1,12 @@
-﻿namespace Nancy.Hosting.SelfHosting
+﻿namespace Nancy.Hosting.Self
 {
     using System;
     using System.Net;
     using System.Threading;
-    using Bootstrapper;
-    using Cookies;
-    using Extensions;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Cookies;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.

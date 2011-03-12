@@ -8,8 +8,8 @@
     <ProjectGuid>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Hosting.SelfHosting</RootNamespace>
-    <AssemblyName>Nancy.Hosting.SelfHosting</AssemblyName>
+    <RootNamespace>Nancy.Hosting.Self</RootNamespace>
+    <AssemblyName>Nancy.Hosting.Self</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>

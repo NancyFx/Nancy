@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Demo.Hosting.Self
 {
     using System;
-    using Nancy.Hosting.SelfHosting;
+    using Nancy.Hosting.Self;
 
     class Program
     {

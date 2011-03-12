@@ -54,9 +54,9 @@
     <Compile Include="TestModule.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.SelfHosting\Nancy.Hosting.SelfHosting.csproj">
+    <ProjectReference Include="..\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
       <Project>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</Project>
-      <Name>Nancy.Hosting.SelfHosting</Name>
+      <Name>Nancy.Hosting.Self</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
