@@ -9,9 +9,9 @@ namespace Nancy.Bootstrapper
     using Nancy.Extensions;
 
     /// <summary>
-    /// Scans the app domain for types
+    /// Scans the app domain for assemblies and types
     /// </summary>
-    public static class AppDomainTypeScanner
+    public static class AppDomainAssemblyTypeScanner
     {
         /// <summary>
         /// App domain type cache
@@ -19,9 +19,14 @@ namespace Nancy.Bootstrapper
         private static IEnumerable<Type> types;
 
         /// <summary>
-        /// Initializes static members of the <see cref="AppDomainTypeScanner"/> class.
+        /// App domain assemblies cache
         /// </summary>
-        static AppDomainTypeScanner()
+        private static IEnumerable<Assembly> assemblies;
+
+        /// <summary>
+        /// Initializes static members of the <see cref="AppDomainAssemblyTypeScanner"/> class.
+        /// </summary>
+        static AppDomainAssemblyTypeScanner()
         {
             LoadNancyAssemblies();
         }
@@ -34,6 +39,17 @@ namespace Nancy.Bootstrapper
             get
             {
                 return types;
+            }
+        }
+
+        /// <summary>
+        /// Gets app domain types.
+        /// </summary>
+        public static IEnumerable<Assembly> Assemblies
+        {
+            get
+            {
+                return assemblies;
             }
         }
 
@@ -55,7 +71,9 @@ namespace Nancy.Bootstrapper
         /// <param name="wildcardFilename">Wildcard to match the assemblies to load</param>
         public static void LoadAssemblies(string containingDirectory, string wildcardFilename)
         {
-            var existingAssemblyPaths = AppDomain.CurrentDomain.GetAssemblies().Select(a => a.Location).ToArray();
+            UpdateAssemblies();
+
+            var existingAssemblyPaths = assemblies.Select(a => a.Location).ToArray();
 
             var unloadedNancyAssemblies =
                 Directory.GetFiles(containingDirectory, wildcardFilename).Where(
@@ -75,12 +93,21 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public static void UpdateTypes()
         {
-            types = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                     where !assembly.ReflectionOnly
-                     where !assembly.IsDynamic
+            types = (from assembly in assemblies
                      from type in assembly.SafeGetExportedTypes()
                      where !type.IsAbstract
                      select type).ToArray();
+        }
+
+        /// <summary>
+        /// Updates the assembly cache from the appdomain
+        /// </summary>
+        private static void UpdateAssemblies()
+        {
+            assemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                          where !assembly.IsDynamic
+                          where !assembly.ReflectionOnly
+                          select assembly).ToArray();
         }
 
         /// <summary>
