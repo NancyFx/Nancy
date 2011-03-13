@@ -215,11 +215,7 @@
         protected virtual Type GetRootPathProvider()
         {
             var providers =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IRootPathProvider).IsAssignableFrom(type)
                 where !type.Equals(typeof(DefaultRootPathProvider))
                 select type;
@@ -236,11 +232,7 @@
         protected virtual IEnumerable<Type> GetViewSourceProviders()
         {
             var viewSourceProviders =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IViewSourceProvider).IsAssignableFrom(type)
                 select type;
 
@@ -263,11 +255,7 @@
             var moduleType = typeof(NancyModule);
 
             var locatedModuleTypes =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where moduleType.IsAssignableFrom(type)
                 select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));
 
@@ -281,11 +269,7 @@
         protected virtual IEnumerable<Type> GetViewEngineTypes()
         {
             var viewEngineTypes =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IViewEngine).IsAssignableFrom(type)
                 select type;
 
