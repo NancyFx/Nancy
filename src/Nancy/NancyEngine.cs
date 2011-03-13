@@ -92,7 +92,7 @@
             var version =
                 typeof(INancyEngine).Assembly.GetName().Version;
 
-            context.Response.Headers.Add("Nancy-Version", version.ToString());
+            context.Response.Headers["Nancy-Version"] = version.ToString();
         }
 
         private void InvokeRequestLifeCycle(NancyContext context)
