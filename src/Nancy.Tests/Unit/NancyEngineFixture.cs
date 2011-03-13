@@ -122,6 +122,27 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_not_throw_exception_when_setting_nancy_version_header_and_it_already_existed()
+        {
+            // Given
+            var cachedResponse = new Response();
+            cachedResponse.Headers.Add("Nancy-Version", "1.2.3.4");
+            Func<NancyContext, Response> preRequestHook = (ctx) => cachedResponse;
+
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
+
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var exception = Record.Exception(() => localEngine.HandleRequest(request));
+
+            // Then
+            exception.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_set_nancy_version_number_on_returned_response()
         {
             // Given
