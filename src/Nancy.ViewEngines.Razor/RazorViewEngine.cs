@@ -8,6 +8,8 @@
     using System.Reflection;
     using System.Web.Razor;
     using Microsoft.CSharp;
+	using System.Configuration;
+	using System.Security.Policy;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -45,10 +47,19 @@
             host.NamespaceImports.Add("System.IO");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
 
+			var razorConfiguration = ConfigurationManager.GetSection("razor") as RazorConfigurationSection;
+			if (razorConfiguration != null)
+			{
+				foreach (var assemblyConfiguration in razorConfiguration.Namespaces)
+				{
+					host.NamespaceImports.Add(assemblyConfiguration.NamespaceName);
+				}
+			}
+
             return new RazorTemplateEngine(host);
         }
 
-        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader) 
+        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader, Assembly referencingAssembly) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
@@ -59,8 +70,8 @@
                 code = sw.GetStringBuilder().ToString();
             }
 
-            var view = 
-                GenerateRazorView(this.codeDomProvider, razorResult);
+            var view =
+				GenerateRazorView(this.codeDomProvider, razorResult, referencingAssembly);
             // TODO DEBUG ONLY
 
             view.Code = code;
@@ -68,19 +79,37 @@
             return view;
         }
 
-        private static NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult)
+		private static NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
         {
             // Compile the generated code into an assembly
+			var outputAssemblyName =
+					 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var outputAssemblyName =
-                Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
+			var assemblies = new List<string>
+            {
+                GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder))
+                , GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite))
+                , GetAssemblyPath(Assembly.GetExecutingAssembly())
+            };
+			var razorConfiguration = ConfigurationManager.GetSection("razor") as RazorConfigurationSection;
+			if (razorConfiguration != null)
+			{
+				foreach (var assemblyConfiguration in razorConfiguration.Assemblies)
+				{
+					Assembly a = Assembly.Load(assemblyConfiguration.AssemblyName);
+					assemblies.Add(GetAssemblyPath(a));
+				}
+			}
 
-            var results = codeProvider.CompileAssemblyFromDom(
-                new CompilerParameters(new [] {
-                    GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
-                    GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
-                    GetAssemblyPath(Assembly.GetExecutingAssembly())}, outputAssemblyName),
-                    razorResult.GeneratedCode);
+			var loadReferencingAssembly = 
+				razorConfiguration == null 
+				|| (razorConfiguration != null && !razorConfiguration.DisableAutoIncludeModelNamespace);
+
+			if (loadReferencingAssembly)
+				assemblies.Add(GetAssemblyPath(referencingAssembly));
+
+			var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
+			var results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)
             {
@@ -145,10 +174,12 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
         {
+			Assembly assembly = Assembly.GetAssembly(model.GetType().UnderlyingSystemType);
+			
             return stream =>
             {
                 var view = 
-                    GetCompiledView<dynamic>(viewLocationResult.Contents);
+                    GetCompiledView<dynamic>(viewLocationResult.Contents, assembly);
 
                 var writer = 
                     new StreamWriter(stream);
