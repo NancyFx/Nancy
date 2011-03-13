@@ -93,6 +93,8 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public static void UpdateTypes()
         {
+            UpdateAssemblies();
+
             types = (from assembly in assemblies
                      from type in assembly.SafeGetExportedTypes()
                      where !type.IsAbstract
