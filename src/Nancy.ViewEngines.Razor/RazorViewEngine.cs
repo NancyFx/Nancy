@@ -56,8 +56,12 @@
 
             if (this.razorConfiguration != null)
             {
-                foreach (var n in this.razorConfiguration.GetDefaultNamespaces())
-                    host.NamespaceImports.Add(n);
+                var namespaces = this.razorConfiguration.GetDefaultNamespaces();
+                if (namespaces != null)
+                {
+                    foreach (var n in namespaces)
+                        host.NamespaceImports.Add(n);
+                }
             }
 
             return new RazorTemplateEngine(host);
@@ -97,16 +101,20 @@
             };
             if (this.razorConfiguration != null)
             {
-                foreach (var assemblyName in this.razorConfiguration.GetAssemblyNames())
+                var assemblyNames = this.razorConfiguration.GetAssemblyNames();
+                if (assemblyNames != null)
                 {
-                    Assembly a = Assembly.Load(assemblyName);
-                    assemblies.Add(GetAssemblyPath(a));
+                    foreach (var assemblyName in assemblyNames)
+                    {
+                        Assembly a = Assembly.Load(assemblyName);
+                        assemblies.Add(GetAssemblyPath(a));
+                    }
                 }
             }
 
             var loadReferencingAssembly = this.razorConfiguration == null || this.razorConfiguration.AutoIncludeModelNamespace;
 
-            if (loadReferencingAssembly)
+            if (loadReferencingAssembly && referencingAssembly != null)
                 assemblies.Add(GetAssemblyPath(referencingAssembly));
 
             var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
