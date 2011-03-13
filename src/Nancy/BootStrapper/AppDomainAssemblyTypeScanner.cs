@@ -75,13 +75,13 @@ namespace Nancy.Bootstrapper
 
             var existingAssemblyPaths = assemblies.Select(a => a.Location).ToArray();
 
-            var unloadedNancyAssemblies =
+            var unloadedAssemblies =
                 Directory.GetFiles(containingDirectory, wildcardFilename).Where(
                     f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase));
 
-            foreach (var unloadedNancyAssembly in unloadedNancyAssemblies)
+            foreach (var unloadedAssembly in unloadedAssemblies)
             {
-                Assembly.Load(AssemblyName.GetAssemblyName(unloadedNancyAssembly));
+                Assembly.Load(AssemblyName.GetAssemblyName(unloadedAssembly));
             }
 
             UpdateTypes();
