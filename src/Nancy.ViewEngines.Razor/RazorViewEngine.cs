@@ -8,6 +8,8 @@
     using System.Reflection;
     using System.Web.Razor;
     using Microsoft.CSharp;
+    using System.Configuration;
+    using System.Security.Policy;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -16,22 +18,29 @@
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
+        private readonly IRazorConfiguration razorConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
-        public RazorViewEngine()
-            : this(GetRazorTemplateEngine(), new CSharpCodeProvider())
+        ///  public RazorViewEngine(IRazorConfiguration configuration)
+        public RazorViewEngine() : this(new RazorConfiguration(), null, new CSharpCodeProvider())
         {
         }
 
-        public RazorViewEngine(RazorTemplateEngine razorTemplateEngine, CodeDomProvider codeDomProvider)
+        public RazorViewEngine(IRazorConfiguration configuration)
+            : this(configuration, null, new CSharpCodeProvider())
         {
-            this.engine = razorTemplateEngine;
+        }
+
+        public RazorViewEngine(IRazorConfiguration configuration, RazorTemplateEngine razorTemplateEngine, CodeDomProvider codeDomProvider)
+        {
             this.codeDomProvider = codeDomProvider;
+            this.razorConfiguration = configuration;
+            this.engine = razorTemplateEngine ?? this.GetRazorTemplateEngine();
         }
 
-        private static RazorTemplateEngine GetRazorTemplateEngine()
+        private RazorTemplateEngine GetRazorTemplateEngine()
         {
             var host = 
                 new RazorEngineHost(new CSharpRazorCodeLanguage())
@@ -44,6 +53,12 @@
             host.NamespaceImports.Add("System");
             host.NamespaceImports.Add("System.IO");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
+
+            if (this.razorConfiguration != null)
+            {
+                foreach (var n in this.razorConfiguration.GetDefaultNamespaces())
+                    host.NamespaceImports.Add(n);
+            }
 
             return new RazorTemplateEngine(host);
         }
@@ -68,24 +83,33 @@
             return view;
         }
 
-        private static NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
+        private NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
         {
             // Compile the generated code into an assembly
-
             var outputAssemblyName =
-                Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
+                     Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var assemblies = new []
+            var assemblies = new List<string>
             {
                 GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder))
                 , GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite))
                 , GetAssemblyPath(Assembly.GetExecutingAssembly())
             };
+            if (this.razorConfiguration != null)
+            {
+                foreach (var assemblyName in this.razorConfiguration.GetAssemblyNames())
+                {
+                    Assembly a = Assembly.Load(assemblyName);
+                    assemblies.Add(GetAssemblyPath(a));
+                }
+            }
 
-            if (referencingAssembly != null)
-                assemblies = assemblies.Concat(new [] { GetAssemblyPath(referencingAssembly) }).ToArray();
+            var loadReferencingAssembly = this.razorConfiguration == null || this.razorConfiguration.AutoIncludeModelNamespace;
 
-            var compilerParameters = new CompilerParameters(assemblies, outputAssemblyName);
+            if (loadReferencingAssembly)
+                assemblies.Add(GetAssemblyPath(referencingAssembly));
+
+            var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
             var results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)
@@ -163,7 +187,7 @@
                 var view =
                     GetCompiledView<dynamic>(viewLocationResult.Contents, referencingAssembly);
 
-                var writer = 
+                var writer =
                     new StreamWriter(stream);
 
                 view.Model = model;

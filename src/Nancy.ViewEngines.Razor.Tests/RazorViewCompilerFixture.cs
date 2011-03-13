@@ -10,7 +10,7 @@
 
         public RazorViewCompilerFixture()
         {
-            this.engine = new RazorViewEngine();            
+            this.engine = new RazorViewEngine(null);            
         }
 
         [Fact]

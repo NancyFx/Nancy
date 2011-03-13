@@ -50,6 +50,7 @@ namespace Nancy.Demo
                 var model = new RatPack { FirstName = "Frank" };
                 return View["~/views/razor.cshtml", model];
             };
+
             Get["/razor-dynamic"] = x =>
             {
                 dynamic model = new ExpandoObject();
