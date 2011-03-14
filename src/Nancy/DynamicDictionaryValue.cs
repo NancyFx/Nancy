@@ -28,6 +28,14 @@
             get { return (this.value != null); }
         }
 
+        /// <summary>
+        /// Gets the actual value
+        /// </summary>
+        public object Value
+        {
+            get { return this.value; }
+        }
+
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             if (dynamicValue.value == null && compareValue == null)

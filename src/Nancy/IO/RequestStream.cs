@@ -1,4 +1,4 @@
-namespace Nancy.IO
+﻿namespace Nancy.IO
 {
     using System;
     using System.IO;
@@ -22,7 +22,7 @@ namespace Nancy.IO
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
-        protected RequestStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
+        public RequestStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
             this.expectedLength = expectedLength;
             this.thresholdLength = thresholdLength;

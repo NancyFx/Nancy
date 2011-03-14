@@ -81,7 +81,6 @@
     <Compile Include="IHideObjectMembers.cs" />
     <Compile Include="INancyContextFactory.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
-    <Compile Include="IO\RequestStream.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Json\JavaScriptConverter.cs" />
     <Compile Include="Json\JavaScriptSerializer.cs" />
@@ -96,6 +95,7 @@
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />
     <Compile Include="DefaultResponseFormatter.cs" />
+    <Compile Include="IO\RequestStream.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
