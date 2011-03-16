@@ -73,6 +73,7 @@
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
     <Compile Include="Unit\HttpMultipartBufferFixture.cs" />
     <Compile Include="Unit\HttpMultipartFixture.cs" />
+    <Compile Include="Unit\IO\RequestStreamFixture.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
     <Compile Include="Specifications\Handling a HEAD request.cs" />
     <Compile Include="Specifications\Handling a DELETE request.cs" />
