@@ -1,9 +1,13 @@
 ﻿namespace Nancy.Hosting.Self
 {
     using System;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.Globalization;
     using System.Net;
     using System.Threading;
-
+    using System.Linq;
+    using IO;
     using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using Nancy.Extensions;
@@ -85,15 +89,48 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
+            var relativeUrl = 
+                GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
+
+            var expectedRequestLength =
+                GetExpectedRequestLength(request.Headers.ToDictionary());
 
             return new Request(
                 request.HttpMethod,
                 string.Concat("/", relativeUrl),
                 request.Headers.ToDictionary(),
-                request.InputStream,
+                RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
                 request.Url.Scheme,
                 request.Url.Query);
+        }
+
+        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        {
+            if (incomingHeaders == null)
+            {
+                return 0;
+            }
+
+            if (!incomingHeaders.ContainsKey("Content-Length"))
+            {
+                return 0;
+            }
+
+            var headerValue =
+                incomingHeaders["Content-Length"].SingleOrDefault();
+
+            if (headerValue == null)
+            {
+                return 0;
+            }
+
+            long contentLength;
+            if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
+            {
+                return 0;
+            }
+
+            return contentLength;
         }
 
         private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)

@@ -1,6 +1,10 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.Linq;
     using System.Web;
+    using IO;
     using Nancy.Extensions;
 
     public class NancyHandler
@@ -24,13 +28,45 @@ namespace Nancy.Hosting.Aspnet
 
         private static Request CreateNancyRequest(HttpContextBase context)
         {
+            var expectedRequestLength =
+                GetExpectedRequestLength(context.Request.Headers.ToDictionary());
+
             return new Request(
                 (context.Request.Form["_method"] ?? context.Request.HttpMethod).ToUpperInvariant(),
                 context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
                 context.Request.Headers.ToDictionary(),
-                context.Request.InputStream,
+                RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
                 context.Request.Url.Scheme,
                 context.Request.Url.Query);
+        }
+
+        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        {
+            if (incomingHeaders == null)
+            {
+                return 0;
+            }
+
+            if (!incomingHeaders.ContainsKey("Content-Length"))
+            {
+                return 0;
+            }
+
+            var headerValue =
+                incomingHeaders["Content-Length"].SingleOrDefault();
+
+            if (headerValue == null)
+            {
+                return 0;
+            }
+
+            long contentLength;
+            if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
+            {
+                return 0;
+            }
+
+            return contentLength;
         }
 
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)

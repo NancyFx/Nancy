@@ -8,6 +8,7 @@ namespace Nancy.Tests.Unit
     using Cryptography;
     using FakeItEasy;
     using Nancy.Bootstrapper;
+    using Nancy.IO;
     using Nancy.Tests.Unit.Sessions;
 
     using Session;
@@ -390,7 +391,7 @@ namespace Nancy.Tests.Unit
                 headers.Add("cookie", new[] { Nancy.Session.CookieBasedSessions.GetCookieName()+ "=" + HttpUtility.UrlEncode(sessionValue) });
             }
 
-            var request = new Request("GET", "http://goku.power:9001/", headers, new MemoryStream(), "http");
+            var request = new Request("GET", "http://goku.power:9001/", headers, CreateRequestStream(), "http");
 
             if (load)
             {
@@ -398,6 +399,16 @@ namespace Nancy.Tests.Unit
             }
 
             return request;
+        }
+
+        private static RequestStream CreateRequestStream()
+        {
+            return CreateRequestStream(new MemoryStream());
+        }
+
+        private static RequestStream CreateRequestStream(Stream stream)
+        {
+            return RequestStream.FromStream(stream, 0, 1, true);
         }
     }
 }

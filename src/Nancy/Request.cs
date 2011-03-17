@@ -5,6 +5,7 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using IO;
     using Nancy.Extensions;
     using Session;
 
@@ -25,7 +26,7 @@ namespace Nancy
         /// <param name="uri">The absolute path of the requested resource. This shold not not include the scheme, host name, or query portion of the URI.</param>
         /// <param name="protocol">The HTTP protocol that was used by the client.</param>
         public Request(string method, string uri, string protocol)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), new MemoryStream(), protocol)
+            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), RequestStream.FromStream(new MemoryStream()), protocol)
         {
         }
 
@@ -38,7 +39,7 @@ namespace Nancy
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
         /// <param name="protocol">The HTTP protocol that was used by the client.</param>
         /// <param name="query">The querystring data that was sent by the client.</param>
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, Stream body, string protocol, string query = "")
+        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string protocol, string query = "")
         {
             if (method == null)
                 throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
@@ -78,7 +79,7 @@ namespace Nancy
         /// Gets a <see cref="Stream"/> that can be used to read the incoming HTTP body
         /// </summary>
         /// <value>A <see cref="Stream"/> object representing the incoming HTTP body.</value>
-        public Stream Body { get; private set; }
+        public RequestStream Body { get; private set; }
 
         /// <summary>
         /// Gets the request cookies.

@@ -1,11 +1,14 @@
-﻿using System;
-
-namespace Nancy.Hosting.Wcf
+﻿namespace Nancy.Hosting.Wcf
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
+    using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
 
@@ -53,13 +56,45 @@ namespace Nancy.Hosting.Wcf
         {
             var relativeUri = GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri).MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
 
+            var expectedRequestLength =
+                GetExpectedRequestLength(webRequest.Headers.ToDictionary());
+
             return new Request(
                 webRequest.Method,
                 string.Concat("/", relativeUri),
                 webRequest.Headers.ToDictionary(),
-                requestBody,
+                RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.UriTemplateMatch.RequestUri.Scheme,
                 webRequest.UriTemplateMatch.RequestUri.Query);
+        }
+
+        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        {
+            if (incomingHeaders == null)
+            {
+                return 0;
+            }
+
+            if (!incomingHeaders.ContainsKey("Content-Length"))
+            {
+                return 0;
+            }
+
+            var headerValue =
+                incomingHeaders["Content-Length"].SingleOrDefault();
+
+            if (headerValue == null)
+            {
+                return 0;
+            }
+
+            long contentLength;
+            if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
+            {
+                return 0;
+            }
+
+            return contentLength;
         }
 
         private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)

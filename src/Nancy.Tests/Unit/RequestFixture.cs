@@ -5,6 +5,7 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Linq;
     using System.Text;
+    using Nancy.IO;
     using Xunit;
 
     public class RequestFixture
@@ -56,9 +57,12 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_throw_argumentnullexception_when_initialized_with_null_headers()
         {
-            // Given, When
+            // Given
+            var stream = CreateRequestStream();
+
+            // When
             var exception =
-                Record.Exception(() => new Request("GET", "/", null, new MemoryStream(), "http"));
+                Record.Exception(() => new Request("GET", "/", null, stream, "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -111,7 +115,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("GET", "/", headers, new MemoryStream(), "http");
+            var request = new Request("GET", "/", headers, CreateRequestStream(), "http");
 
             // Then
             request.Headers.Keys.Contains("content-type").ShouldBeTrue();
@@ -121,7 +125,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_body_parameter_value_to_body_property_when_initialized()
         {
             // Given
-            var body = new MemoryStream();
+            var body = CreateRequestStream();
 
             // When
             var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body, "http");
@@ -135,7 +139,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-            var memory = new MemoryStream();
+            var memory = CreateRequestStream();
             var writer = new StreamWriter(memory);
             writer.Write(bodyContent);
             writer.Flush();
@@ -172,7 +176,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
@@ -196,7 +200,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             request.Files.ShouldHaveCount(1);
@@ -219,7 +223,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             request.Files.First().ContentType.ShouldEqual("content/type");
@@ -242,7 +246,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             request.Files.First().Name.ShouldEqual("sample.txt");
@@ -265,7 +269,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             GetStringValue(request.Files.First().Value).ShouldEqual("some test content");
@@ -294,7 +298,7 @@ namespace Nancy.Tests.Unit
                 };
 
 			// When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 			request.Form.ToString();
 			// Then
 			((string)request.Form.name).ShouldEqual("John Doe");
@@ -333,6 +337,16 @@ namespace Nancy.Tests.Unit
 
             // Then
             request.Protocol.ShouldEqual(protocol);
+        }
+
+        private static RequestStream CreateRequestStream()
+        {
+            return CreateRequestStream(new MemoryStream());
+        }
+
+        private static RequestStream CreateRequestStream(Stream stream)
+        {
+            return RequestStream.FromStream(stream);
         }
 
         private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
