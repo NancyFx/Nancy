@@ -156,6 +156,8 @@
                         var headers = result.Response.Headers;
 
                         responseCallBack.Invoke(returnCode, headers, this.GetResponseBodyBuilder(result));
+
+                        result.Dispose();
                     }, 
                     errorCallback);
             }
