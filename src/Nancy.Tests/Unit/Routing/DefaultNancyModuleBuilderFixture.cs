@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Unit.Routing
+﻿using Nancy.MimeType;
+
+namespace Nancy.Tests.Unit.Routing
 {
     using FakeItEasy;
     using Fakes;
@@ -11,6 +13,7 @@
         private readonly DefaultNancyModuleBuilder builder;
         private readonly DefaultResponseFormatter responseFormatter;
         private readonly IRootPathProvider rootPathProvider;
+        private readonly IMimeTypeRegistry mimeRegistry;
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
 
@@ -18,7 +21,8 @@
         {
             this.module = new FakeNancyModule();
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
+            this.mimeRegistry = A.Fake<IMimeTypeRegistry>();
+            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider, this.mimeRegistry);
             this.viewFactory = A.Fake<IViewFactory>();
             this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatter);
         }

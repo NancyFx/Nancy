@@ -1,3 +1,5 @@
+using Nancy.MimeType;
+
 namespace Nancy.Tests.Unit
 {
     using System.IO;
@@ -12,12 +14,14 @@ namespace Nancy.Tests.Unit
         private readonly Person model;
         private readonly Response response;
         private readonly IRootPathProvider rootPathProvider;
+        private readonly IMimeTypeRegistry mimeRegistry;
 
 
         public XmlFormatterExtensionsFixtures()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
+            this.mimeRegistry = A.Fake<IMimeTypeRegistry>();
+            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider, this.mimeRegistry);
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.responseFormatter.AsXml(model);
         }

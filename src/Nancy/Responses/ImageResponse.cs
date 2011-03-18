@@ -3,6 +3,7 @@
     using System;
     using System.IO;
 
+    // TODO: This class should be removed
     public class ImageResponse : Response
     {
         public ImageResponse(string imagePath)

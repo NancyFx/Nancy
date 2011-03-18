@@ -13,8 +13,6 @@ namespace Nancy.Tests.Responses
     private const string txtPath = @"Responses\testfiles\test.txt";
     private const string txtContentType = "text/txt";
 
-    [Fact] public void ImageResponse_consistency() { ConsistencyTestImpl(imagePath, new ImageResponse(imagePath)); }
-    [Fact] public void StaticFileResponse_consistency() { ConsistencyTestImpl(txtPath, new StaticFileResponse(txtPath, txtContentType)); }
     [Fact] public void GenericFileResponse_consistency() { ConsistencyTestImpl(imagePath, new GenericFileResponse(imagePath, imageContentType)); }
 
     private static void ConsistencyTestImpl(string filePath, Response r)

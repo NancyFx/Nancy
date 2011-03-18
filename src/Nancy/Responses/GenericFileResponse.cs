@@ -1,4 +1,5 @@
 ﻿using Nancy.Bootstrapper;
+using Nancy.MimeType;
 
 namespace Nancy.Responses
 {
@@ -7,20 +8,17 @@ namespace Nancy.Responses
 
     public class GenericFileResponse : Response
     {
-        public GenericFileResponse(string filePath)
-        {
-            InitializeGenericFileResonse(filePath, InferMimeType());
-        }        
+        public GenericFileResponse(string filePath, IMimeTypeRegistry mimeRegistry) : this (filePath, InferMimeType(filePath, mimeRegistry)) {}        
 
         public GenericFileResponse(string filePath, string contentType)
         {
             InitializeGenericFileResonse(filePath, contentType);
         }
 
-        private string InferMimeType()
+        private static string InferMimeType(string filePath, IMimeTypeRegistry mimeRegistry)
         {
-            //NancyBootstrapperLocator.Bootstrapper
-            return "application/octet-stream";
+            string ext = filePath.Substring(filePath.LastIndexOf('.') + 1);
+            return mimeRegistry.GetMimeTypeFor(ext);
         }
 
         private static Action<Stream> GetFileContent(string filePath)
@@ -30,8 +28,8 @@ namespace Nancy.Responses
                 using (var file = File.OpenRead(filePath))
                 {
                     var buffer = new byte[4096];
-                    var read = 1;
-                    while (read > 0)
+                    var read = -1;
+                    while (read != 0)
                     {                                   
                         read = file.Read(buffer, 0, buffer.Length);
                         stream.Write(buffer, 0, read);
