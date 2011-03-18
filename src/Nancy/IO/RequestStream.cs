@@ -32,6 +32,9 @@ namespace Nancy.IO
             if (!this.stream.CanRead)
                 throw new InvalidOperationException("The stream must support reading.");
 
+            if (!this.stream.CanSeek)
+                throw new InvalidOperationException("The stream must support seeking.");
+
             if (expectedLength < 0)
                 throw new ArgumentOutOfRangeException("expectedLength", expectedLength, "The value of the expectedLength parameter cannot be less than zero.");
 
