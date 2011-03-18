@@ -29,17 +29,7 @@ namespace Nancy.IO
             this.disableStreamSwitching = disableStreamSwitching;
             this.stream = stream ?? this.CreateDefaultMemoryStream();
 
-            if (!this.stream.CanRead)
-                throw new InvalidOperationException("The stream must support reading.");
-
-            if (!this.stream.CanSeek)
-                throw new InvalidOperationException("The stream must support seeking.");
-
-            if (expectedLength < 0)
-                throw new ArgumentOutOfRangeException("expectedLength", expectedLength, "The value of the expectedLength parameter cannot be less than zero.");
-
-            if (thresholdLength < 0)
-                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength, "The value of the threshHoldLength parameter cannot be less than zero.");
+            ThrowExceptionIfCtorParametersWereInvalid(this.stream, this.expectedLength, this.thresholdLength);
 
             this.stream.Position = 0;
 
@@ -321,5 +311,29 @@ namespace Nancy.IO
             fileStream.Position = 0;
             this.stream = fileStream;
         }
+
+        private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)
+        {
+            if (!stream.CanRead)
+            {
+                throw new InvalidOperationException("The stream must support reading.");
+            }
+
+            if (!stream.CanSeek)
+            {
+                throw new InvalidOperationException("The stream must support seeking.");
+            }
+
+            if (expectedLength < 0)
+            {
+                throw new ArgumentOutOfRangeException("expectedLength", expectedLength, "The value of the expectedLength parameter cannot be less than zero.");
+            }
+
+            if (thresholdLength < 0)
+            {
+                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength, "The value of the threshHoldLength parameter cannot be less than zero.");
+            }
+        }
+
     }
 }
