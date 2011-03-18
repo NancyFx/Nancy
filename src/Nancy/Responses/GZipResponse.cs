@@ -28,7 +28,7 @@ namespace Nancy.Responses
                           {
                               inFile.CopyTo(Compress);
                           }
-                    }
+                      }
              }
         }
     }

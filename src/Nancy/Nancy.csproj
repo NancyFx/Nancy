@@ -92,6 +92,8 @@
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
+    <Compile Include="MimeType\DefaultMimeTypeRegistry.cs" />
+    <Compile Include="MimeType\IMimeTypeRegistry.cs" />
     <Compile Include="NancyContext.cs" />
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />
@@ -152,7 +154,9 @@
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="MimeType\mime_types.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

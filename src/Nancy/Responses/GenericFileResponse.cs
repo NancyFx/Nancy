@@ -1,4 +1,6 @@
-﻿namespace Nancy.Responses
+﻿using Nancy.Bootstrapper;
+
+namespace Nancy.Responses
 {
     using System;
     using System.IO;
@@ -7,12 +9,18 @@
     {
         public GenericFileResponse(string filePath)
         {
-            InitializeGenericFileResonse(filePath, "application/octet-stream");
-        }
+            InitializeGenericFileResonse(filePath, InferMimeType());
+        }        
 
         public GenericFileResponse(string filePath, string contentType)
         {
             InitializeGenericFileResonse(filePath, contentType);
+        }
+
+        private string InferMimeType()
+        {
+            //NancyBootstrapperLocator.Bootstrapper
+            return "application/octet-stream";
         }
 
         private static Action<Stream> GetFileContent(string filePath)

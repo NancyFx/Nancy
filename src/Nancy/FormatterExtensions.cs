@@ -14,7 +14,7 @@ namespace Nancy
         }
 
         public static Response AsImage(this IResponseFormatter formatter, string imagePath)
-        {
+        {            
             return new ImageResponse(imagePath);
         }
 

@@ -66,6 +66,7 @@
     <Compile Include="Fakes\FakeHookedModule.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
+    <Compile Include="MimeType\DefaultMimeTypeRegistryFixture.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
     <Compile Include="Responses\ResponseConsistencyFixture.cs" />

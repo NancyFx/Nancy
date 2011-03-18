@@ -6,6 +6,6 @@
     /// <remarks>Extension methods to this interface should always return <see cref="Response"/> or one of the types that can implicitly be types into a <see cref="Response"/>.</remarks>
     public interface IResponseFormatter : IHideObjectMembers
     {
-        string RootPath { get; }
+        string RootPath { get; }        
     }
 }
