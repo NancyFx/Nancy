@@ -3,6 +3,8 @@
     using System;
     using System.IO;
     
+    // TODO: StaticFileResource is intended to read text files (uses TextReader/Writers). 
+    // This file is redundant! GenericFileResource is more awesome
     public class StaticFileResponse : Response
     {
         public StaticFileResponse(string filePath, string contentType)

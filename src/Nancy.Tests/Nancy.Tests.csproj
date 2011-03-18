@@ -68,6 +68,7 @@
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
+    <Compile Include="Responses\ResponseConsistencyFixture.cs" />
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
@@ -133,6 +134,15 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Responses\testfiles\test.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Responses\testfiles\zip.png">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

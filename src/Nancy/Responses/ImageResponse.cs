@@ -29,6 +29,8 @@
 
         private static Action<Stream> GetImageContent(string imagePath)
         {
+            // TODO: Why is this going to the trouble of reading/processing 
+            // an image just to write out the bytes???            
             return stream =>
             {
                 var image = System.Drawing.Image.FromFile(imagePath);
