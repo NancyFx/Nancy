@@ -15,14 +15,14 @@ namespace Nancy.Hosting.Owin.Fakes
     /// </summary>
     public class FakeConsumer
     {
-        private readonly bool useContinuation = false;
+        private readonly bool useContinuation;
 
         private Action cancelDelegate;
 
         private bool bodyDelegateInvoked;
 
         private MemoryStream dataStream;
-        private ManualResetEventSlim sync = new ManualResetEventSlim();;
+        private ManualResetEventSlim sync = new ManualResetEventSlim();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeConsumer"/> class.

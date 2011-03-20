@@ -2,6 +2,7 @@ namespace Nancy.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Text;
     using Bootstrapper;
@@ -248,7 +249,6 @@ namespace Nancy.Tests
         [Fact]
         public void Should_dispose_context_if_body_delegate_throws()
         {
-            var data1 = Encoding.ASCII.GetBytes("Some content");
             var fakeResponse = new Response()
             {
                 StatusCode = HttpStatusCode.OK,
@@ -264,6 +264,42 @@ namespace Nancy.Tests
             this.host.ProcessRequest(environment, callback, fakeErrorCallback);
 
             A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_read_entire_request_body_when_theres_no_continuation()
+        {
+            var requestBody = Encoding.ASCII.GetBytes("This is some request body content");
+            var fakeRequestBodyDelegate = new FakeProducer(false, requestBody, 5, false);
+            this.environment["owin.RequestBody"] = (BodyDelegate)fakeRequestBodyDelegate;
+            Request request = null;
+            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
+                .Invokes(i => request = (Request)i.Arguments[0]);
+
+            this.host.ProcessRequest(environment, fakeResponseCallback, fakeErrorCallback);
+            fakeRequestBodyDelegate.SendAll();
+
+            var read = new StreamReader(request.Body);
+            var output = read.ReadToEnd();
+            output.ShouldEqual("This is some request body content");
+        }
+
+        [Fact]
+        public void Should_read_entire_request_body_when_there_is_a_continuation()
+        {
+            var requestBody = Encoding.ASCII.GetBytes("This is some request body content");
+            var fakeRequestBodyDelegate = new FakeProducer(true, requestBody, 5, false);
+            this.environment["owin.RequestBody"] = (BodyDelegate)fakeRequestBodyDelegate;
+            Request request = null;
+            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
+                .Invokes(i => request = (Request)i.Arguments[0]);
+
+            this.host.ProcessRequest(environment, fakeResponseCallback, fakeErrorCallback);
+            fakeRequestBodyDelegate.SendAll();
+
+            var read = new StreamReader(request.Body);
+            var output = read.ReadToEnd();
+            output.ShouldEqual("This is some request body content");
         }
 
         /// <summary>
