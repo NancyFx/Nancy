@@ -99,7 +99,6 @@
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />
     <Compile Include="DefaultResponseFormatter.cs" />
-    <Compile Include="Responses\GZipResponse.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
     <Compile Include="Responses\JsonSettings.cs" />
