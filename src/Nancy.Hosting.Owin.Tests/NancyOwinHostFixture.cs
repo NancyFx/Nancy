@@ -2,9 +2,12 @@ namespace Nancy.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
     using Bootstrapper;
     using FakeItEasy;
     using Hosting.Owin;
+    using Hosting.Owin.Fakes;
     using Xunit;
 
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
@@ -106,6 +109,171 @@ namespace Nancy.Tests
             this.host.ProcessRequest(environment, fakeResponseCallback, (e) => called = true);
 
             called.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_invoke_response_delegate_when_nancy_returns()
+        {
+            var fakeResponse = new Response() { StatusCode = HttpStatusCode.OK };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var called = false;
+            ResponseCallBack callback = (status, headers, bodyDelegate) => called = true;
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            called.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_invoke_view_delegate_to_get_response()
+        {
+            var called = false;
+            var fakeResponse = new Response()
+                                   {
+                                       StatusCode = HttpStatusCode.OK,
+                                       Contents = s => called = true
+                                   };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var fakeConsumer = new FakeConsumer(false);
+            ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            called.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_set_return_code_in_response_callback()
+        {
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Contents = s => { }
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            string statusCode = "";
+            ResponseCallBack callback = (r, h, b) => statusCode = r;
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            statusCode.ShouldEqual("200 OK");            
+        }
+
+        [Fact]
+        public void Should_set_headers_in_response_callback()
+        {
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Headers = new Dictionary<string, string>() { { "TestHeader", "TestValue" } },
+                Contents = s => { }
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            IDictionary<string, string> headers = null;
+            ResponseCallBack callback = (r, h, b) => headers = h;
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            headers.Count.ShouldEqual(1);
+            headers["TestHeader"].ShouldEqual("TestValue");
+        }
+
+        [Fact]
+        public void Should_send_null_continuation()
+        {
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Contents = s => s.WriteByte(12)
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var fakeConsumer = new FakeConsumer(false);
+            ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            fakeConsumer.ContinuationSent.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_send_entire_body()
+        {
+            var data1 = Encoding.ASCII.GetBytes("Some content");
+            var data2 = Encoding.ASCII.GetBytes("Some more content");
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Contents = s =>
+                    {
+                        s.Write(data1, 0, data1.Length);
+                        s.Write(data2, 0, data2.Length);
+                    }
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var fakeConsumer = new FakeConsumer(false);
+            ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            fakeConsumer.ConsumedData.SequenceEqual(data1.Concat(data2)).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_dispose_context_on_completion_of_body_delegate()
+        {
+            var data1 = Encoding.ASCII.GetBytes("Some content");
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Contents = s => s.Write(data1, 0, data1.Length)
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var mockDisposable = A.Fake<IDisposable>();
+            fakeContext.Items.Add("Test",  mockDisposable);
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var fakeConsumer = new FakeConsumer(false);
+            ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_dispose_context_if_body_delegate_throws()
+        {
+            var data1 = Encoding.ASCII.GetBytes("Some content");
+            var fakeResponse = new Response()
+            {
+                StatusCode = HttpStatusCode.OK,
+                Contents = s => { throw new InvalidOperationException(); }
+            };
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var mockDisposable = A.Fake<IDisposable>();
+            fakeContext.Items.Add("Test", mockDisposable);
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var fakeConsumer = new FakeConsumer(false);
+            ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+
+            A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        /// <summary>
+        /// Sets the fake nancy engine to execute the complete callback with the given context
+        /// </summary>
+        /// <param name="context">Context to return</param>
+        private void SetupFakeNancyCompleteCallback(NancyContext context)
+        {
+            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
+                .Invokes((i => ((Action<NancyContext>)i.Arguments[1]).Invoke(context)));
         }
     }
 }
