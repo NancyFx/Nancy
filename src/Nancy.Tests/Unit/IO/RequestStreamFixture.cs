@@ -8,7 +8,7 @@ namespace Nancy.Tests.Unit.IO
 
     public class RequestStreamFixture
     {
-        private Stream stream;
+        private readonly Stream stream;
 
         public RequestStreamFixture()
         {
@@ -27,7 +27,7 @@ namespace Nancy.Tests.Unit.IO
             A.CallTo(() => this.stream.CanSeek).Returns(false);
 
             // When
-            var exception = Record.Exception(() => new RequestStream(this.stream, 0, 1, false));
+            var exception = Record.Exception(() => RequestStream.FromStream(this.stream));
 
             // Then
             exception.ShouldBeOfType<InvalidOperationException>();
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit.IO
             A.CallTo(() => this.stream.CanRead).Returns(false);
 
             // When
-            var exception = Record.Exception(() => new RequestStream(this.stream, 0, 1, false));
+            var exception = Record.Exception(() => RequestStream.FromStream(this.stream));
 
             // Then
             exception.ShouldBeOfType<InvalidOperationException>();
@@ -53,20 +53,20 @@ namespace Nancy.Tests.Unit.IO
             const int expectedLength = -1;
 
             // When
-            var exception = Record.Exception(() => new RequestStream(this.stream, expectedLength, 0, false));
+            var exception = Record.Exception(() => RequestStream.FromStream(this.stream, expectedLength));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
-        public void Should_throw_argumentoutofrangeexception_when_threshHoldLength_is_less_than_zero()
+        public void Should_throw_argumentoutofrangeexception_when_thresholdLength_is_less_than_zero()
         {
             // Given
-            const int threshHoldLength = -1;
+            const int tresholdLength = -1;
 
             // When
-            var exception = Record.Exception(() => new RequestStream(this.stream, 0, threshHoldLength, false));
+            var exception = Record.Exception(() => RequestStream.FromStream(this.stream, 0, tresholdLength));
 
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
@@ -76,7 +76,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_return_true_when_queried_about_supporting_reading()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.CanRead;
@@ -86,23 +86,24 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_return_false_when_queried_about_supporting_writing()
+        public void Should_return_state_of_underlaying_stream_when_queried_about_supporting_writing()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            A.CallTo(() => this.stream.CanWrite).Returns(true);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.CanWrite;
 
             // Then
-            result.ShouldBeFalse();
+            result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_return_true_when_queried_about_supporting_seeking()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.CanSeek;
@@ -115,7 +116,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_return_false_when_queried_about_supporting_timeout()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.CanTimeout;
@@ -129,7 +130,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Length).Returns(1234L);
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.Length;
@@ -142,7 +143,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_return_position_of_underlaying_stream()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
             A.CallTo(() => this.stream.Position).Returns(1234L);
 
             // When
@@ -157,7 +158,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Length).Returns(2000L);
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Position = 1234L;
@@ -170,7 +171,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_throw_argumentoutofrangexception_when_setting_position_to_less_than_zero()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var exception = Record.Exception(() => request.Position = -1);
@@ -184,7 +185,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Length).Returns(100L);
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var exception = Record.Exception(() => request.Position = 1000);
@@ -197,7 +198,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_flush_underlaying_stream()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Flush();
@@ -210,7 +211,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_throw_notsupportedexception_when_setting_length()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var exception = Record.Exception(() => request.SetLength(10L));
@@ -226,7 +227,7 @@ namespace Nancy.Tests.Unit.IO
             A.CallTo(() => this.stream.Position).Returns(10);
 
             // When
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // Then
             this.stream.Position.ShouldEqual(0L);
@@ -236,7 +237,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_seek_in_the_underlaying_stream_when_seek_is_called()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Seek(10L, SeekOrigin.Current);
@@ -250,7 +251,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Seek(A<long>.Ignored, A<SeekOrigin>.Ignored)).Returns(100L);
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.Seek(10L, SeekOrigin.Current);
@@ -263,7 +264,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_read_byte_from_underlaying_stream_when_reading_byte()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.ReadByte();
@@ -277,7 +278,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.ReadByte()).Returns(5);
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             var result = request.ReadByte();
@@ -290,7 +291,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_close_the_underlaying_stream_when_being_closed()
         {
             // Given
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Close();
@@ -304,7 +305,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var buffer = new byte[1];
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Read(buffer, 0, buffer.Length);
@@ -318,7 +319,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var buffer = new byte[1];
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
             A.CallTo(() => this.stream.Read(buffer, 0, buffer.Length)).Returns(3);
 
             // When
@@ -333,7 +334,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var buffer = new byte[1];
-            var request = new RequestStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1, false);
 
             // When
             request.Write(buffer, 0, buffer.Length);
@@ -346,7 +347,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_no_longer_be_in_memory_if_expected_length_is_greater_or_equal_to_threshold_length()
         {
             // Given, When
-            var request = new RequestStream(this.stream, 1, 0, false);
+            var request = RequestStream.FromStream(this.stream, 1, 0, false);
 
             // Then
             request.IsInMemory.ShouldBeFalse();
@@ -357,7 +358,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var buffer = new byte[100];
-            var request = new RequestStream(this.stream, 0, 10, false);
+            var request = RequestStream.FromStream(this.stream, 0, 10, false);
             A.CallTo(() => this.stream.Length).Returns(100);
 
             // When
@@ -372,7 +373,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var buffer = new byte[100];
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
             A.CallTo(() => this.stream.Length).Returns(100);
 
             // When
@@ -389,7 +390,7 @@ namespace Nancy.Tests.Unit.IO
             var buffer = new byte[10];
             AsyncCallback callback = x => { };
             var state = new object();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
 
             // When
             request.BeginRead(buffer, 0, buffer.Length, callback, state);
@@ -406,7 +407,7 @@ namespace Nancy.Tests.Unit.IO
             var asyncResult = A.Fake<IAsyncResult>();
             AsyncCallback callback = x => { };
             var state = new object();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
             A.CallTo(() => this.stream.BeginRead(buffer, 0, buffer.Length, callback, state)).Returns(asyncResult);
 
             // When
@@ -423,7 +424,7 @@ namespace Nancy.Tests.Unit.IO
             var buffer = new byte[10];
             AsyncCallback callback = x => { };
             var state = new object();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
 
             // When
             request.BeginWrite(buffer, 0, buffer.Length, callback, state);
@@ -440,7 +441,7 @@ namespace Nancy.Tests.Unit.IO
             var asyncResult = A.Fake<IAsyncResult>();
             AsyncCallback callback = x => { };
             var state = new object();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
             A.CallTo(() => this.stream.BeginWrite(buffer, 0, buffer.Length, callback, state)).Returns(asyncResult);
 
             // When
@@ -455,7 +456,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var asyncResult = A.Fake<IAsyncResult>();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
 
             // When
             request.EndRead(asyncResult);
@@ -469,7 +470,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var asyncResult = A.Fake<IAsyncResult>();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
             A.CallTo(() => this.stream.EndRead(A<IAsyncResult>.Ignored.Argument)).Returns(4);
 
             // When
@@ -484,7 +485,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var asyncResult = A.Fake<IAsyncResult>();
-            var request = new RequestStream(this.stream, 0, 10, true);
+            var request = RequestStream.FromStream(this.stream, 0, 10, true);
 
             // When
             request.EndWrite(asyncResult);
