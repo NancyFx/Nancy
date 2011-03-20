@@ -11,9 +11,40 @@
         public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
 
         private bool disableStreamSwitching;
-        private readonly long expectedLength;
         private readonly long thresholdLength;
         private Stream stream;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// </summary>
+        /// <param name="expectedLength">The expected length of the contents in the stream.</param>
+        /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
+        /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
+        public RequestStream(long expectedLength, long thresholdLength, bool disableStreamSwitching)
+            : this(null, expectedLength, thresholdLength, disableStreamSwitching)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// </summary>
+        /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
+        /// <param name="expectedLength">The expected length of the contents in the stream.</param>
+        /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
+        public RequestStream(Stream stream, long expectedLength, bool disableStreamSwitching)
+            : this(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RequestStream"/> class.
+        /// </summary>
+        /// <param name="expectedLength">The expected length of the contents in the stream.</param>
+        /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
+        public RequestStream(long expectedLength, bool disableStreamSwitching)
+            : this(null, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
@@ -24,16 +55,15 @@
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
         public RequestStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
-            this.expectedLength = expectedLength;
             this.thresholdLength = thresholdLength;
             this.disableStreamSwitching = disableStreamSwitching;
-            this.stream = stream ?? this.CreateDefaultMemoryStream();
+            this.stream = stream ?? this.CreateDefaultMemoryStream(expectedLength);
 
-            ThrowExceptionIfCtorParametersWereInvalid(this.stream, this.expectedLength, this.thresholdLength);
+            ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
             this.stream.Position = 0;
 
-            if (this.expectedLength >= this.thresholdLength)
+            if (expectedLength >= this.thresholdLength)
             {
                 this.MoveStreamContentsToFileStream();
             }
@@ -275,11 +305,11 @@
             return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
         }
 
-        private Stream CreateDefaultMemoryStream()
+        private Stream CreateDefaultMemoryStream(long expectedLength)
         {
-            if (this.disableStreamSwitching || this.expectedLength < this.thresholdLength)
+            if (this.disableStreamSwitching || expectedLength < this.thresholdLength)
             {
-                return new MemoryStream((int)this.expectedLength);
+                return new MemoryStream((int)expectedLength);
             }
 
             this.disableStreamSwitching = true;
