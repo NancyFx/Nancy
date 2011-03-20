@@ -41,8 +41,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Extensions\EnvironmentExtensions.cs" />
-    <Compile Include="Fakes\FakeConsumer.cs" />
-    <Compile Include="Fakes\FakeProducer.cs" />
     <Compile Include="NancyOwinHost.cs" />
     <Compile Include="NancyRequestParameters.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

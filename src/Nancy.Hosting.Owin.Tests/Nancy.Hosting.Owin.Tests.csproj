@@ -53,6 +53,8 @@
       <Link>ShouldExtensions.cs</Link>
     </Compile>
     <Compile Include="Extensions\EnvironmentExtensionsFixture.cs" />
+    <Compile Include="Fakes\FakeConsumer.cs" />
+    <Compile Include="Fakes\FakeProducer.cs" />
     <Compile Include="NancyOwinHostFixture.cs" />
   </ItemGroup>
   <ItemGroup>

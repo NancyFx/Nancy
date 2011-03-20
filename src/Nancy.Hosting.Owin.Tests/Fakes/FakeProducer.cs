@@ -1,4 +1,4 @@
-namespace Nancy.Hosting.Owin.Fakes
+namespace Nancy.Hosting.Owin.Tests.Fakes
 {
     using System;
     using System.Threading;

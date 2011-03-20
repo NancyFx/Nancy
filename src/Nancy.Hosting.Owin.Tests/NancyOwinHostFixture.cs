@@ -8,7 +8,7 @@ namespace Nancy.Tests
     using Bootstrapper;
     using FakeItEasy;
     using Hosting.Owin;
-    using Hosting.Owin.Fakes;
+    using Hosting.Owin.Tests.Fakes;
     using Xunit;
 
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
