@@ -1,7 +1,4 @@
-﻿using System;
-using Nancy.MimeType;
-
-namespace Nancy
+﻿namespace Nancy
 {
     /// <summary>
     /// The default implementation of the <see cref="IResponseFormatter"/> interface.

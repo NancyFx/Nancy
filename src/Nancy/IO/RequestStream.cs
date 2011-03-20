@@ -8,6 +8,8 @@ namespace Nancy.IO
     /// </summary>
     public class RequestStream : Stream
     {
+        public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
+
         private bool disableStreamSwitching;
         private readonly long expectedLength;
         private readonly long thresholdLength;
@@ -16,39 +18,18 @@ namespace Nancy.IO
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
         /// </summary>
-        /// <param name="expectedLength">The expected length of the contents in the stream.</param>
-        /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
-        /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
-        public RequestStream(long expectedLength, long thresholdLength, bool disableStreamSwitching)
-            : this(null, expectedLength, thresholdLength, disableStreamSwitching)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RequestStream"/> class.
-        /// </summary>
         /// <param name="stream">The <see cref="Stream"/> that should be handled by the request stream</param>
         /// <param name="expectedLength">The expected length of the contents in the stream.</param>
         /// <param name="thresholdLength">The content length that will trigger the stream to be moved out of memory.</param>
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
-        public RequestStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
+        protected RequestStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
             this.expectedLength = expectedLength;
             this.thresholdLength = thresholdLength;
             this.disableStreamSwitching = disableStreamSwitching;
             this.stream = stream ?? this.CreateDefaultMemoryStream();
 
-            if (!this.stream.CanSeek)
-                throw new InvalidOperationException("The stream must support seeking.");
-
-            if (!this.stream.CanRead)
-                throw new InvalidOperationException("The stream must support reading.");
-
-            if (expectedLength < 0)
-                throw new ArgumentOutOfRangeException("expectedLength", expectedLength, "The value of the expectedLength parameter cannot be less than zero.");
-
-            if (thresholdLength < 0)
-                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength, "The value of the threshHoldLength parameter cannot be less than zero.");
+            ThrowExceptionIfCtorParametersWereInvalid(this.stream, this.expectedLength, this.thresholdLength);
 
             this.stream.Position = 0;
 
@@ -59,7 +40,7 @@ namespace Nancy.IO
         }
 
         /// <summary>
-        /// When overridden in a derived class, gets a value indicating whether the current stream supports reading.
+        /// Gets a value indicating whether the current stream supports reading.
         /// </summary>
         /// <returns>Always returns <see langword="true"/>.</returns>
         public override bool CanRead
@@ -88,10 +69,10 @@ namespace Nancy.IO
         /// <summary>
         /// Gets a value indicating whether the current stream supports writing.
         /// </summary>
-        /// <returns>Always returns <see langword="false"/>.</returns>
+        /// <returns>Always returns <see langword="true"/>.</returns>
         public override bool CanWrite
         {
-            get { return false; }
+            get { return true; }
         }
 
         /// <summary>
@@ -135,9 +116,7 @@ namespace Nancy.IO
         /// <summary>
         /// Begins an asynchronous read operation.
         /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.IAsyncResult"/> that represents the asynchronous read, which could still be pending.
-        /// </returns>
+        /// <returns>An <see cref="T:System.IAsyncResult"/> that represents the asynchronous read, which could still be pending.</returns>
         /// <param name="buffer">The buffer to read the data into. </param>
         /// <param name="offset">The byte offset in <paramref name="buffer"/> at which to begin writing data read from the stream. </param>
         /// <param name="count">The maximum number of bytes to read. </param>
@@ -151,9 +130,7 @@ namespace Nancy.IO
         /// <summary>
         /// Begins an asynchronous write operation.
         /// </summary>
-        /// <returns>
-        /// An IAsyncResult that represents the asynchronous write, which could still be pending.
-        /// </returns>
+        /// <returns>An <see cref="IAsyncResult"/> that represents the asynchronous write, which could still be pending.</returns>
         /// <param name="buffer">The buffer to write data from. </param>
         /// <param name="offset">The byte offset in <paramref name="buffer"/> from which to begin writing. </param>
         /// <param name="count">The maximum number of bytes to write. </param>
@@ -194,15 +171,40 @@ namespace Nancy.IO
         }
 
         /// <summary>
-        /// When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.
+        /// Clears all buffers for this stream and causes any buffered data to be written to the underlying device.
         /// </summary>
         public override void Flush()
         {
             this.stream.Flush();
         }
 
+        public static RequestStream FromStream(Stream stream)
+        {
+            return FromStream(stream, 0, DEFAULT_SWITCHOVER_THRESHOLD, false);
+        }
+
+        public static RequestStream FromStream(Stream stream, long expectedLength)
+        {
+            return FromStream(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, false);
+        }
+
+        public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength)
+        {
+            return FromStream(stream, expectedLength, thresholdLength, false);
+        }
+
+        public static RequestStream FromStream(Stream stream, long expectedLength, bool disableStreamSwitching)
+        {
+            return FromStream(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching);
+        }
+
+        public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
+        {
+            return new RequestStream(stream, expectedLength, thresholdLength, disableStreamSwitching);
+        }
+
         /// <summary>
-        /// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
+        /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
         /// </summary>
         /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
         /// <param name="buffer">An array of bytes. When this method returns, the buffer contains the specified byte array with the values between <paramref name="offset"/> and (<paramref name="offset"/> + <paramref name="count"/> - 1) replaced by the bytes read from the current source. </param>
@@ -223,7 +225,7 @@ namespace Nancy.IO
         }
 
         /// <summary>
-        /// When overridden in a derived class, sets the position within the current stream.
+        /// Sets the position within the current stream.
         /// </summary>
         /// <returns>The new position within the current stream.</returns>
         /// <param name="offset">A byte offset relative to the <paramref name="origin"/> parameter. </param>
@@ -234,7 +236,7 @@ namespace Nancy.IO
         }
 
         /// <summary>
-        /// When overridden in a derived class, sets the length of the current stream.
+        /// Sets the length of the current stream.
         /// </summary>
         /// <param name="value">The desired length of the current stream in bytes. </param>
         /// <exception cref="NotSupportedException">The stream does not support having it's length set.</exception>
@@ -245,7 +247,7 @@ namespace Nancy.IO
         }
 
         /// <summary>
-        /// When overridden in a derived class, writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
+        /// Writes a sequence of bytes to the current stream and advances the current position within this stream by the number of bytes written.
         /// </summary>
         /// <param name="buffer">An array of bytes. This method copies <paramref name="count"/> bytes from <paramref name="buffer"/> to the current stream. </param>
         /// <param name="offset">The zero-based byte offset in <paramref name="buffer"/> at which to begin copying bytes to the current stream. </param>
@@ -302,12 +304,36 @@ namespace Nancy.IO
                 return;
             }
 
-            this.stream.Position = 0;
             this.stream.CopyTo(fileStream, 8196);
             this.stream.Flush();
+            this.stream.Close();
 
             fileStream.Position = 0;
             this.stream = fileStream;
         }
+
+        private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)
+        {
+            if (!stream.CanRead)
+            {
+                throw new InvalidOperationException("The stream must support reading.");
+            }
+
+            if (!stream.CanSeek)
+            {
+                throw new InvalidOperationException("The stream must support seeking.");
+            }
+
+            if (expectedLength < 0)
+            {
+                throw new ArgumentOutOfRangeException("expectedLength", expectedLength, "The value of the expectedLength parameter cannot be less than zero.");
+            }
+
+            if (thresholdLength < 0)
+            {
+                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength, "The value of the threshHoldLength parameter cannot be less than zero.");
+            }
+        }
+
     }
 }
