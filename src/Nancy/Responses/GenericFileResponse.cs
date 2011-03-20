@@ -1,5 +1,4 @@
-﻿using Nancy.Bootstrapper;
-using Nancy.MimeType;
+﻿using Nancy.MimeType;
 
 namespace Nancy.Responses
 {
@@ -8,17 +7,17 @@ namespace Nancy.Responses
 
     public class GenericFileResponse : Response
     {
-        public GenericFileResponse(string filePath, IMimeTypeRegistry mimeRegistry) : this (filePath, InferMimeType(filePath, mimeRegistry)) {}        
+        public GenericFileResponse(string filePath) : this (filePath, InferMimeType(filePath)) {}        
 
         public GenericFileResponse(string filePath, string contentType)
         {
             InitializeGenericFileResonse(filePath, contentType);
         }
 
-        private static string InferMimeType(string filePath, IMimeTypeRegistry mimeRegistry)
+        private static string InferMimeType(string filePath)
         {
             string ext = filePath.Substring(filePath.LastIndexOf('.') + 1);
-            return mimeRegistry.GetMimeTypeFor(ext);
+            return MimeTypeUtils.GetMimeTypeFor(ext);
         }
 
         private static Action<Stream> GetFileContent(string filePath)

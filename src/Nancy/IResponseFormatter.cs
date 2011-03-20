@@ -1,6 +1,4 @@
-﻿using Nancy.MimeType;
-
-namespace Nancy
+﻿namespace Nancy
 {
     /// <summary>
     /// An extension point for adding support for formatting response contents. No members should be added to this interface without good reason.
@@ -9,7 +7,5 @@ namespace Nancy
     public interface IResponseFormatter : IHideObjectMembers
     {
         string RootPath { get; }
-
-        IMimeTypeRegistry MimeTypeRegistry { get; }
     }
 }

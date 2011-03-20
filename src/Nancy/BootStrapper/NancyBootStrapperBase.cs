@@ -109,11 +109,6 @@
         protected virtual Type DefaultResponseFormatter { get { return typeof(DefaultResponseFormatter); } }
 
         /// <summary>
-        /// Type passed into RegisterDefaults - override this to switch out default implementations
-        /// </summary>
-        protected virtual Type DefaultMimeTypeRegistry { get { return typeof(DefaultMimeTypeRegistry); } }
-
-        /// <summary>
         /// <para>
         /// The pre-request hook
         /// </para>
@@ -188,8 +183,7 @@
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
                 new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory),
                 new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
-                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter),
-                new TypeRegistration(typeof(IMimeTypeRegistry), DefaultMimeTypeRegistry)
+                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter)
             };
         }
 

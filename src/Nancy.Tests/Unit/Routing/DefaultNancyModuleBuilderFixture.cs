@@ -13,7 +13,6 @@ namespace Nancy.Tests.Unit.Routing
         private readonly DefaultNancyModuleBuilder builder;
         private readonly DefaultResponseFormatter responseFormatter;
         private readonly IRootPathProvider rootPathProvider;
-        private readonly IMimeTypeRegistry mimeRegistry;
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
 
@@ -21,8 +20,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             this.module = new FakeNancyModule();
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.mimeRegistry = A.Fake<IMimeTypeRegistry>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider, this.mimeRegistry);
+            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
             this.viewFactory = A.Fake<IViewFactory>();
             this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatter);
         }

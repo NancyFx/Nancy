@@ -9,17 +9,14 @@ namespace Nancy
     public class DefaultResponseFormatter : IResponseFormatter
     {
         private readonly IRootPathProvider rootPathProvider;
-        private readonly IMimeTypeRegistry mimeTypeRegistry;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class.
         /// </summary>
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used by the instance.</param>
-        /// <param name="mimeTypeRegistry">The <see cref="IMimeTypeRegistry"/> that should be used by the instance.</param>
-        public DefaultResponseFormatter(IRootPathProvider rootPathProvider, IMimeTypeRegistry mimeTypeRegistry)
+        public DefaultResponseFormatter(IRootPathProvider rootPathProvider)
         {
             this.rootPathProvider = rootPathProvider;
-            this.mimeTypeRegistry = mimeTypeRegistry;
         }
 
         /// <summary>
@@ -29,14 +26,6 @@ namespace Nancy
         public string RootPath
         {
             get { return this.rootPathProvider.GetRootPath(); }
-        }
-
-        /// <summary>
-        /// Gets the mime-type registry
-        /// </summary>                
-        public IMimeTypeRegistry MimeTypeRegistry
-        {
-            get { return this.mimeTypeRegistry; }
         }
     }
 }

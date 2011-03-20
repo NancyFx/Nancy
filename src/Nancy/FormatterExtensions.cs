@@ -7,7 +7,7 @@ namespace Nancy
     {
         public static Response AsFile(this IResponseFormatter formatter, string filePath)
         {            
-            return new GenericFileResponse(Path.Combine(formatter.RootPath, filePath), formatter.MimeTypeRegistry);
+            return new GenericFileResponse(Path.Combine(formatter.RootPath, filePath));
         }
 
         public static Response AsCss(this IResponseFormatter formatter, string filePath)

@@ -94,6 +94,7 @@
     <Compile Include="Json\StringBuilderExtensions.cs" />
     <Compile Include="MimeType\DefaultMimeTypeRegistry.cs" />
     <Compile Include="MimeType\IMimeTypeRegistry.cs" />
+    <Compile Include="MimeType\MimeTypeUtils.cs" />
     <Compile Include="NancyContext.cs" />
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />

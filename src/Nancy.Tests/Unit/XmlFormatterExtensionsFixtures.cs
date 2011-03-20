@@ -14,14 +14,12 @@ namespace Nancy.Tests.Unit
         private readonly Person model;
         private readonly Response response;
         private readonly IRootPathProvider rootPathProvider;
-        private readonly IMimeTypeRegistry mimeRegistry;
 
 
         public XmlFormatterExtensionsFixtures()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.mimeRegistry = A.Fake<IMimeTypeRegistry>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider, this.mimeRegistry);
+            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.responseFormatter.AsXml(model);
         }
