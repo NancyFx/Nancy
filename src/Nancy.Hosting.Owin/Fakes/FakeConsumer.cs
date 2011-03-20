@@ -22,6 +22,7 @@ namespace Nancy.Hosting.Owin.Fakes
         private bool bodyDelegateInvoked;
 
         private MemoryStream dataStream;
+        private ManualResetEventSlim sync = new ManualResetEventSlim();;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeConsumer"/> class.
@@ -56,16 +57,23 @@ namespace Nancy.Hosting.Owin.Fakes
         /// Invoke the body delegate
         /// </summary>
         /// <param name="bodyDelegate">The body delegate to invoke</param>
-        public void InvokeBodyDelegate(BodyDelegate bodyDelegate)
+        public void InvokeBodyDelegate(BodyDelegate bodyDelegate, bool waitForComplete = true)
         {
             if (bodyDelegate == null)
             {
                 throw new ArgumentNullException("bodyDelegate");    
             }
 
+            this.sync.Reset();
+
             this.dataStream = new MemoryStream();
             this.cancelDelegate = bodyDelegate.Invoke(this.DataConsumer, this.OnError, this.OnComplete);
             this.bodyDelegateInvoked = true;
+
+            if (waitForComplete)
+            {
+                this.sync.Wait();
+            }
         }
 
         /// <summary>
@@ -79,6 +87,8 @@ namespace Nancy.Hosting.Owin.Fakes
             }
 
             this.cancelDelegate.Invoke();
+
+            this.sync.Set();
         }
 
         private void OnComplete()
@@ -86,12 +96,14 @@ namespace Nancy.Hosting.Owin.Fakes
             this.CompleteCalled = true;
             this.dataStream.Close();
             this.ConsumedData = this.dataStream.ToArray();
+            this.sync.Set();
         }
 
         private void OnError(Exception ex)
         {
             this.RaisedException = ex;
             this.dataStream.Dispose();
+            this.sync.Set();
         }
 
         private bool DataConsumer(ArraySegment<byte> data, Action continuation)
