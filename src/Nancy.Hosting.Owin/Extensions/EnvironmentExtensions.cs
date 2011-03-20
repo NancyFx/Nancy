@@ -21,7 +21,7 @@ namespace Nancy.Hosting.Owin.Extensions
                 Headers = GetHeaders(environment),
                 Protocol = GetProtocol(environment),
                 Query = GetQueryString(environment),
-                Body = new RequestStream(null, GetExpectedRequestLength(environment), RequestStream.DEFAULT_SWITCHOVER_THRESHOLD, false),
+                Body = new RequestStream(GetExpectedRequestLength(environment), false),
             };
         }
 

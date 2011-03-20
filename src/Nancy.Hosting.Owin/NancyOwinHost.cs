@@ -40,7 +40,8 @@
 
         private INancyEngine engine;
 
-        public NancyOwinHost() : this(NancyBootstrapperLocator.Bootstrapper)
+        public NancyOwinHost()
+            : this(NancyBootstrapperLocator.Bootstrapper)
         {
         }
 
@@ -75,8 +76,8 @@
             // If a body is present, build the RequestStream and 
             // invoke Nancy when it's ready.
             requestBodyDelegate.Invoke(
-                this.GetRequestBodyBuilder(parameters, errorCallback), 
-                errorCallback, 
+                this.GetRequestBodyBuilder(parameters, errorCallback),
+                errorCallback,
                 () => this.InvokeNancy(parameters, responseCallBack, errorCallback));
         }
 
@@ -130,8 +131,6 @@
                             {
                                 state.OnError.Invoke(e);
                             }
-
-                            return;
                         },
                         asyncState);
 
@@ -149,16 +148,14 @@
 
                 // Execute the nancy async request handler
                 this.engine.HandleRequest(
-                    request, 
+                    request,
                     (result) =>
                     {
                         var returnCode = this.GetReturnCode(result);
                         var headers = result.Response.Headers;
 
                         responseCallBack.Invoke(returnCode, headers, this.GetResponseBodyBuilder(result));
-
-                        result.Dispose();
-                    }, 
+                    },
                     errorCallback);
             }
             catch (Exception e)
@@ -171,7 +168,16 @@
         {
             return (next, error, complete) =>
                 {
-                    using (var stream = new ResponseStream(next, complete))
+                    // Wrap the completion delegate so the context is disposed on completion.
+                    // Technically we could just do this after the .Invoke below, but doing it
+                    // here gives scope for supporting async response body generation in the future.
+                    Action onComplete = () =>
+                            {
+                                complete.Invoke();
+                                result.Dispose();
+                            };
+
+                    using (var stream = new ResponseStream(next, onComplete))
                     {
                         try
                         {
@@ -180,11 +186,12 @@
                         catch (Exception e)
                         {
                             error.Invoke(e);
+                            result.Dispose();
                         }
                     }
 
-                    // Don't support cancelling - should we throw here or just do nothing?
-                    return () => { throw new InvalidOperationException("Cancellation is not supported"); };
+                    // Don't currently support cancelling, but if it gets called then dispose the context
+                    return result.Dispose;
                 };
         }
 
