@@ -92,16 +92,15 @@
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
+    <Compile Include="MimeTypes.cs" />
     <Compile Include="NancyContext.cs" />
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />
     <Compile Include="DefaultResponseFormatter.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
-    <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
     <Compile Include="Responses\JsonSettings.cs" />
     <Compile Include="Responses\RedirectResponse.cs" />
-    <Compile Include="Responses\StaticFileResponse.cs" />
     <Compile Include="Responses\XmlResponse.cs" />
     <Compile Include="Routing\DefaultNancyModuleBuilder.cs" />
     <Compile Include="Routing\DefaultRouteCacheProvider.cs" />

@@ -5,10 +5,8 @@
 
     public class GenericFileResponse : Response
     {
-        public GenericFileResponse(string filePath)
-        {
-            InitializeGenericFileResonse(filePath, "application/octet-stream");
-        }
+        public GenericFileResponse(string filePath) : 
+            this (filePath, MimeTypes.GetMimeType(filePath)) {}        
 
         public GenericFileResponse(string filePath, string contentType)
         {
@@ -22,12 +20,11 @@
                 using (var file = File.OpenRead(filePath))
                 {
                     var buffer = new byte[4096];
-                    var read = 0;
-                    while (read <= file.Length)
-                    {
-                        file.Read(buffer, 0, buffer.Length);
-                        stream.Write(buffer, 0, buffer.Length);
-                        read += buffer.Length;
+                    var read = -1;
+                    while (read != 0)
+                    {                                   
+                        read = file.Read(buffer, 0, buffer.Length);
+                        stream.Write(buffer, 0, read);
                     }
                 }
             };
