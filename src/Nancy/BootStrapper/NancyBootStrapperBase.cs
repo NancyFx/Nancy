@@ -111,11 +111,11 @@
         /// <summary>
         /// Gets the available view source provider types
         /// </summary>
-        protected virtual IEnumerable<Type> ViewSourceProviders
+        protected virtual IEnumerable<Type> ViewLocationProviders
         {
             get
             {
-                return AppDomainAssemblyTypeScanner.TypesOf<IViewSourceProvider>();
+                return AppDomainAssemblyTypeScanner.TypesOf<IViewLocationProvider>();
             }
         }
 
@@ -356,7 +356,7 @@
         /// <param name="container">Container to register into</param>
         /// <param name="instanceRegistrations">Instance registration types</param>
         protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
-
+        
         /// <summary>
         /// Gets additional required type registrations
         /// that don't form part of the core Nancy configuration
@@ -380,7 +380,7 @@
             return new[]
                 {
                     new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
-                    new CollectionTypeRegistration(typeof(IViewSourceProvider), this.ViewSourceProviders),
+                    new CollectionTypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProviders),
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),

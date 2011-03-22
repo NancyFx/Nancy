@@ -1,4 +1,4 @@
-﻿<viewdata model="Nancy.Demo.Models.RatPack" />
+﻿<viewdata model="Nancy.Demo.Hosting.Aspnet.Models.RatPack" />
 <html>
 <head>
     <title>Spark View Engine Demo</title>
