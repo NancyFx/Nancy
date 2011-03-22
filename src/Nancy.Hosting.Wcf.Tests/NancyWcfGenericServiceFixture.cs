@@ -46,7 +46,6 @@ namespace Nancy.Hosting.Wcf.Tests
             }
         }
 
-        [SkippableFact]
         public void Should_be_able_to_post_body_to_selfhost()
         {
             using (CreateAndOpenWebServiceHost())

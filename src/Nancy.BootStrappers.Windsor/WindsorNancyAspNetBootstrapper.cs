@@ -1,3 +1,4 @@
+
 namespace Nancy.Bootstrappers.Windsor
 {
     using System;
@@ -9,20 +10,13 @@ namespace Nancy.Bootstrappers.Windsor
     using Nancy.Bootstrapper;
     using Nancy.Routing;
     using ViewEngines;
+    using Castle.Core;
+    using Castle.MicroKernel.Lifestyle;
+    using Nancy.BootStrappers.Windsor;
 
-    public abstract class WindsorNancyBootstrapper : NancyBootstrapperBase<IWindsorContainer>,
-        INancyBootstrapperPerRequestRegistration<IWindsorContainer>, INancyModuleCatalog
+    public abstract class WindsorNancyAspNetBootstrapper : NancyBootstrapperBase<IWindsorContainer>, INancyModuleCatalog
     {
-        /// <summary>
-        /// Key for storing the child container in the context items
-        /// </summary>
-        private const string CONTEXT_KEY = "WindsorNancyBootStrapperChildContainer";
-
         protected IWindsorContainer container;
-
-        private IEnumerable<ModuleRegistration> modulesRegistrationTypes;
-        private IEnumerable<Type> viewEngines;
-        private IEnumerable<Type> viewSourceProviders;
 
         protected override sealed INancyEngine GetEngineInternal()
         {
@@ -70,80 +64,39 @@ namespace Nancy.Bootstrappers.Windsor
 
         protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
         {
-            this.viewSourceProviders = viewSourceProviderTypes;
+            var components = viewSourceProviderTypes.Select(r => Component.For(typeof(IViewSourceProvider))
+                .ImplementedBy(r)
+                .LifeStyle.Custom(typeof(HybridPerWebRequestLifestyleManager<PerThreadLifestyleManager>)));
+
+            existingContainer.Register(components.ToArray());
         }
 
         protected override void RegisterViewEngines(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
         {
-            this.viewEngines = viewEngineTypes;
+            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
+                .ImplementedBy(r)
+                .LifeStyle.Custom(typeof(HybridPerWebRequestLifestyleManager<PerThreadLifestyleManager>)));
+
+            existingContainer.Register(components.ToArray());
         }
 
         protected override sealed void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
-            this.modulesRegistrationTypes = moduleRegistrationTypes;
-        }
-        
-        private static void RegisterModulesInternal(IWindsorContainer existingContainer, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
-        {
             var components = moduleRegistrationTypes.Select(r => Component.For(typeof (NancyModule))
                 .ImplementedBy(r.ModuleType)
                 .Named(r.ModuleKey)
-                .LifeStyle.Transient);
-            existingContainer.Register(components.ToArray());
+                .LifeStyle.Custom(typeof(HybridPerWebRequestLifestyleManager<TransientLifestyleManager>)));
+            this.container.Register(components.ToArray());
         }
-
-        public virtual void ConfigureRequestContainer(IWindsorContainer existingContainer)
-        {
-        }
-
+        
         public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var child = GetChild(context);
-            return child.Kernel.ResolveAll<NancyModule>();
+            return this.container.ResolveAll<NancyModule>();
         }
 
         public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var child = GetChild(context);
-            return child.Kernel.Resolve<NancyModule>(moduleKey);
-        }
-
-        IWindsorContainer GetChild(NancyContext context)
-        {
-            object contextObject;
-            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
-            var childContainer = contextObject as IWindsorContainer;
-
-            if (childContainer == null)
-            {
-                childContainer = new WindsorContainer();
-                this.container.AddChildContainer(childContainer);
-                this.ConfigureRequestContainer(childContainer);
-                RegisterModulesInternal(childContainer, this.modulesRegistrationTypes);
-                RegisterViewEnginesInternal(childContainer, this.viewEngines);
-                RegisterViewSourceProvidersInternal(childContainer, this.viewSourceProviders);
-                context.Items[CONTEXT_KEY] = childContainer;
-            }
-
-            return childContainer;
-        }
-
-        private static void RegisterViewSourceProvidersInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
-        {
-            var components = viewSourceProviderTypes.Select(r => Component.For(typeof(IViewSourceProvider))
-                .ImplementedBy(r)
-                .LifeStyle.Singleton);
-
-            existingContainer.Register(components.ToArray());
-        }
-
-        private static void RegisterViewEnginesInternal(IWindsorContainer existingContainer, IEnumerable<Type> viewEngineTypes)
-        {
-            var components = viewEngineTypes.Select(r => Component.For(typeof(IViewEngine))
-                .ImplementedBy(r)
-                .LifeStyle.Singleton);
-
-            existingContainer.Register(components.ToArray());
+            return this.container.Resolve<NancyModule>(moduleKey);
         }
     }
 }

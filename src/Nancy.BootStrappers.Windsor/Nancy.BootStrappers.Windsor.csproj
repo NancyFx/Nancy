@@ -54,7 +54,7 @@
     </Compile>
     <Compile Include="HybridLifestyleManager.cs" />
     <Compile Include="WindsorModuleKeyGenerator.cs" />
-    <Compile Include="WindsorNancyBootstrapper.cs" />
+    <Compile Include="WindsorNancyAspNetBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Binaries\Castle.Core.dll" />
