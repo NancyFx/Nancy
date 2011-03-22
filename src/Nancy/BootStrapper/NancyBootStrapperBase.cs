@@ -29,7 +29,7 @@
     /// via <see cref="INancyModuleCatalog.GetModuleByKey"/> are per-request scoped.
     /// </summary>
     /// <typeparam name="TContainer">Container tyope</typeparam>
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines 
         where TContainer : class
     {
         /// <summary>
@@ -118,7 +118,7 @@
         /// returned.
         /// </para>
         /// </summary>
-        protected BeforePipeline BeforeRequest { get; set; }
+        public BeforePipeline BeforeRequest { get; set; }
 
         /// <summary>
         /// <para>
@@ -129,7 +129,7 @@
         /// to rewrite the response or add/remove items from the context.
         /// </para>
         /// </summary>
-        protected AfterPipeline AfterRequest { get; set; }
+        public AfterPipeline AfterRequest { get; set; }
 
         /// <summary>
         /// <para>
@@ -152,12 +152,12 @@
 
             this.ApplicationContainer = this.CreateContainer();
 
+            this.ConfigureApplicationContainer(this.ApplicationContainer);
+            
             this.InitialiseInternal(this.ApplicationContainer);
 
             this.initialised = true;
 
-            ConfigureApplicationContainer(this.ApplicationContainer);
-            
             RegisterDefaults(this.ApplicationContainer, BuildDefaults());
             RegisterModules(GetModuleTypes(GetModuleKeyGenerator()));
             RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
@@ -231,11 +231,7 @@
         protected virtual Type GetRootPathProvider()
         {
             var providers =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IRootPathProvider).IsAssignableFrom(type)
                 where !type.Equals(typeof(DefaultRootPathProvider))
                 select type;
@@ -252,11 +248,7 @@
         protected virtual IEnumerable<Type> GetViewSourceProviders()
         {
             var viewSourceProviders =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IViewSourceProvider).IsAssignableFrom(type)
                 select type;
 
@@ -279,11 +271,7 @@
             var moduleType = typeof(NancyModule);
 
             var locatedModuleTypes =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where moduleType.IsAssignableFrom(type)
                 select new ModuleRegistration(type, moduleKeyGenerator.GetKeyForModuleType(type));
 
@@ -297,11 +285,7 @@
         protected virtual IEnumerable<Type> GetViewEngineTypes()
         {
             var viewEngineTypes =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                where !assembly.ReflectionOnly
-                where !assembly.IsDynamic
-                from type in assembly.SafeGetExportedTypes()
-                where !type.IsAbstract
+                from type in AppDomainAssemblyTypeScanner.Types
                 where typeof(IViewEngine).IsAssignableFrom(type)
                 select type;
 

@@ -5,6 +5,9 @@ namespace Nancy.Tests.Unit
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Text;
+    using Nancy.IO;
     using Xunit;
 
     public class RequestFixture
@@ -56,9 +59,12 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_throw_argumentnullexception_when_initialized_with_null_headers()
         {
-            // Given, When
+            // Given
+            var stream = CreateRequestStream();
+
+            // When
             var exception =
-                Record.Exception(() => new Request("GET", "/", null, new MemoryStream(), "http"));
+                Record.Exception(() => new Request("GET", "/", null, stream, "http"));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -111,7 +117,7 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("GET", "/", headers, new MemoryStream(), "http");
+            var request = new Request("GET", "/", headers, CreateRequestStream(), "http");
 
             // Then
             request.Headers.Keys.Contains("content-type").ShouldBeTrue();
@@ -121,7 +127,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_body_parameter_value_to_body_property_when_initialized()
         {
             // Given
-            var body = new MemoryStream();
+            var body = CreateRequestStream();
 
             // When
             var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body, "http");
@@ -135,7 +141,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-            var memory = new MemoryStream();
+            var memory = CreateRequestStream();
             var writer = new StreamWriter(memory);
             writer.Write(bodyContent);
             writer.Flush();
@@ -172,10 +178,133 @@ namespace Nancy.Tests.Unit
                 };
 
             // When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 
             // Then
             ((string[])request.Form.names).ShouldContain("John", "Paul", "George", "Ringo");
+        }
+
+        [Fact]
+        public void Should_set_extracted_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>
+                {
+                    { "name", "John Doe"},
+                    { "age", "42"}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            ((string)request.Form.name).ShouldEqual("John Doe");
+            ((string)request.Form.age).ShouldEqual("42");
+        }
+
+        [Fact]
+        public void Should_set_extracted_files_to_files_collection_when_body_content_type_is_multipart_form_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "test", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            request.Files.ShouldHaveCount(1);
+        }
+
+        [Fact]
+        public void Should_set_content_type_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            request.Files.First().ContentType.ShouldEqual("content/type");
+        }
+
+        [Fact]
+        public void Should_set_name_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            request.Files.First().Name.ShouldEqual("sample.txt");
+        }
+
+        [Fact]
+        public void Should_value_on_file_extracted_from_multipart_form_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            GetStringValue(request.Files.First().Value).ShouldEqual("some test content");
+        }
+
+        private static string GetStringValue(Stream stream)
+        {
+            var reader = new StreamReader(stream);
+            return reader.ReadToEnd();
         }
 
 		[Fact]
@@ -195,7 +324,7 @@ namespace Nancy.Tests.Unit
                 };
 
 			// When
-            var request = new Request("POST", "/", headers, memory, "http");
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
 			request.Form.ToString();
 			// Then
 			((string)request.Form.name).ShouldEqual("John Doe");
@@ -234,6 +363,79 @@ namespace Nancy.Tests.Unit
 
             // Then
             request.Protocol.ShouldEqual(protocol);
+        }
+
+        private static RequestStream CreateRequestStream()
+        {
+            return CreateRequestStream(new MemoryStream());
+        }
+
+        private static RequestStream CreateRequestStream(Stream stream)
+        {
+            return RequestStream.FromStream(stream);
+        }
+
+        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key]);
+            }
+
+            boundaryBuilder.Append('\r');
+            boundaryBuilder.Append('\n');
+            boundaryBuilder.Append("------NancyFormBoundary--");
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
+        }
+
+        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string>> formValues)
+        {
+            var boundaryBuilder = new StringBuilder();
+
+            foreach (var key in formValues.Keys)
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append("--");
+                boundaryBuilder.Append("----NancyFormBoundary");
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"whatever\"; filename=\"{0}\"", key);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.AppendFormat("Content-Type: {0}", formValues[key].Item1);
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+                boundaryBuilder.Append(formValues[key].Item2);
+            }
+
+            boundaryBuilder.Append('\r');
+            boundaryBuilder.Append('\n');
+            boundaryBuilder.Append("------NancyFormBoundary--");
+
+            var bytes =
+                Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
+
+            return bytes;
         }
     }
 }

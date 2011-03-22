@@ -26,17 +26,15 @@
             var bootstrapperInterface = typeof(INancyBootstrapper);
             var defaultBootstrapper = typeof(DefaultNancyBootstrapper);
 
-            var locatedBootstrappers = from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                                       where !assembly.IsDynamic
-                                       from type in assembly.SafeGetExportedTypes()
-                                       where !type.IsAbstract
-                                       where bootstrapperInterface.IsAssignableFrom(type)
-                                       where type != defaultBootstrapper
-                                       select type;
+            var locatedBootstrappers =
+                from type in AppDomainAssemblyTypeScanner.Types
+                where bootstrapperInterface.IsAssignableFrom(type)
+                where type != defaultBootstrapper
+                select type;
 
             var bootstrapperType = locatedBootstrappers.FirstOrDefault() ?? defaultBootstrapper;
 
-            Bootstrapper = (INancyBootstrapper) Activator.CreateInstance(bootstrapperType);
+            Bootstrapper = (INancyBootstrapper)Activator.CreateInstance(bootstrapperType);
         }
     }
 }

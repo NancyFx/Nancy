@@ -1,10 +1,8 @@
 using System.Reflection;
-using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("NancyFx")]
-[assembly: AssemblyDescription("A Sinatra inspired web framework for the .NET platform")]
-[assembly: AssemblyCompany("NancyFx")]
-[assembly: AssemblyProduct("NancyFx")]
+[assembly: AssemblyTitle("my assembly title")]
+[assembly: AssemblyDescription("this is the assembly description")]
+[assembly: AssemblyCompany("a test company")]
+[assembly: AssemblyProduct("a product name goes here")]
 [assembly: AssemblyCopyright("Copyright (C) Andreas Hakansson and contributors")]
-[assembly: AssemblyVersion("0.0.2.0")]
-
+[assembly: AssemblyVersion("0.4.0.0")]

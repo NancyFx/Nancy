@@ -47,6 +47,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ErrorPipeline.cs" />
+    <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
+    <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
+    <Compile Include="Cryptography\Base64Helpers.cs" />
+    <Compile Include="Cryptography\DefaultHmacProvider.cs" />
+    <Compile Include="Cryptography\HmacComparer.cs" />
+    <Compile Include="Cryptography\IHmacProvider.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
@@ -69,10 +75,15 @@
     <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
     <Compile Include="Helpers\HttpEncoder.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
+    <Compile Include="HttpFile.cs" />
+    <Compile Include="HttpMultipart.cs" />
+    <Compile Include="HttpMultipartBoundary.cs" />
+    <Compile Include="HttpMultipartBuffer.cs" />
     <Compile Include="HttpStatusCode.cs" />
     <Compile Include="IHideObjectMembers.cs" />
     <Compile Include="INancyContextFactory.cs" />
     <Compile Include="INancyModuleCatalog.cs" />
+    <Compile Include="IO\RequestStream.cs" />
     <Compile Include="IResponseFormatter.cs" />
     <Compile Include="Json\JavaScriptConverter.cs" />
     <Compile Include="Json\JavaScriptSerializer.cs" />
@@ -90,6 +101,7 @@
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\ImageResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
+    <Compile Include="Responses\JsonSettings.cs" />
     <Compile Include="Responses\RedirectResponse.cs" />
     <Compile Include="Responses\StaticFileResponse.cs" />
     <Compile Include="Responses\XmlResponse.cs" />
@@ -106,6 +118,18 @@
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
+    <Compile Include="Security\SecurityConventions.cs" />
+    <Compile Include="Security\ModuleSecurity.cs" />
+    <Compile Include="Session\CookieBasedSessions.cs" />
+    <Compile Include="Cryptography\DefaultEncryptionProvider.cs" />
+    <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
+    <Compile Include="Cryptography\IEncryptionProvider.cs" />
+    <Compile Include="Session\IFormatterSelector.cs" />
+    <Compile Include="Session\ISession.cs" />
+    <Compile Include="Session\ISessionObjectFormatter.cs" />
+    <Compile Include="Session\NullSessionProvider.cs" />
+    <Compile Include="Session\Session.cs" />
+    <Compile Include="HttpMultiparSubStream.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />

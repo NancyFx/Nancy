@@ -82,7 +82,6 @@ namespace Nancy.Bootstrappers.Windsor
         {
             this.modulesRegistrationTypes = moduleRegistrationTypes;
         }
-
         
         private static void RegisterModulesInternal(IWindsorContainer existingContainer, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {

@@ -54,12 +54,12 @@
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
-        /// <param name="existingExistingContainer"></param>
-        protected override void ConfigureApplicationContainer(TinyIoCContainer existingExistingContainer)
+        /// <param name="container"></param>
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            base.ConfigureApplicationContainer(existingExistingContainer);
+            base.ConfigureApplicationContainer(container);
 
-            existingExistingContainer.AutoRegister();
+            container.AutoRegister();
         }
 
         public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)

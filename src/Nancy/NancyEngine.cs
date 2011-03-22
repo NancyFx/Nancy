@@ -1,10 +1,7 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
-
     using Nancy.Routing;
-    using Nancy.ViewEngines;
 
     public class NancyEngine : INancyEngine
     {
@@ -90,6 +87,28 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
+            this.InvokeRequestLifeCycle(context);
+
+            AddNancyVersionHeaderToResponse(context);
+
+            return context;
+        }
+
+        private static void AddNancyVersionHeaderToResponse(NancyContext context)
+        {
+            if (context.Response == null)
+            {
+                return;
+            }
+
+            var version =
+                typeof(INancyEngine).Assembly.GetName().Version;
+
+            context.Response.Headers["Nancy-Version"] = version.ToString();
+        }
+
+        private void InvokeRequestLifeCycle(NancyContext context)
+        {
             try
             {
                 this.InvokePreRequestHook(context);
@@ -108,8 +127,6 @@
             {
                 this.InvokeOnErrorHook(context, ex);
             }
-
-            return context;
         }
 
         private void InvokePreRequestHook(NancyContext context)

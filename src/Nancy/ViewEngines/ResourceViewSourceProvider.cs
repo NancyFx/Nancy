@@ -5,6 +5,8 @@
     using System.IO;
     using System.Linq;
 
+    using Nancy.Bootstrapper;
+
     /// <summary>
     /// Contains the functionality for locating a view that has been embedded into an assembly resource.
     /// </summary>
@@ -57,15 +59,12 @@
         private static Tuple<string, Stream> GetResourceStreamMatch(string viewName, IEnumerable<string> supportedViewEngineExtensions)
         {
             var resourceStreams =
-                from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                from assembly in AppDomainAssemblyTypeScanner.Assemblies
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
                 let inspectedResourceName = string.Concat(viewName, ".", viewEngineExtension)
                 where GetResourceFileName(resourceName).Equals(inspectedResourceName, StringComparison.OrdinalIgnoreCase)
-                select new Tuple<string, Stream>(
-                    resourceName,
-                    assembly.GetManifestResourceStream(resourceName)
-                 );
+                select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
 
             return resourceStreams.FirstOrDefault();
         }

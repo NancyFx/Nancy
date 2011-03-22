@@ -20,7 +20,7 @@
         /// <summary>
         /// Pipeline items to execute
         /// </summary>
-        private List<Func<NancyContext, Response>> pipelineItems;
+        protected List<Func<NancyContext, Response>> pipelineItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BeforePipeline"/> class.
@@ -75,7 +75,7 @@
         /// <returns>
         /// Response from an item invocation, or null if no response was generated.
         /// </returns>
-        public Response Invoke(NancyContext context)
+        public virtual Response Invoke(NancyContext context)
         {
             Response returnValue = null;
 
@@ -94,7 +94,7 @@
         /// Add an item to the start of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void AddItemToStartOfPipeline(Func<NancyContext, Response> item)
+        public virtual void AddItemToStartOfPipeline(Func<NancyContext, Response> item)
         {
             this.InsertItemAtPipelineIndex(0, item);
         }
@@ -103,7 +103,7 @@
         /// Add an item to the end of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public void AddItemToEndOfPipeline(Func<NancyContext, Response> item)
+        public virtual void AddItemToEndOfPipeline(Func<NancyContext, Response> item)
         {
             this.pipelineItems.Add(item);
         }
@@ -113,7 +113,7 @@
         /// </summary>
         /// <param name="index">Index to add at</param>
         /// <param name="item">Item to add</param>
-        public void InsertItemAtPipelineIndex(int index, Func<NancyContext, Response> item)
+        public virtual void InsertItemAtPipelineIndex(int index, Func<NancyContext, Response> item)
         {
             this.pipelineItems.Insert(index, item);
         }

@@ -109,6 +109,54 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_add_nancy_version_number_header_on_returned_response()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.Headers.ContainsKey("Nancy-Version").ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_not_throw_exception_when_setting_nancy_version_header_and_it_already_existed()
+        {
+            // Given
+            var cachedResponse = new Response();
+            cachedResponse.Headers.Add("Nancy-Version", "1.2.3.4");
+            Func<NancyContext, Response> preRequestHook = (ctx) => cachedResponse;
+
+            var prePostResolver = A.Fake<IRouteResolver>();
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
+
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var exception = Record.Exception(() => localEngine.HandleRequest(request));
+
+            // Then
+            exception.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_set_nancy_version_number_on_returned_response()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+            var nancyVersion = typeof(INancyEngine).Assembly.GetName().Version;
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.Headers["Nancy-Version"].ShouldEqual(nancyVersion.ToString());
+        }
+
+        [Fact]
         public void HandleRequest_Null_PreRequest_Should_Not_Throw()
         {
             engine.PreRequestHook = null;
@@ -182,17 +230,22 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void HandleRequest_should_call_route_prereq_then_invoke_route_then_call_route_postreq()
         {
+            // Given
             var executionOrder = new List<String>();
             Func<NancyContext, Response> preHook = (ctx) => { executionOrder.Add("Prehook"); return null; };
             Action<NancyContext> postHook = (ctx) => { executionOrder.Add("Posthook"); };
+            
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
+           
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
 
+            // When
             localEngine.HandleRequest(request);
 
+            // Then
             executionOrder.Count().ShouldEqual(3);
             executionOrder.SequenceEqual(new[] { "Prehook", "RouteInvoke", "Posthook" }).ShouldBeTrue();
         }

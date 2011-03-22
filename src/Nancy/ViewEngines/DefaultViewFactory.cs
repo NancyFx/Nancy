@@ -27,6 +27,36 @@
         }
 
         /// <summary>
+        /// Renders the view with the name and model defined by the <paramref name="viewName"/> and <paramref name="model"/> parameters.
+        /// </summary>
+        /// <param name="module">The <see cref="NancyModule"/> from there the view rendering is being invoked.</param>
+        /// <param name="viewName">The name of the view to render.</param>
+        /// <param name="model">The model that should be passed into the view.</param>
+        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
+        public Action<Stream> RenderView(NancyModule module, string viewName, dynamic model)
+        {
+            if (module == null)
+            {
+                throw new ArgumentNullException("module", "The value of the module parameter cannot be null.");
+            }
+
+            if (viewName == null && model == null)
+            {
+                throw new ArgumentException("viewName and model parameters cannot both be null.");
+            }
+
+            if (model == null && viewName.Length == 0)
+            {
+                throw new ArgumentException("The viewName parameter cannot be empty when the model parameters is null.");
+            }
+
+            var actualViewName = 
+                viewName ?? GetViewNameFromModel(model);
+
+            return this.GetRenderedView(actualViewName, model);
+        }
+
+        /// <summary>
         /// Renders the view with its name resolved from the model type, and model defined by the <paramref name="model"/> parameter.
         /// </summary>
         /// <param name="model">The model that should be passed into the view.</param>

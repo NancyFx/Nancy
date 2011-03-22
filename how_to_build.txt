@@ -1,6 +1,8 @@
 How to build Nancy
 ==================
 
+*NOTE* These instructions are *only* for building with Rake - if you just want to build Nancy manually you can do so just by loading the solution into Visual Studio 2010 and pressing build :-)
+
 Prerequisites
 -------------
 

@@ -7,19 +7,20 @@ namespace Nancy.Hosting.Aspnet
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
-        private readonly INancyEngine engine;
+        private static INancyEngine engine;
 
-        public static INancyBootstrapper bootstrapper;
-
-        public NancyHttpRequestHandler()
+        public bool IsReusable
         {
-            var bootstrapper = 
-                GetBootstrapper();
+            get { return true; }
+        }
+
+        static NancyHttpRequestHandler()
+        {
+            var bootstrapper = GetBootstrapper();
 
             bootstrapper.Initialise();
 
-            this.engine = 
-                bootstrapper.GetEngine();
+            engine = bootstrapper.GetEngine();
         }
 
         private static INancyBootstrapper GetBootstrapper()
@@ -29,8 +30,6 @@ namespace Nancy.Hosting.Aspnet
 
         private static INancyBootstrapper GetConfigurationBootstrapper()
         {
-            if (bootstrapper != null) return bootstrapper;
-
             var configurationBootstrapperType = 
                 GetConfigurationBootstrapperType();
 
@@ -38,8 +37,8 @@ namespace Nancy.Hosting.Aspnet
             {
                 var bootstrapperType =
                     Type.GetType(configurationBootstrapperType.Name);
-                bootstrapper = (Activator.CreateInstance(bootstrapperType)) as INancyBootstrapper;
-                return bootstrapper;
+
+                return Activator.CreateInstance(bootstrapperType) as INancyBootstrapper;
             }
 
             return null;
@@ -72,23 +71,8 @@ namespace Nancy.Hosting.Aspnet
         public void ProcessRequest(HttpContext context)
         {
             var wrappedContext = new HttpContextWrapper(context);
-            var handler = new NancyHandler(this.engine);
+            var handler = new NancyHandler(engine);
             handler.ProcessRequest(wrappedContext);
-        }
-
-        public bool IsReusable { get { return true; } }
-
-        public void Init(HttpApplication context)
-        {
-            context.BeginRequest += new EventHandler(context_BeginRequest);
-        }
-
-        void context_BeginRequest(object sender, EventArgs e)
-        {
-            ProcessRequest(HttpContext.Current);
-        }
-        public void Dispose()
-        {
         }
     }
 }

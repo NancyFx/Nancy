@@ -3,22 +3,33 @@ using System.Reflection;
 
 namespace Nancy.Extensions
 {
+    using System.Reflection;
+    using System.IO;
+    using System.Reflection;
+    /// <summary>
+    /// Assembly extension methods
+    /// </summary>
     public static class AssemblyExtensions
     {
+        /// <summary>
+        /// Gets exported types from an assembly and catches common errors
+        /// that occur when running under test runners.
+        /// </summary>
+        /// <param name="assembly">Assembly to retreive from</param>
+        /// <returns>An array of types</returns>
         public static Type[] SafeGetExportedTypes(this Assembly assembly)
         {
-            Type[] assemblies;
-
+            Type[] types;
             try
             {
-                assemblies = assembly.GetExportedTypes();
+                types = assembly.GetExportedTypes();
             }
             catch (Exception)
             {
-                assemblies = new Type[] { };
+                types = new Type[] { };
             }
 
-            return assemblies;
+            return types;
         }
     }
 }
