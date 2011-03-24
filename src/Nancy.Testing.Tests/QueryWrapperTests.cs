@@ -1,6 +1,7 @@
 namespace Nancy.Testing.Tests
 {
     using System.Linq;
+    using HtmlAgilityPack;
     using HtmlAgilityPlus;
     using Nancy.Testing;
     using Xunit;
@@ -14,7 +15,7 @@ namespace Nancy.Testing.Tests
             var queryResult = query.Find("#testId").FirstOrDefault();
             QueryWrapper wrapper = query;
 
-            var result = wrapper["#testId"].FirstOrDefault();
+            var result = (HtmlNode)wrapper["#testId"].FirstOrDefault();
 
             Assert.NotNull(result);
             Assert.Same(queryResult, result);

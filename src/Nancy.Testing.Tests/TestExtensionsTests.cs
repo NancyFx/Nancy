@@ -26,9 +26,9 @@ namespace Nancy.Testing.Tests
         {
             var result = Record.Exception(
                 () =>
-                    {
-                       this.query["#notThere"].ShouldExist();
-                    });
+                {
+                    this.query["#notThere"].ShouldExist();
+                });
 
             Assert.IsAssignableFrom<AssertException>(result);
         }
@@ -62,7 +62,7 @@ namespace Nancy.Testing.Tests
         {
             var result = this.query["#testId"].ShouldExistOnce();
 
-            Assert.IsType<AndConnector<HtmlNode>>(result);
+            Assert.IsType<AndConnector<NodeWrapper>>(result);
         }
 
         [Fact]
@@ -96,9 +96,9 @@ namespace Nancy.Testing.Tests
 
             var result = Record.Exception(
                 () =>
-                    {
-                        htmlNode.ShouldBeOfClass("nope");
-                    });
+                {
+                    htmlNode.ShouldBeOfClass("nope");
+                });
 
             Assert.IsAssignableFrom<AssertException>(result);
         }
@@ -214,6 +214,5 @@ namespace Nancy.Testing.Tests
 
             Assert.IsAssignableFrom<AssertException>(result);
         }
-
     }
 }

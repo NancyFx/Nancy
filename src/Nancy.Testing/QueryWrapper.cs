@@ -2,10 +2,10 @@
 {
     using System.Collections;
     using System.Collections.Generic;
-    using HtmlAgilityPack;
+    using System.Linq;
     using HtmlAgilityPlus;
 
-    public class QueryWrapper : IEnumerable<HtmlNode>
+    public class QueryWrapper : IEnumerable<NodeWrapper>
     {
         private SharpQuery query;
 
@@ -39,9 +39,9 @@
         /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
         /// </returns>
         /// <filterpriority>1</filterpriority>
-        public IEnumerator<HtmlNode> GetEnumerator()
+        public IEnumerator<NodeWrapper> GetEnumerator()
         {
-            return this.query.GetEnumerator();
+            return this.query.All().Select(n => (NodeWrapper)n).GetEnumerator();
         }
 
         /// <summary>
