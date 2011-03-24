@@ -120,7 +120,8 @@ namespace Nancy.Testing
             using (var reader = new StreamReader(this.inputStream))
             {
                 this.agilityPackDocumentInternal = new HtmlDocument();
-                this.agilityPackDocumentInternal.LoadHtml(reader.ReadToEnd());
+                var htmlContents = reader.ReadToEnd();
+                this.agilityPackDocumentInternal.LoadHtml(htmlContents);
             }
         }
     }

@@ -13,5 +13,8 @@
         <br />
         <input type="submit" value="Login" />
     </form>
+    @if (Model.Errored) {
+        <div id="errorBox" class="floatingError">Invalid Username or Password</div>
+    }
 </body>
 </html>

@@ -43,6 +43,8 @@
         /// </summary>
         protected NancyBootstrapperBase()
         {
+            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
+
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();
         }

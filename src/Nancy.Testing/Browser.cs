@@ -88,7 +88,7 @@ namespace Nancy.Testing
             var requestStream =
                 RequestStream.FromStream(contextValues.Body);
 
-            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol);
+            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
         }
     }
 }

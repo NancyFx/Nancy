@@ -1,6 +1,7 @@
 namespace Nancy.Demo.Authentication.Forms
 {
     using System;
+    using System.Dynamic;
     using Nancy;
     using Nancy.Authentication.Forms;
 
@@ -12,9 +13,13 @@ namespace Nancy.Demo.Authentication.Forms
                 return View["index"];
             };
 
-            Get["/login"] = x => {
-                return View["login"];
-            };
+            Get["/login"] = x =>
+                {
+                    dynamic model = new ExpandoObject();
+                    model.Errored = this.Request.Query.error.HasValue;
+
+                    return View["login", model];
+                };
 
             Post["/login"] = x => {
                 var userGuid = UserDatabase.ValidateUser((string)this.Request.Form.Username, (string)this.Request.Form.Password);

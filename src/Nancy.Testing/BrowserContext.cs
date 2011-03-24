@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Testing
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
 
@@ -28,6 +29,11 @@
         /// </summary>
         /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request..</value>
         string IBrowserContextValues.Protocol { get; set; }
+
+        /// <summary>
+        /// Gets or sets the querystring
+        /// </summary>
+        string IBrowserContextValues.QueryString { get; set; }
 
         /// <summary>
         /// Gets or sets the headers that should be sent with the HTTP request.
@@ -76,6 +82,11 @@
         public void HttpsRequest()
         {
             this.Values.Protocol = "https";
+        }
+
+        public void QueryString(string queryString)
+        {
+            this.Values.QueryString = queryString;
         }
 
         private IBrowserContextValues Values

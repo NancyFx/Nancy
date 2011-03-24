@@ -52,6 +52,7 @@
     <Compile Include="LoginFixture.cs" />
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="TestBootstrapper.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj">

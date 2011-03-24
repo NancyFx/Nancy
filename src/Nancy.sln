@@ -79,6 +79,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Testing", "Nancy.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Testing.Tests", "Nancy.Testing.Tests\Nancy.Testing.Tests.csproj", "{8EB9E15A-4B65-4C80-B834-9A7773750666}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms.TestingDemo", "Nancy.Demo.Authentication.Forms.TestingDemo\Nancy.Demo.Authentication.Forms.TestingDemo.csproj", "{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -439,6 +441,16 @@ Global
 		{8EB9E15A-4B65-4C80-B834-9A7773750666}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{8EB9E15A-4B65-4C80-B834-9A7773750666}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{8EB9E15A-4B65-4C80-B834-9A7773750666}.Release|x86.ActiveCfg = Release|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -479,5 +491,6 @@ Global
 		{EBB6F597-3273-4972-8B25-A809D2FC1F24} = {4A24657F-9695-437B-9702-2541ED280628}
 		{E127FED3-01C0-41BA-BF83-D8DCDD827D6A} = {4A24657F-9695-437B-9702-2541ED280628}
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E} = {4A24657F-9695-437B-9702-2541ED280628}
+		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 EndGlobal

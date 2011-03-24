@@ -25,5 +25,10 @@
         /// </summary>
         /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request..</value>
         string Protocol { get; set; }
+
+        /// <summary>
+        /// Gets or sets the querystring
+        /// </summary>
+        string QueryString { get; set; }
     }
 }

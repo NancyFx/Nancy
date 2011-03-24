@@ -24,14 +24,6 @@ namespace Nancy.Bootstrapper
         private static IEnumerable<Assembly> assemblies;
 
         /// <summary>
-        /// Initializes static members of the <see cref="AppDomainAssemblyTypeScanner"/> class.
-        /// </summary>
-        static AppDomainAssemblyTypeScanner()
-        {
-            LoadNancyAssemblies();
-        }
-
-        /// <summary>
         /// Gets app domain types.
         /// </summary>
         public static IEnumerable<Type> Types
@@ -115,7 +107,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Loads any Nancy*.dll assemblies in the app domain base directory
         /// </summary>
-        private static void LoadNancyAssemblies()
+        public static void LoadNancyAssemblies()
         {
             LoadAssemblies(@"Nancy*.dll");
         }
