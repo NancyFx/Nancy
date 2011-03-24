@@ -1,6 +1,8 @@
 namespace Nancy.Testing
 {
     using System;
+    using System.IO;
+    using System.Text;
     using Bootstrapper;
     using IO;
 
@@ -28,8 +30,8 @@ namespace Nancy.Testing
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="NancyContext"/> instance of the executed request.</returns>
-        public NancyContext Delete(string path, Action<BrowserContext> browserContext)
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public BrowserResponse Delete(string path, Action<BrowserContext> browserContext)
         {
             return this.HandleRequest("DELETE", path, browserContext);
         }
@@ -39,8 +41,8 @@ namespace Nancy.Testing
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="NancyContext"/> instance of the executed request.</returns>
-        public NancyContext Get(string path, Action<BrowserContext> browserContext)
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public BrowserResponse Get(string path, Action<BrowserContext> browserContext)
         {
             return this.HandleRequest("GET", path, browserContext);
         }
@@ -50,8 +52,8 @@ namespace Nancy.Testing
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="NancyContext"/> instance of the executed request.</returns>
-        public NancyContext Post(string path, Action<BrowserContext> browserContext)
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public BrowserResponse Post(string path, Action<BrowserContext> browserContext)
         {
             return this.HandleRequest("POST", path, browserContext);
         }
@@ -61,18 +63,18 @@ namespace Nancy.Testing
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
-        /// <returns>An <see cref="NancyContext"/> instance of the executed request.</returns>
-        public NancyContext Put(string path, Action<BrowserContext> browserContext)
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public BrowserResponse Put(string path, Action<BrowserContext> browserContext)
         {
             return this.HandleRequest("PUT", path, browserContext);
         }
 
-        private NancyContext HandleRequest(string method, string path, Action<BrowserContext> browserContext)
+        private BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
             var request =
                 CreateRequest(method, path, browserContext);
 
-            return this.engine.HandleRequest(request);
+            return new BrowserResponse(this.engine.HandleRequest(request));
         }
 
         private static Request CreateRequest(string method, string path, Action<BrowserContext> browserContext)
@@ -85,8 +87,16 @@ namespace Nancy.Testing
             var contextValues =
                 (IBrowserContextValues)context;
 
+            var bodyContents = String.IsNullOrEmpty(contextValues.BodyString)
+                                   ? contextValues.FormValues
+                                   : contextValues.BodyString;
+
+            var bodyBytes = Encoding.UTF8.GetBytes(bodyContents);
+            var requestBodyStream = new MemoryStream(bodyBytes);
+
+            // TODO - use the new ctors when owin is merged in
             var requestStream =
-                RequestStream.FromStream(contextValues.Body);
+                RequestStream.FromStream(requestBodyStream);
 
             return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
         }

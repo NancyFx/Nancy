@@ -17,6 +17,8 @@
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
             this.Values.Protocol = "http";
             this.Values.QueryString = String.Empty;
+            this.Values.BodyString = String.Empty;
+            this.Values.FormValues = String.Empty;
         }
 
         /// <summary>
@@ -37,6 +39,16 @@
         string IBrowserContextValues.QueryString { get; set; }
 
         /// <summary>
+        /// Gets or sets the body string
+        /// </summary>
+        string IBrowserContextValues.BodyString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the form values string
+        /// </summary>
+        string IBrowserContextValues.FormValues { get; set; }
+
+        /// <summary>
         /// Gets or sets the headers that should be sent with the HTTP request.
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains the headers that should be sent with the HTTP request.</value>
@@ -45,10 +57,10 @@
         /// <summary>
         /// Adds a body to the HTTP request.
         /// </summary>
-        /// <param name="body">A <see cref="Stream"/> that should be used as the HTTP request body.</param>
-        public void Body(Stream body)
+        /// <param name="body">A string that should be used as the HTTP request body.</param>
+        public void Body(string body)
         {
-            this.Values.Body = body;
+            this.Values.BodyString = body;
         }
 
         /// <summary>
@@ -102,6 +114,18 @@
             get { return this; }
         }
 
+        public void FormValue(string key, string value)
+        {
+            if (!String.IsNullOrEmpty(this.Values.BodyString))
+            {
+                throw new InvalidOperationException("Form value cannot be set as well as body string");
+            }
 
+            this.Values.FormValues += String.Format(
+                "{0}{1}={2}",
+                this.Values.FormValues.Length == 0 ? String.Empty : "&", 
+                key,
+                value);
+        }
     }
 }

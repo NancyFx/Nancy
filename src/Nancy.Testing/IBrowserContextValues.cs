@@ -30,5 +30,15 @@
         /// Gets or sets the querystring
         /// </summary>
         string QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the body string
+        /// </summary>
+        string BodyString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the form values string
+        /// </summary>
+        string FormValues { get; set; }
     }
 }

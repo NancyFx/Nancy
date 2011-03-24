@@ -20,35 +20,30 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
         [Fact]
         public void Should_redirect_to_login_with_error_querystring_if_username_or_password_incorrect()
         {
-            // TODO - form encoded helper
-            var bodyBytes = Encoding.ASCII.GetBytes("Username=username&Password=wrongpassword");
-            var requestBodyStream = new MemoryStream(bodyBytes);
-
             // Given, When
-            var context = browser.Post("/login/", (with) =>
+            var response = browser.Post("/login/", (with) =>
             {
                 with.HttpRequest();
-                with.Body(requestBodyStream);
+                with.FormValue("Username", "username");
+                with.FormValue("Password", "wrongpassword");
             });
 
             // TODO - add "ShouldRedirectTo"
-            context.Response.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
-            context.Response.Headers["Location"].ShouldEqual("/login?error=true");
-
-            requestBodyStream.Dispose();
+            response.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
+            response.Headers["Location"].ShouldEqual("/login?error=true");
         }
 
         [Fact]
         public void Should_display_error_message_when_error_passed()
         {
             // Given, When
-            var context = browser.Get("/login", (with) =>
+            var response = browser.Get("/login", (with) =>
                 {
                     with.HttpRequest();
                     with.Query("error", "true");
                 });
 
-            context.DocumentBody()["#errorBox"]
+            response.Body["#errorBox"]
                 .ShouldExistOnce()
                 .And.ShouldBeOfClass("floatingError")
                 .And.ShouldContain("invalid", StringComparison.InvariantCultureIgnoreCase);
