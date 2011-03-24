@@ -54,6 +54,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Browser.cs" />
+    <Compile Include="BrowserContextMultipartFormData.cs" />
     <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />

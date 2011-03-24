@@ -31,6 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Reference Include="FakeItEasy">
       <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
     </Reference>
@@ -42,6 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPlus.dll</HintPath>
     </Reference>
+=======
+>>>>>>> Added first spike of Browser test harness implementation
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,23 +52,30 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+<<<<<<< HEAD
     <Reference Include="xunit">
       <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
     </Reference>
     <Reference Include="xunit.extensions">
       <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
     </Reference>
+=======
+>>>>>>> Added first spike of Browser test harness implementation
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="AndConnector.cs" />
     <Compile Include="AssertException.cs" />
+=======
+>>>>>>> Added first spike of Browser test harness implementation
     <Compile Include="Browser.cs" />
     <Compile Include="BrowserContext.cs" />
     <Compile Include="BrowserContextExtensions.cs" />
     <Compile Include="BrowserContextMultipartFormData.cs" />
+<<<<<<< HEAD
     <Compile Include="BrowserResponse.cs" />
     <Compile Include="BrowserResponseExtensions.cs" />
     <Compile Include="NancyContextExtensions.cs" />
@@ -79,6 +89,9 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="QueryWrapper.cs" />
     <Compile Include="AssertExtensions.cs" />
+=======
+    <Compile Include="IBrowserContextValues.cs" />
+>>>>>>> Added first spike of Browser test harness implementation
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

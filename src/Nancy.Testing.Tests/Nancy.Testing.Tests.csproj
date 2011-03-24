@@ -34,6 +34,7 @@
     <Reference Include="FakeItEasy">
       <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
     </Reference>
+<<<<<<< HEAD
     <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
@@ -42,6 +43,8 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPlus.dll</HintPath>
     </Reference>
+=======
+>>>>>>> Added first spike of Browser test harness implementation
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -63,6 +66,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="AndConnectorTests.cs" />
     <Compile Include="BrowserFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
@@ -70,6 +74,9 @@
     <Compile Include="PathHelperTests.cs" />
     <Compile Include="QueryWrapperTests.cs" />
     <Compile Include="AssertExtensionsTests.cs" />
+=======
+    <Compile Include="BrowserFixture.cs" />
+>>>>>>> Added first spike of Browser test harness implementation
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">

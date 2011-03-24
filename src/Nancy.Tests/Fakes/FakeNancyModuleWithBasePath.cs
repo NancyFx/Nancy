@@ -32,7 +32,7 @@ namespace Nancy.Tests.Fakes
             };
 
             Get["/foo/{value}/bar/{capture}"] = x => {
-                throw new NotImplementedException();
+                return string.Concat(x.value, " ", x.capture);
             };
 
             Post["/"] = x => {
