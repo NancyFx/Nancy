@@ -200,7 +200,20 @@ namespace Nancy.IO
 
         public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
-            return new RequestStream(stream, expectedLength, thresholdLength, disableStreamSwitching);
+            return new RequestStream(CreateSeekableStream(stream), expectedLength, thresholdLength, disableStreamSwitching);
+        }
+
+        private static Stream CreateSeekableStream(Stream instr) {            
+            if (instr.CanSeek) return instr; // Don't do overhead if not required
+            MemoryStream stream = new MemoryStream();
+            var buffer = new byte[4096];
+            var read = -1;
+            while (read != 0)
+            {                                   
+                read = instr.Read(buffer, 0, buffer.Length);
+                stream.Write(buffer, 0, read);
+            }
+            return stream;
         }
 
         /// <summary>

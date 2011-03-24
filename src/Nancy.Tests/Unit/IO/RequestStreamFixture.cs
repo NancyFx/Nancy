@@ -21,19 +21,6 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_throw_invalidoperationexception_when_created_with_non_seekable_stream()
-        {
-            // Given
-            A.CallTo(() => this.stream.CanSeek).Returns(false);
-
-            // When
-            var exception = Record.Exception(() => RequestStream.FromStream(this.stream));
-
-            // Then
-            exception.ShouldBeOfType<InvalidOperationException>();
-        }
-
-        [Fact]
         public void Should_throw_invalidoperationexception_when_created_with_non_readable_stream()
         {
             // Given
@@ -71,6 +58,28 @@ namespace Nancy.Tests.Unit.IO
             // Then
             exception.ShouldBeOfType<ArgumentOutOfRangeException>();
         }
+
+        
+        [Fact]
+        public void Should_work_even_with_a_non_seekable_stream()
+        {
+            var str = A.Fake<Stream>();
+
+            A.CallTo(() => str.CanRead).Returns(true);
+            A.CallTo(() => str.CanSeek).Returns(false);
+            A.CallTo(() => str.CanTimeout).Returns(true);
+            A.CallTo(() => str.CanWrite).Returns(true);
+
+            // Given
+           var request = RequestStream.FromStream(str, 0, 1, false);
+
+            // When
+            var result = request.CanRead;
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
 
         [Fact]
         public void Should_return_true_when_queried_about_supporting_reading()
