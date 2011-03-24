@@ -16,6 +16,7 @@
         {
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
             this.Values.Protocol = "http";
+            this.Values.QueryString = String.Empty;
         }
 
         /// <summary>
@@ -84,9 +85,16 @@
             this.Values.Protocol = "https";
         }
 
-        public void QueryString(string queryString)
+        /// <summary>
+        /// Adds a query string entry
+        /// </summary>
+        public void Query(string key, string value)
         {
-            this.Values.QueryString = queryString;
+            this.Values.QueryString += String.Format(
+                "{0}{1}={2}",
+                this.Values.QueryString.Length == 0 ? String.Empty : "&", 
+                key,
+                value);
         }
 
         private IBrowserContextValues Values

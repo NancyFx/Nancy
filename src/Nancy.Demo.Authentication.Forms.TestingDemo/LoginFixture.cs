@@ -13,12 +13,12 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
 
         public LoginFixture()
         {
-            var bootstrapper = new FormsAuthBootstrapper();
+            var bootstrapper = new TestBootstrapper();
             this.browser = new Browser(bootstrapper);
         }
 
         [Fact]
-        public void Should_display_error_message_if_login_incorrect()
+        public void Should_redirect_to_login_with_error_querystring_if_username_or_password_incorrect()
         {
             // TODO - form encoded helper
             var bodyBytes = Encoding.ASCII.GetBytes("Username=username&Password=wrongpassword");
@@ -31,7 +31,8 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
                 with.Body(requestBodyStream);
             });
 
-            context.Response.StatusCode.ShouldEqual(HttpStatusCode.Redirect);
+            // TODO - add "ShouldRedirectTo"
+            context.Response.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
             context.Response.Headers["Location"].ShouldEqual("/login?error=true");
 
             requestBodyStream.Dispose();
@@ -44,7 +45,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
             var context = browser.Get("/login", (with) =>
                 {
                     with.HttpRequest();
-                    with.QueryString("?error=true");
+                    with.Query("error", "true");
                 });
 
             context.DocumentBody()["#errorBox"]
