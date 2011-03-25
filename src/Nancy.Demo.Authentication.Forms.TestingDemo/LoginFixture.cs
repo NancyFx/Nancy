@@ -28,9 +28,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
                 with.FormValue("Password", "wrongpassword");
             });
 
-            // TODO - add "ShouldRedirectTo"
-            response.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
-            response.Headers["Location"].ShouldEqual("/login?error=true");
+            response.ShouldHaveRedirectedTo("/login?error=true");
         }
 
         [Fact]

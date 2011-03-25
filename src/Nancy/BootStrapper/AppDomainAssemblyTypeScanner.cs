@@ -13,6 +13,11 @@ namespace Nancy.Bootstrapper
     /// </summary>
     public static class AppDomainAssemblyTypeScanner
     {
+        static AppDomainAssemblyTypeScanner()
+        {
+            LoadNancyAssemblies();
+        }
+
         /// <summary>
         /// App domain type cache
         /// </summary>
@@ -22,6 +27,11 @@ namespace Nancy.Bootstrapper
         /// App domain assemblies cache
         /// </summary>
         private static IEnumerable<Assembly> assemblies;
+
+        /// <summary>
+        /// Indicates whether the nancy assemblies have already been loaded
+        /// </summary>
+        private static bool nancyAssembliesLoaded;
 
         /// <summary>
         /// Gets app domain types.
@@ -109,7 +119,14 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public static void LoadNancyAssemblies()
         {
+            if (nancyAssembliesLoaded)
+            {
+                return;
+            }
+
             LoadAssemblies(@"Nancy*.dll");
+
+            nancyAssembliesLoaded = true;
         }
     }
 }

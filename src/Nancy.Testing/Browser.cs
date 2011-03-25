@@ -87,18 +87,26 @@ namespace Nancy.Testing
             var contextValues =
                 (IBrowserContextValues)context;
 
-            var bodyContents = String.IsNullOrEmpty(contextValues.BodyString)
-                                   ? contextValues.FormValues
-                                   : contextValues.BodyString;
+            BuildBody(contextValues);
 
-            var bodyBytes = Encoding.UTF8.GetBytes(bodyContents);
-            var requestBodyStream = new MemoryStream(bodyBytes);
-
-            // TODO - use the new ctors when owin is merged in
             var requestStream =
-                RequestStream.FromStream(requestBodyStream);
+                RequestStream.FromStream(contextValues.Body, 0, true);
 
             return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
+        }
+
+        private static void BuildBody(IBrowserContextValues contextValues)
+        {
+            var useFormValues = !String.IsNullOrEmpty(contextValues.BodyString);
+            var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
+            var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };
+
+            if (useFormValues && !contextValues.Headers.ContainsKey("Content-Type"))
+            {
+                contextValues.Headers["Content-Type"] = new[] { "application/x-www-form-urlencoded" };
+            }
+
+            contextValues.Body = new MemoryStream(bodyBytes);
         }
     }
 }
