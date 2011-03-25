@@ -29,14 +29,15 @@ namespace Nancy.IO
             this.disableStreamSwitching = disableStreamSwitching;
             this.stream = stream ?? this.CreateDefaultMemoryStream();
 
-            ThrowExceptionIfCtorParametersWereInvalid(this.stream, this.expectedLength, this.thresholdLength);
-
-            this.stream.Position = 0;
+            ThrowExceptionIfCtorParametersWereInvalid(this.stream, this.expectedLength, this.thresholdLength);            
 
             if (this.expectedLength >= this.thresholdLength)
             {
                 this.MoveStreamContentsToFileStream();
+            } else if (!this.stream.CanSeek) {
+                this.MoveStreamContentsToMemoryStream();
             }
+            this.stream.Position = 0;
         }
 
         /// <summary>
@@ -200,21 +201,8 @@ namespace Nancy.IO
 
         public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
-            return new RequestStream(CreateSeekableStream(stream), expectedLength, thresholdLength, disableStreamSwitching);
-        }
-
-        private static Stream CreateSeekableStream(Stream instr) {            
-            if (instr.CanSeek) return instr; // Don't do overhead if not required
-            MemoryStream stream = new MemoryStream();
-            var buffer = new byte[4096];
-            var read = -1;
-            while (read != 0)
-            {                                   
-                read = instr.Read(buffer, 0, buffer.Length);
-                stream.Write(buffer, 0, read);
-            }
-            return stream;
-        }
+            return new RequestStream(stream, expectedLength, thresholdLength, disableStreamSwitching);
+        }        
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -276,7 +264,12 @@ namespace Nancy.IO
 
             if (this.stream.Length >= this.thresholdLength)
             {
+                // Close the stream here as closing it every time we call 
+                // MoveStreamContentsToFileStream causes an (ObjectDisposedException) 
+                // in NancyWcfGenericService - webRequest.UriTemplateMatch
+                var old = this.stream;
                 this.MoveStreamContentsToFileStream();
+                old.Close();                
             }
         }
 
@@ -301,28 +294,35 @@ namespace Nancy.IO
         }
 
         private void MoveStreamContentsToFileStream()
-        {
+        {            
+            MoveStreamContentsInto(CreateTemporaryFileStream());
+        }        
+
+        private void MoveStreamContentsToMemoryStream() {
+            MoveStreamContentsInto(new MemoryStream());
+        }
+
+        private void MoveStreamContentsInto(Stream target) {
             if (this.disableStreamSwitching)
             {
                 return;
             }
-
-            var fileStream =
-                CreateTemporaryFileStream();
-
-            if (this.stream.Length == 0)
+            if (this.stream.CanSeek && this.stream.Length == 0)
             {
                 this.stream.Close();
-                this.stream = fileStream;
+                this.stream = target;
                 return;
             }
 
-            this.stream.CopyTo(fileStream, 8196);
-            this.stream.Flush();
-            this.stream.Close();
+            this.stream.CopyTo(target, 8196);
+            if (this.stream.CanSeek) 
+            {
+                this.stream.Flush();
+            }
+            
 
-            fileStream.Position = 0;
-            this.stream = fileStream;
+            target.Position = 0;
+            this.stream = target;
         }
 
         private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)
@@ -330,11 +330,6 @@ namespace Nancy.IO
             if (!stream.CanRead)
             {
                 throw new InvalidOperationException("The stream must support reading.");
-            }
-
-            if (!stream.CanSeek)
-            {
-                throw new InvalidOperationException("The stream must support seeking.");
             }
 
             if (expectedLength < 0)
