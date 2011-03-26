@@ -3,11 +3,11 @@ namespace Nancy.Testing
     using System;
     using System.IO;
     using System.Text;
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
     using IO;
 
     /// <summary>
-    /// 
+    /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.
     /// </summary>
     public class Browser : IHideObjectMembers
     {
@@ -77,25 +77,7 @@ namespace Nancy.Testing
             return new BrowserResponse(this.engine.HandleRequest(request));
         }
 
-        private static Request CreateRequest(string method, string path, Action<BrowserContext> browserContext)
-        {
-            var context =
-                new BrowserContext();
-
-            browserContext.Invoke(context);
-
-            var contextValues =
-                (IBrowserContextValues)context;
-
-            BuildBody(contextValues);
-
-            var requestStream =
-                RequestStream.FromStream(contextValues.Body, 0, true);
-
-            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
-        }
-
-        private static void BuildBody(IBrowserContextValues contextValues)
+        private static void BuildRequestBody(IBrowserContextValues contextValues)
         {
             var useFormValues = !String.IsNullOrEmpty(contextValues.BodyString);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
@@ -107,6 +89,24 @@ namespace Nancy.Testing
             }
 
             contextValues.Body = new MemoryStream(bodyBytes);
+        }
+
+        private static Request CreateRequest(string method, string path, Action<BrowserContext> browserContext)
+        {
+            var context =
+                new BrowserContext();
+
+            browserContext.Invoke(context);
+
+            var contextValues =
+                (IBrowserContextValues)context;
+
+            BuildRequestBody(contextValues);
+
+            var requestStream =
+                RequestStream.FromStream(contextValues.Body, 0, true);
+
+            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
         }
     }
 }

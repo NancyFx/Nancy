@@ -9,10 +9,21 @@
     public interface IBrowserContextValues : IHideObjectMembers
     {
         /// <summary>
-        /// Gets or sets the that should be sent with the HTTP request.
+        /// Gets or sets the stream that should be sent with the HTTP request.
         /// </summary>
         /// <value>A <see cref="Stream"/> that contains the body that should be sent with the HTTP request.</value>
         Stream Body { get; set; }
+
+        /// <summary>
+        /// Gets or sets the body string
+        /// </summary>
+        string BodyString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the form values string
+        /// </summary>
+        /// <remarks>If <see cref="BodyString"/> is assigned a value, the <see cref="FormValues"/> will be ignored.</remarks>
+        string FormValues { get; set; }
 
         /// <summary>
         /// Gets or sets the headers that should be sent with the HTTP request.
@@ -23,22 +34,12 @@
         /// <summary>
         /// Gets or sets the protocol that should be sent with the HTTP request.
         /// </summary>
-        /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request..</value>
+        /// <value>A <see cref="string"/> contains the the protocol that should be sent with the HTTP request.</value>
         string Protocol { get; set; }
 
         /// <summary>
         /// Gets or sets the querystring
         /// </summary>
         string QueryString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the body string
-        /// </summary>
-        string BodyString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the form values string
-        /// </summary>
-        string FormValues { get; set; }
     }
 }
