@@ -40,10 +40,17 @@
             closure.Invoke(configurator);
         }
 
+        /// <summary>
+        /// Provides an API for configuring a <see cref="FakeNancyModule"/> instance.
+        /// </summary>
         public class FakeNancyModuleConfigurator : IHideObjectMembers
         {
             private readonly FakeNancyModule module;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="FakeNancyModuleConfigurator"/> class.
+            /// </summary>
+            /// <param name="module">The <see cref="FakeNancyModule"/> that should be configured.</param>
             public FakeNancyModuleConfigurator(FakeNancyModule module)
             {
                 this.module = module;
