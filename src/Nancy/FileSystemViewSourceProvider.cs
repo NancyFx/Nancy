@@ -34,29 +34,29 @@ namespace Nancy
                 return null;
             }
 
-            var filesInViewFolder =
-                Directory.GetFiles(viewFolder);
-
-            var viewsFiles =
-                from file in filesInViewFolder
-                from extension in supportedViewEngineExtensions
-                where Path.GetFileName(file).Equals(string.Concat(viewName, ".", extension), StringComparison.OrdinalIgnoreCase)
-                select new
-                {
-                    file,
-                    extension
-                };
-
-            var selectedView =
-                viewsFiles.FirstOrDefault();
-
-            var fileStream = new FileStream(selectedView.file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+            var selectedView = FindViewFromName(viewFolder, viewName, supportedViewEngineExtensions);
+            var fileStream = new FileStream(selectedView.Item1, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
 
             return new ViewLocationResult(
-                selectedView.file,
-                selectedView.extension,
+                selectedView.Item1,
+                selectedView.Item2,
                 new StreamReader(fileStream)
             );
+        }
+
+        private static Tuple<string, string> FindViewFromName(string viewFolder, string viewName, IEnumerable<string> supportedViewEngineExtensions)
+        {
+            foreach (var extension in supportedViewEngineExtensions)
+            {
+                var file = Path.Combine(viewFolder, string.Concat(viewName, ".", extension));
+
+                if (File.Exists(file))
+                {
+                    return Tuple.Create(file, extension);
+                }
+            }
+
+            return null;
         }
     }
 }
