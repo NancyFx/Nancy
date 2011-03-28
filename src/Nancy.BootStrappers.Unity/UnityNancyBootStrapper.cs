@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using Microsoft.Practices.Unity;
+    using ModelBinding;
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
 
@@ -93,6 +94,7 @@
 
             container.RegisterType(typeof(IEnumerable<IViewSourceProvider>), typeof(UnityEnumerableShim<IViewSourceProvider>));
             container.RegisterType(typeof(IEnumerable<IViewEngine>), typeof(UnityEnumerableShim<IViewEngine>));
+            container.RegisterType(typeof(IEnumerable<IModelBinder>), typeof(UnityEnumerableShim<IModelBinder>));
         }
 
         /// <summary>

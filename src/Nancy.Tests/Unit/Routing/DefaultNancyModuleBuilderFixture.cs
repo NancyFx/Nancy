@@ -2,6 +2,7 @@
 {
     using FakeItEasy;
     using Fakes;
+    using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.ViewEngines;
     using Xunit;
@@ -13,6 +14,7 @@
         private readonly IRootPathProvider rootPathProvider;
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
+        private readonly IModelBinderLocator modelBinderLocator;
 
         public DefaultNancyModuleBuilderFixture()
         {
@@ -20,7 +22,8 @@
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
             this.viewFactory = A.Fake<IViewFactory>();
-            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatter);
+            this.modelBinderLocator = A.Fake<IModelBinderLocator>();
+            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatter, this.modelBinderLocator);
         }
 
         [Fact]
@@ -73,6 +76,19 @@
 
             // Then
             result.Response.ShouldBeSameAs(this.responseFormatter);
+        }
+
+        [Fact]
+        public void Should_set_binder_locator_on_module_to_resolved_binder_locator()
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            var result = this.builder.BuildModule(this.module, context);
+
+            // Then
+            result.ModelBinderLocator.ShouldBeSameAs(this.modelBinderLocator);
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Routing
 {
+    using ModelBinding;
     using Nancy.ViewEngines;
 
     /// <summary>
@@ -9,16 +10,19 @@
     {
         private readonly IViewFactory viewFactory;
         private readonly IResponseFormatter responseFormatter;
+        private readonly IModelBinderLocator modelBinderLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
         /// </summary>
         /// <param name="viewFactory">The <see cref="IViewFactory"/> instance that should be assigned to the module.</param>
         /// <param name="responseFormatter">An <see cref="DefaultResponseFormatter"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatter responseFormatter)
+        /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatter responseFormatter, IModelBinderLocator modelBinderLocator)
         {
             this.viewFactory = viewFactory;
             this.responseFormatter = responseFormatter;
+            this.modelBinderLocator = modelBinderLocator;
         }
 
         /// <summary>
@@ -32,6 +36,7 @@
             module.Context = context;
             module.Response = this.responseFormatter;
             module.ViewFactory = this.viewFactory;
+            module.ModelBinderLocator = this.modelBinderLocator;
 
             return module;
         }

@@ -69,6 +69,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Aspnet",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Self", "Nancy.Hosting.Self\Nancy.Hosting.Self.csproj", "{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ModelBinding", "Nancy.Demo.ModelBinding\Nancy.Demo.ModelBinding.csproj", "{1258BFCD-3BAD-4373-B786-4D698EC3C157}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -379,6 +381,16 @@ Global
 		{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}.Release|x86.ActiveCfg = Release|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -414,5 +426,6 @@ Global
 		{0B3EA40E-F7D8-4E14-A30F-1536F41B62D1} = {4A24657F-9695-437B-9702-2541ED280628}
 		{EBB6F597-3273-4972-8B25-A809D2FC1F24} = {4A24657F-9695-437B-9702-2541ED280628}
 		{E127FED3-01C0-41BA-BF83-D8DCDD827D6A} = {4A24657F-9695-437B-9702-2541ED280628}
+		{1258BFCD-3BAD-4373-B786-4D698EC3C157} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 EndGlobal

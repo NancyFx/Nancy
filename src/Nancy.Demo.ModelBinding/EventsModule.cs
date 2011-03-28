@@ -1,0 +1,32 @@
+namespace Nancy.Demo.ModelBinding
+{
+    using System.Linq;
+    using Database;
+    using Models;
+    using Nancy.ModelBinding;
+
+    public class EventsModule : NancyModule
+    {
+        public EventsModule()
+            : base("/events")
+        {
+            Get["/"] = x =>
+                { 
+                    var model = DB.Events.OrderBy(e => e.Time).ToArray();
+
+                    return View["Events", model];
+                };
+
+            Post["/"] = x =>
+                {
+                    Event model = this.Bind();
+                    var model2 = this.Bind<Event>();
+
+                    DB.Events.Add(model);
+                    DB.Events.Add(model2);
+
+                    return Response.AsRedirect("/Events");
+                };
+        }
+    }
+}
