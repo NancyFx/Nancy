@@ -1,0 +1,26 @@
+﻿<viewdata model="Nancy.Demo.ModelBinding.Models.Event[]"/>
+<html>
+  <head>
+    <title>Events</title>
+  </head>
+  <body>
+    <h1>Events</h1>
+    <p>Current events:</p>
+    <ul>
+      <li each="var v in Model">
+        <a href="event/${v.Id}"> ${v.Title} - ${v.Location} </a> ${v.Time}
+      </li>
+    </ul>
+
+    <h2>Add another</h2>
+    <form method="POST" action="/events">
+      <label for="Name">Title</label>
+      <input type="text" name="Title" />
+      <label for="Location">Location</label>
+      <input type="text" name="Location" />
+      <label for="EventDate">Time</label>
+      <input type="text" name="Time" value="${System.DateTime.Now}"/>
+      <input type="submit"/>
+    </form>
+  </body>
+</html>

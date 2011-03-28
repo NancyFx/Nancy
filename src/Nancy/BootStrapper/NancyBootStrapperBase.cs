@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using ModelBinding;
     using Nancy.Routing;
     using Nancy.Extensions;
     using ViewEngines;
@@ -110,6 +111,11 @@
         protected virtual Type DefaultResponseFormatter { get { return typeof(DefaultResponseFormatter); } }
 
         /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultModelBinderLocator { get { return typeof(ModelBinderLocator); } }
+
+        /// <summary>
         /// <para>
         /// The pre-request hook
         /// </para>
@@ -162,6 +168,7 @@
             RegisterRootPathProvider(this.ApplicationContainer, GetRootPathProvider());
             RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
             RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
+            RegisterModelBinders(this.ApplicationContainer, GetModelBinders());
 
             var engine = GetEngineInternal();
             engine.PreRequestHook = this.BeforeRequest;
@@ -184,7 +191,8 @@
                 new TypeRegistration(typeof(IViewFactory), DefaultViewFactory),
                 new TypeRegistration(typeof(INancyContextFactory), DefaultContextFactory),
                 new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
-                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter)
+                new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter),
+                new TypeRegistration(typeof(IModelBinderLocator), DefaultModelBinderLocator), 
             };
         }
 
@@ -242,11 +250,32 @@
         }
 
         /// <summary>
+        /// Get all model binders
+        /// </summary>
+        /// <returns>Enumerable of types that implement IModelBinder</returns>
+        protected virtual IEnumerable<Type> GetModelBinders()
+        {
+            var modelBinders =
+                from type in AppDomainAssemblyTypeScanner.Types
+                where typeof(IModelBinder).IsAssignableFrom(type)
+                select type;
+
+            return modelBinders;
+        }
+
+        /// <summary>
         /// Register the view source providers into the container
         /// </summary>
         /// <param name="container">Container instance</param>
         /// <param name="viewSourceProviderTypes">Enumerable of types that implement IViewSourceProvider</param>
         protected abstract void RegisterViewSourceProviders(TContainer container, IEnumerable<Type> viewSourceProviderTypes);
+
+        /// <summary>
+        /// Register the model binders into the container
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        /// <param name="modelBinderTypes">Enumerable of types that implement IModelBinder</param>
+        protected abstract void RegisterModelBinders(TContainer container, IEnumerable<Type> modelBinderTypes);
 
         /// <summary>
         /// Returns available NancyModule types

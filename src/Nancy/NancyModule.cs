@@ -4,7 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-
+    using ModelBinding;
     using Nancy.Routing;
     using Nancy.Session;
     using Nancy.ViewEngines;
@@ -160,6 +160,12 @@ namespace Nancy
         /// <remarks>This is automatically set by Nancy at runtime.</remarks>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public IViewFactory ViewFactory { get; set; }
+
+        /// <summary>
+        /// Gets or sets the model binder locator
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IModelBinderLocator ModelBinderLocator { get; set; }
 
         /// <summary>
         /// Helper class for configuring a route handler in a module.

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using ModelBinding;
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
     using TinyIoC;
@@ -48,6 +49,11 @@
         protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
+        }
+
+        protected override void RegisterModelBinders(TinyIoCContainer container, IEnumerable<Type> modelBinderTypes)
+        {
+            this.container.RegisterMultiple<IModelBinder>(modelBinderTypes).AsSingleton();
         }
 
         /// <summary>

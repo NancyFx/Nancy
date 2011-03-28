@@ -91,6 +91,14 @@
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
+    <Compile Include="ModelBinding\DefaultModelBinder.cs" />
+    <Compile Include="ModelBinding\DynamicModelBinderAdapter.cs" />
+    <Compile Include="ModelBinding\IModelBinder.cs" />
+    <Compile Include="ModelBinding\IModelBinderLocator.cs" />
+    <Compile Include="ModelBinding\ITypeConverter.cs" />
+    <Compile Include="ModelBinding\ModelBinderLocator.cs" />
+    <Compile Include="ModelBinding\ModelBindingException.cs" />
+    <Compile Include="ModelBinding\ModuleExtensions.cs" />
     <Compile Include="NancyContext.cs" />
     <Compile Include="AfterPipeline.cs" />
     <Compile Include="BeforePipeline.cs" />

@@ -29,7 +29,7 @@
         }
 
         /// <summary>
-        /// Gets the actual value
+        /// Gets the inner value
         /// </summary>
         public object Value
         {
