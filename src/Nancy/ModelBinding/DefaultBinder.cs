@@ -87,15 +87,36 @@ namespace Nancy.ModelBinding
 
         private object DeserializeBody(NancyContext context, Type modelType)
         {
-            return null;
-            //var contentType = context.Request.Headers["Content-Type"];
+            if (context == null || context.Request == null)
+            {
+                return null;
+            }
 
-            //if (string.IsNullOrEmpty(contentType))
+            var contentType = this.GetContentType(context);
 
-            //    foreach (var bodyDeserializer in bodyDeserializers.Where(b => b.CanDeserialize(contentType)))
-            //    {
+            var bodyDeserializer = this.bodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
 
-            //    }
+            return bodyDeserializer != null
+                       ? bodyDeserializer.Deserialize(contentType, context.Request.Body, context)
+                       : null;
+        }
+
+        private string GetContentType(NancyContext context)
+        {
+            if (context == null || context.Request == null)
+            {
+                return String.Empty;
+            }
+
+            IEnumerable<string> contentTypeHeaders;
+            context.Request.Headers.TryGetValue("Content-Type", out contentTypeHeaders);
+
+            if (contentTypeHeaders == null || !contentTypeHeaders.Any())
+            {
+                return string.Empty;
+            }
+
+            return contentTypeHeaders.First();
         }
     }
 }

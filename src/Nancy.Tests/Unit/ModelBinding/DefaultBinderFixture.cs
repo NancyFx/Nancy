@@ -6,6 +6,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using FakeItEasy;
 
     using Nancy.ModelBinding;
+    using Nancy.Tests.Fakes;
 
     using Xunit;
 
@@ -25,6 +26,56 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, null));
 
             result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_call_body_deserializer_if_one_matches()
+        {
+            var deserializer = A.Fake<IBodyDeserializer>();
+            A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
+
+            binder.Bind(context, this.GetType());
+
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_not_call_body_deserializer_if_none_matching()
+        {
+            var deserializer = A.Fake<IBodyDeserializer>();
+            A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(false);
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
+
+            binder.Bind(context, this.GetType());
+
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_request_content_type_to_can_deserialize()
+        {
+            var deserializer = A.Fake<IBodyDeserializer>();
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
+
+            binder.Bind(context, this.GetType());
+
+            A.CallTo(() => deserializer.CanDeserialize("application/xml"))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null)
+        {
+            return new DefaultBinder(
+                typeConverters ?? new ITypeConverter[] { }, bodyDeserializers ?? new IBodyDeserializer[] { });
         }
     }
 }
