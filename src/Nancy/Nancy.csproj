@@ -98,7 +98,7 @@
     <Compile Include="ModelBinding\IModelBinder.cs" />
     <Compile Include="ModelBinding\IModelBinderLocator.cs" />
     <Compile Include="ModelBinding\ITypeConverter.cs" />
-    <Compile Include="ModelBinding\ModelBinderLocator.cs" />
+    <Compile Include="ModelBinding\DefaultModelBinderLocator.cs" />
     <Compile Include="ModelBinding\ModelBindingException.cs" />
     <Compile Include="ModelBinding\ModuleExtensions.cs" />
     <Compile Include="NancyContext.cs" />

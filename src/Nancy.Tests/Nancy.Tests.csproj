@@ -89,9 +89,9 @@
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Fakes\FakeDefaultNancyBootstrapper.cs" />
     <Compile Include="Unit\HeadResponseFixture.cs" />
-    <Compile Include="Unit\ModelBinding\DefaultModelBinderFixture.cs" />
+    <Compile Include="Unit\ModelBinding\DefaultBinderFixture.cs" />
     <Compile Include="Unit\ModelBinding\DynamicModelBinderAdapterFixture.cs" />
-    <Compile Include="Unit\ModelBinding\ModelBinderLocatorFixture.cs" />
+    <Compile Include="Unit\ModelBinding\DefaultModelBinderLocatorFixture.cs" />
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
