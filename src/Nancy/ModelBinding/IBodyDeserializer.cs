@@ -1,5 +1,7 @@
 namespace Nancy.ModelBinding
 {
+    using System.IO;
+
     /// <summary>
     /// Provides a way to deserialize the contents of a request
     /// into a bound model.
@@ -17,9 +19,9 @@ namespace Nancy.ModelBinding
         /// Deserialize the request body to a model
         /// </summary>
         /// <param name="contentType">Content type to deserialize</param>
-        /// <param name="body">Request body</param>
+        /// <param name="bodyStream">Request body stream</param>
         /// <param name="context">Current context</param>
         /// <returns>Model instance</returns>
-        object Deserialize(string contentType, string body, NancyContext context);
+        object Deserialize(string contentType, Stream bodyStream, NancyContext context);
     }
 }
