@@ -111,7 +111,12 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultModelBinderLocator { get { return typeof(ModelBinderLocator); } }
+        protected virtual Type DefaultModelBinderLocator { get { return typeof(DefaultModelBinderLocator); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultModelBinder { get { return typeof(DefaultBinder); } }
 
         /// <summary>
         /// <para>
@@ -191,6 +196,7 @@
                 new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
                 new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter),
                 new TypeRegistration(typeof(IModelBinderLocator), DefaultModelBinderLocator), 
+                new TypeRegistration(typeof(IBinder), DefaultModelBinder), 
             };
         }
 

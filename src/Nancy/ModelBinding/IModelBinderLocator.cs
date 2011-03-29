@@ -12,6 +12,6 @@ namespace Nancy.ModelBinding
         /// </summary>
         /// <param name="modelType">Destination type to bind to</param>
         /// <returns>IModelBinder instance or null if none found</returns>
-        IModelBinder GetBinderForType(Type modelType);
+        IBinder GetBinderForType(Type modelType);
     }
 }
