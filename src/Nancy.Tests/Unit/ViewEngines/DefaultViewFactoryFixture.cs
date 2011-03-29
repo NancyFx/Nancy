@@ -29,20 +29,6 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
-        public void Should_throw_argumentnullexception_when_rendering_view_and_module_is_null()
-        {
-            // Given
-            var factory = this.CreateFactory(null);
-
-            // When
-            var exception =
-                Record.Exception(() => factory.RenderView(null, "foobar", new object()));
-
-            // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Should_throw_argumentexception_when_rendering_view_and_view_name_is_empty_and_model_is_null()
         {
             // Given
@@ -50,7 +36,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // When
             var exception =
-                Record.Exception(() => factory.RenderView(new FakeNancyModule(), string.Empty, null));
+                Record.Exception(() => factory.RenderView(string.Empty, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -64,7 +50,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // When
             var exception =
-                Record.Exception(() => factory.RenderView(new FakeNancyModule(), null, null));
+                Record.Exception(() => factory.RenderView(null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();

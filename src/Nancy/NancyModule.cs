@@ -230,7 +230,7 @@ namespace Nancy
             /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
             public Action<Stream> this[dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(module, null, model); }
+                get { return this.module.ViewFactory.RenderView(null, model); }
             }
 
             /// <summary>
@@ -241,7 +241,7 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Action<Stream> this[string viewName]
             {
-                get { return this.module.ViewFactory.RenderView(module, viewName, null); }
+                get { return this.module.ViewFactory.RenderView(viewName, null); }
             }
 
             /// <summary>
@@ -253,7 +253,7 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Action<Stream> this[string viewName, dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(module, viewName, model); }
+                get { return this.module.ViewFactory.RenderView(viewName, model); }
             }
         }
     }
