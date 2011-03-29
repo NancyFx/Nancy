@@ -2,12 +2,9 @@ namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
     using System.Collections.Generic;
-
     using FakeItEasy;
-
     using Nancy.ModelBinding;
-    using Nancy.Tests.Fakes;
-
+    using Fakes;
     using Xunit;
 
     public class DefaultBinderFixture
@@ -153,6 +150,25 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.DateProperty.ShouldEqual(default(DateTime));
         }
 
+        [Fact]
+        public void Should_handle_basic_array_types_in_model()
+        {
+            var binder = this.GetBinder();
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["Strings"] = "Test,Test2,Test3"; // This is what it looks like after being pased in Request
+
+            var result = (ArrayModel)binder.Bind(context, typeof(ArrayModel));
+
+            result.Strings.ShouldNotBeNull();
+            result.Strings.Length.ShouldEqual(3);
+        }
+
+        [Fact]
+        public void Should_call_type_converter_for_array_type_if_it_exists()
+        {
+            throw new NotImplementedException();
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null)
         {
             return new DefaultBinder(
@@ -176,6 +192,11 @@ namespace Nancy.Tests.Unit.ModelBinding
                 get { return this.broken; }
                 set { throw new NotImplementedException(); }
             }
+        }
+
+        public class ArrayModel
+        {
+            public string[] Strings { get; set; }
         }
     }
 }
