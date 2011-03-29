@@ -9,7 +9,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
     using Xunit;
 
-    public class DefaultModelBinderFixture
+    public class DefaultBinderFixture
     {
         [Fact]
         public void Should_throw_if_type_converters_is_null()

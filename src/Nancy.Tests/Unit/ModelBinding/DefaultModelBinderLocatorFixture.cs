@@ -8,14 +8,14 @@ namespace Nancy.Tests.Unit.ModelBinding
 
     using Xunit;
 
-    public class ModelBinderLocatorFixture
+    public class DefaultModelBinderLocatorFixture
     {
         private DefaultBinder defaultBinder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public ModelBinderLocatorFixture()
+        public DefaultModelBinderLocatorFixture()
         {
             this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { });
         }
