@@ -20,7 +20,8 @@ namespace Nancy.ModelBinding
         /// </summary>
         /// <param name="input">Input string</param>
         /// <param name="destinationType">Destination type</param>
+        /// <param name="context">Current context</param>
         /// <returns>Converted object of the destination type</returns>
-        object Convert(string input, Type destinationType);
+        object Convert(string input, Type destinationType, NancyContext context);
     }
 }

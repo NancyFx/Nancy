@@ -1,6 +1,7 @@
 namespace Nancy.ModelBinding
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
@@ -19,6 +20,16 @@ namespace Nancy.ModelBinding
     /// </summary>
     public class DefaultModelBinder : IModelBinder
     {
+        private readonly IEnumerable<ITypeConverter> typeConverters;
+
+        private readonly IEnumerable<IBodyDeserializer> bodyDeserializers;
+
+        public DefaultModelBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers)
+        {
+            this.typeConverters = typeConverters;
+            this.bodyDeserializers = bodyDeserializers;
+        }
+
         /// <summary>
         /// Whether the binder can bind to the given model type
         /// </summary>
@@ -37,6 +48,13 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType)
         {
+            var result = this.DeserializeBody();
+
+            if (result != null)
+            {
+                return result;
+            }
+
             // Currently this is *extremely* dumb and PoC only :-)
             // Models must have a default constructor and public settable properties
             // for each member. Also only supports very basic types and only works
@@ -66,5 +84,17 @@ namespace Nancy.ModelBinding
 
             return model;
         }
-    }    
+
+        private object DeserializeBody(NancyContext context, Type modelType)
+        {
+            var contentType = context.Request.Headers["Content-Type"];
+
+            if (string.IsNullOrEmpty(contentType))
+
+                foreach (var bodyDeserializer in bodyDeserializers.Where(b => b.CanDeserialize(contentType)))
+                {
+
+                }
+        }
+    }
 }
