@@ -175,13 +175,14 @@ namespace Nancy
             }
 
             var contentType = this.Headers["content-type"].First();
-            if (contentType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
+            var mimeType = contentType.Split(';').First();
+            if (mimeType.Equals("application/x-www-form-urlencoded", StringComparison.OrdinalIgnoreCase))
             {
                 var reader = new StreamReader(this.Body);
                 this.form = reader.ReadToEnd().AsQueryDictionary();
             }
 
-            if (!contentType.StartsWith("multipart/form-data", StringComparison.OrdinalIgnoreCase))
+            if (!mimeType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
             {
                 return;
             }
