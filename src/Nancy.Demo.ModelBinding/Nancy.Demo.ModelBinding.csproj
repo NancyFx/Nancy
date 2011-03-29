@@ -60,6 +60,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\SharedAssemblyInfo.cs">
+      <Link>Properties\SharedAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="CustomersModule.cs" />
     <Compile Include="Database\DB.cs" />
     <Compile Include="EventsModule.cs" />
@@ -67,7 +70,6 @@
     <Compile Include="ModelBinders\CustomerModelBinder.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Event.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Customers.spark" />

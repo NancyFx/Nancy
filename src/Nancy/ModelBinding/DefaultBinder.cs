@@ -18,26 +18,26 @@ namespace Nancy.ModelBinding
     /// properties.
     /// </para>
     /// </summary>
-    public class DefaultModelBinder : IModelBinder
+    public class DefaultBinder : IBinder
     {
         private readonly IEnumerable<ITypeConverter> typeConverters;
 
         private readonly IEnumerable<IBodyDeserializer> bodyDeserializers;
 
-        public DefaultModelBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers)
+        public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers)
         {
+            if (typeConverters == null)
+            {
+                throw new ArgumentNullException("typeConverters");
+            }
+
+            if (bodyDeserializers == null)
+            {
+                throw new ArgumentNullException("bodyDeserializers");
+            }
+
             this.typeConverters = typeConverters;
             this.bodyDeserializers = bodyDeserializers;
-        }
-
-        /// <summary>
-        /// Whether the binder can bind to the given model type
-        /// </summary>
-        /// <param name="modelType">Required model type</param>
-        /// <returns>True if binding is possible, false otherwise</returns>
-        public bool CanBind(Type modelType)
-        {
-            return true;
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType)
         {
-            var result = this.DeserializeBody();
+            var result = this.DeserializeBody(context, modelType);
 
             if (result != null)
             {
@@ -87,14 +87,15 @@ namespace Nancy.ModelBinding
 
         private object DeserializeBody(NancyContext context, Type modelType)
         {
-            var contentType = context.Request.Headers["Content-Type"];
+            return null;
+            //var contentType = context.Request.Headers["Content-Type"];
 
-            if (string.IsNullOrEmpty(contentType))
+            //if (string.IsNullOrEmpty(contentType))
 
-                foreach (var bodyDeserializer in bodyDeserializers.Where(b => b.CanDeserialize(contentType)))
-                {
+            //    foreach (var bodyDeserializer in bodyDeserializers.Where(b => b.CanDeserialize(contentType)))
+            //    {
 
-                }
+            //    }
         }
     }
 }

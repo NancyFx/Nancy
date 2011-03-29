@@ -91,9 +91,10 @@
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
-    <Compile Include="ModelBinding\DefaultModelBinder.cs" />
+    <Compile Include="ModelBinding\DefaultBinder.cs" />
     <Compile Include="ModelBinding\DynamicModelBinderAdapter.cs" />
     <Compile Include="ModelBinding\IBodyDeserializer.cs" />
+    <Compile Include="ModelBinding\IBinder.cs" />
     <Compile Include="ModelBinding\IModelBinder.cs" />
     <Compile Include="ModelBinding\IModelBinderLocator.cs" />
     <Compile Include="ModelBinding\ITypeConverter.cs" />

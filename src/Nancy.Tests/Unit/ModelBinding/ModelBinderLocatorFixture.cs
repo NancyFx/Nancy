@@ -10,10 +10,20 @@ namespace Nancy.Tests.Unit.ModelBinding
 
     public class ModelBinderLocatorFixture
     {
+        private DefaultBinder defaultBinder;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public ModelBinderLocatorFixture()
+        {
+            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { });
+        }
+
         [Fact]
         public void Should_not_throw_if_null_binders_collection_is_passed()
         {
-            var result = Record.Exception(() => new ModelBinderLocator(null));
+            var result = Record.Exception(() => new DefaultModelBinderLocator(null, this.defaultBinder));
 
             result.ShouldBeNull();
         }
@@ -23,11 +33,11 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(false);
-            var locator = new ModelBinderLocator(new IModelBinder[] { fakeBinder });
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
 
             var result = locator.GetBinderForType(typeof(Model));
 
-            result.ShouldBeOfType(typeof(DefaultModelBinder));
+            result.ShouldBeSameAs(this.defaultBinder);
         }
 
         [Fact]
@@ -35,7 +45,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(false);
-            var locator = new ModelBinderLocator(new IModelBinder[] { fakeBinder });
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
 
             var result = locator.GetBinderForType(typeof(Model));
 
@@ -47,7 +57,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(true);
-            var locator = new ModelBinderLocator(new IModelBinder[] { fakeBinder });
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
 
             var result = locator.GetBinderForType(typeof(Model));
 

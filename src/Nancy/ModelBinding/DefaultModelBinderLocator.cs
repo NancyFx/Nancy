@@ -7,7 +7,7 @@ namespace Nancy.ModelBinding
     /// <summary>
     /// Locates model binders for a particular model
     /// </summary>
-    public class ModelBinderLocator : IModelBinderLocator
+    public class DefaultModelBinderLocator : IModelBinderLocator
     {
         /// <summary>
         /// Available model binders
@@ -17,19 +17,18 @@ namespace Nancy.ModelBinding
         /// <summary>
         /// Default model binder to fall back on
         /// </summary>
-        private readonly IModelBinder defaultBinder = new DefaultModelBinder(); // TODO: Should we make the "fallback" removable/pluggable?
+        private readonly IBinder fallbackBinder;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelBinderLocator"/> class.
+        /// Initializes a new instance of the <see cref="DefaultModelBinderLocator"/> class.
         /// </summary>
         /// <param name="binders">Available model binders</param>
-        public ModelBinderLocator(IEnumerable<IModelBinder> binders)
+        /// <param name="fallbackBinder">Fallback binder</param>
+        public DefaultModelBinderLocator(IEnumerable<IModelBinder> binders, IBinder fallbackBinder)
         {
-            var defaultBinderType = typeof(DefaultModelBinder);
+            this.fallbackBinder = fallbackBinder;
 
-            this.binders = binders != null
-                               ? binders.Where(b => b.GetType() != defaultBinderType)
-                               : new IModelBinder[] { };
+            this.binders = binders;
         }
 
         /// <summary>
@@ -37,9 +36,9 @@ namespace Nancy.ModelBinding
         /// </summary>
         /// <param name="modelType">Destination type to bind to</param>
         /// <returns>IModelBinder instance or null if none found</returns>
-        public IModelBinder GetBinderForType(Type modelType)
+        public IBinder GetBinderForType(Type modelType)
         {
-            return this.binders.Where(modelBinder => modelBinder.CanBind(modelType)).FirstOrDefault() ?? this.defaultBinder;
+            return this.binders.Where(modelBinder => modelBinder.CanBind(modelType)).FirstOrDefault() ?? this.fallbackBinder;
         }
     }
 }
