@@ -148,7 +148,7 @@ namespace Nancy.Tests.Unit
             var headers = 
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    { "content-type", new[] { "application/x-www-form-urlencoded; charset=UTF-8" } }
                 };
 
             // When
