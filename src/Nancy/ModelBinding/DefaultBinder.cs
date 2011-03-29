@@ -6,17 +6,8 @@ namespace Nancy.ModelBinding
     using System.Reflection;
 
     /// <summary>
-    /// <para>
-    /// A simple default model binder.
-    /// </para>
-    /// <para>
-    /// Uses the DynamicDictionary from Request.Form to attempt to
-    /// populate the model object.
-    /// </para>
-    /// <para>
-    /// Currently the model must either have a default constructor and public settable
-    /// properties.
-    /// </para>
+    /// Default binder - used as a fallback when a specific modelbinder
+    /// is not available.
     /// </summary>
     public class DefaultBinder : IBinder
     {
@@ -48,7 +39,7 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType)
         {
-            var result = this.DeserializeBody(context, modelType);
+            var result = this.DeserializeRequestBody(context, modelType);
 
             if (result != null)
             {
@@ -85,14 +76,14 @@ namespace Nancy.ModelBinding
             return model;
         }
 
-        private object DeserializeBody(NancyContext context, Type modelType)
+        private object DeserializeRequestBody(NancyContext context, Type modelType)
         {
             if (context == null || context.Request == null)
             {
                 return null;
             }
 
-            var contentType = this.GetContentType(context);
+            var contentType = this.GetRequestContentType(context);
 
             var bodyDeserializer = this.bodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
 
@@ -101,7 +92,7 @@ namespace Nancy.ModelBinding
                        : null;
         }
 
-        private string GetContentType(NancyContext context)
+        private string GetRequestContentType(NancyContext context)
         {
             if (context == null || context.Request == null)
             {

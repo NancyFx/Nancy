@@ -72,6 +72,22 @@ namespace Nancy.Tests.Unit.ModelBinding
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
+        [Fact]
+        public void Should_return_object_from_deserializer_if_one_returned()
+        {
+            var modelObject = new object();
+            var deserializer = A.Fake<IBodyDeserializer>();
+            A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
+
+            var result = binder.Bind(context, this.GetType());
+
+            result.ShouldBeSameAs(modelObject);
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null)
         {
             return new DefaultBinder(
