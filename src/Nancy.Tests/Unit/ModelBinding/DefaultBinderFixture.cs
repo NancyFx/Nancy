@@ -88,10 +88,94 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.ShouldBeSameAs(modelObject);
         }
 
+        [Fact]
+        public void Should_see_if_a_type_converter_is_available_for_each_property_on_the_model_where_incoming_value_exists()
+        {
+            var typeConverter = A.Fake<ITypeConverter>();
+            A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments().Returns(false);
+            var binder = this.GetBinder(typeConverters: new[] { typeConverter });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
+
+            binder.Bind(context, typeof(TestModel));
+
+            A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Times(2));
+        }
+
+        [Fact]
+        public void Should_call_convert_on_type_converter_if_available()
+        {
+            var typeConverter = A.Fake<ITypeConverter>();
+            A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
+            var binder = this.GetBinder(typeConverters: new[] { typeConverter });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+
+            binder.Bind(context, typeof(TestModel));
+
+            A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_convert_basic_types()
+        {
+            var binder = this.GetBinder();
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
+            var now = DateTime.Now;
+            context.Request.Form["DateProperty"] = now.ToString();
+
+            var result = (TestModel)binder.Bind(context, typeof(TestModel));
+
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(12);
+            result.DateProperty.ShouldEqual(now);
+        }
+
+        [Fact]
+        public void Should_ignore_properties_that_cannot_be_converted()
+        {
+            var binder = this.GetBinder();
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
+            context.Request.Form["DateProperty"] = "Broken";
+
+            var result = (TestModel)binder.Bind(context, typeof(TestModel));
+
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(12);
+            result.DateProperty.ShouldEqual(default(DateTime));
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null)
         {
             return new DefaultBinder(
                 typeConverters ?? new ITypeConverter[] { }, bodyDeserializers ?? new IBodyDeserializer[] { });
+        }
+
+        public class TestModel
+        {
+            public string StringProperty { get; set; }
+
+            public int IntProperty { get; set; }
+
+            public DateTime DateProperty { get; set; }
+        }
+
+        public class BrokenModel
+        {
+            private string broken;
+            public string Broken
+            {
+                get { return this.broken; }
+                set { throw new NotImplementedException(); }
+            }
         }
     }
 }

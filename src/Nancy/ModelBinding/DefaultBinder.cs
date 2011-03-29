@@ -1,7 +1,9 @@
 namespace Nancy.ModelBinding
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
 
@@ -39,6 +41,10 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType)
         {
+            // TODO - Blacklist
+            // TODO - Name conversion conventions? Might not want to exactly match name in form fields
+            // TODO - Collections support
+
             var result = this.DeserializeRequestBody(context, modelType);
 
             if (result != null)
@@ -46,34 +52,80 @@ namespace Nancy.ModelBinding
                 return result;
             }
 
-            // Currently this is *extremely* dumb and PoC only :-)
-            // Models must have a default constructor and public settable properties
-            // for each member. Also only supports very basic types and only works
-            // if the input type is directly assignable to the type in the object.
-            var model = Activator.CreateInstance(modelType);
+            var model = this.CreateModel(modelType);
 
-            var modelProperties = model.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
-            DynamicDictionary formDictionary = context.Request.Form;
+            var modelProperties = this.GetProperties(modelType);
 
             foreach (var modelProperty in modelProperties)
             {
-                var dictionaryItem = (DynamicDictionaryValue)formDictionary[modelProperty.Name];
+                var stringValue = this.GetValue(modelProperty.Name, context);
 
-                // TODO - Use type converters if they are available
-                if (dictionaryItem.HasValue)
+                if (!String.IsNullOrEmpty(stringValue))
                 {
-                    if (modelProperty.PropertyType.IsAssignableFrom(dictionaryItem.Value.GetType()))
-                    {
-                        modelProperty.SetValue(model, dictionaryItem.Value, null);
-                    }
-                    else
-                    {
-                        //modelProperty.SetValue(model, dictionaryItem, null);
-                    }
+                    this.BindProperty(model, modelProperty, stringValue, context);
                 }
             }
 
             return model;
+        }
+
+        private void BindProperty(object model, PropertyInfo modelProperty, string stringValue, NancyContext context)
+        {
+            var destinationType = modelProperty.PropertyType;
+
+            var typeConverter =
+                this.typeConverters.Where(c => c.CanConvertTo(destinationType)).FirstOrDefault();
+
+            if (typeConverter != null)
+            {
+                this.SetPropertyValue(modelProperty, model, typeConverter.Convert(stringValue, destinationType, context));
+                return;
+            }
+
+            if (destinationType == typeof(string))
+            {
+                this.SetPropertyValue(modelProperty, model, stringValue);
+                return;
+            }
+
+            var converter = TypeDescriptor.GetConverter(modelProperty.PropertyType);
+
+            if (converter == null || !converter.CanConvertFrom(typeof(string)))
+            {
+                return;
+            }
+
+            try
+            {
+                this.SetPropertyValue(modelProperty, model, converter.ConvertFrom(stringValue));
+            }
+            catch (FormatException)
+            {
+            }
+        }
+
+        private void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
+        {
+            // TODO - catch reflection exceptions?
+            modelProperty.SetValue(model, value, null);
+        }
+
+        private IEnumerable<PropertyInfo> GetProperties(Type modelType)
+        {
+            return modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite);
+        }
+
+        private object CreateModel(Type modelType)
+        {
+            return Activator.CreateInstance(modelType);
+        }
+
+        private string GetValue(string propertyName, NancyContext context)
+        {
+            // TODO - check captured variables too if possible
+            var dictionaryItem = (DynamicDictionaryValue)context.Request.Form[propertyName];
+
+            return dictionaryItem.HasValue ? dictionaryItem : String.Empty;
         }
 
         private object DeserializeRequestBody(NancyContext context, Type modelType)
