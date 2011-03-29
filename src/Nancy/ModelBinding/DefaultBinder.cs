@@ -88,6 +88,11 @@ namespace Nancy.ModelBinding
                 return;
             }
 
+            if (typeof(IEnumerable).IsAssignableFrom(destinationType))
+            {
+                this.BindCollection(model, modelProperty, stringValue, context);
+            }
+
             var converter = TypeDescriptor.GetConverter(modelProperty.PropertyType);
 
             if (converter == null || !converter.CanConvertFrom(typeof(string)))
@@ -102,6 +107,11 @@ namespace Nancy.ModelBinding
             catch (FormatException)
             {
             }
+        }
+
+        private void BindCollection(object model, PropertyInfo modelProperty, string stringValue, NancyContext context)
+        {
+            throw new NotImplementedException();
         }
 
         private void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
