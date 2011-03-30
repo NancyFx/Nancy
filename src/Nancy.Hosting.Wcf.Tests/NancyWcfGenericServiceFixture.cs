@@ -5,6 +5,8 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Web;
+    using Bootstrapper;
+    using FakeItEasy;
     using Nancy.Tests;
     using Nancy.Tests.xUnitExtensions;
     using Xunit;
@@ -30,6 +32,36 @@ namespace Nancy.Hosting.Wcf.Tests
 
                 request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
             }
+        }
+
+        [SkippableFact]
+        public void Should_set_query_string_and_uri_correctly()
+        {
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
+                request.Method = "GET";
+
+                try
+                {
+                    request.GetResponse();
+                }
+                catch (WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
+
+            nancyRequest.Uri.ShouldEqual("/test/stuff");
+            Assert.True(nancyRequest.Query.query.HasValue);
+            Assert.True(nancyRequest.Query.query2.HasValue);
         }
 
         [SkippableFact]
@@ -68,10 +100,15 @@ namespace Nancy.Hosting.Wcf.Tests
             }
         }
 
-        private static WebServiceHost CreateAndOpenWebServiceHost()
+        private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null)
         {
+            if (nancyBootstrapper == null)
+            {
+                nancyBootstrapper = new DefaultNancyBootstrapper();
+            }
+
             var host = new WebServiceHost(
-                new NancyWcfGenericService(new DefaultNancyBootstrapper()),
+                new NancyWcfGenericService(nancyBootstrapper),
                 BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
