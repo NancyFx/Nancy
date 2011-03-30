@@ -3,13 +3,20 @@ namespace Nancy.Hosting.Owin
     using System;
     using System.IO;
 
+    /// <summary>
+    /// Provides a <see cref="Stream"/> interface for writing a response to an OWIN host.
+    /// </summary>
     public class ResponseStream : Stream
     {
         private Func<ArraySegment<byte>, Action, bool> onNext;
-
-        private Action onComplete;
+        private readonly Action onComplete;
         private bool isCompleted;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResponseStream"/> class.
+        /// </summary>
+        /// <param name="onNext">Delegate to call when writing data to the OWIN host.</param>
+        /// <param name="onComplete">Delegate to call to signal to the OWIN host that all data have been written.</param>
         public ResponseStream(Func<ArraySegment<byte>, Action, bool> onNext, Action onComplete)
         {
             if (onNext == null)
@@ -43,6 +50,9 @@ namespace Nancy.Hosting.Owin
             }
         }
 
+        /// <summary>
+        /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
+        /// </summary>
         public override void Close()
         {
             if (this.isCompleted)
@@ -111,10 +121,7 @@ namespace Nancy.Hosting.Owin
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports seeking.
         /// </summary>
-        /// <returns>
-        /// true if the stream supports seeking; otherwise, false.
-        /// </returns>
-        /// <filterpriority>1</filterpriority>
+        /// <returns>true if the stream supports seeking; otherwise, false.</returns>
         public override bool CanSeek
         {
             get { return false; }
@@ -123,10 +130,7 @@ namespace Nancy.Hosting.Owin
         /// <summary>
         /// When overridden in a derived class, gets a value indicating whether the current stream supports writing.
         /// </summary>
-        /// <returns>
-        /// true if the stream supports writing; otherwise, false.
-        /// </returns>
-        /// <filterpriority>1</filterpriority>
+        /// <returns>true if the stream supports writing; otherwise, false.</returns>
         public override bool CanWrite
         {
             get { return !isCompleted; }
@@ -135,36 +139,22 @@ namespace Nancy.Hosting.Owin
         /// <summary>
         /// When overridden in a derived class, gets the length in bytes of the stream.
         /// </summary>
-        /// <returns>
-        /// A long value representing the length of the stream in bytes.
-        /// </returns>
+        /// <returns>A long value representing the length of the stream in bytes.</returns>
         /// <exception cref="T:System.NotSupportedException">A class derived from Stream does not support seeking. </exception><exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception><filterpriority>1</filterpriority>
         public override long Length
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
+            get { throw new NotSupportedException(); }
         }
 
         /// <summary>
         /// When overridden in a derived class, gets or sets the position within the current stream.
         /// </summary>
-        /// <returns>
-        /// The current position within the stream.
-        /// </returns>
+        /// <returns>The current position within the stream.</returns>
         /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception><exception cref="T:System.NotSupportedException">The stream does not support seeking. </exception><exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception><filterpriority>1</filterpriority>
         public override long Position
         {
-            get
-            {
-                throw new NotSupportedException();
-            }
-
-            set
-            {
-                throw new NotSupportedException();
-            }
+            get { throw new NotSupportedException(); }
+            set { throw new NotSupportedException(); }
         }
     }
 }

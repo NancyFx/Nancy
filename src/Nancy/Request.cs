@@ -76,9 +76,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets a <see cref="Stream"/> that can be used to read the incoming HTTP body
+        /// Gets a <see cref="RequestStream"/> that can be used to read the incoming HTTP body
         /// </summary>
-        /// <value>A <see cref="Stream"/> object representing the incoming HTTP body.</value>
+        /// <value>A <see cref="RequestStream"/> object representing the incoming HTTP body.</value>
         public RequestStream Body { get; private set; }
 
         /// <summary>

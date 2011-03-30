@@ -5,11 +5,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{500B28EA-BFDB-4686-8A7D-5CA38B11EF21}</ProjectGuid>
+    <ProjectGuid>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Hosting.Owin</RootNamespace>
-    <AssemblyName>Nancy.Hosting.Owin</AssemblyName>
+    <RootNamespace>Nancy.Testing</RootNamespace>
+    <AssemblyName>Nancy.Testing</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -31,6 +31,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FakeItEasy">
+      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPlus, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPlus.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -38,15 +49,36 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit">
+      <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\EnvironmentExtensions.cs" />
-    <Compile Include="NancyOwinHost.cs" />
-    <Compile Include="NancyRequestParameters.cs" />
-    <Compile Include="ResponseStream.cs" />
+    <Compile Include="AndConnector.cs" />
+    <Compile Include="AssertException.cs" />
+    <Compile Include="Browser.cs" />
+    <Compile Include="BrowserContext.cs" />
+    <Compile Include="BrowserContextExtensions.cs" />
+    <Compile Include="BrowserContextMultipartFormData.cs" />
+    <Compile Include="BrowserResponse.cs" />
+    <Compile Include="BrowserResponseExtensions.cs" />
+    <Compile Include="NancyContextExtensions.cs" />
+    <Compile Include="DocumentWrapper.cs" />
+    <Compile Include="Fakes\FakeNancyBootstrapper.cs" />
+    <Compile Include="Fakes\FakeRootPathProvider.cs" />
+    <Compile Include="Fakes\FakeNancyModule.cs" />
+    <Compile Include="IBrowserContextValues.cs" />
+    <Compile Include="IndexHelper.cs" />
+    <Compile Include="NodeWrapper.cs" />
+    <Compile Include="PathHelper.cs" />
+    <Compile Include="QueryWrapper.cs" />
+    <Compile Include="AssertExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

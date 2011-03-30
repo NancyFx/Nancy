@@ -21,30 +21,20 @@
     /// </summary>
     public class NancyOwinHost
     {
+        private readonly INancyEngine engine;
+
         /// <summary>
-        /// State object for async request builder stream begin/endwrite
+        /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
-        private sealed class AsyncBuilderState
-        {
-            public Stream Stream { get; private set; }
-            public Action OnComplete { get; private set; }
-            public Action<Exception> OnError { get; private set; }
-
-            public AsyncBuilderState(Stream stream, Action onComplete, Action<Exception> onError)
-            {
-                this.Stream = stream;
-                this.OnComplete = onComplete;
-                this.OnError = onError;
-            }
-        }
-
-        private INancyEngine engine;
-
         public NancyOwinHost()
             : this(NancyBootstrapperLocator.Bootstrapper)
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
+        /// </summary>
+        /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
         public NancyOwinHost(INancyBootstrapper bootstrapper)
         {
             bootstrapper.Initialise();
@@ -60,11 +50,11 @@
         /// <param name="errorCallback">Error callback delegate</param>
         public void ProcessRequest(IDictionary<string, object> environment, ResponseCallBack responseCallBack, Action<Exception> errorCallback)
         {
-            this.CheckVersion(environment);
+            CheckVersion(environment);
 
             var parameters = environment.AsNancyRequestParameters();
 
-            var requestBodyDelegate = this.GetRequestBodyDelegate(environment);
+            var requestBodyDelegate = GetRequestBodyDelegate(environment);
 
             // If there's no body, just invoke Nancy immediately
             if (requestBodyDelegate == null)
@@ -76,12 +66,12 @@
             // If a body is present, build the RequestStream and 
             // invoke Nancy when it's ready.
             requestBodyDelegate.Invoke(
-                this.GetRequestBodyBuilder(parameters, errorCallback),
+                GetRequestBodyBuilder(parameters, errorCallback),
                 errorCallback,
                 () => this.InvokeNancy(parameters, responseCallBack, errorCallback));
         }
 
-        private void CheckVersion(IDictionary<string, object> environment)
+        private static void CheckVersion(IDictionary<string, object> environment)
         {
             object version;
             environment.TryGetValue("owin.Version", out version);
@@ -92,12 +82,12 @@
             }
         }
 
-        private BodyDelegate GetRequestBodyDelegate(IDictionary<string, object> environment)
+        private static BodyDelegate GetRequestBodyDelegate(IDictionary<string, object> environment)
         {
             return (BodyDelegate)environment["owin.RequestBody"];
         }
 
-        private Func<ArraySegment<byte>, Action, bool> GetRequestBodyBuilder(NancyRequestParameters parameters, Action<Exception> errorCallback)
+        private static Func<ArraySegment<byte>, Action, bool> GetRequestBodyBuilder(NancyRequestParameters parameters, Action<Exception> errorCallback)
         {
             return (data, continuation) =>
                 {
@@ -151,10 +141,10 @@
                     request,
                     (result) =>
                     {
-                        var returnCode = this.GetReturnCode(result);
+                        var returnCode = GetReturnCode(result);
                         var headers = result.Response.Headers;
 
-                        responseCallBack.Invoke(returnCode, headers, this.GetResponseBodyBuilder(result));
+                        responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
                     },
                     errorCallback);
             }
@@ -164,7 +154,7 @@
             }
         }
 
-        private BodyDelegate GetResponseBodyBuilder(NancyContext result)
+        private static BodyDelegate GetResponseBodyBuilder(NancyContext result)
         {
             return (next, error, complete) =>
                 {
@@ -195,9 +185,26 @@
                 };
         }
 
-        private string GetReturnCode(NancyContext result)
+        private static string GetReturnCode(NancyContext result)
         {
             return String.Format("{0} {1}", (int)result.Response.StatusCode, result.Response.StatusCode);
+        }
+
+        /// <summary>
+        /// State object for async request builder stream begin/endwrite
+        /// </summary>
+        private sealed class AsyncBuilderState
+        {
+            public Stream Stream { get; private set; }
+            public Action OnComplete { get; private set; }
+            public Action<Exception> OnError { get; private set; }
+
+            public AsyncBuilderState(Stream stream, Action onComplete, Action<Exception> onError)
+            {
+                this.Stream = stream;
+                this.OnComplete = onComplete;
+                this.OnError = onError;
+            }
         }
     }
 }
