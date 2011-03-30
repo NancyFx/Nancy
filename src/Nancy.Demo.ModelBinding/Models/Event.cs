@@ -1,6 +1,7 @@
 namespace Nancy.Demo.ModelBinding.Models
 {
     using System;
+    using System.Collections.Generic;
 
     public class Event
     {
@@ -9,6 +10,8 @@ namespace Nancy.Demo.ModelBinding.Models
         public string Title { get; set; }
 
         public string Location { get; set; }
+
+        public IEnumerable<int> Venues { get; set; }
 
         public DateTime Time { get; set; }
 

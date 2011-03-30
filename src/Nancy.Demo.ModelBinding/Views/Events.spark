@@ -18,6 +18,12 @@
       <input type="text" name="Title" />
       <label for="Location">Location</label>
       <input type="text" name="Location" />
+
+      <input type="checkbox" name="Venues" value="1">Venue 1</input>
+      <input type="checkbox" name="Venues" value="2">Venue 2</input>
+      <input type="checkbox" name="Venues" value="3">Venue 3</input>
+      <input type="checkbox" name="Venues" value="4">Venue 4</input>
+
       <label for="EventDate">Time</label>
       <input type="text" name="Time" value="${System.DateTime.Now}"/>
       <input type="submit"/>
