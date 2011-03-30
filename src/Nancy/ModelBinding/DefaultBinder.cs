@@ -87,7 +87,7 @@ namespace Nancy.ModelBinding
                     Model = this.CreateModel(modelType),
                     ValidModelProperties = this.GetProperties(modelType, blackList),
                     FormFields = this.GetFormFields(context),
-                    TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters);
+                    TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
                 };
         }
 
