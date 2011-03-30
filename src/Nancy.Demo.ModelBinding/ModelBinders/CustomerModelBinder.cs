@@ -24,8 +24,9 @@ namespace Nancy.Demo.ModelBinding.ModelBinders
         /// </summary>
         /// <param name="context">Current context</param>
         /// <param name="modelType">Model type to bind to</param>
+        /// <param name="blackList">Blacklisted property names</param>
         /// <returns>Bound model</returns>
-        public object Bind(NancyContext context, Type modelType)
+        public object Bind(NancyContext context, Type modelType, params string[] blackList)
         {
             var customer = new Customer
                                {

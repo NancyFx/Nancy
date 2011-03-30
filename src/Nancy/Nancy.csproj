@@ -91,10 +91,17 @@
     <Compile Include="Helpers\ReflectionUtils.cs" />
     <Compile Include="Json\ScriptIgnoreAttribute.cs" />
     <Compile Include="Json\StringBuilderExtensions.cs" />
+    <Compile Include="ModelBinding\BindingContext.cs" />
+    <Compile Include="ModelBinding\BindingDefaults.cs" />
     <Compile Include="ModelBinding\DefaultBinder.cs" />
+    <Compile Include="ModelBinding\DefaultBodyDeserializers\JsonBodyDeserializer.cs" />
+    <Compile Include="ModelBinding\DefaultConverters\CollectionConverter.cs" />
+    <Compile Include="ModelBinding\DefaultConverters\FallbackConverter.cs" />
+    <Compile Include="ModelBinding\DefaultFieldNameConverter.cs" />
     <Compile Include="ModelBinding\DynamicModelBinderAdapter.cs" />
     <Compile Include="ModelBinding\IBodyDeserializer.cs" />
     <Compile Include="ModelBinding\IBinder.cs" />
+    <Compile Include="ModelBinding\IFieldNameConverter.cs" />
     <Compile Include="ModelBinding\IModelBinder.cs" />
     <Compile Include="ModelBinding\IModelBinderLocator.cs" />
     <Compile Include="ModelBinding\ITypeConverter.cs" />

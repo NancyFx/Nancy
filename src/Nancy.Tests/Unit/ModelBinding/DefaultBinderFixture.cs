@@ -5,14 +5,33 @@ namespace Nancy.Tests.Unit.ModelBinding
     using FakeItEasy;
     using Nancy.ModelBinding;
     using Fakes;
+    using Nancy.ModelBinding.DefaultConverters;
     using Xunit;
 
     public class DefaultBinderFixture
     {
+        private IFieldNameConverter passthroughNameConverter;
+
+        private BindingDefaults emptyDefaults;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// </summary>
+        public DefaultBinderFixture()
+        {
+            this.passthroughNameConverter = A.Fake<IFieldNameConverter>();
+            A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
+                .ReturnsLazily(f => (string)f.Arguments[0]);
+
+            this.emptyDefaults = A.Fake<BindingDefaults>();
+            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new IBodyDeserializer[] { });
+            A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new ITypeConverter[] { });
+        }
+
         [Fact]
         public void Should_throw_if_type_converters_is_null()
         {
-            var result = Record.Exception(() => new DefaultBinder(null, new IBodyDeserializer[] { }));
+            var result = Record.Exception(() => new DefaultBinder(null, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), new BindingDefaults()));
 
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
@@ -20,7 +39,23 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_throw_if_body_deserializers_is_null()
         {
-            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, null));
+            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, null, A.Fake<IFieldNameConverter>(), new BindingDefaults()));
+
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_throw_if_field_name_converter_is_null()
+        {
+            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, null, new BindingDefaults()));
+
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_throw_if_defaults_is_null()
+        {
+            var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), null));
 
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
@@ -36,12 +71,12 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
+            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public void Should_not_call_body_deserializer_if_none_matching()
+        public void Should_not_call_body_deserializer_if_doesnt_match()
         {
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(false);
@@ -51,7 +86,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
+            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }
 
@@ -75,7 +110,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var modelObject = new object();
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
-            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
+            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments().Returns(modelObject);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
@@ -118,26 +153,9 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Should_convert_basic_types()
-        {
-            var binder = this.GetBinder();
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "12";
-            var now = DateTime.Now;
-            context.Request.Form["DateProperty"] = now.ToString();
-
-            var result = (TestModel)binder.Bind(context, typeof(TestModel));
-
-            result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(12);
-            result.DateProperty.ShouldEqual(now);
-        }
-
-        [Fact]
         public void Should_ignore_properties_that_cannot_be_converted()
         {
-            var binder = this.GetBinder();
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
@@ -151,28 +169,53 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Should_handle_basic_array_types_in_model()
+        public void Should_use_field_name_converter_for_each_field()
         {
             var binder = this.GetBinder();
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Form["Strings"] = "Test,Test2,Test3"; // This is what it looks like after being pased in Request
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
 
-            var result = (ArrayModel)binder.Bind(context, typeof(ArrayModel));
+            binder.Bind(context, typeof(TestModel));
 
-            result.Strings.ShouldNotBeNull();
-            result.Strings.Length.ShouldEqual(3);
+            A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Times(2));
         }
 
         [Fact]
-        public void Should_call_type_converter_for_array_type_if_it_exists()
+        public void Should_not_bind_anything_on_blacklist()
+        {
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
+
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), "IntProperty");
+
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(0);
+        }
+
+        [Fact]
+        public void Should_use_default_body_deserializer_if_one_found()
         {
             throw new NotImplementedException();
         }
 
-        private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null)
+        [Fact]
+        public void Should_use_default_type_converter_if_one_found()
         {
-            return new DefaultBinder(
-                typeConverters ?? new ITypeConverter[] { }, bodyDeserializers ?? new IBodyDeserializer[] { });
+            throw new NotImplementedException();
+        }
+
+        private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
+        {
+            var converters = typeConverters ?? new ITypeConverter[] { };
+            var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
+            var converter = nameConverter ?? this.passthroughNameConverter;
+            var defaults = bindingDefaults ?? this.emptyDefaults;
+
+            return new DefaultBinder(converters, deserializers, converter, defaults);
         }
 
         public class TestModel
@@ -182,21 +225,6 @@ namespace Nancy.Tests.Unit.ModelBinding
             public int IntProperty { get; set; }
 
             public DateTime DateProperty { get; set; }
-        }
-
-        public class BrokenModel
-        {
-            private string broken;
-            public string Broken
-            {
-                get { return this.broken; }
-                set { throw new NotImplementedException(); }
-            }
-        }
-
-        public class ArrayModel
-        {
-            public string[] Strings { get; set; }
         }
     }
 }

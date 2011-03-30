@@ -121,6 +121,11 @@
         protected virtual Type DefaultModelBinder { get { return typeof(DefaultBinder); } }
 
         /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultBindingDefaults { get { return typeof(BindingDefaults); } } 
+
+        /// <summary>
         /// <para>
         /// The pre-request hook
         /// </para>
@@ -199,6 +204,7 @@
                 new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter),
                 new TypeRegistration(typeof(IModelBinderLocator), DefaultModelBinderLocator), 
                 new TypeRegistration(typeof(IBinder), DefaultModelBinder), 
+                new TypeRegistration(typeof(BindingDefaults), DefaultBindingDefaults), 
             };
         }
 
