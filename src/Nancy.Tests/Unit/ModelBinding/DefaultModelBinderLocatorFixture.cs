@@ -17,7 +17,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         /// </summary>
         public DefaultModelBinderLocatorFixture()
         {
-            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { });
+            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), new BindingDefaults());
         }
 
         [Fact]

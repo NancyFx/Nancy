@@ -22,6 +22,6 @@ namespace Nancy.ModelBinding
         /// <param name="destinationType">Destination type</param>
         /// <param name="context">Current context</param>
         /// <returns>Converted object of the destination type</returns>
-        object Convert(string input, Type destinationType, NancyContext context);
+        object Convert(string input, Type destinationType, BindingContext context);
     }
 }

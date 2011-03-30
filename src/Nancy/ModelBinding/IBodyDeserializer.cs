@@ -1,5 +1,6 @@
 namespace Nancy.ModelBinding
 {
+    using System;
     using System.IO;
 
     /// <summary>
@@ -19,9 +20,10 @@ namespace Nancy.ModelBinding
         /// Deserialize the request body to a model
         /// </summary>
         /// <param name="contentType">Content type to deserialize</param>
+        /// <param name="outputType">Output type to deserialize to</param>
         /// <param name="bodyStream">Request body stream</param>
         /// <param name="context">Current context</param>
         /// <returns>Model instance</returns>
-        object Deserialize(string contentType, Stream bodyStream, NancyContext context);
+        object Deserialize(string contentType, Type outputType, Stream bodyStream, NancyContext context);
     }
 }
