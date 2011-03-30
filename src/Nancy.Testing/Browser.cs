@@ -79,6 +79,11 @@ namespace Nancy.Testing
 
         private static void BuildRequestBody(IBrowserContextValues contextValues)
         {
+            if (contextValues.Body != null)
+            {
+                return;
+            }
+
             var useFormValues = !String.IsNullOrEmpty(contextValues.BodyString);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
             var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };

@@ -1,51 +1,39 @@
-﻿namespace Nancy.Tests
+﻿namespace Nancy.Testing
 {
     using System;
     using System.IO;
     using System.Text;
 
+    /// <summary>
+    /// Contains the functionality for setting up a multipart/form-data encoded request body that should be used by an <see cref="Browser"/> instance.
+    /// </summary>
     public class BrowserContextMultipartFormData
     {
-        private readonly string Boundary = "--NancyMultiPartBoundary123124";
+        private const string Boundary = "--NancyMultiPartBoundary123124";
 
-        public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> closure)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserContextMultipartFormData"/> class.
+        /// </summary>
+        /// <param name="configuration">The configuration that should be used to create the multipart/form-data encoded data.</param>
+        public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> configuration)
         {
             this.Body = new MemoryStream();
 
             var configurator =
-                new BrowserContextMultipartFormDataConfigurator(this.Body, this.Boundary);
+                new BrowserContextMultipartFormDataConfigurator(this.Body, Boundary);
 
-            closure.Invoke(configurator);
+            configuration.Invoke(configurator);
             this.TerminateBoundary();
             this.Body.Position = 0;
 
-            var content =
-                (new StreamReader(this.Body)).ReadToEnd();
-
             this.Body.Position = 0;
-            var ffg = 10;
         }
 
+        /// <summary>
+        /// Gets the <see cref="Stream"/> that should be used by the HTTP request to pass in the multipart/form-data encoded values.
+        /// </summary>
+        /// <value>A <see cref="Stream"/> that contains the multipart/form-data encoded values.</value>
         public Stream Body { get; private set; }
-
-        private void InitializeBoundary()
-        {
-            // 
-            var builder = new StringBuilder();
-
-            builder.Append('\r');
-            builder.Append('\n');
-            builder.AppendFormat(@"Content-Type: multipart/form-data; boundary={0}", this.Boundary.Substring(6));
-            builder.Append('\r');
-            builder.Append('\n');
-            builder.Append('\r');
-            builder.Append('\n'); 
-
-            var encodedHeaders =
-                Encoding.ASCII.GetBytes(builder.ToString());
-
-            this.Body.Write(encodedHeaders, 0, encodedHeaders.Length);
-        }
 
         private void TerminateBoundary()
         {
@@ -53,7 +41,7 @@
 
             builder.Append('\r');
             builder.Append('\n');
-            builder.Append(this.Boundary);
+            builder.Append(Boundary);
             builder.Append("--");
 
             var encodedHeaders =
@@ -62,17 +50,32 @@
             this.Body.Write(encodedHeaders, 0, encodedHeaders.Length);
         }
 
+        /// <summary>
+        /// Provides an API for configuring a multipart/form-data encoded request body.
+        /// </summary>
         public class BrowserContextMultipartFormDataConfigurator
         {
             private readonly Stream body;
             private readonly string boundary;
 
+            /// <summary>
+            /// Initializes a new instance of the <see cref="BrowserContextMultipartFormDataConfigurator"/> class.
+            /// </summary>
+            /// <param name="body">The <see cref="Stream"/> that the values should be written to.</param>
+            /// <param name="boundary">The multipart/form-data boundary that should be used in the request body.</param>
             public BrowserContextMultipartFormDataConfigurator(Stream body, string boundary)
             {
                 this.body = body;
                 this.boundary = boundary;
             }
 
+            /// <summary>
+            /// Adds a file to the request body.
+            /// </summary>
+            /// <param name="name">The name of the file http element that was used to upload the file.</param>
+            /// <param name="fileName">Name of the file.</param>
+            /// <param name="contentType">The mime type of file.</param>
+            /// <param name="file">The content of the file</param>
             public void AddFile(string name, string fileName, string contentType, Stream file)
             {
                 this.AddFileHeaders(name, fileName, contentType);

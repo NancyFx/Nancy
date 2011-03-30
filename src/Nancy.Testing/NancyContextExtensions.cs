@@ -2,10 +2,18 @@ namespace Nancy.Testing
 {
     using System.IO;
 
-    public static class ContextExtensions
+    /// <summary>
+    /// Defines extensions for the <see cref="NancyContext"/> type.
+    /// </summary>
+    public static class NancyContextExtensions
     {
         private const string DOCUMENT_WRAPPER_KEY_NAME = "@@@@DOCUMENT_WRAPPER@@@@";
 
+        /// <summary>
+        /// Returns the HTTP response body, of the specified <see cref="NancyContext"/>, wrapped in an <see cref="DocumentWrapper"/> instance.
+        /// </summary>
+        /// <param name="context">The <see cref="NancyContext"/> instance that the HTTP response body should be retrieved from.</param>
+        /// <returns>A <see cref="DocumentWrapper"/> instance, wrapping the HTTP response body of the context.</returns>
         public static DocumentWrapper DocumentBody(this NancyContext context)
         {
             // We only really want to generate this once, so we'll stick it in the context

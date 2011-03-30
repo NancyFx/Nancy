@@ -5,7 +5,7 @@
     using System.IO;
 
     /// <summary>
-    /// 
+    /// Defines the context that a <see cref="Browser"/> instance should run under.
     /// </summary>
     public class BrowserContext : IBrowserContextValues
     {
@@ -64,6 +64,25 @@
         }
 
         /// <summary>
+        /// Adds an application/x-www-form-urlencoded form value.
+        /// </summary>
+        /// <param name="key">The name of the form element.</param>
+        /// <param name="value">The value of the form element.</param>
+        public void FormValue(string key, string value)
+        {
+            if (!String.IsNullOrEmpty(this.Values.BodyString))
+            {
+                throw new InvalidOperationException("Form value cannot be set as well as body string");
+            }
+
+            this.Values.FormValues += String.Format(
+                "{0}{1}={2}",
+                this.Values.FormValues.Length == 0 ? String.Empty : "&",
+                key,
+                value);
+        }
+
+        /// <summary>
         /// Adds a header to the HTTP request.
         /// </summary>
         /// <param name="name">The name of the header.</param>
@@ -112,20 +131,6 @@
         private IBrowserContextValues Values
         {
             get { return this; }
-        }
-
-        public void FormValue(string key, string value)
-        {
-            if (!String.IsNullOrEmpty(this.Values.BodyString))
-            {
-                throw new InvalidOperationException("Form value cannot be set as well as body string");
-            }
-
-            this.Values.FormValues += String.Format(
-                "{0}{1}={2}",
-                this.Values.FormValues.Length == 0 ? String.Empty : "&", 
-                key,
-                value);
         }
     }
 }

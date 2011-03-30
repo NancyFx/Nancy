@@ -1,9 +1,18 @@
 namespace Nancy.Testing
 {
     using System;
-
+    
+    /// <summary>
+    /// Defines extensions for the <see cref="BrowserResponse"/> type.
+    /// </summary>
     public static class BrowserResponseExtensions
     {
+        /// <summary>
+        /// Asserts that a redirect to a certain location took place.
+        /// </summary>
+        /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
+        /// <param name="location">The location that should have been redirected to.</param>
+        /// <param name="stringComparer">The string comparer that should be used by the assertion. The default value is <see cref="StringComparison.InvariantCulture"/>.</param>
         public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location, StringComparison stringComparer = StringComparison.InvariantCulture)
         {
             if (response.StatusCode != HttpStatusCode.SeeOther)

@@ -52,7 +52,6 @@
     <Compile Include="LoginFixture.cs" />
     <Compile Include="Properties\SharedAssemblyInfo.cs" />
     <Compile Include="TestBootstrapper.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>

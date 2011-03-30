@@ -4,7 +4,10 @@ namespace Nancy.Testing
     using System.Linq;
     using Xunit;
 
-    public static class TestExtensions
+    /// <summary>
+    /// Defines assert extensions for HTML validation.
+    /// </summary>
+    public static class AssertExtensions
     {
         /// <summary>
         /// Asserts that an element should exist at least once

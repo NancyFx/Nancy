@@ -4,7 +4,7 @@
     using System.IO;
 
     /// <summary>
-    /// 
+    /// Provides an API ontop of <see cref="BrowserContext"/> for extracting values.
     /// </summary>
     public interface IBrowserContextValues : IHideObjectMembers
     {

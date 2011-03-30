@@ -1,7 +1,7 @@
 namespace Nancy.Testing.Fakes
 {
     /// <summary>
-    /// Fake root path provider - set the static RootPath property
+    /// Fake root path provider - set the static <see cref="RootPath"/> property
     /// </summary>
     public class FakeRootPathProvider : IRootPathProvider
     {

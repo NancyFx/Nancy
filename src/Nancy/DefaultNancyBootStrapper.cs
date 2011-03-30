@@ -86,7 +86,7 @@
         /// Registers all modules in the container as multi-instance
         /// </summary>
         /// <param name="moduleRegistrations">NancyModule registration types</param>
-        protected sealed override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
+        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
         {
             foreach (var registrationType in moduleRegistrations)
             {
@@ -97,7 +97,7 @@
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected sealed override void RegisterDefaults(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterDefaults(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
         {
             existingContainer.Register<INancyModuleCatalog>(this);
 
