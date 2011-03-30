@@ -23,7 +23,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         /// <returns>True if conversion supported, false otherwise</returns>
         public bool CanConvertTo(Type destinationType)
         {
-            return typeof(IEnumerable).IsAssignableFrom(destinationType);
+            return IsCollection(destinationType) || IsEnumerable(destinationType) || IsArray(destinationType);
         }
 
         /// <summary>
