@@ -79,7 +79,6 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="QueryWrapper.cs" />
     <Compile Include="AssertExtensions.cs" />
-    <Compile Include="IBrowserContextValues.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

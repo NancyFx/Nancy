@@ -64,7 +64,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AndConnectorTests.cs" />
-    <Compile Include="BrowserFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
     <Compile Include="DocumentWrapperTests.cs" />
     <Compile Include="PathHelperTests.cs" />
