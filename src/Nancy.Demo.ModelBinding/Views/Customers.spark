@@ -5,6 +5,7 @@
   </head>
   <body>
     <h1>Customers</h1>
+    <p>Customer is added twice, one using the dynamic binder adapter, the other using the generic one.</p>
     <p>Current customers:</p>
     <ul>
       <li each="var v in Model">

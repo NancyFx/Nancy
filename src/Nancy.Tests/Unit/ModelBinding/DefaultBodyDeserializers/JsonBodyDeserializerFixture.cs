@@ -2,9 +2,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System;
     using System.IO;
+    using System.Linq;
     using System.Text;
 
     using Nancy.Json;
+    using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
 
     using Xunit;
@@ -25,7 +27,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 {
                     IntProperty = 12,
                     StringProperty = "More cowbell",
-                    DateProperty = DateTime.Now,
+                    DateProperty = DateTime.Parse("2011/12/25"),
                     ArrayProperty = new[] { "Ping", "Pong" }
                 };
 
@@ -87,16 +89,41 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public void Should_deserialize_json_model()
         {
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
-            
+            var context = new BindingContext()
+                              {
+                                  DestinationType = typeof(TestModel),
+                                  ValidModelProperties = typeof(TestModel).GetProperties(),
+                              };
+
             var result = (TestModel)this.deserialize.Deserialize(
                             "application/json", 
-                            typeof(TestModel), 
                             bodyStream, 
-                            null);
+                            context);
 
             result.ShouldNotBeNull();
             result.ShouldBeOfType(typeof(TestModel));
             result.ShouldEqual(this.testModel);
+        }
+
+        [Fact]
+        public void Should_only_set_allowed_properties()
+        {
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties().Where(p => !(p.Name == "ArrayProperty" || p.Name == "DateProperty")),
+            };
+
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/json",
+                            bodyStream,
+                            context);
+
+            result.StringProperty.ShouldEqual(this.testModel.StringProperty);
+            result.IntProperty.ShouldEqual(this.testModel.IntProperty);
+            result.ArrayProperty.ShouldBeNull();
+            result.DateProperty.ShouldEqual(default(DateTime));
         }
 
         public class TestModel : IEquatable<TestModel>
@@ -115,11 +142,16 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, other))
                 {
                     return true;
                 }
-                return Equals(other.StringProperty, this.StringProperty) && other.IntProperty == this.IntProperty && other.DateProperty.Equals(this.DateProperty) && Equals(other.ArrayProperty, this.ArrayProperty);
+
+                return other.StringProperty == this.StringProperty &&
+                       other.IntProperty == this.IntProperty &&
+                       !other.ArrayProperty.Except(this.ArrayProperty).Any() &&
+                       other.DateProperty.ToShortDateString() == this.DateProperty.ToShortDateString();
             }
 
             public override bool Equals(object obj)
@@ -128,14 +160,17 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 {
                     return false;
                 }
+
                 if (ReferenceEquals(this, obj))
                 {
                     return true;
                 }
+
                 if (obj.GetType() != typeof(TestModel))
                 {
                     return false;
                 }
+
                 return Equals((TestModel)obj);
             }
 
