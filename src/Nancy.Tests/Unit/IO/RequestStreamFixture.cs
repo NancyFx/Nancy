@@ -21,6 +21,32 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
+        public void Should_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_enabled()
+        {
+            // Given
+            var stream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+
+            // When
+            var result = RequestStream.FromStream(stream, 0, 4, false);
+
+            // Then
+            result.IsInMemory.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_not_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_disabled()
+        {
+            // Given
+            var stream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+
+            // When
+            var result = RequestStream.FromStream(stream, 0, 4, true);
+
+            // Then
+            result.IsInMemory.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_throw_invalidoperationexception_when_created_with_non_readable_stream()
         {
             // Given
@@ -139,7 +165,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Length).Returns(1234L);
-            var request = RequestStream.FromStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 1235, false);
 
             // When
             var result = request.Length;
@@ -167,7 +193,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             A.CallTo(() => this.stream.Length).Returns(2000L);
-            var request = RequestStream.FromStream(this.stream, 0, 1, false);
+            var request = RequestStream.FromStream(this.stream, 0, 2001, false);
 
             // When
             request.Position = 1234L;

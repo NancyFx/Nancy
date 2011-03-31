@@ -59,14 +59,12 @@
             this.disableStreamSwitching = disableStreamSwitching;
             this.stream = stream ?? this.CreateDefaultMemoryStream(expectedLength);
 
-            ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);            
+            ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            if (expectedLength >= this.thresholdLength)
-            {
-                this.MoveStreamContentsToFileStream();
-            } else if (!this.stream.CanSeek) {
-                this.MoveStreamContentsToMemoryStream();
-            }
+            this.EnsureStreamIsSeekable();
+            this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength);
+            this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled(thresholdLength, this.stream);
+
             this.stream.Position = 0;
         }
 
@@ -323,20 +321,47 @@
             return CreateTemporaryFileStream();
         }
 
+        private void EnsureStreamIsSeekable()
+        {
+            if (!this.stream.CanSeek)
+            {
+                this.MoveStreamContentsToMemoryStream();
+            }
+        }
+
+        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled(long thresholdLength, Stream stream)
+        {
+            if ((stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+            {
+                this.MoveStreamContentsToFileStream();
+            }
+        }
+
+        private void MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(long expectedLength)
+        {
+            if (expectedLength >= this.thresholdLength)
+            {
+                this.MoveStreamContentsToFileStream();
+            }
+        }
+
         private void MoveStreamContentsToFileStream()
         {            
             MoveStreamContentsInto(CreateTemporaryFileStream());
         }        
 
-        private void MoveStreamContentsToMemoryStream() {
+        private void MoveStreamContentsToMemoryStream()
+        {
             MoveStreamContentsInto(new MemoryStream());
         }
 
-        private void MoveStreamContentsInto(Stream target) {
+        private void MoveStreamContentsInto(Stream target)
+        {
             if (this.disableStreamSwitching)
             {
                 return;
             }
+
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
                 this.stream.Close();
@@ -350,7 +375,6 @@
                 this.stream.Flush();
             }
             
-
             target.Position = 0;
             this.stream = target;
         }
