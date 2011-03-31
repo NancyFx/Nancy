@@ -71,7 +71,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -86,7 +86,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }
 
@@ -110,7 +110,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var modelObject = new object();
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
-            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments().Returns(modelObject);
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
@@ -208,7 +208,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+            A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -243,9 +243,9 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             binder.Bind(context, this.GetType());
 
-            A.CallTo(() => userDeserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+            A.CallTo(() => userDeserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => defaultDeserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+            A.CallTo(() => defaultDeserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }
 

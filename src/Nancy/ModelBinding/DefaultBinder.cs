@@ -56,14 +56,14 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType, params string[] blackList)
         {
-            var result = this.DeserializeRequestBody(context, modelType, blackList);
-
-            if (result != null)
-            {
-                return result;
-            }
-
             var bindingContext = this.CreateBindingContext(context, modelType, blackList);
+
+            var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
+
+            if (bodyDeserializedModel != null)
+            {
+                return bodyDeserializedModel;
+            }
 
             foreach (var modelProperty in bindingContext.ValidModelProperties)
             {
@@ -141,25 +141,25 @@ namespace Nancy.ModelBinding
             return context.FormFields.ContainsKey(propertyName) ? context.FormFields[propertyName] : String.Empty;
         }
 
-        private object DeserializeRequestBody(NancyContext context, Type modelType, string[] blackList)
+        private object DeserializeRequestBody(BindingContext context)
         {
-            if (context == null || context.Request == null)
+            if (context.Context == null || context.Context.Request == null)
             {
                 return null;
             }
 
-            var contentType = this.GetRequestContentType(context);
+            var contentType = this.GetRequestContentType(context.Context);
             var bodyDeserializer = this.bodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
 
             if (bodyDeserializer != null)
             {
-                return bodyDeserializer.Deserialize(contentType, modelType, context.Request.Body, context);
+                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
         
             bodyDeserializer = this.defaults.DefaultBodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
             if (bodyDeserializer != null)
             {
-                return bodyDeserializer.Deserialize(contentType, modelType, context.Request.Body, context);
+                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
 
             return null;
