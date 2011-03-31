@@ -1,0 +1,26 @@
+<html>
+  <head>
+     <title>JSON Post Test</title>
+     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+     <script type="text/javascript">
+         $(function () {
+             var dat = "{\"Name\":\"This is the name\", \"Address\":\"This is the address\"}";
+
+             alert("POSTing the following data to /bindjson:\n\n" + dat);
+
+             $.ajax({
+                 type: "POST",
+                 url: "/bindjson",
+                 contentType: "application/json",
+                 data: dat,
+                 success: function (data) {
+                     alert("Response:\n" + data);
+                 }
+             });
+         });
+     </script>
+  </head>
+  <body>
+    JSON Post
+  </body>
+</html>

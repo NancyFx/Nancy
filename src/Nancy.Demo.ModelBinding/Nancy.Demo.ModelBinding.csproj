@@ -51,6 +51,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\PostJson.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -66,10 +67,12 @@
     <Compile Include="CustomersModule.cs" />
     <Compile Include="Database\DB.cs" />
     <Compile Include="EventsModule.cs" />
+    <Compile Include="JsonModule.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="ModelBinders\CustomerModelBinder.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Event.cs" />
+    <Compile Include="Models\User.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Customers.spark" />
