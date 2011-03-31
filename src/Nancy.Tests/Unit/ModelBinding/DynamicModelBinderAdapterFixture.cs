@@ -31,7 +31,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>.Ignored, A<Type>.Ignored)).Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored)).Returns(fakeModelBinder);
             dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
@@ -46,7 +46,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>.Ignored, A<Type>.Ignored)).Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored)).Returns(fakeModelBinder);
             dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
@@ -61,7 +61,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>.Ignored, A<Type>.Ignored)).Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored)).Returns(fakeModelBinder);
             dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());

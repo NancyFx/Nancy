@@ -5,7 +5,7 @@ using StructureMap;
 namespace Nancy.Bootstrappers.StructureMap
 {
     using System;
-
+    using ModelBinding;
     using Nancy.ViewEngines;
 
     public abstract class StructureMapNancyBootstrapper : NancyBootstrapperBase<IContainer>, INancyBootstrapperPerRequestRegistration<IContainer>, INancyModuleCatalog
@@ -40,6 +40,17 @@ namespace Nancy.Bootstrappers.StructureMap
         protected override void ConfigureApplicationContainer(IContainer existingContainer)
         {
             base.ConfigureApplicationContainer(existingContainer);
+        }
+
+        protected override void RegisterModelBinders(IContainer container, IEnumerable<Type> modelBinderTypes)
+        {
+            _Container.Configure(registry =>
+            {
+                foreach (var modelBinder in modelBinderTypes)
+                {
+                    registry.For(typeof(IModelBinder)).LifecycleIs(InstanceScope.Singleton).Use(modelBinder);
+                }
+            });
         }
 
         protected override void RegisterViewSourceProviders(IContainer container, IEnumerable<Type> viewSourceProviderTypes)

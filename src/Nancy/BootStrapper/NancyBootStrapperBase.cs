@@ -118,12 +118,17 @@
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultModelBinder { get { return typeof(DefaultBinder); } }
+        protected virtual Type DefaultBinder { get { return typeof(DefaultBinder); } }
 
         /// <summary>
         /// Type passed into RegisterDefaults - override this to switch out default implementations
         /// </summary>
-        protected virtual Type DefaultBindingDefaults { get { return typeof(BindingDefaults); } } 
+        protected virtual Type DefaultBindingDefaults { get { return typeof(BindingDefaults); } }
+
+        /// <summary>
+        /// Type passed into RegisterDefaults - override this to switch out default implementations
+        /// </summary>
+        protected virtual Type DefaultFieldNameConverter { get { return typeof(DefaultFieldNameConverter); } }
 
         /// <summary>
         /// <para>
@@ -203,8 +208,9 @@
                 new TypeRegistration(typeof(INancyModuleBuilder), DefaultNancyModuleBuilder),
                 new TypeRegistration(typeof(IResponseFormatter), DefaultResponseFormatter),
                 new TypeRegistration(typeof(IModelBinderLocator), DefaultModelBinderLocator), 
-                new TypeRegistration(typeof(IBinder), DefaultModelBinder), 
+                new TypeRegistration(typeof(IBinder), this.DefaultBinder), 
                 new TypeRegistration(typeof(BindingDefaults), DefaultBindingDefaults), 
+                new TypeRegistration(typeof(IFieldNameConverter), DefaultFieldNameConverter), 
             };
         }
 

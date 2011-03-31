@@ -6,6 +6,9 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
     using System.Reflection;
     using Json;
 
+    /// <summary>
+    /// Deserializes request bodies in JSON format
+    /// </summary>
     public class JsonBodyDeserializer : IBodyDeserializer
     {
         private readonly MethodInfo deserializeMethod = typeof(JavaScriptSerializer).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
@@ -17,7 +20,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>True if supported, false otherwise</returns>
         public bool CanDeserialize(string contentType)
         {
-            return IsJsonType(contentType);
+            return this.IsJsonType(contentType);
         }
 
         /// <summary>
@@ -75,8 +78,8 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         ///   application/vnd[something]+json
         /// Matches are case insentitive to try and be as "accepting" as possible.
         /// </summary>
-        /// <param name="contentType"></param>
-        /// <returns></returns>
+        /// <param name="contentType">Request content type</param>
+        /// <returns>True if content type is JSON, false otherwise</returns>
         private bool IsJsonType(string contentType)
         {
             if (String.IsNullOrEmpty(contentType))
@@ -88,8 +91,8 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
                    contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                    contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
+                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

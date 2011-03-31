@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Provides fallback for binding an incoming request, via the context, to a model type
+    /// Binds incoming request data to a model type
     /// </summary>
     public interface IBinder
     {

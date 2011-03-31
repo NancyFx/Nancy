@@ -4,7 +4,7 @@ namespace Nancy.ModelBinding
 
     /// <summary>
     /// Provides a way to convert from the incoming string representation
-    /// of a type to the type itself. Useful for things like datetimes.
+    /// of a type to the type itself.
     /// </summary>
     public interface ITypeConverter
     {

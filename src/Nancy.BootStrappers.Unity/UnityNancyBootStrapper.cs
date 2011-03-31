@@ -62,6 +62,14 @@
             }
         }
 
+        protected override void RegisterModelBinders(IUnityContainer container, IEnumerable<Type> modelBinderTypes)
+        {
+            foreach (var modelBinder in modelBinderTypes)
+            {
+                unityContainer.RegisterType(typeof(IModelBinder), modelBinder, new ContainerControlledLifetimeManager());
+            }
+        }
+
         /// <summary>
         ///   Register the given module types into the container
         /// </summary>
@@ -95,6 +103,8 @@
             container.RegisterType(typeof(IEnumerable<IViewSourceProvider>), typeof(UnityEnumerableShim<IViewSourceProvider>));
             container.RegisterType(typeof(IEnumerable<IViewEngine>), typeof(UnityEnumerableShim<IViewEngine>));
             container.RegisterType(typeof(IEnumerable<IModelBinder>), typeof(UnityEnumerableShim<IModelBinder>));
+            container.RegisterType(typeof(IEnumerable<ITypeConverter>), typeof(UnityEnumerableShim<ITypeConverter>));
+            container.RegisterType(typeof(IEnumerable<IBodyDeserializer>), typeof(UnityEnumerableShim<IBodyDeserializer>));
         }
 
         /// <summary>

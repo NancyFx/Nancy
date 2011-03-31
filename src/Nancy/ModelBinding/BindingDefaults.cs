@@ -2,8 +2,8 @@ namespace Nancy.ModelBinding
 {
     using System.Collections.Generic;
 
-    using Nancy.ModelBinding.DefaultBodyDeserializers;
-    using Nancy.ModelBinding.DefaultConverters;
+    using DefaultBodyDeserializers;
+    using DefaultConverters;
 
     /// <summary>
     /// Provides default binding converters/deserializers
@@ -11,11 +11,18 @@ namespace Nancy.ModelBinding
     /// </summary>
     public class BindingDefaults
     {
+        private readonly IEnumerable<ITypeConverter> defaultTypeConverters;
+
+        private readonly IEnumerable<IBodyDeserializer> defaultBodyDeserializers;
+
         /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
+        /// Initializes a new instance of the <see cref="BindingDefaults"/> class.
         /// </summary>
         public BindingDefaults()
         {
+            // Ordering is important - for now we will new just these up
+            // as the binding defaults class itself is replacable if necessary,
+            // and none of defaults have any dependencies.
             this.defaultTypeConverters = new ITypeConverter[]
                 {
                     new CollectionConverter(),
@@ -27,10 +34,6 @@ namespace Nancy.ModelBinding
                     new JsonBodyDeserializer(),
                 };
         }
-
-        private readonly IEnumerable<ITypeConverter> defaultTypeConverters;
-
-        private readonly IEnumerable<IBodyDeserializer> defaultBodyDeserializers;
 
         /// <summary>
         /// Gets the default type converters
