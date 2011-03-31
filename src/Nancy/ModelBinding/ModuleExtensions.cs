@@ -6,10 +6,11 @@ namespace Nancy.ModelBinding
         /// Bind the incoming request to a model
         /// </summary>
         /// <param name="module">Current module</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
         /// <returns>Model adapter - cast to a model type to bind it</returns>
-        public static dynamic Bind(this NancyModule module)
+        public static dynamic Bind(this NancyModule module, params string[] blacklistedProperties)
         {
-            return new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context);
+            return new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context, blacklistedProperties);
         }
 
         /// <summary>
@@ -17,10 +18,11 @@ namespace Nancy.ModelBinding
         /// </summary>
         /// <typeparam name="TModel">Model type</typeparam>
         /// <param name="module">Current module</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
         /// <returns>Bound model instance</returns>
-        public static TModel Bind<TModel>(this NancyModule module)
+        public static TModel Bind<TModel>(this NancyModule module, params string[] blacklistedProperties)
         {
-            return (TModel)module.Bind();
+            return (TModel)module.Bind(blacklistedProperties);
         }
     }
 }

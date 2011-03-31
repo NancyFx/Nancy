@@ -5,6 +5,8 @@
   </head>
   <body>
     <h1>Events</h1>
+    <p>Event is added twice, one using the dynamic binder adapter, the other using the generic one.</p>
+    <p>The second one has 'Location' marked as blacklisted so should appear as 'Default'</p>
     <p>Current events:</p>
     <ul>
       <li each="var v in Model">

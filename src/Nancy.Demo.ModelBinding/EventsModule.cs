@@ -20,7 +20,7 @@ namespace Nancy.Demo.ModelBinding
             Post["/"] = x =>
                 {
                     Event model = this.Bind();
-                    var model2 = this.Bind<Event>();
+                    var model2 = this.Bind<Event>("Location"); // Blacklist location
 
                     DB.Events.Add(model);
                     DB.Events.Add(model2);
