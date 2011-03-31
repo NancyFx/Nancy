@@ -1,7 +1,7 @@
 ﻿namespace Nancy.ModelBinding
 {
     /// <summary>
-    /// Provides the capability to suppl a convention to
+    /// Provides the capability to supply a convention to
     /// convert form field names to property names if required.
     /// </summary>
     public interface IFieldNameConverter

@@ -1,6 +1,5 @@
 namespace Nancy.ModelBinding
 {
-    using System;
     using System.IO;
 
     /// <summary>

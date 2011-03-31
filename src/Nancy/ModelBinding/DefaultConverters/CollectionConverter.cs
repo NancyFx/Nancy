@@ -1,9 +1,7 @@
 namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
 
@@ -43,19 +41,20 @@ namespace Nancy.ModelBinding.DefaultConverters
 
             var items = input.Split(',');
 
-            if (IsCollection(destinationType))
+            // Strategy, schmategy ;-)
+            if (this.IsCollection(destinationType))
             {
-                return ConvertCollection(items, destinationType, context);
+                return this.ConvertCollection(items, destinationType, context);
             }
 
-            if (IsArray(destinationType))
+            if (this.IsArray(destinationType))
             {
-                return ConvertArray(items, destinationType, context);
+                return this.ConvertArray(items, destinationType, context);
             }
 
-            if (IsEnumerable(destinationType))
+            if (this.IsEnumerable(destinationType))
             {
-                return ConvertEnumerable(items, destinationType, context);
+                return this.ConvertEnumerable(items, destinationType, context);
             }
 
             return null;

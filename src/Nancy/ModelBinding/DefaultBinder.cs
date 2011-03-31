@@ -86,13 +86,14 @@ namespace Nancy.ModelBinding
                     DestinationType = modelType,
                     Model = this.CreateModel(modelType),
                     ValidModelProperties = this.GetProperties(modelType, blackList),
-                    FormFields = this.GetFormFields(context),
+                    RequestData = this.GetDataFields(context),
                     TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
                 };
         }
 
-        private IDictionary<string, string> GetFormFields(NancyContext context)
+        private IDictionary<string, string> GetDataFields(NancyContext context)
         {
+            // TODO - should we get querystring and captured variables too?
             var formDictionary = (DynamicDictionary)context.Request.Form;
 
             return formDictionary.GetDynamicMemberNames().ToDictionary(
@@ -137,8 +138,7 @@ namespace Nancy.ModelBinding
 
         private string GetValue(string propertyName, BindingContext context)
         {
-            // TODO - check captured variables too if possible?
-            return context.FormFields.ContainsKey(propertyName) ? context.FormFields[propertyName] : String.Empty;
+            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
         }
 
         private object DeserializeRequestBody(BindingContext context)
