@@ -105,7 +105,7 @@ namespace Nancy.ModelBinding
             var destinationType = modelProperty.PropertyType;
 
             var typeConverter =
-                this.typeConverters.Where(c => c.CanConvertTo(destinationType)).FirstOrDefault();
+                context.TypeConverters.Where(c => c.CanConvertTo(destinationType)).FirstOrDefault();
 
             if (typeConverter != null)
             {

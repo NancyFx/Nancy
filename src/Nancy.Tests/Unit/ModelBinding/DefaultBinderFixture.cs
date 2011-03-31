@@ -199,13 +199,34 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_use_default_body_deserializer_if_one_found()
         {
-            throw new NotImplementedException();
+            var deserializer = A.Fake<IBodyDeserializer>();
+            A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
+            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { deserializer });
+            var binder = this.GetBinder();
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
+
+            binder.Bind(context, this.GetType());
+
+            A.CallTo(() => deserializer.Deserialize(null, null, null, null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Should_use_default_type_converter_if_one_found()
         {
-            throw new NotImplementedException();
+            var typeConverter = A.Fake<ITypeConverter>();
+            A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
+            A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { typeConverter });
+            var binder = this.GetBinder();
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+
+            binder.Bind(context, typeof(TestModel));
+
+            A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
