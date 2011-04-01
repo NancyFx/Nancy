@@ -184,6 +184,8 @@
             RegisterViewEngines(this.ApplicationContainer, GetViewEngineTypes());
             RegisterViewSourceProviders(this.ApplicationContainer, GetViewSourceProviders());
             RegisterModelBinders(this.ApplicationContainer, GetModelBinders());
+            RegisterTypeConverters(this.ApplicationContainer, GetTypeConverters());
+            RegisterBodyDeserializers(this.ApplicationContainer, GetBodyDeserializers());
 
             var engine = GetEngineInternal();
             engine.PreRequestHook = this.BeforeRequest;
@@ -282,6 +284,40 @@
         }
 
         /// <summary>
+        /// Get all type converters
+        /// </summary>
+        /// <returns>Enumerable of types that implement IModelBinder</returns>
+        protected virtual IEnumerable<Type> GetTypeConverters()
+        {
+            var nancyAssembly = typeof(NancyEngine).Assembly;
+
+            var typeConverters =
+                from type in AppDomainAssemblyTypeScanner.Types
+                where type.Assembly != nancyAssembly
+                where typeof(ITypeConverter).IsAssignableFrom(type)
+                select type;
+
+            return typeConverters;
+        }
+
+        /// <summary>
+        /// Get all body deserializers
+        /// </summary>
+        /// <returns>Enumerable of types that implement IBodyDeserializer</returns>
+        protected virtual IEnumerable<Type> GetBodyDeserializers()
+        {
+            var nancyAssembly = typeof(NancyEngine).Assembly;
+
+            var bodyDeserializers =
+                from type in AppDomainAssemblyTypeScanner.Types
+                where type.Assembly != nancyAssembly
+                where typeof(IBodyDeserializer).IsAssignableFrom(type)
+                select type;
+
+            return bodyDeserializers;
+        }
+
+        /// <summary>
         /// Register the view source providers into the container
         /// </summary>
         /// <param name="container">Container instance</param>
@@ -294,6 +330,20 @@
         /// <param name="container">Container instance</param>
         /// <param name="modelBinderTypes">Enumerable of types that implement IModelBinder</param>
         protected abstract void RegisterModelBinders(TContainer container, IEnumerable<Type> modelBinderTypes);
+
+        /// <summary>
+        /// Register the type converters into the container
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        /// <param name="typeConverterTypes">Enumerable of types that implement ITypeConverter</param>
+        protected abstract void RegisterTypeConverters(TContainer container, IEnumerable<Type> typeConverterTypes);
+
+        /// <summary>
+        /// Register the type converters into the container
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        /// <param name="bodyDeserializerTypes">Enumerable of types that implement IBodyDeserializer</param>
+        protected abstract void RegisterBodyDeserializers(TContainer container, IEnumerable<Type> bodyDeserializerTypes);
 
         /// <summary>
         /// Returns available NancyModule types

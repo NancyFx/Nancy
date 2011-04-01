@@ -25,6 +25,8 @@ namespace Nancy.Bootstrappers.Windsor
         private IEnumerable<Type> viewEngines;
         private IEnumerable<Type> viewSourceProviders;
         private IEnumerable<Type> modelBinders;
+        private IEnumerable<Type> typeConverters;
+        private IEnumerable<Type> bodyDeserializers;
 
         protected override sealed INancyEngine GetEngineInternal()
         {
@@ -73,6 +75,16 @@ namespace Nancy.Bootstrappers.Windsor
         protected override void RegisterModelBinders(IWindsorContainer container, IEnumerable<Type> modelBinderTypes)
         {
             this.modelBinders = modelBinderTypes;
+        }
+
+        protected override void RegisterTypeConverters(IWindsorContainer container, IEnumerable<Type> typeConverterTypes)
+        {
+            this.typeConverters = typeConverterTypes;
+        }
+
+        protected override void RegisterBodyDeserializers(IWindsorContainer container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            this.bodyDeserializers = bodyDeserializerTypes;
         }
 
         protected override void RegisterViewSourceProviders(IWindsorContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
@@ -131,6 +143,8 @@ namespace Nancy.Bootstrappers.Windsor
                 RegisterViewEnginesInternal(childContainer, this.viewEngines);
                 RegisterViewSourceProvidersInternal(childContainer, this.viewSourceProviders);
                 RegisterModelBindersInternal(childContainer, this.modelBinders);
+                RegisterTypeConvertersInternal(childContainer, this.typeConverters);
+                RegisterBodyDeserializersInternal(childContainer, this.bodyDeserializers);
                 context.Items[CONTEXT_KEY] = childContainer;
             }
 
@@ -158,6 +172,24 @@ namespace Nancy.Bootstrappers.Windsor
         private static void RegisterModelBindersInternal(IWindsorContainer existingContainer, IEnumerable<Type> modelBinderTypes)
         {
             var components = modelBinderTypes.Select(r => Component.For(typeof(IModelBinder))
+                .ImplementedBy(r)
+                .LifeStyle.Singleton);
+
+            existingContainer.Register(components.ToArray());
+        }
+
+        private static void RegisterTypeConvertersInternal(IWindsorContainer existingContainer, IEnumerable<Type> typeConverterTypes)
+        {
+            var components = typeConverterTypes.Select(r => Component.For(typeof(ITypeConverter))
+                .ImplementedBy(r)
+                .LifeStyle.Singleton);
+
+            existingContainer.Register(components.ToArray());
+        }
+
+        private static void RegisterBodyDeserializersInternal(IWindsorContainer existingContainer, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            var components = bodyDeserializerTypes.Select(r => Component.For(typeof(IBodyDeserializer))
                 .ImplementedBy(r)
                 .LifeStyle.Singleton);
 

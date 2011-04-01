@@ -57,6 +57,16 @@
             this.container.RegisterMultiple<IModelBinder>(modelBinderTypes).AsSingleton();
         }
 
+        protected override void RegisterTypeConverters(TinyIoCContainer container, IEnumerable<Type> typeConverterTypes)
+        {
+            this.container.RegisterMultiple<ITypeConverter>(typeConverterTypes).AsSingleton();
+        }
+
+        protected override void RegisterBodyDeserializers(TinyIoCContainer container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            this.container.RegisterMultiple<IBodyDeserializer>(bodyDeserializerTypes).AsSingleton();
+        }
+
         /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.

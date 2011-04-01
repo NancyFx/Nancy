@@ -75,6 +75,22 @@
             }
         }
 
+        protected override void RegisterTypeConverters(IKernel container, IEnumerable<Type> typeConverterTypes)
+        {
+            foreach (var typeConverter in typeConverterTypes)
+            {
+                container.Bind(typeof(ITypeConverter)).To(typeConverter).InSingletonScope();
+            }
+        }
+
+        protected override void RegisterBodyDeserializers(IKernel container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            foreach (var bodyDeserializer in bodyDeserializerTypes)
+            {
+                container.Bind(typeof(IBodyDeserializer)).To(bodyDeserializer).InSingletonScope();
+            }
+        }
+
         /// <summary>
         ///   Register the given module types into the container
         /// </summary>

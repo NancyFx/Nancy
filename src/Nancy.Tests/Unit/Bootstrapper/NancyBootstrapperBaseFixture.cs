@@ -55,6 +55,14 @@
         {
         }
 
+        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
+        {
+        }
+
+        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+        }
+
         protected override object CreateContainer()
         {
             return FakeContainer;
@@ -112,6 +120,14 @@
         }
 
         protected override void RegisterModelBinders(object container, IEnumerable<Type> modelBinderTypes)
+        {
+        }
+
+        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
+        {
+        }
+
+        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
         {
         }
 

@@ -53,6 +53,28 @@ namespace Nancy.Bootstrappers.StructureMap
             });
         }
 
+        protected override void RegisterTypeConverters(IContainer container, IEnumerable<Type> typeConverterTypes)
+        {
+            _Container.Configure(registry =>
+            {
+                foreach (var typeConverter in typeConverterTypes)
+                {
+                    registry.For(typeof(ITypeConverter)).LifecycleIs(InstanceScope.Singleton).Use(typeConverter);
+                }
+            });
+        }
+
+        protected override void RegisterBodyDeserializers(IContainer container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            _Container.Configure(registry =>
+            {
+                foreach (var bodyDeserializer in bodyDeserializerTypes)
+                {
+                    registry.For(typeof(IBodyDeserializer)).LifecycleIs(InstanceScope.Singleton).Use(bodyDeserializer);
+                }
+            });
+        }
+
         protected override void RegisterViewSourceProviders(IContainer container, IEnumerable<Type> viewSourceProviderTypes)
         {
             _Container.Configure(registry =>

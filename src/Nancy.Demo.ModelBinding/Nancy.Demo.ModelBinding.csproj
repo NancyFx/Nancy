@@ -70,6 +70,7 @@
     <Compile Include="JsonModule.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="ModelBinders\CustomerModelBinder.cs" />
+    <Compile Include="ModelBindingBootstrapper.cs" />
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\User.cs" />

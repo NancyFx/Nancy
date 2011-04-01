@@ -70,6 +70,22 @@
             }
         }
 
+        protected override void RegisterTypeConverters(IUnityContainer container, IEnumerable<Type> typeConverterTypes)
+        {
+            foreach (var typeConverter in typeConverterTypes)
+            {
+                unityContainer.RegisterType(typeof(ITypeConverter), typeConverter, new ContainerControlledLifetimeManager());
+            }
+        }
+
+        protected override void RegisterBodyDeserializers(IUnityContainer container, IEnumerable<Type> bodyDeserializerTypes)
+        {
+            foreach (var bodyDeserializer in bodyDeserializerTypes)
+            {
+                unityContainer.RegisterType(typeof(IBodyDeserializer), bodyDeserializer, new ContainerControlledLifetimeManager());
+            }
+        }
+
         /// <summary>
         ///   Register the given module types into the container
         /// </summary>
