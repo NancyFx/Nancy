@@ -21,13 +21,26 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
+        public void Should_move_non_seekable_stream_into_seekable_stream_when_stream_switching_is_disabled()
+        {
+            // Given
+            A.CallTo(() => this.stream.CanSeek).Returns(false);
+
+            // When
+            var result = RequestStream.FromStream(stream, 0, 1, true);
+
+            // Then
+            result.CanSeek.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_enabled()
         {
             // Given
-            var stream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var inputStream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
             // When
-            var result = RequestStream.FromStream(stream, 0, 4, false);
+            var result = RequestStream.FromStream(inputStream, 0, 4, false);
 
             // Then
             result.IsInMemory.ShouldBeFalse();
@@ -37,10 +50,10 @@ namespace Nancy.Tests.Unit.IO
         public void Should_not_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_disabled()
         {
             // Given
-            var stream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var inputStream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
 
             // When
-            var result = RequestStream.FromStream(stream, 0, 4, true);
+            var result = RequestStream.FromStream(inputStream, 0, 4, true);
 
             // Then
             result.IsInMemory.ShouldBeTrue();

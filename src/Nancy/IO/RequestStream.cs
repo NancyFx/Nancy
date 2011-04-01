@@ -63,7 +63,7 @@
 
             this.EnsureStreamIsSeekable();
             this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength);
-            this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled(thresholdLength, this.stream);
+            this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
 
             this.stream.Position = 0;
         }
@@ -83,7 +83,7 @@
         /// <returns>Always returns <see langword="true"/>.</returns>
         public override bool CanSeek
         {
-            get { return true; }
+            get { return this.stream.CanSeek; }
         }
 
         /// <summary>
@@ -329,9 +329,9 @@
             }
         }
 
-        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled(long thresholdLength, Stream stream)
+        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
         {
-            if ((stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+            if ((this.stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
             {
                 this.MoveStreamContentsToFileStream();
             }
@@ -355,9 +355,14 @@
             MoveStreamContentsInto(new MemoryStream());
         }
 
+        private bool IsStreamSeekableAndSwitchingDisabled()
+        {
+            return this.disableStreamSwitching && this.stream.CanSeek;
+        }
+
         private void MoveStreamContentsInto(Stream target)
         {
-            if (this.disableStreamSwitching)
+            if (IsStreamSeekableAndSwitchingDisabled())
             {
                 return;
             }
