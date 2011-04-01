@@ -83,5 +83,17 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             output.ShouldNotBeNull();
             output.Count().ShouldEqual(3);
         }
+
+        [Fact]
+        public void IEnumerable_type_conversion_should_use_type_converter()
+        {
+            const string input = "one,two,three";
+            var mockContext = new BindingContext() { TypeConverters = new[] { this.mockStringTypeConverter } };
+
+            converter.Convert(input, typeof(IEnumerable<string>), mockContext);
+
+            A.CallTo(() => this.mockStringTypeConverter.Convert(null, null, null)).WithAnyArguments()
+                .MustHaveHappened(Repeated.Exactly.Times(3));
+        }
     }
 }

@@ -12,7 +12,7 @@ namespace Nancy.ModelBinding.DefaultConverters
     {
         private readonly MethodInfo enumerableCastMethod = typeof(Enumerable).GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
         private readonly MethodInfo enumerableToArrayMethod = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private readonly MethodInfo enumerableAsEnumerableMethod = typeof(Enumerable).GetMethod("AsEnumerable", BindingFlags.Public | BindingFlags.Static);
+        private readonly MethodInfo enumerableToListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
 
         /// <summary>
         /// Whether the converter can convert to the destination type
@@ -140,12 +140,14 @@ namespace Nancy.ModelBinding.DefaultConverters
 
             var returnArray = items.Select(s => converter.Convert(s, genericType, context));
 
+            // Use ToList rather than AsEnumerable to make sure the collection
+            // is materialised and converters are called as appropriate.
             var genericCastMethod = this.enumerableCastMethod.MakeGenericMethod(new[] { genericType });
-            var genericAsEnumerableMethod = this.enumerableAsEnumerableMethod.MakeGenericMethod(new[] { genericType });
+            var genericToListMethod = this.enumerableToListMethod.MakeGenericMethod(new[] { genericType });
 
             var castArray = genericCastMethod.Invoke(null, new object[] { returnArray });
 
-            return genericAsEnumerableMethod.Invoke(null, new[] { castArray });
+            return genericToListMethod.Invoke(null, new[] { castArray });
         }
     }
 }
