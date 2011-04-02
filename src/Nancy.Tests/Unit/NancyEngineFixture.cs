@@ -28,7 +28,7 @@ namespace Nancy.Tests.Unit
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
 
-            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
 
             this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory);
         }
@@ -130,7 +130,7 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, Response> preRequestHook = (ctx) => cachedResponse;
 
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
 
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
@@ -237,7 +237,7 @@ namespace Nancy.Tests.Unit
             
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
            
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
@@ -258,7 +258,7 @@ namespace Nancy.Tests.Unit
             Action<NancyContext> postHook = (ctx) => { executionOrder.Add("Posthook"); };
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
 
@@ -273,7 +273,7 @@ namespace Nancy.Tests.Unit
             var preResponse = new Response();
             Func<NancyContext, Response> preHook = (ctx) => preResponse;
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, null));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, null));
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
 
@@ -288,7 +288,7 @@ namespace Nancy.Tests.Unit
             var postResponse = new Response();
             Action<NancyContext> postHook = (ctx) => ctx.Response = postResponse;
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
 
@@ -302,7 +302,7 @@ namespace Nancy.Tests.Unit
         {
             Action<NancyContext> postHook = (ctx) => ctx.Items.Add("RoutePostReq", new object());
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             var request = new Request("GET", "/", "http");
 
@@ -334,7 +334,7 @@ namespace Nancy.Tests.Unit
             Action<NancyContext> routePostHook = (ctx) => { executionOrder.Add("Routeposthook"); };
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored.Argument)).Returns(new ResolveResult(route, DynamicDictionary.Empty, routePreHook, routePostHook));
+            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, routePreHook, routePostHook));
             var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
             localEngine.PostRequestHook = postHook;
             var request = new Request("GET", "/", "http");

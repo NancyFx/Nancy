@@ -44,7 +44,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             // Given
             this.formData.Add("_method", "DELETE");
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(new NancyContext() { Response = new Response() });
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
 
             // When
             this.handler.ProcessRequest(this.context);
@@ -58,7 +58,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         {
             // Given
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(new NancyContext() { Response = new Response() });
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
 
             // When
             this.handler.ProcessRequest(this.context);
@@ -94,7 +94,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             var nancyContext = new NancyContext() { Response = new Response() };
             nancyContext.Items.Add("Disposable", disposable);
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(nancyContext);
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);
 
             this.handler.ProcessRequest(this.context);
 
@@ -106,7 +106,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.request.AppRelativeCurrentExecutionFilePath).Returns("~/about");
             A.CallTo(() => this.request.Url).Returns(new Uri("http://ihatedummydata.com/about"));
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored.Argument)).Returns(nancyContext);
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);
         }
     }
 }

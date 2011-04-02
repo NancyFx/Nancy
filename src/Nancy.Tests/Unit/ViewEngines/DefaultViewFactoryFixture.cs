@@ -90,7 +90,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => this.locator.GetViewLocation("foo",
-                A<IEnumerable<string>>.That.IsSameSequenceAs(expectedViewEngineExtensions).Argument)).MustHaveHappened();
+                A<IEnumerable<string>>.That.IsSameSequenceAs(expectedViewEngineExtensions))).MustHaveHappened();
         }
 
         [Fact]
@@ -113,7 +113,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => this.locator.GetViewLocation("foo", 
-                A<IEnumerable<string>>.That.Matches(x => expectedViewEngineExtensions.All(y => x.Contains(y))).Argument)).MustHaveHappened();
+                A<IEnumerable<string>>.That.Matches(x => expectedViewEngineExtensions.All(y => x.Contains(y))))).MustHaveHappened();
         }
 
         [Fact]
@@ -126,7 +126,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var action = factory["viewname.html"];
 
             // Then)
-            A.CallTo(() => this.locator.GetViewLocation("viewname", A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
+            A.CallTo(() => this.locator.GetViewLocation("viewname", A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -134,7 +134,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             var factory = this.CreateFactory();
             
-            A.CallTo(() => this.locator.GetViewLocation(A<string>.Ignored, A<IEnumerable<string>>.Ignored.Argument)).Returns(null);
+            A.CallTo(() => this.locator.GetViewLocation(A<string>.Ignored, A<IEnumerable<string>>.Ignored)).Returns(null);
 
             var action = factory["foo"];
             var stream = new MemoryStream();
@@ -208,7 +208,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => this.locator.GetViewLocation(A<string>.Ignored,
-                A<IEnumerable<string>>.That.IsSameSequenceAs(expectedViewEngineExtensions).Argument)).MustHaveHappened();
+                A<IEnumerable<string>>.That.IsSameSequenceAs(expectedViewEngineExtensions))).MustHaveHappened();
         }
 
         [Fact]
@@ -224,7 +224,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "html" });
 
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
 
@@ -246,7 +246,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "HTML" });
 
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
 
@@ -262,7 +262,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var stream = new MemoryStream();
             var factory = this.CreateFactory();
@@ -289,7 +289,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Returns(actionReturnedFromEngine);
 
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
 
@@ -311,7 +311,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Throws(new Exception());
 
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var stream = new MemoryStream();
             var factory = this.CreateFactory(viewEngines);
@@ -336,7 +336,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Throws(new Exception());
 
             var location = new ViewLocationResult(string.Empty, "html", null);
-            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored.Argument)).Returns(location);
+            A.CallTo(() => this.locator.GetViewLocation("foo", A<IEnumerable<string>>.Ignored)).Returns(location);
 
             var model = new object();
             var factory = this.CreateFactory(viewEngines);
@@ -358,7 +358,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var action = factory[new object()];
 
             // Then
-            A.CallTo(() => this.locator.GetViewLocation("Object", A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
+            A.CallTo(() => this.locator.GetViewLocation("Object", A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -371,7 +371,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var action = factory[new ViewModel()];
 
             // Then
-            A.CallTo(() => this.locator.GetViewLocation("View", A<IEnumerable<string>>.Ignored.Argument)).MustHaveHappened();
+            A.CallTo(() => this.locator.GetViewLocation("View", A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
     }
 }

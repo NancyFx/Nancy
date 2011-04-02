@@ -519,7 +519,7 @@ namespace Nancy.Tests.Unit.IO
             // Given
             var asyncResult = A.Fake<IAsyncResult>();
             var request = RequestStream.FromStream(this.stream, 0, 10, true);
-            A.CallTo(() => this.stream.EndRead(A<IAsyncResult>.Ignored.Argument)).Returns(4);
+            A.CallTo(() => this.stream.EndRead(A<IAsyncResult>.Ignored)).Returns(4);
 
             // When
             var result = request.EndRead(asyncResult);
