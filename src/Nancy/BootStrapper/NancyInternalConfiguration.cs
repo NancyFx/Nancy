@@ -80,7 +80,14 @@ namespace Nancy.Bootstrapper
         {
             get
             {
-                return !this.GetTypeRegistations().Where(tr => tr.RegistrationType == null).Any();
+                try
+                {
+                    return !this.GetTypeRegistations().Where(tr => tr.RegistrationType == null).Any();
+                }
+                catch (ArgumentNullException)
+                {
+                    return false;
+                }
             }
         }
 

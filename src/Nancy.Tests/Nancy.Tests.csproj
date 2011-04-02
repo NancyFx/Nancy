@@ -70,6 +70,8 @@
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
     <Compile Include="Responses\ResponseConsistencyFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyInternalConfigurationFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\TypeRegistrationFixture.cs" />
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
