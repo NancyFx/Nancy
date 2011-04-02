@@ -124,6 +124,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [John Downey](http://github.com/jtdowney)
 * [Maciej Kowalewski](http://github.com/maciejk)
 * [Mindaugas Mozûras](http://github.com/mmozuras)
+* [Patrik Hägne](http://github.com/patrik-hagne)
 * [Pedro Felix](http://github.com/pmhsfelix)
 * [Piotr Wlodek](http://github.com/pwlodek)
 * [Phil Haack](http://github.com/haacked)
