@@ -37,7 +37,7 @@ namespace Nancy.Testing.Fakes
             this.configuredEnumerableInstances = new Dictionary<Type, IEnumerable<object>>();
             this.configuredInstances = new Dictionary<Type, object>();
 
-            if ( configuration != null)
+            if (configuration != null)
             {
                 var configurator =
                     new FakeNancyBootstrapperConfigurator(this);
@@ -55,54 +55,37 @@ namespace Nancy.Testing.Fakes
 
             foreach (var typeRegistration in typeRegistrations)
             {
-                this.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType);
+                this.Register(existingContainer, typeRegistration.RegistrationType, typeRegistration.ImplementationType);
             }
         }
 
-        protected override void RegisterRootPathProvider(TinyIoCContainer existingContainer, Type rootPathProviderType)
+        protected override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
-            this.Register(typeof(IRootPathProvider), rootPathProviderType);
+            foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
+            {
+                this.RegisterAll(container, collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
+            }
         }
 
-        /// <summary>
-        /// Register view engines into the container
-        /// </summary>
-        /// <param name="existingContainer">Container Instance</param>
-        /// <param name="viewEngineTypes">Enumerable of types that implement IViewEngine</param>
-        protected override void RegisterViewEngines(TinyIoCContainer existingContainer, IEnumerable<Type> viewEngineTypes)
-        {
-            this.RegisterAll(typeof(IViewEngine), viewEngineTypes);
-        }
-
-        /// <summary>
-        /// Register the view source providers into the container
-        /// </summary>
-        /// <param name="existingContainer">Container instance</param>
-        /// <param name="viewSourceProviderTypes">Enumerable of types that implement IViewSourceProvider</param>
-        protected override void RegisterViewSourceProviders(TinyIoCContainer existingContainer, IEnumerable<Type> viewSourceProviderTypes)
-        {
-            this.RegisterAll(typeof(IViewSourceProvider), viewSourceProviderTypes);
-        }
-
-        private void Register(Type registrationType, Type implementationType)
+        private void Register(TinyIoCContainer container, Type registrationType, Type implementationType)
         {
             if (this.configuredInstances.ContainsKey(registrationType) && this.configuredInstances[registrationType] != null)
             {
-                this.container.Register(registrationType, this.configuredInstances[registrationType]);
+                container.Register(registrationType, this.configuredInstances[registrationType]);
             }
             else
             {
-                this.container.Register(registrationType, this.GetOverridenType(registrationType) ?? implementationType).AsSingleton();
+                container.Register(registrationType, this.GetOverridenType(registrationType) ?? implementationType).AsSingleton();
             }
         }
 
-        private void RegisterAll(Type registrationType, IEnumerable<Type> implementationTypes)
+        private void RegisterAll(TinyIoCContainer container, Type registrationType, IEnumerable<Type> implementationTypes)
         {
             if (this.configuredEnumerableInstances.ContainsKey(registrationType) && this.configuredEnumerableInstances[registrationType] != null)
             {
                 foreach (var configuredInstance in this.configuredEnumerableInstances[registrationType])
                 {
-                    this.container.Register(registrationType, configuredInstance, GenerateTypeName());
+                    container.Register(registrationType, configuredInstance, GenerateTypeName());
                 }
             }
             else
@@ -112,7 +95,7 @@ namespace Nancy.Testing.Fakes
 
                 foreach (var typeToRegister in typesToRegister)
                 {
-                    this.container.Register(registrationType, typeToRegister, GenerateTypeName()).AsSingleton();
+                    container.Register(registrationType, typeToRegister, GenerateTypeName()).AsSingleton();
                 }
             }
         }
