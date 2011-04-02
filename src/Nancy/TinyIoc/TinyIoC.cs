@@ -155,10 +155,6 @@ namespace TinyIoC
             {
                 assemblies = new Type[] { };
             }
-            catch (ReflectionTypeLoadException)
-            {
-                assemblies = new Type[] { };
-            }
 
             return assemblies;
         }
@@ -990,7 +986,6 @@ namespace TinyIoC
 
             return new MultiRegisterOptions(registerOptions);
         }
-
         #endregion
 
         #region Resolution
@@ -2957,7 +2952,7 @@ namespace TinyIoC
 #endif
         private object GetIEnumerableRequest(Type type)
         {
-            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new Type[] { });
+            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
 
             //#if GETPARAMETERS_OPEN_GENERICS
             //            // Using MakeGenericMethod (slow) because we need to
@@ -2978,7 +2973,7 @@ namespace TinyIoC
 
             //            var genericResolveAllMethod = resolveAllMethods.First();
             //#endif
-            return genericResolveAllMethod.Invoke(this, new object[] { });
+            return genericResolveAllMethod.Invoke(this, new object[] { false });
         }
 
         private bool CanConstruct(ConstructorInfo ctor, NamedParameterOverloads parameters, ResolveOptions options)
