@@ -1,26 +1,32 @@
 ﻿namespace Nancy.Tests.Unit.Bootstrapper
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
+
     using FakeItEasy;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     internal class FakeBootstrapperBaseImplementation : NancyBootstrapperBase<object>
     {
         public INancyEngine FakeNancyEngine { get; set; }
-        public object FakeContainer { get;set; }
+        public object FakeContainer { get; set; }
         public object AppContainer { get; set; }
-        public List<ModuleRegistration> Modules { get; set; }
         public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
+        public List<ModuleRegistration> PassedModules { get; set; }
 
-        protected override Type DefaultModuleKeyGenerator { get { return typeof(Fakes.FakeModuleKeyGenerator); } }
+        protected override NancyInternalConfiguration InternalConfiguration
+        {
+            get
+            {
+                return NancyInternalConfiguration.WithOverrides(c => c.ModuleKeyGenerator = typeof(FakeModuleKeyGenerator));
+            }
+        }
 
-        /// <summary>
-        /// Initializes a new instance of the TestBootstrapper class.
-        /// </summary>
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
@@ -31,36 +37,17 @@
 
         protected override INancyEngine GetEngineInternal()
         {
-            return FakeNancyEngine;
+            return this.FakeNancyEngine;
         }
 
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
-            return Generator;
+            return this.Generator;
         }
 
-        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        protected override void ConfigureApplicationContainer(object existingContainer)
         {
-        }
-
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
-        {
-        }
-
-        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
-        {
-        }
-
-        protected override void RegisterModelBinders(object container, IEnumerable<Type> modelBinderTypes)
-        {
-        }
-
-        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
-        {
-        }
-
-        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
-        {
+            this.AppContainer = existingContainer;
         }
 
         protected override object CreateContainer()
@@ -73,15 +60,13 @@
             this.TypeRegistrations = typeRegistrations;
         }
 
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
-            Modules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
-        protected override void ConfigureApplicationContainer(object existingContainer)
+        protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
-            base.ConfigureApplicationContainer(existingContainer);
-            AppContainer = existingContainer;
+            PassedModules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
         public BeforePipeline PreRequest
@@ -99,46 +84,20 @@
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
     {
-        public bool GetModuleTypesCalled { get; set; }
         public IEnumerable<ModuleRegistration> RegisterModulesRegistrationTypes { get; set; }
         public IEnumerable<ModuleRegistration> ModuleRegistrations { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the FakeBootstrapperBaseGetModulesOverride class.
-        /// </summary>
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return ModuleRegistrations;
+            }
+        }
+
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
-        }
-
-        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
-        {
-        }
-
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
-        {
-        }
-
-        protected override void RegisterModelBinders(object container, IEnumerable<Type> modelBinderTypes)
-        {
-        }
-
-        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
-        {
-        }
-
-        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
-        {
-        }
-
-        protected override IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)
-        {
-            return ModuleRegistrations;
-        }
-
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
-        {
-            RegisterModulesRegistrationTypes = moduleRegistrationTypes;
         }
 
         protected override INancyEngine GetEngineInternal()
@@ -151,10 +110,6 @@
             return new Fakes.FakeModuleKeyGenerator();
         }
 
-        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
-        {
-        }
-
         protected override object CreateContainer()
         {
             return new object();
@@ -162,7 +117,15 @@
 
         protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
         {
+        }
 
+        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        {
+        }
+
+        protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
+            this.RegisterModulesRegistrationTypes = moduleRegistrationTypes;
         }
     }
 
@@ -200,9 +163,9 @@
         {
             _Bootstrapper.GetEngine();
 
-            _Bootstrapper.Modules.ShouldNotBeNull();
-            _Bootstrapper.Modules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
-            _Bootstrapper.Modules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
+            _Bootstrapper.PassedModules.ShouldNotBeNull();
+            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
+            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
         }
 
         [Fact]
@@ -210,14 +173,14 @@
         {
             _Bootstrapper.GetEngine();
 
-            var totalKeyEntries = _Bootstrapper.Modules.Count();
+            var totalKeyEntries = _Bootstrapper.PassedModules.Count();
             var called = (_Bootstrapper.Generator as Fakes.FakeModuleKeyGenerator).CallCount;
 
             called.ShouldEqual(totalKeyEntries);
         }
 
         [Fact]
-        public void Overridden_GetModules_Is_Used_For_Getting_ModuleTypes()
+        public void Overridden_Modules_Is_Used_For_Getting_ModuleTypes()
         {
             var bootstrapper = new FakeBootstrapperBaseGetModulesOverride();
             bootstrapper.Initialise();
@@ -227,7 +190,7 @@
         }
 
         [Fact]
-        public void RegisterDefaults_Passes_In_User_Types_If_Set_In_Derived_Class_Ctor()
+        public void RegisterTypes_Passes_In_User_Types_If_Custom_Config_Set()
         {
             _Bootstrapper.GetEngine();
 

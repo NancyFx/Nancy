@@ -6,9 +6,9 @@
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoC.TinyIoCContainer Container { get { return this.container; } }
+        public TinyIoC.TinyIoCContainer Container { get { return this.ApplicationContainer; } }
 
-        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
+        protected override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
         {
             base.ConfigureRequestContainer(existingContainer);
 

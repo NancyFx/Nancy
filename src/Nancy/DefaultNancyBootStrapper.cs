@@ -33,7 +33,7 @@
         /// <returns>IEnumerable of NancyModule</returns>
         public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var childContainer = this.GetChildContainer(context);
+            var childContainer = this.GetRequestContainer(context);
 
             this.ConfigureRequestContainer(childContainer);
 
@@ -48,7 +48,7 @@
         /// <returns>NancyModule instance</returns>
         public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var childContainer = this.GetChildContainer(context);
+            var childContainer = this.GetRequestContainer(context);
 
             this.ConfigureRequestContainer(childContainer);
 
@@ -89,6 +89,7 @@
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             container.AutoRegister();
+            container.Register<INancyModuleCatalog>(this);
         }
 
         /// <summary>
@@ -147,11 +148,11 @@
         }
 
         /// <summary>
-        /// Gets the per-request child container
+        /// Gets the per-request container
         /// </summary>
         /// <param name="context">Current context</param>
         /// <returns>Child container</returns>
-        private TinyIoCContainer GetChildContainer(NancyContext context)
+        private TinyIoCContainer GetRequestContainer(NancyContext context)
         {
             object contextObject;
             context.Items.TryGetValue(ContextKey, out contextObject);

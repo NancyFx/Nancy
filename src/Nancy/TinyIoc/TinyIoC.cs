@@ -151,7 +151,11 @@ namespace TinyIoC
             {
                 assemblies = new Type[] { };
             }
-            catch (System.NotSupportedException)
+            catch (NotSupportedException)
+            {
+                assemblies = new Type[] { };
+            }
+            catch (ReflectionTypeLoadException)
             {
                 assemblies = new Type[] { };
             }
