@@ -122,7 +122,7 @@
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected sealed override void RegisterDefaults(IKernel container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterTypes(IKernel container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             container.Bind<INancyModuleCatalog>().ToConstant(this);
 

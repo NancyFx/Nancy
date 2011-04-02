@@ -49,7 +49,7 @@ namespace Nancy.Testing.Fakes
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected override void RegisterDefaults(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterTypes(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
         {
             existingContainer.Register<INancyModuleCatalog>(this);
 

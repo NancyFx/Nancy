@@ -45,7 +45,7 @@ namespace Nancy.Bootstrappers.Windsor
             return this.container;
         }
 
-        protected override sealed void RegisterDefaults(IWindsorContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override sealed void RegisterTypes(IWindsorContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
         {
             this.container.Register(Component.For<INancyModuleCatalog>().Instance(this));
 

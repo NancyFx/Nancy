@@ -68,7 +68,7 @@
             return FakeContainer;
         }
 
-        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             this.TypeRegistrations = typeRegistrations;
         }
@@ -160,7 +160,7 @@
             return new object();
         }
 
-        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
         {
 
         }

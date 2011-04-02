@@ -104,7 +104,7 @@
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected sealed override void RegisterDefaults(IUnityContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterTypes(IUnityContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             container.RegisterInstance<INancyModuleCatalog>(this);
 
