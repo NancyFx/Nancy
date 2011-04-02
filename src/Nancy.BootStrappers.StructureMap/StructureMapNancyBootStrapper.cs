@@ -133,7 +133,7 @@ namespace Nancy.Bootstrappers.StructureMap
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected sealed override void RegisterDefaults(IContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected sealed override void RegisterTypes(IContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             _Container.Configure(registry =>
             {
