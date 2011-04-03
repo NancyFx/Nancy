@@ -14,7 +14,7 @@
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, IHideObjectMembers
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines
         where TContainer : class
     {
         /// <summary>
@@ -202,6 +202,34 @@
             engine.PostRequestHook = this.AfterRequest;
 
             return engine;
+        }
+
+        /// <summary>
+        /// Hides Equals from the overrides list
+        /// </summary>
+        /// <param name="obj">Object to compare</param>
+        /// <returns>Boolean indicating equality</returns>
+        public override sealed bool Equals(object obj)
+        {
+            return base.Equals(obj);
+        }
+
+        /// <summary>
+        /// Hides GetHashCode from the overrides list
+        /// </summary>
+        /// <returns>Hash code integer</returns>
+        public override sealed int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        /// <summary>
+        /// Hides ToString from the overrides list
+        /// </summary>
+        /// <returns>String representation</returns>
+        public override sealed string ToString()
+        {
+            return base.ToString();
         }
 
         /// <summary>
