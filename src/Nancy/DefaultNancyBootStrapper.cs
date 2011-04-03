@@ -110,7 +110,7 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="typeRegistrations">Type registrations to register</param>
-        protected override void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
             {
@@ -124,7 +124,7 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
-        protected override void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
             {
@@ -137,7 +137,7 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
-        protected override void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected override sealed void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             this.moduleRegistrationTypeCache = moduleRegistrationTypes;
 
