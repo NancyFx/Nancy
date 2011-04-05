@@ -535,6 +535,25 @@ namespace Nancy
 			mimeTypes.Add ("z", "application/x-compressed");
 			mimeTypes.Add ("zip", "application/zip");
 			mimeTypes.Add ("zsh", "text/x-script.zsh");
+
+            // Office Formats
+            mimeTypes.Add("docm", "application/vnd.ms-word.document.macroEnabled.12");
+            mimeTypes.Add("docx", "application/vnd.openxmlformats-officedocument.wordprocessingml.document");
+            mimeTypes.Add("dotm", "application/vnd.ms-word.template.macroEnabled.12");
+            mimeTypes.Add("dotx", "application/vnd.openxmlformats-officedocument.wordprocessingml.template");
+            mimeTypes.Add("potm", "application/vnd.ms-powerpoint.template.macroEnabled.12");
+            mimeTypes.Add("potx", "application/vnd.openxmlformats-officedocument.presentationml.template");
+            mimeTypes.Add("ppam", "application/vnd.ms-powerpoint.addin.macroEnabled.12");
+            mimeTypes.Add("ppsm", "application/vnd.ms-powerpoint.slideshow.macroEnabled.12");
+            mimeTypes.Add("ppsx", "application/vnd.openxmlformats-officedocument.presentationml.slideshow");
+            mimeTypes.Add("pptm", "application/vnd.ms-powerpoint.presentation.macroEnabled.12");
+            mimeTypes.Add("pptx", "application/vnd.openxmlformats-officedocument.presentationml.presentation");
+            mimeTypes.Add("xlam", "application/vnd.ms-excel.addin.macroEnabled.12");
+            mimeTypes.Add("xlsb", "application/vnd.ms-excel.sheet.binary.macroEnabled.12");
+            mimeTypes.Add("xlsm", "application/vnd.ms-excel.sheet.macroEnabled.12");
+            mimeTypes.Add("xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            mimeTypes.Add("xltm", "application/vnd.ms-excel.template.macroEnabled.12");
+            mimeTypes.Add("xltx", "application/vnd.openxmlformats-officedocument.spreadsheetml.template");
 		}
 
 		public static string GetMimeType (string fileName)
