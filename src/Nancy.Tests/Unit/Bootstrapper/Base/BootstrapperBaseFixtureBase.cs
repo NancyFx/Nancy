@@ -5,6 +5,13 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
     using Nancy.Routing;
     using Xunit;
 
+    /// <summary>
+    /// Base class for testing the basic behaviour of a bootstrapper that
+    /// implements either of the two bootstrapper base classes.
+    /// These tests only test basic extenral behaviour, they are not exhaustive;
+    /// it is expected that additional tests specific to the bootstrapper implementation
+    /// are also created.
+    /// </summary>
     public abstract class BootstrapperBaseFixtureBase<TContainer>
         where TContainer : class
     {

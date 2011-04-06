@@ -1,13 +1,12 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using Nancy.Bootstrapper;
-    using Fakes;
     using Bootstrapper.Base;
     using TinyIoC;
 
     public class DefaultNancyBootstrapperBootstrapperBaseFixture : BootstrapperBaseFixtureBase<TinyIoCContainer>
     {
-        private readonly FakeDefaultNancyBootstrapper bootstrapper;
+        private readonly FakeBootstrapper bootstrapper;
 
         protected override NancyBootstrapperBase<TinyIoCContainer> Bootstrapper
         {
@@ -16,7 +15,22 @@
 
         public DefaultNancyBootstrapperBootstrapperBaseFixture()
         {
-            this.bootstrapper = new FakeDefaultNancyBootstrapper(this.Configuration);
+            this.bootstrapper = new FakeBootstrapper(this.Configuration);
+        }
+
+        public class FakeBootstrapper : DefaultNancyBootstrapper
+        {
+            private NancyInternalConfiguration configuration;
+
+            protected override NancyInternalConfiguration InternalConfiguration
+            {
+                get { return configuration; }
+            }
+
+            public FakeBootstrapper(NancyInternalConfiguration configuration)
+            {
+                this.configuration = configuration;
+            }
         }
     }
 }
