@@ -1,7 +1,21 @@
 ﻿namespace Nancy.Tests.Fakes
 {
+    using Bootstrapper;
+
     public class FakeDefaultNancyBootstrapper : DefaultNancyBootstrapper
     {
+        private NancyInternalConfiguration configuration;
+
+        public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
+        {
+            this.configuration = configuration;
+        }
+
+        protected override NancyInternalConfiguration InternalConfiguration
+        {
+            get { return configuration; }
+        }
+
         public bool RequestContainerConfigured { get; set; }
 
         public bool ApplicationContainerConfigured { get; set; }

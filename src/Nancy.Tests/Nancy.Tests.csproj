@@ -68,6 +68,7 @@
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
+    <Compile Include="Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs" />
     <Compile Include="Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs" />
     <Compile Include="Unit\Bootstrapper\NancyInternalConfigurationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\TypeRegistrationFixture.cs" />
@@ -88,7 +89,7 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\DefaultModuleKeyGeneratorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs" />
-    <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
+    <Compile Include="Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Fakes\FakeDefaultNancyBootstrapper.cs" />
