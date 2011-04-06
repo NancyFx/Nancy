@@ -51,6 +51,7 @@
     <Reference Include="System.EnterpriseServices" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Views\PostXml.html" />
     <Content Include="Views\PostJson.html" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -74,6 +75,7 @@
     <Compile Include="Models\Customer.cs" />
     <Compile Include="Models\Event.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="XmlModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Views\Customers.spark" />
