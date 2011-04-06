@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
 
     using Nancy.Bootstrapper;
 
