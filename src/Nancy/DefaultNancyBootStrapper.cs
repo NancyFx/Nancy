@@ -15,12 +15,6 @@
                                             INancyModuleCatalog
     {
         /// <summary>
-        /// Key for storing the child container in the context items
-        /// </summary>
-        [SuppressMessage("Microsoft.StyleCop.CSharp.NamingRules", "SA1310:FieldNamesMustNotContainUnderscore", Justification = "Reviewed. Suppression is OK here.")]
-        private const string ContextKey = "DefaultNancyBootStrapperChildContainer";
-
-        /// <summary>
         /// A copy of the module registration types to register into the
         /// request container when it is created.
         /// </summary>
@@ -53,14 +47,6 @@
             this.ConfigureRequestContainer(childContainer);
 
             return childContainer.Resolve<NancyModule>(moduleKey);
-        }
-
-        /// <summary>
-        /// Configure the container with per-request registrations
-        /// </summary>
-        /// <param name="container">Constainer instance</param>
-        protected override void ConfigureRequestContainer(TinyIoCContainer container)
-        {
         }
 
         /// <summary>
@@ -137,37 +123,25 @@
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
-        protected override sealed void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        protected override sealed void RegisterRequestContainerModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
-            this.moduleRegistrationTypeCache = moduleRegistrationTypes;
-
-            foreach (var registrationType in moduleRegistrationTypes)
+            foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
-                container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsSingleton();
+                container.Register(
+                    typeof(NancyModule), 
+                    moduleRegistrationType.ModuleType, 
+                    moduleRegistrationType.ModuleKey).
+                    AsSingleton();
             }
         }
 
         /// <summary>
-        /// Gets the per-request container
+        /// Creates a per request child/nested container
         /// </summary>
-        /// <param name="context">Current context</param>
-        /// <returns>Child container</returns>
-        private TinyIoCContainer GetRequestContainer(NancyContext context)
+        /// <returns>Request container instance</returns>
+        protected override TinyIoCContainer CreateRequestContainer()
         {
-            object contextObject;
-            context.Items.TryGetValue(ContextKey, out contextObject);
-            var childContainer = contextObject as TinyIoCContainer;
-
-            if (childContainer == null)
-            {
-                childContainer = this.ApplicationContainer.GetChildContainer();
-
-                this.RegisterModules(childContainer, this.moduleRegistrationTypeCache);
-
-                context.Items[ContextKey] = childContainer;
-            }
-
-            return childContainer;
+            return this.ApplicationContainer.GetChildContainer();
         }
     }
 }
