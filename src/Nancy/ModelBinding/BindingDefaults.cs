@@ -32,6 +32,7 @@ namespace Nancy.ModelBinding
             this.defaultBodyDeserializers = new IBodyDeserializer[]
                 {
                     new JsonBodyDeserializer(),
+                    new XmlBodyDeserializer()
                 };
         }
 
