@@ -133,7 +133,7 @@
         /// Creates a per request child/nested container
         /// </summary>
         /// <returns>Request container instance</returns>
-        protected override TinyIoCContainer CreateRequestContainer()
+        protected override sealed TinyIoCContainer CreateRequestContainer()
         {
             return this.ApplicationContainer.GetChildContainer();
         }
