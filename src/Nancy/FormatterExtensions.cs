@@ -5,25 +5,24 @@ namespace Nancy
 
     public static class FormatterExtensions
     {
+        public static Response AsFile(this IResponseFormatter formatter, string filePath)
+        {            
+            return new GenericFileResponse(Path.Combine(formatter.RootPath, filePath));
+        }
+
         public static Response AsCss(this IResponseFormatter formatter, string filePath)
         {
-            var resourcePath =
-                Path.Combine(formatter.RootPath, filePath);
-
-            return new StaticFileResponse(resourcePath, "text/css");
+            return AsFile(formatter, filePath);
         }
 
         public static Response AsImage(this IResponseFormatter formatter, string imagePath)
-        {
-            return new ImageResponse(imagePath);
+        {            
+            return AsFile(formatter, imagePath);
         }
 
         public static Response AsJs(this IResponseFormatter formatter, string filePath)
         {
-            var resourcePath =
-                Path.Combine(formatter.RootPath, filePath);
-
-            return new StaticFileResponse(resourcePath, "text/javascript");
+            return AsFile(formatter, filePath);
         }
 
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model)
