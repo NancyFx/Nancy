@@ -15,12 +15,6 @@
                                             INancyModuleCatalog
     {
         /// <summary>
-        /// A copy of the module registration types to register into the
-        /// request container when it is created.
-        /// </summary>
-        private IEnumerable<ModuleRegistration> moduleRegistrationTypeCache;
-
-        /// <summary>
         /// Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <param name="context">Current request context</param>

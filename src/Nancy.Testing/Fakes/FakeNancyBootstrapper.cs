@@ -15,12 +15,6 @@ namespace Nancy.Testing.Fakes
     public class FakeNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>,
                                          INancyModuleCatalog
     {
-        /// <summary>
-        /// A copy of the module registration types to register into the
-        /// request container when it is created.
-        /// </summary>
-        private IEnumerable<ModuleRegistration> moduleRegistrationTypeCache;
-
         private readonly Dictionary<Type, Type> configuredDefaults;
         private readonly Dictionary<Type, object> configuredInstances;
         private readonly Dictionary<Type, IEnumerable<Type>> configuredEnumerableDefaults;

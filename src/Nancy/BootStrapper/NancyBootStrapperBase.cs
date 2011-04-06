@@ -170,13 +170,19 @@
                 throw new InvalidOperationException("Configuration is invalid");
             }
 
-            this.initialised = true;
-
             this.ApplicationContainer = this.CreateContainer();
-
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
+            var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
+                                        .Concat(this.GetAdditionalTypes());
+
+            this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
+            this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
+            this.RegisterModules(this.ApplicationContainer, this.Modules);
+
             this.InitialiseInternal(this.ApplicationContainer);
+
+            this.initialised = true;
         }
 
         /// <summary>
@@ -189,13 +195,6 @@
             {
                 throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
             }
-
-            var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
-                                        .Concat(this.GetAdditionalTypes());
-
-            this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
-            this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
-            this.RegisterModules(this.ApplicationContainer, this.Modules);
 
             var engine = this.GetEngineInternal();
             engine.PreRequestHook = this.BeforeRequest;
