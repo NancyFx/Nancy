@@ -1,6 +1,5 @@
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Nancy.Bootstrapper;
@@ -20,7 +19,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             {
                 return new[]
                 {
-                    new ModuleRegistration(typeof(Fakes.FakeNancyModuleWithBasePath), typeof(Fakes.FakeNancyModuleWithBasePath).FullName), 
+                    new ModuleRegistration(typeof(FakeModule), typeof(FakeModule).FullName), 
                 };
             }
         }
@@ -29,8 +28,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         public void GetModuleByKey_returns_same_instance_with_same_context()
         {
             var context = new NancyContext();
-            var output1 = this.Catalog.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context);
-            var output2 = this.Catalog.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context);
+            var output1 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context);
+            var output2 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -42,8 +41,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var context1 = new NancyContext();
             var context2 = new NancyContext();
-            var output1 = this.Catalog.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context1);
-            var output2 = this.Catalog.GetModuleByKey(typeof(Fakes.FakeNancyModuleWithBasePath).FullName, context2);
+            var output1 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context1);
+            var output2 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context2);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -73,6 +72,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
             output1.ShouldNotBeSameAs(output2);
+        }
+        
+        public class FakeModule : NancyModule
+        {
+            
         }
     }
 }
