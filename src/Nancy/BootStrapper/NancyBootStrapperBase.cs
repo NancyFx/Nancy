@@ -14,7 +14,7 @@
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, INancyModuleCatalog
         where TContainer : class
     {
         /// <summary>
@@ -184,6 +184,21 @@
 
             this.initialised = true;
         }
+
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public abstract IEnumerable<NancyModule> GetAllModules(NancyContext context);
+
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public abstract NancyModule GetModuleByKey(string moduleKey, NancyContext context);
 
         /// <summary>
         /// Gets the configured INancyEngine
