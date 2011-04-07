@@ -2,7 +2,7 @@ require 'rubygems'
 require 'albacore'
 require 'rake/clean'
 
-NANCY_VERSION = "0.4.0"
+NANCY_VERSION = "0.5.0"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
@@ -30,7 +30,7 @@ assemblyinfo :version => [:clean] do |asm|
 	asm.product_name = "Nancy"
 	asm.title = "Nancy"
 	asm.description = "A Sinatra inspired web framework for the .NET platform"
-	asm.copyright = "Copyright (C) Andreas Hakansson and contributors"
+	asm.copyright = "Copyright (C) Andreas Hakansson, Steven Robbins and contributors"
 	asm.output_file = SHARED_ASSEMBLY_INFO
 end
 
