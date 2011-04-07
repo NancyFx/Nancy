@@ -1,0 +1,26 @@
+<html>
+  <head>
+     <title>XML Post Test</title>
+     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+     <script type="text/javascript">
+         $(function () {
+             var dat = "<User><Name>This is the name</Name><Address>This is the address</Address></User>";
+
+             alert("POSTing the following data to /bindxml:\n\n" + dat);
+
+             $.ajax({
+                 type: "POST",
+                 url: "/bindxml",
+                 contentType: "application/xml",
+                 data: dat,
+                 success: function (data) {
+                     alert("Response:\n" + data);
+                 }
+             });
+         });
+     </script>
+  </head>
+  <body>
+    XML Post
+  </body>
+</html>
