@@ -86,26 +86,6 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         }
 
         [Fact]
-        public void Should_deserialize_json_model()
-        {
-            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
-            var context = new BindingContext()
-                              {
-                                  DestinationType = typeof(TestModel),
-                                  ValidModelProperties = typeof(TestModel).GetProperties(),
-                              };
-
-            var result = (TestModel)this.deserialize.Deserialize(
-                            "application/json", 
-                            bodyStream, 
-                            context);
-
-            result.ShouldNotBeNull();
-            result.ShouldBeOfType(typeof(TestModel));
-            result.ShouldEqual(this.testModel);
-        }
-
-        [Fact]
         public void Should_only_set_allowed_properties()
         {
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
