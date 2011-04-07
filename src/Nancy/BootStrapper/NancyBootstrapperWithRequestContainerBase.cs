@@ -34,6 +34,35 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public override sealed IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        {
+            var requestContainer = this.GetRequestContainer(context);
+
+            this.ConfigureRequestContainer(requestContainer);
+
+            return this.GetAllModules(requestContainer);
+        }
+
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public override sealed NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        {
+            var requestContainer = this.GetRequestContainer(context);
+
+            this.ConfigureRequestContainer(requestContainer);
+
+            return this.GetModuleByKey(requestContainer, moduleKey);
+        }
+
+        /// <summary>
         /// Gets the per-request container
         /// </summary>
         /// <param name="context">Current context</param>
@@ -86,5 +115,20 @@ namespace Nancy.Bootstrapper
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
         protected abstract void RegisterRequestContainerModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes);
+
+        /// <summary>
+        /// Retrieve all module instances from the container
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <returns>Collection of NancyModule instances</returns>
+        protected abstract IEnumerable<NancyModule> GetAllModules(TContainer container);
+
+        /// <summary>
+        /// Retreive a specific module instance from the container by its key
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="moduleKey">Module key of the module</param>
+        /// <returns>NancyModule instance</returns>
+        protected abstract NancyModule GetModuleByKey(TContainer container, string moduleKey);
     }
 }
