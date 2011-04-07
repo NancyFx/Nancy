@@ -93,6 +93,7 @@
     <Compile Include="Unit\HeadResponseFixture.cs" />
     <Compile Include="Unit\ModelBinding\DefaultBinderFixture.cs" />
     <Compile Include="Unit\ModelBinding\DefaultBodyDeserializers\JsonBodyDeserializerFixture.cs" />
+    <Compile Include="Unit\ModelBinding\DefaultBodyDeserializers\XmlBodyDeserializerfixture.cs" />
     <Compile Include="Unit\ModelBinding\DefaultConverters\CollectionConverterFixture.cs" />
     <Compile Include="Unit\ModelBinding\DefaultConverters\FallbackConverterFixture.cs" />
     <Compile Include="Unit\ModelBinding\DefaultFieldNameConverterFixture.cs" />
