@@ -115,22 +115,47 @@
         }
 
         [Fact]
-        public void Should_return_route_with_most_parameter_captures_when_multiple_matches_are_available()
+        public void Should_return_route_with_most_parameter_captures_when_multiple_matches_with_parameters_are_available()
+        {
+            // Given
+            var request = new FakeRequest("get", "/foo/bar/foo");
+            var context = new NancyContext {Request = request};
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/{bar}/{foo}", "module-key-two-parameters");
+                x.AddGetRoute("/foo/{bar}", "module-key-one-parameter");
+            });
+
+            this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/{bar}/{foo}", this.expectedAction));
+
+            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
+
+            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}/{foo}")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true)
+                    .AddParameter("foo", "fake value")
+                    .AddParameter("bar", "fake value 2")));
+
+            // When
+            this.resolver.Resolve(context, routeCache);
+
+            // Then
+            A.CallTo(() => this.catalog.GetModuleByKey("module-key-two-parameters", context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_return_route_with_no_parameter_captures_and_is_an_exact_match_when_multiple_matches_are_available()
         {
             // Given
             var request = new FakeRequest("get", "/foo/bar");
-            var context = new NancyContext();
-            context.Request = request;
+            var context = new NancyContext {Request = request};
             var routeCache = new FakeRouteCache(x =>
             {
-                x.AddGetRoute("/foo/bar", "module-key-noparameters");
+                x.AddGetRoute("/foo/bar", "module-key-no-parameters");
                 x.AddGetRoute("/foo/{bar}", "module-key-parameters");
             });
 
-            this.expectedModule = new FakeNancyModule(x =>
-            {
-                x.AddGetRoute("/foo/{bar}", this.expectedAction);
-            });
+            this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/bar", this.expectedAction));
 
             A.CallTo(() => this.matcher.Match(request.Uri, "/foo/bar")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
@@ -142,9 +167,8 @@
             this.resolver.Resolve(context, routeCache);
 
             // Then
-            A.CallTo(() => this.catalog.GetModuleByKey("module-key-parameters", context)).MustHaveHappened();
+            A.CallTo(() => this.catalog.GetModuleByKey("module-key-no-parameters", context)).MustHaveHappened();
         }
-
         [Fact]
         public void Should_invoke_pattern_matcher_with_request_uri()
         {
