@@ -171,6 +171,7 @@
             }
 
             this.ApplicationContainer = this.GetApplicationContainer();
+            this.RegisterBootstrapperTypes(this.ApplicationContainer);
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
@@ -281,6 +282,14 @@
         /// </summary>
         /// <returns>Container instance</returns>
         protected abstract TContainer GetApplicationContainer();
+
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected abstract void RegisterBootstrapperTypes(TContainer applicationContainer);
 
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
