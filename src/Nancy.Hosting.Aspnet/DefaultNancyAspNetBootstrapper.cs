@@ -66,13 +66,9 @@
         /// Create a default, unconfigured, container
         /// </summary>
         /// <returns>Container instance</returns>
-        protected override sealed TinyIoCContainer GetApplicationContainer()
+        protected override TinyIoCContainer GetApplicationContainer()
         {
-            var container = new TinyIoCContainer();
-
-            container.Register<INancyModuleCatalog>(this);
-
-            return container;
+            return new TinyIoCContainer();
         }
 
         /// <summary>
