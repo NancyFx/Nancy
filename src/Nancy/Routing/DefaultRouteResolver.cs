@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
     using System.Collections.Generic;
     using System.Linq;
