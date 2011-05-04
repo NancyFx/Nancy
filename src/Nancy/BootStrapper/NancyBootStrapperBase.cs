@@ -170,7 +170,7 @@
                 throw new InvalidOperationException("Configuration is invalid");
             }
 
-            this.ApplicationContainer = this.CreateContainer();
+            this.ApplicationContainer = this.GetApplicationContainer();
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
@@ -277,10 +277,10 @@
         protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
 
         /// <summary>
-        /// Create a default, unconfigured, container
+        /// Gets the application level container
         /// </summary>
         /// <returns>Container instance</returns>
-        protected abstract TContainer CreateContainer();
+        protected abstract TContainer GetApplicationContainer();
 
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons

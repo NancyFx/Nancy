@@ -45,7 +45,7 @@
         /// Create a default, unconfigured, container
         /// </summary>
         /// <returns>Container instance</returns>
-        protected override sealed TinyIoCContainer CreateContainer()
+        protected override sealed TinyIoCContainer GetApplicationContainer()
         {
             var container = new TinyIoCContainer();
 

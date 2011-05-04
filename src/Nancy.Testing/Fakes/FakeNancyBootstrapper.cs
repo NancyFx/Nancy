@@ -110,7 +110,7 @@ namespace Nancy.Testing.Fakes
         /// Create a default, unconfigured, container
         /// </summary>
         /// <returns>Container instance</returns>
-        protected override TinyIoCContainer CreateContainer()
+        protected override TinyIoCContainer GetApplicationContainer()
         {
             var container = new TinyIoCContainer();
 

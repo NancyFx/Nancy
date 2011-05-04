@@ -51,7 +51,7 @@
             this.AppContainer = existingContainer;
         }
 
-        protected override object CreateContainer()
+        protected override object GetApplicationContainer()
         {
             return FakeContainer;
         }
@@ -111,7 +111,7 @@
             return new Fakes.FakeModuleKeyGenerator();
         }
 
-        protected override object CreateContainer()
+        protected override object GetApplicationContainer()
         {
             return new object();
         }
