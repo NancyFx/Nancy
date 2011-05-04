@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Route that is returned when the path could be matched but it was for the wrong request method.
     /// </summary>
