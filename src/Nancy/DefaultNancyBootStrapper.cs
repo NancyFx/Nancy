@@ -1,5 +1,6 @@
 ﻿namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
 
     using Bootstrapper;
@@ -20,7 +21,6 @@
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             container.AutoRegister();
-            container.Register<INancyModuleCatalog>(this);
         }
 
         /// <summary>
@@ -45,13 +45,20 @@
         /// Create a default, unconfigured, container
         /// </summary>
         /// <returns>Container instance</returns>
-        protected override sealed TinyIoCContainer GetApplicationContainer()
+        protected override TinyIoCContainer GetApplicationContainer()
         {
-            var container = new TinyIoCContainer();
+            return new TinyIoCContainer();
+        }
 
-            container.Register<INancyModuleCatalog>(this);
-
-            return container;
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override sealed void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
+        {
+            applicationContainer.Register<INancyModuleCatalog>(this);
         }
 
         /// <summary>
