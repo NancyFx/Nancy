@@ -1,4 +1,6 @@
-﻿namespace Nancy.Routing
+﻿using System;
+
+namespace Nancy.Routing
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -53,7 +55,8 @@
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method), DynamicDictionary.Empty, null, null);
+                var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
+                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
             }
 
             var routeMatchesWithMostParameterCaptures = 
