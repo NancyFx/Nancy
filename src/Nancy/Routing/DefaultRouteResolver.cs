@@ -64,7 +64,7 @@
             }
 
             var routeMatchesWithMostParameterCaptures = 
-                GetTopRouteMatch(routesWithCorrectRequestMethod);
+                GetTopRouteMatches(routesWithCorrectRequestMethod);
 
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
@@ -101,7 +101,7 @@
                 x => x.Item4.Parameters.GetDynamicMemberNames().Count() == 0);
         }
 
-        private static IEnumerable<RouteCandidate> GetTopRouteMatch(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
+        private static IEnumerable<RouteCandidate> GetTopRouteMatches(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
 
         {
             var maxSegments = 0;
