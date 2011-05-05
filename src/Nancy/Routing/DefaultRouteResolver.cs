@@ -109,9 +109,8 @@
             // Order is by number of path segment matches first number of parameter matches second.  
             // If two candidates have the same number of path segments the tie breaker is the parameter count.
             foreach (var tuple in routesWithCorrectRequestMethod
-                .OrderByDescending(x => x.Item4.Parameters.GetDynamicMemberNames().Count())
-                .OrderByDescending(x => x.Item3.Path.Count(c => c.Equals('/')))
-                )
+                .OrderBy(x => x.Item4.Parameters.GetDynamicMemberNames().Count())
+                .OrderByDescending(x => x.Item3.Path.Count(c => c.Equals('/'))))
             {
                 var segments = tuple.Item3.Path.Count(c => c == '/');
                 var parameters = tuple.Item4.Parameters.GetDynamicMemberNames().Count();
