@@ -169,6 +169,34 @@
             // Then
             A.CallTo(() => this.catalog.GetModuleByKey("module-key-no-parameters", context)).MustHaveHappened();
         }
+
+        [Fact]
+        public void Should_return_the_route_with_the_most_specific_path_matches()
+        {
+            // Given
+            var request = new FakeRequest("get", "/foo/bar/me");
+            var context = new NancyContext {Request = request};
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/{bar}", "module-key-first");
+                x.AddGetRoute("/foo/bar/{two}", "module-key-second");
+            });
+
+            this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/bar/{two}", this.expectedAction));
+
+            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/bar/{two}")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("two", "fake values")));
+
+            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
+
+            // When
+            this.resolver.Resolve(context, routeCache);
+
+            // Then
+            A.CallTo(() => this.catalog.GetModuleByKey("module-key-second", context)).MustHaveHappened();
+        }
+
         [Fact]
         public void Should_invoke_pattern_matcher_with_request_uri()
         {

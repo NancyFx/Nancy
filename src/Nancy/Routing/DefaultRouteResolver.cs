@@ -64,7 +64,7 @@
             }
 
             var routeMatchesWithMostParameterCaptures = 
-                GetRouteMatchesWithMostParameterCaptures(routesWithCorrectRequestMethod);
+                GetTopRouteMatch(routesWithCorrectRequestMethod);
 
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
@@ -101,13 +101,26 @@
                 x => x.Item4.Parameters.GetDynamicMemberNames().Count() == 0);
         }
 
-        private static IEnumerable<RouteCandidate> GetRouteMatchesWithMostParameterCaptures(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
-        {
-            var maxParameterCount =
-                routesWithCorrectRequestMethod.Max(x => x.Item4.Parameters.GetDynamicMemberNames().Count());
+        private static IEnumerable<RouteCandidate> GetTopRouteMatch(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
 
-            return routesWithCorrectRequestMethod.Where(
-                x => x.Item4.Parameters.GetDynamicMemberNames().Count() == maxParameterCount);
+        {
+            var maxSegments = 0;
+            var maxParameters = 0;
+            // Order is by number of path segment matches first number of parameter matches second.  
+            // If two candidates have the same number of path segments the tie breaker is the parameter count.
+            foreach (var tuple in routesWithCorrectRequestMethod
+                .OrderByDescending(x => x.Item4.Parameters.GetDynamicMemberNames().Count())
+                .OrderByDescending(x => x.Item3.Path.Count(c => c.Equals('/')))
+                )
+            {
+                var segments = tuple.Item3.Path.Count(c => c == '/');
+                var parameters = tuple.Item4.Parameters.GetDynamicMemberNames().Count();
+                if (segments < maxSegments || parameters < maxParameters)
+                    yield break;
+                maxSegments = segments;
+                maxParameters = parameters;
+                yield return tuple;
+            }
         }
 
         private static bool NoRoutesWereForTheRequestedMethod(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
