@@ -227,8 +227,6 @@
         [Fact]
         public void GetEngine_Calls_RegisterModules_With_Assembly_Modules()
         {
-            throw new NotImplementedException("update these tests :-)");
-
             _Bootstrapper.GetEngine();
 
             _Bootstrapper.PassedModules.ShouldNotBeNull();
