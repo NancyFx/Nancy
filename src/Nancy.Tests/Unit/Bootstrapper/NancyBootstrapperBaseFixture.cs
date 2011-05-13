@@ -46,6 +46,30 @@
             return this.Generator;
         }
 
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        {
+            return this.PassedModules.Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType));
+        }
+
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        {
+            return
+                this.PassedModules.Where(m => String.Equals(m.ModuleKey, moduleKey, StringComparison.InvariantCulture))
+                    .Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType))
+                    .FirstOrDefault();
+        }
+
         protected override void ConfigureApplicationContainer(object existingContainer)
         {
             this.AppContainer = existingContainer;
@@ -54,6 +78,16 @@
         protected override object GetApplicationContainer()
         {
             return FakeContainer;
+        }
+
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override void RegisterBootstrapperTypes(object applicationContainer)
+        {
         }
 
         protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
@@ -101,6 +135,27 @@
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
         }
 
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override INancyEngine GetEngineInternal()
         {
             return A.Fake<INancyEngine>();
@@ -114,6 +169,16 @@
         protected override object GetApplicationContainer()
         {
             return new object();
+        }
+
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override void RegisterBootstrapperTypes(object applicationContainer)
+        {
         }
 
         protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)

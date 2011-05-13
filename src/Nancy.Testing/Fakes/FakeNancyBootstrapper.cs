@@ -12,8 +12,7 @@ namespace Nancy.Testing.Fakes
     /// <summary>
     /// Provides a way to define a Nancy bootstrapper though an API.
     /// </summary>
-    public class FakeNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>,
-                                         INancyModuleCatalog
+    public class FakeNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
         private readonly Dictionary<Type, Type> configuredDefaults;
         private readonly Dictionary<Type, object> configuredInstances;
@@ -48,33 +47,14 @@ namespace Nancy.Testing.Fakes
             }
         }
 
-        /// <summary>
-        /// Get all NancyModule implementation instances - should be multi-instance
-        /// </summary>
-        /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        protected override IEnumerable<NancyModule> GetAllModules(TinyIoCContainer container)
         {
-            var childContainer = this.GetRequestContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-
-            return childContainer.ResolveAll<NancyModule>(false);
+            return container.ResolveAll<NancyModule>(false);
         }
 
-        /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be multi-instance and per-request
-        /// </summary>
-        /// <param name="moduleKey">Module key</param>
-        /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        protected override NancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
         {
-            var childContainer = this.GetRequestContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-
-            return childContainer.Resolve<NancyModule>(moduleKey);
+            return container.Resolve<NancyModule>(moduleKey);
         }
 
         /// <summary>
@@ -117,6 +97,17 @@ namespace Nancy.Testing.Fakes
             container.Register<INancyModuleCatalog>(this);
 
             return container;
+        }
+
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
+        {
+            applicationContainer.Register<INancyModuleCatalog>(this);
         }
 
         /// <summary>

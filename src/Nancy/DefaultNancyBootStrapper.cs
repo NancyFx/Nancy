@@ -20,7 +20,10 @@
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
+            // TODO - Add a predicate delegate to autoregister to allow excluding module catalog
             container.AutoRegister();
+
+            this.RegisterBootstrapperTypes(container);
         }
 
         /// <summary>
