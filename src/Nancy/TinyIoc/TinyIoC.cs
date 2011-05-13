@@ -151,7 +151,7 @@ namespace TinyIoC
             {
                 assemblies = new Type[] { };
             }
-            catch (System.NotSupportedException)
+            catch (NotSupportedException)
             {
                 assemblies = new Type[] { };
             }
@@ -954,25 +954,38 @@ namespace TinyIoC
         /// Internally this registers each implementation using the full name of the class as its registration name.
         /// </summary>
         /// <typeparam name="RegisterType">Type that each implementation implements</typeparam>
-        /// <param name="types">Types that implement RegisterType</param>
+        /// <param name="implementationTypes">Types that implement RegisterType</param>
         /// <returns>MultiRegisterOptions for the fluent API</returns>
-        public MultiRegisterOptions RegisterMultiple<RegisterType>(IEnumerable<Type> types)
+        public MultiRegisterOptions RegisterMultiple<RegisterType>(IEnumerable<Type> implementationTypes)
         {
-            if (types == null)
+            return RegisterMultiple(typeof(RegisterType), implementationTypes);
+        }
+
+        /// <summary>
+        /// Register multiple implementations of a type.
+        /// 
+        /// Internally this registers each implementation using the full name of the class as its registration name.
+        /// </summary>
+        /// <param name="registrationType">Type that each implementation implements</param>
+        /// <param name="implementationTypes">Types that implement RegisterType</param>
+        /// <returns>MultiRegisterOptions for the fluent API</returns>
+        public MultiRegisterOptions RegisterMultiple(Type registrationType, IEnumerable<Type> implementationTypes)
+        {
+            if (implementationTypes == null)
                 throw new ArgumentNullException("types", "types is null.");
 
-            foreach (var type in types)
-                if (!typeof(RegisterType).IsAssignableFrom(type))
-                    throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", typeof(RegisterType).FullName, type.FullName));
+            foreach (var type in implementationTypes)
+                if (!registrationType.IsAssignableFrom(type))
+                    throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
-            if (types.Count() != types.Distinct().Count())
+            if (implementationTypes.Count() != implementationTypes.Distinct().Count())
                 throw new ArgumentException("types: The same implementation type cannot be specificed multiple times");
 
             var registerOptions = new List<RegisterOptions>();
 
-            foreach (var type in types)
+            foreach (var type in implementationTypes)
             {
-                registerOptions.Add(Register(typeof(RegisterType), type, type.FullName));
+                registerOptions.Add(Register(registrationType, type, type.FullName));
             }
 
             return new MultiRegisterOptions(registerOptions);
@@ -2943,7 +2956,7 @@ namespace TinyIoC
 #endif
         private object GetIEnumerableRequest(Type type)
         {
-            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new Type[] { });
+            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
 
             //#if GETPARAMETERS_OPEN_GENERICS
             //            // Using MakeGenericMethod (slow) because we need to
@@ -2964,7 +2977,7 @@ namespace TinyIoC
 
             //            var genericResolveAllMethod = resolveAllMethods.First();
             //#endif
-            return genericResolveAllMethod.Invoke(this, new object[] { });
+            return genericResolveAllMethod.Invoke(this, new object[] { false });
         }
 
         private bool CanConstruct(ConstructorInfo ctor, NamedParameterOverloads parameters, ResolveOptions options)

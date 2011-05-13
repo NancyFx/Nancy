@@ -8,14 +8,14 @@ namespace Nancy
     public interface INancyModuleCatalog
     {
         /// <summary>
-        /// Get all NancyModule implementation instances - should be multi-instance
+        /// Get all NancyModule implementation instances - should be per-request lifetime
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
         IEnumerable<NancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be multi-instance and per-request
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be per-request lifetime
         /// </summary>
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>

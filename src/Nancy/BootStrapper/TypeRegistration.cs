@@ -14,8 +14,23 @@ namespace Nancy.Bootstrapper
         /// <param name="implementationType">Implementation type i.e. MyClassThatImplementsIMyInterface</param>
         public TypeRegistration(Type registrationType, Type implementationType)
         {
-            RegistrationType = registrationType;
-            ImplementationType = implementationType;
+            if (registrationType == null)
+            {
+                throw new ArgumentNullException("registrationType");
+            }
+
+            if (implementationType == null)
+            {
+                throw new ArgumentNullException("implementationType");
+            }
+    
+            if (!registrationType.IsAssignableFrom(implementationType))
+            {
+                throw new ArgumentException("implementationType must implement registrationType", "implementationType");    
+            }
+
+            this.RegistrationType = registrationType;
+            this.ImplementationType = implementationType;
         }
 
         /// <summary>

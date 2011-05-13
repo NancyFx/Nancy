@@ -3,24 +3,31 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
+
     using FakeItEasy;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     internal class FakeBootstrapperBaseImplementation : NancyBootstrapperBase<object>
     {
         public INancyEngine FakeNancyEngine { get; set; }
-        public object FakeContainer { get;set; }
+        public object FakeContainer { get; set; }
         public object AppContainer { get; set; }
-        public List<ModuleRegistration> Modules { get; set; }
         public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
+        public List<ModuleRegistration> PassedModules { get; set; }
 
-        protected override Type DefaultModuleKeyGenerator { get { return typeof(Fakes.FakeModuleKeyGenerator); } }
+        protected override NancyInternalConfiguration InternalConfiguration
+        {
+            get
+            {
+                return NancyInternalConfiguration.WithOverrides(c => c.ModuleKeyGenerator = typeof(FakeModuleKeyGenerator));
+            }
+        }
 
-        /// <summary>
-        /// Initializes a new instance of the TestBootstrapper class.
-        /// </summary>
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
@@ -31,57 +38,70 @@
 
         protected override INancyEngine GetEngineInternal()
         {
-            return FakeNancyEngine;
+            return this.FakeNancyEngine;
         }
 
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
-            return Generator;
+            return this.Generator;
         }
 
-        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
+            return this.PassedModules.Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType));
         }
 
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-        }
-
-        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
-        {
-        }
-
-        protected override void RegisterModelBinders(object container, IEnumerable<Type> modelBinderTypes)
-        {
-        }
-
-        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
-        {
-        }
-
-        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
-        {
-        }
-
-        protected override object CreateContainer()
-        {
-            return FakeContainer;
-        }
-
-        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
-        {
-            this.TypeRegistrations = typeRegistrations;
-        }
-
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
-        {
-            Modules = new List<ModuleRegistration>(moduleRegistrationTypes);
+            return
+                this.PassedModules.Where(m => String.Equals(m.ModuleKey, moduleKey, StringComparison.InvariantCulture))
+                    .Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType))
+                    .FirstOrDefault();
         }
 
         protected override void ConfigureApplicationContainer(object existingContainer)
         {
-            base.ConfigureApplicationContainer(existingContainer);
-            AppContainer = existingContainer;
+            this.AppContainer = existingContainer;
+        }
+
+        protected override object GetApplicationContainer()
+        {
+            return FakeContainer;
+        }
+
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override void RegisterBootstrapperTypes(object applicationContainer)
+        {
+        }
+
+        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        {
+            this.TypeRegistrations = typeRegistrations;
+        }
+
+        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        {
+        }
+
+        protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
+            PassedModules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
         public BeforePipeline PreRequest
@@ -99,46 +119,41 @@
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
     {
-        public bool GetModuleTypesCalled { get; set; }
         public IEnumerable<ModuleRegistration> RegisterModulesRegistrationTypes { get; set; }
         public IEnumerable<ModuleRegistration> ModuleRegistrations { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the FakeBootstrapperBaseGetModulesOverride class.
-        /// </summary>
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get
+            {
+                return ModuleRegistrations;
+            }
+        }
+
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
         }
 
-        protected override void RegisterRootPathProvider(object container, Type rootPathProviderType)
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
+            throw new NotImplementedException();
         }
 
-        protected override void RegisterViewSourceProviders(object container, IEnumerable<Type> viewSourceProviderTypes)
+        /// <summary>
+        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// </summary>
+        /// <param name="moduleKey">Module key</param>
+        /// <param name="context">The current context</param>
+        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
+        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-        }
-
-        protected override void RegisterModelBinders(object container, IEnumerable<Type> modelBinderTypes)
-        {
-        }
-
-        protected override void RegisterTypeConverters(object container, IEnumerable<Type> typeConverterTypes)
-        {
-        }
-
-        protected override void RegisterBodyDeserializers(object container, IEnumerable<Type> bodyDeserializerTypes)
-        {
-        }
-
-        protected override IEnumerable<ModuleRegistration> GetModuleTypes(IModuleKeyGenerator moduleKeyGenerator)
-        {
-            return ModuleRegistrations;
-        }
-
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrationTypes)
-        {
-            RegisterModulesRegistrationTypes = moduleRegistrationTypes;
+            throw new NotImplementedException();
         }
 
         protected override INancyEngine GetEngineInternal()
@@ -151,18 +166,32 @@
             return new Fakes.FakeModuleKeyGenerator();
         }
 
-        protected override void RegisterViewEngines(object container, IEnumerable<Type> viewEngineTypes)
-        {
-        }
-
-        protected override object CreateContainer()
+        protected override object GetApplicationContainer()
         {
             return new object();
         }
 
-        protected override void RegisterDefaults(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        /// <summary>
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
+        /// </summary>
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override void RegisterBootstrapperTypes(object applicationContainer)
         {
+        }
 
+        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        {
+        }
+
+        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        {
+        }
+
+        protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
+            this.RegisterModulesRegistrationTypes = moduleRegistrationTypes;
         }
     }
 
@@ -200,9 +229,9 @@
         {
             _Bootstrapper.GetEngine();
 
-            _Bootstrapper.Modules.ShouldNotBeNull();
-            _Bootstrapper.Modules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
-            _Bootstrapper.Modules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
+            _Bootstrapper.PassedModules.ShouldNotBeNull();
+            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
+            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
         }
 
         [Fact]
@@ -210,14 +239,14 @@
         {
             _Bootstrapper.GetEngine();
 
-            var totalKeyEntries = _Bootstrapper.Modules.Count();
+            var totalKeyEntries = _Bootstrapper.PassedModules.Count();
             var called = (_Bootstrapper.Generator as Fakes.FakeModuleKeyGenerator).CallCount;
 
             called.ShouldEqual(totalKeyEntries);
         }
 
         [Fact]
-        public void Overridden_GetModules_Is_Used_For_Getting_ModuleTypes()
+        public void Overridden_Modules_Is_Used_For_Getting_ModuleTypes()
         {
             var bootstrapper = new FakeBootstrapperBaseGetModulesOverride();
             bootstrapper.Initialise();
@@ -227,7 +256,7 @@
         }
 
         [Fact]
-        public void RegisterDefaults_Passes_In_User_Types_If_Set_In_Derived_Class_Ctor()
+        public void RegisterTypes_Passes_In_User_Types_If_Custom_Config_Set()
         {
             _Bootstrapper.GetEngine();
 

@@ -2,173 +2,140 @@
 {
     using System;
     using System.Collections.Generic;
-    using ModelBinding;
-    using Nancy.Bootstrapper;
-    using Nancy.ViewEngines;
+
+    using Bootstrapper;
+
     using TinyIoC;
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as
     /// INancyModuleCatalog for resolving modules but behaviour can be overridden if required.
     /// </summary>
-    public class 
-        DefaultNancyBootstrapper : NancyBootstrapperBase<TinyIoCContainer>, INancyBootstrapperPerRequestRegistration<TinyIoCContainer>, INancyModuleCatalog
+    public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
         /// <summary>
-        /// Key for storing the child container in the context items
+        /// Configures the container using AutoRegister followed by registration
+        /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
-        private const string CONTEXT_KEY = "DefaultNancyBootStrapperChildContainer";
+        /// <param name="container">Container instance</param>
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        {
+            // TODO - Add a predicate delegate to autoregister to allow excluding module catalog
+            container.AutoRegister();
 
-        /// <summary>
-        /// Container instance
-        /// </summary>
-        protected TinyIoCContainer container;
+            this.RegisterBootstrapperTypes(container);
+        }
 
         /// <summary>
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
-        protected sealed override INancyEngine GetEngineInternal()
+        protected override sealed INancyEngine GetEngineInternal()
         {
-            return this.container.Resolve<INancyEngine>();
+            return this.ApplicationContainer.Resolve<INancyEngine>();
         }
 
         /// <summary>
         /// Get the moduleKey generator
         /// </summary>
         /// <returns>IModuleKeyGenerator instance</returns>
-        protected sealed override IModuleKeyGenerator GetModuleKeyGenerator()
+        protected override sealed IModuleKeyGenerator GetModuleKeyGenerator()
         {
-            return this.container.Resolve<IModuleKeyGenerator>();
-        }
-
-        protected override void RegisterRootPathProvider(TinyIoCContainer container, Type rootPathProviderType)
-        {
-            this.container.Register(typeof(IRootPathProvider), rootPathProviderType).AsSingleton();
-        }
-
-        protected override void RegisterViewSourceProviders(TinyIoCContainer container, IEnumerable<Type> viewSourceProviderTypes)
-        {
-            this.container.RegisterMultiple<IViewSourceProvider>(viewSourceProviderTypes).AsSingleton();
-        }
-
-        protected override void RegisterModelBinders(TinyIoCContainer container, IEnumerable<Type> modelBinderTypes)
-        {
-            this.container.RegisterMultiple<IModelBinder>(modelBinderTypes).AsSingleton();
-        }
-
-        protected override void RegisterTypeConverters(TinyIoCContainer container, IEnumerable<Type> typeConverterTypes)
-        {
-            this.container.RegisterMultiple<ITypeConverter>(typeConverterTypes).AsSingleton();
-        }
-
-        protected override void RegisterBodyDeserializers(TinyIoCContainer container, IEnumerable<Type> bodyDeserializerTypes)
-        {
-            this.container.RegisterMultiple<IBodyDeserializer>(bodyDeserializerTypes).AsSingleton();
+            return this.ApplicationContainer.Resolve<IModuleKeyGenerator>();
         }
 
         /// <summary>
-        /// Configures the container using AutoRegister followed by registration
-        /// of default INancyModuleCatalog and IRouteResolver.
+        /// Create a default, unconfigured, container
         /// </summary>
-        /// <param name="container"></param>
-        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        /// <returns>Container instance</returns>
+        protected override TinyIoCContainer GetApplicationContainer()
         {
-            base.ConfigureApplicationContainer(container);
-
-            container.AutoRegister();
-        }
-
-        public virtual void ConfigureRequestContainer(TinyIoCContainer existingContainer)
-        {
-        }
-
-        protected override void RegisterViewEngines(TinyIoCContainer container, IEnumerable<Type> viewEngineTypes)
-        {
-            this.container.RegisterMultiple<IViewEngine>(viewEngineTypes).AsSingleton();
+            return new TinyIoCContainer();
         }
 
         /// <summary>
-        /// Creates a new container instance
+        /// Register the bootstrapper's implemented types into the container.
+        /// This is necessary so a user can pass in a populated container but not have
+        /// to take the responsibility of registering things like INancyModuleCatalog manually.
         /// </summary>
-        /// <returns>New container</returns>
-        protected sealed override TinyIoCContainer CreateContainer()
+        /// <param name="applicationContainer">Application container to register into</param>
+        protected override sealed void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
-            this.container = new TinyIoCContainer();
-
-            return this.container;
-        }
-
-        /// <summary>
-        /// Registers all modules in the container as multi-instance
-        /// </summary>
-        /// <param name="moduleRegistrations">NancyModule registration types</param>
-        protected override void RegisterModules(IEnumerable<ModuleRegistration> moduleRegistrations)
-        {
-            foreach (var registrationType in moduleRegistrations)
-            {
-                this.container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsMultiInstance();
-            }
+            applicationContainer.Register<INancyModuleCatalog>(this);
         }
 
         /// <summary>
         /// Register the default implementations of internally used types into the container as singletons
         /// </summary>
-        protected override void RegisterDefaults(TinyIoCContainer existingContainer, IEnumerable<TypeRegistration> typeRegistrations)
+        /// <param name="container">Container to register into</param>
+        /// <param name="typeRegistrations">Type registrations to register</param>
+        protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
-            existingContainer.Register<INancyModuleCatalog>(this);
-
             foreach (var typeRegistration in typeRegistrations)
             {
-                existingContainer.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
             }
         }
 
         /// <summary>
-        /// Get all NancyModule implementation instances - should be multi-instance
+        /// Register the various collections into the container as singletons to later be resolved
+        /// by IEnumerable{Type} constructor dependencies.
         /// </summary>
-        /// <param name="context">Current request context</param>
-        /// <returns>IEnumerable of NancyModule</returns>
-        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        /// <param name="container">Container to register into</param>
+        /// <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
+        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
-            var childContainer = this.GetChildContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-            return childContainer.ResolveAll<NancyModule>(false);
-        }
-
-        /// <summary>
-        /// Gets a specific, per-request, module instance from the key
-        /// </summary>
-        /// <param name="moduleKey">Module key of the module to retrieve</param>
-        /// <param name="context">Current request context</param>
-        /// <returns>NancyModule instance</returns>
-        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
-        {
-            var childContainer = this.GetChildContainer(context);
-
-            this.ConfigureRequestContainer(childContainer);
-            return childContainer.Resolve<NancyModule>(moduleKey);
-        }
-
-        /// <summary>
-        /// Gets the per-request child container
-        /// </summary>
-        /// <param name="context">Current context</param>
-        /// <returns>Child container</returns>
-        private TinyIoCContainer GetChildContainer(NancyContext context)
-        {
-            object contextObject;
-            context.Items.TryGetValue(CONTEXT_KEY, out contextObject);
-            var childContainer = contextObject as TinyIoCContainer;
-
-            if (childContainer == null)
+            foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
             {
-                childContainer = this.container.GetChildContainer();
-                context.Items[CONTEXT_KEY] = childContainer;
+                container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
             }
+        }
 
-            return childContainer;
+        /// <summary>
+        /// Register the given module types into the container
+        /// </summary>
+        /// <param name="container">Container to register into</param>
+        /// <param name="moduleRegistrationTypes">NancyModule types</param>
+        protected override sealed void RegisterRequestContainerModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
+        {
+            foreach (var moduleRegistrationType in moduleRegistrationTypes)
+            {
+                container.Register(
+                    typeof(NancyModule), 
+                    moduleRegistrationType.ModuleType, 
+                    moduleRegistrationType.ModuleKey).
+                    AsSingleton();
+            }
+        }
+
+        /// <summary>
+        /// Creates a per request child/nested container
+        /// </summary>
+        /// <returns>Request container instance</returns>
+        protected override sealed TinyIoCContainer CreateRequestContainer()
+        {
+            return this.ApplicationContainer.GetChildContainer();
+        }
+
+        /// <summary>
+        /// Retrieve all module instances from the container
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <returns>Collection of NancyModule instances</returns>
+        protected override sealed IEnumerable<NancyModule> GetAllModules(TinyIoCContainer container)
+        {
+            return container.ResolveAll<NancyModule>(false);
+        }
+
+        /// <summary>
+        /// Retreive a specific module instance from the container by its key
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="moduleKey">Module key of the module</param>
+        /// <returns>NancyModule instance</returns>
+        protected override sealed NancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
+        {
+            return container.Resolve<NancyModule>(moduleKey);
         }
     }
 }

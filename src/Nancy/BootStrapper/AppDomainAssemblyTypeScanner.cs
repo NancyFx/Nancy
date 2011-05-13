@@ -19,6 +19,11 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
+        /// Nancy core assembly
+        /// </summary>
+        private static Assembly nancyAssembly = typeof(NancyEngine).Assembly;
+
+        /// <summary>
         /// App domain type cache
         /// </summary>
         private static IEnumerable<Type> types;
@@ -127,6 +132,24 @@ namespace Nancy.Bootstrapper
             LoadAssemblies(@"Nancy*.dll");
 
             nancyAssembliesLoaded = true;
+        }
+
+        /// <summary>
+        /// Gets all types implementing a particular interface/base class
+        /// </summary>
+        /// <typeparam name="TType">Type to search for</typeparam>
+        /// <param name="excludeInternalTypes">Whether to exclude types inside the core Nancy assembly</param>
+        /// <returns>IEnumerable of types</returns>
+        public static IEnumerable<Type> TypesOf<TType>(bool excludeInternalTypes = false)
+        {
+            var returnTypes = Types.Where(t => typeof(TType).IsAssignableFrom(t));
+
+            if (excludeInternalTypes)
+            {
+                returnTypes = returnTypes.Where(t => t.Assembly != nancyAssembly);
+            }
+
+            return returnTypes;
         }
     }
 }

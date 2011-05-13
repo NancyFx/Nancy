@@ -13,7 +13,7 @@
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
         }
 
-        public override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
+        protected override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
         {
             base.ConfigureRequestContainer(existingContainer);
 
