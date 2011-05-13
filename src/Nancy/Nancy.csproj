@@ -47,7 +47,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
+    <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
+    <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\DefaultHmacProvider.cs" />
     <Compile Include="Cryptography\HmacComparer.cs" />
@@ -70,7 +72,7 @@
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
-    <Compile Include="Bootstrapper\INancyBootStrapperPerRequestRegistration.cs" />
+    <Compile Include="Bootstrapper\NancyBootstrapperWithRequestContainerBase.cs" />
     <Compile Include="Helpers\HttpEncoder.cs" />
     <Compile Include="Helpers\HttpUtility.cs" />
     <Compile Include="HttpFile.cs" />

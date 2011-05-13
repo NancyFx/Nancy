@@ -70,8 +70,13 @@
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
     <Compile Include="Responses\ResponseConsistencyFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs" />
+    <Compile Include="Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyInternalConfigurationFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\TypeRegistrationFixture.cs" />
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
+    <Compile Include="Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs" />
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
     <Compile Include="Unit\HttpMultipartBufferFixture.cs" />
     <Compile Include="Unit\HttpMultipartFixture.cs" />
@@ -86,7 +91,7 @@
     <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\DefaultModuleKeyGeneratorFixture.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs" />
-    <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
+    <Compile Include="Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
     <Compile Include="Unit\Extensions\StringExtensionsFixture.cs" />
     <Compile Include="Fakes\FakeDefaultNancyBootstrapper.cs" />
