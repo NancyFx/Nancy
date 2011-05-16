@@ -7,6 +7,8 @@
 
     using ModelBinding;
 
+    using Nancy.Conventions;
+
     using ViewEngines;
 
     /// <summary>
@@ -24,6 +26,11 @@
         private bool initialised;
 
         /// <summary>
+        /// Default Nancy conventions
+        /// </summary>
+        private NancyConventions conventions;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -32,6 +39,8 @@
 
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();
+
+            this.conventions = new NancyConventions();
         }
 
         /// <summary>
@@ -70,6 +79,17 @@
             get
             {
                 return NancyInternalConfiguration.Default;
+            }
+        }
+
+        /// <summary>
+        /// Nancy conventions
+        /// </summary>
+        protected virtual NancyConventions Conventions
+        {
+            get
+            {
+                return this.conventions;
             }
         }
 
@@ -181,6 +201,8 @@
             this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
             this.RegisterModules(this.ApplicationContainer, this.Modules);
 
+            this.ConfigureConventions(this.conventions);
+
             this.InitialiseInternal(this.ApplicationContainer);
 
             this.initialised = true;
@@ -262,6 +284,14 @@
         /// </summary>
         /// <param name="existingContainer">Container instance</param>
         protected virtual void ConfigureApplicationContainer(TContainer existingContainer)
+        {
+        }
+
+        /// <summary>
+        /// Overrides/configures Nancy's conventions
+        /// </summary>
+        /// <param name="nancyConventions">Convention object instance</param>
+        protected virtual void ConfigureConventions(NancyConventions nancyConventions)
         {
         }
 
