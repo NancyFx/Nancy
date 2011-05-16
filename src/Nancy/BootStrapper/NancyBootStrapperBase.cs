@@ -197,12 +197,19 @@
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());
 
+            // TODO - should this be after initialiseinternal?
+            this.ConfigureConventions(this.Conventions);
+            var conventionValidationResult = this.Conventions.Validate();
+            if (!conventionValidationResult.Item1)
+            {
+                throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
+            }
+
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
             this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
             this.RegisterModules(this.ApplicationContainer, this.Modules);
-
-            this.ConfigureConventions(this.conventions);
-
+            this.RegisterInstances(this.ApplicationContainer, this.Conventions.GetInstanceRegistrations());
+            
             this.InitialiseInternal(this.ApplicationContainer);
 
             this.initialised = true;
@@ -342,6 +349,13 @@
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
         protected abstract void RegisterModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes);
+
+        /// <summary>
+        /// Register the given instances into the container
+        /// </summary>
+        /// <param name="container">Container to register into</param>
+        /// <param name="instanceRegistrations">Instance registration types</param>
+        protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
 
         /// <summary>
         /// Gets additional required type registrations

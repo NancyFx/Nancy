@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
 
     using Nancy.Bootstrapper;
 
@@ -11,6 +12,11 @@
     /// </summary>
     public class NancyConventions
     {
+        /// <summary>
+        /// Discovered conventions
+        /// </summary>
+        private IEnumerable<IConvention> conventions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyConventions"/> class.
         /// </summary>
@@ -25,18 +31,49 @@
         public IList<Func<string, dynamic, string, string>> ViewLocationConventions { get; set; }
 
         /// <summary>
-        /// Locates all the default convention providers and calls them in
+        /// Validates the conventions
+        /// </summary>
+        /// <returns>A tuple containing a flag indicating validity, and any error messages</returns>
+        public Tuple<bool, string> Validate()
+        {
+            var isValid = true;
+            var errorMessageBuilder = new StringBuilder();
+
+            foreach (var result in this.conventions.Select(convention => convention.Validate(this)).Where(result => !result.Item1))
+            {
+                isValid = false;
+                errorMessageBuilder.AppendLine(result.Item2);
+            }
+
+            return new Tuple<bool, string>(isValid, errorMessageBuilder.ToString());
+        }
+
+        /// <summary>
+        /// Gets the instance registrations for registering into the container
+        /// </summary>
+        /// <returns>Enumeration of InstanceRegistration types</returns>
+        public IEnumerable<InstanceRegistration> GetInstanceRegistrations()
+        {
+            return new InstanceRegistration[] { };
+            //return new[]
+            //    {
+            //        new InstanceRegistration(typeof(IList<Func<string, dynamic, string, string>>), this.ViewLocationConventions),
+            //    };
+        }
+
+        /// <summary>
+        /// Locates all the default conventions and calls them in
         /// turn to build up the default conventions.
         /// </summary>
         private void BuildDefaultConventions()
         {
-            var defaultConventionProviders = AppDomainAssemblyTypeScanner
-                                                .TypesOf<IDefaultConventionProvider>()
-                                                .Select(t => (IDefaultConventionProvider)Activator.CreateInstance(t));
+            this.conventions = AppDomainAssemblyTypeScanner
+                                                .TypesOf<IConvention>()
+                                                .Select(t => (IConvention)Activator.CreateInstance(t));
 
-            foreach (var defaultConventionProvider in defaultConventionProviders)
+            foreach (var convention in this.conventions)
             {
-                defaultConventionProvider.Initialise(this);
+                convention.Initialise(this);
             }
         }
     }
