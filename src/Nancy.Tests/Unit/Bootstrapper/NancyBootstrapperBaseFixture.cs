@@ -104,6 +104,10 @@
             PassedModules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
+        protected override void RegisterInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        {
+        }
+
         public BeforePipeline PreRequest
         {
             get { return this.BeforeRequest; }
@@ -192,6 +196,10 @@
         protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             this.RegisterModulesRegistrationTypes = moduleRegistrationTypes;
+        }
+
+        protected override void RegisterInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        {
         }
     }
 

@@ -7,6 +7,8 @@
 
     using ModelBinding;
 
+    using Nancy.Conventions;
+
     using ViewEngines;
 
     /// <summary>
@@ -24,6 +26,11 @@
         private bool initialised;
 
         /// <summary>
+        /// Default Nancy conventions
+        /// </summary>
+        private NancyConventions conventions;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -32,6 +39,8 @@
 
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();
+
+            this.conventions = new NancyConventions();
         }
 
         /// <summary>
@@ -70,6 +79,17 @@
             get
             {
                 return NancyInternalConfiguration.Default;
+            }
+        }
+
+        /// <summary>
+        /// Nancy conventions
+        /// </summary>
+        protected virtual NancyConventions Conventions
+        {
+            get
+            {
+                return this.conventions;
             }
         }
 
@@ -177,10 +197,19 @@
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());
 
+            // TODO - should this be after initialiseinternal?
+            this.ConfigureConventions(this.Conventions);
+            var conventionValidationResult = this.Conventions.Validate();
+            if (!conventionValidationResult.Item1)
+            {
+                throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
+            }
+
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
             this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
             this.RegisterModules(this.ApplicationContainer, this.Modules);
-
+            this.RegisterInstances(this.ApplicationContainer, this.Conventions.GetInstanceRegistrations());
+            
             this.InitialiseInternal(this.ApplicationContainer);
 
             this.initialised = true;
@@ -266,6 +295,14 @@
         }
 
         /// <summary>
+        /// Overrides/configures Nancy's conventions
+        /// </summary>
+        /// <param name="nancyConventions">Convention object instance</param>
+        protected virtual void ConfigureConventions(NancyConventions nancyConventions)
+        {
+        }
+
+        /// <summary>
         /// Resolve INancyEngine
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
@@ -312,6 +349,13 @@
         /// <param name="container">Container to register into</param>
         /// <param name="moduleRegistrationTypes">NancyModule types</param>
         protected abstract void RegisterModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes);
+
+        /// <summary>
+        /// Register the given instances into the container
+        /// </summary>
+        /// <param name="container">Container to register into</param>
+        /// <param name="instanceRegistrations">Instance registration types</param>
+        protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
 
         /// <summary>
         /// Gets additional required type registrations

@@ -109,6 +109,21 @@
         }
 
         /// <summary>
+        /// Register the given instances into the container
+        /// </summary>
+        /// <param name="container">Container to register into</param>
+        /// <param name="instanceRegistrations">Instance registration types</param>
+        protected override void RegisterInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        {
+            foreach (var instanceRegistration in instanceRegistrations)
+            {
+                container.Register(
+                    instanceRegistration.RegistrationType, 
+                    instanceRegistration.Implementation);
+            }
+        }
+
+        /// <summary>
         /// Creates a per request child/nested container
         /// </summary>
         /// <returns>Request container instance</returns>
