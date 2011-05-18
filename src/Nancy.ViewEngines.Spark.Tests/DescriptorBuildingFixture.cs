@@ -20,11 +20,13 @@
         private readonly ActionContext actionContext;
         private readonly SparkViewEngine engine;
         private readonly InMemoryViewFolder viewFolder;
+        private readonly IRootPathProvider rootPathProvider;
 
         public DescriptorBuildingFixture()
         {
+            this.rootPathProvider = A.Fake<IRootPathProvider>();
             this.viewFolder = new InMemoryViewFolder();
-            this.engine = new SparkViewEngine(null) {ViewFolder = viewFolder};
+            this.engine = new SparkViewEngine(this.rootPathProvider) {ViewFolder = viewFolder};
             this.actionContext = new ActionContext(A.Fake<HttpContextBase>(), "Bar");
         }
         

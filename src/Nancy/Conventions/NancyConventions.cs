@@ -6,6 +6,7 @@
     using System.Text;
 
     using Nancy.Bootstrapper;
+    using ViewEngines;
 
     /// <summary>
     /// Nancy configurable conventions
@@ -28,7 +29,7 @@
         /// <summary>
         /// Gets or sets the conventions for locating view templates
         /// </summary>
-        public IList<Func<string, dynamic, string, string>> ViewLocationConventions { get; set; }
+        public IList<Func<string, dynamic, ViewLocationContext, string>> ViewLocationConventions { get; set; }
 
         /// <summary>
         /// Validates the conventions
@@ -54,11 +55,10 @@
         /// <returns>Enumeration of InstanceRegistration types</returns>
         public IEnumerable<InstanceRegistration> GetInstanceRegistrations()
         {
-            return new InstanceRegistration[] { };
-            //return new[]
-            //    {
-            //        new InstanceRegistration(typeof(IList<Func<string, dynamic, string, string>>), this.ViewLocationConventions),
-            //    };
+            return new[]
+            {
+                new InstanceRegistration(typeof(IEnumerable<Func<string, dynamic, ViewLocationContext, string>>), this.ViewLocationConventions),
+            };
         }
 
         /// <summary>
@@ -68,8 +68,8 @@
         private void BuildDefaultConventions()
         {
             this.conventions = AppDomainAssemblyTypeScanner
-                                                .TypesOf<IConvention>()
-                                                .Select(t => (IConvention)Activator.CreateInstance(t));
+                .TypesOf<IConvention>()
+                .Select(t => (IConvention)Activator.CreateInstance(t));
 
             foreach (var convention in this.conventions)
             {

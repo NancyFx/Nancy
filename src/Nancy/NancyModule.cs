@@ -31,10 +31,10 @@ namespace Nancy
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
         protected NancyModule(string modulePath)
         {
+            this.After = new AfterPipeline();
+            this.Before = new BeforePipeline();
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
-            this.Before = new BeforePipeline();
-            this.After = new AfterPipeline();
         }
 
         /// <summary>
@@ -236,7 +236,7 @@ namespace Nancy
             /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
             public Action<Stream> this[dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(module, null, model); }
+                get { return this.module.ViewFactory.RenderView(null, model, this.GetViewLocationContext()); }
             }
 
             /// <summary>
@@ -247,7 +247,7 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Action<Stream> this[string viewName]
             {
-                get { return this.module.ViewFactory.RenderView(module, viewName, null); }
+                get { return this.module.ViewFactory.RenderView(viewName, null, this.GetViewLocationContext()); }
             }
 
             /// <summary>
@@ -259,7 +259,12 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Action<Stream> this[string viewName, dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(module, viewName, model); }
+                get { return this.module.ViewFactory.RenderView(viewName, model, this.GetViewLocationContext()); }
+            }
+
+            private ViewLocationContext GetViewLocationContext()
+            {
+                return new ViewLocationContext { ModulePath = module.ModulePath } ;
             }
         }
     }

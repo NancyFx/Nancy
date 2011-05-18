@@ -51,6 +51,7 @@
     <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
+    <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
@@ -71,7 +72,7 @@
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultNancyBootstrapper.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
-    <Compile Include="FileSystemViewSourceProvider.cs" />
+    <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
     <Compile Include="Extensions\CollectionExtensions.cs" />
@@ -162,16 +163,20 @@
     <Compile Include="Routing\Route.cs" />
     <Compile Include="DynamicDictionary.cs" />
     <Compile Include="Routing\DefaultRouteResolver.cs" />
+    <Compile Include="ViewEngines\AmbiguousViewsException.cs" />
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
+    <Compile Include="ViewEngines\DefaultViewLocator.cs" />
+    <Compile Include="ViewEngines\DefaultViewResolver.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\IViewFactory.cs" />
+    <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
-    <Compile Include="ViewEngines\IViewSourceProvider.cs" />
-    <Compile Include="ViewEngines\ResourceViewSourceProvider.cs" />
+    <Compile Include="ViewEngines\IViewFactory.cs" />
+    <Compile Include="ViewEngines\IViewResolver.cs" />
+    <Compile Include="ViewEngines\ResourceViewLocationProviders.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngineWrapper.cs" />
+    <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
-    <Compile Include="ViewEngines\DefaultViewLocator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -40,7 +40,7 @@
             return s =>
             {
                 var writer = new StreamWriter(s);
-                writer.Write(this.viewEngine.Render(viewLocationResult.Contents.ReadToEnd(), model));
+                writer.Write(this.viewEngine.Render(viewLocationResult.Contents.Invoke().ReadToEnd(), model));
                 writer.Flush();
             };
         }

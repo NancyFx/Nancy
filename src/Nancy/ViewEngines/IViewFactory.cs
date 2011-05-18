@@ -11,10 +11,10 @@
         /// <summary>
         /// Renders the view with the name and model defined by the <paramref name="viewName"/> and <paramref name="model"/> parameters.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> from there the view rendering is being invoked.</param>
         /// <param name="viewName">The name of the view to render.</param>
-        /// <param name="model">The model that should be passed into the view.</param>
+        /// <param name="model">The module path of the module that is rendering the view.</param>
+        /// <param name="viewLocationContext">A <see cref="ViewLocationContext"/> instance, containing information about the context for which the view is being rendered.</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        Action<Stream> RenderView(NancyModule module, string viewName, dynamic model);
+        Action<Stream> RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext);
     }
 }
