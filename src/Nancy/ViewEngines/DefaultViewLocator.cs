@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     /// <summary>
@@ -9,89 +10,71 @@
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
-        private readonly IEnumerable<IViewSourceProvider> viewSourceProviders;
+        private readonly IEnumerable<IViewLocationProvider> viewLocationProviders;
+        private readonly IEnumerable<IViewEngine> viewEngines;
+        private readonly IEnumerable<ViewLocationResult> locatedViews;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultViewLocator"/> class.
-        /// </summary>
-        /// <param name="viewSourceProviders">An <see cref="IEnumerable{T}"/> instance, containing the <see cref="IViewSourceProvider"/> used by the locator to look for a view.</param>
-        public DefaultViewLocator(IEnumerable<IViewSourceProvider> viewSourceProviders)
+        public DefaultViewLocator(IEnumerable<IViewLocationProvider> viewLocationProviders, IEnumerable<IViewEngine> viewEngines)
         {
-            if (viewSourceProviders == null)
-            {
-                throw new ArgumentNullException("viewSourceProviders", "The value of the viewSourceProviders parameter cannot be null.");
-            }
-
-            this.viewSourceProviders = viewSourceProviders;
+            this.viewLocationProviders = viewLocationProviders;
+            this.viewEngines = viewEngines;
+            this.locatedViews = GetLocatedViews();
         }
 
         /// <summary>
         /// Gets the location of the view defined by the <paramref name="viewName"/> parameter.
         /// </summary>
         /// <param name="viewName">Name of the view to locate.</param>
-        /// <param name="supportedViewEngineExtensions">An <see cref="IEnumerable{T}"/> instance containing the supported view engine extensions.</param>
-        /// <returns>A <see cref="ViewLocationResult"/> instance if the requested view could be located; otherwise <see langword="null"/>.</returns>
-        public ViewLocationResult GetViewLocation(string viewName, IEnumerable<string> supportedViewEngineExtensions)
+        /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise <see langword="null"/>.</returns>
+        public ViewLocationResult LocateView(string viewName)
         {
-            if(this.NotEnoughInformationAvailableToLocateView(viewName, supportedViewEngineExtensions))
+            if (string.IsNullOrEmpty(viewName))
             {
                 return null;
             }
 
-            return this.LocateView(viewName, supportedViewEngineExtensions);
+            var viewsThatMatchesCritera = this.locatedViews
+                .Where(x => x.Name.Equals(Path.GetFileNameWithoutExtension(viewName), StringComparison.OrdinalIgnoreCase));
+
+            viewsThatMatchesCritera = GetViewsThatMatchesViewExtension(viewName, viewsThatMatchesCritera);
+
+            if (viewsThatMatchesCritera.Count() > 1)
+            {
+                throw new AmbiguousViewsException();
+            }
+
+            return viewsThatMatchesCritera.FirstOrDefault();
         }
 
-        private bool NotEnoughInformationAvailableToLocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
+        private static IEnumerable<ViewLocationResult> GetViewsThatMatchesViewExtension(string viewName, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
         {
-            if (viewName == null)
+            var viewExtension = Path.GetExtension(viewName);
+
+            if (!string.IsNullOrEmpty(viewExtension))
             {
-                return true;
+                viewsThatMatchesCritera = viewsThatMatchesCritera.Where(x => x.Extension.Equals(viewExtension.Substring(1), StringComparison.OrdinalIgnoreCase));    
             }
 
-            if (viewName.Length == 0)
-            {
-                return true;
-            }
-
-            if (supportedViewEngineExtensions == null)
-            {
-                return true;
-            }
-
-            if (!supportedViewEngineExtensions.Any())
-            {
-                return true;
-            }
-
-            return !this.viewSourceProviders.Any();
+            return viewsThatMatchesCritera;
         }
 
-        private ViewLocationResult LocateView(string viewName, IEnumerable<string> supportedViewEngineExtensions)
+        private IEnumerable<ViewLocationResult> GetLocatedViews()
         {
-            foreach (var viewSourceProvider in viewSourceProviders)
-            {
-                var result =
-                    LocateViewAndSupressExceptions(viewSourceProvider, viewName, supportedViewEngineExtensions);
+            var supportedViewExtensions = 
+                GetSupportedViewExtensions();
 
-                if (result != null)
-                {
-                    return result;
-                }
-            }
+            var viewsLocatedByProviders = this.viewLocationProviders
+                .SelectMany(x => x.GetLocatedViews(supportedViewExtensions))
+                .ToList();
 
-            return null;
+            return viewsLocatedByProviders;
         }
 
-        private static ViewLocationResult LocateViewAndSupressExceptions(IViewSourceProvider viewSourceProvider, string viewName, IEnumerable<string> supportedViewEngineExtensions)
+        private IEnumerable<string> GetSupportedViewExtensions()
         {
-            try
-            {
-                return viewSourceProvider.LocateView(viewName, supportedViewEngineExtensions);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            return this.viewEngines
+                .SelectMany(engine => engine.Extensions)
+                .Distinct();
         }
     }
 }

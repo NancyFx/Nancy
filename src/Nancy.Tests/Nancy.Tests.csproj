@@ -74,6 +74,7 @@
     <Compile Include="Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs" />
     <Compile Include="Unit\Bootstrapper\NancyInternalConfigurationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\TypeRegistrationFixture.cs" />
+    <Compile Include="Unit\Conventions\DefaultViewLocationConventionsFixture.cs" />
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs" />
@@ -134,8 +135,9 @@
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
+    <Compile Include="Unit\ViewEngines\DefaultViewLocatorFixture.cs" />
+    <Compile Include="Unit\ViewEngines\DefaultViewResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
-    <Compile Include="Unit\ViewEngines\ViewLocatorFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
     <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />

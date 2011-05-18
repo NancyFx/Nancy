@@ -32,7 +32,7 @@
             {
                 var templateManagerProvider = 
                     new TemplateManagerProvider()
-                    .WithLoader(new TemplateLoader(viewLocationResult.Contents));
+                    .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
 
                 var templateManager = 
                     templateManagerProvider.GetNewManager();

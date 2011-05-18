@@ -2,7 +2,6 @@ namespace Nancy.Testing.Fakes
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Nancy.Bootstrapper;
     using Nancy.Routing;
@@ -554,46 +553,46 @@ namespace Nancy.Testing.Fakes
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IViewSourceProvider"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IViewLocationProvider"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IViewSourceProvider"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IViewLocationProvider"/> that the bootstrapper should use.</typeparam>
             /// <returns>An instance to the current <see cref="FakeNancyBootstrapperConfigurator"/>.</returns>
-            public FakeNancyBootstrapperConfigurator ViewSourceProvider<T>() where T : IViewSourceProvider
+            public FakeNancyBootstrapperConfigurator ViewLocationProvider<T>() where T : IViewLocationProvider
             {
-                this.bootstrapper.configuredEnumerableDefaults[typeof(IViewSourceProvider)] = new[] { typeof(T) };
+                this.bootstrapper.configuredEnumerableDefaults[typeof(IViewLocationProvider)] = new[] { typeof(T) };
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IViewSourceProvider"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IViewLocationProvider"/>.
             /// </summary>
-            /// <param name="viewSourceProvider">The <see cref="IViewSourceProvider"/> instance that should be used by the bootstrapper.</param>
+            /// <param name="viewLocationProvider">The <see cref="IViewLocationProvider"/> instance that should be used by the bootstrapper.</param>
             /// <returns>An instance to the current <see cref="FakeNancyBootstrapperConfigurator"/>.</returns>
-            public FakeNancyBootstrapperConfigurator ViewSourceProvider(IViewSourceProvider viewSourceProvider)
+            public FakeNancyBootstrapperConfigurator ViewLocationProvider(IViewLocationProvider viewLocationProvider)
             {
-                this.bootstrapper.configuredEnumerableInstances[typeof(IViewSourceProvider)] = new[] { viewSourceProvider };
+                this.bootstrapper.configuredEnumerableInstances[typeof(IViewLocationProvider)] = new[] { viewLocationProvider };
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided <see cref="IViewSourceProvider"/> types.
+            /// Configures the bootstrapper to use the provided <see cref="IViewLocationProvider"/> types.
             /// </summary>
-            /// <param name="viewSourceProviders">The <see cref="IViewSourceProvider"/> types that should be used by the bootstrapper.</param>
+            /// <param name="viewLocationProvider">The <see cref="IViewLocationProvider"/> types that should be used by the bootstrapper.</param>
             /// <returns>An instance to the current <see cref="FakeNancyBootstrapperConfigurator"/>.</returns>
-            public FakeNancyBootstrapperConfigurator ViewSourceProviders(params Type[] viewSourceProviders)
+            public FakeNancyBootstrapperConfigurator ViewLocationProviders(params Type[] viewLocationProvider)
             {
-                this.bootstrapper.configuredEnumerableDefaults[typeof(IViewSourceProvider)] = viewSourceProviders;
+                this.bootstrapper.configuredEnumerableDefaults[typeof(IViewLocationProvider)] = viewLocationProvider;
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IViewSourceProvider"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IViewLocationProvider"/>.
             /// </summary>
-            /// <param name="viewSourceProviders">The <see cref="IViewSourceProvider"/> instances that should be used by the bootstrapper.</param>
+            /// <param name="viewLocationProvider">The <see cref="IViewLocationProvider"/> instances that should be used by the bootstrapper.</param>
             /// <returns>An instance to the current <see cref="FakeNancyBootstrapperConfigurator"/>.</returns>
-            public FakeNancyBootstrapperConfigurator ViewSourceProviders(params IViewSourceProvider[] viewSourceProviders)
+            public FakeNancyBootstrapperConfigurator ViewLocationProviders(params IViewLocationProvider[] viewLocationProvider)
             {
-                this.bootstrapper.configuredEnumerableInstances[typeof(IViewSourceProvider)] = viewSourceProviders;
+                this.bootstrapper.configuredEnumerableInstances[typeof(IViewLocationProvider)] = viewLocationProvider;
                 return this;
             }
         }

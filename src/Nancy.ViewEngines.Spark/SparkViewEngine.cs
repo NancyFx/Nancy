@@ -16,6 +16,7 @@
 
     public class SparkViewEngine : ISparkServiceInitialize, IViewEngine
     {
+        private readonly IRootPathProvider rootPathProvider;
         private readonly Dictionary<BuildDescriptorParams, ISparkViewEntry> cache = new Dictionary<BuildDescriptorParams, ISparkViewEntry>();
         private readonly ViewEngineResult cacheMissResult = new ViewEngineResult(new List<string>());
         
@@ -23,17 +24,10 @@
         private IDescriptorBuilder descriptorBuilder;
         private ISparkViewEngine engine;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
-        /// </summary>
-        public SparkViewEngine()
-            : this(null)
+        public SparkViewEngine(IRootPathProvider rootPathProvider)
         {
-        }
-
-        public SparkViewEngine(ISparkSettings settings)
-        {
-            this.Settings = settings ?? (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+            this.rootPathProvider = rootPathProvider;
+            this.Settings = (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
         }
 
         public ISparkSettings Settings { get; set; }
@@ -384,8 +378,8 @@
             var viewName = 
                 Path.GetFileNameWithoutExtension(path);
 
-            var viewPath = 
-                Path.GetDirectoryName(path);
+            var viewPath =
+                Path.Combine(this.rootPathProvider.GetRootPath(), Path.GetDirectoryName(path));
 
             var targetNamespace = string.Empty; //TODO Rob G: This can be used to support things like areas or features
             this.ViewFolder = new FileSystemViewFolder(viewPath);

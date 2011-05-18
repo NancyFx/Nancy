@@ -39,6 +39,7 @@ namespace Nancy.Bootstrapper
                         Binder = typeof(DefaultBinder),
                         BindingDefaults = typeof(BindingDefaults),
                         FieldNameConverter = typeof(DefaultFieldNameConverter),
+                        ViewResolver = typeof(DefaultViewResolver)
                     };
             }
         }
@@ -72,6 +73,8 @@ namespace Nancy.Bootstrapper
         public Type BindingDefaults { get; set; }
 
         public Type FieldNameConverter { get; set; }
+
+        public Type ViewResolver { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -128,6 +131,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IBinder), this.Binder), 
                 new TypeRegistration(typeof(BindingDefaults), this.BindingDefaults), 
                 new TypeRegistration(typeof(IFieldNameConverter), this.FieldNameConverter), 
+                new TypeRegistration(typeof(IViewResolver), this.ViewResolver), 
             };
         }
     }

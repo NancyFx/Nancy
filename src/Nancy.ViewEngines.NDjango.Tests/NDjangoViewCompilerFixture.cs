@@ -19,8 +19,9 @@ namespace Nancy.ViewEngines.NDjango.Tests
             // Given
             var location = new ViewLocationResult(
                 string.Empty,
+                string.Empty,
                 "django",
-                new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
+                () => new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
             );
 
             var stream = new MemoryStream();

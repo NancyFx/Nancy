@@ -21,13 +21,14 @@
         private readonly HttpContextBase httpContext;
         private readonly TextWriter output;
         private readonly HttpResponseBase response;
+        private readonly IRootPathProvider rootPathProvider;
 
         public SparkViewEngineFixture()
         {
             var settings = new SparkSettings();
-
+            this.rootPathProvider = A.Fake<IRootPathProvider>();
             this.actionContext = new ActionContext(httpContext, "Stub");
-            this.engine = new SparkViewEngine(settings) {ViewFolder = new FileSystemViewFolder("TestViews")};
+            this.engine = new SparkViewEngine(this.rootPathProvider) {ViewFolder = new FileSystemViewFolder("TestViews")};
             this.httpContext = MockHttpContextBase.Generate("/", new StringWriter());
             this.response = httpContext.Response;
             this.output = response.Output;

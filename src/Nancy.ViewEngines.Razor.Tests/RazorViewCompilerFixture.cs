@@ -19,8 +19,9 @@
             // Given
             var location = new ViewLocationResult(
                 string.Empty,
+                string.Empty,
                 "cshtml",
-                new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
+                () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
             );
 
             var stream = new MemoryStream();

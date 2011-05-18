@@ -148,7 +148,7 @@
             return stream =>
             {
                 var view = 
-                    GetCompiledView<dynamic>(viewLocationResult.Contents);
+                    GetCompiledView<dynamic>(viewLocationResult.Contents.Invoke());
 
                 var writer = 
                     new StreamWriter(stream);
