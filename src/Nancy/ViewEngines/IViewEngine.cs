@@ -21,7 +21,8 @@
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
+        /// <param name="renderContext"></param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model);
+        Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext);
     }
 }

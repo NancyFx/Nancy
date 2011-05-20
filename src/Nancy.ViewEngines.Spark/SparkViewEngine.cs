@@ -408,13 +408,16 @@
             get { yield return "spark"; }
         }
 
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model)
+        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return stream =>
             {
+                var locatedView =
+                    renderContext.LocateView("routes.cshtml", model);
+
                 ViewEngineResult viewEngineResult =
                     this.RenderView(viewLocationResult.Location, model);
-
+                
                 var writer =
                     new StreamWriter(stream);
 

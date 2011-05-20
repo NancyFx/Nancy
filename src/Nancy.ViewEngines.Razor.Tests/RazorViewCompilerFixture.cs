@@ -27,7 +27,7 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null);
+            var action = this.engine.RenderView(location, null, null);
             action.Invoke(stream);
 
             // Then

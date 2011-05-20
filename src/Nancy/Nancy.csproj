@@ -167,6 +167,7 @@
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\DefaultViewResolver.cs" />
+    <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />

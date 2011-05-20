@@ -27,7 +27,7 @@ namespace Nancy.ViewEngines.NDjango.Tests
             var stream = new MemoryStream();
 
             // When
-            var action = engine.RenderView(location, null);
+            var action = engine.RenderView(location, null, null);
             action.Invoke(stream);
 
             // Then

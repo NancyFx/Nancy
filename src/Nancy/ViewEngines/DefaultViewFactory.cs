@@ -72,7 +72,8 @@
             return SafeInvokeViewEngine(
                 resolvedViewEngine,
                 viewLocationResult,
-                model
+                model,
+                new DefaultRenderContext(this.viewResolver, viewLocationContext)
             );
         }
 
@@ -96,11 +97,11 @@
             return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }
 
-        private static Action<Stream> SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model)
+        private static Action<Stream> SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model, IRenderContext renderContext)
         {
             try
             {
-                return viewEngine.RenderView(locationResult, model);
+                return viewEngine.RenderView(locationResult, model, renderContext);
             }
             catch (Exception)
             {
