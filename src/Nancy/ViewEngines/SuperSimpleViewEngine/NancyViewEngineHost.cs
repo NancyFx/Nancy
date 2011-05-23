@@ -35,7 +35,14 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>Contents of the template, or null if not found</returns>
         public string GetTemplate(string templateName, object model)
         {
-            return this.renderContext.LocateView(templateName, model).Contents.Invoke().ReadToEnd();
+            var viewLocationResult = this.renderContext.LocateView(templateName, model);
+
+            if (viewLocationResult == null)
+            {
+                return "[ERR!]";
+            }
+
+            return viewLocationResult.Contents.Invoke().ReadToEnd();
         }
 
         /// <summary>

@@ -67,6 +67,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.F
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ModelBinding", "Nancy.Demo.ModelBinding\Nancy.Demo.ModelBinding.csproj", "{1258BFCD-3BAD-4373-B786-4D698EC3C157}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.SuperSimpleViewEngine", "Nancy.Demo.SuperSimpleViewEngine\Nancy.Demo.SuperSimpleViewEngine.csproj", "{4885B9DF-D99C-4A1C-8606-259D32A58C33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -367,6 +369,16 @@ Global
 		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{1258BFCD-3BAD-4373-B786-4D698EC3C157}.Release|x86.ActiveCfg = Release|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -401,5 +413,6 @@ Global
 		{7959D79C-9E2B-4871-9470-6A6B527ABE5E} = {4A24657F-9695-437B-9702-2541ED280628}
 		{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B} = {4A24657F-9695-437B-9702-2541ED280628}
 		{1258BFCD-3BAD-4373-B786-4D698EC3C157} = {4A24657F-9695-437B-9702-2541ED280628}
+		{4885B9DF-D99C-4A1C-8606-259D32A58C33} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 EndGlobal

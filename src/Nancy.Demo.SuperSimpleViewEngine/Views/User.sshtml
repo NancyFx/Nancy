@@ -1,0 +1,5 @@
+﻿@Each
+Firstname: @Current.FirstName <br/>
+Surname: @Current.LastName <br/>
+<br/>
+@EndEach

@@ -1,0 +1,19 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Super Simple View Engine</title>
+</head>
+<body>
+<h1>Super Simple View Engine</h1>
+<h2>Partials</h2>
+<p>Login box below rendered via a partial view with no model.</p>
+<div id="login">
+	@Partial['login'];
+</div>
+<p>Box below is rendered via a partial with a sub-model passed in.</p>
+<p>The submodel is a list which the partial iterates over with Each</p>
+<div id="users">
+	@Partial['user', Model.Users];
+</div>
+</body>
+</html>

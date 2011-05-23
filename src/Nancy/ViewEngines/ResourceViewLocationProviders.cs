@@ -116,6 +116,7 @@
         {
             var resourceStreams =
                 from assembly in AppDomainAssemblyTypeScanner.Assemblies
+                where !assembly.FullName.StartsWith(@"System.")
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
                 where resourceName.EndsWith(viewEngineExtension, StringComparison.OrdinalIgnoreCase)

@@ -72,12 +72,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model)
         {
-            if (model == null)
-            {
-                return template;
-            }
-
-            return this.processors.Aggregate(template, (current, processor) => processor(current, model));
+            return this.processors.Aggregate(template, (current, processor) => processor(current, model ?? new object()));
         }
 
         /// <summary>
