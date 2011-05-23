@@ -56,6 +56,11 @@
 
         private static string GetEncodedResouceName(string commonResourceNamespace, string location, string viewName)
         {
+            if (commonResourceNamespace.Equals(viewName, StringComparison.OrdinalIgnoreCase))
+            {
+                return viewName;
+            }
+
             var locationWithoutViewName =
                 location.Replace(viewName, string.Empty);
 
