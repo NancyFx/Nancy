@@ -106,7 +106,7 @@
 
             return (segmentCount < 2) ?
                 string.Empty :
-                string.Format("{0}.{1}", nameSegments.ElementAt(segmentCount - 2), nameSegments.Last());
+                nameSegments.ElementAt(segmentCount - 2);
         }
 
         private static string GetResourceNameExtension(string resourceName)
