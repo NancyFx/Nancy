@@ -4,6 +4,8 @@ namespace Nancy.ViewEngines
 
     public interface IRenderContext
     {
+        string HtmlEncode(string input);
+
         ViewLocationResult LocateView(string viewName, dynamic model);
     }
 
@@ -16,6 +18,11 @@ public class DefaultRenderContext : IRenderContext
     {
         this.viewResolver = viewResolver;
         this.viewLocationContext = viewLocationContext;
+    }
+
+    public string HtmlEncode(string input)
+    {
+        return Helpers.HttpUtility.HtmlEncode(input);
     }
 
     public ViewLocationResult LocateView(string viewName, dynamic model)

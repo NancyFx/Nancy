@@ -24,7 +24,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>Encoded string</returns>
         public string HtmlEncode(string input)
         {
-            return Helpers.HttpUtility.HtmlEncode(input);
+            return this.renderContext.HtmlEncode(input);
         }
 
         /// <summary>
