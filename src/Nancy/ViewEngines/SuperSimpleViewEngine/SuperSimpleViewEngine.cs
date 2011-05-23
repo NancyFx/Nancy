@@ -1,4 +1,4 @@
-namespace Nancy.ViewEngines
+namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System;
     using System.Collections;
@@ -16,7 +16,7 @@ namespace Nancy.ViewEngines
         /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
-        private readonly Regex singleSubstitutionsRegEx = new Regex(@"@Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?", RegexOptions.Compiled);
+        private readonly Regex singleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for each blocks
@@ -26,7 +26,7 @@ namespace Nancy.ViewEngines
         /// <summary>
         /// Compiled Regex for each block current substitutions
         /// </summary>
-        private readonly Regex eachItemSubstitutionRegEx = new Regex(@"@Current(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+        private readonly Regex eachItemSubstitutionRegEx = new Regex(@"@(?<Encode>!)?Current(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for if blocks
@@ -34,20 +34,33 @@ namespace Nancy.ViewEngines
         private readonly Regex conditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndIf;?", RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
+        /// Compiled regex for partial blocks
+        /// </summary>
+        private readonly Regex partialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
+
+        /// <summary>
         /// View engine transform processors
         /// </summary>
         private readonly List<Func<string, object, string>> processors;
 
         /// <summary>
+        /// Stores the view engine context
+        /// </summary>
+        private IViewEngineHost viewEngineHost;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="SuperSimpleViewEngine"/> class.
         /// </summary>
-        public SuperSimpleViewEngine()
+        public SuperSimpleViewEngine(IViewEngineHost viewEngineHost)
         {
+            this.viewEngineHost = viewEngineHost;
+
             this.processors = new List<Func<string, object, string>>
                 {
                     this.PerformSingleSubstitutions,
                     this.PerformEachSubstitutions,
                     this.PerformConditionalSubstitutions,
+                    this.PerformPartialSubstitutions,
                 };
         }
 
@@ -261,7 +274,12 @@ namespace Nancy.ViewEngines
                         return "[ERR!]";
                     }
 
-                    return substitution.Item2 == null ? String.Empty : substitution.Item2.ToString();
+                    if (substitution.Item2 == null)
+                    {
+                        return String.Empty;
+                    }
+
+                    return m.Groups["Encode"].Success ? this.viewEngineHost.HtmlEncode(substitution.Item2.ToString()) : substitution.Item2.ToString();
                 });
         }
 
@@ -322,7 +340,7 @@ namespace Nancy.ViewEngines
                 {
                     if (String.IsNullOrEmpty(eachMatch.Groups["ParameterName"].Value))
                     {
-                        return item.ToString();
+                        return eachMatch.Groups["Encode"].Success ? this.viewEngineHost.HtmlEncode(item.ToString()) : item.ToString();
                     }
 
                     var properties = GetCaptureGroupValues(eachMatch, "ParameterName");
@@ -334,7 +352,12 @@ namespace Nancy.ViewEngines
                         return "[ERR!]";
                     }
 
-                    return substitution.Item2 == null ? String.Empty : substitution.Item2.ToString();
+                    if (substitution.Item2 == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    return eachMatch.Groups["Encode"].Success ? this.viewEngineHost.HtmlEncode(substitution.Item2.ToString()) : substitution.Item2.ToString();
                 });
         }
 
@@ -362,6 +385,44 @@ namespace Nancy.ViewEngines
                     }
 
                     return predicateResult ? m.Groups["Contents"].Value : String.Empty;
+                });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Perform @Partial partial view expansion
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with partials expanded</returns>
+        private string PerformPartialSubstitutions(string template, object model)
+        {
+            var result = template;
+
+            result = this.partialSubstitutionRegEx.Replace(
+                result,
+                m =>
+                {
+                    var partialViewName = m.Groups["ViewName"].Value;
+                    var partialModel = model;
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    if (m.Groups["Model"].Length > 0)
+                    {
+                        var modelValue = GetPropertyValueFromParameterCollection(model, properties);
+
+                        if (modelValue.Item1 != true)
+                        {
+                            return "[ERR!]";
+                        }
+
+                        partialModel = modelValue.Item2;
+                    }
+
+                    var partialTemplate = this.viewEngineHost.GetTemplate(partialViewName, partialModel);
+
+                    return this.Render(partialTemplate, partialModel);
                 });
 
             return result;

@@ -1,4 +1,4 @@
-﻿namespace Nancy.ViewEngines
+﻿namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System;
     using System.Collections.Generic;
@@ -9,11 +9,6 @@
     /// </summary>
     public class SuperSimpleViewEngineWrapper : IViewEngine
     {
-        /// <summary>
-        /// The actual view engine
-        /// </summary>
-        private readonly SuperSimpleViewEngine viewEngine = new SuperSimpleViewEngine();
-
         /// <summary>
         /// Extensions that the view engine supports
         /// </summary>
@@ -40,7 +35,8 @@
             return s =>
             {
                 var writer = new StreamWriter(s);
-                writer.Write(this.viewEngine.Render(viewLocationResult.Contents.Invoke().ReadToEnd(), model));
+                var viewEngine = new SuperSimpleViewEngine(new NancyViewEngineHost(renderContext));
+                writer.Write(viewEngine.Render(viewLocationResult.Contents.Invoke().ReadToEnd(), model));
                 writer.Flush();
             };
         }
