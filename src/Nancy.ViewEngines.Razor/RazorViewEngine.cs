@@ -165,6 +165,7 @@
                 var writer = 
                     new StreamWriter(stream);
 
+                view.Html = new HtmlHelpers(this, renderContext, stream);
                 view.Model = model;
                 view.Writer = writer;
                 view.Execute();

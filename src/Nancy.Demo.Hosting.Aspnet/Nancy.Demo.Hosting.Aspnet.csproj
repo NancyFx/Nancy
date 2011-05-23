@@ -112,6 +112,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\embedded.django" />
     <Content Include="Views\someview.cshtml" />
+    <Content Include="Views\partial.cshtml" />
     <None Include="Views\razor-dependency.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
