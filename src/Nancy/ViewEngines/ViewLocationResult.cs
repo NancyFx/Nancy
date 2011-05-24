@@ -6,7 +6,7 @@
     /// <summary>
     /// Contains the result of an attempt to locate a view.
     /// </summary>
-    public class ViewLocationResult
+    public class ViewLocationResult : IEquatable<ViewLocationResult>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
@@ -48,5 +48,40 @@
         /// </summary>
         /// <value>A <see cref="string"/> containing the name of the view.</value>
         public string Name { get; private set; }
+
+        public bool Equals(ViewLocationResult other)
+        {
+            if (ReferenceEquals(null, other)) return false;
+            if (ReferenceEquals(this, other)) return true;
+            return Equals(other.Extension, Extension) && Equals(other.Location, Location) && Equals(other.Name, Name);
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (ReferenceEquals(null, obj)) return false;
+            if (ReferenceEquals(this, obj)) return true;
+            return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult) obj);
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                var result = Extension.GetHashCode();
+                result = (result*397) ^ Location.GetHashCode();
+                result = (result*397) ^ Name.GetHashCode();
+                return result;
+            }
+        }
+
+        public static bool operator ==(ViewLocationResult left, ViewLocationResult right)
+        {
+            return Equals(left, right);
+        }
+
+        public static bool operator !=(ViewLocationResult left, ViewLocationResult right)
+        {
+            return !Equals(left, right);
+        }
     }
 }

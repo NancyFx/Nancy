@@ -161,8 +161,16 @@
                 return new ViewEngineResult(searchedLocations);
             }
 
-            entry = Engine.CreateEntry(descriptor);
-            this.SetCacheValue(descriptorParams, entry);
+            entry = (ISparkViewEntry)this.RenderContext.ViewCache.Retrieve(this.ViewLocationResult);
+
+            if (entry == null)
+            {
+                entry = this.Engine.CreateEntry(descriptor);
+                this.RenderContext.ViewCache.Store(this.ViewLocationResult, entry);
+            }
+
+            //this.SetCacheValue(descriptorParams, entry);
+
             return BuildResult(actionContext.HttpContext, entry);
         }
 
@@ -184,13 +192,13 @@
 
         private ViewEngineResult BuildResult(HttpContextBase httpContext, ISparkViewEntry entry)
         {
-            var view = entry.CreateInstance();
-            if (view is NancySparkView)
+            var sparkView = entry.CreateInstance();
+            if (sparkView is NancySparkView)
             {
-                ((NancySparkView)view).CacheService = this.CacheServiceProvider.GetCacheService(httpContext);
+                ((NancySparkView)sparkView).CacheService = this.CacheServiceProvider.GetCacheService(httpContext);
             }
 
-            return new ViewEngineResult(view as NancySparkView, this);
+            return new ViewEngineResult(sparkView as NancySparkView, this);
         }
 
         public SparkViewDescriptor CreateDescriptor(
@@ -373,13 +381,20 @@
             public SparkViewEngine Engine { get; set; }
         }
 
-        private ViewEngineResult RenderView<TModel>(string path, TModel model)
+        private IRenderContext RenderContext { get; set; }
+
+        private ViewLocationResult ViewLocationResult { get; set; }
+
+        private ViewEngineResult RenderViewInternal<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
         {
-            var viewName = 
-                Path.GetFileNameWithoutExtension(path);
+            this.RenderContext = renderContext;
+            this.ViewLocationResult = viewLocationResult;
+
+            var viewName =
+                Path.GetFileNameWithoutExtension(viewLocationResult.Location);
 
             var viewPath =
-                Path.Combine(this.rootPathProvider.GetRootPath(), Path.GetDirectoryName(path));
+                Path.Combine(this.rootPathProvider.GetRootPath(), Path.GetDirectoryName(viewLocationResult.Location));
 
             var targetNamespace = string.Empty; //TODO Rob G: This can be used to support things like areas or features
             this.ViewFolder = new FileSystemViewFolder(viewPath);
@@ -412,11 +427,8 @@
         {
             return stream =>
             {
-                var locatedView =
-                    renderContext.LocateView("routes.cshtml", model);
-
                 ViewEngineResult viewEngineResult =
-                    this.RenderView(viewLocationResult.Location, model);
+                    this.RenderViewInternal(viewLocationResult, model, renderContext);
                 
                 var writer =
                     new StreamWriter(stream);

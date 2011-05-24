@@ -6,6 +6,39 @@
     using System.Linq;
     using System.Text.RegularExpressions;
 
+    public interface IViewCache
+    {
+        void Store(ViewLocationResult viewLocationResult, object viewInstance);
+        object Retrieve(ViewLocationResult viewLocationResult);
+    }
+
+    public class DefaultViewCache : IViewCache
+    {
+        private readonly Dictionary<ViewLocationResult, object> viewCache;
+        private readonly object cacheLock = new object();
+
+        public DefaultViewCache()
+        {
+            this.viewCache = new Dictionary<ViewLocationResult, object>();
+        }
+
+        public void Store(ViewLocationResult viewLocationResult, object viewInstance)
+        {
+            lock (this.cacheLock)
+            {
+                this.viewCache[viewLocationResult] = viewInstance;
+            }
+        }
+
+        public object Retrieve(ViewLocationResult viewLocationResult)
+        {
+            lock (this.cacheLock)
+            {
+                return this.viewCache.ContainsKey(viewLocationResult) ? this.viewCache[viewLocationResult] : null;
+            }
+        }
+    }
+
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.
     /// </summary>
@@ -13,6 +46,7 @@
     {
         private readonly IViewResolver viewResolver;
         private readonly IEnumerable<IViewEngine> viewEngines;
+        private readonly IRenderContextFactory renderContextFactory;
         private static readonly Action<Stream> EmptyView = x => { };
 
         /// <summary>
@@ -20,10 +54,11 @@
         /// </summary>
         /// <param name="viewResolver">An <see cref="IViewResolver"/> instance that should be used to resolve the location of a view.</param>
         /// <param name="viewEngines">An <see cref="IEnumerable{T}"/> instance containing the <see cref="IViewEngine"/> instances that should be able to be used to render a view</param>
-        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines)
+        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory)
         {
             this.viewResolver = viewResolver;
             this.viewEngines = viewEngines;
+            this.renderContextFactory = renderContextFactory;
         }
 
         /// <summary>
@@ -73,7 +108,7 @@
                 resolvedViewEngine,
                 viewLocationResult,
                 model,
-                new DefaultRenderContext(this.viewResolver, viewLocationContext)
+                this.renderContextFactory.GetRenderContext(viewLocationContext)
             );
         }
 

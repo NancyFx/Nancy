@@ -10,10 +10,12 @@ namespace Nancy.Tests.Unit.ViewEngines
     public class DefaultViewFactoryFixture
     {
         private readonly IViewResolver resolver;
+        private readonly IRenderContextFactory renderContextFactory;
 
         public DefaultViewFactoryFixture()
         {
             this.resolver = A.Fake<IViewResolver>();
+            this.renderContextFactory = A.Fake<IRenderContextFactory>();
         }
 
         private DefaultViewFactory CreateFactory(params IViewEngine[] viewEngines)
@@ -23,7 +25,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 viewEngines = new IViewEngine[] { };
             }
 
-            return new DefaultViewFactory(this.resolver, viewEngines);
+            return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory);
         }
 
         [Fact]

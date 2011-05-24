@@ -39,7 +39,9 @@ namespace Nancy.Bootstrapper
                         Binder = typeof(DefaultBinder),
                         BindingDefaults = typeof(BindingDefaults),
                         FieldNameConverter = typeof(DefaultFieldNameConverter),
-                        ViewResolver = typeof(DefaultViewResolver)
+                        ViewResolver = typeof(DefaultViewResolver),
+                        ViewCache = typeof(DefaultViewCache),
+                        RenderContextFactory = typeof(DefaultRenderContextFactory)
                     };
             }
         }
@@ -75,6 +77,10 @@ namespace Nancy.Bootstrapper
         public Type FieldNameConverter { get; set; }
 
         public Type ViewResolver { get; set; }
+
+        public Type ViewCache { get; set; }
+
+        public Type RenderContextFactory { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -131,7 +137,9 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IBinder), this.Binder), 
                 new TypeRegistration(typeof(BindingDefaults), this.BindingDefaults), 
                 new TypeRegistration(typeof(IFieldNameConverter), this.FieldNameConverter), 
-                new TypeRegistration(typeof(IViewResolver), this.ViewResolver), 
+                new TypeRegistration(typeof(IViewResolver), this.ViewResolver),
+                new TypeRegistration(typeof(IViewCache), this.ViewCache),
+                new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory)
             };
         }
     }

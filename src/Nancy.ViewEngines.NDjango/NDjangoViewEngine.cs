@@ -28,11 +28,10 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return stream =>
-            {
-                var templateManagerProvider = 
+            return stream =>{
+                var templateManagerProvider =
                     new TemplateManagerProvider()
-                    .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
+                        .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
 
                 var templateManager = 
                     templateManagerProvider.GetNewManager();
