@@ -48,22 +48,28 @@
             return new RazorTemplateEngine(host);
         }
 
-        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader) 
+        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader)
         {
+            var view = (NancyRazorViewBase)this.Context.ViewCache.Retrieve(this.ViewLocationResult);
+
+            if (view == null)
+            {
             var razorResult = this.engine.GenerateCode(reader);
 
-            string code;
+            //using (var sw = new StringWriter()) {
+            //    this.codeDomProvider.GenerateCodeFromCompileUnit(razorResult.GeneratedCode, sw, new CodeGeneratorOptions());
+            //    code = sw.GetStringBuilder().ToString();
+            //}
 
-            using (var sw = new StringWriter()) {
-                this.codeDomProvider.GenerateCodeFromCompileUnit(razorResult.GeneratedCode, sw, new CodeGeneratorOptions());
-                code = sw.GetStringBuilder().ToString();
-            }
-
-            var view = 
+            view = 
                 GenerateRazorView(this.codeDomProvider, razorResult);
+            
+            this.Context.ViewCache.Store(this.ViewLocationResult, view);
+            }
             // TODO DEBUG ONLY
+            
 
-            view.Code = code;
+            view.Code = string.Empty;
 
             return view;
         }
@@ -137,6 +143,9 @@
             get { return new[] { "cshtml", "vbhtml" }; }
         }
 
+        private IRenderContext Context { get; set; }
+        private ViewLocationResult ViewLocationResult { get; set; }
+
         /// <summary>
         /// Renders the view.
         /// </summary>
@@ -147,6 +156,9 @@
         {
             return stream =>
             {
+                this.Context = renderContext;
+                this.ViewLocationResult = viewLocationResult;
+
                 var view = 
                     GetCompiledView<dynamic>(viewLocationResult.Contents.Invoke());
 

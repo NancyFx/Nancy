@@ -142,15 +142,15 @@
                 DescriptorBuilder.GetExtraParameters(actionContext));
 
             ISparkViewEntry entry;
-            if (useCache)
-            {
-                if (TryGetCacheValue(descriptorParams, out entry) && entry.IsCurrent())
-                {
-                    return BuildResult(actionContext.HttpContext, entry);
-                }
+            //if (useCache)
+            //{
+            //    if (TryGetCacheValue(descriptorParams, out entry) && entry.IsCurrent())
+            //    {
+            //        return BuildResult(actionContext.HttpContext, entry);
+            //    }
 
-                return cacheMissResult;
-            }
+            //    return cacheMissResult;
+            //}
 
             var descriptor = DescriptorBuilder.BuildDescriptor(
                 descriptorParams,
@@ -169,7 +169,7 @@
                 this.RenderContext.ViewCache.Store(this.ViewLocationResult, entry);
             }
 
-            //this.SetCacheValue(descriptorParams, entry);
+            this.SetCacheValue(descriptorParams, entry);
 
             return BuildResult(actionContext.HttpContext, entry);
         }
