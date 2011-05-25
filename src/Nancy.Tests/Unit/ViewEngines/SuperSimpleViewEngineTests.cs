@@ -21,17 +21,6 @@
         }
 
         [Fact]
-        public void Should_return_straight_template_if_model_is_null()
-        {
-            const string input = @"<html><head></head><body>Hello @Model.Name;</body></html>";
-            dynamic model = null;
-
-            var result = this.viewEngine.Render(input, model);
-
-            Assert.Equal(input, result);
-        }
-
-        [Fact]
         public void Should_replaces_valid_property_when_followed_by_closing_tag()
         {
             const string input = @"<html><head></head><body>Hello there @Model.Name;</body></html>";

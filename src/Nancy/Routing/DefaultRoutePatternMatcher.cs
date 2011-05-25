@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text.RegularExpressions;
@@ -8,14 +9,13 @@
 
     public class DefaultRoutePatternMatcher : IRoutePatternMatcher
     {
+        private ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
+
         public IRoutePatternMatchResult Match(string requestedPath, string routePath)
         {
-            var routePathPattern =
-                BuildRegexMatcher(routePath);
+            var routePathPattern = this.matcherCache.GetOrAdd(routePath, (s) => BuildRegexMatcher(routePath));
 
-            requestedPath =
-                TrimTrailingSlashFromRequestedPath(requestedPath);
-
+            requestedPath = TrimTrailingSlashFromRequestedPath(requestedPath);
             var match = routePathPattern.Match(requestedPath);
 
             return new RoutePatternMatchResult(
@@ -44,7 +44,7 @@
             var pattern =
                 string.Concat(@"^/", string.Join("/", parameterizedSegments), @"$");
 
-            return new Regex(pattern, RegexOptions.IgnoreCase);
+            return new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
         private static DynamicDictionary GetParameters(Regex regex, GroupCollection groups)
@@ -67,7 +67,7 @@
                 if (current.IsParameterized())
                 {
                     var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>([/A-Z0-9()*!'._-]|%[0-9A-F]{{2}})*)", segment.GetParameterName());
+                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>([/A-Za-z0-9()*!'._-]|%[0-9A-F]{{2}})*)", segment.GetParameterName());
 
                     current = segment.Replace(segment, replacement);
                 }

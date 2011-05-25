@@ -31,6 +31,11 @@
         private NancyConventions conventions;
 
         /// <summary>
+        /// Nancy modules - built on startup from the app domain scanner
+        /// </summary>
+        private ModuleRegistration[] modules;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -100,11 +105,14 @@
         {
             get
             {
-                var moduleKeyGenerator = this.GetModuleKeyGenerator();
-
-                return AppDomainAssemblyTypeScanner
-                            .TypesOf<NancyModule>(true)
-                            .Select(t => new ModuleRegistration(t, moduleKeyGenerator.GetKeyForModuleType(t)));
+                // Shouldn't need thread safety here?
+                return 
+                    this.modules 
+                    ?? 
+                    (this.modules = AppDomainAssemblyTypeScanner
+                                        .TypesOf<NancyModule>(true)
+                                        .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
+                                        .ToArray());
             }
         }
 
@@ -191,6 +199,7 @@
             }
 
             this.ApplicationContainer = this.GetApplicationContainer();
+
             this.RegisterBootstrapperTypes(this.ApplicationContainer);
             this.ConfigureApplicationContainer(this.ApplicationContainer);
 

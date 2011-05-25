@@ -8,6 +8,8 @@
 
     public interface IViewCache
     {
+        //TCompiledView GetOrAdd<TCompiledView>(ViewLocationResult viewLocationResult, Func<ViewLocationResult, TCompiledView> valueFactory);
+
         void Store(ViewLocationResult viewLocationResult, object viewInstance);
         object Retrieve(ViewLocationResult viewLocationResult);
     }
