@@ -9,13 +9,16 @@ namespace Nancy.Demo.SuperSimpleViewEngine.Models
 
         public IEnumerable<User> Users { get; set; }
 
+        public string NaughtyStuff { get; set; }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MainModel(string name, IEnumerable<User> users)
+        public MainModel(string name, IEnumerable<User> users, string naughtyStuff)
         {
             this.Name = name;
             this.Users = users;
+            this.NaughtyStuff = naughtyStuff;
         }
     }
 

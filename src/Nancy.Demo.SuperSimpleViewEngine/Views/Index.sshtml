@@ -2,7 +2,7 @@
 
 @Section['Content']
 	<p>This content from the index page<p>
-	<h2>Partials</h2>
+	<h3>Partials</h3>
 	<p>Login box below rendered via a partial view with no model.</p>
 	<div id="login">
 		@Partial['login'];
@@ -12,4 +12,7 @@
 	<div id="users">
 		@Partial['user', Model.Users];
 	</div>
+	<h3>Encoding</h3>
+	<p>Model output can also be encoded:</p>
+	<p>@!Model.NaughtyStuff</p>
 @EndSection
