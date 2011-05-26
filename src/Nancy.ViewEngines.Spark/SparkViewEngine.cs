@@ -428,7 +428,7 @@
             return stream =>
             {
                 ViewEngineResult viewEngineResult =
-                    this.RenderViewInternal(viewLocationResult, model, renderContext);
+                    this.RenderViewInternal<dynamic>(viewLocationResult, model, renderContext);
                 
                 var writer =
                     new StreamWriter(stream);
