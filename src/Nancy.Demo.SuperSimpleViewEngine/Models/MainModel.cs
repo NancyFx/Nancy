@@ -1,16 +1,20 @@
 namespace Nancy.Demo.SuperSimpleViewEngine.Models
 {
+    using System;
     using System.Collections.Generic;
 
     public class MainModel
     {
+        public string Name { get; set; }
+
         public IEnumerable<User> Users { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
-        public MainModel(IEnumerable<User> users)
+        public MainModel(string name, IEnumerable<User> users)
         {
+            this.Name = name;
             this.Users = users;
         }
     }

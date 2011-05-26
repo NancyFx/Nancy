@@ -4,6 +4,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -39,6 +40,21 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private readonly Regex partialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
 
         /// <summary>
+        /// Compiled RegEx for section block declarations
+        /// </summary>
+        private readonly Regex sectionDeclarationRegEx = new Regex(@"@Section\[\'(?<SectionName>.+?)\'\];?", RegexOptions.Compiled);
+
+        /// <summary>
+        /// Compiled RegEx for section block contents
+        /// </summary>
+        private readonly Regex sectionContentsRegEx = new Regex(@"(?:@Section\[\'(?<SectionName>.+?)\'\];?(?<SectionContents>.*?)@EndSection;?)", RegexOptions.Compiled | RegexOptions.Singleline);
+
+        /// <summary>
+        /// Compiled RegEx for master page declaration
+        /// </summary>
+        private readonly Regex masterPageHeaderRegEx = new Regex(@"^(?:@Master\[\'(?<MasterPage>.+?)\'\]);?", RegexOptions.Compiled);
+
+        /// <summary>
         /// View engine transform processors
         /// </summary>
         private readonly List<Func<string, object, string>> processors;
@@ -61,6 +77,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     this.PerformEachSubstitutions,
                     this.PerformConditionalSubstitutions,
                     this.PerformPartialSubstitutions,
+                    this.PerformMasterPageSubstitutions,
                 };
         }
 
@@ -421,6 +438,73 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 });
 
             return result;
+        }
+
+        /// <summary>
+        /// Invokes the master page rendering with current sections if necessary
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with master page applied and sections substituted</returns>
+        private string PerformMasterPageSubstitutions(string template, object model)
+        {
+            var masterPageName = this.GetMasterPageName(template);
+
+            if (String.IsNullOrWhiteSpace(masterPageName))
+            {
+                return template;
+            }
+
+            var masterTemplate = this.viewEngineHost.GetTemplate(masterPageName, model);
+            var sectionMatches = this.sectionContentsRegEx.Matches(template);
+            var sections = sectionMatches.Cast<Match>().ToDictionary(sectionMatch => sectionMatch.Groups["SectionName"].Value, sectionMatch => sectionMatch.Groups["SectionContents"].Value);
+
+            return this.RenderMasterPage(masterTemplate, sections, model);
+        }
+
+        /// <summary>
+        /// Renders a master page - does a normal render then replaces any section tags with sections passed in
+        /// </summary>
+        /// <param name="masterTemplate">The master page template</param>
+        /// <param name="sections">Dictionary of section contents</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with the master page applied and sections substituted</returns>
+        private string RenderMasterPage(string masterTemplate, IDictionary<string, string> sections, object model)
+        {
+            var result = this.Render(masterTemplate, model);
+
+            result = this.sectionDeclarationRegEx.Replace(
+                result,
+                m =>
+                {
+                    var sectionName = m.Groups["SectionName"].Value;
+
+                    return sections.ContainsKey(sectionName) ? sections[sectionName] : String.Empty;
+                });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Gets the master page name, if one is specificed
+        /// </summary>
+        /// <param name="template">The template</param>
+        /// <returns>Master page name or String.Empty</returns>
+        private string GetMasterPageName(string template)
+        {
+            using (var stringReader = new StringReader(template))
+            {
+                var firstLine = stringReader.ReadLine();
+
+                if (firstLine == null)
+                {
+                    return String.Empty;
+                }
+
+                var masterPageMatch = this.masterPageHeaderRegEx.Match(firstLine);
+
+                return masterPageMatch.Success ? masterPageMatch.Groups["MasterPage"].Value : string.Empty;
+            }
         }
     }
 }

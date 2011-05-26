@@ -11,7 +11,7 @@ namespace Nancy.Demo.SuperSimpleViewEngine
         {
             Get["/"] = (x) =>
                 {
-                    var model = new MainModel(new[]
+                    var model = new MainModel("Jimbo", new[]
                         {
                             new User("Bob", "Smith"),
                             new User("Jimbo", "Jones"),
