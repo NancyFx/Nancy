@@ -1,31 +1,69 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
+    using System;
     using System.IO;
     using System.Web;
 
+    /// <summary>
+    /// 
+    /// </summary>
+    public class NonEncodedHtmlString : IHtmlString
+    {
+        private readonly string value;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NonEncodedHtmlString"/> class.
+        /// </summary>
+        /// <param name="value">The value.</param>
+        public NonEncodedHtmlString(string value)
+        {
+            this.value = value;
+        }
+
+        /// <summary>
+        /// Returns an HTML-encoded string.
+        /// </summary>
+        /// <returns>An HTML-encoded string.</returns>
+        public string ToHtmlString()
+        {
+            return value;
+        }
+    }
+
     public class HtmlHelpers
     {
-        private readonly IViewEngine engine;
-        private readonly IRenderContext renderContext;
+        public readonly IViewEngine engine;
+        public readonly IRenderContext renderContext;
 
-        private readonly Stream s;
-
-        public HtmlHelpers(IViewEngine engine, IRenderContext renderContext, Stream s)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HtmlHelpers"/> class.
+        /// </summary>
+        /// <param name="engine"></param>
+        /// <param name="renderContext"></param>
+        public HtmlHelpers(IViewEngine engine, IRenderContext renderContext)
         {
             this.engine = engine;
             this.renderContext = renderContext;
-            this.s = s;
         }
 
-        public void Partial(string viewName, dynamic model)
+        public IHtmlString Partial(string viewName)
+        {
+            return this.Partial(viewName, null);
+        }
+
+        public IHtmlString Partial(string viewName, dynamic model)
         {
             ViewLocationResult view = this.renderContext.LocateView(viewName, model);
 
-            var content = view.Contents.Invoke().ReadToEnd();
+            Action<Stream> action = this.engine.RenderView(view, model, this.renderContext);
+            var mem = new MemoryStream();
 
-            var writer = new StreamWriter(s);
-            writer.Write(content);
-            writer.Flush();
+            action.Invoke(mem);
+            mem.Position = 0;
+
+            var reader = new StreamReader(mem);
+
+            return new NonEncodedHtmlString(reader.ReadToEnd());
         }
     }
 

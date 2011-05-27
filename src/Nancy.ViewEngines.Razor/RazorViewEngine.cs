@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Web;
     using System.Web.Razor;
     using Microsoft.CSharp;
 
@@ -43,6 +44,7 @@
 
             host.NamespaceImports.Add("System");
             host.NamespaceImports.Add("System.IO");
+            host.NamespaceImports.Add("System.Web");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
 
             return new RazorTemplateEngine(host);
@@ -50,10 +52,6 @@
 
         private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader)
         {
-            var view = (NancyRazorViewBase)this.Context.ViewCache.Retrieve(this.ViewLocationResult);
-
-            if (view == null)
-            {
             var razorResult = this.engine.GenerateCode(reader);
 
             //using (var sw = new StringWriter()) {
@@ -61,14 +59,9 @@
             //    code = sw.GetStringBuilder().ToString();
             //}
 
-            view = 
+            var view = 
                 GenerateRazorView(this.codeDomProvider, razorResult);
             
-            this.Context.ViewCache.Store(this.ViewLocationResult, view);
-            }
-            // TODO DEBUG ONLY
-            
-
             view.Code = string.Empty;
 
             return view;
@@ -85,7 +78,8 @@
                 new CompilerParameters(new [] {
                     GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
                     GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
-                    GetAssemblyPath(Assembly.GetExecutingAssembly())}, outputAssemblyName),
+                    GetAssemblyPath(Assembly.GetExecutingAssembly()),
+                    GetAssemblyPath(typeof(IHtmlString).Assembly)}, outputAssemblyName),
                     razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)
@@ -133,6 +127,22 @@
             return new Uri(assembly.CodeBase).LocalPath;
         }
 
+        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext)
+        {
+            var view = (NancyRazorViewBase)renderContext.ViewCache.Retrieve(viewLocationResult);
+
+            if (view == null)
+            {
+                view = GetCompiledView<dynamic>(viewLocationResult.Contents.Invoke());
+
+                renderContext.ViewCache.Store(viewLocationResult, view);
+            }
+
+            view.Code = string.Empty;
+
+            return view;
+        }
+
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
         /// </summary>
@@ -143,32 +153,30 @@
             get { return new[] { "cshtml", "vbhtml" }; }
         }
 
-        private IRenderContext Context { get; set; }
-        private ViewLocationResult ViewLocationResult { get; set; }
-
         /// <summary>
         /// Renders the view.
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
+        /// <param name="renderContext"></param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
+            //@(section)?[\s]*(?<name>[A-Za-z]*)[\s]*{(?<content>[^\}]*)}?
+
             return stream =>
             {
-                this.Context = renderContext;
-                this.ViewLocationResult = viewLocationResult;
-
-                var view = 
-                    GetCompiledView<dynamic>(viewLocationResult.Contents.Invoke());
+                var view =
+                    GetOrCompileView(viewLocationResult, renderContext);
 
                 var writer = 
                     new StreamWriter(stream);
 
-                view.Html = new HtmlHelpers(this, renderContext, stream);
+                view.Html = new HtmlHelpers(this, renderContext);
                 view.Model = model;
                 view.Writer = writer;
                 view.Execute();
+
                 writer.Flush();
             };
         }
