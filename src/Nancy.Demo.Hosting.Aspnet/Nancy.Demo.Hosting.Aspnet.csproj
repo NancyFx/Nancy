@@ -112,7 +112,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\embedded.django" />
     <Content Include="Views\someview.cshtml" />
-    <Content Include="Views\partial.cshtml" />
     <Content Include="Views\layout.cshtml" />
     <Content Include="Views\contents.cshtml" />
     <None Include="Views\razor-dependency.cshtml" />
