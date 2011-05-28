@@ -116,6 +116,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Jonas Cannehag](http://github.com/knecke)
 * [José F. Romaniello](http://github.com/jfromaniello)
 * [Karl Seguin](http://github.com/karlseguin)
+* [Luke Smith](http://github.com/lukesmith)
 * [James Eggers](http://github.com/jameseggers1)
 * [Jason Mead](http://github.com/meadiagenic)
 * [Jeremy Skinner](http://github.com/jeremyskinner)
