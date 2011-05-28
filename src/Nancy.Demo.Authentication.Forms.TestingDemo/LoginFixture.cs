@@ -28,7 +28,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
                 with.FormValue("Password", "wrongpassword");
             });
 
-            response.ShouldHaveRedirectedTo("/login?error=true");
+            response.ShouldHaveRedirectedTo("/login?error=true&username=username");
         }
 
         [Fact]

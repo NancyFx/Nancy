@@ -84,7 +84,7 @@ namespace Nancy.Testing
                 return;
             }
 
-            var useFormValues = !String.IsNullOrEmpty(contextValues.BodyString);
+            var useFormValues = !String.IsNullOrEmpty(contextValues.FormValues);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
             var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };
 
