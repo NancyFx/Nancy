@@ -229,6 +229,28 @@
         }
 
         [Fact]
+        public void Should_return_methodnotallowedroute_with_allow_header_set_to_allowed_methods_matching_request_route()
+        {
+            // Given
+            var request = new FakeRequest("POST", "/foo/bar");
+            var context = new NancyContext();
+            context.Request = request;
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/bar");
+                x.AddPutRoute("/foo/bar");
+            });
+
+            // When
+            var route = this.resolver.Resolve(context, routeCache).Item1;
+
+            // Then
+            route.ShouldNotBeNull();
+            route.ShouldBeOfType<MethodNotAllowedRoute>();
+            route.Invoke(new DynamicDictionary()).Headers["Allow"].ShouldEqual("GET, PUT");
+        }
+
+        [Fact]
         public void Should_invoke_module_builder_with_context_and_resolved_module()
         {
             // Given
