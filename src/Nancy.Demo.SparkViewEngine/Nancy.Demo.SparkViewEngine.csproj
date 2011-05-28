@@ -63,6 +63,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="FifthElement\FifthElementModule.cs" />
     <Compile Include="MainModule.cs" />
   </ItemGroup>
   <ItemGroup>
