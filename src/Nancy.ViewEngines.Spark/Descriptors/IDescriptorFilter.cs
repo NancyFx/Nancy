@@ -5,12 +5,12 @@
     public interface IDescriptorFilter
     {
         /// <summary>
-        /// Called frequently to extract filter-specific parameters from a request context. This call
+        /// Called frequently to extract filter-specific parameters from a request viewLocationResult. This call
         /// happens on every request so should be implemented as efficiently as possible.
         /// </summary>
-        /// <param name="context">The current request's action context</param>
+        /// <param name="viewLocationResult">The current request's action viewLocationResult</param>
         /// <param name="extra">Dictionary where additional parameters should be added</param>
-        void ExtraParameters(ActionContext context, IDictionary<string, object> extra);
+        void ExtraParameters(ViewLocationResult viewLocationResult, IDictionary<string, object> extra);
 
         /// <summary>
         /// The DefaultDescriptorBuider calls this method for the filter to return a modified enumerable

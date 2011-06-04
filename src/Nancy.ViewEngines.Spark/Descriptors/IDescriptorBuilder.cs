@@ -9,9 +9,10 @@
         /// Implemented by custom descriptor builder to quickly extract additional parameters needed
         /// to locate templates, like the theme or language in effect for the request
         /// </summary>
-        /// <param name="actionContext">Context information for the current request</param>
+        /// <param name="viewLocationResult">Context information for the current request</param>
         /// <returns>An in-order array of values which are meaningful to BuildDescriptor on the same implementation class</returns>
-        IDictionary<string, object> GetExtraParameters(ActionContext actionContext);
+        IDictionary<string, object> GetExtraParameters(ViewLocationResult viewLocationResult);
+        //TODO: RobG: Move to lower in the Nancy stack to allow for multi-lingual support in all views
 
         /// <summary>
         /// Given a set of MVC-specific parameters, a descriptor for the target view is created. This can

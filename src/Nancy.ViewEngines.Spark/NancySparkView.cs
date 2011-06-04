@@ -8,8 +8,6 @@
     {
         public object Model { get; set; }
 
-        public ViewContext ViewContext { get; set; }
-
         public TextWriter Writer { get; set; }
 
         public void Execute()

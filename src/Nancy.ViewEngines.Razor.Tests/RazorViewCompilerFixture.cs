@@ -1,16 +1,20 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System.IO;
+    using FakeItEasy;
     using Nancy.Tests;
     using Xunit;
 
     public class RazorViewCompilerFixture
     {
         private readonly RazorViewEngine engine;
+        private IRenderContext renderContext;
 
         public RazorViewCompilerFixture()
         {
-            this.engine = new RazorViewEngine();            
+            this.engine = new RazorViewEngine();
+            this.renderContext = A.Fake<IRenderContext>();
+            A.CallTo(() => this.renderContext.ViewCache.Retrieve(A<ViewLocationResult>.Ignored)).Returns(null);
         }
 
         [Fact]
@@ -27,7 +31,7 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, null);
+            var action = this.engine.RenderView(location, null, this.renderContext);
             action.Invoke(stream);
 
             // Then

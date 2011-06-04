@@ -38,12 +38,12 @@
             get { return grammar.ParseUseMaster; }
         }
 
-        public virtual IDictionary<string, object> GetExtraParameters(ActionContext actionContext)
+        public virtual IDictionary<string, object> GetExtraParameters(ViewLocationResult viewLocationResult)
         {
             var extra = new Dictionary<string, object>();
             foreach (var filter in Filters)
             {
-                filter.ExtraParameters(actionContext, extra);
+                filter.ExtraParameters(viewLocationResult, extra);
             }
 
             return extra;

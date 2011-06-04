@@ -2,7 +2,6 @@
 {
     using System;
     using global::Spark;
-    using SparkViewEngine = Spark.SparkViewEngine;
 
     public static class DescriptorFilterExtensions
     {
@@ -11,7 +10,7 @@
             target.GetService<IDescriptorBuilder>().AddFilter(filter);
         }
 
-        public static void AddFilter(this SparkViewEngine target, IDescriptorFilter filter)
+        public static void AddFilter(this SparkViewEngineWrapper target, IDescriptorFilter filter)
         {
             target.DescriptorBuilder.AddFilter(filter);
         }
