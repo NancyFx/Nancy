@@ -28,4 +28,11 @@
             };
         }
     }
+
+    public class JsonResponse : JsonResponse<object>
+    {
+        public JsonResponse(object model) : base(model)
+        {
+        }
+    }
 }
