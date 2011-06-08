@@ -10,7 +10,7 @@
     using Nancy.ViewEngines.Spark.Descriptors;
 
     /// <summary>
-    /// 
+    /// View engine for rendering spark views.
     /// </summary>
     public class SparkViewEngine : IViewEngine
     {

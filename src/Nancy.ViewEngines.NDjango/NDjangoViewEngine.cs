@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.IO;
     using global::NDjango;
-    using global::NDjango.Interfaces;
 
     /// <summary>
     /// View engine for rendering django views.

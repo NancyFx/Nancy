@@ -22,14 +22,9 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         public RazorViewEngine()
-            : this(GetRazorTemplateEngine(), new CSharpCodeProvider())
         {
-        }
-
-        public RazorViewEngine(RazorTemplateEngine razorTemplateEngine, CodeDomProvider codeDomProvider)
-        {
-            this.engine = razorTemplateEngine;
-            this.codeDomProvider = codeDomProvider;
+            this.engine = GetRazorTemplateEngine();
+            this.codeDomProvider = new CSharpCodeProvider();
         }
 
         private static RazorTemplateEngine GetRazorTemplateEngine()
