@@ -145,7 +145,7 @@
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get { return new[] { "cshtml", "vbhtml" }; }
+            get { return new[] { "cshtml" }; }
         }
 
         /// <summary>
