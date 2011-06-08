@@ -72,6 +72,9 @@
     <Compile Include="Cookies\INancyCookie.cs" />
     <Compile Include="DefaultNancyBootstrapper.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="ViewEngines\DefaultRenderContext.cs" />
+    <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
+    <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
@@ -168,6 +171,8 @@
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\DefaultViewResolver.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
+    <Compile Include="ViewEngines\IRenderContextFactory.cs" />
+    <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />

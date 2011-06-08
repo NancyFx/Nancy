@@ -1,5 +1,6 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
+    using System;
     using System.IO;
     using FakeItEasy;
     using Nancy.Tests;
@@ -8,13 +9,13 @@
     public class RazorViewCompilerFixture
     {
         private readonly RazorViewEngine engine;
-        private IRenderContext renderContext;
+        private readonly IRenderContext renderContext;
 
         public RazorViewCompilerFixture()
         {
             this.engine = new RazorViewEngine();
             this.renderContext = A.Fake<IRenderContext>();
-            A.CallTo(() => this.renderContext.ViewCache.Retrieve(A<ViewLocationResult>.Ignored)).Returns(null);
+            A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, NancyRazorViewBase>>.Ignored)).Returns(null);
         }
 
         [Fact]

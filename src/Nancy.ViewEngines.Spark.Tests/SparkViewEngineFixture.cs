@@ -12,6 +12,9 @@ namespace Nancy.ViewEngines.Spark.Tests
     using System.Threading;
     using System.Web;
     using FakeItEasy;
+
+    using global::Spark;
+
     using Nancy.Tests;
     using Nancy.ViewEngines.Spark.Tests.ViewModels;
     using Xunit;
@@ -29,8 +32,21 @@ namespace Nancy.ViewEngines.Spark.Tests
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Environment.CurrentDirectory + @"\TestViews");
             this.renderContext = A.Fake<IRenderContext>();
-            A.CallTo(() => this.renderContext.ViewCache.Retrieve(A<ViewLocationResult>.Ignored)).Returns(null);
+            A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, ISparkViewEntry>>.Ignored)).Returns(null);
             this.engine = new SparkViewEngineWrapper(this.rootPathProvider) {ViewFolder = new FileSystemViewFolder("TestViews")};
+        }
+
+        [Fact]
+        public void Should_()
+        {
+            // Given
+
+
+            // When
+
+
+            // Then
+            throw new NotImplementedException();
         }
 
         [Fact]
@@ -56,7 +72,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             var replacement = A.Fake<IViewFolder>();
 
             //When
-            IViewFolder existing = this.engine.ViewFolder;
+            var existing = this.engine.ViewFolder;
 
             //Then
             existing.ShouldNotBeSameAs(replacement);
@@ -78,7 +94,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             var viewLocationResult = new ViewLocationResult("Stub", "Foo", "spark", GetEmptyContentReader());
 
             //When
-            SparkViewDescriptor descriptor = this.engine.CreateDescriptor(viewLocationResult, null, true, null);
+            var descriptor = this.engine.CreateDescriptor(viewLocationResult, null, true, null);
 
             //Then
             Assert.Equal("Stub", descriptor.TargetNamespace);
@@ -292,7 +308,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             var stream = new MemoryStream();
 
             //When
-            Action<Stream> action = this.engine.RenderView(viewLocationResult, viewModel, this.renderContext);
+            var action = this.engine.RenderView(viewLocationResult, viewModel, this.renderContext);
             action.Invoke(stream);
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
@@ -311,49 +327,6 @@ namespace Nancy.ViewEngines.Spark.Tests
             return () => new StreamReader(new MemoryStream());
         }
 
-        #region Nested type: MockHttpContextBase
-        public class MockHttpContextBase
-        {
-            public static HttpContextBase Generate(string path)
-            {
-                return Generate(path, new StringWriter(), new MemoryStream());
-            }
-
-            public static HttpContextBase Generate(string path, TextWriter output)
-            {
-                return Generate(path, output, new MemoryStream());
-            }
-
-            public static HttpContextBase Generate(string path, Stream outputStream)
-            {
-                return Generate(path, new StringWriter(), outputStream);
-            }
-
-            public static HttpContextBase Generate(string path, TextWriter output, Stream outputStream)
-            {
-                var contextBase = A.Fake<HttpContextBase>();
-                var requestBase = A.Fake<HttpRequestBase>();
-                var responseBase = A.Fake<HttpResponseBase>();
-                var sessionStateBase = A.Fake<HttpSessionStateBase>();
-                var serverUtilityBase = A.Fake<HttpServerUtilityBase>();
-
-                A.CallTo(() => contextBase.Request).Returns(requestBase);
-                A.CallTo(() => contextBase.Response).Returns(responseBase);
-                A.CallTo(() => contextBase.Session).Returns(sessionStateBase);
-                A.CallTo(() => contextBase.Server).Returns(serverUtilityBase);
-
-                responseBase.Output = output;
-                A.CallTo(() => responseBase.OutputStream).Returns(outputStream);
-
-                A.CallTo(() => requestBase.ApplicationPath).Returns("/");
-                A.CallTo(() => requestBase.Path).Returns(path);
-
-                return contextBase;
-            }
-        }
-        #endregion
-
-        #region Nested type: ScopedCulture
         public class ScopedCulture : IDisposable
         {
             private readonly CultureInfo savedCulture;
@@ -364,13 +337,10 @@ namespace Nancy.ViewEngines.Spark.Tests
                 Thread.CurrentThread.CurrentCulture = culture;
             }
 
-            #region IDisposable Members
             public void Dispose()
             {
                 Thread.CurrentThread.CurrentCulture = this.savedCulture;
             }
-            #endregion
         }
-        #endregion
     }
 }

@@ -29,6 +29,75 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
+        public void Should_get_render_context_from_factory_when_rendering_view()
+        {
+            // Given
+            var viewEngines = new[] {
+              A.Fake<IViewEngine>(),
+            };
+
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+
+            var factory = this.CreateFactory(viewEngines);
+
+            // When
+            factory.RenderView("view.html", new object(), new ViewLocationContext());
+
+            // Then
+            A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_render_view_with_context_created_by_factory()
+        {
+            // Given
+            var viewEngines = new[] {
+              A.Fake<IViewEngine>(),
+            };
+
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+
+            var context = A.Fake<IRenderContext>();
+            A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).Returns(context);
+
+            var factory = this.CreateFactory(viewEngines);
+
+            // When
+            factory.RenderView("view.html", new object(), new ViewLocationContext());
+
+            // Then
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.Ignored, context)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_TestExpectation()
+        {
+            // Given
+            var viewEngines = new[] {
+              A.Fake<IViewEngine>(),
+            };
+
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+
+            var factory = this.CreateFactory(viewEngines);
+
+            // When
+            factory.RenderView("view.html", new object(), new ViewLocationContext());
+
+            // Then
+            A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappened(Repeated.NoMoreThan.Once);
+        }
+
+        [Fact]
         public void Should_throw_argumentnullexception_when_rendering_view_and_viewlocationcontext_is_null()
         {
             // Given

@@ -7,7 +7,6 @@
     using System.IO;
     using System.Threading;
     using global::Spark;
-    using global::Spark.Compiler;
     using global::Spark.FileSystem;
     using Nancy.ViewEngines.Spark.Descriptors;
 
@@ -45,14 +44,8 @@
 
         public IViewFolder ViewFolder
         {
-            get
-            {
-                return this.Engine.ViewFolder;
-            }
-            set
-            {
-                this.Engine.ViewFolder = value;
-            }
+            get { return this.Engine.ViewFolder; }
+            set { this.Engine.ViewFolder = value; }
         }
 
         public IDescriptorBuilder DescriptorBuilder
@@ -63,15 +56,12 @@
                     Interlocked.CompareExchange(ref this.descriptorBuilder, new DefaultDescriptorBuilder(this.Engine), null) ??
                         this.descriptorBuilder;
             }
-            set
-            {
-                this.descriptorBuilder = value;
-            }
+            set { this.descriptorBuilder = value; }
         }
 
-        public IRenderContext RenderContext { get; set; }
+        private IRenderContext RenderContext { get; set; }
 
-        public ViewLocationResult ViewLocationResult { get; set; }
+        private ViewLocationResult ViewLocationResult { get; set; }
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -80,28 +70,25 @@
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get
-            {
-                yield return "spark";
-            }
+            get { yield return "spark"; }
         }
 
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return stream =>
-                   {
-                       SparkViewEngineResult sparkViewEngineResult =
-                           this.RenderViewInternal(viewLocationResult, model ?? new ExpandoObject(), renderContext);
+            {
+                SparkViewEngineResult sparkViewEngineResult =
+                    this.RenderViewInternal(viewLocationResult, model ?? new ExpandoObject(), renderContext);
 
-                       var writer =
-                           new StreamWriter(stream);
+                var writer =
+                    new StreamWriter(stream);
 
-                       sparkViewEngineResult.View.Writer = writer;
-                       sparkViewEngineResult.View.Model = model;
-                       sparkViewEngineResult.View.Execute();
+                sparkViewEngineResult.View.Writer = writer;
+                sparkViewEngineResult.View.Model = model;
+                sparkViewEngineResult.View.Execute();
 
-                       writer.Flush();
-                   };
+                writer.Flush();
+            };
         }
 
         public void SetEngine(ISparkViewEngine viewEngine)
@@ -115,8 +102,7 @@
             }
         }
 
-        private SparkViewEngineResult FindViewInternal(string viewPath, string viewName, string masterName, bool findDefaultMaster,
-            IDictionary<string, object> extraParams)
+        private SparkViewEngineResult FindViewInternal(string viewPath, string viewName, string masterName, bool findDefaultMaster, IDictionary<string, object> extraParams)
         {
             var searchedLocations = new List<string>();
 
@@ -136,16 +122,13 @@
                 return new SparkViewEngineResult(searchedLocations);
             }
 
-            var entry = (ISparkViewEntry) this.RenderContext.ViewCache.Retrieve(this.ViewLocationResult);
+            var entry = this.RenderContext.ViewCache.GetOrAdd<ISparkViewEntry>(
+                this.ViewLocationResult, 
+                x => this.Engine.CreateEntry(descriptor));
 
-            if (entry == null)
-            {
-                entry = this.Engine.CreateEntry(descriptor);
-                this.RenderContext.ViewCache.Store(this.ViewLocationResult, entry);
-            }
-
-            ISparkView sparkView = entry.CreateInstance();
-            return new SparkViewEngineResult(sparkView as NancySparkView, this);
+            return new SparkViewEngineResult(
+                entry.CreateInstance() as NancySparkView, 
+                this);
         }
 
         public SparkViewDescriptor CreateDescriptor(

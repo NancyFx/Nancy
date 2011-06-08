@@ -40,7 +40,6 @@
         /// Gets the location of where the view was found.
         /// </summary>
         /// <value>A <see cref="string"/> containing the location of the view.</value>
-        /// <remarks>This value is returned by the <see cref="IViewSourceProvider"/> instance that located the view and is in the path format that is uses.</remarks>
         public string Location { get; private set; }
 
         /// <summary>
@@ -49,6 +48,11 @@
         /// <value>A <see cref="string"/> containing the name of the view.</value>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <returns><see langword="true"/> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <see langword="false"/>.</returns>
+        /// <param name="other">An <see cref="ViewLocationResult"/> to compare with this instance.</param>
         public bool Equals(ViewLocationResult other)
         {
             if (ReferenceEquals(null, other)) return false;
@@ -56,6 +60,11 @@
             return Equals(other.Extension, Extension) && Equals(other.Location, Location) && Equals(other.Name, Name);
         }
 
+        /// <summary>
+        /// Determines whether the specified <see cref="object"/> is equal to the current <see cref="object"/>.
+        /// </summary>
+        /// <returns><see langword="true"/> if the specified <see cref="object"/> is equal to the current <see cref="object"/>; otherwise, <see langword="false"/>.</returns>
+        /// <param name="obj">The <see cref="object"/> to compare with the current <see cref="object"/>.</param>
         public override bool Equals(object obj)
         {
             if (ReferenceEquals(null, obj)) return false;
@@ -63,6 +72,10 @@
             return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult) obj);
         }
 
+        /// <summary>
+        /// Serves as a hash function for a particular type. 
+        /// </summary>
+        /// <returns>A hash code for the current <see cref="ViewLocationResult"/>.</returns>
         public override int GetHashCode()
         {
             unchecked

@@ -135,6 +135,7 @@
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\ViewEngines\DefaultRenderContextFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewResolverFixture.cs" />

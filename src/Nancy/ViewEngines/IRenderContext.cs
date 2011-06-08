@@ -1,64 +1,29 @@
 namespace Nancy.ViewEngines
 {
-    using System;
-
+    /// <summary>
+    /// Defines the functionality of the context that is passed into a view engine when the view is requested to be rendered.
+    /// </summary>
     public interface IRenderContext
     {
+        /// <summary>
+        /// HTML encodes a string.
+        /// </summary>
+        /// <param name="input">The string that should be HTML encoded.</param>
+        /// <returns>A HTML encoded <see cref="string"/>.</returns>
         string HtmlEncode(string input);
 
+        /// <summary>
+        /// Gets the view cache that is used by Nancy.
+        /// </summary>
+        /// <value>An <see cref="IViewCache"/> instance.</value>
         IViewCache ViewCache { get; }
 
+        /// <summary>
+        /// Locates a view that matches the provided <paramref name="viewName"/> and <paramref name="model"/>.
+        /// </summary>
+        /// <param name="viewName">The name of the view that should be located.</param>
+        /// <param name="model">The model that should be used when locating the view.</param>
+        /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise, <see langword="null"/>.</returns>
         ViewLocationResult LocateView(string viewName, dynamic model);
-    }
-
-    public interface IRenderContextFactory
-    {
-        IRenderContext GetRenderContext(ViewLocationContext viewLocationContext);
-    }
-
-    public class DefaultRenderContextFactory : IRenderContextFactory
-    {
-        private readonly IViewCache viewCache;
-        private readonly IViewResolver viewResolver;
-
-        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver)
-        {
-            this.viewCache = viewCache;
-            this.viewResolver = viewResolver;
-        }
-
-        public IRenderContext GetRenderContext(ViewLocationContext viewLocationContext)
-        {
-            return new DefaultRenderContext(this.viewResolver, this.viewCache, viewLocationContext);
-        }
-    }
-
-    public class DefaultRenderContext : IRenderContext
-    {
-        private readonly IViewResolver viewResolver;
-        private readonly IViewCache viewCache;
-        private readonly ViewLocationContext viewLocationContext;
-
-        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, ViewLocationContext viewLocationContext)
-        {
-            this.viewResolver = viewResolver;
-            this.viewCache = viewCache;
-            this.viewLocationContext = viewLocationContext;
-        }
-
-        public string HtmlEncode(string input)
-        {
-            return Helpers.HttpUtility.HtmlEncode(input);
-        }
-
-        public IViewCache ViewCache
-        {
-            get { return this.viewCache; }
-        }
-
-        public ViewLocationResult LocateView(string viewName, dynamic model)
-        {
-            return this.viewResolver.GetViewLocation(viewName, model, this.viewLocationContext);
-        }
     }
 }

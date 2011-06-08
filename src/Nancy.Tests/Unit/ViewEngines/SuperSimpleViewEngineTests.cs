@@ -4,11 +4,8 @@
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-
     using Nancy.Tests.Fakes;
-    using Nancy.ViewEngines;
     using Nancy.ViewEngines.SuperSimpleViewEngine;
-
     using Xunit;
 
     public class SuperSimpleViewEngineTests
