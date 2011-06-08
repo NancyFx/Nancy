@@ -1,26 +1,27 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+namespace Nancy.ViewEngines.NDjango.Tests
 {
     using System;
     using System.IO;
     using FakeItEasy;
+    using global::NDjango.Interfaces;
     using Nancy.Tests;
     using Xunit;
 
-    public class RazorViewCompilerFixture
+    public class NDjangoViewEngineFixture
     {
-        private readonly RazorViewEngine engine;
+        private readonly NDjangoViewEngine engine;
         private readonly IRenderContext renderContext;
 
-        public RazorViewCompilerFixture()
+        public NDjangoViewEngineFixture()
         {
-            this.engine = new RazorViewEngine();
+            this.engine = new NDjangoViewEngine();
 
             var cache = A.Fake<IViewCache>();
-            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, NancyRazorViewBase>>.Ignored))
+            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, ITemplate>>.Ignored))
                 .ReturnsLazily(x =>
                 {
                     var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, NancyRazorViewBase>>(1).Invoke(result);
+                    return x.GetArgument<Func<ViewLocationResult, ITemplate>>(1).Invoke(result);
                 });
 
             this.renderContext = A.Fake<IRenderContext>();
@@ -34,14 +35,14 @@
             var location = new ViewLocationResult(
                 string.Empty,
                 string.Empty,
-                "cshtml",
-                () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
+                "django",
+                () => new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
             );
 
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, this.renderContext);
+            var action = engine.RenderView(location, null, this.renderContext);
             action.Invoke(stream);
 
             // Then
