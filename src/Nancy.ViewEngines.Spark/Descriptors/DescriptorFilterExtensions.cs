@@ -2,32 +2,33 @@
 {
     using System;
     using global::Spark;
+    using SparkViewEngine = Spark.SparkViewEngine;
 
-    public static class DescriptorFilterExtensions
-    {
-        public static void AddFilter(this ISparkServiceContainer target, IDescriptorFilter filter)
-        {
-            target.GetService<IDescriptorBuilder>().AddFilter(filter);
-        }
+    //public static class DescriptorFilterExtensions
+    //{
+    //    public static void AddFilter(this ISparkServiceContainer target, IDescriptorFilter filter)
+    //    {
+    //        target.GetService<IDescriptorBuilder>().AddFilter(filter);
+    //    }
 
-        public static void AddFilter(this SparkViewEngineWrapper target, IDescriptorFilter filter)
-        {
-            target.DescriptorBuilder.AddFilter(filter);
-        }
+    //    public static void AddFilter(this SparkViewEngine target, IDescriptorFilter filter)
+    //    {
+    //        target.DescriptorBuilder.AddFilter(filter);
+    //    }
 
-        public static void AddFilter(this IDescriptorBuilder target, IDescriptorFilter filter)
-        {
-            if (!(target is DefaultDescriptorBuilder))
-            {
-                throw new InvalidCastException("IDescriptorFilters may only be added to DefaultDescriptorBuilder");
-            }
+    //    public static void AddFilter(this IDescriptorBuilder target, IDescriptorFilter filter)
+    //    {
+    //        if (!(target is DefaultDescriptorBuilder))
+    //        {
+    //            throw new InvalidCastException("IDescriptorFilters may only be added to DefaultDescriptorBuilder");
+    //        }
 
-            ((DefaultDescriptorBuilder) target).AddFilter(filter);
-        }
+    //        ((DefaultDescriptorBuilder) target).AddFilter(filter);
+    //    }
 
-        public static void AddFilter(this DefaultDescriptorBuilder target, IDescriptorFilter filter)
-        {
-            target.Filters.Add(filter);
-        }
-    }
+    //    public static void AddFilter(this DefaultDescriptorBuilder target, IDescriptorFilter filter)
+    //    {
+    //        target.Filters.Add(filter);
+    //    }
+    //}
 }

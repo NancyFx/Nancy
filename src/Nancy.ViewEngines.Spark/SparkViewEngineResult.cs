@@ -6,7 +6,7 @@ namespace Nancy.ViewEngines.Spark
 
     public class SparkViewEngineResult
     {
-        public SparkViewEngineResult(NancySparkView view, SparkViewEngineWrapper engine)
+        public SparkViewEngineResult(NancySparkView view, SparkViewEngine engine)
         {
             View = view;
             Engine = engine;
@@ -25,6 +25,6 @@ namespace Nancy.ViewEngines.Spark
 
         public NancySparkView View { get; set; }
 
-        public SparkViewEngineWrapper Engine { get; set; }
+        public SparkViewEngine Engine { get; set; }
     }
 }

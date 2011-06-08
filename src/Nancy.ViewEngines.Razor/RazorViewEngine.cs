@@ -129,16 +129,9 @@
 
         private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext)
         {
-            var view = renderContext.ViewCache.GetOrAdd<NancyRazorViewBase>(viewLocationResult, x => GetCompiledView<dynamic>(x.Contents.Invoke()));
-
-            //var view = (NancyRazorViewBase)renderContext.ViewCache.Retrieve(viewLocationResult);
-
-            //if (view == null)
-            //{
-            //    view = GetCompiledView<dynamic>(viewLocationResult.Contents.Invoke());
-
-            //    renderContext.ViewCache.Store(viewLocationResult, view);
-            //}
+            var view = renderContext.ViewCache.GetOrAdd(
+                viewLocationResult, 
+                x => GetCompiledView<dynamic>(x.Contents.Invoke()));
 
             view.Code = string.Empty;
 
