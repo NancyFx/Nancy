@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using global::NDjango;
+    using global::NDjango.Interfaces;
 
     /// <summary>
     /// View engine for rendering django views.
@@ -29,15 +30,17 @@
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return stream =>{
+
                 var templateManagerProvider =
                     new TemplateManagerProvider()
                         .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
 
-                var templateManager = 
+                var templateManager =
                     templateManagerProvider.GetNewManager();
 
-                var template = 
-                    templateManager.GetTemplate(string.Empty);
+                var template = renderContext.ViewCache.GetOrAdd(
+                    viewLocationResult,
+                    x => templateManager.GetTemplate(string.Empty));
 
                 var context = new Dictionary<string, object> { { "Model", model } };
                 var reader = template.Walk(templateManager, context);
