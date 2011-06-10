@@ -20,6 +20,13 @@
         private readonly IRazorConfiguration razorConfiguration;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RazorViewEngine"/> class with a default configuration.
+        /// </summary>
+        public RazorViewEngine() : this(new RazorConfiguration())
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration"></param>

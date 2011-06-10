@@ -1,6 +1,10 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
+    using System;
+    using System.Collections.Generic;
+
     using Nancy.Session;
+    using Nancy.ViewEngines.Razor;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
@@ -11,6 +15,7 @@
             // We don't call base because we don't want autoregister
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
+            existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
         }
 
         protected override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
@@ -36,5 +41,28 @@
                 }
             };
         }
+    }
+
+    public class MyRazorConfiguration : IRazorConfiguration
+    {
+        public bool AutoIncludeModelNamespace
+        {
+            get
+            {
+                return false;
+            }
+        }
+
+        public IEnumerable<string> GetAssemblyNames()
+        {
+            return new string[] { };
+        }
+
+        public IEnumerable<string> GetDefaultNamespaces()
+        {
+            return new string[] { };
+        }
+
+
     }
 }
