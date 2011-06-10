@@ -37,6 +37,10 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return "Test";
             };
 
+            Get["/dotliquid"] = parameters => {
+                return View["dot", new { name = "dot" }];
+            };
+
             Get["/javascript"] = x => {
                 return View["~/views/javascript.html"];
             };

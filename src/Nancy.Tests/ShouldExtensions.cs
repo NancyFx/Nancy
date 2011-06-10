@@ -93,6 +93,11 @@
             Assert.Equal(expected.Second, actual.Second);
         }
 
+        public static void ShouldEqual<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
+        {
+            Assert.True(actual.SequenceEqual(expected));
+        }
+
         public static void ShouldBeGreaterThan(this int actual, int smallestValueNotAccepted)
         {
             Assert.True(actual > smallestValueNotAccepted);
