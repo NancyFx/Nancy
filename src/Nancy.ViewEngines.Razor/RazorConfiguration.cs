@@ -16,7 +16,7 @@
         /// </summary>
         public RazorConfiguration()
         {
-            //this.razorConfigurationSection = ConfigurationManager.GetSection("razor") as RazorConfigurationSection;
+            this.razorConfigurationSection = ConfigurationManager.GetSection("razor") as RazorConfigurationSection;
         }
 
         public bool AutoIncludeModelNamespace 
