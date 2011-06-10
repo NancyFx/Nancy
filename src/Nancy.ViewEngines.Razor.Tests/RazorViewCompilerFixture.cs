@@ -10,10 +10,12 @@
     {
         private readonly RazorViewEngine engine;
         private readonly IRenderContext renderContext;
+        private readonly IRazorConfiguration configuration;
 
         public RazorViewCompilerFixture()
         {
-            this.engine = new RazorViewEngine();
+            this.configuration = A.Fake<IRazorConfiguration>();
+            this.engine = new RazorViewEngine(this.configuration);
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, NancyRazorViewBase>>.Ignored))

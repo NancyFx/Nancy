@@ -17,17 +17,20 @@
     {
         private readonly RazorTemplateEngine engine;
         private readonly CodeDomProvider codeDomProvider;
+        private readonly IRazorConfiguration razorConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
-        public RazorViewEngine()
+        /// <param name="configuration"></param>
+        public RazorViewEngine(IRazorConfiguration configuration)
         {
-            this.engine = GetRazorTemplateEngine();
+            this.razorConfiguration = configuration;
+            this.engine = this.GetRazorTemplateEngine();
             this.codeDomProvider = new CSharpCodeProvider();
         }
 
-        private static RazorTemplateEngine GetRazorTemplateEngine()
+        private RazorTemplateEngine GetRazorTemplateEngine()
         {
             var host = 
                 new RazorEngineHost(new CSharpRazorCodeLanguage())
@@ -42,10 +45,22 @@
             host.NamespaceImports.Add("System.Web");
             host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
 
+            if (this.razorConfiguration != null)
+            {
+                var namespaces = this.razorConfiguration.GetDefaultNamespaces();
+                if (namespaces != null)
+                {
+                    foreach (var n in namespaces)
+                    {
+                        host.NamespaceImports.Add(n);
+                    }
+                }
+            }
+
             return new RazorTemplateEngine(host);
         }
 
-        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader)
+        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader, Assembly referencingAssembly) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
@@ -55,27 +70,45 @@
             //}
 
             var view = 
-                GenerateRazorView(this.codeDomProvider, razorResult);
-            
+                GenerateRazorView(this.codeDomProvider, razorResult, referencingAssembly);
+
             view.Code = string.Empty;
 
             return view;
         }
 
-        private static NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult)
+        private NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
         {
             // Compile the generated code into an assembly
-
             var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var results = codeProvider.CompileAssemblyFromDom(
-                new CompilerParameters(new [] {
-                    GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)), 
-                    GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)), 
-                    GetAssemblyPath(Assembly.GetExecutingAssembly()),
-                    GetAssemblyPath(typeof(IHtmlString).Assembly)}, outputAssemblyName),
-                    razorResult.GeneratedCode);
+            var assemblies = new List<string>
+            {
+                GetAssemblyPath(typeof(Microsoft.CSharp.RuntimeBinder.Binder)),
+                GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)),
+                GetAssemblyPath(typeof(IHtmlString)),
+                GetAssemblyPath(Assembly.GetExecutingAssembly())
+            };
+
+            if (this.razorConfiguration != null)
+            {
+                var assemblyNames = this.razorConfiguration.GetAssemblyNames();
+                if (assemblyNames != null)
+                {
+                    assemblies.AddRange(assemblyNames.Select(Assembly.Load).Select(GetAssemblyPath));
+                }
+            }
+
+            var loadReferencingAssembly = this.razorConfiguration == null || this.razorConfiguration.AutoIncludeModelNamespace;
+
+            if (loadReferencingAssembly && referencingAssembly != null)
+            {
+                assemblies.Add(GetAssemblyPath(referencingAssembly));
+            }
+
+            var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
+            var results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
 
             if (results.Errors.HasErrors)
             {
@@ -122,11 +155,11 @@
             return new Uri(assembly.CodeBase).LocalPath;
         }
 
-        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext)
+        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly)
         {
             var view = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult, 
-                x => GetCompiledView<dynamic>(x.Contents.Invoke()));
+                x => GetCompiledView<dynamic>(x.Contents.Invoke(), referencingAssembly));
 
             view.Code = string.Empty;
 
@@ -154,10 +187,20 @@
         {
             //@(section)?[\s]*(?<name>[A-Za-z]*)[\s]*{(?<content>[^\}]*)}?
 
+            Assembly referencingAssembly = null;
+            if (model != null)
+            {
+                var underlyingSystemType = model.GetType().UnderlyingSystemType;
+                if (underlyingSystemType != null)
+                {
+                    referencingAssembly = Assembly.GetAssembly(underlyingSystemType);
+                }
+            }
+
             return stream =>
             {
-                var view =
-                    GetOrCompileView(viewLocationResult, renderContext);
+                var view = 
+                    GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
 
                 var writer = 
                     new StreamWriter(stream);
