@@ -278,7 +278,7 @@
                 });
 
             var locatedView =
-                new ViewLocationResult("name", "location", "extension", GetEmptyContentReader());
+                new ViewLocationResult("name", "location", "extension", GetEmptyContentReader(), null);
 
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(locatedView);
 

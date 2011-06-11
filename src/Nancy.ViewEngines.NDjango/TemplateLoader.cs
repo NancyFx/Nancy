@@ -6,16 +6,19 @@
 
     public class TemplateLoader : ITemplateLoader
     {
-        private readonly TextReader textReader;
+        private readonly ViewLocationResult result;
 
-        public TemplateLoader(TextReader textReader)
+        public TemplateLoader(ViewLocationResult result)
         {
-            this.textReader = textReader;
+            this.result = result;
         }
 
-        public TextReader GetTemplate(string path)
+        public TextReader GetTemplate(string name)
         {
-            return textReader;
+            if (name == result.Name)
+                return result.Contents();
+
+            return result.AdditionalFile(name).Contents();
         }
 
         public bool IsUpdated(string path, DateTime timestamp)

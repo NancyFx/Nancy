@@ -15,12 +15,13 @@
         /// <param name="name">The name of the view.</param>
         /// <param name="extension">The file extension of the located view.</param>
         /// <param name="contents">A <see cref="TextReader"/> that can be used to read the contents of the located view.</param>
-        public ViewLocationResult(string location, string name, string extension, Func<TextReader> contents)
+        public ViewLocationResult(string location, string name, string extension, Func<TextReader> contents, Func<ViewLocationResult, string, ViewLocationResult> additionalFile)
         {
             this.Location = location;
             this.Name = name;
             this.Extension = extension;
             this.Contents = contents;
+            this.additionalFile = additionalFile;
         }
 
         /// <summary>
@@ -48,5 +49,16 @@
         /// </summary>
         /// <value>A <see cref="string"/> containing the name of the view.</value>
         public string Name { get; private set; }
+
+        /// <summary>
+        /// Gets additional files, relative to this one
+        /// </summary>
+        /// <param name="name">file name</param>
+        public ViewLocationResult AdditionalFile(string name)
+        {
+            return additionalFile(this, name);
+        }
+
+        Func<ViewLocationResult, string, ViewLocationResult> additionalFile;
     }
 }

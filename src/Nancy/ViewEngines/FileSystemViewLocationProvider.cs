@@ -34,7 +34,19 @@
                     match.Replace(this.rootPathProvider.GetRootPath(), string.Empty).TrimStart(new[] { '\\' }),
                     Path.GetFileNameWithoutExtension(match),
                     Path.GetExtension(match).Substring(1),
-                    () => new StreamReader(new FileStream(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+                    () => new StreamReader(new FileStream(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)),
+                    alternateViews);
+        }
+
+        private static ViewLocationResult alternateViews(ViewLocationResult original, string name) 
+        {
+            string newfn = Path.Combine(original.Location, name);
+            return new ViewLocationResult(
+                Path.GetDirectoryName(newfn),
+                Path.GetFileNameWithoutExtension(newfn),
+                Path.GetExtension(newfn).Substring(1),
+                () => new StreamReader(new FileStream(newfn, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)),
+                alternateViews);
         }
 
         private IEnumerable<string> GetViewsWithSupportedExtensions(IEnumerable<string> supportedViewExtensions)

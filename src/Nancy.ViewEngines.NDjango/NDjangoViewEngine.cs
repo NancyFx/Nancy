@@ -30,15 +30,15 @@
         {
             return stream =>
             {
-                var templateManagerProvider = 
+                var templateManagerProvider =
                     new TemplateManagerProvider()
-                    .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
+                    .WithLoader(new TemplateLoader(viewLocationResult));
 
                 var templateManager = 
                     templateManagerProvider.GetNewManager();
 
-                var template = 
-                    templateManager.GetTemplate(string.Empty);
+                var template =
+                    templateManager.GetTemplate(viewLocationResult.Name);
 
                 var context = new Dictionary<string, object> { { "Model", model } };
                 var reader = template.Walk(templateManager, context);

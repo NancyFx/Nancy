@@ -136,7 +136,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
             A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "html" });
 
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
@@ -158,7 +158,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "HTML" });
 
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
@@ -174,7 +174,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_empty_action_when_no_view_engine_could_be_resolved()
         {
             // Given
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var stream = new MemoryStream();
@@ -201,7 +201,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Returns(actionReturnedFromEngine);
 
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var factory = this.CreateFactory(viewEngines);
@@ -223,7 +223,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Throws(new Exception());
 
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var stream = new MemoryStream();
@@ -248,7 +248,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null)).Throws(new Exception());
 
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader(), null);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
             var model = new object();

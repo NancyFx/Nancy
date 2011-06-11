@@ -17,7 +17,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_ignore_caseing_of_view_name_when_locating_a_view(string viewNameToTest)
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
@@ -45,7 +45,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_ignore_caseing_of_view_extension_when_locating_a_view(string viewExtensionToTest)
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
@@ -71,7 +71,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_ignore_extension_when_resolving_view_and_view_name_does_not_contain_extension()
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
@@ -95,8 +95,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_throw_ambiguousviewsexception_when_more_than_one_located_view_matches_view_name()
         {
             // Given
-            var viewLocation1 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-            var viewLocation2 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation1 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
+            var viewLocation2 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
@@ -119,7 +119,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_null_when_no_located_view_matches_view_name()
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
@@ -142,7 +142,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_view_when_located_view_matches_view_name()
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader(), null);
 
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });

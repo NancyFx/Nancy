@@ -39,20 +39,50 @@
                 GetViewLocationsWithQualifiedLocations(resourceStreamMatches);
         }
 
-        private static IEnumerable<ViewLocationResult> GetViewLocationsWithQualifiedLocations(IEnumerable<Tuple<string, Stream>> resources)
+        private static IEnumerable<ViewLocationResult> GetViewLocationsWithQualifiedLocations(IEnumerable<Tuple<string, System.Reflection.Assembly, Stream>> resources)
         {
             var commonResourceNamespace =
                 ExtractCommonResourceNamespace(resources.Select(x => x.Item1));
 
             return
                 from resource in resources
-                let resourceFileName = GetResourceFileName(resource.Item1)
-                select new ViewLocationResult(
-                    GetEncodedResouceName(commonResourceNamespace, resource.Item1, resourceFileName),
-                    resourceFileName,
-                    GetResourceNameExtension(resource.Item1),
-                    () => new StreamReader(resource.Item2));
+                select GetResult(resource.Item1, resource.Item2, resource.Item3);
         }
+
+        private static ViewLocationResult GetResult(string rname, System.Reflection.Assembly asm, Stream data)
+        {
+            var resourceFileName = GetResourceFileName(rname);
+            return new ViewLocationResult(
+                    DropTwoDots(rname),
+                    resourceFileName,
+                    GetResourceNameExtension(rname),
+                    () => new StreamReader(data),
+                    (orig, name) =>
+                    {
+                        string s = orig.Location;
+                        while (name.StartsWith("..\\") || name.StartsWith("../"))
+                        {
+                            int n = s.LastIndexOf('.');
+                            if (n == -1)
+                                break;
+                            s = s.Substring(0, n - 1);
+                            name = name.Substring(3);
+                        }
+                        s = s + "." + name.Replace('/', '.').Replace('\\', '.');
+
+                        return GetResult(name, asm, asm.GetManifestResourceStream(s));
+                    });
+        }
+
+        private static string DropTwoDots(string data)
+        {
+            int n = data.LastIndexOf('.');
+            if (n == -1) return data;
+            int j = data.LastIndexOf('.', n-1);
+            if (j == -1) return data;
+            return data.Substring(0, j);
+        }
+
 
         private static string GetEncodedResouceName(string commonResourceNamespace, string location, string viewName)
         {
@@ -117,14 +147,14 @@
             return string.IsNullOrEmpty(extension) ? string.Empty : extension.TrimStart('.');
         }
 
-        private static IEnumerable<Tuple<string, Stream>> GetResourceStreamMatches(IEnumerable<string> supportedViewEngineExtensions)
+        private static IEnumerable<Tuple<string, System.Reflection.Assembly, Stream>> GetResourceStreamMatches(IEnumerable<string> supportedViewEngineExtensions)
         {
             var resourceStreams =
                 from assembly in AppDomainAssemblyTypeScanner.Assemblies
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
                 where resourceName.EndsWith(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
-                select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
+                select new Tuple<string, System.Reflection.Assembly, Stream>(resourceName, assembly, assembly.GetManifestResourceStream(resourceName));
 
             return resourceStreams.ToList();
         }

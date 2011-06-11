@@ -21,7 +21,8 @@
                 string.Empty,
                 string.Empty,
                 "cshtml",
-                () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
+                () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>"),
+                null
             );
 
             var stream = new MemoryStream();

@@ -21,7 +21,8 @@ namespace Nancy.ViewEngines.NDjango.Tests
                 string.Empty,
                 string.Empty,
                 "django",
-                () => new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
+                () => new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}"),
+                null
             );
 
             var stream = new MemoryStream();
