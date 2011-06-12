@@ -1,4 +1,5 @@
-﻿<div>
+﻿<use master="layout" />
+<div>
   <content name="footer">
     <div>Here is some footer stuff defined at the top</div>
   </content>

@@ -5,8 +5,10 @@ using IViewFolder = Spark.FileSystem.IViewFolder;
 namespace Nancy.ViewEngines.Spark.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using FakeItEasy;
     using global::Spark;
@@ -17,15 +19,21 @@ namespace Nancy.ViewEngines.Spark.Tests
 
     public class SparkViewEngineFixture
     {
-        private readonly SparkViewEngine engine;
         private readonly IRenderContext renderContext;
-        private readonly IRootPathProvider rootPathProvider;
         private string output;
+        private IEnumerable<IViewLocationProvider> viewLocationProviders;
+        private IViewLocationProvider fakeViewLocationProvider;
+        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
+        private IRootPathProvider rootPathProvider;
 
         public SparkViewEngineFixture()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Environment.CurrentDirectory + @"\TestViews");
+
+            this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider);
+            this.fakeViewLocationProvider = A.Fake<IViewLocationProvider>();
+            this.viewLocationProviders = new[] { this.fakeViewLocationProvider, this.fileSystemViewLocationProvider };
             this.renderContext = A.Fake<IRenderContext>();
 
             var cache = A.Fake<IViewCache>();
@@ -36,72 +44,31 @@ namespace Nancy.ViewEngines.Spark.Tests
                 });
 
             A.CallTo(() => this.renderContext.ViewCache).Returns(cache);
-
-            this.engine = new SparkViewEngine(this.rootPathProvider) {ViewFolder = new FileSystemViewFolder("TestViews")};
         }
-
-        //private SparkViewDescriptor CreateDescriptor(ViewLocationResult viewLocationResult, string masterName, bool findDefaultMaster, ICollection<string> searchedLocations)
-        //{
-        //    return this.engine.DescriptorBuilder.BuildDescriptor(
-        //        new BuildDescriptorParams(
-        //            viewLocationResult.Location,
-        //            viewLocationResult.Name,
-        //            masterName,
-        //            findDefaultMaster,
-        //            this.engine.DescriptorBuilder.GetExtraParameters(viewLocationResult)),
-        //        searchedLocations);
-        //}
-
-        //[Fact]
-        //public void Application_dot_spark_should_be_used_as_the_master_layout_if_present()
-        //{
-        //    //Given
-        //    this.engine.ViewFolder = new InMemoryViewFolder {{"Stub\\baz.spark", ""}, {"Shared\\Application.spark", ""}};
-        //    var viewLocationResult = new ViewLocationResult("Stub", "baz", "spark", GetEmptyContentReader());
-
-        //    //When
-        //    var descriptor = this.CreateDescriptor(viewLocationResult, null, true, null);
-
-        //    //Then
-        //    descriptor.Templates.ShouldHaveCount(2);
-        //    descriptor.Templates[0].ShouldEqual("Stub\\baz.spark");
-        //    descriptor.Templates[1].ShouldEqual("Shared\\Application.spark");
-        //}
 
         [Fact]
-        public void Should_be_able_to_change_view_source_folder_on_the_fly()
+        public void Should_get_located_views_from_view_location_providers()
         {
-            //Given
-            var replacement = A.Fake<IViewFolder>();
-
-            //When
-            var existing = this.engine.ViewFolder;
+            //Given, When
+            new SparkViewEngine(this.viewLocationProviders);
 
             //Then
-            existing.ShouldNotBeSameAs(replacement);
-            existing.ShouldBeSameAs(this.engine.ViewFolder);
-
-            //When
-            this.engine.ViewFolder = replacement;
-
-            //Then
-            replacement.ShouldBeSameAs(this.engine.ViewFolder);
-            existing.ShouldNotBeSameAs(this.engine.ViewFolder);
+            A.CallTo(() => this.fakeViewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
-        //[Fact]
-        //public void Should_be_able_to_get_the_target_namespace_from_the_action_context()
-        //{
-        //    //Given
-        //    this.engine.ViewFolder = new InMemoryViewFolder {{"Stub\\Foo.spark", ""}, {"Layouts\\Home.spark", ""}};
-        //    var viewLocationResult = new ViewLocationResult("Stub", "Foo", "spark", GetEmptyContentReader());
+        [Fact]
+        public void Application_dot_spark_should_be_used_as_the_master_layout_if_present()
+        {
+            //Given, When
+            this.FindViewAndRender("ViewThatUsesApplicationLayout");
 
-        //    //When
-        //    var descriptor = this.CreateDescriptor(viewLocationResult, null, true, null);
-
-        //    //Then
-        //    Assert.Equal("Stub", descriptor.TargetNamespace);
-        //}
+            //Then
+            this.output.ShouldContainInOrder(
+                "<title>Child View That Expects Application Layout by default</title>",
+                "<div>main application header by default</div>",
+                "<h1>Child View That Expects Application Layout by default</h1>",
+                "<div>main application footer by default</div>");
+        }
 
         [Fact]
         public void Should_be_able_to_html_encode_using_H_function_from_views()
@@ -126,11 +93,11 @@ namespace Nancy.ViewEngines.Spark.Tests
                 "<div>7==7</div>");
         }
 
-        [Fact(Skip = "Rob G: Looking to depreciate this as the template should contain the master it wants")] 
+        [Fact] 
         public void Should_be_able_to_render_a_child_view_with_a_master_layout()
         {
             //Given, When
-            this.FindViewAndRender("ChildViewThatExpectsALayout", "Layout");
+            this.FindViewAndRender("ViewThatExpectsALayout");
 
             //Then
             this.output.ShouldContainInOrder(
@@ -278,11 +245,11 @@ namespace Nancy.ViewEngines.Spark.Tests
                 "<div>Hello</div>");
         }
 
-        [Fact(Skip = "Rob G: content areas need some work to get correct ordering - that'll come next")]
+        [Fact]//(Skip = "Rob G: content areas need some work to get correct ordering - that'll come next")]
         public void Should_capture_named_content_areas_and_render_in_the_correct_order()
         {
             //Given, When
-            this.FindViewAndRender("ChildViewThatUsesAllNamedContentAreas", "Layout");
+            this.FindViewAndRender("ViewThatUsesAllNamedContentAreas");
 
             //Then
             this.output.ShouldContainInOrder(
@@ -292,28 +259,15 @@ namespace Nancy.ViewEngines.Spark.Tests
                 "<div>Much better place for footer stuff - or is it?</div>");
         }
 
-        //[Fact]
-        //public void The_master_layout_should_be_empty_by_default()
-        //{
-        //    //Given
-        //    this.engine.ViewFolder = new InMemoryViewFolder {{"Stub\\baz.spark", ""}};
-        //    var viewLocationResult = new ViewLocationResult("Stub", "baz", "spark", GetEmptyContentReader());
-
-        //    //When
-        //    SparkViewDescriptor descriptor = this.CreateDescriptor(viewLocationResult, null, true, null);
-
-        //    //Then
-        //    descriptor.Templates.ShouldHaveCount(1);
-        //    descriptor.Templates[0].ShouldEqual("Stub\\baz.spark");
-        //}
-
-        private void FindViewAndRender<T>(string viewName, T viewModel, string masterName = null) where T : class
+        private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
         {
-            var viewLocationResult = new ViewLocationResult(@"Stub\", viewName, "spark", GetEmptyContentReader());
+            var location = Path.Combine("Stub", viewName + ".spark");
+            var viewLocationResult = new ViewLocationResult(location, viewName, "spark", GetEmptyContentReader());
             var stream = new MemoryStream();
+            var engine = new SparkViewEngine(this.viewLocationProviders);
 
             //When
-            var action = this.engine.RenderView(viewLocationResult, viewModel, this.renderContext);
+            var action = engine.RenderView(viewLocationResult, viewModel, this.renderContext);
             action.Invoke(stream);
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
@@ -322,9 +276,9 @@ namespace Nancy.ViewEngines.Spark.Tests
             }
         }
 
-        private void FindViewAndRender(string viewName, string masterName = null)
+        private void FindViewAndRender(string viewName)
         {
-            this.FindViewAndRender<dynamic>(viewName, null, masterName);
+            this.FindViewAndRender<dynamic>(viewName, null);
         }
 
         private static Func<TextReader> GetEmptyContentReader()

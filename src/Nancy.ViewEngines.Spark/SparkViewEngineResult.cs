@@ -6,10 +6,9 @@ namespace Nancy.ViewEngines.Spark
 
     public class SparkViewEngineResult
     {
-        public SparkViewEngineResult(NancySparkView view, SparkViewEngine engine)
+        public SparkViewEngineResult(NancySparkView view)
         {
             View = view;
-            Engine = engine;
         }
 
         public SparkViewEngineResult(List<string> searchedLocations)
@@ -24,7 +23,5 @@ namespace Nancy.ViewEngines.Spark
         }
 
         public NancySparkView View { get; set; }
-
-        public SparkViewEngine Engine { get; set; }
     }
 }

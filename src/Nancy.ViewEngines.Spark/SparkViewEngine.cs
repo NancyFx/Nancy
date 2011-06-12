@@ -5,6 +5,7 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
+    using System.Linq;
     using global::Spark;
     using global::Spark.FileSystem;
     using Nancy.ViewEngines.Spark.Descriptors;
@@ -14,7 +15,7 @@
     /// </summary>
     public class SparkViewEngine : IViewEngine
     {
-        private readonly IRootPathProvider rootPathProvider;
+        private readonly IEnumerable<IViewLocationProvider> viewLocationProviders;
         private readonly IDescriptorBuilder descriptorBuilder;
         private readonly ISparkViewEngine engine;
         private readonly ISparkSettings settings;
@@ -23,9 +24,9 @@
         /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
         /// </summary>
         /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance used by the application.</param>
-        public SparkViewEngine(IRootPathProvider rootPathProvider)
+        public SparkViewEngine(IEnumerable<IViewLocationProvider> viewLocationProviders)
         {
-            this.rootPathProvider = rootPathProvider;
+            this.viewLocationProviders = viewLocationProviders;
             this.settings = (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
 
             this.engine = new global::Spark.SparkViewEngine(this.settings)
@@ -34,7 +35,20 @@
             };
 
             this.descriptorBuilder = new DefaultDescriptorBuilder(this.engine);
-            this.ViewFolder = new FileSystemViewFolder(Path.Combine(this.rootPathProvider.GetRootPath()));
+            this.engine.ViewFolder = this.GetMemoryViewMap();
+        }
+
+        private InMemoryViewFolder GetMemoryViewMap()
+        {
+            var viewsLocatedByProviders = this.viewLocationProviders
+                .SelectMany(x => x.GetLocatedViews(new[] { "spark" }));
+
+            var memoryViewMap = new InMemoryViewFolder();
+            foreach (var viewLocationResult in viewsLocatedByProviders)
+            {
+                memoryViewMap.Add(viewLocationResult.Location, viewLocationResult.Contents.Invoke().ReadToEnd());
+            }
+            return memoryViewMap;
         }
 
         /// <summary>
@@ -45,12 +59,6 @@
         public IEnumerable<string> Extensions
         {
             get { yield return "spark"; }
-        }
-
-        public IViewFolder ViewFolder
-        {
-            get { return this.engine.ViewFolder; }
-            set { this.engine.ViewFolder = value; }
         }
 
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
@@ -91,8 +99,7 @@
                 x => this.engine.CreateEntry(descriptor));
 
             return new SparkViewEngineResult(
-                entry.CreateInstance() as NancySparkView, 
-                this);
+                entry.CreateInstance() as NancySparkView);
         }
 
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)

@@ -79,6 +79,9 @@
     <None Include="TestViews\Layouts\anotherLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestViews\Shared\Application.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\Shared\elementLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -88,13 +91,13 @@
     <None Include="TestViews\Shared\Partial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestViews\Stub\ChildViewThatExpectsALayout.spark">
+    <None Include="TestViews\Stub\ViewThatExpectsALayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestViews\Stub\ChildViewThatUsesAllNamedContentAreas.spark">
+    <None Include="TestViews\Stub\ViewThatUsesAllNamedContentAreas.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="TestViews\Stub\HtmlTags.spark">
+    <None Include="TestViews\Stub\ViewThatUsesApplicationLayout.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestViews\Stub\Index.spark">

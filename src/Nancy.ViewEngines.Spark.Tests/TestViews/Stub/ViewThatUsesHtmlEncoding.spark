@@ -1,4 +1,4 @@
-﻿<div>${H(SomeHtml())}</div>
+﻿<use master="" /><div>${H(SomeHtml())}</div>
 
 <macro name="SomeHtml">
   <div>&lt;&gt;</div>
