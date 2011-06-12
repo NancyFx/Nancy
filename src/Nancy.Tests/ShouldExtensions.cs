@@ -93,7 +93,7 @@
             Assert.Equal(expected.Second, actual.Second);
         }
 
-        public static void ShouldEqual<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
+        public static void ShouldEqualSequence<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
             Assert.True(actual.SequenceEqual(expected));
         }

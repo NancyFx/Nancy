@@ -22,7 +22,6 @@ namespace Nancy.ViewEngines.Spark.Tests
         private readonly IRenderContext renderContext;
         private string output;
         private IEnumerable<IViewLocationProvider> viewLocationProviders;
-        private IViewLocationProvider fakeViewLocationProvider;
         private FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private IRootPathProvider rootPathProvider;
 
@@ -32,8 +31,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Environment.CurrentDirectory + @"\TestViews");
 
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider);
-            this.fakeViewLocationProvider = A.Fake<IViewLocationProvider>();
-            this.viewLocationProviders = new[] { this.fakeViewLocationProvider, this.fileSystemViewLocationProvider };
+            this.viewLocationProviders = new[] { this.fileSystemViewLocationProvider };
             this.renderContext = A.Fake<IRenderContext>();
 
             var cache = A.Fake<IViewCache>();
@@ -49,11 +47,15 @@ namespace Nancy.ViewEngines.Spark.Tests
         [Fact]
         public void Should_get_located_views_from_view_location_providers()
         {
-            //Given, When
-            new SparkViewEngine(this.viewLocationProviders);
+            //Given
+            var fakeProvider = A.Fake<IViewLocationProvider>();
+            IEnumerable<IViewLocationProvider> providers = new[] { fakeProvider };
+            
+            //When
+            new SparkViewEngine(providers);
 
             //Then
-            A.CallTo(() => this.fakeViewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
+            A.CallTo(() => fakeProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
         [Fact]

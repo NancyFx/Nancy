@@ -58,7 +58,7 @@
 
             // Then
             extensions.ShouldHaveCount(1);
-            extensions.ShouldEqual(new[] { "liquid" });
+            extensions.ShouldEqualSequence(new[] { "liquid" });
         }
 
         [Fact]
