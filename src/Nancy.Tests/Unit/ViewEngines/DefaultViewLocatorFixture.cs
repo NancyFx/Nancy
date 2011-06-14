@@ -14,7 +14,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Theory]
         [InlineData("view")]
         [InlineData("ViEw")]
-        public void Should_ignore_caseing_of_view_name_when_locating_a_view(string viewNameToTest)
+        public void Should_ignore_casing_of_view_name_when_locating_a_view(string viewNameToTest)
         {
             // Given
             var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
@@ -160,72 +160,6 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             result.ShouldBeSameAs(viewLocation);
-        }
-
-        [Fact]
-        public void Should_call_view_location_providers_with_available_extensions_when_created()
-        {
-            // Given
-            var viewEngine1 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine1.Extensions).Returns(new[] { "html" });
-
-            var viewEngine2 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine2.Extensions).Returns(new[] { "spark" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            var expectedViewEngineExtensions = new[] { "html", "spark" };
-
-            // When
-            CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine1, viewEngine2 });
-
-            // Then
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
-                x => x.All(y => expectedViewEngineExtensions.Contains(y))))).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_call_view_location_providers_with_distinct_available_extensions_when_created()
-        {
-            // Given
-            var viewEngine1 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine1.Extensions).Returns(new[] { "html" });
-
-            var viewEngine2 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine2.Extensions).Returns(new[] { "spark", "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            var expectedViewEngineExtensions = new[] { "html", "spark" };
-
-            // When
-            CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine1, viewEngine2 });
-
-            // Then
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
-                x => expectedViewEngineExtensions.All(y => x.Where(z => z.Equals(y)).Count() == 1)))).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_call_all_view_location_providers_when_created()
-        {
-            // Given
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider1 = A.Fake<IViewLocationProvider>();
-            var viewLocationProvider2 = A.Fake<IViewLocationProvider>();
-
-            // When
-            CreateViewLocator(
-                new[] { viewLocationProvider1, viewLocationProvider2 },
-                new[] { viewEngine });
-
-            // Then
-            A.CallTo(() => viewLocationProvider1.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
-            A.CallTo(() => viewLocationProvider2.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
         [Fact]

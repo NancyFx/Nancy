@@ -24,6 +24,10 @@
             get { return this.extensions; }
         }
 
+        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        {
+        }
+
         /// <summary>
         /// Renders the view.
         /// </summary>

@@ -183,6 +183,10 @@
             get { return new[] { "cshtml" }; }
         }
 
+        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        {
+        }
+
         /// <summary>
         /// Renders the view.
         /// </summary>

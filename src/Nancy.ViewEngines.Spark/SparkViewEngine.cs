@@ -102,6 +102,10 @@
                 entry.CreateInstance() as NancySparkView);
         }
 
+        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        {
+        }
+
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return stream =>

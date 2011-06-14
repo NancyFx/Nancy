@@ -17,6 +17,11 @@
         IEnumerable<string> Extensions { get; }
 
         /// <summary>
+        /// 
+        /// </summary>
+        void Initialize(IEnumerable<ViewLocationResult> matchingViews);
+
+        /// <summary>
         /// Renders the view.
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
