@@ -1,53 +1,10 @@
-namespace Nancy.Tests.Unit.ViewEngines
+﻿namespace Nancy.Tests.Unit.ViewEngines
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using FakeItEasy;
     using Nancy.ViewEngines;
     using Xunit;
-
-    public class ViewEngineStartupFixture
-    {
-        [Fact]
-        public void Should_call_intialize_on_each_view_engine()
-        {
-            // Given
-            var engines = new[]
-            {
-                A.Fake<IViewEngine>(),
-                A.Fake<IViewEngine>()
-            };
-
-            var initializer = new ViewEngineStartup(engines, A.Fake<IViewLocationCache>());
-
-            // When
-            initializer.Initialize();
-
-            // Then
-            A.CallTo(() => engines[0].Initialize(A<IEnumerable<ViewLocationResult>>.Ignored)).MustHaveHappened();
-            A.CallTo(() => engines[0].Initialize(A<IEnumerable<ViewLocationResult>>.Ignored)).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_call_initialize_view_engine_with_views_that_are_of_type_that_engine_can_process()
-        {
-            // Given
-            var engine = A.Fake<IViewEngine>();
-            A.CallTo(() => engine.Extensions).Returns(new[] { "html", "spark" });
-
-            var cache = A.Fake<IViewLocationCache>();
-            //A.CallTo(() => cache.GetMatchingViews(x => x))
-
-            var initializer = new ViewEngineStartup(new[] { engine }, A.Fake<IViewLocationCache>());
-
-            // When
-            initializer.Initialize();
-
-            // Then
-            throw new NotImplementedException();
-        }
-    }
 
     public class DefaultViewLocationCacheFixture
     {
@@ -95,7 +52,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
-                x => x.All(y => expectedViewEngineExtensions.Contains(y))))).MustHaveHappened();
+                    x => x.All(y => expectedViewEngineExtensions.Contains(y))))).MustHaveHappened();
         }
 
         [Fact]

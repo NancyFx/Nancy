@@ -183,7 +183,7 @@
             get { return new[] { "cshtml" }; }
         }
 
-        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
 

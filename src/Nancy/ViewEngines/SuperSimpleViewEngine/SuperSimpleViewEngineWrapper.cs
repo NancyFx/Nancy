@@ -24,7 +24,7 @@
             get { return this.extensions; }
         }
 
-        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
 

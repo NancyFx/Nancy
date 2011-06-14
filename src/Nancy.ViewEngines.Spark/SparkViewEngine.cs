@@ -102,7 +102,7 @@
                 entry.CreateInstance() as NancySparkView);
         }
 
-        public void Initialize(IEnumerable<ViewLocationResult> matchingViews)
+        public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
 
