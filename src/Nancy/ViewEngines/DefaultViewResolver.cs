@@ -1,14 +1,14 @@
 ﻿namespace Nancy.ViewEngines
 {
     using System;
-    using System.Collections.Generic;
+    using Nancy.Conventions;
 
     /// <summary>
     /// Default implementation on how views are resolved by Nancy.
     /// </summary>
     public class DefaultViewResolver : IViewResolver
     {
-        private readonly IEnumerable<Func<string, dynamic, ViewLocationContext, string>> conventions;
+        private readonly ViewLocationConventions conventions;
         private readonly IViewLocator viewLocator;
 
         /// <summary>
@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="viewLocator">The view locator that should be used to locate views.</param>
         /// <param name="conventions">The conventions that the view resolver should use to figure out where to look for views.</param>
-        public DefaultViewResolver(IViewLocator viewLocator, IEnumerable<Func<string, dynamic, ViewLocationContext, string>> conventions)
+        public DefaultViewResolver(IViewLocator viewLocator, ViewLocationConventions conventions)
         {
             if (viewLocator == null)
             {
@@ -46,9 +46,9 @@
                 return null;
             }
 
-            foreach (var convention in conventions)
+            foreach (var convention in this.conventions.GetConventions())
             {
-                var conventionBasedViewName =
+                dynamic conventionBasedViewName =
                     SafeInvokeConvention(convention, viewName, model, viewLocationContext);
 
                 if (String.IsNullOrEmpty(conventionBasedViewName))
@@ -56,7 +56,7 @@
                     continue;
                 }
 
-                var locatedView = 
+                dynamic locatedView =
                     this.viewLocator.LocateView(conventionBasedViewName);
 
                 if (locatedView != null)
@@ -68,13 +68,13 @@
             return null;
         }
 
-        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model,
+            ViewLocationContext viewLocationContext)
         {
             try
             {
                 return convention.Invoke(viewName, model, viewLocationContext);
-            }
-            catch
+            } catch
             {
                 return null;
             }

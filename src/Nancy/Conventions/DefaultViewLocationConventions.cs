@@ -30,14 +30,14 @@
                 return Tuple.Create(false, "The view conventions cannot be null.");
             }
 
-            return (conventions.ViewLocationConventions.Count > 0) ? 
+            return conventions.ViewLocationConventions.HasConventions() ? 
                 Tuple.Create(true, string.Empty) :
                 Tuple.Create(false, "The view conventions cannot be empty.");
         }
 
         private static void ConfigureViewLocationConventions(NancyConventions conventions)
         {
-            conventions.ViewLocationConventions = new List<Func<string, object, ViewLocationContext, string>>
+            conventions.ViewLocationConventions = new ViewLocationConventions(new Func<string, object, ViewLocationContext, string>[]
             {
                 (viewName, model, viewLocationContext) => {
                     return string.Concat("/", viewName);
@@ -50,7 +50,7 @@
                 (viewName, model, viewLocationContext) => {
                     return string.Concat("/views", viewLocationContext.ModulePath, "/", viewName);
                 }
-            };
+            });
         }
     }
 }

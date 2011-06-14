@@ -29,7 +29,7 @@
         /// <summary>
         /// Gets or sets the conventions for locating view templates
         /// </summary>
-        public IList<Func<string, dynamic, ViewLocationContext, string>> ViewLocationConventions { get; set; }
+        public ViewLocationConventions ViewLocationConventions { get; set; }
 
         /// <summary>
         /// Validates the conventions
@@ -57,7 +57,7 @@
         {
             return new[]
             {
-                new InstanceRegistration(typeof(IEnumerable<Func<string, dynamic, ViewLocationContext, string>>), this.ViewLocationConventions),
+                new InstanceRegistration(typeof(ViewLocationConventions), this.ViewLocationConventions),
             };
         }
 
