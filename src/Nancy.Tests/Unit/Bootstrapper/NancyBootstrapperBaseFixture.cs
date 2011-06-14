@@ -19,6 +19,7 @@
         public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
         public List<ModuleRegistration> PassedModules { get; set; }
+        public IStartup[] OverriddenStartupTasks { get; set; }
 
         protected override NancyInternalConfiguration InternalConfiguration
         {
@@ -44,6 +45,15 @@
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
             return this.Generator;
+        }
+
+        /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected override IEnumerable<IStartup> GetStartupTasks()
+        {
+            return this.OverriddenStartupTasks ?? new IStartup[] { };
         }
 
         /// <summary>
@@ -137,6 +147,15 @@
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected override IEnumerable<IStartup> GetStartupTasks()
+        {
+            return new IStartup[] { };
         }
 
         /// <summary>
@@ -291,6 +310,19 @@
             var result = _Bootstrapper.GetEngine();
 
             result.PostRequestHook.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_invoke_startup_tasks()
+        {
+            var startupMock = A.Fake<IStartup>();
+            var startupMock2 = A.Fake<IStartup>();
+            _Bootstrapper.OverriddenStartupTasks = new[] { startupMock, startupMock2 };
+
+            _Bootstrapper.Initialise();
+
+            A.CallTo(() => startupMock.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

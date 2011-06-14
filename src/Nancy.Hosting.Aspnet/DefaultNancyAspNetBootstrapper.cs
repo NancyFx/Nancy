@@ -13,6 +13,15 @@
     public abstract class DefaultNancyAspNetBootstrapper : NancyBootstrapperBase<TinyIoCContainer>
     {
         /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected override IEnumerable<IStartup> GetStartupTasks()
+        {
+            return this.ApplicationContainer.ResolveAll<IStartup>(false);
+        }
+
+        /// <summary>
         /// Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <param name="context">Current request context</param>

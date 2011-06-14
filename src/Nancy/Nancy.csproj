@@ -50,6 +50,7 @@
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
+    <Compile Include="Bootstrapper\IStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
+    <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
     <Compile Include="HeadResponse.cs" />
@@ -174,7 +176,7 @@
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\IStartup.cs" />
+    <Compile Include="ViewEngines\IViewLocationCache.cs" />
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
@@ -184,6 +186,7 @@
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineWrapper.cs" />
+    <Compile Include="ViewEngines\ViewEngineStartup.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
   </ItemGroup>

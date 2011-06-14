@@ -172,6 +172,17 @@
         }
 
         /// <summary>
+        /// Gets all startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> StartupTasks
+        {
+            get
+            {
+                return AppDomainAssemblyTypeScanner.TypesOf<IStartup>();
+            }
+        }
+
+        /// <summary>
         /// Gets the root path provider
         /// </summary>
         protected virtual Type RootPathProvider
@@ -221,8 +232,19 @@
             
             this.InitialiseInternal(this.ApplicationContainer);
 
+            foreach (var startupTask in this.GetStartupTasks())
+            {
+                startupTask.Initialize();
+            }
+
             this.initialised = true;
         }
+
+        /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected abstract IEnumerable<IStartup> GetStartupTasks();
 
         /// <summary>
         /// Get all NancyModule implementation instances
@@ -393,6 +415,7 @@
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
+                    new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
                 };
         }
     }

@@ -5,6 +5,8 @@
 
     using Bootstrapper;
 
+    using Nancy.ViewEngines;
+
     using TinyIoC;
 
     /// <summary>
@@ -130,6 +132,15 @@
         protected override sealed TinyIoCContainer CreateRequestContainer()
         {
             return this.ApplicationContainer.GetChildContainer();
+        }
+
+        /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected override IEnumerable<IStartup> GetStartupTasks()
+        {
+            return this.ApplicationContainer.ResolveAll<IStartup>(false);
         }
 
         /// <summary>

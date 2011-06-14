@@ -26,6 +26,7 @@ namespace Nancy.Testing.Fakes
         {
         }
 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeNancyBootstrapper"/> class.
         /// </summary>
@@ -44,6 +45,15 @@ namespace Nancy.Testing.Fakes
 
                 configuration.Invoke(configurator);    
             }
+        }
+
+        /// <summary>
+        /// Gets all registered startup tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
+        protected override IEnumerable<IStartup> GetStartupTasks()
+        {
+            return this.ApplicationContainer.ResolveAll<IStartup>(false);
         }
 
         protected override IEnumerable<NancyModule> GetAllModules(TinyIoCContainer container)
