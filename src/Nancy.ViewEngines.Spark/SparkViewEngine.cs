@@ -104,6 +104,7 @@
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
+            int a = 10;
         }
 
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)

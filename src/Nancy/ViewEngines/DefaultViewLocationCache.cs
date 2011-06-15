@@ -1,6 +1,6 @@
 namespace Nancy.ViewEngines
 {
-    using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -15,11 +15,6 @@ namespace Nancy.ViewEngines
             this.viewLocationProviders = viewLocationProviders;
             this.viewEngines = viewEngines;
             this.locatedViews = GetLocatedViews();
-        }
-
-        public IEnumerable<ViewLocationResult> GetMatchingViews(Func<ViewLocationResult, bool> criterion)
-        {
-            return this.locatedViews.Where(criterion);
         }
 
         private IEnumerable<ViewLocationResult> GetLocatedViews()
@@ -39,6 +34,16 @@ namespace Nancy.ViewEngines
             return this.viewEngines
                 .SelectMany(engine => engine.Extensions)
                 .Distinct();
+        }
+
+        public IEnumerator<ViewLocationResult> GetEnumerator()
+        {
+            return this.locatedViews.GetEnumerator();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
         }
     }
 }

@@ -1,42 +1,36 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using FakeItEasy;
+    using Fakes;
     using Nancy.ViewEngines;
     using Xunit;
     using Xunit.Extensions;
 
     public class DefaultViewLocatorFixture
     {
+        private readonly IViewLocationCache viewLocationCache;
+        private readonly ViewLocationResult viewLocation;
+        private readonly DefaultViewLocator viewLocator;
+
+        public DefaultViewLocatorFixture()
+        {
+            this.viewLocation = new ViewLocationResult("location", "view", "html", null);
+            this.viewLocationCache = new FakeViewLocationCache(this.viewLocation);
+            this.viewLocator = CreateViewLocator(this.viewLocationCache);
+        }
+
         [Theory]
         [InlineData("view")]
         [InlineData("ViEw")]
         public void Should_ignore_casing_of_view_name_when_locating_a_view(string viewNameToTest)
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation });
-
-            // When
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
-
-            var viewName = string.Concat(viewNameToTest, ".html");
+            var viewName = string.Concat(viewNameToTest);
 
             // When
             var result = viewLocator.LocateView(viewName);
 
             // Then
-            result.ShouldBeSameAs(viewLocation);
+            result.ShouldBeSameAs(this.viewLocation);
         }
 
         [Theory]
@@ -45,19 +39,6 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_ignore_caseing_of_view_extension_when_locating_a_view(string viewExtensionToTest)
         {
             // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation });
-
-            // When
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
-
             var viewName = string.Concat("view.", viewExtensionToTest);
 
             // When
@@ -70,21 +51,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_ignore_extension_when_resolving_view_and_view_name_does_not_contain_extension()
         {
-            // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation });
-
-            // When
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
-
-            // When
+            // Given, When
             var result = viewLocator.LocateView("view");
 
             // Then
@@ -95,21 +62,14 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_throw_ambiguousviewsexception_when_more_than_one_located_view_matches_view_name()
         {
             // Given
-            var viewLocation1 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-            var viewLocation2 = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
+            var cache = new FakeViewLocationCache(
+                new ViewLocationResult("location", "view", "html", null),
+                new ViewLocationResult("location", "view", "html", null));
 
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation1, viewLocation2 });
-
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
+            var locator = CreateViewLocator(cache);
 
             // When
-            var exception = Record.Exception(() => viewLocator.LocateView("view.html"));
+            var exception = Record.Exception(() => locator.LocateView("view.html"));
 
             // Then
             exception.ShouldBeOfType<AmbiguousViewsException>();
@@ -118,20 +78,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_return_null_when_no_located_view_matches_view_name()
         {
-            // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation });
-
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
-
-            // When
+            // Given, When
             var result = viewLocator.LocateView("view2.html");
 
             // Then
@@ -141,21 +88,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_return_view_when_located_view_matches_view_name()
         {
-            // Given
-            var viewLocation = new ViewLocationResult("location", "view", "html", GetEmptyContentReader());
-
-            var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
-
-            var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).Returns(new[] { viewLocation });
-
-            // When
-            var viewLocator = CreateViewLocator(
-                new[] { viewLocationProvider },
-                new[] { viewEngine });
-
-            // When
+            // Given, When
             var result = viewLocator.LocateView("view.html");
 
             // Then
@@ -168,42 +101,29 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Given
             string viewName = null;
 
-            var viewLocator = CreateViewLocator(
-                new[] { A.Fake<IViewLocationProvider>() },
-                new[] { A.Fake<IViewEngine>() });
-
             // When
-            var result = viewLocator.LocateView(viewName);
+            var result = this.viewLocator.LocateView(viewName);
 
             // Then
             result.ShouldBeNull();
         }
-     
+
         [Fact]
         public void Should_return_null_if_locate_view_is_invoked_with_empty_view_name()
         {
             // Given
             var viewName = string.Empty;
 
-            var viewLocator = CreateViewLocator(
-                new[] { A.Fake<IViewLocationProvider>() },
-                new[] { A.Fake<IViewEngine>() });
-
             // When
-            var result = viewLocator.LocateView(viewName);
+            var result = this.viewLocator.LocateView(viewName);
 
             // Then
             result.ShouldBeNull();
         }
 
-        private static DefaultViewLocator CreateViewLocator(IEnumerable<IViewLocationProvider> viewLocationProviders, IEnumerable<IViewEngine> viewEngines)
+        private static DefaultViewLocator CreateViewLocator(IViewLocationCache viewLocationCache)
         {
-            return new DefaultViewLocator(viewLocationProviders, viewEngines);
-        }
-
-        private static Func<TextReader> GetEmptyContentReader()
-        {
-            return () => new StreamReader(new MemoryStream());
+            return new DefaultViewLocator(viewLocationCache);
         }
     }
 }

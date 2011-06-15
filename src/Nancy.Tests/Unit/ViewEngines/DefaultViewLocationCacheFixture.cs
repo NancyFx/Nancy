@@ -26,7 +26,7 @@
             var cache = CreateViewLocationCache(providers, engines);
 
             // When
-            var result = cache.GetMatchingViews(x => true);
+            var result = cache.Where(x => true);
 
             // Then
             result.Count().ShouldEqual(3);

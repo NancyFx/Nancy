@@ -185,6 +185,7 @@
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
+            int a = 10;
         }
 
         /// <summary>

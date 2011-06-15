@@ -1,10 +1,8 @@
 namespace Nancy.ViewEngines
 {
-    using System;
     using System.Collections.Generic;
 
-    public interface IViewLocationCache
+    public interface IViewLocationCache : IEnumerable<ViewLocationResult>
     {
-        IEnumerable<ViewLocationResult> GetMatchingViews(Func<ViewLocationResult, bool> criterion);
     }
 }

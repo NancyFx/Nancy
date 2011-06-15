@@ -143,7 +143,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewResolver), this.ViewResolver),
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
-                new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache), 
+                new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
             };
         }
     }

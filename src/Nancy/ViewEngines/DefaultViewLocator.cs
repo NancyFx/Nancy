@@ -10,15 +10,11 @@
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
-        private readonly IEnumerable<IViewLocationProvider> viewLocationProviders;
-        private readonly IEnumerable<IViewEngine> viewEngines;
-        private readonly IEnumerable<ViewLocationResult> locatedViews;
+        private readonly IViewLocationCache viewLocationCache;
 
-        public DefaultViewLocator(IEnumerable<IViewLocationProvider> viewLocationProviders, IEnumerable<IViewEngine> viewEngines)
+        public DefaultViewLocator(IViewLocationCache viewLocationCache)
         {
-            this.viewLocationProviders = viewLocationProviders;
-            this.viewEngines = viewEngines;
-            this.locatedViews = GetLocatedViews();
+            this.viewLocationCache = viewLocationCache;
         }
 
         /// <summary>
@@ -33,8 +29,8 @@
                 return null;
             }
 
-            var viewsThatMatchesCritera = this.locatedViews
-                .Where(x => x.Name.Equals(Path.GetFileNameWithoutExtension(viewName), StringComparison.OrdinalIgnoreCase));
+            var viewsThatMatchesCritera = this.viewLocationCache.Where(
+                x => x.Name.Equals(Path.GetFileNameWithoutExtension(viewName), StringComparison.OrdinalIgnoreCase));
 
             viewsThatMatchesCritera = GetViewsThatMatchesViewExtension(viewName, viewsThatMatchesCritera);
 
@@ -56,25 +52,6 @@
             }
 
             return viewsThatMatchesCritera;
-        }
-
-        private IEnumerable<ViewLocationResult> GetLocatedViews()
-        {
-            var supportedViewExtensions = 
-                GetSupportedViewExtensions();
-
-            var viewsLocatedByProviders = this.viewLocationProviders
-                .SelectMany(x => x.GetLocatedViews(supportedViewExtensions))
-                .ToList();
-
-            return viewsLocatedByProviders;
-        }
-
-        private IEnumerable<string> GetSupportedViewExtensions()
-        {
-            return this.viewEngines
-                .SelectMany(engine => engine.Extensions)
-                .Distinct();
         }
     }
 }
