@@ -21,9 +21,8 @@ namespace Nancy.ViewEngines.Spark.Tests
     {
         private readonly IRenderContext renderContext;
         private string output;
-        private IEnumerable<IViewLocationProvider> viewLocationProviders;
-        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
-        private IRootPathProvider rootPathProvider;
+        private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
+        private readonly IRootPathProvider rootPathProvider;
 
         public SparkViewEngineFixture()
         {
@@ -31,7 +30,7 @@ namespace Nancy.ViewEngines.Spark.Tests
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Environment.CurrentDirectory + @"\TestViews");
 
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider);
-            this.viewLocationProviders = new[] { this.fileSystemViewLocationProvider };
+            
             this.renderContext = A.Fake<IRenderContext>();
 
             var cache = A.Fake<IViewCache>();
@@ -42,20 +41,6 @@ namespace Nancy.ViewEngines.Spark.Tests
                 });
 
             A.CallTo(() => this.renderContext.ViewCache).Returns(cache);
-        }
-
-        [Fact]
-        public void Should_get_located_views_from_view_location_providers()
-        {
-            //Given
-            var fakeProvider = A.Fake<IViewLocationProvider>();
-            IEnumerable<IViewLocationProvider> providers = new[] { fakeProvider };
-            
-            //When
-            new SparkViewEngine(providers);
-
-            //Then
-            A.CallTo(() => fakeProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -266,7 +251,13 @@ namespace Nancy.ViewEngines.Spark.Tests
             var location = Path.Combine("Stub", viewName + ".spark");
             var viewLocationResult = new ViewLocationResult(location, viewName, "spark", GetEmptyContentReader());
             var stream = new MemoryStream();
-            var engine = new SparkViewEngine(this.viewLocationProviders);
+            var engine = new SparkViewEngine();
+
+            var context = new ViewEngineStartupContext(
+                A.Fake<IViewCache>(),
+                this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"spark"}));
+
+            engine.Initialize(context);
 
             //When
             var action = engine.RenderView(viewLocationResult, viewModel, this.renderContext);
