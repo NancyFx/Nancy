@@ -22,7 +22,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class with a default configuration.
         /// </summary>
-        public RazorViewEngine() : this(new RazorConfiguration())
+        public RazorViewEngine() : this(new DefaultRazorConfiguration())
         {
         }
 

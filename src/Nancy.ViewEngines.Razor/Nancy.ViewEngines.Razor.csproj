@@ -50,12 +50,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
     <Compile Include="NonEncodedHtmlString.cs" />
-    <Compile Include="RazorConfiguration.cs" />
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />
   </ItemGroup>

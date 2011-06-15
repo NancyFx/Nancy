@@ -7,14 +7,14 @@
     /// <summary>
     /// 
     /// </summary>
-	public class RazorConfiguration : IRazorConfiguration
+	public class DefaultRazorConfiguration : IRazorConfiguration
     {
         private readonly RazorConfigurationSection razorConfigurationSection;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RazorConfiguration"/> class.
+        /// Initializes a new instance of the <see cref="DefaultRazorConfiguration"/> class.
         /// </summary>
-        public RazorConfiguration()
+        public DefaultRazorConfiguration()
         {
             this.razorConfigurationSection = ConfigurationManager.GetSection("razor") as RazorConfigurationSection;
         }
