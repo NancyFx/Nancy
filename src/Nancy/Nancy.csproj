@@ -187,6 +187,7 @@
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineWrapper.cs" />
     <Compile Include="ViewEngines\ViewEngineStartup.cs" />
+    <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
   </ItemGroup>

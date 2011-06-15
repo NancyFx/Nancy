@@ -30,17 +30,4 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext);
     }
-
-    public class ViewEngineStartupContext
-    {
-        public ViewEngineStartupContext(IViewCache viewCache, IEnumerable<ViewLocationResult> viewLocationResults)
-        {
-            this.ViewCache = viewCache;
-            this.ViewLocationResults = viewLocationResults;
-        }
-
-        public IViewCache ViewCache { get; private set; }
-
-        public IEnumerable<ViewLocationResult> ViewLocationResults { get; private set; }
-    }
 }
