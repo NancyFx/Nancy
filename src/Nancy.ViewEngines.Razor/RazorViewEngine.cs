@@ -8,6 +8,8 @@
     using System.Reflection;
     using System.Web;
     using System.Web.Razor;
+    using System.Web.Razor.Generator;
+
     using Microsoft.CSharp;
 
     /// <summary>
@@ -46,6 +48,8 @@
                     DefaultNamespace = "RazorOutput",
                     DefaultClassName = "RazorView"
                 };
+
+            host.GeneratedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", null, null, null, "DefineSection");
 
             host.NamespaceImports.Add("System");
             host.NamespaceImports.Add("System.IO");
