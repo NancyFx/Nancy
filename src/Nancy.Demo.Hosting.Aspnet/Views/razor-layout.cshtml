@@ -1,9 +1,11 @@
 ﻿<html>
 <head>
-    <title>Razor View Engine Demo</title>
+    <title>Razor View Engine Demo - @Model.FirstName</title>
     @RenderSection("Header")
 </head>
 <body>
-    @RenderBody()
+    <div id="body">@RenderBody()</div>
+    <div id="footer">@RenderSection("Footer")</div>
+    <div id="optional">@RenderSection("Optional", false)</div>
 </body>
 </html>

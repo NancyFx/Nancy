@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Web;
     using System.Web.Razor;
     using System.Web.Razor.Generator;
@@ -123,11 +124,10 @@
                 var err = results.Errors
                     .OfType<CompilerError>()
                     .Where(ce => !ce.IsWarning)
-                    .First();
+                    .Select(error => String.Format("Error Compiling Template: ({0}, {1}) {2})", error.Line, error.Column, error.ErrorText))
+                    .Aggregate((s1, s2) => s1 + "<br/>" + s2);
 
-                var error = String.Format("Error Compiling Template: ({0}, {1}) {2})", err.Line, err.Column, err.ErrorText);
-
-                return () => new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(err);
             }
             // Load the assembly
             var assembly = Assembly.LoadFrom(outputAssemblyName);
@@ -212,24 +212,37 @@
 
             return stream =>
             {
-                var view = 
-                    GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
-
-                var writer = 
+                var writer =
                     new StreamWriter(stream);
 
-                view.Html = new HtmlHelpers(this, renderContext);
-                view.Model = model;
-                view.Writer = writer;
-                view.Execute();
-
-                foreach (var section in view.Sections)
+                NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                view.ExecuteView(null, null);
+                var body = view.Body;
+                var sectionContents = view.SectionContents;
+                var root = !view.HasLayout;
+                var layout = view.Layout;
+                
+                while (!root)
                 {
-                    section.Value.Invoke();
+                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view.ExecuteView(body, sectionContents);
+
+                    body = view.Body;
+                    sectionContents = view.SectionContents;
+                    root = !view.HasLayout;
                 }
 
+                writer.Write(body);
                 writer.Flush();
             };
+        }
+
+        private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
+        {
+            var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
+            view.Html = new HtmlHelpers(this, renderContext);
+            view.Model = model;
+            return view;
         }
     }
 }
