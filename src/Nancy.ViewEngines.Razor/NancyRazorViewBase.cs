@@ -7,7 +7,19 @@
 
     public abstract class NancyRazorViewBase
     {
-        public string Layout { get; set; }
+        private string layout;
+
+        public string Layout
+        {
+            get
+            {
+                return this.layout;
+            }
+            set
+            {
+                this.layout = value;
+            }
+        }
 
         public TextWriter Writer { get; set; }
 
@@ -43,8 +55,7 @@
         // Stores sections
         public virtual void DefineSection(string sectionName, Action action)
         {
-            // This crashes with a duplicate key exception, even though it's only called once :-)
-            //this.Sections.Add(sectionName, action);
+            this.Sections.Add(sectionName, action);
         }
     }
 }

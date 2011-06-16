@@ -71,7 +71,7 @@
             return new RazorTemplateEngine(host);
         }
 
-        private NancyRazorViewBase GetCompiledView<TModel>(TextReader reader, Assembly referencingAssembly) 
+        private Func<NancyRazorViewBase> GetCompiledViewFactory<TModel>(TextReader reader, Assembly referencingAssembly) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
@@ -80,15 +80,12 @@
             //    code = sw.GetStringBuilder().ToString();
             //}
 
-            var view = 
-                GenerateRazorView(this.codeDomProvider, razorResult, referencingAssembly);
+            var viewFactory = this.GenerateRazorViewFactory(this.codeDomProvider, razorResult, referencingAssembly);
 
-            view.Code = string.Empty;
-
-            return view;
+            return viewFactory;
         }
 
-        private NancyRazorViewBase GenerateRazorView(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
+        private Func<NancyRazorViewBase> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly)
         {
             // Compile the generated code into an assembly
             var outputAssemblyName =
@@ -130,14 +127,14 @@
 
                 var error = String.Format("Error Compiling Template: ({0}, {1}) {2})", err.Line, err.Column, err.ErrorText);
 
-                return new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error);
             }
             // Load the assembly
             var assembly = Assembly.LoadFrom(outputAssemblyName);
             if (assembly == null)
             {
                 const string error = "Error loading template assembly";
-                return new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error);
             }
 
             // Get the template type
@@ -145,17 +142,16 @@
             if (type == null) 
             {
                 var error = String.Format("Could not find type RazorOutput.Template in assembly {0}", assembly.FullName);
-                return new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error);
             }
 
-            var view = Activator.CreateInstance(type) as NancyRazorViewBase;
-            if (view == null)
+            if (Activator.CreateInstance(type) as NancyRazorViewBase == null)
             {
                 const string error = "Could not construct RazorOutput.Template or it does not inherit from RazorViewBase";
-                return new NancyRazorErrorView(error);
+                return () => new NancyRazorErrorView(error);
             }
 
-            return view;
+            return () => (NancyRazorViewBase)Activator.CreateInstance(type);
         }
 
         private static string GetAssemblyPath(Type type) {
@@ -168,9 +164,11 @@
 
         private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly)
         {
-            var view = renderContext.ViewCache.GetOrAdd(
+            var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult, 
-                x => GetCompiledView<dynamic>(x.Contents.Invoke(), referencingAssembly));
+                x => this.GetCompiledViewFactory<dynamic>(x.Contents.Invoke(), referencingAssembly));
+
+            var view = viewFactory.Invoke();
 
             view.Code = string.Empty;
 
@@ -224,6 +222,11 @@
                 view.Model = model;
                 view.Writer = writer;
                 view.Execute();
+
+                foreach (var section in view.Sections)
+                {
+                    section.Value.Invoke();
+                }
 
                 writer.Flush();
             };
