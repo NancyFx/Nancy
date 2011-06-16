@@ -18,11 +18,11 @@
             this.engine = new RazorViewEngine(this.configuration);
 
             var cache = A.Fake<IViewCache>();
-            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, NancyRazorViewBase>>.Ignored))
+            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<NancyRazorViewBase>>>.Ignored))
                 .ReturnsLazily(x =>
                 {
                     var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, NancyRazorViewBase>>(1).Invoke(result);
+                    return x.GetArgument<Func<ViewLocationResult, Func<NancyRazorViewBase>>>(1).Invoke(result);
                 });
 
             this.renderContext = A.Fake<IRenderContext>();
