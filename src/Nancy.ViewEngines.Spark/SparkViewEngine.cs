@@ -413,7 +413,7 @@
             return stream =>
             {
                 ViewEngineResult viewEngineResult =
-                    this.RenderView(viewLocationResult.Location, model);
+                    this.RenderView(viewLocationResult.Location, model ?? new object());
 
                 var writer =
                     new StreamWriter(stream);

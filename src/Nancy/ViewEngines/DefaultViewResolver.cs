@@ -46,9 +46,9 @@
                 return null;
             }
 
-            foreach (var convention in this.conventions.GetConventions())
+            foreach (var convention in conventions)
             {
-                dynamic conventionBasedViewName =
+                var conventionBasedViewName =
                     SafeInvokeConvention(convention, viewName, model, viewLocationContext);
 
                 if (String.IsNullOrEmpty(conventionBasedViewName))
@@ -56,7 +56,7 @@
                     continue;
                 }
 
-                dynamic locatedView =
+                var locatedView = 
                     this.viewLocator.LocateView(conventionBasedViewName);
 
                 if (locatedView != null)
@@ -68,13 +68,13 @@
             return null;
         }
 
-        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model,
-            ViewLocationContext viewLocationContext)
+        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model, ViewLocationContext viewLocationContext)
         {
             try
             {
                 return convention.Invoke(viewName, model, viewLocationContext);
-            } catch
+            }
+            catch
             {
                 return null;
             }

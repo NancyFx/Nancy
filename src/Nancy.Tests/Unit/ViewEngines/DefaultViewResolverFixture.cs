@@ -1,9 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using System;
-    using System.IO;    
+    using System.IO;
+    using System.Linq;
     using FakeItEasy;
-    using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Xunit;
 
@@ -15,14 +15,14 @@
         public DefaultViewResolverFixture()
         {
             this.viewLocator = A.Fake<IViewLocator>();
-            this.viewResolver = new DefaultViewResolver(this.viewLocator, new ViewLocationConventions(new Func<string, object, ViewLocationContext, string>[] {}));
+            this.viewResolver = new DefaultViewResolver(this.viewLocator, Enumerable.Empty<Func<string, object, ViewLocationContext, string>>());
         }
 
         [Fact]
         public void Should_throw_invalidoperationexception_when_created_with_null_view_locator()
         {
             // Given, When
-            var exception = Record.Exception(() => new DefaultViewResolver(null, new ViewLocationConventions(new Func<string, object, ViewLocationContext, string>[] {})));
+            var exception = Record.Exception(() => new DefaultViewResolver(null, Enumerable.Empty<Func<string, object, ViewLocationContext, string>>()));
 
             // Then
             exception.ShouldBeOfType<InvalidOperationException>();
@@ -87,17 +87,16 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => {
-                            viewNamePassedToFirstConvention = viewName;
-                            return string.Empty;
-                        },
-                        (name, model, path) => {
-                            viewNamePassedToSecondConvention = viewName;
-                            return string.Empty;
-                        }
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => {
+                        viewNamePassedToFirstConvention = viewName;
+                        return string.Empty;
+                    },
+                    (name, model, path) => {
+                        viewNamePassedToSecondConvention = viewName;
+                        return string.Empty;
+                    }
+                });
 
             // When
             resolver.GetViewLocation(viewName, null, new ViewLocationContext());
@@ -119,17 +118,16 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => {
-                            modelPassedToFirstConvention = model;
-                            return string.Empty;
-                        },
-                        (name, model, path) => {
-                            modelPassedToSecondConvention = model;
-                            return string.Empty;
-                        }
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => {
+                        modelPassedToFirstConvention = model;
+                        return string.Empty;
+                    },
+                    (name, model, path) => {
+                        modelPassedToSecondConvention = model;
+                        return string.Empty;
+                    }
+                });
 
             // When
             resolver.GetViewLocation(viewName, viewModel, new ViewLocationContext());
@@ -151,17 +149,16 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, viewLocationContext) => {
-                            modulePathPassedToFirstConvention = viewLocationContext;
-                            return string.Empty;
-                        },
-                        (name, model, viewLocationContext) => {
-                            modulePathPassedToSecondConvention = viewLocationContext;
-                            return string.Empty;
-                        }
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, viewLocationContext) => {
+                        modulePathPassedToFirstConvention = viewLocationContext;
+                        return string.Empty;
+                    },
+                    (name, model, viewLocationContext) => {
+                        modulePathPassedToSecondConvention = viewLocationContext;
+                        return string.Empty;
+                    }
+                });
 
             // When
             resolver.GetViewLocation(viewName, null, context);
@@ -179,10 +176,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) =>  "bar.html" 
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) =>  "bar.html" 
+                });
 
             // When
             resolver.GetViewLocation(viewName, null, new ViewLocationContext());
@@ -199,10 +195,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) =>  null 
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) =>  null 
+                });
 
             // When
             resolver.GetViewLocation(viewName, null, new ViewLocationContext());
@@ -219,10 +214,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => string.Empty 
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => string.Empty 
+                });
 
             // When
             resolver.GetViewLocation(viewName, null, new ViewLocationContext());
@@ -239,10 +233,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => { throw new Exception(); }
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => { throw new Exception(); }
+                });
 
             // When
             var exception = Record.Exception(() => resolver.GetViewLocation(viewName, null, new ViewLocationContext()));
@@ -259,10 +252,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => "bar.html"
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => "bar.html"
+                });
 
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(null);
 
@@ -281,10 +273,9 @@
 
             var resolver = new DefaultViewResolver(
                 this.viewLocator,
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[] {
-                        (name, model, path) => "bar.html"
-                    }));
+                new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) => "bar.html"
+                });
 
             var locatedView =
                 new ViewLocationResult("name", "location", "extension", GetEmptyContentReader());

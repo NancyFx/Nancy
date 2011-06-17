@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.Conventions
 {
-    using System;    
+    using System;
+    using System.Collections.Generic;
     using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Xunit;
@@ -46,7 +47,7 @@ namespace Nancy.Tests.Unit.Conventions
         public void Should_not_be_valid_when_view_location_conventions_is_empty()
         {
             // Given
-            this.conventions.ViewLocationConventions = new ViewLocationConventions(new Func<string, dynamic, ViewLocationContext, string>[0]);
+            this.conventions.ViewLocationConventions = new List<Func<string, dynamic, ViewLocationContext, string>>();
 
             // When
             var result = this.viewLocationConventions.Validate(this.conventions);
@@ -59,7 +60,7 @@ namespace Nancy.Tests.Unit.Conventions
         public void Should_return_correct_error_message_when_not_valid_because_view_location_conventions_is_empty()
         {
             // Given
-            this.conventions.ViewLocationConventions = new ViewLocationConventions(new Func<string, dynamic, ViewLocationContext, string>[0]);
+            this.conventions.ViewLocationConventions = new List<Func<string, dynamic, ViewLocationContext, string>>();
 
             // When
             var result = this.viewLocationConventions.Validate(this.conventions);
@@ -73,13 +74,12 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.conventions.ViewLocationConventions = 
-                new ViewLocationConventions(
-                    new Func<string, dynamic, ViewLocationContext, string>[]
-                    {
-                        (viewName, model, viewLocationContext) => {
-                            return string.Empty;
-                        }
-                    });
+                new List<Func<string, dynamic, ViewLocationContext, string>>
+                {
+                    (viewName, model, viewLocationContext) => {
+                        return string.Empty;
+                    }
+                };
 
             // When
             var result = this.viewLocationConventions.Validate(this.conventions);
@@ -93,12 +93,12 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.conventions.ViewLocationConventions =
-                new ViewLocationConventions(new Func<string, dynamic, ViewLocationContext, string>[]
-                    {
-                        (viewName, model, viewLocationContext) => {
-                            return string.Empty;
-                        }
-                    });
+                new List<Func<string, dynamic, ViewLocationContext, string>>
+                {
+                    (viewName, model, viewLocationContext) => {
+                        return string.Empty;
+                    }
+                };
 
             // When
             var result = this.viewLocationConventions.Validate(this.conventions);
@@ -114,7 +114,7 @@ namespace Nancy.Tests.Unit.Conventions
             this.viewLocationConventions.Initialise(this.conventions);
 
             // Then
-            this.conventions.ViewLocationConventions.HasConventions().ShouldBeTrue();
+            this.conventions.ViewLocationConventions.Count.ShouldBeGreaterThan(0);
         }
     }
 }
