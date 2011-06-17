@@ -121,9 +121,11 @@
     <Content Include="Views\razor-layout.cshtml" />
     <None Include="Views\dot.liquid" />
     <None Include="Views\razor-dependency.cshtml" />
+    <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
+    <None Include="Views\ssve.sshtml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

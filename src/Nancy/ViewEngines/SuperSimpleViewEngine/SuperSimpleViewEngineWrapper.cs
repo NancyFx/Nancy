@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading;
 
     /// <summary>
     /// Nancy IViewEngine wrapper for the super simple view engine
@@ -13,6 +14,8 @@
         /// Extensions that the view engine supports
         /// </summary>
         private readonly string[] extensions = new[] { "sshtml", "html", "htm" };
+
+        private SuperSimpleViewEngine viewEngine;
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -36,11 +39,14 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
+            Interlocked.CompareExchange(ref this.viewEngine, new SuperSimpleViewEngine(new NancyViewEngineHost(renderContext)), null);
+
             return s =>
             {
                 var writer = new StreamWriter(s);
-                var viewEngine = new SuperSimpleViewEngine(new NancyViewEngineHost(renderContext));
-                writer.Write(viewEngine.Render(viewLocationResult.Contents.Invoke().ReadToEnd(), model));
+                var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
+
+                writer.Write(this.viewEngine.Render(templateContents, model));
                 writer.Flush();
             };
         }

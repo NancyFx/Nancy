@@ -54,11 +54,23 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["~/views/razor.cshtml", model];
             };
 
+            Get["/razor-simple"] = x =>
+            {
+                var model = new RatPack { FirstName = "Frank" };
+                return View["~/views/razor-simple.cshtml", model];
+            };
+
             Get["/razor-dynamic"] = x =>
             {
                 dynamic model = new ExpandoObject();
                 model.FirstName = "Frank";
                 return View["~/views/razor.cshtml", model];
+            };
+
+            Get["/ssve"] = x =>
+            {
+                var model = new RatPack { FirstName = "You" };
+                return View["~/views/ssve.sshtml", model];
             };
 
             Get["/embedded"] = x => {
