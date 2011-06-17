@@ -57,7 +57,7 @@
         {
             return new[]
             {
-                new InstanceRegistration(typeof(IEnumerable<Func<string, dynamic, ViewLocationContext, string>>), this.ViewLocationConventions),
+                new InstanceRegistration(typeof(ViewLocationConventions), new ViewLocationConventions(this.ViewLocationConventions)),
             };
         }
 
