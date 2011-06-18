@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -21,7 +22,7 @@
         /// </summary>
         /// <param name="viewResolver">An <see cref="IViewResolver"/> instance that should be used to resolve the location of a view.</param>
         /// <param name="viewEngines">An <see cref="IEnumerable{T}"/> instance containing the <see cref="IViewEngine"/> instances that should be able to be used to render a view</param>
-        /// <param name="renderContextFactory"></param>
+        /// <param name="renderContextFactory">A <see cref="IRenderContextFactory"/> instance that should be used to create an <see cref="IRenderContext"/> when a view is rendered.</param>
         public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory)
         {
             this.viewResolver = viewResolver;
@@ -75,9 +76,27 @@
             return SafeInvokeViewEngine(
                 resolvedViewEngine,
                 viewLocationResult,
-                model,
+                GetSafeModel(model),
                 this.renderContextFactory.GetRenderContext(viewLocationContext)
             );
+        }
+
+        private static object GetSafeModel(object model)
+        {
+            return (model.IsAnonymousType()) ? GetExpandoObject(model) : model;
+        }
+
+        private static ExpandoObject GetExpandoObject(object source)
+        {
+            var expandoObject = new ExpandoObject();
+            IDictionary<string, object> results = expandoObject;
+
+            foreach (var propertyInfo in source.GetType().GetProperties())
+            {
+                results[propertyInfo.Name] = propertyInfo.GetValue(source, null);
+            }
+
+            return expandoObject;
         }
 
         private IViewEngine GetViewEngine(ViewLocationResult viewLocationResult)

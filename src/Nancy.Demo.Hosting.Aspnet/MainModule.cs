@@ -1,7 +1,6 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
-    using System.Dynamic;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
 
@@ -62,9 +61,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/razor-dynamic"] = x =>
             {
-                dynamic model = new ExpandoObject();
-                model.FirstName = "Frank";
-                return View["~/views/razor.cshtml", model];
+                return View["razor.cshtml", new { FirstName = "Frank" }];
             };
 
             Get["/ssve"] = x =>
