@@ -1,7 +1,6 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System;
-    using System.Collections.Generic;
     using System.Dynamic;
     using System.IO;
     using FakeItEasy;
@@ -376,24 +375,6 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             ((string)viewEngines[0].Model.Name).ShouldEqual("Nancy");
-        }
-
-        private class FakeViewEngine : IViewEngine
-        {
-            public IEnumerable<string> Extensions { get; set; }
-
-            public dynamic Model { get; set; }
-
-            public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-            {
-                throw new NotImplementedException();
-            }
-
-            public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
-            {
-                this.Model = model;
-                return stream => { };
-            }
         }
 
         [Fact]
