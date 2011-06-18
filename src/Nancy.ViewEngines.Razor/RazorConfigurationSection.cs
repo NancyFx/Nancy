@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Configuration;
-using System.Collections;
-
-
-namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines.Razor
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
+    using System.Collections;
+
 	public class RazorConfigurationSection : ConfigurationSection
 	{
 		[ConfigurationProperty("disableAutoIncludeModelNamespace", DefaultValue = "false", IsRequired = false)]

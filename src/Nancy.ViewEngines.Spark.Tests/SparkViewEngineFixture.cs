@@ -1,14 +1,8 @@
-﻿using FileSystemViewFolder = Spark.FileSystem.FileSystemViewFolder;
-using InMemoryViewFolder = Spark.FileSystem.InMemoryViewFolder;
-using IViewFolder = Spark.FileSystem.IViewFolder;
-
-namespace Nancy.ViewEngines.Spark.Tests
+﻿namespace Nancy.ViewEngines.Spark.Tests
 {
     using System;
-    using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Threading;
     using FakeItEasy;
     using global::Spark;

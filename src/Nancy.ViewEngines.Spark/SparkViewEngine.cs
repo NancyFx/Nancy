@@ -5,7 +5,6 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
-    using System.Linq;
     using global::Spark;
     using global::Spark.FileSystem;
     using Nancy.ViewEngines.Spark.Descriptors;

@@ -6,11 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Web;
     using System.Web.Razor;
     using System.Web.Razor.Generator;
-
     using Microsoft.CSharp;
 
     /// <summary>
