@@ -39,12 +39,12 @@ namespace Nancy.Tests.Unit
             boundaries.Count().ShouldEqual(1);
         }
 
-        private static HttpMultiparSubStream BuildInputStream(string padding, int numberOfBoundaries)
+        private static HttpMultipartSubStream BuildInputStream(string padding, int numberOfBoundaries)
         {
             var memory =
                 new MemoryStream(BuildRandomBoundaries(padding, numberOfBoundaries));
 
-            return new HttpMultiparSubStream(memory, 0, memory.Length);
+            return new HttpMultipartSubStream(memory, 0, memory.Length);
         }
 
         private static byte[] BuildRandomBoundaries(string padding, int numberOfBoundaries)

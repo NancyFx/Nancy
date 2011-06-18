@@ -18,7 +18,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="HttpMultipartBoundary"/> class.
         /// </summary>
         /// <param name="boundaryStream">The stream that contains the boundary information.</param>
-        public HttpMultipartBoundary(HttpMultiparSubStream boundaryStream)
+        public HttpMultipartBoundary(HttpMultipartSubStream boundaryStream)
         {
             this.Value = boundaryStream;
             this.ExtractHeaders();
@@ -47,7 +47,7 @@ namespace Nancy
         /// A stream containig the value of the boundary.
         /// </summary>
         /// <remarks>This is the RFC2047 decoded value of the Content-Type header.</remarks>
-        public HttpMultiparSubStream Value { get; private set; }
+        public HttpMultipartSubStream Value { get; private set; }
 
         private void ExtractHeaders()
         {

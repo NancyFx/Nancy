@@ -38,16 +38,16 @@
                 select new HttpMultipartBoundary(boundaryStream)).ToList();
         }
 
-        private IEnumerable<HttpMultiparSubStream> GetBoundarySubStreams()
+        private IEnumerable<HttpMultipartSubStream> GetBoundarySubStreams()
         {
-            var boundarySubStreams = new List<HttpMultiparSubStream>();
+            var boundarySubStreams = new List<HttpMultipartSubStream>();
             var boundaryStart = this.GetNextBoundaryPosition();
 
             while (boundaryStart > -1)
             {
                 var boundaryEnd = this.GetNextBoundaryPosition();
 
-                boundarySubStreams.Add(new HttpMultiparSubStream(
+                boundarySubStreams.Add(new HttpMultipartSubStream(
                     this.requestStream,
                     boundaryStart,
                     this.GetActualEndOfBoundary(boundaryEnd)));

@@ -156,7 +156,7 @@
     <Compile Include="Session\ISessionObjectFormatter.cs" />
     <Compile Include="Session\NullSessionProvider.cs" />
     <Compile Include="Session\Session.cs" />
-    <Compile Include="HttpMultiparSubStream.cs" />
+    <Compile Include="HttpMultipartSubStream.cs" />
     <Compile Include="TinyIoc\TinyIoC.cs" />
     <Compile Include="NancyModule.cs" />
     <Compile Include="INancyEngine.cs" />

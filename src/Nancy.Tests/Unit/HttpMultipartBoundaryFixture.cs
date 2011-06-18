@@ -139,12 +139,12 @@
             return reader.ReadToEnd();
         }
 
-        private static HttpMultiparSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
+        private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
         {
             var memory =  
                 new MemoryStream(BuildBoundaryWithSingleFile(name, filename, contentType, content));
 
-            return new HttpMultiparSubStream(memory, 0, memory.Length);
+            return new HttpMultipartSubStream(memory, 0, memory.Length);
         }
 
         private static byte[] BuildBoundaryWithSingleFile(string name, string filename, string contentType, string content)
