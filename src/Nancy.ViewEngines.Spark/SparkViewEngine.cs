@@ -51,7 +51,7 @@
                 viewLocationResult,
                 renderContext);
 
-            var viewWithModel = result.View as NancySparkView<TModel>;
+            var viewWithModel = result.View;
 
             if (viewWithModel != null)
             {

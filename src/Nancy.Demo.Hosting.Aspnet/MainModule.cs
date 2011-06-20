@@ -94,6 +94,12 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["spark.spark", model];
             };
 
+            Get["/spark-anon"] = x =>
+            {
+                var model = new { FirstName = "Anonymous" };
+                return View["anon.spark", model];
+            };
+
             Get["/json"] = x => {
                 var model = new RatPack { FirstName = "Andy" };
                 return Response.AsJson(model);

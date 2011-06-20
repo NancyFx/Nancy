@@ -24,13 +24,18 @@
         {
             return value;
         }
+
+        public virtual void SetModel(object model)
+        {
+            this.Model = model;
+        }
     }
 
     public abstract class NancySparkView<TModel> : NancySparkView
     {
         public new TModel Model { get; private set; }
 
-        public void SetModel(object model)
+        public override void SetModel(object model)
         {
             Model = (model is TModel) ? (TModel)model : default(TModel);
         }

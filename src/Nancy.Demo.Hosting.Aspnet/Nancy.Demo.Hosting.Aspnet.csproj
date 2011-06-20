@@ -119,6 +119,7 @@
     <Content Include="Views\layout.cshtml" />
     <Content Include="Views\contents.cshtml" />
     <Content Include="Views\razor-layout.cshtml" />
+    <None Include="Views\anon.spark" />
     <None Include="Views\dot.liquid" />
     <None Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />

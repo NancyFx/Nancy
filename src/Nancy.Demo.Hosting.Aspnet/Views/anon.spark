@@ -1,0 +1,10 @@
+﻿<viewdata model="dynamic" />
+<html>
+<head>
+    <title>Spark View Engine Demo</title>
+</head>
+<body>
+    <h1>The name's Spark, ${Model.FirstName} Spark</h1>
+    <p>This is a sample Spark view!</p>
+</body>
+</html>
