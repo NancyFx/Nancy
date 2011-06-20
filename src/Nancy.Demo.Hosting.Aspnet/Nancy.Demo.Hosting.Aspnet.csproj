@@ -116,8 +116,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Views\embedded.django" />
     <Content Include="Views\someview.cshtml" />
-    <Content Include="Views\layout.cshtml" />
-    <Content Include="Views\contents.cshtml" />
     <Content Include="Views\razor-layout.cshtml" />
     <None Include="Views\anon.spark" />
     <None Include="Views\dot.liquid" />
