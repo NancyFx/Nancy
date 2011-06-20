@@ -8,13 +8,17 @@
 
     public class FakeViewEngine : IViewEngine
     {
+        public FakeViewEngine()
+        {
+            this.Extensions = new[] { "html " };
+        }
+
         public IEnumerable<string> Extensions { get; set; }
 
         public dynamic Model { get; set; }
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
-            throw new NotImplementedException();
         }
 
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)

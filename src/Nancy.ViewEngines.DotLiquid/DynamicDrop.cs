@@ -15,26 +15,54 @@
         /// <param name="model">The view model.</param>
         public DynamicDrop(dynamic model)
         {
-            this.model = model;
+            this.model = GetValidModelType(model);
         }
 
         public override object BeforeMethod(string propertyName)
         {
             if (model == null)
             {
-                return "[Model is null.]";
+                return "[Model is null]";
             }
 
-            if (this.model.GetType().Equals(typeof(ExpandoObject)))
+            if (string.IsNullOrEmpty(propertyName))
             {
-                return (new Dictionary<string, object>(this.model))[propertyName];
+                return "[Invalid model property name]";
             }
 
-            var property = model.GetType().GetProperty(propertyName);
+            var value = (this.model.GetType().Equals(typeof(Dictionary<string, object>))) ?
+                GetExpandoObjectValue(propertyName) :
+                GetPropertyValue(propertyName);
 
-            return property == null ? 
-                string.Format("[Can't find :{0} in the model.]", propertyName) : 
-                property.GetValue(model, null);
+            return value ?? string.Format("[Can't find :{0} in the model]", propertyName);
+        }
+
+        private object GetExpandoObjectValue(string propertyName)
+        {
+            return (!this.model.ContainsKey(propertyName)) ?
+                null :
+                this.model[propertyName];
+        }
+
+        private object GetPropertyValue(string propertyName)
+        {
+            var property = this.model.GetType().GetProperty(propertyName);
+
+            return (property == null) ?
+                null : 
+                property.GetValue(this.model, null);
+        }
+
+        private static dynamic GetValidModelType(dynamic model)
+        {
+            if (model == null)
+            {
+                return null;
+            }
+
+            return model.GetType().Equals(typeof(ExpandoObject))
+                ? new Dictionary<string, object>(model)
+                : model;
         }
     }
 }

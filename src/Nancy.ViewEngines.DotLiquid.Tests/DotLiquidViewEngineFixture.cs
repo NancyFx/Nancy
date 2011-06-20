@@ -39,7 +39,7 @@
                 "liquid",
                 () => new StringReader(@"<h1>Including a partial</h1>{% include 'partial' %}")
             );
-            
+
             var stream = new MemoryStream();
 
             // When
@@ -81,7 +81,7 @@
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
-        
+
         [Fact]
         public void When_passing_a_null_model_should_return_a_null_model_message_if_called()
         {
@@ -100,9 +100,9 @@
             action.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Model is null.]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
         }
-        
+
         [Fact]
         public void RenderView_should_accept_a_model_and_read_from_it_into_the_stream()
         {
@@ -117,13 +117,13 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, new { name= "test" }, this.renderContext);
+            var action = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
             action.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. test</h1>");            
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
-        
+
         [Fact]
         public void when_calling_a_missing_member_should_return_a_missing_member_message()
         {
@@ -142,7 +142,7 @@
             action.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model.]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
         }
 
         [Fact]
@@ -164,7 +164,7 @@
             action.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>"); 
+            stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
         }
     }
 

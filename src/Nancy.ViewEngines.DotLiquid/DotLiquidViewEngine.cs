@@ -5,7 +5,7 @@
     using System.IO;
     using global::DotLiquid;
     using global::DotLiquid.FileSystems;
- 
+
     public class DotLiquidViewEngine : IViewEngine
     {
         /// <summary>
@@ -24,6 +24,7 @@
         {
             if (fileSystem != null)
             {
+                // TODO - Wrap around Nancy view locator / cache??
                 Template.FileSystem = fileSystem;
             }
         }
@@ -53,7 +54,7 @@
         {
             return stream =>
             {
-                var hashedModel = 
+                var hashedModel =
                     Hash.FromAnonymousObject(new { model = new DynamicDrop(model) });
 
                 var parsed = renderContext.ViewCache.GetOrAdd(
