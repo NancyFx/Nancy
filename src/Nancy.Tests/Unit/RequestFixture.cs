@@ -7,9 +7,56 @@ namespace Nancy.Tests.Unit
     using System.Text;
     using Nancy.IO;
     using Xunit;
+    using Xunit.Extensions;
 
     public class RequestFixture
     {
+        [Fact]
+        public void Should_override_request_method_on_post()
+        {
+            // Given
+            const string bodyContent = "_method=GET";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            request.Method.ShouldEqual("GET");
+        }
+
+        [Theory]
+        [InlineData("GET")]
+        [InlineData("PUT")]
+        [InlineData("DELETE")]
+        [InlineData("HEAD")]
+        public void Should_only_override_method_on_post(string method)
+        {
+            // Given
+            const string bodyContent = "_method=TEST";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+
+            // When
+            var request = new Request(method, "/", headers, memory, "http");
+
+            // Then
+            request.Method.ShouldEqual(method);
+        }
+
         [Fact]
         public void Should_throw_argumentnullexception_when_initialized_with_null_method()
         {

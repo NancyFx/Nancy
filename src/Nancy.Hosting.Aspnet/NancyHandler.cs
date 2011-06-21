@@ -32,7 +32,7 @@ namespace Nancy.Hosting.Aspnet
                 GetExpectedRequestLength(context.Request.Headers.ToDictionary());
 
             return new Request(
-                (context.Request.Form["_method"] ?? context.Request.HttpMethod).ToUpperInvariant(),
+                context.Request.HttpMethod.ToUpperInvariant(),
                 context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
                 context.Request.Headers.ToDictionary(),
                 RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
