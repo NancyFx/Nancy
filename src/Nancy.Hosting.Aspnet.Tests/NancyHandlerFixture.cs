@@ -39,21 +39,6 @@ namespace Nancy.Hosting.Aspnet.Tests
         }
 
         [Fact]
-        public void Should_invoke_engine_with_request_set_to_form_method_value_when_available()
-        {
-            // Given
-            this.formData.Add("_method", "DELETE");
-            A.CallTo(() => this.request.HttpMethod).Returns("POST");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
-
-            // When
-            this.handler.ProcessRequest(this.context);
-
-            // Then
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.That.Matches(x => x.Method.Equals("DELETE")))).MustHaveHappened();
-        }
-
-        [Fact]
         public void Should_invoke_engine_with_requested_method()
         {
             // Given
