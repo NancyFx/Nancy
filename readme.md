@@ -1,4 +1,4 @@
-﻿# Meet Nancy
+# Meet Nancy
 
 Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aims to deliver a low ceremony approach to building light, fast web applications.
 
@@ -107,25 +107,23 @@ All view engine integrations are still very early implementations and more work 
 Nancy is not a one man project and many of the features that are availble would not have been possible without the awesome contributions from the community!
 
 * [Andy Pike](http://github.com/andypike)
-* [Bjarte Djuvik NÃ¦ss](http://github.com/bjartn)
+* [Bjarte Djuvik Næss](http://github.com/bjartn)
 * [Chris Nicola](http://github.com/lucisferre)
 * [David Hong](http://github.com/davidhong)
 * [Graeme Foster](http://github.com/GraemeF)
 * [Guido Tapia](http://github.com/gatapia)
-* [Hernan Garcia](http://github.com/hgarcia)
 * [Ian Davis](http://github.com/innovatian)
 * [Jonas Cannehag](http://github.com/knecke)
-* [JosÃ© F. Romaniello](http://github.com/jfromaniello)
+* [José F. Romaniello](http://github.com/jfromaniello)
 * [Karl Seguin](http://github.com/karlseguin)
 * [Luke Smith](http://github.com/lukesmith)
 * [James Eggers](http://github.com/jameseggers1)
 * [Jason Mead](http://github.com/meadiagenic)
 * [Jeremy Skinner](http://github.com/jeremyskinner)
-* [JoÃ£o BraganÃ§a](http://github.com/joaobraganca)
+* [João Bragança](http://github.com/joaobraganca)
 * [Johan Danforth](http://github.com/johandanforth)
 * [John Downey](http://github.com/jtdowney)
 * [Maciej Kowalewski](http://github.com/maciejk)
-* [Martijn Laarman](http://github.com/mpdreamz)
 * [Mindaugas Mozûras](http://github.com/mmozuras)
 * [Patrik Hägne](http://github.com/patrik-hagne)
 * [Pedro Felix](http://github.com/pmhsfelix)
@@ -136,11 +134,11 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Steven Robbins](http://github.com/grumpydev)
 * [Thomas Pedersen](http://github.com/thedersen)
 * [Troels Thomsen](http://github.com/troethom)
-* [Vidar L. SÃ¸mme](http://github.com/vidarls)
+* [Vidar L. Sømme](http://github.com/vidarls)
 
 ## Copyright
 
-Copyright Â© 2010 Andreas HÃ¥kansson, Steven Robbins and contributors
+Copyright © 2010 Andreas Håkansson, Steven Robbins and contributors
 
 ## License
 
