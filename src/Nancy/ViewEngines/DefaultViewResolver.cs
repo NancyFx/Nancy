@@ -1,14 +1,14 @@
 ﻿namespace Nancy.ViewEngines
 {
     using System;
-    using System.Collections.Generic;
+    using Nancy.Conventions;
 
     /// <summary>
     /// Default implementation on how views are resolved by Nancy.
     /// </summary>
     public class DefaultViewResolver : IViewResolver
     {
-        private readonly IEnumerable<Func<string, dynamic, ViewLocationContext, string>> conventions;
+        private readonly ViewLocationConventions conventions;
         private readonly IViewLocator viewLocator;
 
         /// <summary>
@@ -16,7 +16,7 @@
         /// </summary>
         /// <param name="viewLocator">The view locator that should be used to locate views.</param>
         /// <param name="conventions">The conventions that the view resolver should use to figure out where to look for views.</param>
-        public DefaultViewResolver(IViewLocator viewLocator, IEnumerable<Func<string, dynamic, ViewLocationContext, string>> conventions)
+        public DefaultViewResolver(IViewLocator viewLocator, ViewLocationConventions conventions)
         {
             if (viewLocator == null)
             {
