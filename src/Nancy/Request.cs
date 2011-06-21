@@ -73,6 +73,7 @@ namespace Nancy
             this.Query = query.AsQueryDictionary();
             this.Session = new NullSessionProvider();
             this.ParseFormData();
+            this.RewriteMethod();
         }
 
         /// <summary>
@@ -206,6 +207,21 @@ namespace Nancy
                                        ));
                 }
             }
+        }
+
+        private void RewriteMethod()
+        {
+            if (!this.Method.Equals("POST", StringComparison.OrdinalIgnoreCase))
+            {
+                return;
+            }
+
+            if (!this.Form["_method"].HasValue)
+            {
+                return;
+            }
+
+            this.Method = this.Form["_method"];
         }
     }
 }
