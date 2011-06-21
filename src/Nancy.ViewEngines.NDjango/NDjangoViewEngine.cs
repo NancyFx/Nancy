@@ -24,6 +24,8 @@
         {
         }
 
+        volatile TemplateManagerProvider provider;
+
         /// <summary>
         /// Renders the view.
         /// </summary>
@@ -33,21 +35,18 @@
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
         public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
+            if (provider == null) {
+                provider = new TemplateManagerProvider().WithLoader(new TemplateLoader(renderContext));
+            }
             return stream =>{
 
-                var templateManagerProvider =
-                    new TemplateManagerProvider()
-                        .WithLoader(new TemplateLoader(viewLocationResult.Contents.Invoke()));
+                var myname = Path.Combine(viewLocationResult.Location, viewLocationResult.Name + (string.IsNullOrEmpty(viewLocationResult.Extension) ? "" : "." + viewLocationResult.Extension));
+                var templateManager = provider.GetNewManager();
 
-                var templateManager =
-                    templateManagerProvider.GetNewManager();
-
-                var template = renderContext.ViewCache.GetOrAdd(
-                    viewLocationResult,
-                    x => templateManager.GetTemplate(string.Empty));
-
+                
+                
                 var context = new Dictionary<string, object> { { "Model", model } };
-                var reader = template.Walk(templateManager, context);
+                var reader = templateManager.GetTemplate(myname).Walk(templateManager, context);
 
                 var writer =
                     new StreamWriter(stream);

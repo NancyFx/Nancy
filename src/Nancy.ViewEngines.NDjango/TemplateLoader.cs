@@ -6,16 +6,19 @@
 
     public class TemplateLoader : ITemplateLoader
     {
-        private readonly TextReader textReader;
+        private readonly IRenderContext renderContext;
 
-        public TemplateLoader(TextReader textReader)
+        public TemplateLoader(IRenderContext renderContext)
         {
-            this.textReader = textReader;
+            this.renderContext = renderContext;
         }
 
         public TextReader GetTemplate(string path)
         {
-            return textReader;
+            var view = renderContext.LocateView(path, null);
+            var template = renderContext.ViewCache.GetOrAdd(view, x => view.Contents().ReadToEnd());
+
+            return new StringReader(template);
         }
 
         public bool IsUpdated(string path, DateTime timestamp)
