@@ -120,7 +120,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [James Eggers](http://github.com/jameseggers1)
 * [Jason Mead](http://github.com/meadiagenic)
 * [Jeremy Skinner](http://github.com/jeremyskinner)
-* [João Bragança](http://github.com/joaobraganca)
+* [João Bragança](http://github.com/thefringeninja)
 * [Johan Danforth](http://github.com/johandanforth)
 * [John Downey](http://github.com/jtdowney)
 * [Mark Rendle](http://github.com/markrendle)
