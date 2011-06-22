@@ -260,13 +260,16 @@
                     {
                         if (String.Equals(ctx.Request.Uri, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
                         {
-                            // TODO - Add cache control / etag headers
-                            return new Response
+                            var response = new Response
                                 {
                                     ContentType = "image/vnd.microsoft.icon",
                                     StatusCode = HttpStatusCode.OK,
                                     Contents = s => s.Write(this.defaultFavIcon, 0, this.defaultFavIcon.Length)
                                 };
+
+                            response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
+
+                            return response;
                         }
 
                         return null;
