@@ -87,7 +87,7 @@ namespace Nancy.Authentication.Basic.Tests
 			
 			context.Response.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
 			context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
-			context.Response.Headers["WWW-Authenticate"].ShouldContain(BasicAuthentication.Scheme);
+			context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
 			context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm +"\"");
 		}
 
@@ -106,7 +106,7 @@ namespace Nancy.Authentication.Basic.Tests
 		public void Should_not_authenticate_when_invalid_encoded_username_in_auth_header()
 		{
 			context.Request.Headers.Add("Authorization",
-				new string[] { BasicAuthentication.Scheme + " " + "some credentials" });
+                new string[] { "Basic" + " " + "some credentials" });
 
 			var result = BasicAuthentication.Authenticate(context, config);
 
@@ -117,7 +117,7 @@ namespace Nancy.Authentication.Basic.Tests
 		public void Should_call_user_validator_with_username_in_auth_header()
 		{
 			context.Request.Headers.Add("Authorization",
-				new string[] { BasicAuthentication.Scheme + " " + EncodeCredentials("foo", "bar") });
+                new string[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
 			BasicAuthentication.Authenticate(context, config);
 
@@ -135,7 +135,7 @@ namespace Nancy.Authentication.Basic.Tests
 			var config = new BasicAuthenticationConfiguration(validator, "realm");
 
 			context.Request.Headers.Add("Authorization",
-				new string[] { BasicAuthentication.Scheme + " " + EncodeCredentials("foo", "bar") });
+                new string[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
 			BasicAuthentication.Enable(fakePipelines, config);
 

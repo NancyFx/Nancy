@@ -12,9 +12,9 @@ namespace Nancy.Demo.Authentication.Basic
 		{
 			base.InitialiseInternal(container);
 
-			container.Register<BasicAuthenticationConfiguration>(new BasicAuthenticationConfiguration(
-				container.Resolve<IUserValidator>(),
-				"MyRealm"));
+            this.EnableBasicAuthentication(new BasicAuthenticationConfiguration(
+                container.Resolve<IUserValidator>(),
+                "MyRealm"));
 		}
 	}
 }

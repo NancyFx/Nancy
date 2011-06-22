@@ -1,15 +1,13 @@
-﻿using Nancy;
-using Nancy.Security;
-using Nancy.Authentication.Basic;
+﻿using Nancy.Security;
 
 namespace Nancy.Demo.Authentication.Basic
 {
 	public class SecureModule : NancyModule
 	{
-		public SecureModule(BasicAuthenticationConfiguration config)
+		public SecureModule()
 			: base("/secure")
 		{
-			this.RequiresBasicAuthentication(config);
+            this.RequiresAuthentication();
 
 			Get["/"] = x =>
 			{
