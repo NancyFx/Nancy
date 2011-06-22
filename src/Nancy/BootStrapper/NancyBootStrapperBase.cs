@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.IO;
     using System.Linq;
 
     using ModelBinding;
@@ -34,6 +35,11 @@
         /// Nancy modules - built on startup from the app domain scanner
         /// </summary>
         private ModuleRegistration[] modules;
+
+        /// <summary>
+        /// Default favicon
+        /// </summary>
+        private byte[] defaultFavIcon;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
@@ -195,6 +201,17 @@
         }
 
         /// <summary>
+        /// Gets the default favicon
+        /// </summary>
+        protected virtual byte[] DefaultFavIcon
+        {
+            get
+            {
+                return this.defaultFavIcon ?? (this.defaultFavIcon = this.LoadFavIcon());
+            }
+        }
+
+        /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
@@ -235,6 +252,25 @@
             foreach (var startupTask in this.GetStartupTasks())
             {
                 startupTask.Initialize();
+            }
+
+            if (this.DefaultFavIcon != null)
+            {
+                this.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                    {
+                        if (String.Equals(ctx.Request.Uri, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            // TODO - Add cache control / etag headers
+                            return new Response
+                                {
+                                    ContentType = "image/vnd.microsoft.icon",
+                                    StatusCode = HttpStatusCode.OK,
+                                    Contents = s => s.Write(this.defaultFavIcon, 0, this.defaultFavIcon.Length)
+                                };
+                        }
+
+                        return null;
+                    });
             }
 
             this.initialised = true;
@@ -417,6 +453,25 @@
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
                     new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
                 };
+        }
+
+
+        /// <summary>
+        /// Loads the default favicon from the assembly
+        /// </summary>
+        /// <returns>Favicon byte array</returns>
+        private byte[] LoadFavIcon()
+        {
+            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+            if (resourceStream == null)
+            {
+                return null;
+            }
+
+            var result = new byte[resourceStream.Length];
+            resourceStream.Read(result, 0, (int)resourceStream.Length);
+
+            return result;
         }
     }
 }
