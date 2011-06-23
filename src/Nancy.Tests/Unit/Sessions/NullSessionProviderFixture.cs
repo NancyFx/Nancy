@@ -54,11 +54,11 @@ namespace Nancy.Tests.Unit.Sessions
         }
 
         [Fact]
-        public void Should_throw_when_haschanged()
+        public void Should_return_false_for_haschanged()
         {
-            var exception = Record.Exception(() => provider.HasChanged);
+            var result = provider.HasChanged;
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            result.ShouldBeFalse();
         }
     }
 }
