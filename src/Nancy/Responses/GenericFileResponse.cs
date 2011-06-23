@@ -40,6 +40,10 @@
             }
             else
             {
+                var fi = new FileInfo(filePath);
+                // TODO - set a standard caching time and/or public?
+                this.Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
+                this.Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
                 this.Contents = GetFileContent(filePath);
                 this.ContentType = contentType;
                 this.StatusCode = HttpStatusCode.OK;
