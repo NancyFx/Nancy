@@ -47,8 +47,43 @@
             shouldContinue = true;
 
             listener.Start();
-            thread = new Thread(Listen);
-            thread.Start();
+            try
+            {
+                listener.BeginGetContext(GotCallback, null);
+            }
+            catch (HttpListenerException)
+            {
+                // this will be thrown when listener is closed while waiting for a request
+                return;
+            }
+
+        }
+
+        private void GotCallback(IAsyncResult ar)
+        {
+            try
+            {
+                HttpListenerContext ctx = listener.EndGetContext(ar);
+                Process(ctx);
+                listener.BeginGetContext(GotCallback, null);
+            }
+            catch (HttpListenerException)
+            {
+                // this will be thrown when listener is closed while waiting for a request
+                return;
+            }
+        }
+
+        private void Process(HttpListenerContext ctx)
+        {
+            ThreadPool.UnsafeQueueUserWorkItem((o) =>
+            {
+                var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
+                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                {
+                    ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+                }
+            }, null);
         }
 
         public void Stop()
@@ -57,28 +92,7 @@
             listener.Stop();
         }
 
-        private void Listen()
-        {
-            while (shouldContinue)
-            {
-                HttpListenerContext requestContext;
-                try
-                {
-                    requestContext = listener.GetContext();
-                }
-                catch (HttpListenerException)
-                {
-                    // this will be thrown when listener is closed while waiting for a request
-                    return;
-                }
-                var nancyRequest = ConvertRequestToNancyRequest(requestContext.Request);
-                using (var nancyContext = engine.HandleRequest(nancyRequest))
-                {
-                    ConvertNancyResponseToResponse(nancyContext.Response, requestContext.Response);
-                }
-            }
-        }
-
+    
         private static Uri GetUrlAndPathComponents(Uri uri) 
         {
             // ensures that for a given url only the
