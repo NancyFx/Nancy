@@ -79,6 +79,8 @@
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs" />
+    <Compile Include="Unit\Extensions\ContextExtensionsFixture.cs" />
+    <Compile Include="Unit\Extensions\RequestExtensionsFixture.cs" />
     <Compile Include="Unit\HttpMultipartBoundaryFixture.cs" />
     <Compile Include="Unit\HttpMultipartBufferFixture.cs" />
     <Compile Include="Unit\HttpMultipartFixture.cs" />
