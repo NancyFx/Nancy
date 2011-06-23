@@ -78,7 +78,7 @@ namespace Nancy.Session
         {
             get
             {
-                throw new InvalidOperationException("Session support is not enabled.");
+                return false;
             }
         }
     }
