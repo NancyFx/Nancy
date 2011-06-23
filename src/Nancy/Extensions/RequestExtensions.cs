@@ -3,6 +3,9 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Containing extensions for the Request object
+    /// </summary>
     public static class RequestExtensions
     {
         /// <summary>

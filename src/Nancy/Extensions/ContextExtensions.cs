@@ -1,5 +1,8 @@
 namespace Nancy.Extensions
 {
+    /// <summary>
+    /// Containing extensions for the NancyContext object
+    /// </summary>
     public static class ContextExtensions
     {
         /// <summary>
