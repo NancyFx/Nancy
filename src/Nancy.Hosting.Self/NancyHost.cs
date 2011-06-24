@@ -64,8 +64,8 @@
             try
             {
                 HttpListenerContext ctx = listener.EndGetContext(ar);
-                Process(ctx);
                 listener.BeginGetContext(GotCallback, null);
+                Process(ctx);
             }
             catch (HttpListenerException)
             {
@@ -76,14 +76,11 @@
 
         private void Process(HttpListenerContext ctx)
         {
-            ThreadPool.UnsafeQueueUserWorkItem((o) =>
+            var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
+            using (var nancyContext = engine.HandleRequest(nancyRequest))
             {
-                var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = engine.HandleRequest(nancyRequest))
-                {
-                    ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
-                }
-            }, null);
+                ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+            }
         }
 
         public void Stop()
