@@ -26,7 +26,7 @@
             return type.IsGenericType 
                    && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic
                    && (type.Name.StartsWith("<>", StringComparison.OrdinalIgnoreCase) || type.Name.StartsWith("VB$", StringComparison.OrdinalIgnoreCase))
-                   && type.Name.Contains("AnonymousType")
+                   && (type.Name.Contains("AnonymousType") || type.Name.Contains("AnonType"))
                    && Attribute.IsDefined(type, typeof (CompilerGeneratedAttribute), false);
         }
     }
