@@ -52,6 +52,7 @@ namespace Nancy.Authentication.Basic
                 throw new ArgumentNullException("configuration");
             }
 
+            module.RequiresAuthentication();
             module.Before.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
             module.After.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
         }
