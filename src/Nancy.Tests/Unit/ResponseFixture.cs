@@ -3,8 +3,8 @@
     using System;
     using System.IO;
     using Nancy;
+	using Nancy.Cookies;
     using Nancy.Tests.Extensions;
-
     using Xunit;
 
     public class ResponseFixture
@@ -157,30 +157,54 @@
         [Fact]
         public void Should_set_a_cookie_with_name_and_value()
         {
+			// Given
             var response = new Response();
+			
+			// When
             response.AddCookie("itsover", "9000");
+			
+			// Then
             response.Cookies.Count.ShouldEqual(1);
-            response.Cookies[0].ShouldEqual("itsover", "9000", null, null, null);
+            ValidateCookie(response.Cookies[0], "itsover", "9000", null, null, null);
         }
 
         [Fact]
         public void Should_set_a_cookie_with_name_and_value_and_expiry()
         {
+			// Given
             var response = new Response();
             var date = DateTime.Now;
+			
+			// When
             response.AddCookie("itsover", "9000", date);
+			
+			// Then
             response.Cookies.Count.ShouldEqual(1);
-            response.Cookies[0].ShouldEqual("itsover", "9000", date, null, null);
+            ValidateCookie(response.Cookies[0], "itsover", "9000", date, null, null);
         }
 
         [Fact]
         public void Should_set_a_cookie_with_everything()
         {
+			// Given
             var response = new Response();
             var date = DateTime.Now;
+			
+			// When
             response.AddCookie("itsover", "9000", date, "life", "/andeverything");
+			
+			// Then
             response.Cookies.Count.ShouldEqual(1);
-            response.Cookies[0].ShouldEqual("itsover", "9000", date, "life", "/andeverything");
+            ValidateCookie(response.Cookies[0], "itsover", "9000", date, "life", "/andeverything");
+        }
+						
+		private static void ValidateCookie(INancyCookie cookie, string name, string value, DateTime? expires, string domain, string path)
+        {
+            cookie.Name.ShouldEqual(name);
+            cookie.Value.ShouldEqual(value);
+            cookie.Expires.ShouldEqual(expires);
+            cookie.Domain.ShouldEqual(domain);
+            cookie.Path.ShouldEqual(path);
         }
 
         private static string GetStringContentsFromResponse(Response response)
