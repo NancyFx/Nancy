@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit
 {
+    using System;
     using Xunit;
 
     public class DynamicDictionaryValueFixture
@@ -231,5 +232,150 @@
             Assert.Equal(10.0, valueLong);
             Assert.Equal(10M, valueLong);
         }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToBoolean()
+        {
+            const bool expected = true;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToBoolean(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToChar()
+        {
+            const char expected = 'a';
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToChar(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToSByte()
+        {
+            const sbyte expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToSByte(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToByte()
+        {
+            const byte expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToByte(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToInt16()
+        {
+            const short expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToInt16(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToUInt16()
+        {
+            const ushort expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToUInt16(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToInt32()
+        {
+            const int expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToInt32(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToUInt32()
+        {
+            const uint expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToUInt32(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToInt64()
+        {
+            const long expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToInt64(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToUInt64()
+        {
+            const ulong expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToUInt64(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToSingle()
+        {
+            const float expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToSingle(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToDouble()
+        {
+            const double expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToDouble(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToDecimal()
+        {
+            const decimal expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToDecimal(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToDateTime()
+        {
+            DateTime expected = new DateTime(1952, 3, 11);
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToDateTime(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertToString()
+        {
+            const string expected = "Forty two";
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ToString(value);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_be_able_to_call_ConvertChangeType()
+        {
+            const int expected = 42;
+            object value = new DynamicDictionaryValue(expected);
+            var actual = Convert.ChangeType(value, typeof(int));
+            Assert.Equal(expected, actual);
+        }
+
     }
 }
