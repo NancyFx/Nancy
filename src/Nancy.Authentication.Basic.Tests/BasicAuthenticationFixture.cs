@@ -9,18 +9,24 @@ using System.Text;
 
 namespace Nancy.Authentication.Basic.Tests
 {
-	public class BasicAuthenticationFixture
+    using Nancy.Security;
+
+    public class BasicAuthenticationFixture
 	{
 		private BasicAuthenticationConfiguration config;
 		private NancyContext context;
 
-		public BasicAuthenticationFixture()
+	    private IApplicationPipelines hooks;
+
+	    public BasicAuthenticationFixture()
         {
 			this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm");
 			this.context = new NancyContext()
 			{
 				Request = new FakeRequest("GET", "/")
 			};
+		    this.hooks = new FakeApplicationPipelines();
+            BasicAuthentication.Enable(this.hooks, this.config);
         }
 
 		[Fact]
@@ -60,69 +66,61 @@ namespace Nancy.Authentication.Basic.Tests
 			result.ShouldBeOfType(typeof(ArgumentNullException));
 		}
 
-        //[Fact]
-        //public void Should_not_authenticate_when_missing_auth_header()
-        //{
-        //    var result = BasicAuthentication.Authenticate(context, config);
-			
-        //    result.ShouldBeFalse();
-        //}
+        [Fact]
+        public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers()
+        {
+            var result = this.hooks.BeforeRequest.Invoke(context);
 
-        //[Fact]
-        //public void Should_return_response_when_missing_auth_header()
-        //{
-        //    var result = BasicAuthentication.Authenticate(context, config);
+            result.ShouldBeNull();
+            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+        }
 
-        //    context.Response.ShouldNotBeNull();
-        //}
+        [Fact]
+        public void Post_request_hook_should_return_challenge_when_unauthorized_returned_from_route()
+        {
+            string wwwAuthenticate = null;
+            this.context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+            
+            this.hooks.AfterRequest.Invoke(context);
 
-        //[Fact]
-        //public void Should_return_challenge_when_missing_auth_header()
-        //{
-        //    string wwwAuthenticate = null;
+            this.context.Response.Headers.TryGetValue("WWW-Authenticate", out wwwAuthenticate);
+            this.context.Response.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            this.context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
+            this.context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
+            this.context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm + "\"");
+        }
 
-        //    var result = BasicAuthentication.Authenticate(context, config);
+        [Fact]
+        public void Pre_request_hook_should_not_set_auth_details_when_invalid_scheme_in_auth_header()
+        {
+            this.context.Request.Headers.Add("Authorization", new [] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
 
-        //    context.Response.Headers.TryGetValue("WWW-Authenticate", out wwwAuthenticate);
-			
-        //    context.Response.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
-        //    context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
-        //    context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
-        //    context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm +"\"");
-        //}
+            var result = this.hooks.BeforeRequest.Invoke(context);
 
-        //[Fact]
-        //public void Should_not_authenticate_when_invalid_scheme_in_auth_header()
-        //{
-        //    context.Request.Headers.Add("Authorization",
-        //        new string[] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
-			
-        //    var result = BasicAuthentication.Authenticate(context, config);
+            result.ShouldBeNull();
+            this.context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+        }
 
-        //    result.ShouldBeFalse();
-        //}
+        [Fact]
+        public void Pre_request_hook_should_not_authenticate_when_invalid_encoded_username_in_auth_header()
+        {
+            this.context.Request.Headers.Add("Authorization", new[] { "Basic" + " " + "some credentials" });
 
-        //[Fact]
-        //public void Should_not_authenticate_when_invalid_encoded_username_in_auth_header()
-        //{
-        //    context.Request.Headers.Add("Authorization",
-        //        new string[] { "Basic" + " " + "some credentials" });
+            var result = this.hooks.BeforeRequest.Invoke(context);
 
-        //    var result = BasicAuthentication.Authenticate(context, config);
+            result.ShouldBeNull();
+            this.context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+        }
 
-        //    result.ShouldBeFalse();
-        //}
+        [Fact]
+        public void Pre_request_hook_should_call_user_validator_with_username_in_auth_header()
+        {
+            this.context.Request.Headers.Add("Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
-        //[Fact]
-        //public void Should_call_user_validator_with_username_in_auth_header()
-        //{
-        //    context.Request.Headers.Add("Authorization",
-        //        new string[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+            this.hooks.BeforeRequest.Invoke(context);
 
-        //    BasicAuthentication.Authenticate(context, config);
-
-        //    A.CallTo(() => config.UserValidator.Validate("foo", "bar")).MustHaveHappened();
-        //}
+            A.CallTo(() => config.UserValidator.Validate("foo", "bar")).MustHaveHappened();
+        }
 
 		[Fact]
 		public void Should_set_username_in_context_with_valid_username_in_auth_header()
@@ -146,11 +144,9 @@ namespace Nancy.Authentication.Basic.Tests
 
 		private string EncodeCredentials(string username, string password)
 		{
-			var encoding = Encoding.GetEncoding("iso-8859-1");
-
 			var credentials = string.Format("{0}:{1}", username, password);
 
-			var encodedCredentials = Convert.ToBase64String(encoding.GetBytes(credentials));
+			var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
 
 			return encodedCredentials;
 		}
