@@ -17,11 +17,11 @@ namespace Nancy.ViewEngines.NDjango.Tests
             this.engine = new NDjangoViewEngine();
 
             var cache = A.Fake<IViewCache>();
-            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, ITemplate>>.Ignored))
+            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, string>>.Ignored))
                 .ReturnsLazily(x =>
                 {
                     var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, ITemplate>>(1).Invoke(result);
+                    return x.GetArgument<Func<ViewLocationResult, string>>(1).Invoke(result);
                 });
 
             this.renderContext = A.Fake<IRenderContext>();
@@ -38,6 +38,7 @@ namespace Nancy.ViewEngines.NDjango.Tests
                 "django",
                 () => new StringReader(@"{% ifequal a a %}<h1>Hello Mr. test</h1>{% endifequal %}")
             );
+            A.CallTo(() => this.renderContext.LocateView(".django", null)).Returns(location);
 
             var stream = new MemoryStream();
 
