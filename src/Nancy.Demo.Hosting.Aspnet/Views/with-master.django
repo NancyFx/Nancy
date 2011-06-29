@@ -1,0 +1,8 @@
+﻿{% extends "ndjango-base" %}
+
+{% block title %}Django View Engine Demo{% endblock %}
+
+{% block content %}
+<h1>Hello {{ Model.FirstName }}</h1>
+<p>This is a sample NDjango view!</p>
+{% endblock %}

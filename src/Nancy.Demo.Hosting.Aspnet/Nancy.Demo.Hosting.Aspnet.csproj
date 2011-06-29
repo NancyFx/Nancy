@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -165,12 +165,14 @@
     <Content Include="Views\razor-layout.cshtml" />
     <None Include="Views\anon.spark" />
     <None Include="Views\dot.liquid" />
+    <None Include="Views\ndjango-base.django" />
     <None Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
     <None Include="Views\ssve.sshtml" />
+    <None Include="Views\with-master.django" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

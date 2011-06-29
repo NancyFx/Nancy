@@ -8,14 +8,20 @@
     {
         private readonly IRenderContext renderContext;
 
-        public TemplateLoader(IRenderContext renderContext)
+        private ViewLocationResult mainTemplateLocation;
+
+        public TemplateLoader(IRenderContext renderContext, ViewLocationResult viewLocationResult)
         {
             this.renderContext = renderContext;
+            this.mainTemplateLocation = viewLocationResult;
         }
 
         public TextReader GetTemplate(string path)
         {
-            var view = renderContext.LocateView(path, null);
+            var view = String.Equals(path, this.mainTemplateLocation.Location)
+                           ? this.mainTemplateLocation
+                           : this.renderContext.LocateView(path, null);
+
             var template = renderContext.ViewCache.GetOrAdd(view, x => view.Contents().ReadToEnd());
 
             return new StringReader(template);
