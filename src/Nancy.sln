@@ -414,6 +414,6 @@ Global
 		{911196F4-B88F-4940-B1FD-D30F5290D06D} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
-		StartupItem = Nancy\Nancy.csproj
+		StartupItem = Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj
 	EndGlobalSection
 EndGlobal

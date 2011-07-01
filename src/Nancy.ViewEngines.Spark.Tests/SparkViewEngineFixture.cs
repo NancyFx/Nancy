@@ -21,8 +21,8 @@
         public SparkViewEngineFixture()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Environment.CurrentDirectory + @"\TestViews");
-
+            A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "TestViews"));
+						
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider);
             
             this.renderContext = A.Fake<IRenderContext>();

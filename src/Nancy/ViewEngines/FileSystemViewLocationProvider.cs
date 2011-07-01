@@ -31,7 +31,7 @@
             return
                 from match in GetViewsWithSupportedExtensions(supportedViewExtensions)
                 select new ViewLocationResult(
-                    match.Replace(this.rootPathProvider.GetRootPath(), string.Empty).TrimStart(new[] { '\\' }),
+                    match.Replace(this.rootPathProvider.GetRootPath(), string.Empty).TrimStart(new[] { Path.DirectorySeparatorChar }),
                     Path.GetFileNameWithoutExtension(match),
                     Path.GetExtension(match).Substring(1),
                     () => new StreamReader(new FileStream(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
@@ -39,13 +39,11 @@
 
         private IEnumerable<string> GetViewsWithSupportedExtensions(IEnumerable<string> supportedViewExtensions)
         {
-            var foo = supportedViewExtensions
+            return supportedViewExtensions
                 .SelectMany(extensions => Directory.GetFiles(this.rootPathProvider.GetRootPath(),
                 string.Concat("*.", extensions),
                 SearchOption.AllDirectories)
                 ).Distinct().ToList();
-
-            return foo;
         }
     }
 }
