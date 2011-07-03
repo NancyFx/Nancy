@@ -9,9 +9,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Traverses up a directory tree
         /// </summary>
-        /// <param name="path">Start path</param>
-        /// <param name="levels">Levels to climb</param>
-        /// <returns>New path string</returns>
+        /// <param name="path">Start path.</param>
+        /// <param name="levels">Levels to climb.</param>
+        /// <returns>A <see cref="string"/> containing the new path.</returns>
         public static string GetParent(string path, int levels)
         {
             if (string.IsNullOrEmpty(path))
@@ -31,10 +31,9 @@ namespace Nancy.Testing
 
             var parts = path.Split(Path.DirectorySeparatorChar);
 
-            // TODO - this isn't going to be mono compatible, maybe we should throw here?
             if (parts.Length <= levels)
             {
-                return String.Format("{0}{1}", parts[0], Path.DirectorySeparatorChar);
+                throw new InvalidOperationException("Cannot go up beyond the root.");
             }
 
             return

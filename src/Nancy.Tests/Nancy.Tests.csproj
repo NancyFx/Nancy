@@ -110,7 +110,6 @@
     <Compile Include="MimeType\MimeTypesFixture.cs" />
     <Compile Include="NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
-    <Compile Include="Responses\ResponseConsistencyFixture.cs" />
     <Compile Include="Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs" />
     <Compile Include="Unit\Bootstrapper\Base\ModuleCatalogFixtureBase.cs" />
     <Compile Include="Unit\Bootstrapper\NancyInternalConfigurationFixture.cs" />
@@ -189,6 +188,7 @@
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
     <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />
+    <Compile Include="Responses\GenericFileResponseFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
