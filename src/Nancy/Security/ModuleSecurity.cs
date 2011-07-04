@@ -15,7 +15,7 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this NancyModule module)
         {
-            module.Before.AddItemToStartOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
         }
 
         /// <summary>
@@ -25,8 +25,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresClaims(this NancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.Before.AddItemToStartOfPipeline(RequiresClaims(requiredClaims));
-            module.Before.AddItemToStartOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(RequiresClaims(requiredClaims));
         }
 
         /// <summary>
