@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
 
+    using Nancy.Cryptography;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 
@@ -29,7 +30,7 @@
         {
             base.InitialiseInternal(container);
 
-            CookieBasedSessions.Enable(this, "MyPassPhrase", "MySaltIsReallyGood", "MyHmacPassphrase");
+            CookieBasedSessions.Enable(this);
 
             this.AfterRequest += (ctx) =>
             {

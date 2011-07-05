@@ -6,21 +6,17 @@ namespace Nancy.Cryptography
     public interface IEncryptionProvider
     {
         /// <summary>
-        /// Encyrypt data
+        /// Encyrypt and base64 encode the string
         /// </summary>
         /// <param name="data">Data to encrypyt</param>
-        /// <param name="passphrase">Passphrase to use</param>
-        /// <param name="salt">Salt to use</param>
         /// <returns>Encrypted string</returns>
-        string Encrypt(string data, string passphrase, byte[] salt);
+        string Encrypt(string data);
 
         /// <summary>
         /// Decrypt string
         /// </summary>
         /// <param name="data">Data to decrypt</param>
-        /// <param name="passphrase">Passphrase to use</param>
-        /// <param name="salt">Salt to use</param>
         /// <returns>Decrypted string</returns>
-        string Decrypt(string data, string passphrase, byte[] salt);
+        string Decrypt(string data);
     }
 }

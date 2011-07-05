@@ -11,34 +11,18 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Initializes a new instance of the <see cref="FormsAuthenticationConfiguration"/> class.
         /// </summary>
-        public FormsAuthenticationConfiguration()
+        public FormsAuthenticationConfiguration() : this(CryptographyConfiguration.Default)
         {
-            this.EncryptionProvider = new DefaultEncryptionProvider();
-            this.HmacProvider = new DefaultHmacProvider();
         }
 
         /// <summary>
-        /// Gets or sets the passphrase for encrypting the forms authentication cookie
+        /// Initializes a new instance of the <see cref="FormsAuthenticationConfiguration"/> class.
         /// </summary>
-        public string Passphrase { get; set; }
-
-        /// <summary>
-        /// Gets or sets the salt for encrypting the forms authentication cookie
-        /// </summary>
-        public string Salt { get; set; }
-
-        /// <summary>
-        /// Gets the salt as a byte array
-        /// </summary>
-        public byte[] SaltBytes
+        /// <param name="cryptographyConfiguration">Cryptography configuration</param>
+        public FormsAuthenticationConfiguration(CryptographyConfiguration cryptographyConfiguration)
         {
-            get { return Encoding.UTF8.GetBytes(this.Salt); }
+            CryptographyConfiguration = cryptographyConfiguration;
         }
-
-        /// <summary>
-        /// Gets or sets the passphrase for signing forms authentication cookie
-        /// </summary>
-        public string HmacPassphrase { get; set; }
 
         /// <summary>
         /// Gets or sets the redirect url for pages that require authentication
@@ -51,14 +35,9 @@ namespace Nancy.Authentication.Forms
         public IUsernameMapper UsernameMapper { get; set; }
 
         /// <summary>
-        /// Gets or sets the encryption provider
+        /// Gets or sets the cryptography configuration
         /// </summary>
-        public IEncryptionProvider EncryptionProvider { get; set; }
-
-        /// <summary>
-        /// Gets or sets the hmac provider
-        /// </summary>
-        public IHmacProvider HmacProvider { get; set; }
+        public CryptographyConfiguration CryptographyConfiguration { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid or not.
@@ -67,21 +46,6 @@ namespace Nancy.Authentication.Forms
         {
             get
             {
-                if (string.IsNullOrEmpty(this.Passphrase))
-                {
-                    return false;
-                }
-
-                if (string.IsNullOrEmpty(this.Salt) || this.Salt.Length < 8)
-                {
-                    return false;
-                }
-
-                if (string.IsNullOrEmpty(this.HmacPassphrase))
-                {
-                    return false;
-                }
-
                 if (string.IsNullOrEmpty(this.RedirectUrl))
                 {
                     return false;
@@ -92,12 +56,17 @@ namespace Nancy.Authentication.Forms
                     return false;
                 }
 
-                if (this.EncryptionProvider == null)
+                if (this.CryptographyConfiguration == null)
                 {
                     return false;
                 }
 
-                if (this.HmacProvider == null)
+                if (this.CryptographyConfiguration.EncryptionProvider == null)
+                {
+                    return false;
+                }
+
+                if (this.CryptographyConfiguration.HmacProvider == null)
                 {
                     return false;
                 }
