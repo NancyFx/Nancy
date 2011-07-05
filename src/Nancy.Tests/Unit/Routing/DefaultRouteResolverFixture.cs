@@ -4,7 +4,7 @@
     using FakeItEasy;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
-    using Nancy.ViewEngines;
+
     using Xunit;
 
     public class DefaultRouteResolverFixture
@@ -126,8 +126,6 @@
                 x.AddGetRoute("/foo/{bar}", "module-key-one-parameter");
             });
 
-            this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/{bar}/{foo}", this.expectedAction));
-
             A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
@@ -151,13 +149,13 @@
             var context = new NancyContext {Request = request};
             var routeCache = new FakeRouteCache(x =>
             {
+                x.AddGetRoute("/foo/{bar}", "module-key-parameters");
+                x.AddGetRoute("/{foo}/{bar}", "module-key-two-parameters");
                 x.AddGetRoute("/foo/bar", "module-key-no-parameters");
                 x.AddGetRoute("/foo/bar", "module-key-no-parameters-second");
                 x.AddGetRoute("/foo/{bar}", "module-key-parameters");
                 x.AddGetRoute("/{foo}/{bar}", "module-key-two-parameters");
             });
-
-            this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/bar", this.expectedAction));
 
             A.CallTo(() => this.matcher.Match(request.Uri, "/foo/bar")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
@@ -187,6 +185,7 @@
             var routeCache = new FakeRouteCache(x =>
             {
                 x.AddGetRoute("/foo/{bar}", "module-key-first");
+                x.AddGetRoute("/foo/{bar}/{two}", "module-key-third");
                 x.AddGetRoute("/foo/bar/{two}", "module-key-second");
                 x.AddGetRoute("/foo/{bar}/{two}", "module-key-third");
             });
