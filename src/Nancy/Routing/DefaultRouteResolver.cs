@@ -57,8 +57,14 @@
                 return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
             }
 
+            var exactMatch = GetRouteMatchesWithExactPathMatch(routesWithCorrectRequestMethod).FirstOrDefault();
+            if (exactMatch != null)
+            {
+                return this.CreateRouteAndParametersFromMatch(context, exactMatch);
+            }
+
             var routeMatchesWithMostParameterCaptures = 
-                GetRouteMatchesWithMostParameterCaptures(routesWithCorrectRequestMethod);
+                GetTopRouteMatches(routesWithCorrectRequestMethod);
 
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
@@ -89,13 +95,31 @@
             return routesWithMostParameterCaptures.First();
         }
 
-        private static IEnumerable<RouteCandidate> GetRouteMatchesWithMostParameterCaptures(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
+        private static IEnumerable<RouteCandidate> GetRouteMatchesWithExactPathMatch(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
         {
-            var maxParameterCount =
-                routesWithCorrectRequestMethod.Max(x => x.Item4.Parameters.GetDynamicMemberNames().Count());
-
             return routesWithCorrectRequestMethod.Where(
-                x => x.Item4.Parameters.GetDynamicMemberNames().Count() == maxParameterCount);
+                x => x.Item4.Parameters.GetDynamicMemberNames().Count() == 0);
+        }
+
+        private static IEnumerable<RouteCandidate> GetTopRouteMatches(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
+
+        {
+            var maxSegments = 0;
+            var maxParameters = 0;
+            // Order is by number of path segment matches first number of parameter matches second.  
+            // If two candidates have the same number of path segments the tie breaker is the parameter count.
+            foreach (var tuple in routesWithCorrectRequestMethod
+                .OrderBy(x => x.Item4.Parameters.GetDynamicMemberNames().Count())
+                .OrderByDescending(x => x.Item3.Path.Count(c => c.Equals('/'))))
+            {
+                var segments = tuple.Item3.Path.Count(c => c == '/');
+                var parameters = tuple.Item4.Parameters.GetDynamicMemberNames().Count();
+                if (segments < maxSegments || parameters < maxParameters)
+                    yield break;
+                maxSegments = segments;
+                maxParameters = parameters;
+                yield return tuple;
+            }
         }
 
         private static bool NoRoutesWereForTheRequestedMethod(IEnumerable<RouteCandidate> routesWithCorrectRequestMethod)
