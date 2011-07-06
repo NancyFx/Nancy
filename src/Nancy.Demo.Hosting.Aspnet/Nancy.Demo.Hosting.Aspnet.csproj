@@ -47,11 +47,6 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
-    <CustomCommands>
-      <CustomCommands>
-        <Command type="AfterExecute" command="mono ../../../../../../../home/andreas/Downloads/xunit-1.7/xunit.gui.clr4.exe" />
-      </CustomCommands>
-    </CustomCommands>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\</OutputPath>
