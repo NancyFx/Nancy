@@ -211,6 +211,29 @@
         }
 
         [Fact]
+        public void Should_choose_root_route_over_one_with_capture_if_requesting_root_uri()
+        {
+            var request = new FakeRequest("get", "/");
+            var context = new NancyContext { Request = request };
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/{name}", "module-key-second");
+                x.AddGetRoute("/", "module-key-first");
+                x.AddGetRoute("/{name}", "module-key-second");
+            });
+            A.CallTo(() => this.matcher.Match(request.Uri, "/")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
+            A.CallTo(() => this.matcher.Match(request.Uri, "/{name}")).Returns(
+                new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("name", "fake values")));
+
+            // When
+            this.resolver.Resolve(context, routeCache);
+
+            // Then
+            A.CallTo(() => this.catalog.GetModuleByKey("module-key-first", context)).MustHaveHappened();
+        }
+
+        [Fact]
         public void Should_invoke_pattern_matcher_with_request_uri()
         {
             // Given
