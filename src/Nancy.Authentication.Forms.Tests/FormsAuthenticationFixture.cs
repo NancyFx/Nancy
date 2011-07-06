@@ -17,27 +17,31 @@ namespace Nancy.Authentication.Forms.Tests
         private Guid userGuid;
 
         private string validCookieValue =
-            HttpUtility.UrlEncode("fEdpkYCBsurZRZhQNco9ztwtfok=scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
+            HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
 
         private string cookieWithNoHmac =
-            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
+            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
 
         private string cookieWithEmptyHmac =
-            HttpUtility.UrlEncode("scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
+            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
 
         private string cookieWithInvalidHmac =
-            HttpUtility.UrlEncode("fEdpjYCBsurZRZhQNco9ztwtfok=scuTY56jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
+            HttpUtility.UrlEncode("C+QzbqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
 
         private string cookieWithBrokenEncryptedData =
-            HttpUtility.UrlEncode("fEdpkYCBsurZRZhQNco9ztwtfok=scuTY57jKoH8FPhfAl70XqpM+UrgWaq1OAHxiLoCuQlr1J5+by2bVj+ZoqhC0g7z");
+            HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3spwI0jB0KeVY9");
+
+        private CryptographyConfiguration cryptographyConfiguration;
 
         public FormsAuthenticationFixture()
         {
+            this.cryptographyConfiguration = new CryptographyConfiguration(
+                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass")),
+                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure")));
+
             this.config = new FormsAuthenticationConfiguration()
             {
-                Passphrase = "SuperSecretPass",
-                Salt = "AndVinegarCrisps",
-                HmacPassphrase = "UberSuperSecure",
+                CryptographyConfiguration = this.cryptographyConfiguration,
                 RedirectUrl = "/login",
                 UsernameMapper = A.Fake<IUsernameMapper>(),
             };
@@ -147,12 +151,12 @@ namespace Nancy.Authentication.Forms.Tests
         public void Should_encrypt_cookie()
         {
             var mockEncrypter = A.Fake<IEncryptionProvider>();
-            this.config.EncryptionProvider = mockEncrypter;
+            this.config.CryptographyConfiguration = new CryptographyConfiguration(mockEncrypter, this.cryptographyConfiguration.HmacProvider);
             FormsAuthentication.Enable(A.Fake<IApplicationPipelines>(), this.config);
 
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
-            A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored, A<string>.Ignored, A<byte[]>.Ignored))
+            A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -161,16 +165,15 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakeEncrypter = A.Fake<IEncryptionProvider>();
             var fakeCryptoText = "FakeText";
-            A.CallTo(() => fakeEncrypter.Encrypt(A<string>.Ignored, A<string>.Ignored, A<byte[]>.Ignored))
+            A.CallTo(() => fakeEncrypter.Encrypt(A<string>.Ignored))
                 .Returns(fakeCryptoText);
-            this.config.EncryptionProvider = fakeEncrypter;
             var mockHmac = A.Fake<IHmacProvider>();
-            this.config.HmacProvider = mockHmac;
+            this.config.CryptographyConfiguration = new CryptographyConfiguration(fakeEncrypter, mockHmac);
             FormsAuthentication.Enable(A.Fake<IApplicationPipelines>(), this.config);
 
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
-            A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText, A<string>.Ignored))
+            A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 

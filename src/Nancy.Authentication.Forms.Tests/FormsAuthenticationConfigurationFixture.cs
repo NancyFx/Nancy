@@ -1,6 +1,8 @@
 namespace Nancy.Authentication.Forms.Tests
 {
     using FakeItEasy;
+
+    using Nancy.Cryptography;
     using Nancy.Tests;
     using Xunit;
 
@@ -10,11 +12,13 @@ namespace Nancy.Authentication.Forms.Tests
 
         public FormsAuthenticationConfigurationFixture()
         {
+            var cryptographyConfiguration = new CryptographyConfiguration(
+                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass")), 
+                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure")));
+
             this.config = new FormsAuthenticationConfiguration()
                               {
-                                  Passphrase = "SuperSecretPass",
-                                  Salt = "AndVinegarCrisps",
-                                  HmacPassphrase = "UberSuperSecure",
+                                  CryptographyConfiguration = cryptographyConfiguration,
                                   RedirectUrl = "/login",
                                   UsernameMapper = A.Fake<IUsernameMapper>(),
                               };
@@ -26,36 +30,6 @@ namespace Nancy.Authentication.Forms.Tests
             var result = config.IsValid;
 
             result.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_not_be_valid_with_empty_passphrase()
-        {
-            config.Passphrase = "";
-
-            var result = config.IsValid;
-
-            result.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_not_be_valid_with_salt_too_short()
-        {
-            config.Salt = "short";
-
-            var result = config.IsValid;
-
-            result.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_not_be_valid_with_empty_hmac_passphrase()
-        {
-            config.HmacPassphrase = "";
-
-            var result = config.IsValid;
-
-            result.ShouldBeFalse();
         }
 
         [Fact]
@@ -79,9 +53,19 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_not_be_valid_with_null_cryptography_configuration()
+        {
+            config.CryptographyConfiguration = null;
+
+            var result = config.IsValid;
+
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
         public void Should_not_be_valid_with_null_encryption_provider()
         {
-            config.EncryptionProvider = null;
+            config.CryptographyConfiguration = new CryptographyConfiguration(null, config.CryptographyConfiguration.HmacProvider);
 
             var result = config.IsValid;
 
@@ -91,19 +75,11 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_be_valid_with_null_hmac_provider()
         {
-            config.HmacProvider = null;
+            config.CryptographyConfiguration = new CryptographyConfiguration(config.CryptographyConfiguration.EncryptionProvider, null); 
 
             var result = config.IsValid;
 
             result.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_return_salt_bytes()
-        {
-            var result = config.SaltBytes;
-
-            result.ShouldNotBeNull();
         }
     }
 }

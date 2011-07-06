@@ -210,11 +210,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Encrypted and signed string</returns>
         private static string EncryptAndSignCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
         {
-            var passPhrase = configuration.Passphrase;
-            var salt = configuration.SaltBytes;
-            var encryptionProvider = configuration.EncryptionProvider;
-
-            var encryptedCookie = encryptionProvider.Encrypt(cookieValue, passPhrase, salt);
+            var encryptedCookie = configuration.CryptographyConfiguration.EncryptionProvider.Encrypt(cookieValue);
             var hmacBytes = GenerateHmac(encryptedCookie, configuration);
             var hmacString = Convert.ToBase64String(hmacBytes);
 
@@ -229,7 +225,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Hmac byte array</returns>
         private static byte[] GenerateHmac(string encryptedCookie, FormsAuthenticationConfiguration configuration)
         {
-            return configuration.HmacProvider.GenerateHmac(encryptedCookie, configuration.HmacPassphrase);
+            return configuration.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedCookie);
         }
 
         /// <summary>
@@ -243,21 +239,19 @@ namespace Nancy.Authentication.Forms
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
             var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
 
-            var hmacStringLength = Base64Helpers.GetBase64Length(configuration.HmacProvider.HmacLength);
+            var hmacStringLength = Base64Helpers.GetBase64Length(configuration.CryptographyConfiguration.HmacProvider.HmacLength);
 
             var encryptedCookie = decodedCookie.Substring(hmacStringLength);
             var hmacString = decodedCookie.Substring(0, hmacStringLength);
 
-            var passPhrase = configuration.Passphrase;
-            var salt = configuration.SaltBytes;
-            var encryptionProvider = configuration.EncryptionProvider;
+            var encryptionProvider = configuration.CryptographyConfiguration.EncryptionProvider;
 
             // Check the hmacs, but don't early exit if they don't match
             var hmacBytes = Convert.FromBase64String(hmacString);
             var newHmac = GenerateHmac(encryptedCookie, configuration);
-            var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, configuration.HmacProvider.HmacLength);
+            var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, configuration.CryptographyConfiguration.HmacProvider.HmacLength);
 
-            var decrypted = encryptionProvider.Decrypt(encryptedCookie, passPhrase, salt);
+            var decrypted = encryptionProvider.Decrypt(encryptedCookie);
 
             // Only return the decrypted result if the hmac was ok
             return hmacValid ? decrypted : String.Empty;
