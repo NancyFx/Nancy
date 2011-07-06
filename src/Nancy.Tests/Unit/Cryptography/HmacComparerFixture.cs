@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.Sessions
 {
-    using Cryptography;
+    using Nancy.Cryptography;
+
     using Xunit;
 
     public class HmacComparerFixture

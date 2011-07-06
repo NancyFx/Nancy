@@ -117,6 +117,7 @@
     <Compile Include="Unit\Conventions\DefaultViewLocationConventionsFixture.cs" />
     <Compile Include="Unit\Cryptography\DefaultHmacProviderFixture.cs" />
     <Compile Include="Unit\Cryptography\HmacComparerFixture.cs" />
+    <Compile Include="Unit\Cryptography\NoEncryptionProviderFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperModuleCatalogFixture.cs" />
     <Compile Include="Unit\Extensions\ContextExtensionsFixture.cs" />
     <Compile Include="Unit\Extensions\RequestExtensionsFixture.cs" />
@@ -172,7 +173,7 @@
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
-    <Compile Include="Unit\Cryptography\DefaultEncryptionProviderFixture.cs" />
+    <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />

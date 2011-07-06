@@ -12,9 +12,6 @@ namespace Nancy.Demo.Authentication.Forms
             var formsAuthConfiguration = 
                 new FormsAuthenticationConfiguration()
                 {
-                    Passphrase = "SuperSecretPass",
-                    Salt = "AndVinegarCrisps",
-                    HmacPassphrase = "UberSuperSecure",
                     RedirectUrl = "/login",
                     UsernameMapper = container.Resolve<IUsernameMapper>(),
                 };

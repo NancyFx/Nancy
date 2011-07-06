@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -98,9 +98,14 @@
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
+    <Compile Include="Cryptography\CryptographyConfiguration.cs" />
     <Compile Include="Cryptography\DefaultHmacProvider.cs" />
     <Compile Include="Cryptography\HmacComparer.cs" />
     <Compile Include="Cryptography\IHmacProvider.cs" />
+    <Compile Include="Cryptography\IKeyGenerator.cs" />
+    <Compile Include="Cryptography\NoEncryptionProvider.cs" />
+    <Compile Include="Cryptography\PassphraseKeyGenerator.cs" />
+    <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
@@ -193,7 +198,7 @@
     <Compile Include="Security\SecurityConventions.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
-    <Compile Include="Cryptography\DefaultEncryptionProvider.cs" />
+    <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
     <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
     <Compile Include="Cryptography\IEncryptionProvider.cs" />
     <Compile Include="Session\IFormatterSelector.cs" />

@@ -1,6 +1,5 @@
 namespace Nancy.Cryptography
 {
-    using System;
     using System.Security.Cryptography;
     using System.Text;
 
@@ -12,7 +11,26 @@ namespace Nancy.Cryptography
         /// <summary>
         /// HMAC length
         /// </summary>
-        private readonly int hmacLength = new HMACSHA1().HashSize / 8;
+        private readonly int hmacLength = new HMACSHA256().HashSize / 8;
+
+        /// <summary>
+        /// Preferred key size for HMACSHA256
+        /// </summary>
+        private const int PreferredKeySize = 64;
+
+        /// <summary>
+        /// Key
+        /// </summary>
+        private readonly byte[] key;
+
+        /// <summary>
+        /// Creates a new instance of the DefaultHmacProvider type
+        /// </summary>
+        /// <param name="keyGenerator">Key generator to use to generate the key</param>
+        public DefaultHmacProvider(IKeyGenerator keyGenerator)
+        {
+            this.key = keyGenerator.GetBytes(PreferredKeySize);
+        }
 
         /// <summary>
         /// Gets the length of the HMAC signature
@@ -26,11 +44,10 @@ namespace Nancy.Cryptography
         /// Create a hmac from the given data using the given passPhrase
         /// </summary>
         /// <param name="data">Data to create hmac from</param>
-        /// <param name="passPhrase">Passphrase to use</param>
         /// <returns>String representation of the hmac</returns>
-        public byte[] GenerateHmac(string data, string passPhrase)
+        public byte[] GenerateHmac(string data)
         {
-            var hmacGenerator = new HMACSHA1(Encoding.UTF8.GetBytes(passPhrase));
+            var hmacGenerator = new HMACSHA256(this.key);
 
             return hmacGenerator.ComputeHash(Encoding.UTF8.GetBytes(data));
         }

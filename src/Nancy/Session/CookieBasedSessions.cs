@@ -15,16 +15,6 @@ namespace Nancy.Session
     public class CookieBasedSessions : IFormatterSelector
     {
         /// <summary>
-        /// Encryption pass phrase
-        /// </summary>
-        private readonly string passPhrase;
-
-        /// <summary>
-        /// Encryption salt
-        /// </summary>
-        private readonly byte[] salt;
-
-        /// <summary>
         /// Encryption provider
         /// </summary>
         private readonly IEncryptionProvider encryptionProvider;
@@ -33,11 +23,6 @@ namespace Nancy.Session
         /// Provider for generating hmacs
         /// </summary>
         private readonly IHmacProvider hmacProvider;
-
-        /// <summary>
-        /// Passphrase for generating hmacs
-        /// </summary>
-        private readonly string hmacPassphrase;
 
         /// <summary>
         /// Formatter for de/serializing the session objects
@@ -54,17 +39,11 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="encryptionProvider">The encryption provider.</param>
         /// <param name="hmacProvider">The hmac provider</param>
-        /// <param name="passPhrase">The encryption pass phrase.</param>
-        /// <param name="salt">The encryption salt.</param>
-        /// <param name="hmacPassphrase">The hmac passphrase</param>
         /// <param name="sessionObjectFormatter">Session object formatter to use</param>
-        public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, string passPhrase, string salt, string hmacPassphrase, ISessionObjectFormatter sessionObjectFormatter)
+        public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, ISessionObjectFormatter sessionObjectFormatter)
         {
             this.encryptionProvider = encryptionProvider;
             this.hmacProvider = hmacProvider;
-            this.passPhrase = passPhrase;
-            this.salt = CreateSalt(salt);
-            this.hmacPassphrase = hmacPassphrase;
             this.formatter = sessionObjectFormatter;
         }
 
@@ -81,15 +60,11 @@ namespace Nancy.Session
         /// Initialise and add cookie based session hooks to the application pipeine
         /// </summary>
         /// <param name="applicationPipelines">Application pipelines</param>
-        /// <param name="encryptionProvider">Encryption provider for encrypting cookies</param>
-        /// <param name="hmacProvider">The hmac provider</param>
-        /// <param name="passPhrase">Encryption pass phrase</param>
-        /// <param name="salt">Encryption salt</param>
-        /// <param name="hmacPassphrase">The hmac passphrase</param>
+        /// <param name="cryptographyConfiguration">Cryptography configuration</param>
         /// <returns>Formatter selector for choosing a non-default formatter</returns>
-        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, string passPhrase, string salt, string hmacPassphrase)
+        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, CryptographyConfiguration cryptographyConfiguration)
         {
-            var sessionStore = new CookieBasedSessions(encryptionProvider, hmacProvider, passPhrase, salt, hmacPassphrase, new DefaultSessionObjectFormatter());
+            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultSessionObjectFormatter());
 
             applicationPipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
             applicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
@@ -101,13 +76,10 @@ namespace Nancy.Session
         /// Initialise and add cookie based session hooks to the application pipeine with the default encryption provider.
         /// </summary>
         /// <param name="applicationPipelines">Application pipelines</param>
-        /// <param name="passPhrase">Encryption pass phrase</param>
-        /// <param name="salt">Encryption salt</param>
-        /// <param name="hmacPassphrase">The hmac passphrase</param>
         /// <returns>Formatter selector for choosing a non-default formatter</returns>
-        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, string passPhrase, string salt, string hmacPassphrase)
+        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines)
         {
-            return Enable(applicationPipelines, new DefaultEncryptionProvider(), new DefaultHmacProvider(), passPhrase, salt, hmacPassphrase);
+            return Enable(applicationPipelines, CryptographyConfiguration.Default);
         }
 
         /// <summary>
@@ -144,8 +116,8 @@ namespace Nancy.Session
             }
 
             // TODO - configurable path?
-            var encryptedData = this.encryptionProvider.Encrypt(sb.ToString(), this.passPhrase, this.salt);
-            var hmacBytes = this.hmacProvider.GenerateHmac(encryptedData, this.hmacPassphrase);
+            var encryptedData = this.encryptionProvider.Encrypt(sb.ToString());
+            var hmacBytes = this.hmacProvider.GenerateHmac(encryptedData);
             var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
 
             var cookie = new NancyCookie(cookieName, cookieData, true);
@@ -170,10 +142,10 @@ namespace Nancy.Session
                 var encryptedCookie = cookieData.Substring(hmacLength);
 
                 var hmacBytes = Convert.FromBase64String(hmacString);
-                var newHmac = this.hmacProvider.GenerateHmac(encryptedCookie, this.hmacPassphrase);
+                var newHmac = this.hmacProvider.GenerateHmac(encryptedCookie);
                 var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, this.hmacProvider.HmacLength);
 
-                var data = this.encryptionProvider.Decrypt(encryptedCookie, this.passPhrase, this.salt);
+                var data = this.encryptionProvider.Decrypt(encryptedCookie);
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
@@ -217,21 +189,6 @@ namespace Nancy.Session
             context.Request.Session = sessionStore.Load(context.Request);
 
             return null;
-        }
-
-        /// <summary>
-        /// Create salt byes from salt stirng
-        /// </summary>
-        /// <param name="saltString">Salt string</param>
-        /// <returns>Byte array for encryption salt</returns>
-        private static byte[] CreateSalt(string saltString)
-        {
-            if (string.IsNullOrEmpty(saltString) || saltString.Length < 8)
-            {
-                throw new ArgumentException("Salt must be at least 8 characters long", "saltString");
-            }
-
-            return Encoding.UTF8.GetBytes(saltString);
         }
     }
 }

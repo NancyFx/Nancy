@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.Sessions
 {
-    using Cryptography;
+    using Nancy.Cryptography;
+
     using Xunit;
 
     public class DefaultHmacProviderFixture
@@ -8,9 +9,9 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_return_hmac_array()
         {
-            var provider = new DefaultHmacProvider();
+            var provider = new DefaultHmacProvider(new RandomKeyGenerator());
 
-            var result = provider.GenerateHmac("some data", "some passphrase");
+            var result = provider.GenerateHmac("some data");
 
             result.ShouldNotBeNull();
             result.Length.ShouldBeGreaterThan(0);
@@ -19,10 +20,10 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_return_array_the_same_size_as_hash_length()
         {
-            var provider = new DefaultHmacProvider();
+            var provider = new DefaultHmacProvider(new RandomKeyGenerator());
             var hashLength = provider.HmacLength;
 
-            var result = provider.GenerateHmac("some data", "some passphrase");
+            var result = provider.GenerateHmac("some data");
 
             result.Length.ShouldEqual(hashLength);
         }
