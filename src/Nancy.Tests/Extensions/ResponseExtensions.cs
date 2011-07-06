@@ -1,8 +1,6 @@
 namespace Nancy.Tests.Extensions
 {
-    using System;
     using System.IO;
-    using Cookies;
 
     public static class ResponseExtensions
     {

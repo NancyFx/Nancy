@@ -6,7 +6,9 @@
     public class GenericFileResponse : Response
     {
         public GenericFileResponse(string filePath) : 
-            this (filePath, MimeTypes.GetMimeType(filePath)) {}        
+            this (filePath, MimeTypes.GetMimeType(filePath))
+        {
+        }        
 
         public GenericFileResponse(string filePath, string contentType)
         {
