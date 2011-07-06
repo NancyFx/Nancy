@@ -30,7 +30,7 @@ namespace Nancy.Demo.Caching
         {
             Tuple<DateTime, Response, int> cacheEntry;
 
-            if (this.cachedResponses.TryGetValue(context.Request.Uri, out cacheEntry))
+            if (this.cachedResponses.TryGetValue(context.Request.Path, out cacheEntry))
             {
                 if (cacheEntry.Item1.AddSeconds(cacheEntry.Item3) > DateTime.Now)
                 {
@@ -43,7 +43,7 @@ namespace Nancy.Demo.Caching
 
         /// <summary>
         /// Adds the current response to the cache if required
-        /// Only stores by Uri and stores the response in a dictionary.
+        /// Only stores by Path and stores the response in a dictionary.
         /// Do not use this as an actual cache :-)
         /// </summary>
         /// <param name="context">Current context</param>
@@ -68,7 +68,7 @@ namespace Nancy.Demo.Caching
 
             var cachedResponse = new CachedResponse(context.Response);
 
-            this.cachedResponses[context.Request.Uri] = new Tuple<DateTime, Response, int>(DateTime.Now, cachedResponse, cacheSeconds);
+            this.cachedResponses[context.Request.Path] = new Tuple<DateTime, Response, int>(DateTime.Now, cachedResponse, cacheSeconds);
 
             context.Response = cachedResponse;
         }

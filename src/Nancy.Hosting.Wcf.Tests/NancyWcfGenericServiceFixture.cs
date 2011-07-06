@@ -59,7 +59,7 @@ namespace Nancy.Hosting.Wcf.Tests
                 }
             }
 
-            nancyRequest.Uri.ShouldEqual("/test/stuff");
+            nancyRequest.Path.ShouldEqual("/test/stuff");
             Assert.True(nancyRequest.Query.query.HasValue);
             Assert.True(nancyRequest.Query.query2.HasValue);
         }

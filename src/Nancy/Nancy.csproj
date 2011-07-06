@@ -124,6 +124,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="StaticConfiguration.cs" />
+    <Compile Include="Url.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />

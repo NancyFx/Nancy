@@ -258,12 +258,12 @@
             {
                 this.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
-                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Uri))
+                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
                         {
                             return null;
                         }
 
-                        if (String.Equals(ctx.Request.Uri, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
                         {
                             var response = new Response
                                 {
