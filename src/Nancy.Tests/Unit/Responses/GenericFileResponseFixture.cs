@@ -5,14 +5,14 @@
     using Nancy.Responses;
     using Xunit;
 
-    public class ResponseConsistencyFixture
+    public class GenericFileResponseFixture
 	{
 		private readonly string imagePath;
         private const string imageContentType = "image/png";
 
-        public ResponseConsistencyFixture()
+        public GenericFileResponseFixture()
 		{
-			this.imagePath = Path.Combine(@"..\", @"..\", "Resources", "zip.png");
+			this.imagePath = Path.Combine(@"..", @"..", "Resources", "zip.png");
 		}
 		
 		[Fact]
