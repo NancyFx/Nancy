@@ -17,8 +17,8 @@ namespace Nancy.Tests.Unit.Sessions
 
     public class CookieBasedSessionsFixture
     {
-        private const string ValidData = "VgPJvXYwcXkn0gxDvg84tsfV9F5he1ZxhjsTZK1UZHVqWk7izPd9XsWnuFMrtQNRZTXXQIQC70PUcl2gxUczXtP1Z7hGdTHdqwopP1/WRQtF949V7EO2JXG7sna/AVkPZvF730XD3oCBY4hxhIydTOw+b/PZYsXYQGTRCp9Ynv/hO3zPt/vKAViGP1n+HrSFwLyiw2RpAzl1/9psKzkL2Mh2YRkDjhb3SSHpbjPgkgyvhImy/L4zd3eKV4UdLR8sUNdEMNoA37nECCPmM+A+nveHUn9HkwakkHsVsj3hh78yEHj1StgMdEAipgyqIdDrc5W36Gr8MTeVeU4+i02Dz0p5kRoFrZXb2q1sV5fTVYoDeQ11ovx/XnmWSO6m5zD+6AFGZWzzSkaeGDXa+tBhVD921SMqWxN2v1AMAO7LgWVdxOwF48ryuhmkLKhNouC7Oe8eUke3BENryJnH7Jp+0/WaCyWV5pAbfl2v1ysbZqvhyXowdm9qSF0quBV/vvkp4wuc4TMXjQP5/TGssbojYKshzBF+buSg+lP5W5pFGne28jjx3+matLr+aA3pgvPj7+JYSRNi3emkuTfAX00neJbbk/g6subFD/KDepDk3tqBXlde0Mhhg5jRX9h2kCpo8vuM3bW5TfXbcwUkTW/0cM9Oq7kYjb0F/jcTbS+OmjC/125BxOslYqa9kun5/SILOJuU757jvfTXzoMCNeb2u7n92Y4iLbV0J/yMmLOBzkN+w5pzzKoKltQXDot4FuCeTtZrL3yYPRDASbCIjpwGEl8X5KUwBpCHE3Cbz0DTduzCJSXZV77MFLlNsT+mj8CtZydTi+wQ9p9Ssty8HVgz/0AeuRABpHZ8S+x9jnwy04vkryYgtKHidBRh+X85GXhIdrM91+oGzN9eDHKjhLLvX5cYuSiSW387keD4hZt/7YGHlOFCW9EL8miiBp5BJ1WN";
-        private const string ValidHmac = "FD+CB9Zm/n18DdcWIoj55UjImgJliwWjKiArlKaBbFE=";
+        private const string ValidData = "VgPJvXYwcXkn0gxDvg84tsfV9F5he1ZxhjsTZK1UZHVqWk7izPd9XsWnuFMrtQNRJEfyiqU2J7tAZDQvdKjQij9wUO6mOTCyZ7HPHK/pEnkgDFMXbHDctGQZSbb2WZZxola+Q3nP2tlQ+Tx//N6YyK7BwpsNPrvyHAvU1z5YzHfPT6HEowIl8mz/uUL6o+FME/Goi7RN2getMeYaPCs0fJkiMCAomnnagAy4aXN0Ak/p7Y3K/kpNAS6PvNu4aok0zVpfo1utP84GyyLomfr4urmDNFIe8PBVoKhuomxjsUOddaarHqqmN3PXOp15SPXPDxEKfpuLzhmqXnStiB8nH9qMBYI/AuLHMckDzkeESH5rQ2q2+1RgCN82PujzGhhVnBMk95ZS9k9zKCvKQa2yzVkaHqwSESyOFboU89kLAEQ0h48dtoJ2FTBs9GjsL3Z4fGogeLwjIvP8I8JF39HI+9U3PC2KnicA/bgUL/Z1paDzZYTrqQS4QSyFgy4DOxYz";
+        private const string ValidHmac = "un/5uJOoOAyn4AX8VU0HsGYYtr79A40TFF1wVqd/jDQ=";
 
         private readonly IEncryptionProvider fakeEncryptionProvider;
         private readonly CookieBasedSessions cookieStore;
@@ -33,9 +33,9 @@ namespace Nancy.Tests.Unit.Sessions
             this.fakeEncryptionProvider = A.Fake<IEncryptionProvider>();
             this.fakeHmacProvider = A.Fake<IHmacProvider>();
             this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, new Fakes.FakeSessionObjectFormatter());
-            var keyGenerator = new PassphraseKeyGenerator("password");
-            this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(keyGenerator);
-            this.defaultHmacProvider = new DefaultHmacProvider(keyGenerator);
+
+			this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("password"));
+            this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword"));
         }
 
         [Fact]
