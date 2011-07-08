@@ -8,6 +8,10 @@
     {
         private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Returns an empty dynamic dictionary.
+        /// </summary>
+        /// <value>A <see cref="DynamicDictionary"/> instance.</value>
         public static DynamicDictionary Empty
         {
             get
@@ -58,6 +62,8 @@
         {
             get
             {
+                name = GetNeutralKey(name);
+
                 dynamic member;
                 if (!dictionary.TryGetValue(name, out member))
                 {
@@ -66,7 +72,12 @@
 
                 return member;
             }
-            set { dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value); }
+            set
+            {
+                name = GetNeutralKey(name);
+
+                dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value);
+            }
         }
 
         /// <summary>
@@ -111,6 +122,11 @@
         public override int GetHashCode()
         {
             return (dictionary != null ? dictionary.GetHashCode() : 0);
+        }
+
+        private static string GetNeutralKey(string key)
+        {
+            return key.Replace("-", string.Empty);
         }
     }
 }

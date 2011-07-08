@@ -16,6 +16,58 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_strip_dash_from_name_when_using_indexer_to_add_value()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary.foobar);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrieve_value_for_key_containing_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foo-bar"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrive_value_stores_with_dash_using_key_without_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foobar"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrive_value_stores_using_dash_using_key_with_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foobar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foo-bar"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
         public void Should_retrieving_non_existing_index_should_return_empty_value()
         {
             // Given
