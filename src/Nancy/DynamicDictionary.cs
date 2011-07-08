@@ -21,6 +21,23 @@
         }
 
         /// <summary>
+        /// Creates a dynamic dictionary from an <see cref="IDictionary{TKey,TValue}"/> instance.
+        /// </summary>
+        /// <param name="values">An <see cref="IDictionary{TKey,TValue}"/> instance, that the dynamic dictionary should be created from.</param>
+        /// <returns>An <see cref="DynamicDictionary"/> instance.</returns>
+        public static DynamicDictionary Create(IDictionary<string, object> values)
+        {
+            var instance = new DynamicDictionary();
+
+            foreach (var key in values.Keys)
+            {
+                instance[key] = values[key];
+            }
+
+            return instance;
+        }
+
+        /// <summary>
         /// Provides the implementation for operations that set member values. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations such as setting a value for a property.
         /// </summary>
         /// <returns>true if the operation is successful; otherwise, false. If this method returns false, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>

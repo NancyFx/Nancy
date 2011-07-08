@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 
@@ -13,6 +14,24 @@ namespace Nancy.Tests.Unit
             this.dictionary = new DynamicDictionary();
             this.dictionary["TestString"] = "Testing";
             this.dictionary["TestInt"] = 2;
+        }
+
+        [Fact]
+        public void Should_create_instance_from_dictionary()
+        {
+            // Given
+            var values = new Dictionary<string, object>
+            {
+                { "foo", 10 },
+                { "bar", "some value" },
+            };
+
+            // When
+            dynamic instance = DynamicDictionary.Create(values);
+
+            // Then
+            ((int)GetIntegerValue(instance.foo)).ShouldEqual(10);
+            ((string)GetStringValue(instance.bar)).ShouldEqual("some value");
         }
 
         [Fact]
