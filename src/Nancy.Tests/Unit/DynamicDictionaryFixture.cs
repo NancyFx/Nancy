@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Xunit;
 
@@ -13,6 +14,76 @@ namespace Nancy.Tests.Unit
             this.dictionary = new DynamicDictionary();
             this.dictionary["TestString"] = "Testing";
             this.dictionary["TestInt"] = 2;
+        }
+
+        [Fact]
+        public void Should_create_instance_from_dictionary()
+        {
+            // Given
+            var values = new Dictionary<string, object>
+            {
+                { "foo", 10 },
+                { "bar", "some value" },
+            };
+
+            // When
+            dynamic instance = DynamicDictionary.Create(values);
+
+            // Then
+            ((int)GetIntegerValue(instance.foo)).ShouldEqual(10);
+            ((string)GetStringValue(instance.bar)).ShouldEqual("some value");
+        }
+
+        [Fact]
+        public void Should_strip_dash_from_name_when_using_indexer_to_add_value()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary.foobar);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrieve_value_for_key_containing_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foo-bar"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrive_value_stores_with_dash_using_key_without_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foo-bar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foobar"]);
+
+            // Then
+            result.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_be_able_to_retrive_value_stores_using_dash_using_key_with_dash_when_using_indexer()
+        {
+            // Given
+            this.dictionary["foobar"] = 10;
+
+            // When
+            int result = GetIntegerValue(this.dictionary["foo-bar"]);
+
+            // Then
+            result.ShouldEqual(10);
         }
 
         [Fact]

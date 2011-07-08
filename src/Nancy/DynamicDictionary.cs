@@ -8,12 +8,33 @@
     {
         private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
 
+        /// <summary>
+        /// Returns an empty dynamic dictionary.
+        /// </summary>
+        /// <value>A <see cref="DynamicDictionary"/> instance.</value>
         public static DynamicDictionary Empty
         {
             get
             {
                 return new DynamicDictionary();
             }
+        }
+
+        /// <summary>
+        /// Creates a dynamic dictionary from an <see cref="IDictionary{TKey,TValue}"/> instance.
+        /// </summary>
+        /// <param name="values">An <see cref="IDictionary{TKey,TValue}"/> instance, that the dynamic dictionary should be created from.</param>
+        /// <returns>An <see cref="DynamicDictionary"/> instance.</returns>
+        public static DynamicDictionary Create(IDictionary<string, object> values)
+        {
+            var instance = new DynamicDictionary();
+
+            foreach (var key in values.Keys)
+            {
+                instance[key] = values[key];
+            }
+
+            return instance;
         }
 
         /// <summary>
@@ -58,6 +79,8 @@
         {
             get
             {
+                name = GetNeutralKey(name);
+
                 dynamic member;
                 if (!dictionary.TryGetValue(name, out member))
                 {
@@ -66,7 +89,12 @@
 
                 return member;
             }
-            set { dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value); }
+            set
+            {
+                name = GetNeutralKey(name);
+
+                dictionary[name] = value is DynamicDictionaryValue ? value : new DynamicDictionaryValue(value);
+            }
         }
 
         /// <summary>
@@ -111,6 +139,11 @@
         public override int GetHashCode()
         {
             return (dictionary != null ? dictionary.GetHashCode() : 0);
+        }
+
+        private static string GetNeutralKey(string key)
+        {
+            return key.Replace("-", string.Empty);
         }
     }
 }
