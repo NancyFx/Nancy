@@ -99,10 +99,9 @@ end
 
 #TODO:
 #-----
-#  7. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation and probably new build of docu for .NET 4.
-#  8. Test coverage report (NCover?)
-#  9. NuGet tasks
-# 10. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
+#  8. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
+#  9. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation and probably new build of docu for .NET 4.
+# 10. Test coverage report (NCover?)
 
 #DONE:
 #-----
@@ -112,3 +111,4 @@ end
 #  4. Zip binaries with docs (named with version number) - DONE
 #  5. Create a how to build file - DONE
 #  6. TeamCity integration - DONE
+#  7. NuGet task - DONE
