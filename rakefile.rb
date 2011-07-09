@@ -74,14 +74,34 @@ zip :package => [:publish] do |zip|
 	zip.output_path = "#{OUTPUT}/packages"
 end
 
+desc "Generates NuGet packages for each project that contains a nuspec"
+task :nuget => [:publish] do
+	Dir.mkdir("#{OUTPUT}/nuget")
+	nuspecs = FileList["src/**/*.nuspec"]
+	root = File.dirname(__FILE__)
+
+	# TODO: Update the nuspecs with common values (version, summary, authors etc)
+
+
+	# Generate the NuGet packages
+	nuspecs.each do |nuspec|
+		puts "Processing nuspec #{nuspec}"
+		
+		nuget = NuGetPack.new
+		nuget.command = "tools/nuget/nuget.exe"
+		nuget.nuspec = root + '/' + nuspec
+		nuget.output = "#{OUTPUT}/nuget"
+		nuget.parameters = "-Symbols", "-BasePath #{root}"		#using base_folder throws as there are two options that begin with b in nuget 1.4
+		nuget.execute
+	end
+end
 
 
 #TODO:
 #-----
-#  6. TeamCity integration
-#  7. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation.
+#  7. Documentation (docu?) - Started, seems to have trouble with .NET 4 assembilies. Needs investigation and probably new build of docu for .NET 4.
 #  8. Test coverage report (NCover?)
-#  9. NuGet task (waiting for albacore pull)
+#  9. NuGet tasks
 # 10. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
 
 #DONE:
@@ -91,3 +111,4 @@ end
 #  3. Set task dependencies - DONE
 #  4. Zip binaries with docs (named with version number) - DONE
 #  5. Create a how to build file - DONE
+#  6. TeamCity integration - DONE
