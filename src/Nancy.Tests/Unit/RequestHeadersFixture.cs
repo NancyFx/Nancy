@@ -19,10 +19,10 @@
         public void Should_return_empty_enumerable_when_accept_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
             
             // Then
             headers.Accept.ShouldHaveCount(0);
@@ -32,14 +32,14 @@
         public void Should_return_accept_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "text/plain", "text/ninja" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Accept", acceptValues } };
+            var expectedValues = new[] { "text/plain", "text/ninja" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Accept.ShouldBeSameAs(acceptValues);
+            headers.Accept.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -48,24 +48,24 @@
         public void Should_ignore_case_of_accept_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "text/plain", "text/ninja" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "text/plain", "text/ninja" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Accept.ShouldBeSameAs(acceptValues);
+            headers.Accept.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_enumerable_when_accept_charset_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.AcceptCharset.ShouldHaveCount(0);
@@ -75,14 +75,14 @@
         public void Should_return_accept_charset_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "utf-8", "iso-8859-5" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", acceptValues } };
+            var expectedValues = new[] { "utf-8", "iso-8859-5" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptCharset.ShouldBeSameAs(acceptValues);
+            headers.AcceptCharset.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -91,24 +91,24 @@
         public void Should_ignore_case_of_accept_charset_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "utf-8", "iso-8859-5" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "utf-8", "iso-8859-5" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptCharset.ShouldBeSameAs(acceptValues);
+            headers.AcceptCharset.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_enumerable_when_accept_encoding_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.AcceptEncoding.ShouldHaveCount(0);
@@ -118,14 +118,14 @@
         public void Should_return_accept_encoding_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "compress", "sdch" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", acceptValues } };
+            var expectedValues = new[] { "compress", "sdch" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptEncoding.ShouldBeSameAs(acceptValues);
+            headers.AcceptEncoding.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -134,24 +134,24 @@
         public void Should_ignore_case_of_accept_encoding_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "compress", "sdch" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "compress", "sdch" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptEncoding.ShouldBeSameAs(acceptValues);
+            headers.AcceptEncoding.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_enumerable_when_accept_language_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.AcceptLanguage.ShouldHaveCount(0);
@@ -161,14 +161,14 @@
         public void Should_return_accept_language_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "en-US", "sv-SE" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", acceptValues } };
+            var expectedValues = new[] { "en-US", "sv-SE" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptLanguage.ShouldBeSameAs(acceptValues);
+            headers.AcceptLanguage.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -177,24 +177,24 @@
         public void Should_ignore_case_of_accept_language_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "en-US", "sv-SE" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "en-US", "sv-SE" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.AcceptLanguage.ShouldBeSameAs(acceptValues);
+            headers.AcceptLanguage.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_string_when_authorization_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Authorization.ShouldBeEmpty();
@@ -204,14 +204,14 @@
         public void Should_return_authorization_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Authorization", acceptValues } };
+            var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Authorization", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Authorization.ShouldBeSameAs(acceptValues[0]);
+            headers.Authorization.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Theory]
@@ -220,24 +220,24 @@
         public void Should_ignore_case_of_authorization_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Authorization.ShouldBeSameAs(acceptValues[0]);
+            headers.Authorization.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Fact]
         public void Should_return_empty_enumerable_when_cache_control_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.CacheControl.ShouldHaveCount(0);
@@ -247,14 +247,14 @@
         public void Should_return_cache_control_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "public", "max-age=123445" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Cache-Control", acceptValues } };
+            var expectedValues = new[] { "public", "max-age=123445" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cache-Control", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.CacheControl.ShouldBeSameAs(acceptValues);
+            headers.CacheControl.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -263,24 +263,24 @@
         public void Should_ignore_case_of_cache_control_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "public", "max-age=123445" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "public", "max-age=123445" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.CacheControl.ShouldBeSameAs(acceptValues);
+            headers.CacheControl.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_string_when_connection_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Connection.ShouldBeEmpty();
@@ -290,14 +290,14 @@
         public void Should_return_connection_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "closed" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Connection", acceptValues } };
+            var expectedValues = new[] { "closed" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Connection", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Connection.ShouldBeSameAs(acceptValues[0]);
+            headers.Connection.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Theory]
@@ -306,24 +306,24 @@
         public void Should_ignore_case_of_connection_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "closed" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "closed" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Connection.ShouldBeSameAs(acceptValues[0]);
+            headers.Connection.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Fact]
         public void Should_return_zero_when_content_length_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentLength.ShouldEqual(0L);
@@ -333,11 +333,11 @@
         public void Should_return_content_length_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "12345" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Content-Length", acceptValues } };
+            var expectedValues = new[] { "12345" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Length", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentLength.ShouldEqual(12345L);
@@ -349,11 +349,11 @@
         public void Should_ignore_case_of_content_length_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "12345" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "12345" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentLength.ShouldEqual(12345L);
@@ -363,10 +363,10 @@
         public void Should_return_empty_string_when_content_type_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentType.ShouldBeEmpty();
@@ -376,11 +376,11 @@
         public void Should_return_content_type_header_when_available()
         {
             // Given
-            var acceptValues = new[] { "text/ninja" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Content-Type", acceptValues } };
+            var expectedValues = new[] { "text/ninja" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Type", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentType.ShouldEqual("text/ninja");
@@ -392,11 +392,11 @@
         public void Should_ignore_case_of_content_type_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "text/ninja" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "text/ninja" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.ContentType.ShouldEqual("text/ninja");
@@ -406,10 +406,10 @@
         public void Should_return_min_date_when_date_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Date.ShouldEqual(DateTime.MinValue);
@@ -420,11 +420,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Date", acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Date", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Date.ShouldEqual(expectedDate);
@@ -437,11 +437,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Date.ShouldEqual(expectedDate);
@@ -451,10 +451,10 @@
         public void Should_return_empty_string_when_host_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Host.ShouldBeEmpty();
@@ -464,14 +464,14 @@
         public void Should_return_host_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "en.wikipedia.org" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Host", acceptValues } };
+            var expectedValues = new[] { "en.wikipedia.org" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Host", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Host.ShouldBeSameAs(acceptValues[0]);
+            headers.Host.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Theory]
@@ -480,24 +480,24 @@
         public void Should_ignore_case_of_host_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "en.wikipedia.org" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "en.wikipedia.org" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Host.ShouldBeSameAs(acceptValues[0]);
+            headers.Host.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Fact]
         public void Should_return_empty_enumerable_when_ifmatch_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfMatch.ShouldHaveCount(0);
@@ -507,14 +507,14 @@
         public void Should_return_ifmatch_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "xyzzy", "c3piozzzz" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "If-Match", acceptValues } };
+            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Match", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfMatch.ShouldBeSameAs(acceptValues);
+            headers.IfMatch.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -523,24 +523,24 @@
         public void Should_ignore_case_of_ifmatch_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "xyzzy", "c3piozzzz" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfMatch.ShouldBeSameAs(acceptValues);
+            headers.IfMatch.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_min_date_when_ifmodifiedsince_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfModifiedSince.ShouldEqual(DateTime.MinValue);
@@ -551,11 +551,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfModifiedSince.ShouldEqual(expectedDate);
@@ -568,11 +568,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfModifiedSince.ShouldEqual(expectedDate);
@@ -582,10 +582,10 @@
         public void Should_return_empty_enumerable_when_ifnonematch_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfNoneMatch.ShouldHaveCount(0);
@@ -595,14 +595,14 @@
         public void Should_return_ifnonematch_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "xyzzy", "c3piozzzz" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", acceptValues } };
+            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfNoneMatch.ShouldBeSameAs(acceptValues);
+            headers.IfNoneMatch.ShouldBeSameAs(expectedValues);
         }
 
         [Theory]
@@ -611,24 +611,24 @@
         public void Should_ignore_case_of_ifnonematch_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "xyzzy", "c3piozzzz" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfNoneMatch.ShouldBeSameAs(acceptValues);
+            headers.IfNoneMatch.ShouldBeSameAs(expectedValues);
         }
 
         [Fact]
         public void Should_return_empty_string_when_ifrange_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfRange.ShouldBeEmpty();
@@ -638,14 +638,14 @@
         public void Should_return_ifrange_header_when_available()
         {
             // Given
-            var acceptValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "If-Range", acceptValues } };
+            var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Range", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfRange.ShouldEqual(acceptValues[0]);
+            headers.IfRange.ShouldEqual(expectedValues[0]);
         }
 
         [Theory]
@@ -654,24 +654,24 @@
         public void Should_ignore_case_of_ifrange_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfRange.ShouldEqual(acceptValues[0]);
+            headers.IfRange.ShouldEqual(expectedValues[0]);
         }
 
         [Fact]
         public void Should_return_min_date_when_ifunmodifiedsince_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfUnmodifiedSince.ShouldEqual(DateTime.MinValue);
@@ -682,11 +682,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfUnmodifiedSince.ShouldEqual(expectedDate);
@@ -699,11 +699,11 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var acceptValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.IfUnmodifiedSince.ShouldEqual(expectedDate);
@@ -713,10 +713,10 @@
         public void Should_return_zero_when_maxforwards_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.MaxForwards.ShouldEqual(0);
@@ -726,11 +726,11 @@
         public void Should_return_maxforwards_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "12" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", acceptValues } };
+            var expectedValues = new[] { "12" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.MaxForwards.ShouldEqual(12);
@@ -742,11 +742,11 @@
         public void Should_ignore_case_of_maxforwards_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "12" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "12" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.MaxForwards.ShouldEqual(12);
@@ -756,10 +756,10 @@
         public void Should_return_empty_string_when_referer_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.Referrer.ShouldBeEmpty();
@@ -769,14 +769,14 @@
         public void Should_return_referer_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "http://nancyfx.org" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "Referer", acceptValues } };
+            var expectedValues = new[] { "http://nancyfx.org" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Referer", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Referrer.ShouldBeSameAs(acceptValues[0]);
+            headers.Referrer.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Theory]
@@ -785,24 +785,24 @@
         public void Should_ignore_case_of_referer_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "http://nancyfx.org" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "http://nancyfx.org" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Referrer.ShouldBeSameAs(acceptValues[0]);
+            headers.Referrer.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Fact]
         public void Should_return_empty_string_when_useragent_headers_are_not_available()
         {
             // Given
-            var values = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
             headers.UserAgent.ShouldBeEmpty();
@@ -812,14 +812,14 @@
         public void Should_return_useragent_headers_when_available()
         {
             // Given
-            var acceptValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var values = new Dictionary<string, IEnumerable<string>> { { "User-Agent", acceptValues } };
+            var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "User-Agent", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.UserAgent.ShouldBeSameAs(acceptValues[0]);
+            headers.UserAgent.ShouldBeSameAs(expectedValues[0]);
         }
 
         [Theory]
@@ -828,14 +828,58 @@
         public void Should_ignore_case_of_useragent_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var acceptValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var values = new Dictionary<string, IEnumerable<string>> { { headerName, acceptValues } };
+            var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(values);
+            var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.UserAgent.ShouldBeSameAs(acceptValues[0]);
+            headers.UserAgent.ShouldBeSameAs(expectedValues[0]);
+        }
+
+        [Fact]
+        public void Should_return_empty_enumerable_when_header_not_available_using_indexer()
+        {
+            // Given
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var headers = new RequestHeaders(rawHeaders);
+
+            // When
+            var result = headers["not-found"];
+
+            // Then
+            result.ShouldHaveCount(0);
+        }
+
+        [Fact]
+        public void Should_header_values_when_available_using_indexer()
+        {
+            // Given
+            var expectedValues = new[] { "fakeValue1", "fakeValue2" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var headers = new RequestHeaders(rawHeaders);
+
+            // When
+            var result = headers["some-header"];
+
+            // Then
+            result.ShouldBeSameAs(expectedValues);
+        }
+
+        [Fact]
+        public void Should_ignore_case_when_available_using_indexer()
+        {
+            // Given
+            var expectedValues = new[] { "fakeValue1", "fakeValue2" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var headers = new RequestHeaders(rawHeaders);
+
+            // When
+            var result = headers["sOme-HeAdEr"];
+
+            // Then
+            result.ShouldBeSameAs(expectedValues);
         }
     }
 }

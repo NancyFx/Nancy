@@ -173,6 +173,17 @@ namespace Nancy
             get { return this.GetValue("User-Agent", x => x.First()); }
         }
 
+        public IEnumerable<string> this[string name]
+        {
+            get
+            {
+                name = GetActualHeaderName(name);
+
+                return (name != null) ?
+                    this.headers[name] :
+                    Enumerable.Empty<string>();
+            }
+        }
 
         private string GetActualHeaderName(string name)
         {
