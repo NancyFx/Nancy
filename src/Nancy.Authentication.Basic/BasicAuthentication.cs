@@ -103,16 +103,15 @@ namespace Nancy.Authentication.Basic
 
         private static string[] ExtractCredentialsFromHeaders(Request request)
         {
-            IEnumerable<string> values;
+            var authorization =
+                request.Headers.Authorization;
 
-            if (!request.Headers.TryGetValue("Authorization", out values))
+            if (string.IsNullOrEmpty(authorization))
             {
                 return null;
             }
 
-            var authorization = values.FirstOrDefault();
-
-            if (authorization == null || !authorization.StartsWith(SCHEME))
+            if (!authorization.StartsWith(SCHEME))
             {
                 return null;
             }
