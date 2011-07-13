@@ -70,6 +70,14 @@ namespace Nancy
         }
         
         /// <summary>
+        /// Contains name/value pairs of information stored for that URL.
+        /// </summary>
+        public IEnumerable<string> Cookie
+        {
+            get { return this.GetValue("Cookie"); }
+        }
+
+        /// <summary>
         /// What type of connection the user-agent would prefer.
         /// </summary>
         public string Connection

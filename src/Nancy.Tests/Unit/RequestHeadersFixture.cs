@@ -430,6 +430,49 @@
             headers.Date.ShouldEqual(expectedDate);
         }
 
+        [Fact]
+        public void Should_return_empty_enumerable_when_cookie_headers_are_not_available()
+        {
+            // Given
+            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.Cookie.ShouldHaveCount(0);
+        }
+
+        [Fact]
+        public void Should_return_cookie_headers_when_available()
+        {
+            // Given
+            var expectedValues = new[] { "foo=bar", "name=value" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", expectedValues } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.Cookie.ShouldBeSameAs(expectedValues);
+        }
+
+        [Theory]
+        [InlineData("cookie")]
+        [InlineData("COokIE")]
+        public void Should_ignore_case_of_cookie_header_name_when_retrieving_values(string headerName)
+        {
+            // Given
+            var expectedValues = new[] { "foo=bar", "name=value" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.Cookie.ShouldBeSameAs(expectedValues);
+        }
+
         [Theory]
         [InlineData("date")]
         [InlineData("daTE")]
