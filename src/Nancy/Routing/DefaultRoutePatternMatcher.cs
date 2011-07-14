@@ -8,6 +8,9 @@
     using Nancy.Extensions;
     using Nancy.Helpers;
 
+    /// <summary>
+    /// Default implementation of a route pattern matcher.
+    /// </summary>
     public class DefaultRoutePatternMatcher : IRoutePatternMatcher
     {
         private readonly ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
