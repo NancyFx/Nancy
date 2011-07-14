@@ -66,7 +66,7 @@ namespace Nancy
                 throw new ArgumentOutOfRangeException("protocol", protocol, "The value of the protocol parameter cannot be empty.");
 
             this.Body = body;
-            this.Headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
+            this.Headers = new RequestHeaders(headers);
             this.Method = method;
             this.Uri = uri;
             this.Protocol = protocol;
@@ -103,7 +103,7 @@ namespace Nancy
         {
             var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            if (!this.Headers.ContainsKey("cookie"))
+            if(!this.Headers.Cookie.Any())
             {
                 return cookieDictionary;
             }
@@ -139,9 +139,9 @@ namespace Nancy
         /// <summary>
         /// Gets the HTTP headers sent by the client.
         /// </summary>
-        /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the name and values of the headers.</value>
+        /// <value>An <see cref=""/> containing the name and values of the headers.</value>
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
-        public IDictionary<string, IEnumerable<string>> Headers { get; private set; }
+        public RequestHeaders Headers { get; private set; }
 
         /// <summary>
         /// Gets or sets the HTTP data transfer method used by the client.
@@ -170,7 +170,7 @@ namespace Nancy
 
         private void ParseFormData()
         {
-            if (!this.Headers.Keys.Any(x => x.Equals("content-type", StringComparison.OrdinalIgnoreCase)))
+            if (string.IsNullOrEmpty(this.Headers.ContentType))
             {
                 return;
             }

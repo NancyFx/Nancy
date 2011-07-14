@@ -121,7 +121,7 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_properly_handle_uri_escaped_route_parameters_that_were_matched()
         {
             // Given
-            var parameter = "baa ram ewe{}";
+            const string parameter = "baa ram ewe{}";
             var escapedParameter = Uri.EscapeUriString(parameter);
             
             // When
@@ -132,23 +132,37 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_not_allow_percent_to_be_used_outside_of_escape_sequences()
+        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_uri()
         {
             // Given
-            var parameter = "%gh";
-            
+            const string parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
+
             // When
             var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
 
             // Then
-            results.IsMatch.ShouldBeFalse();
+            ((string)results.Parameters["bar"]).ShouldEqual(parameter);
         }
 
         [Fact]
-        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_uri()
+        public void Should_url_decode_requested_patj()
         {
             // Given
-            var parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
+            const string encoded = @"this%26that+and+then+some%3f";
+            const string decoded = @"this&that and then some?";
+
+            // When
+            var results = this.matcher.Match("/foo/" + encoded, "/foo/{bar}");
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual(decoded);
+        }
+
+        [Fact]
+        public void Should_capture_complex_routes()
+        {
+            // Given
+            const string parameter = "co-ordinates;w=39.001409,z=-84.578201";
 
             // When
             var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");

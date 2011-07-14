@@ -10,13 +10,9 @@ namespace Nancy.Tests.Unit.ModelBinding
 
     public class DefaultBinderFixture
     {
-        private IFieldNameConverter passthroughNameConverter;
+        private readonly IFieldNameConverter passthroughNameConverter;
+        private readonly BindingDefaults emptyDefaults;
 
-        private BindingDefaults emptyDefaults;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="T:System.Object"/> class.
-        /// </summary>
         public DefaultBinderFixture()
         {
             this.passthroughNameConverter = A.Fake<IFieldNameConverter>();
@@ -31,46 +27,57 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_throw_if_type_converters_is_null()
         {
+            // Given, When
             var result = Record.Exception(() => new DefaultBinder(null, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), new BindingDefaults()));
 
+            // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
         [Fact]
         public void Should_throw_if_body_deserializers_is_null()
         {
+            // Given, When
             var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, null, A.Fake<IFieldNameConverter>(), new BindingDefaults()));
 
+            // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
         [Fact]
         public void Should_throw_if_field_name_converter_is_null()
         {
+            // Given, When
             var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, null, new BindingDefaults()));
 
+            // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
         [Fact]
         public void Should_throw_if_defaults_is_null()
         {
+            // Given, When
             var result = Record.Exception(() => new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), null));
 
+            // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
         [Fact]
         public void Should_call_body_deserializer_if_one_matches()
         {
+            // Given
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             binder.Bind(context, this.GetType());
 
+            // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -78,14 +85,17 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_not_call_body_deserializer_if_doesnt_match()
         {
+            // Given
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(false);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             binder.Bind(context, this.GetType());
 
+            // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustNotHaveHappened();
         }
@@ -93,13 +103,16 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_pass_request_content_type_to_can_deserialize()
         {
+            // Then
             var deserializer = A.Fake<IBodyDeserializer>();
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             binder.Bind(context, this.GetType());
 
+            // Then
             A.CallTo(() => deserializer.CanDeserialize("application/xml"))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -107,22 +120,26 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_return_object_from_deserializer_if_one_returned()
         {
+            // Given
             var modelObject = new object();
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             var result = binder.Bind(context, this.GetType());
 
+            // Then
             result.ShouldBeSameAs(modelObject);
         }
 
         [Fact]
         public void Should_see_if_a_type_converter_is_available_for_each_property_on_the_model_where_incoming_value_exists()
         {
+            // Given
             var typeConverter = A.Fake<ITypeConverter>();
             A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments().Returns(false);
             var binder = this.GetBinder(typeConverters: new[] { typeConverter });
@@ -130,8 +147,10 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
 
+            // When
             binder.Bind(context, typeof(TestModel));
 
+            // Then
             A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Times(2));
         }
@@ -139,6 +158,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_call_convert_on_type_converter_if_available()
         {
+            // Given
             var typeConverter = A.Fake<ITypeConverter>();
             A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
@@ -146,8 +166,10 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
 
+            // When
             binder.Bind(context, typeof(TestModel));
 
+            // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -155,14 +177,17 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_ignore_properties_that_cannot_be_converted()
         {
+            // Given
             var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
             context.Request.Form["DateProperty"] = "Broken";
 
+            // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
 
+            // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(12);
             result.DateProperty.ShouldEqual(default(DateTime));
@@ -171,13 +196,16 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_use_field_name_converter_for_each_field()
         {
+            // Given
             var binder = this.GetBinder();
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
 
+            // When
             binder.Bind(context, typeof(TestModel));
 
+            // Then
             A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Times(2));
         }
@@ -185,13 +213,16 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_not_bind_anything_on_blacklist()
         {
+            // Given
             var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "12";
 
+            // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel), "IntProperty");
 
+            // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(0);
         }
@@ -199,15 +230,18 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_use_default_body_deserializer_if_one_found()
         {
+            // Given
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { deserializer });
             var binder = this.GetBinder();
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             binder.Bind(context, this.GetType());
 
+            // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -215,6 +249,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_use_default_type_converter_if_one_found()
         {
+            // Given
             var typeConverter = A.Fake<ITypeConverter>();
             A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
@@ -223,8 +258,10 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
 
+            // When
             binder.Bind(context, typeof(TestModel));
 
+            // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -232,17 +269,22 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void User_body_serializer_should_take_precedence_over_default_one()
         {
+            // Given
             var userDeserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => userDeserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
+            
             var defaultDeserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => defaultDeserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
+
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { defaultDeserializer });
             var binder = this.GetBinder(bodyDeserializers: new[] { userDeserializer });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Headers.Add("Content-Type", new[] { "application/xml" });
 
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
             binder.Bind(context, this.GetType());
 
+            // Then
             A.CallTo(() => userDeserializer.Deserialize(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => defaultDeserializer.Deserialize(null, null, null)).WithAnyArguments()
@@ -252,6 +294,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void User_type_converter_should_take_precedence_over_default_one()
         {
+            // Given
             var userTypeConverter = A.Fake<ITypeConverter>();
             A.CallTo(() => userTypeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
             A.CallTo(() => userTypeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
@@ -259,12 +302,14 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => defaultTypeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
             A.CallTo(() => defaultTypeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { defaultTypeConverter });
-            var binder = this.GetBinder(typeConverters: new[] { userTypeConverter });
+            var binder = this.GetBinder(new[] { userTypeConverter });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
 
+            // When
             binder.Bind(context, typeof(TestModel));
 
+            // Then
             A.CallTo(() => userTypeConverter.Convert(null, null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => defaultTypeConverter.Convert(null, null, null)).WithAnyArguments()
@@ -279,6 +324,19 @@ namespace Nancy.Tests.Unit.ModelBinding
             var defaults = bindingDefaults ?? this.emptyDefaults;
 
             return new DefaultBinder(converters, deserializers, converter, defaults);
+        }
+
+        private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)
+        {
+            var header = new Dictionary<string, IEnumerable<string>>
+            {
+                { name, values }
+            };
+
+            return new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/", header)
+            };
         }
 
         public class TestModel
