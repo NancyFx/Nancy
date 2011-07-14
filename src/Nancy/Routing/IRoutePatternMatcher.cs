@@ -3,6 +3,7 @@
     /// <summary>
     /// Defined the functionality that is required by a route pattern matcher.
     /// </summary>
+    /// <remarks>Implement this interface if you want to support a custom route syntax.</remarks>
     public interface IRoutePatternMatcher
     {
         /// <summary>
