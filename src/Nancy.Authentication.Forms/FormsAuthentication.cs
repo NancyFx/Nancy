@@ -146,7 +146,7 @@ namespace Nancy.Authentication.Forms
                 {
                     if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        context.Response = new RedirectResponse(string.Format("{0}?{1}={2}", configuration.RedirectUrl, REDIRECT_QUERYSTRING_KEY, context.Request.Uri));
+                        context.Response = new RedirectResponse(string.Format("{0}?{1}={2}", configuration.RedirectUrl, REDIRECT_QUERYSTRING_KEY, context.Request.Path));
                     }
                 };
         }
