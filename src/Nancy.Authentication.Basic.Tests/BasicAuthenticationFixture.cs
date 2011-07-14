@@ -1,30 +1,23 @@
-﻿using System;
-using FakeItEasy;
-using Nancy.Tests;
-using Xunit;
-using Nancy.Bootstrapper;
-using Nancy.Tests.Fakes;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Nancy.Authentication.Basic.Tests
+﻿namespace Nancy.Authentication.Basic.Tests
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+    using FakeItEasy;
     using Nancy.Security;
+    using Nancy.Tests;
+    using Xunit;
+    using Nancy.Bootstrapper;
+    using Nancy.Tests.Fakes;
 
     public class BasicAuthenticationFixture
 	{
-		private BasicAuthenticationConfiguration config;
-		private NancyContext context;
-
-	    private IApplicationPipelines hooks;
+		private readonly BasicAuthenticationConfiguration config;
+	    private readonly IApplicationPipelines hooks;
 
 	    public BasicAuthenticationFixture()
         {
 			this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm");
-			this.context = new NancyContext()
-			{
-				Request = new FakeRequest("GET", "/")
-			};
 		    this.hooks = new FakeApplicationPipelines();
             BasicAuthentication.Enable(this.hooks, this.config);
         }
@@ -32,10 +25,13 @@ namespace Nancy.Authentication.Basic.Tests
 		[Fact]
 		public void Should_add_a_pre_and_post_hook_in_application_when_enabled()
 		{
+            // Given
 			var pipelines = A.Fake<IApplicationPipelines>();
 
+            // When
 			BasicAuthentication.Enable(pipelines, this.config);
 
+            // Then
 			A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
 				.MustHaveHappened(Repeated.Exactly.Once);
 		}
@@ -43,34 +39,49 @@ namespace Nancy.Authentication.Basic.Tests
 		[Fact]
 		public void Should_add_both_basic_and_requires_auth_pre_and_post_hooks_in_module_when_enabled()
 		{
+            // Given
 			var module = new FakeModule();
 
+            // When
 			BasicAuthentication.Enable(module, this.config);
 			
+            // Then
 			module.Before.PipelineItems.ShouldHaveCount(2);
 		}
 
 		[Fact]
 		public void Should_throw_with_null_config_passed_to_enable_with_application()
 		{
+            // Given, When
 			var result = Record.Exception(() => BasicAuthentication.Enable(A.Fake<IApplicationPipelines>(), null));
 
+            // Then
 			result.ShouldBeOfType(typeof(ArgumentNullException));
 		}
 
 		[Fact]
 		public void Should_throw_with_null_config_passed_to_enable_with_module()
 		{
+            // Given, When
 			var result = Record.Exception(() => BasicAuthentication.Enable(new FakeModule(), null));
 
+            // Then
 			result.ShouldBeOfType(typeof(ArgumentNullException));
 		}
 
         [Fact]
         public void Pre_request_hook_should_not_set_auth_details_with_no_auth_headers()
         {
+            // Given
+            var context = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/")
+            };
+
+            // When
             var result = this.hooks.BeforeRequest.Invoke(context);
 
+            // Then
             result.ShouldBeNull();
             context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
         }
@@ -78,71 +89,107 @@ namespace Nancy.Authentication.Basic.Tests
         [Fact]
         public void Post_request_hook_should_return_challenge_when_unauthorized_returned_from_route()
         {
-            string wwwAuthenticate = null;
-            this.context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
-            
+            // Given
+            var context = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/")
+            };
+
+            string wwwAuthenticate;
+            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+
+            // When
             this.hooks.AfterRequest.Invoke(context);
 
-            this.context.Response.Headers.TryGetValue("WWW-Authenticate", out wwwAuthenticate);
-            this.context.Response.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
-            this.context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
-            this.context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
-            this.context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm + "\"");
+            // Then
+            context.Response.Headers.TryGetValue("WWW-Authenticate", out wwwAuthenticate);
+            context.Response.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
+            context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
+            context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm + "\"");
         }
 
         [Fact]
         public void Pre_request_hook_should_not_set_auth_details_when_invalid_scheme_in_auth_header()
         {
-            this.context.Request.Headers.Add("Authorization", new [] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
+            // Given
+            var context = CreateContextWithHeader(
+                "Authorization", new[] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
 
+            // When
             var result = this.hooks.BeforeRequest.Invoke(context);
 
+            // Then
             result.ShouldBeNull();
-            this.context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
         }
 
         [Fact]
         public void Pre_request_hook_should_not_authenticate_when_invalid_encoded_username_in_auth_header()
         {
-            this.context.Request.Headers.Add("Authorization", new[] { "Basic" + " " + "some credentials" });
+            // Given
+            var context = CreateContextWithHeader(
+               "Authorization", new[] { "Basic" + " " + "some credentials" });
 
+            // When
             var result = this.hooks.BeforeRequest.Invoke(context);
 
+            // Then
             result.ShouldBeNull();
-            this.context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
         }
 
         [Fact]
         public void Pre_request_hook_should_call_user_validator_with_username_in_auth_header()
         {
-            this.context.Request.Headers.Add("Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+            // Given
+            var context = CreateContextWithHeader(
+               "Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
+            // When
             this.hooks.BeforeRequest.Invoke(context);
 
+            // Then
             A.CallTo(() => config.UserValidator.Validate("foo", "bar")).MustHaveHappened();
         }
 
-		[Fact]
-		public void Should_set_username_in_context_with_valid_username_in_auth_header()
-		{
-			var fakePipelines = new FakeApplicationPipelines();
+        [Fact]
+        public void Should_set_username_in_context_with_valid_username_in_auth_header()
+        {
+            // Given
+            var fakePipelines = new FakeApplicationPipelines();
 
-			var validator = A.Fake<IUserValidator>();
-			A.CallTo(() => validator.Validate("foo", "bar")).Returns(true);
+            var validator = A.Fake<IUserValidator>();
+            A.CallTo(() => validator.Validate("foo", "bar")).Returns(true);
 
-			var config = new BasicAuthenticationConfiguration(validator, "realm");
+            var cfg = new BasicAuthenticationConfiguration(validator, "realm");
 
-			context.Request.Headers.Add("Authorization",
-                new string[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+            var context = CreateContextWithHeader(
+               "Authorization", new [] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
-			BasicAuthentication.Enable(fakePipelines, config);
+            BasicAuthentication.Enable(fakePipelines, cfg);
 
-			var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            // When
+            fakePipelines.BeforeRequest.Invoke(context);
 
-			context.Items[Security.SecurityConventions.AuthenticatedUsernameKey].ShouldEqual("foo");
-		}
+            // Then
+            context.Items[SecurityConventions.AuthenticatedUsernameKey].ShouldEqual("foo");
+        }
 
-		private string EncodeCredentials(string username, string password)
+        private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)
+        {
+            var header = new Dictionary<string, IEnumerable<string>>
+            {
+                { name, values }
+            };
+
+            return new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/", header)
+            };
+        }
+
+        private static string EncodeCredentials(string username, string password)
 		{
 			var credentials = string.Format("{0}:{1}", username, password);
 
@@ -153,7 +200,6 @@ namespace Nancy.Authentication.Basic.Tests
 
 		class FakeModule : NancyModule
 		{
-
 		}
 
 		public class FakeApplicationPipelines : IApplicationPipelines

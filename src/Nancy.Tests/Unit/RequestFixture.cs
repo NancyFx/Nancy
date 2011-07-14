@@ -165,7 +165,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", "/", headers, CreateRequestStream(), "http");
 
             // Then
-            request.Headers.Keys.Contains("content-type").ShouldBeTrue();
+            request.Headers.ContentType.ShouldNotBeEmpty();
         }
 
         [Fact]

@@ -1,8 +1,7 @@
-﻿using Nancy.Extensions;
-
-namespace Nancy.Tests.Unit.Extensions
+﻿namespace Nancy.Tests.Unit.Extensions
 {
     using System.Collections.Generic;
+    using Nancy.Extensions;
     using Fakes;
     using Xunit;
 

@@ -122,6 +122,7 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="RequestHeaders.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />

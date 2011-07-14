@@ -148,7 +148,7 @@ namespace Nancy.ModelBinding
                 return null;
             }
 
-            var contentType = this.GetRequestContentType(context.Context);
+            var contentType = GetRequestContentType(context.Context);
             var bodyDeserializer = this.bodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
 
             if (bodyDeserializer != null)
@@ -165,22 +165,19 @@ namespace Nancy.ModelBinding
             return null;
         }
 
-        private string GetRequestContentType(NancyContext context)
+        private static string GetRequestContentType(NancyContext context)
         {
             if (context == null || context.Request == null)
             {
                 return String.Empty;
             }
 
-            IEnumerable<string> contentTypeHeaders;
-            context.Request.Headers.TryGetValue("Content-Type", out contentTypeHeaders);
+            var contentType =
+                context.Request.Headers.ContentType;
 
-            if (contentTypeHeaders == null || !contentTypeHeaders.Any())
-            {
-                return string.Empty;
-            }
-
-            return contentTypeHeaders.First();
+            return (string.IsNullOrEmpty(contentType))
+                ? string.Empty
+                : contentType;
         }
     }
 }
