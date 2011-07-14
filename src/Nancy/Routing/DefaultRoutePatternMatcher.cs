@@ -6,17 +6,21 @@
     using System.Globalization;
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
+    using Nancy.Helpers;
 
+    /// <summary>
+    /// Default implementation of a route pattern matcher.
+    /// </summary>
     public class DefaultRoutePatternMatcher : IRoutePatternMatcher
     {
-        private ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
+        private readonly ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
 
         public IRoutePatternMatchResult Match(string requestedPath, string routePath)
         {
             var routePathPattern = this.matcherCache.GetOrAdd(routePath, (s) => BuildRegexMatcher(routePath));
 
             requestedPath = TrimTrailingSlashFromRequestedPath(requestedPath);
-            var match = routePathPattern.Match(requestedPath);
+            var match = routePathPattern.Match(HttpUtility.UrlDecode(requestedPath));
 
             return new RoutePatternMatchResult(
                 match.Success,
@@ -67,7 +71,7 @@
                 if (current.IsParameterized())
                 {
                     var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>([/A-Za-z0-9()*!'._-]|%[0-9A-F]{{2}})*)", segment.GetParameterName());
+                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>(.+?))", segment.GetParameterName());
 
                     current = segment.Replace(segment, replacement);
                 }
