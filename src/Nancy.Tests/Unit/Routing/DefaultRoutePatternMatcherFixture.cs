@@ -143,32 +143,5 @@ namespace Nancy.Tests.Unit.Routing
             // Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);
         }
-
-        [Fact]
-        public void Should_url_decode_requested_patj()
-        {
-            // Given
-            const string encoded = @"this%26that+and+then+some%3f";
-            const string decoded = @"this&that and then some?";
-
-            // When
-            var results = this.matcher.Match("/foo/" + encoded, "/foo/{bar}");
-
-            // Then
-            ((string)results.Parameters["bar"]).ShouldEqual(decoded);
-        }
-
-        [Fact]
-        public void Should_capture_complex_routes()
-        {
-            // Given
-            const string parameter = "co-ordinates;w=39.001409,z=-84.578201";
-
-            // When
-            var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
-
-            // Then
-            ((string)results.Parameters["bar"]).ShouldEqual(parameter);
-        }
     }
 }
