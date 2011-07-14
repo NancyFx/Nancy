@@ -2,19 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
+    using System.Linq;
 
     using Nancy;
-    using FakeItEasy;
+    using Nancy.Cookies;
+
     using Xunit;
     using Xunit.Extensions;
 
     public class RequestHeadersFixture
     {
-        public RequestHeadersFixture()
-        {
-        }
-
         [Fact]
         public void Should_return_empty_enumerable_when_accept_headers_are_not_available()
         {
@@ -447,14 +444,15 @@
         public void Should_return_cookie_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "foo=bar", "name=value" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", expectedValues } };
+            var rawValues = new[] { "foo=bar", "name=value" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Cookie.ShouldBeSameAs(expectedValues);
+            ValidateCookie(headers.Cookie.First(), "foo", "bar");
+            ValidateCookie(headers.Cookie.Last(), "name", "value");
         }
 
         [Theory]
@@ -470,7 +468,8 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Cookie.ShouldBeSameAs(expectedValues);
+            ValidateCookie(headers.Cookie.First(), "foo", "bar");
+            ValidateCookie(headers.Cookie.Last(), "name", "value");
         }
 
         [Theory]
@@ -923,6 +922,12 @@
 
             // Then
             result.ShouldBeSameAs(expectedValues);
+        }
+
+        private static void ValidateCookie(INancyCookie cookie, string name, string value)
+        {
+            cookie.Name.ShouldEqual(name);
+            cookie.Value.ShouldEqual(value);
         }
     }
 }

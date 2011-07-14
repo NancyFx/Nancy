@@ -5,6 +5,8 @@ namespace Nancy
     using System.Globalization;
     using System.Linq;
 
+    using Nancy.Cookies;
+
     /// <summary>
     /// Provides strongly-typed access to HTTP request headers.
     /// </summary>
@@ -18,7 +20,7 @@ namespace Nancy
         /// <param name="headers">The headers.</param>
         public RequestHeaders(IDictionary<string, IEnumerable<string>> headers)
         {
-            this.headers = headers;
+            this.headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -72,9 +74,9 @@ namespace Nancy
         /// <summary>
         /// Contains name/value pairs of information stored for that URL.
         /// </summary>
-        public IEnumerable<string> Cookie
+        public IEnumerable<INancyCookie> Cookie
         {
-            get { return this.GetValue("Cookie"); }
+            get { return this.GetValue("Cookie", GetNancyCookies); }
         }
 
         /// <summary>
@@ -185,24 +187,19 @@ namespace Nancy
         {
             get
             {
-                name = GetActualHeaderName(name);
-
-                return (name != null) ?
+                return (this.headers.ContainsKey(name)) ?
                     this.headers[name] :
                     Enumerable.Empty<string>();
             }
         }
 
-        private string GetActualHeaderName(string name)
-        {
-            return this.headers.Keys.SingleOrDefault(x => x.Equals(name, StringComparison.OrdinalIgnoreCase));
-        }
-
         private static object GetDefaultValue(Type T)
         {
-            if (T.Equals(typeof(IEnumerable<string>)))
+            if (IsGenericEnumerable(T))
             {
-                return Enumerable.Empty<string>();
+                var enumerableType = T.GetGenericArguments().First();
+                var x = typeof(List<>).MakeGenericType(new[] { enumerableType });
+                return Activator.CreateInstance(x);
             }
 
             if (T.Equals(typeof(DateTime)))
@@ -215,6 +212,18 @@ namespace Nancy
                 null;
         }
 
+        private static IEnumerable<INancyCookie> GetNancyCookies(IEnumerable<string> cookies)
+        {
+            if(cookies == null)
+            {
+                return Enumerable.Empty<INancyCookie>();
+            }
+
+            return from cookie in cookies
+                   let pair = cookie.Split('=')
+                   select new NancyCookie(pair[0], pair[1]);
+        }
+
         private IEnumerable<string> GetValue(string name)
         {
             return this.GetValue(name, x => x);
@@ -222,14 +231,17 @@ namespace Nancy
 
         private T GetValue<T>(string name, Func<IEnumerable<string>, T> converter)
         {
-            var actualHeaderName = GetActualHeaderName(name);
-
-            if (actualHeaderName == null)
+            if (!this.headers.ContainsKey(name))
             {
                 return (T)(GetDefaultValue(typeof(T)) ?? default(T));
             }
 
-            return converter.Invoke(this.headers[actualHeaderName]);
+            return converter.Invoke(this.headers[name]);
+        }
+
+        private static bool IsGenericEnumerable(Type T)
+        {
+            return !(T.Equals(typeof(string))) && T.IsGenericType && T.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>));
         }
 
         private static DateTime ParseDateTime(string value)
