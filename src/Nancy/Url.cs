@@ -8,6 +8,20 @@ namespace Nancy
     public class Url
     {
         /// <summary>
+        /// Represents a URL made up of component parts
+        /// </summary>
+        public Url()
+        {
+            this.Scheme = "http";
+            this.HostName = String.Empty;
+            this.Port = null;
+            this.BasePath = String.Empty;
+            this.Path = String.Empty;
+            this.Query = String.Empty;
+            this.Fragment = String.Empty;
+        }
+
+        /// <summary>
         /// Gets or sets the HTTP protocol used by the client.
         /// </summary>
         /// <value>The protocol.</value>
@@ -43,19 +57,5 @@ namespace Nancy
         /// Gets the fragment of the request
         /// </summary>
         public string Fragment { get; set; }
-
-        /// <summary>
-        /// Represents a URL made up of component parts
-        /// </summary>
-        public Url()
-        {
-            this.Scheme = "http";
-            this.HostName = String.Empty;
-            this.Port = null;
-            this.BasePath = String.Empty;
-            this.Path = String.Empty;
-            this.Query = String.Empty;
-            this.Fragment = String.Empty;
-        }
     }
 }
