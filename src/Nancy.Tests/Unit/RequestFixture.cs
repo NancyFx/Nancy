@@ -58,14 +58,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_argumentnullexception_when_initialized_with_null_method()
+        public void Should_throw_argumentoutofrangeexception_when_initialized_with_null_method()
         {
             // Given, When
             var exception =
                 Record.Exception(() => new Request(null, "/", "http"));
 
             // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
+            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -80,14 +80,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_argumentnullexception_when_initialized_with_null_uri()
+        public void Should_throw_argumentoutofrangeexception_when_initialized_with_null_uri()
         {
             // Given, When
             var exception =
                 Record.Exception(() => new Request("GET", null, "http"));
 
             // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
+            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
