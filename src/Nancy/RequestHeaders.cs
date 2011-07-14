@@ -26,6 +26,7 @@ namespace Nancy
         /// <summary>
         /// Content-types that are acceptable.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> Accept
         {
             get { return this.GetValue("Accept"); }
@@ -34,6 +35,7 @@ namespace Nancy
         /// <summary>
         /// Character sets that are acceptable.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptCharset
         {
             get { return this.GetValue("Accept-Charset"); }
@@ -42,6 +44,7 @@ namespace Nancy
         /// <summary>
         /// Acceptable encodings.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptEncoding
         {
             get { return this.GetValue("Accept-Encoding"); }
@@ -50,6 +53,7 @@ namespace Nancy
         /// <summary>
         /// Acceptable languages for response.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptLanguage
         {
             get { return this.GetValue("Accept-Language"); }
@@ -58,6 +62,7 @@ namespace Nancy
         /// <summary>
         /// Acceptable languages for response.
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Authorization
         {
             get { return this.GetValue("Authorization", x => x.First()); }
@@ -66,6 +71,7 @@ namespace Nancy
         /// <summary>
         /// Used to specify directives that MUST be obeyed by all caching mechanisms along the request/response chain.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> CacheControl
         {
             get { return this.GetValue("Cache-Control"); }
@@ -74,6 +80,7 @@ namespace Nancy
         /// <summary>
         /// Contains name/value pairs of information stored for that URL.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains <see cref="INancyCookie"/> instances if they are available; otherwise it will be empty.</value>
         public IEnumerable<INancyCookie> Cookie
         {
             get { return this.GetValue("Cookie", GetNancyCookies); }
@@ -82,6 +89,7 @@ namespace Nancy
         /// <summary>
         /// What type of connection the user-agent would prefer.
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Connection
         {
             get { return this.GetValue("Connection", x => x.First()); }
@@ -90,6 +98,7 @@ namespace Nancy
         /// <summary>
         /// The length of the request body in octets (8-bit bytes).
         /// </summary>
+        /// <value>The lenght of the contents if it is available; otherwise 0.</value>
         public long ContentLength
         {
             get { return this.GetValue("Content-Length", x => Convert.ToInt64(x.First())); }
@@ -98,6 +107,7 @@ namespace Nancy
         /// <summary>
         /// The mime type of the body of the request (used with POST and PUT requests).
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string ContentType
         {
             get { return this.GetValue("Content-Type", x => x.First()); }
@@ -106,6 +116,7 @@ namespace Nancy
         /// <summary>
         /// The date and time that the message was sent.
         /// </summary>
+        /// <value>A <see cref="DateTime"/> instance that specifies when the message was sent. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime Date
         {
             get { return this.GetValue("Date", x => ParseDateTime(x.First())); }
@@ -114,6 +125,7 @@ namespace Nancy
         /// <summary>
         /// The domain name of the server (for virtual hosting), mandatory since HTTP/1.1
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Host
         {
             get { return this.GetValue("Host", x => x.First()); }
@@ -122,6 +134,7 @@ namespace Nancy
         /// <summary>
         /// Only perform the action if the client supplied entity matches the same entity on the server. This is mainly for methods like PUT to only update a resource if it has not been modified since the user last updated it.
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> IfMatch
         {
             get { return this.GetValue("If-Match"); }
@@ -130,6 +143,7 @@ namespace Nancy
         /// <summary>
         /// Allows a 304 Not Modified to be returned if content is unchanged
         /// </summary>
+        /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource must have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime IfModifiedSince
         {
             get { return this.GetValue("If-Modified-Since", x => ParseDateTime(x.First())); }
@@ -138,6 +152,7 @@ namespace Nancy
         /// <summary>
         /// Allows a 304 Not Modified to be returned if content is unchanged
         /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> IfNoneMatch
         {
             get { return this.GetValue("If-None-Match"); }
@@ -146,6 +161,7 @@ namespace Nancy
         /// <summary>
         /// If the entity is unchanged, send me the part(s) that I am missing; otherwise, send me the entire new entity.
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string IfRange
         {
             get { return this.GetValue("If-Range", x => x.First()); }
@@ -154,6 +170,7 @@ namespace Nancy
         /// <summary>
         /// Only send the response if the entity has not been modified since a specific time.
         /// </summary>
+        /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource may not have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime IfUnmodifiedSince
         {
             get { return this.GetValue("If-Unmodified-Since", x => ParseDateTime(x.First())); }
@@ -162,6 +179,7 @@ namespace Nancy
         /// <summary>
         /// Limit the number of times the message can be forwarded through proxies or gateways.
         /// </summary>
+        /// <value>The number of the maximum allowed number of forwards if it is available; otherwise 0.</value>
         public int MaxForwards
         {
             get { return this.GetValue("Max-Forwards", x => Convert.ToInt32(x.First())); }
@@ -170,6 +188,7 @@ namespace Nancy
         /// <summary>
         /// This is the address of the previous web page from which a link to the currently requested page was followed.
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Referrer
         {
             get { return this.GetValue("Referer", x => x.First()); }
@@ -178,11 +197,17 @@ namespace Nancy
         /// <summary>
         /// The user agent string of the user agent
         /// </summary>
+        /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string UserAgent
         {
             get { return this.GetValue("User-Agent", x => x.First()); }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public IEnumerable<string> this[string name]
         {
             get
