@@ -102,31 +102,6 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_argumentnullexception_when_initialized_with_null_headers()
-        {
-            // Given
-            var stream = CreateRequestStream();
-
-            // When
-            var exception =
-                Record.Exception(() => new Request("GET", "/", null, stream, "http"));
-
-            // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
-        public void Should_throw_argumentnullexception_when_initialized_with_null_body()
-        {
-            // Given, When
-            var exception =
-                Record.Exception(() => new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), null, "http"));
-
-            // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
-        }
-
-        [Fact]
         public void Should_set_method_parameter_value_to_method_property_when_initialized()
         {
             // Given
@@ -143,13 +118,13 @@ namespace Nancy.Tests.Unit
         public void Should_set_uri_parameter_value_to_uri_property_when_initialized()
         {
             // Given
-            const string uri = "/";
+            const string path = "/";
             
             // When
-            var request = new Request("GET", uri, "http");
+            var request = new Request("GET", path, "http");
 
             // Then
-            request.Uri.ShouldEqual(uri);
+            request.Path.ShouldEqual(path);
         }
 
         [Fact]
@@ -407,7 +382,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", "/", protocol);
 
             // Then
-            request.Protocol.ShouldEqual(protocol);
+            request.Url.Scheme.ShouldEqual(protocol);
         }
 
         private static RequestStream CreateRequestStream()

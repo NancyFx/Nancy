@@ -104,7 +104,7 @@
                 x.AddGetRoute("/foo/{bar}", this.expectedAction);
             });
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
             // When
@@ -126,10 +126,10 @@
                 x.AddGetRoute("/foo/{bar}", "module-key-one-parameter");
             });
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}/{foo}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{foo}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("foo", "fake value")
                     .AddParameter("bar", "fake value 2")));
@@ -157,13 +157,13 @@
                 x.AddGetRoute("/{foo}/{bar}", "module-key-two-parameters");
             });
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/bar")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("foo", "fake value")
                     .AddParameter("bar", "fake value")));
@@ -192,15 +192,15 @@
 
             this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/bar/{two}", this.expectedAction));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/bar/{two}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar/{two}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("two", "fake values")));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}/{two}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{two}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("bar", "fake values")
                     .AddParameter("two", "fake values")));
 
-            A.CallTo(() => this.matcher.Match(request.Uri, "/foo/{bar}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
             // When
@@ -221,9 +221,9 @@
                 x.AddGetRoute("/", "module-key-first");
                 x.AddGetRoute("/{name}", "module-key-second");
             });
-            A.CallTo(() => this.matcher.Match(request.Uri, "/")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
-            A.CallTo(() => this.matcher.Match(request.Uri, "/{name}")).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/{name}")).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("name", "fake values")));
 
             // When
@@ -249,7 +249,7 @@
             this.resolver.Resolve(context, routeCache);
 
             // Then
-            A.CallTo(() => this.matcher.Match(request.Uri, A<string>.Ignored)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(request.Path, A<string>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -313,7 +313,7 @@
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<MethodNotAllowedRoute>();
-            route.Description.Path.ShouldEqual(request.Uri);
+            route.Description.Path.ShouldEqual(request.Path);
         }
 
         [Fact]
@@ -389,7 +389,7 @@
 
             // Then
             resolvedRoute.ShouldNotBeOfType<NotFoundRoute>();
-            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Path);
         }
 
         [Fact]
@@ -406,7 +406,7 @@
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Path);
         }
 
         [Fact]
@@ -429,7 +429,7 @@
 
             // Then
             resolvedRoute.ShouldBeOfType<NotFoundRoute>();
-            resolvedRoute.Description.Path.ShouldEqual(request.Uri);
+            resolvedRoute.Description.Path.ShouldEqual(request.Path);
         }
 
         [Fact]

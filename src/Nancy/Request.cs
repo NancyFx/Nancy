@@ -23,10 +23,10 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="uri">The absolute path of the requested resource. This shold not not include the scheme, host name, or query portion of the URI.</param>
-        /// <param name="protocol">The HTTP protocol that was used by the client.</param>
-        public Request(string method, string uri, string protocol)
-            : this(method, uri, new Dictionary<string, IEnumerable<string>>(), RequestStream.FromStream(new MemoryStream()), protocol)
+        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This shold not not include the scheme, host name, or query portion of the URI.</param>
+        /// <param name="scheme">The HTTP protocol that was used by the client.</param>
+        public Request(string method, string path, string scheme) 
+            : this(method, new Url { Path = path, Scheme = scheme })
         {
         }
 
@@ -34,47 +34,87 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="uri">The absolute path of the requested resource. This shold not not include the scheme, host name, or query portion of the URI</param>
+        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This shold not not include the scheme, host name, or query portion of the URI.</param>
         /// <param name="headers">The headers that was passed in by the client.</param>
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
-        /// <param name="protocol">The HTTP protocol that was used by the client.</param>
+        /// <param name="scheme">The HTTP scheme that was used by the client.</param>
         /// <param name="query">The querystring data that was sent by the client.</param>
-        public Request(string method, string uri, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string protocol, string query = "")
+        public Request(string method, string path, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string scheme, string query = null)
+            : this(method, new Url { Path=path, Scheme = scheme, Query = query ?? String.Empty}, body, headers)
         {
-            if (method == null)
-                throw new ArgumentNullException("method", "The value of the method parameter cannot be null.");
+        }
+
+        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null)
+        {
+            if (String.IsNullOrEmpty(method))
+            {
+                throw new ArgumentOutOfRangeException("method");
+            }
+
+            if (url == null)
+            {
+                throw new ArgumentNullException("url");
+            }
+
+            if (String.IsNullOrEmpty(url.Path))
+            {
+                throw new ArgumentOutOfRangeException("url.Path");
+            }
+
+            if (url.Scheme == null)
+            {
+                throw new ArgumentNullException("url.Scheme");
+            }
             
-            if (method.Length == 0)
-                throw new ArgumentOutOfRangeException("method", method, "The value of the method parameter cannot be empty.");
+            if (String.IsNullOrEmpty(url.Scheme))
+            {
+                throw new ArgumentOutOfRangeException("url.Scheme");
+            }
 
-            if (uri == null)
-                throw new ArgumentNullException("uri", "The value of the uri parameter cannot be null.");
+            this.Url = url;
 
-            if (uri.Length == 0)
-                throw new ArgumentOutOfRangeException("uri", uri, "The value of the uri parameter cannot be empty.");
-
-            if (headers == null)
-                throw new ArgumentNullException("headers", "The value of the headers parameter cannot be null.");
-
-            if (body == null)
-                throw new ArgumentNullException("body", "The value of the body parameter cannot be null.");
-
-            if (protocol == null)
-                throw new ArgumentNullException("protocol", "The value of the protocol parameter cannot be null.");
-
-            if (protocol.Length == 0)
-                throw new ArgumentOutOfRangeException("protocol", protocol, "The value of the protocol parameter cannot be empty.");
-
-            this.Body = body;
-            this.Headers = new RequestHeaders(headers);
             this.Method = method;
-            this.Uri = uri;
-            this.Protocol = protocol;
-            this.Query = query.AsQueryDictionary();
+
+            this.Query = url.Query.AsQueryDictionary();
+
+            this.Body = body ?? RequestStream.FromStream(new MemoryStream());
+
+            this.Headers = new RequestHeaders(headers ?? new Dictionary<string, IEnumerable<string>>());
+
             this.Session = new NullSessionProvider();
+
             this.ParseFormData();
             this.RewriteMethod();
         }
+
+        /// <summary>
+        /// Gets or sets the HTTP data transfer method used by the client.
+        /// </summary>
+        /// <value>The method.</value>
+        public string Method { get; private set; }
+
+        /// <summary>
+        /// Gets the url
+        /// </summary>
+        public Url Url { get; private set; } 
+
+        /// <summary>
+        /// Gets the request path, relative to the base path.
+        /// Used for route matching etc.
+        /// </summary>
+        public string Path
+        {
+            get
+            {
+                return this.Url.Path;
+            }
+        }
+
+        /// <summary>
+        /// Gets the querystring data of the requested resource.
+        /// </summary>
+        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of querystring data.</value>
+        public dynamic Query { get; set; }
 
         /// <summary>
         /// Gets a <see cref="RequestStream"/> that can be used to read the incoming HTTP body
@@ -103,7 +143,7 @@ namespace Nancy
         {
             var cookieDictionary = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
 
-            if(!this.Headers.Cookie.Any())
+            if (!this.Headers.Cookie.Any())
             {
                 return cookieDictionary;
             }
@@ -139,34 +179,9 @@ namespace Nancy
         /// <summary>
         /// Gets the HTTP headers sent by the client.
         /// </summary>
-        /// <value>An <see cref=""/> containing the name and values of the headers.</value>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the name and values of the headers.</value>
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
         public RequestHeaders Headers { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the HTTP data transfer method used by the client.
-        /// </summary>
-        /// <value>The method.</value>
-        public string Method { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the HTTP protocol used by the client.
-        /// </summary>
-        /// <value>The protocol.</value>
-        public string Protocol { get; private set; }
-
-        /// <summary>
-        /// Gets the querystring data of the requested resource.
-        /// </summary>
-        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of querystring data.</value>
-        public dynamic Query { get; private set; }
-
-        /// <summary>
-        /// Gets the absolute path of the requested resource. 
-        /// </summary>
-        /// <value>A <see cref="string"/> containing the absolute path of the requested resource.</value>
-        /// <remarks>This does not include the scheme, host name, or query portion of the URI.</remarks>
-        public string Uri { get; private set; }
 
         private void ParseFormData()
         {

@@ -34,7 +34,7 @@ namespace Nancy.Demo.Authentication
                 // forward the user to the login page
                 if (ctx.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    ctx.Response = new RedirectResponse("/login?returnUrl=" + Uri.EscapeDataString(ctx.Request.Uri));
+                    ctx.Response = new RedirectResponse("/login?returnUrl=" + Uri.EscapeDataString(ctx.Request.Path));
                 }
             };
         }

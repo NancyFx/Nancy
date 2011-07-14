@@ -38,14 +38,14 @@
         {
             if (routeCache.IsEmpty())
             {
-                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty, null, null);
+                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null);
             }
 
             var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, context);
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
-                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Uri), DynamicDictionary.Empty, null, null);
+                return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null);
             }
 
             var routesWithCorrectRequestMethod =
@@ -54,7 +54,7 @@
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
                 var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
-                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Uri, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
+                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
             }
 
             var exactMatch = GetRouteMatchesWithExactPathMatch(routesWithCorrectRequestMethod).FirstOrDefault();
@@ -148,7 +148,7 @@
                    let routeIndex = cacheEntryRoutes.Item1
                    let routeDescription = cacheEntryRoutes.Item2
                    where ((routeDescription.Condition == null) || (routeDescription.Condition(context)))
-                   let result = this.routePatternMatcher.Match(context.Request.Uri, routeDescription.Path)
+                   let result = this.routePatternMatcher.Match(context.Request.Path, routeDescription.Path)
                    where result.IsMatch
                    select new RouteCandidate(cacheEntry.Key, routeIndex, routeDescription, result);
         }
