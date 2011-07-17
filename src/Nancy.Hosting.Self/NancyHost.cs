@@ -21,26 +21,31 @@
     /// </remarks>
     public class NancyHost  
     {
-        private readonly Uri baseUri;
+        private readonly IList<Uri> baseUriList;
         private readonly HttpListener listener;
         private readonly INancyEngine engine;
         private Thread thread;
         private bool shouldContinue;
 
-        public NancyHost(Uri baseUri)
-            : this(baseUri, NancyBootstrapperLocator.Bootstrapper)
-        {
-        }
+        public NancyHost(params Uri[] baseUris)
+            : this(NancyBootstrapperLocator.Bootstrapper, baseUris){}
 
-        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper)
+        public NancyHost(INancyBootstrapper bootStrapper, params Uri[] baseUris)
         {
-            this.baseUri = baseUri;
+            baseUriList = baseUris;
             listener = new HttpListener();
-            listener.Prefixes.Add(baseUri.ToString());
+
+            foreach (var baseUri in baseUriList)
+            {
+                listener.Prefixes.Add(baseUri.ToString());
+            }
 
             bootStrapper.Initialise();
             engine = bootStrapper.GetEngine();
         }
+
+        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper) : this (bootStrapper, baseUri) {}
+
 
         public void Start()
         {
@@ -99,7 +104,9 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = 
+            var baseUri = baseUriList.Where(uri => uri.Host == request.Url.Host).First();
+
+            var relativeUrl =
                 GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
 
             var expectedRequestLength =
