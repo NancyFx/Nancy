@@ -28,22 +28,8 @@
         public string Method { get; set; }
 
         /// <summary>
-        /// Gets or sets the HTTP protocol used by the client.
+        /// Nancy url for the request
         /// </summary>
-        /// <value>The protocol.</value>
-        public string Protocol { get; set; }
-
-        /// <summary>
-        /// Gets the querystring data of the requested resource.
-        /// </summary>
-        /// <value>A <see cref="DynamicDictionary"/>instance, containing the key/value pairs of querystring data.</value>
-        public string Query { get; set; }
-
-        /// <summary>
-        /// Gets the absolute path of the requested resource. 
-        /// </summary>
-        /// <value>A <see cref="string"/> containing the absolute path of the requested resource.</value>
-        /// <remarks>This does not include the scheme, host name, or query portion of the URI.</remarks>
-        public string Uri { get; set; }
+        public Url Url { get; set; }
     }
 }
