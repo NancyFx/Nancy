@@ -66,7 +66,10 @@
             var memoryViewMap = new InMemoryViewFolder();
             foreach (var viewLocationResult in viewLocationResults)
             {
-                memoryViewMap.Add(viewLocationResult.Location, viewLocationResult.Contents.Invoke().ReadToEnd());
+                var key =
+                    string.Concat(viewLocationResult.Location, "/", viewLocationResult.Name);
+
+                memoryViewMap.Add(key, viewLocationResult.Contents.Invoke().ReadToEnd());
             }
             return memoryViewMap;
         }

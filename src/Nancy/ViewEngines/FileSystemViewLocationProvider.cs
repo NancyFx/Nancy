@@ -31,10 +31,22 @@
             return
                 from match in GetViewsWithSupportedExtensions(supportedViewExtensions)
                 select new ViewLocationResult(
-                    match.Replace(this.rootPathProvider.GetRootPath(), string.Empty).TrimStart(new[] { Path.DirectorySeparatorChar }),
+                    GetViewLocation(match, this.rootPathProvider),
                     Path.GetFileNameWithoutExtension(match),
                     Path.GetExtension(match).Substring(1),
                     () => new StreamReader(new FileStream(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+        }
+
+        private static string GetViewLocation(string match, IRootPathProvider rootPathProvider)
+        {
+            var location = match
+                .Replace(rootPathProvider.GetRootPath(), string.Empty)
+                .TrimStart(new[] { Path.DirectorySeparatorChar })
+                .Replace(@"\", "/")
+                .Replace(Path.GetFileName(match), string.Empty)
+                .TrimEnd(new [] { '/' });
+
+            return location;
         }
 
         private IEnumerable<string> GetViewsWithSupportedExtensions(IEnumerable<string> supportedViewExtensions)

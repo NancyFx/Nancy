@@ -1,133 +1,158 @@
-﻿namespace Nancy.ViewEngines
-{
-    using System;
-    using System.Collections.Generic;
-    using System.IO;
-    using System.Linq;
-    using Nancy.Bootstrapper;
+﻿//namespace Nancy.ViewEngines
+//{
+//    using System;
+//    using System.Collections.Generic;
+//    using System.IO;
+//    using System.Linq;
+//    using System.Reflection;
 
-    /// <summary>
-    /// Contains the functionality for locating a view that has been embedded into an assembly resource.
-    /// </summary>
-    public class ResourceViewLocationProviders : IViewLocationProvider
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ResourceViewLocationProviders"/> class.
-        /// </summary>
-        public ResourceViewLocationProviders()
-        {
-        }
+//    using Nancy.Bootstrapper;
 
-        /// <summary>
-        /// Returns an <see cref="ViewLocationResult"/> instance for all the views that could be located by the provider.
-        /// </summary>
-        /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
-        /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
-        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions)
-        {
-            if (supportedViewExtensions == null)
-            {
-                return null;
-            }
+//    /// <summary>
+//    /// Contains the functionality for locating a view that has been embedded into an assembly resource.
+//    /// </summary>
+//    public class ResourceViewLocationProviders : IViewLocationProvider
+//    {
+//        /// <summary>
+//        /// Initializes a new instance of the <see cref="ResourceViewLocationProviders"/> class.
+//        /// </summary>
+//        public ResourceViewLocationProviders()
+//        {
+//        }
 
-            var resourceStreamMatches =
-                GetResourceStreamMatches(supportedViewExtensions);
+//        /// <summary>
+//        /// Returns an <see cref="ViewLocationResult"/> instance for all the views that could be located by the provider.
+//        /// </summary>
+//        /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+//        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
+//        /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
+//        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions)
+//        {
+//            if (supportedViewExtensions == null)
+//            {
+//                return null;
+//            }
 
-            return !resourceStreamMatches.Any() ?
-                Enumerable.Empty<ViewLocationResult>() :
-                GetViewLocationsWithQualifiedLocations(resourceStreamMatches);
-        }
+//            var excludedAssemblies = new List<Func<Assembly, bool>>()
+//            {
+//                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
+//                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
+//            };
 
-        private static IEnumerable<ViewLocationResult> GetViewLocationsWithQualifiedLocations(IEnumerable<Tuple<string, Stream>> resources)
-        {
-            var commonResourceNamespace =
-                ExtractCommonResourceNamespace(resources.Select(x => x.Item1));
+//            var resourceStreamMatches = AppDomainAssemblyTypeScanner.Assemblies
+//                .Where(x => !excludedAssemblies.Any(asm => asm.Invoke(x)))
+//                .SelectMany(x => GetViewLocations(
+//                    ExtractAssemblyCommonNamespace(x),
+//                    GetResourceStreamMatches(x, supportedViewExtensions)));
 
-            return
-                from resource in resources
-                let resourceFileName = GetResourceFileName(resource.Item1)
-                select new ViewLocationResult(
-                    GetEncodedResouceName(commonResourceNamespace, resource.Item1, resourceFileName),
-                    resourceFileName,
-                    GetResourceNameExtension(resource.Item1),
-                    () => new StreamReader(resource.Item2));
-        }
+//            return resourceStreamMatches;
+//        }
 
-        private static string GetEncodedResouceName(string commonResourceNamespace, string location, string viewName)
-        {
-            if (commonResourceNamespace.Equals(viewName, StringComparison.OrdinalIgnoreCase))
-            {
-                return viewName;
-            }
+//        private static IEnumerable<ViewLocationResult> GetViewLocations(string commonNameSpace, IList<Tuple<string, Stream>> resources)
+//        {
+//            return
+//                from resource in resources
+//                let resourceFileName = GetResourceFileName(resource.Item1)
+//                where !resourceFileName.Equals(string.Empty)
+//                select new ViewLocationResult(
+//                    GetEncodedResouceName(commonNameSpace, resource.Item1, resourceFileName),
+//                    resourceFileName,
+//                    GetSafeResourceExtension(resource.Item1),
+//                    () => new StreamReader(resource.Item2));
+//        }
 
-            var locationWithoutViewName =
-                location.Replace(viewName, string.Empty);
+//        private static string GetEncodedResouceName(string commonNamespace, string location, string viewName)
+//        {
+//            if (commonNamespace.Equals(viewName, StringComparison.OrdinalIgnoreCase))
+//            {
+//                return viewName;
+//            }
 
-            var commonResourceNamespaceWithoutViewName =
-                commonResourceNamespace.Replace(viewName, string.Empty);
+//            var locationWithoutViewName =
+//                location.Replace(viewName, string.Empty);
 
-            var encodedLocation = locationWithoutViewName
-                .Replace(commonResourceNamespaceWithoutViewName, string.Empty)
-                .TrimEnd(new[] { '.' })
-                .Replace(".", @"\");
+//            var commonResourceNamespaceWithoutViewName =
+//                commonNamespace.Replace(viewName, string.Empty);
 
-            if (encodedLocation.Length != 0)
-            {
-                encodedLocation = string.Concat(encodedLocation, @"\");
-            }
+//            var encodedLocation = locationWithoutViewName
+//                .Replace(commonResourceNamespaceWithoutViewName, string.Empty)
+//                .TrimEnd(new[] { '.' })
+//                .Replace(".", "/");
 
-            return string.Concat(encodedLocation, viewName);
-        }
+//            if (encodedLocation.Length != 0)
+//            {
+//                encodedLocation = string.Concat(encodedLocation, @"\");
+//            }
 
-        private static string ExtractCommonResourceNamespace(IEnumerable<string> resources)
-        {
-            if (resources.Count() == 1)
-            {
-                return resources.First();
-            }
+//            return string.Concat(encodedLocation, viewName);
+//        }
 
-            var commonPathSegments = resources.Select(s => new { parts = s.Split('.') })
-                .Aggregate((previous, current) => new { parts = current.parts.TakeWhile((step, index) => step == previous.parts.ElementAtOrDefault(index)).ToArray() });
+//        private static string ExtractCommonResourceNamespace(IList<string> resources)
+//        {
+//            if (resources.Count() == 1)
+//            {
+//                var resource = resources.First();
 
-            var commonResourceNamespace =
-                string.Join(".", commonPathSegments.parts) + ".";
+//                return resource
+//                    .Replace(GetResourceFileName(resource), string.Empty)
+//                    .TrimEnd(new [] { '.' });
+//            }
 
-            return commonResourceNamespace;
-        }
+//            var commonPathSegments = resources.Select(s => new { parts = s.Split('.') })
+//                .Aggregate((previous, current) => new { parts = current.parts.TakeWhile((step, index) => step == previous.parts.ElementAtOrDefault(index)).ToArray() });
 
-        private static string GetResourceFileName(string resourceName)
-        {
-            var nameSegments =
-                resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+//            var commonResourceNamespace =
+//                string.Join(".", commonPathSegments.parts);
 
-            var segmentCount =
-                nameSegments.Count();
+//            return commonResourceNamespace;
+//        }
 
-            return (segmentCount < 2) ?
-                string.Empty :
-                nameSegments.ElementAt(segmentCount - 2);
-        }
+//        private static string GetResourceFileName(string resourceName)
+//        {
+//            var nameSegments =
+//                resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
 
-        private static string GetResourceNameExtension(string resourceName)
-        {
-            var extension =
-                Path.GetExtension(resourceName);
+//            var segmentCount =
+//                nameSegments.Count();
 
-            return string.IsNullOrEmpty(extension) ? string.Empty : extension.TrimStart('.');
-        }
+//            return (segmentCount < 2) ?
+//                string.Empty :
+//                string.Concat(nameSegments[segmentCount - 2], ".", nameSegments[segmentCount - 1]);
+//        }
 
-        private static IEnumerable<Tuple<string, Stream>> GetResourceStreamMatches(IEnumerable<string> supportedViewEngineExtensions)
-        {
-            var resourceStreams =
-                from assembly in AppDomainAssemblyTypeScanner.Assemblies
-                where !assembly.FullName.StartsWith(@"System.")
-                from resourceName in assembly.GetManifestResourceNames()
-                from viewEngineExtension in supportedViewEngineExtensions
-                where resourceName.EndsWith(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
-                select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
+//        private static string GetSafeResourceExtension(string resourceName)
+//        {
+//            var extension =
+//                Path.GetExtension(resourceName);
 
-            return resourceStreams.ToList();
-        }
-    }
-}
+//            return string.IsNullOrEmpty(extension) ? string.Empty : extension.TrimStart('.');
+//        }
+
+//        private static string ExtractAssemblyCommonNamespace(Assembly assembly)
+//        {
+//            var resources = assembly
+//                .GetTypes()
+//                .Where(x => !x.IsAnonymousType())
+//                .Select(x => string.Concat(x.Namespace, ".", x.Name))
+//                .ToList();
+
+//            return ExtractCommonResourceNamespace(resources);
+//        }
+
+//        private static IList<Tuple<string, Stream>> GetResourceStreamMatches(Assembly assembly, IEnumerable<string> supportedViewEngineExtensions)
+//        {
+//            var resourceStreams =
+//                from resourceName in assembly.GetManifestResourceNames()
+//                from viewEngineExtension in supportedViewEngineExtensions
+//                where resourceName.EndsWith(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
+//                select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
+
+//            return resourceStreams.ToList();
+//        }
+//    }
+//}

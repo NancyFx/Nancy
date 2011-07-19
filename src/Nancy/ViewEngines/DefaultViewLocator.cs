@@ -29,29 +29,44 @@
                 return null;
             }
 
-            var viewsThatMatchesCritera = this.viewLocationCache.Where(
-                x => x.Name.Equals(Path.GetFileNameWithoutExtension(viewName), StringComparison.OrdinalIgnoreCase));
+            var viewThatMatchCriteria = this.viewLocationCache
+                .Where(x => NameMatchesView(viewName, x))
+                .Where(x => ExtensionMatchesView(viewName, x))
+                .Where(x => LocationMatchesView(viewName, x))
+                .ToList();
 
-            viewsThatMatchesCritera = GetViewsThatMatchesViewExtension(viewName, viewsThatMatchesCritera);
-
-            if (viewsThatMatchesCritera.Count() > 1)
+            if (viewThatMatchCriteria.Count() > 1)
             {
                 throw new AmbiguousViewsException();
             }
 
-            return viewsThatMatchesCritera.FirstOrDefault();
+            return viewThatMatchCriteria.SingleOrDefault();
         }
 
-        private static IEnumerable<ViewLocationResult> GetViewsThatMatchesViewExtension(string viewName, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
+        private static bool ExtensionMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var viewExtension = Path.GetExtension(viewName);
+            var extension = Path.GetExtension(viewName);
 
-            if (!string.IsNullOrEmpty(viewExtension))
-            {
-                viewsThatMatchesCritera = viewsThatMatchesCritera.Where(x => x.Extension.Equals(viewExtension.Substring(1), StringComparison.OrdinalIgnoreCase));    
-            }
+            return string.IsNullOrEmpty(extension) ||
+                viewLocationResult.Extension.Equals(extension.Substring(1), StringComparison.OrdinalIgnoreCase);
+        }
 
-            return viewsThatMatchesCritera;
+        private static bool LocationMatchesView(string viewName, ViewLocationResult viewLocationResult)
+        {
+            var location = viewName
+                .Replace(Path.GetFileName(viewName), string.Empty)
+                .TrimEnd(new [] { '/' });
+
+            return string.IsNullOrEmpty(location) ||
+                viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool NameMatchesView(string viewName, ViewLocationResult viewLocationResult)
+        {
+            var name = Path.GetFileNameWithoutExtension(viewName);
+
+            return (!string.IsNullOrEmpty(name)) &&
+                viewLocationResult.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }
