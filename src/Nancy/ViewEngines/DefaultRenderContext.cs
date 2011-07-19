@@ -23,6 +23,17 @@
         }
 
         /// <summary>
+        /// Parses a path and returns an absolute url path, taking into account
+        /// base directory etc.
+        /// </summary>
+        /// <param name="input">Input url such as ~/styles/main.css</param>
+        /// <returns>Parsed absolut url path</returns>
+        public string ParsePath(string input)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        /// <summary>
         /// HTML encodes a string.
         /// </summary>
         /// <param name="input">The string that should be HTML encoded.</param>
