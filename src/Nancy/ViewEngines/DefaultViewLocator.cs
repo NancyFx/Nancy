@@ -57,8 +57,7 @@
                 .Replace(Path.GetFileName(viewName), string.Empty)
                 .TrimEnd(new [] { '/' });
 
-            return string.IsNullOrEmpty(location) ||
-                viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
+            return viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool NameMatchesView(string viewName, ViewLocationResult viewLocationResult)

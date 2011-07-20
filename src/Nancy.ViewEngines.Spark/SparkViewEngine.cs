@@ -73,14 +73,19 @@
 
         private static string GetViewFolderKey(ViewLocationResult viewLocationResult)
         {
-            return string.Concat(viewLocationResult.Location, Path.DirectorySeparatorChar, viewLocationResult.Name, ".", viewLocationResult.Extension);
+            return string.Concat(GetNamespaceEncodedPathViewPath(viewLocationResult.Location), Path.DirectorySeparatorChar, viewLocationResult.Name, ".", viewLocationResult.Extension);
         }
 
         private SparkViewEngineResult LocateView(string viewPath, string viewName, ViewLocationResult viewLocationResult, IRenderContext renderContext)
         {
             var searchedLocations = new List<string>();
 
-            var descriptorParams = new BuildDescriptorParams(viewPath, viewName, null, true, null);
+            var descriptorParams = new BuildDescriptorParams(
+                GetNamespaceEncodedPathViewPath(viewPath),
+                viewName,
+                null,
+                true,
+                null);
 
             var descriptor = this.descriptorBuilder.BuildDescriptor(
                 descriptorParams,
@@ -97,6 +102,11 @@
 
             return new SparkViewEngineResult(
                 entry.CreateInstance() as NancySparkView);
+        }
+
+        private static string GetNamespaceEncodedPathViewPath(string viewPath)
+        {
+            return viewPath.Replace('/', '_');
         }
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)

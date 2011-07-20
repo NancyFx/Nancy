@@ -1,0 +1,10 @@
+﻿<viewdata model="Nancy.Demo.Hosting.Aspnet.Models.RatPack" />
+<html>
+<head>
+    <title>Spark View Engine Demo</title>
+</head>
+<body>
+    <h1>The name's Spark, ${Model.FirstName} Spark</h1>
+    <p>This is the forum sample Spark view!</p>
+</body>
+</html>

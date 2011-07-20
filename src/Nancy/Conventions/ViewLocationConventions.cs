@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using Nancy.ViewEngines;
-
-namespace Nancy.Conventions
+﻿namespace Nancy.Conventions
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using Nancy.ViewEngines;
     /// <summary>
     /// This is a wrapper around the type 
     /// 'IEnumerable<Func<string, object, ViewLocationContext, string>>' and its 
@@ -20,8 +19,14 @@ namespace Nancy.Conventions
             this.conventions = conventions;
         }
 
-        public IEnumerator<Func<string, object, ViewLocationContext, string>> GetEnumerator() { return conventions.GetEnumerator(); }
+        public IEnumerator<Func<string, object, ViewLocationContext, string>> GetEnumerator()
+        {
+            return conventions.GetEnumerator();
+        }
 
-        IEnumerator IEnumerable.GetEnumerator() { return GetEnumerator(); }
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
     }
 }
