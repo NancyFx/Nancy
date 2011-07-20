@@ -46,8 +46,8 @@
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
         {
             var result = this.LocateView(
-                Path.GetDirectoryName(viewLocationResult.Location), 
-                Path.GetFileNameWithoutExtension(viewLocationResult.Name),
+                viewLocationResult.Location, 
+                viewLocationResult.Name,
                 viewLocationResult,
                 renderContext);
 
@@ -66,12 +66,14 @@
             var memoryViewMap = new InMemoryViewFolder();
             foreach (var viewLocationResult in viewLocationResults)
             {
-                var key =
-                    string.Concat(viewLocationResult.Location, "/", viewLocationResult.Name);
-
-                memoryViewMap.Add(key, viewLocationResult.Contents.Invoke().ReadToEnd());
+                memoryViewMap.Add(GetViewFolderKey(viewLocationResult), viewLocationResult.Contents.Invoke().ReadToEnd());
             }
             return memoryViewMap;
+        }
+
+        private static string GetViewFolderKey(ViewLocationResult viewLocationResult)
+        {
+            return string.Concat(viewLocationResult.Location, Path.DirectorySeparatorChar, viewLocationResult.Name, ".", viewLocationResult.Extension);
         }
 
         private SparkViewEngineResult LocateView(string viewPath, string viewName, ViewLocationResult viewLocationResult, IRenderContext renderContext)
