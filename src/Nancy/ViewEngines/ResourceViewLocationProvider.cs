@@ -146,7 +146,7 @@
             var resourceStreams =
                 from resourceName in assembly.GetManifestResourceNames()
                 from viewEngineExtension in supportedViewEngineExtensions
-                where resourceName.EndsWith(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
+                where GetResourceExtension(resourceName).Equals(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
                 select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
 
             return resourceStreams.ToList();
