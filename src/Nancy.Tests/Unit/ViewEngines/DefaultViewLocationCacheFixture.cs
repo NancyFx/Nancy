@@ -16,24 +16,21 @@
             A.CallTo(() => engines[0].Extensions).Returns(new[] { "html" });
             A.CallTo(() => engines[1].Extensions).Returns(new[] { "spark" });
 
-            var providers = new[] { A.Fake<IViewLocationProvider>(), A.Fake<IViewLocationProvider>() };
-            A.CallTo(() => providers[0].GetLocatedViews(A<IEnumerable<string>>.Ignored))
+            var provider = A.Fake<IViewLocationProvider>();
+            A.CallTo(() => provider.GetLocatedViews(A<IEnumerable<string>>.Ignored))
                 .Returns(new[] { new ViewLocationResult(string.Empty, string.Empty, string.Empty, null), new ViewLocationResult(string.Empty, string.Empty, string.Empty, null) });
 
-            A.CallTo(() => providers[1].GetLocatedViews(A<IEnumerable<string>>.Ignored))
-                .Returns(new[] { new ViewLocationResult(string.Empty, string.Empty, string.Empty, null) });
-
-            var cache = CreateViewLocationCache(providers, engines);
+            var cache = CreateViewLocationCache(provider, engines);
 
             // When
             var result = cache.Where(x => true);
 
             // Then
-            result.Count().ShouldEqual(3);
+            result.Count().ShouldEqual(2);
         }
 
         [Fact]
-        public void Should_call_view_location_providers_with_available_extensions_when_created()
+        public void Should_get_located_views_from_view_location_providers_with_available_extensions_when_created()
         {
             // Given
             var viewEngine1 = A.Fake<IViewEngine>();
@@ -47,16 +44,16 @@
 
             // When
             CreateViewLocationCache(
-                new[] { viewLocationProvider },
+                viewLocationProvider,
                 new[] { viewEngine1, viewEngine2 });
 
             // Then
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
-                    x => x.All(y => expectedViewEngineExtensions.Contains(y))))).MustHaveHappened();
+                    x => x.All(expectedViewEngineExtensions.Contains)))).MustHaveHappened();
         }
 
         [Fact]
-        public void Should_call_view_location_providers_with_distinct_available_extensions_when_created()
+        public void Should_get_located_views_from_view_location_provider_with_distinct_available_extensions_when_created()
         {
             // Given
             var viewEngine1 = A.Fake<IViewEngine>();
@@ -70,7 +67,7 @@
 
             // When
             CreateViewLocationCache(
-                new[] { viewLocationProvider },
+                viewLocationProvider,
                 new[] { viewEngine1, viewEngine2 });
 
             // Then
@@ -79,28 +76,26 @@
         }
 
         [Fact]
-        public void Should_call_all_view_location_providers_when_created()
+        public void Should_get_located_views_from_view_location_provider_when_created()
         {
             // Given
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(new[] { "html" });
 
-            var viewLocationProvider1 = A.Fake<IViewLocationProvider>();
-            var viewLocationProvider2 = A.Fake<IViewLocationProvider>();
+            var viewLocationProvider = A.Fake<IViewLocationProvider>();
 
             // When
             CreateViewLocationCache(
-                new[] { viewLocationProvider1, viewLocationProvider2 },
+                viewLocationProvider,
                 new[] { viewEngine });
 
             // Then
-            A.CallTo(() => viewLocationProvider1.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
-            A.CallTo(() => viewLocationProvider2.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
+            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.Ignored)).MustHaveHappened();
         }
 
-        private static DefaultViewLocationCache CreateViewLocationCache(IEnumerable<IViewLocationProvider> viewLocationProviders, IEnumerable<IViewEngine> viewEngines)
+        private static DefaultViewLocationCache CreateViewLocationCache(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
-            return new DefaultViewLocationCache(viewLocationProviders, viewEngines);
+            return new DefaultViewLocationCache(viewLocationProvider, viewEngines);
         }
     }
 }
