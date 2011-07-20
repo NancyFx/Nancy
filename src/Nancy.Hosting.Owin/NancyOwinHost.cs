@@ -1,4 +1,4 @@
-﻿namespace Nancy.Hosting.Owin
+namespace Nancy.Hosting.Owin
 {
     using System;
     using System.Collections.Generic;
@@ -130,28 +130,16 @@
 
         private void InvokeNancy(NancyRequestParameters parameters, ResponseCallBack responseCallBack, Action<Exception> errorCallback)
         {
-            try
-            {
-                parameters.Body.Seek(0, SeekOrigin.Begin);
+            parameters.Body.Seek(0, SeekOrigin.Begin);
 
-                var request = new Request(parameters.Method, parameters.Uri, parameters.Headers, parameters.Body, parameters.Protocol, parameters.Query);
+            var request = new Request(parameters.Method, parameters.Uri, parameters.Headers, parameters.Body, parameters.Protocol, parameters.Query);
 
-                // Execute the nancy async request handler
-                this.engine.HandleRequest(
-                    request,
-                    (result) =>
-                    {
-                        var returnCode = GetReturnCode(result);
-                        var headers = result.Response.Headers;
+            var result = this.engine.HandleRequest(request);
 
-                        responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
-                    },
-                    errorCallback);
-            }
-            catch (Exception e)
-            {
-                errorCallback.Invoke(e);
-            }
+            var returnCode = GetReturnCode(result);
+            var headers = result.Response.Headers;
+
+            responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
         }
 
         private static BodyDelegate GetResponseBodyBuilder(NancyContext result)
