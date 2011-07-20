@@ -30,7 +30,20 @@
         /// <returns>Parsed absolut url path</returns>
         public string ParsePath(string input)
         {
-            throw new System.NotImplementedException();
+            if (string.IsNullOrEmpty(input))
+            {
+                return string.Empty;
+            }
+
+            if (!input.StartsWith("~/"))
+            {
+                return input;
+            }
+
+            return string.Format(
+                "{0}{1}", 
+                this.viewLocationContext.Context.Request.Url.BasePath ?? string.Empty,
+                input.TrimStart('~'));
         }
 
         /// <summary>
