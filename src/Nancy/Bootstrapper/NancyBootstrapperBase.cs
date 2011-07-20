@@ -123,17 +123,6 @@
         }
 
         /// <summary>
-        /// Gets the available view source provider types
-        /// </summary>
-        protected virtual IEnumerable<Type> ViewLocationProviders
-        {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IViewLocationProvider>();
-            }
-        }
-
-        /// <summary>
         /// Gets the available view engine types
         /// </summary>
         protected virtual IEnumerable<Type> ViewEngines
@@ -455,7 +444,6 @@
             return new[]
                 {
                     new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
-                    new CollectionTypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProviders),
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
