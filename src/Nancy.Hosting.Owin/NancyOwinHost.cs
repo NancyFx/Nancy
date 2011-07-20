@@ -134,7 +134,7 @@
             {
                 parameters.Body.Seek(0, SeekOrigin.Begin);
 
-                var request = new Request(parameters.Method, parameters.Uri, parameters.Headers, parameters.Body, parameters.Protocol, parameters.Query);
+                var request = new Request(parameters.Method, parameters.Url, parameters.Body, parameters.Headers);
 
                 // Execute the nancy async request handler
                 this.engine.HandleRequest(

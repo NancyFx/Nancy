@@ -17,10 +17,8 @@ namespace Nancy.Hosting.Owin.Extensions
             return new NancyRequestParameters
             {
                 Method = GetMethod(environment),
-                Uri = GetUri(environment),
+                Url = GetUrl(environment),
                 Headers = GetHeaders(environment),
-                Protocol = GetProtocol(environment),
-                Query = GetQueryString(environment),
                 Body = new RequestStream(GetExpectedRequestLength(environment), false),
             };
         }
@@ -49,16 +47,6 @@ namespace Nancy.Hosting.Owin.Extensions
             return contentLength;
         }
 
-        private static string GetQueryString(IDictionary<string, object> environment)
-        {
-            return (string)environment["owin.RequestQueryString"];
-        }
-
-        private static string GetProtocol(IDictionary<string, object> environment)
-        {
-            return (string)environment["owin.RequestScheme"];
-        }
-
         private static string GetMethod(IDictionary<string, object> environment)
         {
             return (string)environment["owin.RequestMethod"];
@@ -77,9 +65,17 @@ namespace Nancy.Hosting.Owin.Extensions
             return headers;
         }
 
-        private static string GetUri(IDictionary<string, object> environment)
+        private static Url GetUrl(IDictionary<string, object> environment)
         {
-            return string.Format("{0}{1}", environment["owin.RequestPathBase"], environment["owin.RequestPath"]);
+            return new Url
+            {
+                Scheme = (string)environment["owin.RequestScheme"],
+                HostName = ((IDictionary<string, string>)environment["owin.RequestHeaders"])["Host"],
+                Port = null,
+                BasePath = (string)environment["owin.RequestPathBase"],
+                Path = (string)environment["owin.RequestPath"],
+                Query = (string)environment["owin.RequestQueryString"],
+            };
         }
     }
 }

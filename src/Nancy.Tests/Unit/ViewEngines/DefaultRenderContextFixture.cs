@@ -92,5 +92,63 @@
             // Then
             result.ShouldBeSameAs(viewResult);
         }
+
+        [Fact]
+        public void Should_return_same_path_when_parsing_path_if_path_doesnt_contain_tilde()
+        {
+            const string input = "/scripts/test.js";
+            var url = new Url
+                {
+                    BasePath = "/base/path",
+                    Path = "/"
+                };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            var result = context.ParsePath(input);
+
+            result.ShouldEqual(input);
+        }
+
+        [Fact]
+        public void Should_replace_tilde_with_base_path_when_parsing_path_if_one_present()
+        {
+            const string input = "~/scripts/test.js";
+            var url = new Url
+                {
+                    BasePath = "/base/path/",
+                    Path = "/"
+                };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            var result = context.ParsePath(input);
+
+            result.ShouldEqual("/base/path/scripts/test.js");
+        }
+
+        [Fact]
+        public void Should_replace_tilde_with_nothing_when_parsing_path_if_one_present_and_base_path_is_null()
+        {
+            const string input = "~/scripts/test.js";
+            var url = new Url
+                {
+                    BasePath = null,
+                    Path = "/"
+                };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            var result = context.ParsePath(input);
+
+            result.ShouldEqual("/scripts/test.js");
+        }
+
     }
 }

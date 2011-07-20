@@ -50,7 +50,7 @@ namespace Nancy.Tests
                                        { "owin.RequestPath", "/test" },
                                        { "owin.RequestPathBase", "/root" },
                                        { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestHeaders", new Dictionary<string, string>() },
+                                       { "owin.RequestHeaders", new Dictionary<string, string> { { "Host", "testserver" } } },
                                        { "owin.RequestBody", null },
                                        { "owin.RequestScheme", "http" },
                                        { "owin.Version", "1.0" }
