@@ -264,7 +264,7 @@ namespace Nancy
 
             private ViewLocationContext GetViewLocationContext()
             {
-                return new ViewLocationContext { ModulePath = module.ModulePath } ;
+                return new ViewLocationContext { ModulePath = module.ModulePath, Context = module.Context } ;
             }
         }
     }

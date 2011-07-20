@@ -15,6 +15,7 @@ namespace Nancy.Tests.Extensions
                                                              {
                                                                  { "Content-Length", "500" },
                                                                  { "Header", "Value1,Value2" },
+                                                                 { "Host", "testserver" },
                                                              };
 
             this.environment = new Dictionary<string, object>()
@@ -39,11 +40,16 @@ namespace Nancy.Tests.Extensions
         }
 
         [Fact]
-        public void Should_set_uri()
+        public void Should_set_url()
         {
             var result = environment.AsNancyRequestParameters();
 
-            result.Uri.ShouldEqual("/root/test");
+            result.Url.Scheme.ShouldEqual("http");
+            result.Url.HostName.ShouldEqual("testserver");
+            result.Url.Port.ShouldBeNull();
+            result.Url.BasePath.ShouldEqual("/root");
+            result.Url.Path.ShouldEqual("/test");
+            result.Url.Query.ShouldEqual("var=value");
         }
 
         [Fact]
@@ -58,21 +64,6 @@ namespace Nancy.Tests.Extensions
             result.Contains("Value2").ShouldBeTrue();
         }
 
-        [Fact]
-        public void Should_set_protocol()
-        {
-            var result = environment.AsNancyRequestParameters();
-
-            result.Protocol.ShouldEqual("http");
-        }
-
-        [Fact]
-        public void Should_set_querystring()
-        {
-            var result = environment.AsNancyRequestParameters();
-
-            result.Query.ShouldEqual("var=value");
-        }
 
         [Fact]
         public void Should_initialise_requeststream_using_content_length_header()

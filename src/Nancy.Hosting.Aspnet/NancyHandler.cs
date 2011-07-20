@@ -31,13 +31,22 @@ namespace Nancy.Hosting.Aspnet
             var expectedRequestLength =
                 GetExpectedRequestLength(context.Request.Headers.ToDictionary());
 
+            var nancyUrl = new Url
+                               {
+                                   Scheme = context.Request.Url.Scheme,
+                                   HostName = context.Request.UserHostName,
+                                   Port = context.Request.Url.Port,
+                                   BasePath = context.Request.ApplicationPath.TrimEnd('/'),
+                                   Path = context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
+                                   Query = context.Request.Url.Query,
+                                   Fragment = context.Request.Url.Fragment,
+                               };
+
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
-                context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
-                context.Request.Headers.ToDictionary(),
+                nancyUrl,
                 RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
-                context.Request.Url.Scheme,
-                context.Request.Url.Query);
+                context.Request.Headers.ToDictionary());
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)

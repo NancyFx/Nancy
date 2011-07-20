@@ -7,6 +7,8 @@ namespace Nancy
     /// </summary>
     public class Url
     {
+        private string basePath;
+
         /// <summary>
         /// Represents a URL made up of component parts
         /// </summary>
@@ -40,7 +42,19 @@ namespace Nancy
         /// <summary>
         /// Gets the base path of the request i.e. the "Nancy root"
         /// </summary>
-        public string BasePath { get; set; }
+        public string BasePath
+        {
+            get { return this.basePath; }
+            set
+            {
+                if (String.IsNullOrEmpty(value))
+                {
+                    return;
+                }
+
+                this.basePath = value.TrimEnd('/');
+            }
+        }
 
         /// <summary>
         /// Gets the path of the request, relative to the base path

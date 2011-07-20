@@ -99,19 +99,28 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var relativeUrl = 
-                GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
-
             var expectedRequestLength =
                 GetExpectedRequestLength(request.Headers.ToDictionary());
 
+            var relativeUrl =
+                GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
+
+            var nancyUrl = new Url
+            {
+                Scheme = request.Url.Scheme,
+                HostName = request.Url.Host,
+                Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
+                BasePath = baseUri.AbsolutePath.TrimEnd('/'),
+                Path = string.Concat("/", relativeUrl),
+                Query = request.Url.Query,
+                Fragment = request.Url.Fragment,
+            };
+
             return new Request(
                 request.HttpMethod,
-                string.Concat("/", relativeUrl),
-                request.Headers.ToDictionary(),
+                nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
-                request.Url.Scheme,
-                request.Url.Query);
+                request.Headers.ToDictionary());
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
