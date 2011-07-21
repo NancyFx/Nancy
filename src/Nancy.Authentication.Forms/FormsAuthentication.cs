@@ -4,6 +4,9 @@ namespace Nancy.Authentication.Forms
     using Bootstrapper;
     using Cookies;
     using Cryptography;
+
+    using Nancy.Extensions;
+
     using Responses;
     using Security;
 
@@ -84,7 +87,7 @@ namespace Nancy.Authentication.Forms
                 redirectUrl = context.Request.Query[REDIRECT_QUERYSTRING_KEY];
             }
 
-            var response = new RedirectResponse(redirectUrl);
+            var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
             response.AddCookie(authenticationCookie);
 
@@ -99,7 +102,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response</returns>
         public static Response LogOutAndRedirectResponse(NancyContext context, string redirectUrl)
         {
-            var response = new RedirectResponse(redirectUrl);
+            var response = context.GetRedirect(redirectUrl);
             var authenticationCookie = BuildLogoutCookie(currentConfiguration);
             response.AddCookie(authenticationCookie);
 
@@ -146,7 +149,7 @@ namespace Nancy.Authentication.Forms
                 {
                     if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        context.Response = new RedirectResponse(string.Format("{0}?{1}={2}", configuration.RedirectUrl, REDIRECT_QUERYSTRING_KEY, context.Request.Path));
+                        context.Response = context.GetRedirect(string.Format("{0}?{1}={2}", configuration.RedirectUrl, REDIRECT_QUERYSTRING_KEY, context.ToFullPath("~" + context.Request.Path)));
                     }
                 };
         }

@@ -12,7 +12,7 @@ namespace Nancy.Demo.Authentication.Forms
             var formsAuthConfiguration = 
                 new FormsAuthenticationConfiguration()
                 {
-                    RedirectUrl = "/login",
+                    RedirectUrl = "~/login",
                     UsernameMapper = container.Resolve<IUsernameMapper>(),
                 };
 

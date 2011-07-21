@@ -4,6 +4,7 @@ namespace Nancy.Demo.Authentication.Forms
     using System.Dynamic;
     using Nancy;
     using Nancy.Authentication.Forms;
+    using Nancy.Extensions;
 
     public class MainModule : NancyModule
     {
@@ -26,7 +27,7 @@ namespace Nancy.Demo.Authentication.Forms
 
                 if (userGuid == null)
                 {
-                    return Response.AsRedirect("/login?error=true&username=" + (string)this.Request.Form.Username);
+                    return Context.GetRedirect("~/login?error=true&username=" + (string)this.Request.Form.Username);
                 }
 
                 DateTime? expiry = null;
@@ -39,7 +40,7 @@ namespace Nancy.Demo.Authentication.Forms
             };
 
             Get["/logout"] = x => {
-                return this.LogoutAndRedirect("/");
+                return this.LogoutAndRedirect("~/");
             };
         }
     }
