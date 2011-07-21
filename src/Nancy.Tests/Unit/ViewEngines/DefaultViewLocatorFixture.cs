@@ -212,22 +212,6 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
-        public void Should_TestExpectation()
-        {
-            // Given
-            var expectedView1 = new ViewLocationResult("sub", "index", string.Empty, () => null);
-            var expectedView2 = new ViewLocationResult(string.Empty, "index", string.Empty, () => null);
-            var cache = new FakeViewLocationCache(expectedView1, expectedView2);
-            var locator = CreateViewLocator(cache);
-
-            // When
-            var exception = Record.Exception(() => locator.LocateView("index"));
-
-            // Then
-            exception.ShouldBeOfType<AmbiguousViewsException>();
-        }
-
-        [Fact]
         public void Should_be_able_to_locate_view_by_name_when_two_views_with_same_name_exists_at_different_locations()
         {
             // Given
