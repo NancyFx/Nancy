@@ -38,7 +38,7 @@ To run a particular task ('test' for example), use the following command:
 
 You can run multiple tasks by listing them ('test' then 'nuget' for example):
 
-	rake test nuget
+	rake test nuget_package
 
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 

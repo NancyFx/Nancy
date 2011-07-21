@@ -76,7 +76,7 @@ zip :package => [:publish] do |zip|
 end
 
 desc "Generates NuGet packages for each project that contains a nuspec"
-task :nuget => [:publish] do
+task :nuget_package => [:publish] do
     Dir.mkdir("#{OUTPUT}/nuget")
     nuspecs = FileList["src/**/*.nuspec"]
     root = File.dirname(__FILE__)
@@ -103,7 +103,7 @@ task :nuget => [:publish] do
         end
     end
 
-    # Generate the NuGet packages from the newly edited nuspec files
+    # Generate the NuGet packages from the newly edited nuspec fileiles
     nuspecs.each do |nuspec|        
         nuget = NuGetPack.new
         nuget.command = "tools/nuget/nuget.exe"
@@ -111,6 +111,19 @@ task :nuget => [:publish] do
         nuget.output = "#{OUTPUT}/nuget"
         nuget.parameters = "-Symbols", "-BasePath \"#{root}\""     #using base_folder throws as there are two options that begin with b in nuget 1.4
         nuget.execute
+    end
+end
+
+desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
+task :nuget_publish do
+    nupkgs = FileList["#{OUTPUT}/nuget/*#{NANCY_VERSION}.nupkg"]
+    nupkgs.each do |nupkg| 
+        puts "Pushing #{nupkg}"
+        nuget_push = NuGetPush.new
+        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.package = "\"" + nupkg + "\""
+        nuget_push.create_only = false
+        nuget_push.execute
     end
 end
 
