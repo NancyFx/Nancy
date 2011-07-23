@@ -10,6 +10,8 @@
 
         public TextWriter Writer { get; set; }
 
+        public IRenderContext RenderContext { get; set; }
+
         public void Execute()
         {
             base.RenderView(Writer);
@@ -28,6 +30,11 @@
         public virtual void SetModel(object model)
         {
             this.Model = model;
+        }
+
+        public string SiteResource(string path)
+        {
+            return this.RenderContext.ParsePath(path);
         }
     }
 
