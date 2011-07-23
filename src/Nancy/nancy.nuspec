@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Nancy</id>
+    <version>0.6.0</version> <!-- Overridden by rake nuget task but a default is required in nuspec files -->
+    <authors>Andreas Håkansson, Steven Robbins and contributors</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.</description>
+    <summary>Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.</summary>
+    <language>en-US</language>
+    <licenseUrl>https://github.com/thecodejunkie/Nancy/blob/master/license.txt</licenseUrl>
+    <projectUrl>http://nancyfx.org</projectUrl>
+    <tags>Nancy</tags>
+  </metadata>
+  <files>
+    <file src="build\binaries\Nancy.dll" target="lib\net40" />
+    <file src="build\binaries\Nancy.pdb" target="lib\net40" />
+    <file src="src\Nancy\**\*.cs" target="src" />
+  </files>
+</package>

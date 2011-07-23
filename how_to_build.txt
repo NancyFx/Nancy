@@ -15,7 +15,7 @@ Prerequisites
 
 	gem install albacore
 
-If you have already installed albacore, please update to the lastest version (0.2.2+):
+If you have already installed albacore, please update to the lastest version (0.2.6+):
 
 	gem update albacore
 
@@ -36,9 +36,14 @@ To run a particular task ('test' for example), use the following command:
 
 	rake test
 
+You can run multiple tasks by listing them ('test' then 'nuget' for example):
+
+	rake test nuget_package
+
 After the build has completed, there will be a new folder in the root called "build". It contains the following folders:
 
 * binaries -> All the Nancy assembilies and their dependencies
 * packages -> Zip file containing the binaries (other configurations might be added in the future)
+* nuget -> NuGet packages generated from this build
 * documentation -> Generated documentation (todo)
 * coverage -> Test coverage reports (todo)
