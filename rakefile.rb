@@ -71,7 +71,7 @@ zip :package => [:publish] do |zip|
     Dir.mkdir("#{OUTPUT}/packages")
 
     zip.directories_to_zip "#{OUTPUT}/binaries"
-    zip.output_file = "NancyFx-Latest.zip"
+    zip.output_file = "Nancy-Latest.zip"
     zip.output_path = "#{OUTPUT}/packages"
 end
 
