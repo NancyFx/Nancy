@@ -1,5 +1,7 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using Nancy.Extensions;
+
     /// <summary>
     /// Default render context implementation.
     /// </summary>
@@ -30,20 +32,7 @@
         /// <returns>Parsed absolut url path</returns>
         public string ParsePath(string input)
         {
-            if (string.IsNullOrEmpty(input))
-            {
-                return string.Empty;
-            }
-
-            if (!input.StartsWith("~/"))
-            {
-                return input;
-            }
-
-            return string.Format(
-                "{0}{1}", 
-                this.viewLocationContext.Context.Request.Url.BasePath ?? string.Empty,
-                input.TrimStart('~'));
+            return this.viewLocationContext.Context.ToFullPath(input);
         }
 
         /// <summary>

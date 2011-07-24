@@ -1,10 +1,12 @@
-﻿using System.Collections.Generic;
-using Nancy.Extensions;
-using Nancy.Tests.Fakes;
-using Xunit;
-
-namespace Nancy.Tests.Unit.Extensions
+﻿namespace Nancy.Tests.Unit.Extensions
 {
+    using System.Collections.Generic;
+
+    using Nancy.Extensions;
+    using Nancy.Tests.Fakes;
+
+    using Xunit;
+
     public class ContextExtensionsFixture
     {
         [Fact]
@@ -49,5 +51,57 @@ namespace Nancy.Tests.Unit.Extensions
             // Then
             Assert.False(context.IsAjaxRequest());
         }
+
+        [Fact]
+        public void Should_return_same_path_when_parsing_path_if_path_doesnt_contain_tilde()
+        {
+            const string input = "/scripts/test.js";
+            var url = new Url
+            {
+                BasePath = "/base/path",
+                Path = "/"
+            };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+
+            var result = nancyContext.ToFullPath(input);
+
+            result.ShouldEqual(input);
+        }
+
+        [Fact]
+        public void Should_replace_tilde_with_base_path_when_parsing_path_if_one_present()
+        {
+            const string input = "~/scripts/test.js";
+            var url = new Url
+            {
+                BasePath = "/base/path/",
+                Path = "/"
+            };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+
+            var result = nancyContext.ToFullPath(input);
+
+            result.ShouldEqual("/base/path/scripts/test.js");
+        }
+
+        [Fact]
+        public void Should_replace_tilde_with_nothing_when_parsing_path_if_one_present_and_base_path_is_null()
+        {
+            const string input = "~/scripts/test.js";
+            var url = new Url
+            {
+                BasePath = null,
+                Path = "/"
+            };
+            var request = new Request("GET", url);
+            var nancyContext = new NancyContext { Request = request };
+
+            var result = nancyContext.ToFullPath(input);
+
+            result.ShouldEqual("/scripts/test.js");
+        }
+
     }
 }
