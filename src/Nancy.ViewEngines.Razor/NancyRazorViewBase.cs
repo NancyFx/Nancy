@@ -35,6 +35,8 @@
 
         public HtmlHelpers Html { get; set; }
 
+        public UrlHelpers Url { get; set; }
+
         public IDictionary<string, Action> Sections { get; set; }
 
         public abstract void Execute();
