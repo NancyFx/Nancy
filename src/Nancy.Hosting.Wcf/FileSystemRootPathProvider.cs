@@ -1,5 +1,6 @@
 namespace Nancy.Hosting.Wcf
 {
+    using System;
     using System.IO;
     using System.Reflection;
 
@@ -7,7 +8,9 @@ namespace Nancy.Hosting.Wcf
     {
         public string GetRootPath()
         {
-            return Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            var assembly = Assembly.GetEntryAssembly();
+
+            return assembly == null ? Environment.CurrentDirectory : Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         }
     }
 }
