@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Routes</title>
-	<link rel="stylesheet" href="http://localhost:40965/style/main.css" type="text/css" media="screen"/>
+	<link rel="stylesheet" href='@Url.Content("~/style/main.css")' type="text/css" media="screen"/>
 </head>
 <body>
 
@@ -11,7 +11,7 @@
 	<ul>
 		@foreach (var module in @Model) {
 			@foreach (var route in @module.Value) {
-				<li><a href="@route.Item2.Path">@route.Item2.Path</a></li>
+				<li><a href='@Url.Content("~" + route.Item2.Path)'>@route.Item2.Path</a></li>
 			}
 		}
 	</ul>

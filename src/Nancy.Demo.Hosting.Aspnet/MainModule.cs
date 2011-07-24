@@ -20,6 +20,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return Response.AsJs("Content/" + (string)x.file);
             };
 
+            Get["/images/{file}"] = x =>
+            {
+                return Response.AsImage("Content/" + (string)x.file);
+            };
+
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };
