@@ -1,11 +1,19 @@
 namespace Nancy.Testing.Fakes
 {
+    using System.IO;
+    using System.Reflection;
+
     /// <summary>
     /// Fake root path provider - set the static <see cref="RootPath"/> property
     /// </summary>
     public class FakeRootPathProvider : IRootPathProvider
     {
-        public static string RootPath { get; set; }
+        private static string rootPath = Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        public static string RootPath
+        {
+            get { return rootPath; }
+            set { rootPath = value; }
+        }
 
         /// <summary>
         /// Returns the root folder path of the current Nancy application.
