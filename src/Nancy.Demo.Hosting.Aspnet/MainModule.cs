@@ -70,16 +70,6 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["ssve.sshtml", model];
             };
 
-            Get["/embedded"] = x => {
-                var model = new RatPack { FirstName = "Embedded" };
-                return View["embedded", model];
-            };
-
-            Get["/embedded2"] = x => {
-                var model = new RatPack { FirstName = "Embedded2" };
-                return View["embedded.django", model];
-            };
-
             Get["/viewmodelconvention"] = x => {
                 return View[new SomeViewModel()];
             };

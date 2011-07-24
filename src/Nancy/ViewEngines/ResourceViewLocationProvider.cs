@@ -12,7 +12,7 @@
     /// </summary>
     public class ResourceViewLocationProvider : IViewLocationProvider
     {
-        public static IDictionary<Type, string> RootNamespaces = new Dictionary<Type, string>();
+        public static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
@@ -63,8 +63,8 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            var commonNamespace = RootNamespaces.ContainsKey(assembly.GetType()) ?
-                RootNamespaces[assembly.GetType()] : 
+            var commonNamespace = RootNamespaces.ContainsKey(assembly) ?
+                RootNamespaces[assembly] : 
                 ExtractAssemblyRootNamespace(assembly);
 
             if (string.IsNullOrEmpty(commonNamespace))

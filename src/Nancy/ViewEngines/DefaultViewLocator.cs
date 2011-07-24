@@ -29,18 +29,29 @@
                 return null;
             }
 
-            var viewThatMatchCriteria = this.viewLocationCache
+            var viewsThatMatchesCritera = this.viewLocationCache
                 .Where(x => NameMatchesView(viewName, x))
                 .Where(x => ExtensionMatchesView(viewName, x))
                 .Where(x => LocationMatchesView(viewName, x))
                 .ToList();
 
-            if (viewThatMatchCriteria.Count() > 1)
+            var count = viewsThatMatchesCritera.Count();
+            if (count > 1)
             {
-                throw new AmbiguousViewsException();
+                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(count, viewsThatMatchesCritera));
             }
 
-            return viewThatMatchCriteria.SingleOrDefault();
+            return viewsThatMatchesCritera.SingleOrDefault();
+        }
+
+        private static string GetAmgiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
+        {
+            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count, string.Join("\r\n\t", viewsThatMatchesCritera.Select(GetFullLocationOfView).ToArray()));
+        }
+
+        private static string GetFullLocationOfView(ViewLocationResult viewLocationResult)
+        {
+            return string.Concat(viewLocationResult.Location, "/", viewLocationResult.Name, ".", viewLocationResult.Extension);
         }
 
         private static bool ExtensionMatchesView(string viewName, ViewLocationResult viewLocationResult)

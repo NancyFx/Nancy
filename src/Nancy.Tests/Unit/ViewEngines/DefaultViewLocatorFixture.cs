@@ -1,7 +1,5 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
-    using System;
-
     using Fakes;
     using Nancy.ViewEngines;
     using Xunit;
@@ -19,8 +17,6 @@ namespace Nancy.Tests.Unit.ViewEngines
             this.viewLocationCache = new FakeViewLocationCache(this.viewLocation);
             this.viewLocator = CreateViewLocator(this.viewLocationCache);
         }
-
-         // Correct exception message when AmbiguousViewsException
 
         [Fact]
         public void Should_return_null_if_locate_view_is_invoked_with_null_view_name()
@@ -95,6 +91,40 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             exception.ShouldBeOfType<AmbiguousViewsException>();
+        }
+
+        [Fact]
+        public void Should_throw_ambiguousviewsexception_when_locating_view_by_name_and_multiple_views_share_the_same_name_and_location_but_different_extensions()
+        {
+            // Given
+            var expectedView1 = new ViewLocationResult(string.Empty, "index", "spark", () => null);
+            var expectedView2 = new ViewLocationResult(string.Empty, "index", "html", () => null);
+            var cache = new FakeViewLocationCache(expectedView1, expectedView2);
+            var locator = CreateViewLocator(cache);
+
+            // When
+            var exception = Record.Exception(() => locator.LocateView("index"));
+
+            // Then
+            exception.ShouldBeOfType<AmbiguousViewsException>();
+        }
+
+        [Fact]
+        public void Should_set_message_on_ambiguousviewexception()
+        {
+            // Given
+            var expectedView1 = new ViewLocationResult(string.Empty, "index", "spark", () => null);
+            var expectedView2 = new ViewLocationResult(string.Empty, "index", "html", () => null);
+            var cache = new FakeViewLocationCache(expectedView1, expectedView2);
+            var locator = CreateViewLocator(cache);
+
+            const string expectedMessage = "This exception was thrown because multiple views were found. 2 view(s):\r\n\t/index.spark\r\n\t/index.html";
+
+            // When
+            var exception = Record.Exception(() => locator.LocateView("index"));
+
+            // Then
+            exception.Message.ShouldEqual(expectedMessage);
         }
 
         [Fact]
