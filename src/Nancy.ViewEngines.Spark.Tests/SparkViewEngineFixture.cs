@@ -226,7 +226,7 @@
                 "<div>Hello</div>");
         }
 
-        [Fact]//(Skip = "Rob G: content areas need some work to get correct ordering - that'll come next")]
+        [Fact]
         public void Should_capture_named_content_areas_and_render_in_the_correct_order()
         {
             //Given, When
@@ -238,6 +238,20 @@
                 "<div>OK - this is the main content by default because it is not contained</div>",
                 "<div>Here is some footer stuff defined at the top</div>",
                 "<div>Much better place for footer stuff - or is it?</div>");
+        }
+
+        [Fact]
+        public void Should_substitute_tilde_in_resource_url_with_parse_result_from_Render_Context()
+        {
+            //Given
+            A.CallTo(() => this.renderContext.ParsePath(A<string>.Ignored))
+                .Returns("/mysensationalrootfolder/scripts/test.js");
+            
+            //When
+            this.FindViewAndRender("ViewThatUsesTildeSubstitution");
+
+            //Then
+            this.output.ShouldContain(@"<script type=""text/javascript"" src=""/mysensationalrootfolder/scripts/test.js""/>");
         }
 
         private void FindViewAndRender<T>(string viewName, T viewModel) where T : class

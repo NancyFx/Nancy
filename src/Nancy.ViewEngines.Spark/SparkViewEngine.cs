@@ -90,8 +90,13 @@
                 viewLocationResult, 
                 x => this.engine.CreateEntry(descriptor));
 
-            return new SparkViewEngineResult(
-                entry.CreateInstance() as NancySparkView);
+            var nancySparkView = entry.CreateInstance() as NancySparkView;
+            if (nancySparkView != null)
+            {
+                nancySparkView.RenderContext = renderContext;
+            }
+
+            return new SparkViewEngineResult(nancySparkView);
         }
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
