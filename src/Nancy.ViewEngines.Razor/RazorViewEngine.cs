@@ -239,6 +239,7 @@
         {
             var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
             view.Html = new HtmlHelpers(this, renderContext);
+            view.Url = new UrlHelpers(this, renderContext);
             view.Model = model;
             return view;
         }

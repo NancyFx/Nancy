@@ -97,6 +97,7 @@
     <Reference Include="System.Web.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\face.png" />
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
     <Content Include="Views\javascript.html" />
