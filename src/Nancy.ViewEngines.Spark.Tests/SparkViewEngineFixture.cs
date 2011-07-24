@@ -256,8 +256,7 @@
 
         private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
         {
-            var location = Path.Combine("Stub", viewName + ".spark");
-            var viewLocationResult = new ViewLocationResult(location, viewName, "spark", GetEmptyContentReader());
+            var viewLocationResult = new ViewLocationResult("Stub", viewName, "spark", GetEmptyContentReader());
             var stream = new MemoryStream();
             var engine = new SparkViewEngine();
 

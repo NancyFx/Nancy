@@ -234,7 +234,7 @@
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
     <Compile Include="ViewEngines\IViewResolver.cs" />
-    <Compile Include="ViewEngines\ResourceViewLocationProviders.cs" />
+    <Compile Include="ViewEngines\ResourceViewLocationProvider.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\IViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />

@@ -1,9 +1,6 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
-    using System;
     using System.Collections.Generic;
-
-    using Nancy.Cryptography;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 

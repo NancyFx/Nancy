@@ -101,7 +101,6 @@
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
     <Content Include="Views\javascript.html" />
-    <EmbeddedResource Include="Views\static-embedded.html" />
     <Content Include="Views\static.htm" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -161,7 +160,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Views\embedded.django" />
     <Content Include="Views\someview.cshtml" />
     <Content Include="Views\razor-layout.cshtml" />
     <None Include="Views\anon.spark" />
@@ -185,7 +183,7 @@
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40965</DevelopmentServerPort>
-          <DevelopmentServerVPath>/nancytest</DevelopmentServerVPath>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost:59015/nancytest</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
