@@ -46,8 +46,8 @@
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
         {
             var result = this.LocateView(
-                Path.GetDirectoryName(viewLocationResult.Location), 
-                Path.GetFileNameWithoutExtension(viewLocationResult.Name),
+                viewLocationResult.Location, 
+                viewLocationResult.Name,
                 viewLocationResult,
                 renderContext);
 
@@ -66,16 +66,26 @@
             var memoryViewMap = new InMemoryViewFolder();
             foreach (var viewLocationResult in viewLocationResults)
             {
-                memoryViewMap.Add(viewLocationResult.Location, viewLocationResult.Contents.Invoke().ReadToEnd());
+                memoryViewMap.Add(GetViewFolderKey(viewLocationResult), viewLocationResult.Contents.Invoke().ReadToEnd());
             }
             return memoryViewMap;
+        }
+
+        private static string GetViewFolderKey(ViewLocationResult viewLocationResult)
+        {
+            return string.Concat(GetNamespaceEncodedPathViewPath(viewLocationResult.Location), Path.DirectorySeparatorChar, viewLocationResult.Name, ".", viewLocationResult.Extension);
         }
 
         private SparkViewEngineResult LocateView(string viewPath, string viewName, ViewLocationResult viewLocationResult, IRenderContext renderContext)
         {
             var searchedLocations = new List<string>();
 
-            var descriptorParams = new BuildDescriptorParams(viewPath, viewName, null, true, null);
+            var descriptorParams = new BuildDescriptorParams(
+                GetNamespaceEncodedPathViewPath(viewPath),
+                viewName,
+                null,
+                true,
+                null);
 
             var descriptor = this.descriptorBuilder.BuildDescriptor(
                 descriptorParams,
@@ -97,6 +107,11 @@
             }
 
             return new SparkViewEngineResult(nancySparkView);
+        }
+
+        private static string GetNamespaceEncodedPathViewPath(string viewPath)
+        {
+            return viewPath.Replace('/', '_');
         }
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)

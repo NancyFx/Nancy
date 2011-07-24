@@ -43,6 +43,7 @@ namespace Nancy.Bootstrapper
                         ViewCache = typeof(DefaultViewCache),
                         RenderContextFactory = typeof(DefaultRenderContextFactory),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
+                        ViewLocationProvider = typeof(FileSystemViewLocationProvider)
                     };
             }
         }
@@ -84,6 +85,8 @@ namespace Nancy.Bootstrapper
         public Type RenderContextFactory { get; set; }
 
         public Type ViewLocationCache { get; set; }
+
+        public Type ViewLocationProvider { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -144,6 +147,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
                 new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
+                new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider)
             };
         }
     }

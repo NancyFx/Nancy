@@ -40,15 +40,15 @@
             conventions.ViewLocationConventions = new List<Func<string, object, ViewLocationContext, string>>
             {
                 (viewName, model, viewLocationContext) => {
-                    return string.Concat("/", viewName);
+                    return viewName;
                 },
 
                 (viewName, model, viewLocationContext) => {
-                    return string.Concat("/views/", viewName);
+                    return string.Concat("views/", viewName);
                 },
 
                 (viewName, model, viewLocationContext) => {
-                    return string.Concat("/views", viewLocationContext.ModulePath, "/", viewName);
+                    return string.Concat("views", viewLocationContext.ModulePath, "/", viewName);
                 }
             };
         }
