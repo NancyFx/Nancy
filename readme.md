@@ -140,6 +140,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Thomas Pedersen](http://github.com/thedersen)
 * [Troels Thomsen](http://github.com/troethom)
 * [Vidar L. Sømme](http://github.com/vidarls)
+* [NeqO](https://github.com/NeqO)
 
 ## Copyright
 
