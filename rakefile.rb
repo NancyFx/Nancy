@@ -3,7 +3,7 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "0.6.0"
+NANCY_VERSION = "0.7.0"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 SHARED_ASSEMBLY_INFO = 'src/SharedAssemblyInfo.cs'
@@ -98,7 +98,7 @@ task :nuget_package => [:publish] do
             # Override common values
             xml.root.elements["metadata/authors"].text = "Andreas Håkansson, Steven Robbins and contributors"
             xml.root.elements["metadata/summary"].text = "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications."
-            xml.root.elements["metadata/licenseUrl"].text = "https://github.com/thecodejunkie/Nancy/blob/master/license.txt"
+            xml.root.elements["metadata/licenseUrl"].text = "https://github.com/NancyFx/Nancy/blob/master/license.txt"
             xml.root.elements["metadata/projectUrl"].text = "http://nancyfx.org"
         end
     end
