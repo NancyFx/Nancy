@@ -385,6 +385,27 @@ namespace Nancy.Tests.Unit
             request.Url.Scheme.ShouldEqual(protocol);
         }
 
+		[Fact]
+		public void Should_split_cookie_in_two_parts_only()
+		{
+			// Given, when
+			var cookieName = "_nc";
+			var cookieData = "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
+			var headers = new Dictionary<string, IEnumerable<string>> ();
+			var cookies = new List<string> ();
+			cookies.Add (string.Format ("{0}={1}", cookieName, cookieData));
+			headers.Add ("cookie", cookies);
+			var newUrl = new Url
+			{
+				Path = "/"
+			};
+			var request = new Request ("GET", newUrl, null, headers);
+
+			// Then
+			request.Cookies[cookieName].ShouldEqual (cookieData);
+
+		}
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());
