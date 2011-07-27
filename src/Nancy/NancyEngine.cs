@@ -8,6 +8,8 @@
 
     public class NancyEngine : INancyEngine
     {
+        internal const string ERROR_KEY = "ERROR_TRACE";
+
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
@@ -183,7 +185,15 @@
 
             if (context.Response == null)
             {
-                context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                try
+                {
+                    context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                }
+                catch (Exception e)
+                {
+                    context.Response = new Response() { StatusCode = HttpStatusCode.InternalServerError };
+                    context.Items[ERROR_KEY] = e.ToString();
+                }
             }
 
             if (context.Request.Method.ToUpperInvariant() == "HEAD")

@@ -49,18 +49,6 @@ namespace Nancy.Tests.Unit.ErrorHandling
         }
 
         [Fact]
-        public void Should_not_overwrite_existing_response_contents()
-        {
-            var context = new NancyContext();
-            context.Response = new Response();
-            context.Response.Contents = this.FakeContents;
-
-            this.errorHandler.Handle(HttpStatusCode.NotFound, context);
-
-            (context.Response.Contents == this.FakeContents).ShouldBeTrue();
-        }
-
-        [Fact]
         public void Should_set_response_contents_if_required()
         {
             var context = new NancyContext();

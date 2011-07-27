@@ -3,7 +3,10 @@ namespace Nancy.ErrorHandling
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Default error handler
@@ -12,11 +15,21 @@ namespace Nancy.ErrorHandling
     {
         private IDictionary<HttpStatusCode, string> errorPages;
 
+        private IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
+
+        private HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
+
         public DefaultErrorHandler()
         {
             this.errorPages = new Dictionary<HttpStatusCode, string>
                 {
-                    { HttpStatusCode.NotFound, this.LoadResource("404.html") }
+                    { HttpStatusCode.NotFound, this.LoadResource("404.html") },
+                    { HttpStatusCode.InternalServerError, this.LoadResource("500.html") },
+                };
+
+            this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
+                {
+                    { HttpStatusCode.InternalServerError, this.PopulateErrorInfo}
                 };
         }
 
@@ -27,7 +40,7 @@ namespace Nancy.ErrorHandling
         /// <returns>True if handled, false otherwise</returns>
         public bool HandlesStatusCode(HttpStatusCode statusCode)
         {
-            return statusCode == HttpStatusCode.NotFound;
+            return this.supportedStatusCodes.Any(s => s == statusCode);
         }
 
         /// <summary>
@@ -50,6 +63,12 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
+            Func<HttpStatusCode, NancyContext, string, string> expansionDelegate;
+            if (this.expansionDelegates.TryGetValue(statusCode, out expansionDelegate))
+            {
+                errorPage = expansionDelegate.Invoke(statusCode, context, errorPage);
+            }
+
             this.ModifyResponse(statusCode, context, errorPage);
         }
 
@@ -58,11 +77,6 @@ namespace Nancy.ErrorHandling
             if (context.Response == null)
             {
                 context.Response = new Response() { StatusCode = statusCode };
-            }
-
-            if (context.Response.Contents != null)
-            {
-                return;
             }
 
             context.Response.ContentType = "text/html";
@@ -88,6 +102,11 @@ namespace Nancy.ErrorHandling
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        private string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
+        {
+            return templateContents.Replace("[DETAILS]", context.GetExceptionDetails());
         }
     }
 }

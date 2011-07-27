@@ -135,6 +135,11 @@ namespace Nancy.Demo.Hosting.Aspnet
 
                 return output;
             };
+
+            Get["/error"] = x =>
+                {
+                    throw new NotSupportedException("This is an exception thrown in a route.");
+                };
         }
     }
 }

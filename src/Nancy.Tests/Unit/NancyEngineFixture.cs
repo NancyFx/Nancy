@@ -6,6 +6,7 @@ namespace Nancy.Tests.Unit
     using FakeItEasy;
 
     using Nancy.ErrorHandling;
+    using Nancy.Extensions;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -391,6 +392,30 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             A.CallTo(() => this.errorHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_set_status_code_to_500_if_route_throws()
+        {
+            var errorRoute = new Route("GET", "/", null, x => { throw new NotImplementedException(); });
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public void Should_store_exception_details_if_route_throws()
+        {
+            var errorRoute = new Route("GET", "/", null, x => { throw new NotImplementedException(); });
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
+            var request = new Request("GET", "/", "http");
+
+            var result = this.engine.HandleRequest(request);
+
+            result.GetExceptionDetails().ShouldContain("NotImplementedException");
         }
     }
 }
