@@ -16,5 +16,19 @@ namespace Nancy
             get { return disableCaches; }
             set { disableCaches = value; }
         }
+
+#if DEBUG
+        private static bool disableErrorTraces = false;
+#else
+        private static bool disableErrorTraces = true;
+#endif
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to disable traces in error messages
+        /// </summary>
+        public static bool DisableErrorTraces
+        {
+            get { return disableErrorTraces; }
+            set { disableErrorTraces = value; }
+        }
     }
 }

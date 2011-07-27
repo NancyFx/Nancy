@@ -66,6 +66,8 @@
   
   #errorDetails
   {
+    width: 100%;
+    margin: 24px;
     text-align: left;
     display: none;
   }
@@ -120,9 +122,15 @@
   </div>
   <div id="errorDetails">
     <h2>Error Details</h2>
-    <pre>
-      [DETAILS]
-    </pre>
+    <pre id="errorContents">[DETAILS]</pre>
   </div>
+  <script type="text/javascript">
+      var toggle = document.getElementById('errorToggle');
+      var errorContents = document.getElementById('errorContents');
+      
+      if (errorContents.innerText == '') {
+          toggle.style.display = 'none';
+      }
+  </script>
 </body>
 </html>

@@ -106,7 +106,7 @@ namespace Nancy.ErrorHandling
 
         private string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
         {
-            return templateContents.Replace("[DETAILS]", context.GetExceptionDetails());
+            return templateContents.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : context.GetExceptionDetails());
         }
     }
 }
