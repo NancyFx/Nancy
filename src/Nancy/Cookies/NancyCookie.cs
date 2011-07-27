@@ -37,6 +37,17 @@ namespace Nancy.Cookies
         public string Name { get; private set; }
 
         /// <summary>
+        /// Gets the encoded name of the cookie
+        /// </summary>
+        public string EncodedName
+        {
+            get
+            {
+                return HttpUtility.UrlEncode(this.Name);
+            }
+        }
+
+        /// <summary>
         /// The path to restrict the cookie to
         /// </summary>
         public string Path { get; set; }
@@ -47,6 +58,17 @@ namespace Nancy.Cookies
         public string Value { get; private set; }
 
         /// <summary>
+        /// Gets the encoded value of the cookie
+        /// </summary>
+        public string EncodedValue
+        {
+            get
+            {
+                return HttpUtility.UrlEncode(this.Value);
+            }
+        }
+
+        /// <summary>
         /// Whether the cookie is http only
         /// </summary>
         public bool HttpOnly { get; private set; }
@@ -54,7 +76,7 @@ namespace Nancy.Cookies
         public override string ToString()
         {
             var sb = new StringBuilder(50);
-            sb.AppendFormat("{0}={1}; path={2}", HttpUtility.UrlEncode(Name), HttpUtility.UrlEncode(Value), Path ?? "/");
+            sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
             
             if (Expires != null)
             {

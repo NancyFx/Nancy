@@ -117,6 +117,36 @@ namespace Nancy.Tests.Unit
             result.ShouldContain("HttpOnly");
         }
 
+        [Fact]
+        public void Should_encode_key_and_value_when_stringified()
+        {
+            var cookie = new NancyCookie("Key with spaces", "Value with spaces");
+
+            var result = cookie.ToString();
+
+            result.ShouldEqual("Key+with+spaces=Value+with+spaces; path=/");
+        }
+
+        [Fact]
+        public void Should_encode_key_if_necessary()
+        {
+            var cookie = new NancyCookie("with spaces", "Value");
+
+            var result = cookie.EncodedName;
+
+            result.ShouldEqual("with+spaces");
+        }
+
+        [Fact]
+        public void Should_encode_value_if_necessary()
+        {
+            var cookie = new NancyCookie("Test", "Value with spaces");
+
+            var result = cookie.EncodedValue;
+
+            result.ShouldEqual("Value+with+spaces");
+        }
+
         public static string GetInvariantAbbreviatedMonthName(DateTime dateTime)
         {
             return CultureInfo.InvariantCulture.DateTimeFormat.AbbreviatedMonthNames[dateTime.Month - 1];

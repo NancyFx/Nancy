@@ -21,6 +21,11 @@ namespace Nancy.Cookies
         string Name { get; }
 
         /// <summary>
+        /// Gets the encoded name of the cookie
+        /// </summary>
+        string EncodedName { get; }
+
+        /// <summary>
         /// The path to restrict the cookie to
         /// </summary>
         string Path { get; set; }
@@ -29,6 +34,11 @@ namespace Nancy.Cookies
         /// The value of the cookie
         /// </summary>
         string Value { get;  }
+
+        /// <summary>
+        /// Gets the encoded value of the cookie
+        /// </summary>
+        string EncodedValue { get; }
 
         /// <summary>
         /// Whether the cookie is http only

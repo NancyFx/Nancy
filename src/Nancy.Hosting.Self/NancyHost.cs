@@ -176,7 +176,7 @@
         private static Cookie ConvertCookie(INancyCookie nancyCookie)
         {
             var cookie = 
-                new Cookie(nancyCookie.Name, nancyCookie.Value, nancyCookie.Path, nancyCookie.Domain);
+                new Cookie(nancyCookie.EncodedName, nancyCookie.EncodedValue, nancyCookie.Path, nancyCookie.Domain);
 
             if (nancyCookie.Expires.HasValue)
             {
