@@ -108,6 +108,8 @@
     <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
+    <Compile Include="ErrorHandling\DefaultErrorHandler.cs" />
+    <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
     <Compile Include="Bootstrapper\IModuleKeyGenerator.cs" />
@@ -246,6 +248,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="favicon.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ErrorHandling\Resources\404.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

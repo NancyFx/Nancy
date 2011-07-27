@@ -4,6 +4,8 @@ namespace Nancy.Tests.Unit
     using System.Collections.Generic;
     using System.Linq;
     using FakeItEasy;
+
+    using Nancy.ErrorHandling;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -17,6 +19,7 @@ namespace Nancy.Tests.Unit
         private readonly NancyContext context;
         private readonly INancyContextFactory contextFactory;
         private readonly Response response;
+        private readonly IErrorHandler errorHandler;
 
         public NancyEngineFixture()
         {
@@ -24,13 +27,16 @@ namespace Nancy.Tests.Unit
             this.response = new Response();
             this.route = new FakeRoute(response);
             this.context = new NancyContext();
+            this.errorHandler = A.Fake<IErrorHandler>();
+
+            A.CallTo(() => errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).Returns(false);
 
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
 
-            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory);
+            this.engine = new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
         }
 
         [Fact]
@@ -38,7 +44,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>(), this.errorHandler));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -49,7 +55,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>()));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>(), this.errorHandler));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -60,7 +66,18 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null, this.errorHandler));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_error_handler()
+        {
+            // Given, When
+            var exception =
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -132,7 +149,7 @@ namespace Nancy.Tests.Unit
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
 
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             // When
@@ -238,8 +255,8 @@ namespace Nancy.Tests.Unit
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
-           
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             // When
@@ -259,7 +276,7 @@ namespace Nancy.Tests.Unit
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             localEngine.HandleRequest(request);
@@ -274,7 +291,7 @@ namespace Nancy.Tests.Unit
             Func<NancyContext, Response> preHook = (ctx) => preResponse;
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, null));
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             var result = localEngine.HandleRequest(request);
@@ -289,7 +306,7 @@ namespace Nancy.Tests.Unit
             Action<NancyContext> postHook = (ctx) => ctx.Response = postResponse;
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             var result = localEngine.HandleRequest(request);
@@ -303,7 +320,7 @@ namespace Nancy.Tests.Unit
             Action<NancyContext> postHook = (ctx) => ctx.Items.Add("RoutePostReq", new object());
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, postHook));
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             var request = new Request("GET", "/", "http");
 
             var result = localEngine.HandleRequest(request);
@@ -335,7 +352,7 @@ namespace Nancy.Tests.Unit
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, routePreHook, routePostHook));
-            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory);
+            var localEngine = new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler);
             localEngine.PostRequestHook = postHook;
             var request = new Request("GET", "/", "http");
 
@@ -343,6 +360,37 @@ namespace Nancy.Tests.Unit
 
             executionOrder.Count().ShouldEqual(3);
             executionOrder.SequenceEqual(new[] { "Routeprehook", "Routeposthook", "Posthook" }).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_ask_error_handler_if_it_can_handle_status_code()
+        {
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+
+            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_not_invoke_error_handler_if_not_supported_status_code()
+        {
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+
+            A.CallTo(() => this.errorHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_error_handler_if_supported_status_code()
+        {
+            var request = new Request("GET", "/", "http");
+            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).Returns(true);
+
+            this.engine.HandleRequest(request);
+
+            A.CallTo(() => this.errorHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
     }
 }

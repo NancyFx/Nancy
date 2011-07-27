@@ -58,6 +58,10 @@ namespace Nancy.Cryptography
                     return Encoding.UTF8.GetString(output);
                 }
             }
+            catch (FormatException)
+            {
+                return String.Empty;
+            }
             catch (CryptographicException)
             {
                 return String.Empty;
