@@ -1,5 +1,4 @@
 using System.Reflection;
-
 [assembly: AssemblyTitle("Nancy")]
 [assembly: AssemblyDescription("A Sinatra inspired web framework for the .NET platform")]
 [assembly: AssemblyCompany("Nancy")]
