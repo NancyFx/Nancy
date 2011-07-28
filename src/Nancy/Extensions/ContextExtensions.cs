@@ -59,5 +59,18 @@ namespace Nancy.Extensions
         {
             return new RedirectResponse(context.ToFullPath(path));
         }
+
+        /// <summary>
+        /// Retrieves exception details from the context, if any exist
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <returns>Exception details</returns>
+        public static string GetExceptionDetails(this NancyContext context)
+        {
+            object errorObject;
+            context.Items.TryGetValue(NancyEngine.ERROR_KEY, out errorObject);
+
+            return (errorObject as string) ?? "None";
+        }
     }
 }
