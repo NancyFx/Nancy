@@ -104,7 +104,12 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var baseUri = baseUriList.Where(uri => uri.Host == request.Url.Host).First();
+            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsBaseOf(request.Url));
+
+            if (baseUri == null)
+            {
+                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+            }
 
             var expectedRequestLength =
                 GetExpectedRequestLength(request.Headers.ToDictionary());

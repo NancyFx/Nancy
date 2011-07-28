@@ -9,7 +9,7 @@
     {
         static void Main()
         {
-            var nancyHost = new NancyHost(new Uri("http://localhost:8888/nancy/"), new Uri("http://127.0.0.1:8888/nancy/"));
+            var nancyHost = new NancyHost(new Uri("http://localhost:8888/nancy/"), new Uri("http://127.0.0.1:8888/nancy/"), new Uri("http://localhost:8889/nancytoo/"));
             nancyHost.Start();
 
             Console.WriteLine("Nancy now listening - navigating to http://localhost:8888/nancy/. Press enter to stop");
