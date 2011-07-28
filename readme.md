@@ -113,6 +113,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [David Hong](http://github.com/davidhong)
 * [Graeme Foster](http://github.com/GraemeF)
 * [Guido Tapia](http://github.com/gatapia)
+* [Greg Banister](https://github.com/gbanister)
 * [Ian Davis](http://github.com/innovatian)
 * [Jonas Cannehag](http://github.com/knecke)
 * [José F. Romaniello](http://github.com/jfromaniello)
