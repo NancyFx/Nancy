@@ -2,13 +2,18 @@
 {
     using System;
     using System.Threading;
+
+    using Nancy.ErrorHandling;
     using Nancy.Routing;
 
     public class NancyEngine : INancyEngine
     {
+        internal const string ERROR_KEY = "ERROR_TRACE";
+
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
+        private readonly IErrorHandler errorHandler;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -16,7 +21,8 @@
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache">Cache of all available routes</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
+        /// <param name="errorHandler">Error handler</param>
+        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IErrorHandler errorHandler)
         {
             if (resolver == null)
             {
@@ -33,9 +39,15 @@
                 throw new ArgumentNullException("contextFactory");
             }
 
+            if (errorHandler == null)
+            {
+                throw new ArgumentNullException("errorHandler");
+            }
+
             this.resolver = resolver;
             this.routeCache = routeCache;
             this.contextFactory = contextFactory;
+            this.errorHandler = errorHandler;
         }
 
         /// <summary>
@@ -80,6 +92,8 @@
 
             AddNancyVersionHeaderToResponse(context);
 
+            CheckErrorHandler(context);
+
             return context;
         }
 
@@ -120,6 +134,19 @@
             context.Response.Headers["Nancy-Version"] = version.ToString();
         }
 
+        private void CheckErrorHandler(NancyContext context)
+        {
+            if (context.Response == null)
+            {
+                return;
+            }
+
+            if (this.errorHandler.HandlesStatusCode(context.Response.StatusCode))
+            {
+                this.errorHandler.Handle(context.Response.StatusCode, context);
+            }
+        }
+
         private void InvokeRequestLifeCycle(NancyContext context)
         {
             this.InvokePreRequestHook(context);
@@ -158,7 +185,15 @@
 
             if (context.Response == null)
             {
-                context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                try
+                {
+                    context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                }
+                catch (Exception e)
+                {
+                    context.Response = new Response() { StatusCode = HttpStatusCode.InternalServerError };
+                    context.Items[ERROR_KEY] = e.ToString();
+                }
             }
 
             if (context.Request.Method.ToUpperInvariant() == "HEAD")
