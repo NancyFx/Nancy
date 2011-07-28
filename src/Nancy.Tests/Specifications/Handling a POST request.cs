@@ -33,11 +33,5 @@ namespace Nancy.Tests.Specifications
 
         It should_set_status_code_to_not_found = () =>
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
-
-        It should_set_content_type_to_text_html = () =>
-            response.ContentType.ShouldEqual("text/html");
-
-        It should_set_blank_content = () =>
-            response.GetStringContentsFromResponse().ShouldEqual(string.Empty);
     }
 }
