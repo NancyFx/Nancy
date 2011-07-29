@@ -55,6 +55,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private readonly Regex masterPageHeaderRegEx = new Regex(@"^(?:@Master\[\'(?<MasterPage>.+?)\'\]);?", RegexOptions.Compiled);
 
         /// <summary>
+        /// Compiled RegEx for path expansion
+        /// </summary>
+        private readonly Regex pathExpansionRegEx = new Regex(@"(?:@Path\[\'(?<Path>.+?)\'\]);?", RegexOptions.Compiled);
+
+        /// <summary>
         /// View engine transform processors
         /// </summary>
         private readonly List<Func<string, object, string>> processors;
@@ -76,6 +81,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     this.PerformSingleSubstitutions,
                     this.PerformEachSubstitutions,
                     this.PerformConditionalSubstitutions,
+                    this.PerformPathSubstitutions,
                     this.PerformPartialSubstitutions,
                     this.PerformMasterPageSubstitutions,
                 };
@@ -397,6 +403,28 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     }
 
                     return predicateResult ? m.Groups["Contents"].Value : String.Empty;
+                });
+
+            return result;
+        }
+
+        /// <summary>
+        /// Perform path expansion substitutions
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">The model.</param>
+        /// <returns>Template with paths expanded</returns>
+        private string PerformPathSubstitutions(string template, object model)
+        {
+            var result = template;
+
+            result = this.pathExpansionRegEx.Replace(
+                result,
+                m =>
+                {
+                    var path = m.Groups["Path"].Value;
+
+                    return this.viewEngineHost.ExpandPath(path);
                 });
 
             return result;
