@@ -28,5 +28,12 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="parameters">Parameters to use to expand the uri string</param>
         /// <returns>Expanded uri string, or null if not found</returns>
         string GetUriString(string name, params string[] parameters);
+
+        /// <summary>
+        /// Expands a path to include any base paths
+        /// </summary>
+        /// <param name="path">Path to expand</param>
+        /// <returns>Expanded path</returns>
+        string ExpandPath(string path);
     }
 }

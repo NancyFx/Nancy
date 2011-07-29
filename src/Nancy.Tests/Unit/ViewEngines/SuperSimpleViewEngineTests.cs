@@ -661,6 +661,19 @@
 
             Assert.Equal("Top! Top\r\nMiddle", result);
         }
+
+        [Fact]
+        public void Should_call_to_expand_paths()
+        {
+            const string input = @"<script src='@Path['~/scripts/test.js']'></script>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.ExpandPathCallBack = s => s.Replace("~/", "/BasePath/");
+            var viewEngine = new SuperSimpleViewEngine(fakeViewEngineHost);
+
+            var result = viewEngine.Render(input, null);
+
+            Assert.Equal("<script src='/BasePath/scripts/test.js'></script>", result);
+        }
     }
 
     public class User
