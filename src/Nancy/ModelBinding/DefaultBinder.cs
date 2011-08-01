@@ -93,12 +93,18 @@ namespace Nancy.ModelBinding
 
         private IDictionary<string, string> GetDataFields(NancyContext context)
         {
-            // TODO - should we get querystring and captured variables too?
-            var formDictionary = (DynamicDictionary)context.Request.Form;
+            var dictionaries = new List<DynamicDictionary> {context.Request.Form, context.Request.Query};
 
-            return formDictionary.GetDynamicMemberNames().ToDictionary(
-                memberName => this.fieldNameConverter.Convert(memberName), 
-                memberName => (string)formDictionary[memberName]);
+            var dataFields = new Dictionary<string, string>();
+
+            dictionaries.ForEach(dictionary =>
+                            dataFields = dataFields.Concat(
+                                dictionary.GetDynamicMemberNames().ToDictionary(
+                                memberName => this.fieldNameConverter.Convert(memberName),
+                                memberName => (string)dictionary[memberName])
+                                .Where(kvp => !dataFields.ContainsKey(kvp.Key))).ToDictionary(kvp => kvp.Key,kvp => kvp.Value));
+            
+            return dataFields;
         }
 
         private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
