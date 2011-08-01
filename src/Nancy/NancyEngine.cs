@@ -178,9 +178,10 @@
         private void ResolveAndInvokeRoute(NancyContext context)
         {
             var resolveResult = this.resolver.Resolve(context, this.routeCache);
+
+            context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;
             var resolveResultPostReq = resolveResult.Item4;
-
             this.ExecuteRoutePreReq(context, resolveResultPreReq);
 
             if (context.Response == null)

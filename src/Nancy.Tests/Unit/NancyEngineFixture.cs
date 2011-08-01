@@ -417,5 +417,17 @@ namespace Nancy.Tests.Unit
 
             result.GetExceptionDetails().ShouldContain("NotImplementedException");
         }
+
+        [Fact]
+        public void Should_set_the_route_parameters_to_the_nancy_context_before_calling_the_module_before()
+        {
+            dynamic parameters = new DynamicDictionary();
+            parameters.Foo = "Bar";
+            Func<NancyContext, Response> moduleBefore = (ctx) =>  { Assert.Equal(this.context.Parameters, parameters); return null; };
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(route, parameters, moduleBefore, null));
+            var request = new Request("GET", "/", "http");
+            engine.HandleRequest(request);
+            Assert.Equal(this.context.Parameters, parameters);
+        }
     }
 }
