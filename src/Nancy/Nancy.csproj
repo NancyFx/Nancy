@@ -125,6 +125,11 @@
     <Compile Include="Cryptography\PassphraseKeyGenerator.cs" />
     <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
+    <Compile Include="Diagnostics\DiagnosticSession.cs" />
+    <Compile Include="Diagnostics\Hooks.cs" />
+    <Compile Include="Diagnostics\IDiagnosticSessions.cs" />
+    <Compile Include="Diagnostics\RequestDiagnostic.cs" />
+    <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultErrorHandler.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />

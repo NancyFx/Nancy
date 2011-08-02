@@ -5,6 +5,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Diagnostics;
 
     /// <summary>
     /// Nancy context.
@@ -17,6 +18,7 @@ namespace Nancy
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
+            this.Diagnostic = new RequestDiagnostic();
         }
 
         /// <summary>
@@ -29,10 +31,25 @@ namespace Nancy
         /// </summary>
         public dynamic Parameters { get; set; }
 
+        private Request request;
+
         /// <summary>
         /// Gets or sets the incoming request
         /// </summary>
-        public Request Request { get; set; }
+        public Request Request
+        {
+            get
+            {
+                return this.request;
+            }
+
+            set
+            {
+                this.request = value;
+                this.Diagnostic.Method = request.Method;
+                this.Diagnostic.RequestUrl = request.Url;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the outgoing response
@@ -43,6 +60,11 @@ namespace Nancy
         /// Gets or sets the current user
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }
+
+        /// <summary>
+        /// Diagnostics
+        /// </summary>
+        public RequestDiagnostic Diagnostic { get; private set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.
