@@ -93,18 +93,22 @@ namespace Nancy.ModelBinding
 
         private IDictionary<string, string> GetDataFields(NancyContext context)
         {
-            var dictionaries = new List<DynamicDictionary> {context.Request.Form, context.Request.Query};
+            var dictionaries = new List<DynamicDictionary> { context.Request.Form, context.Request.Query, context.Parameters };
 
             var dataFields = new Dictionary<string, string>();
 
-            dictionaries.ForEach(dictionary =>
-                            dataFields = dataFields.Concat(
-                                dictionary.GetDynamicMemberNames().ToDictionary(
-                                memberName => this.fieldNameConverter.Convert(memberName),
-                                memberName => (string)dictionary[memberName])
-                                .Where(kvp => !dataFields.ContainsKey(kvp.Key))).ToDictionary(kvp => kvp.Key,kvp => kvp.Value));
-            
+            dataFields = dictionaries.Where(dictionary => dictionary != null).Aggregate(dataFields, (current, dictionary) => 
+                        current.Concat(convertDynamicDictionary(dictionary).Where(kvp => !current.ContainsKey(kvp.Key)))
+                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
+
             return dataFields;
+        }
+
+        private IEnumerable<KeyValuePair<string, string>> convertDynamicDictionary(DynamicDictionary dictionary)
+        {
+            return dictionary.GetDynamicMemberNames().ToDictionary(memberName =>
+                                                                   fieldNameConverter.Convert(memberName),
+                                                                   memberName => (string) dictionary[memberName]);
         }
 
         private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
