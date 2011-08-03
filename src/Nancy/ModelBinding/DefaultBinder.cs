@@ -4,6 +4,7 @@ namespace Nancy.ModelBinding
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Default binder - used as a fallback when a specific modelbinder
@@ -93,22 +94,26 @@ namespace Nancy.ModelBinding
 
         private IDictionary<string, string> GetDataFields(NancyContext context)
         {
-            var dictionaries = new List<DynamicDictionary> { context.Request.Form, context.Request.Query, context.Parameters };
+            var dictionaries = new IDictionary<string, string>[]
+                {
+                    ConvertDynamicDictionary(context.Request.Form), 
+                    ConvertDynamicDictionary(context.Request.Query), 
+                    ConvertDynamicDictionary(context.Parameters),
+                };
 
-            var dataFields = new Dictionary<string, string>();
-
-            dataFields = dictionaries.Where(dictionary => dictionary != null).Aggregate(dataFields, (current, dictionary) => 
-                        current.Concat(convertDynamicDictionary(dictionary).Where(kvp => !current.ContainsKey(kvp.Key)))
-                        .ToDictionary(kvp => kvp.Key, kvp => kvp.Value));
-
-            return dataFields;
+            return dictionaries.Merge();
         }
 
-        private IEnumerable<KeyValuePair<string, string>> convertDynamicDictionary(DynamicDictionary dictionary)
+        private IDictionary<string, string> ConvertDynamicDictionary(DynamicDictionary dictionary)
         {
-            return dictionary.GetDynamicMemberNames().ToDictionary(memberName =>
-                                                                   fieldNameConverter.Convert(memberName),
-                                                                   memberName => (string) dictionary[memberName]);
+            if (dictionary == null)
+            {
+                return null;
+            }
+
+            return dictionary.GetDynamicMemberNames().ToDictionary(
+                    memberName => this.fieldNameConverter.Convert(memberName),
+                    memberName => (string)dictionary[memberName]);
         }
 
         private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
@@ -165,7 +170,7 @@ namespace Nancy.ModelBinding
             {
                 return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
-        
+
             bodyDeserializer = this.defaults.DefaultBodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
             if (bodyDeserializer != null)
             {

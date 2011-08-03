@@ -25,5 +25,23 @@
 
             return collection;
         }
+
+        public static IDictionary<TKey, TValue> Merge<TKey, TValue>(this IEnumerable<IDictionary<TKey, TValue>> dictionaries)
+        {
+            var output = new Dictionary<TKey, TValue>();
+
+            foreach (var dictionary in dictionaries.Where(d => d != null))
+            {
+                foreach (var kvp in dictionary)
+                {
+                    if (!output.ContainsKey(kvp.Key))
+                    {
+                        output.Add(kvp.Key, kvp.Value);
+                    }
+                }
+            }
+
+            return output;
+        }
     }
 }
