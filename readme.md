@@ -126,6 +126,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [João Bragança](http://github.com/thefringeninja)
 * [Johan Danforth](http://github.com/johandanforth)
 * [Johan Nilsson](http://github.com/Dashue)
+* [Jonathan Scoles](https://github.com/jscoles)
 * [John Downey](http://github.com/jtdowney)
 * [Jonas Schmid](https://github.com/NeqO)
 * [Mark Rendle](http://github.com/markrendle)
