@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
 
     using FakeItEasy;
@@ -118,6 +119,11 @@
         {
         }
 
+        protected override byte[] DefaultFavIcon
+        {
+            get { return this.Favicon ?? base.DefaultFavIcon; }
+        }
+
         public BeforePipeline PreRequest
         {
             get { return this.BeforeRequest; }
@@ -129,6 +135,8 @@
             get { return this.AfterRequest; }
             set { this.AfterRequest = value; }
         }
+
+        public byte[] Favicon { get; set; }
     }
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
@@ -323,6 +331,33 @@
 
             A.CallTo(() => startupMock.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => startupMock2.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_allow_favicon_override()
+        {
+            var favicon = new byte[] { 1, 2, 3 };
+            _Bootstrapper.Favicon = favicon;
+            var favIconRequest = new FakeRequest("GET", "/favicon.ico");
+            var context = new NancyContext { Request = favIconRequest };
+            _Bootstrapper.Initialise();
+
+            var result = _Bootstrapper.PreRequest.Invoke(context);
+
+            result.ShouldNotBeNull();
+            result.ContentType.ShouldEqual("image/vnd.microsoft.icon");
+            result.StatusCode = HttpStatusCode.OK;
+            GetBodyBytes(result).SequenceEqual(favicon).ShouldBeTrue();
+        }
+
+        private byte[] GetBodyBytes(Response response)
+        {
+            using (var contentsStream = new MemoryStream())
+            {
+                response.Contents.Invoke(contentsStream);
+
+                return contentsStream.ToArray();
+            }
         }
     }
 }
