@@ -13,7 +13,10 @@
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
 
-            this.BuildCache(moduleCatalog.GetAllModules(contextFactory.Create()));
+            using (var context = contextFactory.Create())
+            {
+                this.BuildCache(moduleCatalog.GetAllModules(context));
+            }
         }
 
         private void BuildCache(IEnumerable<NancyModule> modules)
