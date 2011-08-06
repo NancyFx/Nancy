@@ -1,7 +1,5 @@
 namespace Nancy.Testing.Tests
 {
-    using Nancy.Testing.Fakes;
-
     public class BrowserFixture
     {
         private readonly Browser browser;
@@ -9,7 +7,7 @@ namespace Nancy.Testing.Tests
         public BrowserFixture()
         {
             var bootstrapper = 
-                new FakeNancyBootstrapper();
+                new ConfigurableBootstrapper();
 
             this.browser = new Browser(bootstrapper);
         }
