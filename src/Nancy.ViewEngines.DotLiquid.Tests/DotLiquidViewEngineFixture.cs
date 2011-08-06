@@ -43,8 +43,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Including a partial</h1>Some template.");
@@ -75,8 +75,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
@@ -96,8 +96,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
@@ -117,8 +117,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
@@ -138,8 +138,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, new { lastname = "test" }, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, new { lastname = "test" }, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
@@ -160,8 +160,8 @@
 
             // When
             var widgets = new List<object> { new { name = "Widget 1" }, new { name = "Widget 2" }, new { name = "Widget 3" }, new { name = "Widget 4" } };
-            var action = this.engine.RenderView(location, new { Widgets = widgets }, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, new { Widgets = widgets }, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");

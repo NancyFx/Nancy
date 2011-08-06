@@ -1,10 +1,8 @@
 ﻿namespace Nancy.Tests.Fakes
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
-
     using Nancy.ViewEngines;
+    using Responses;
 
     public class FakeViewEngine : IViewEngine
     {
@@ -21,10 +19,10 @@
         {
         }
 
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             this.Model = model;
-            return stream => { };
+            return new HtmlResponse();
         }
     }
 }

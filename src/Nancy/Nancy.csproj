@@ -131,6 +131,9 @@
     <Compile Include="NamedPipelineBase.cs" />
     <Compile Include="PipelineItem.cs" />
     <Compile Include="RequestHeaders.cs" />
+    <Compile Include="Responses\HtmlResponse.cs" />
+    <Compile Include="Security\CsrfProtection.cs" />
+    <Compile Include="Security\CsrfToken.cs" />
     <Compile Include="ResponseExtensions.cs" />
     <Compile Include="RootPathStartup.cs" />
     <Compile Include="Security\IUserIdentity.cs" />

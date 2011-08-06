@@ -186,11 +186,11 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
-            var action = factory.RenderView("foo", null, new ViewLocationContext());
+            var response = factory.RenderView("foo", null, new ViewLocationContext());
             var stream = new MemoryStream();
 
             // When
-            action.Invoke(stream);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.Length.ShouldEqual(0L);
@@ -253,15 +253,15 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            var action = factory.RenderView("foo", null, new ViewLocationContext());
-            action.Invoke(stream);
+            var response = factory.RenderView("foo", null, new ViewLocationContext());
+            response.Contents.Invoke(stream);
 
             // Then
             stream.Length.ShouldEqual(0L);
         }
 
         [Fact]
-        public void Should_return_action_from_invoked_engine()
+        public void Should_return_response_from_invoked_engine()
         {
             // Given
             var viewEngines = new[] {
@@ -279,10 +279,10 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            var action = factory.RenderView("foo", null, new ViewLocationContext());
+            var response = factory.RenderView("foo", null, new ViewLocationContext());
 
             // Then
-            action.ShouldEqual(actionReturnedFromEngine);
+            response.Contents.ShouldBeSameAs(actionReturnedFromEngine);
         }
 
         [Fact]
@@ -302,8 +302,8 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            var action = factory.RenderView("foo", null, new ViewLocationContext());
-            action.Invoke(stream);
+            var response = factory.RenderView("foo", null, new ViewLocationContext());
+            response.Contents.Invoke(stream);
 
             // Then
             stream.Length.ShouldEqual(0L);

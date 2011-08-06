@@ -14,7 +14,7 @@
         /// <param name="viewName">The name of the view to render.</param>
         /// <param name="model">The module path of the module that is rendering the view.</param>
         /// <param name="viewLocationContext">A <see cref="ViewLocationContext"/> instance, containing information about the context for which the view is being rendered.</param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        Action<Stream> RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext);
+        /// <returns>A response.</returns>
+        Response RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext);
     }
 }

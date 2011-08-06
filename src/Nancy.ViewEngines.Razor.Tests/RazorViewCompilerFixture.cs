@@ -43,8 +43,8 @@
             var stream = new MemoryStream();
 
             // When
-            var action = this.engine.RenderView(location, null, this.renderContext);
-            action.Invoke(stream);
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");

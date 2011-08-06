@@ -10,6 +10,7 @@
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using Microsoft.CSharp;
+    using Responses;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -193,8 +194,8 @@
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
         /// <param name="renderContext"></param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        /// <returns>A response.</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             //@(section)?[\s]*(?<name>[A-Za-z]*)[\s]*{(?<content>[^\}]*)}?
 
@@ -208,7 +209,7 @@
                 }
             }
 
-            return stream =>
+            return new HtmlResponse(contents: stream =>
             {
                 var writer =
                     new StreamWriter(stream);
@@ -232,7 +233,7 @@
 
                 writer.Write(body);
                 writer.Flush();
-            };
+            });
         }
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
