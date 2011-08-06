@@ -15,6 +15,6 @@
         /// <param name="salt">Optional salt value specified during creation</param>
         /// <param name="validityPeriod">Optional period that the tokens are valid for</param>
         /// <returns>Token validation result</returns>
-        CsrfTokenValidationResult IsValid(CsrfToken tokenOne, CsrfToken tokenTwo, string salt = null, TimeSpan? validityPeriod = null);
+        CsrfTokenValidationResult Validate(CsrfToken tokenOne, CsrfToken tokenTwo, string salt = null, TimeSpan? validityPeriod = null);
     }
 }

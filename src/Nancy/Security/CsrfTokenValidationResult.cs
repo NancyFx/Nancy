@@ -29,5 +29,10 @@
         /// Token is valid, but has expired
         /// </summary>
         TokenExpired,
+
+        /// <summary>
+        /// Token salt does not match validation salt
+        /// </summary>
+        SaltMismatch,
     }
 }

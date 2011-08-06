@@ -134,6 +134,7 @@
     <Compile Include="Responses\HtmlResponse.cs" />
     <Compile Include="Security\CsrfToken.cs" />
     <Compile Include="Security\CsrfTokenExtensions.cs" />
+    <Compile Include="Security\DefaultCsrfTokenValidator.cs" />
     <Compile Include="Security\ICsrfTokenValidator.cs" />
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />

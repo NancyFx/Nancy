@@ -177,6 +177,7 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
+    <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
