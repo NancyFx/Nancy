@@ -1,6 +1,11 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using System;
+    using System.Collections.Generic;
+    using Cryptography;
     using Nancy.Extensions;
+    using Security;
+    using Session;
 
     /// <summary>
     /// Default render context implementation.
@@ -9,6 +14,8 @@
     {
         private readonly IViewResolver viewResolver;
         private readonly IViewCache viewCache;
+        private readonly IHmacProvider hmacProvider;
+        private readonly ISessionObjectFormatter formatter;
         private readonly ViewLocationContext viewLocationContext;
 
         /// <summary>
@@ -16,11 +23,15 @@
         /// </summary>
         /// <param name="viewResolver"></param>
         /// <param name="viewCache"></param>
+        /// <param name="hmacProvider"></param>
+        /// <param name="formatter"></param>
         /// <param name="viewLocationContext"></param>
-        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, ViewLocationContext viewLocationContext)
+        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, IHmacProvider hmacProvider, ISessionObjectFormatter formatter, ViewLocationContext viewLocationContext)
         {
             this.viewResolver = viewResolver;
             this.viewCache = viewCache;
+            this.hmacProvider = hmacProvider;
+            this.formatter = formatter;
             this.viewLocationContext = viewLocationContext;
         }
 
@@ -63,6 +74,29 @@
         public ViewLocationResult LocateView(string viewName, dynamic model)
         {
             return this.viewResolver.GetViewLocation(viewName, model, this.viewLocationContext);
+        }
+
+        /// <summary>
+        /// Generates a Csrf token.
+        /// The token should be stored in a cookie and the form as a hidden field.
+        /// In both cases the name should be the key of the returned key value pair.
+        /// </summary>
+        /// <param name="salt">Optional salt</param>
+        /// <returns>A tuple containing the name (cookie name and form/querystring name) and value</returns>
+        public KeyValuePair<string, string> GenerateCsrfToken(string salt = null)
+        {
+            if (this.hmacProvider == null || this.formatter == null)
+            {
+                throw new InvalidOperationException("Csrf tokens cannot be generated as a HmacProvider and Formatter were not specified");
+            }
+
+            var token = new CsrfToken { Salt = salt, CreatedDate = DateTime.Now };
+            token.CreateRandomBytes();
+            token.CreateHmac(this.hmacProvider);
+
+            var serializedToken = this.formatter.Serialize(token);
+
+            return new KeyValuePair<string, string>(CsrfToken.DEFAULT_CSRF_KEY, serializedToken);
         }
     }
 }

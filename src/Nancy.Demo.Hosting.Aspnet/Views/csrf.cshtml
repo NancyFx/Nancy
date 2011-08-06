@@ -1,0 +1,12 @@
+﻿<html>
+<head>
+    <title>CSRF Demo</title>
+</head>
+<body>
+    <form action='@Url.Content("~/csrfresult")'>
+        <input type="text" name="Name"/>
+        @Html.AntiForgeryToken();
+        <input type="submit"/>
+    </form>
+</body>
+</html>

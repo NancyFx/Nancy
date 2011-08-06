@@ -127,6 +127,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                 {
                     throw new NotSupportedException("This is an exception thrown in a route.");
                 };
+
+            Get["/csrf"] = x =>
+                {
+                    return View["csrf"];
+                };
         }
     }
 }

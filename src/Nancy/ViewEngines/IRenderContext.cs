@@ -1,5 +1,10 @@
 namespace Nancy.ViewEngines
 {
+    using System;
+    using System.Collections.Generic;
+    using Cookies;
+    using Security;
+
     /// <summary>
     /// Defines the functionality of the context that is passed into a view engine when the view is requested to be rendered.
     /// </summary>
@@ -33,5 +38,14 @@ namespace Nancy.ViewEngines
         /// <param name="model">The model that should be used when locating the view.</param>
         /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise, <see langword="null"/>.</returns>
         ViewLocationResult LocateView(string viewName, dynamic model);
+
+        /// <summary>
+        /// Generates a Csrf token.
+        /// The token should be stored in a cookie and the form as a hidden field.
+        /// In both cases the name should be the key of the returned key value pair.
+        /// </summary>
+        /// <param name="salt">Optional salt</param>
+        /// <returns>A tuple containing the name (cookie name and form/querystring name) and value</returns>
+        KeyValuePair<string, string> GenerateCsrfToken(string salt = null);
     }
 }

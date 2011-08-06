@@ -184,6 +184,11 @@
             get { return new[] { "cshtml" }; }
         }
 
+        /// <summary>
+        /// Gets or sets the csrf token key value
+        /// </summary>
+        public KeyValuePair<string, string>? TokenKeyValue { get; set; }
+
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
@@ -209,31 +214,38 @@
                 }
             }
 
-            return new HtmlResponse(contents: stream =>
-            {
-                var writer =
-                    new StreamWriter(stream);
-
-                NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
-                view.ExecuteView(null, null);
-                var body = view.Body;
-                var sectionContents = view.SectionContents;
-                var root = !view.HasLayout;
-                var layout = view.Layout;
-                
-                while (!root)
+            var response = new HtmlResponse(contents: stream =>
                 {
-                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
-                    view.ExecuteView(body, sectionContents);
+                    var writer =
+                        new StreamWriter(stream);
 
-                    body = view.Body;
-                    sectionContents = view.SectionContents;
-                    root = !view.HasLayout;
-                }
+                    NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                    view.ExecuteView(null, null);
+                    var body = view.Body;
+                    var sectionContents = view.SectionContents;
+                    var root = !view.HasLayout;
+                    var layout = view.Layout;
+                
+                    while (!root)
+                    {
+                        view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                        view.ExecuteView(body, sectionContents);
 
-                writer.Write(body);
-                writer.Flush();
-            });
+                        body = view.Body;
+                        sectionContents = view.SectionContents;
+                        root = !view.HasLayout;
+                    }
+
+                    writer.Write(body);
+                    writer.Flush();
+                });
+
+            if (this.TokenKeyValue.HasValue)
+            {
+                response.AddCookie(this.TokenKeyValue.Value.Key, this.TokenKeyValue.Value.Value);
+            }
+
+            return response;
         }
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
