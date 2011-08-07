@@ -184,11 +184,6 @@
             get { return new[] { "cshtml" }; }
         }
 
-        /// <summary>
-        /// Gets or sets the csrf token key value
-        /// </summary>
-        public KeyValuePair<string, string>? TokenKeyValue { get; set; }
-
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
@@ -214,11 +209,12 @@
                 }
             }
 
-            var response = new HtmlResponse(contents: stream =>
+            var response = new HtmlResponse();
+            
+            response.Contents = stream =>
                 {
                     var writer =
                         new StreamWriter(stream);
-
                     NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
                     view.ExecuteView(null, null);
                     var body = view.Body;
@@ -238,12 +234,7 @@
 
                     writer.Write(body);
                     writer.Flush();
-                });
-
-            if (this.TokenKeyValue.HasValue)
-            {
-                response.AddCookie(this.TokenKeyValue.Value.Key, this.TokenKeyValue.Value.Value);
-            }
+                };
 
             return response;
         }

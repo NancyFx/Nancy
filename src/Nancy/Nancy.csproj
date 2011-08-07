@@ -217,11 +217,11 @@
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
-    <Compile Include="Session\DefaultSessionObjectFormatter.cs" />
+    <Compile Include="DefaultObjectSerializer.cs" />
     <Compile Include="Cryptography\IEncryptionProvider.cs" />
-    <Compile Include="Session\IFormatterSelector.cs" />
+    <Compile Include="IObjectSerializerSelector.cs" />
     <Compile Include="Session\ISession.cs" />
-    <Compile Include="Session\ISessionObjectFormatter.cs" />
+    <Compile Include="IObjectSerializer.cs" />
     <Compile Include="Session\NullSessionProvider.cs" />
     <Compile Include="Session\Session.cs" />
     <Compile Include="HttpMultipartSubStream.cs" />

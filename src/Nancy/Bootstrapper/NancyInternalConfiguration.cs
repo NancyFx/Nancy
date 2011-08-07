@@ -48,6 +48,7 @@ namespace Nancy.Bootstrapper
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                         ErrorHandler = typeof(DefaultErrorHandler),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
+                        ObjectSerializer = typeof(DefaultObjectSerializer),
                     };
             }
         }
@@ -95,6 +96,8 @@ namespace Nancy.Bootstrapper
         public Type ErrorHandler { get; set; }
 
         public Type CsrfTokenValidator { get; set; }
+
+        public Type ObjectSerializer { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -158,6 +161,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(IErrorHandler), this.ErrorHandler), 
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
+                new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
             };
         }
     }

@@ -102,7 +102,7 @@
     <Compile Include="Fakes\FakeNancyModuleWithPreAndPostHooks.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
-    <Compile Include="Fakes\FakeSessionObjectFormatter.cs" />
+    <Compile Include="Fakes\FakeObjectSerializer.cs" />
     <Compile Include="Fakes\FakeHookedModule.cs" />
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
     <Compile Include="Fakes\Person.cs" />
