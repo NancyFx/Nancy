@@ -14,7 +14,7 @@
 
         public PassphraseKeyGenerator(string passphrase)
         {
-            this.provider = new Rfc2898DeriveBytes(passphrase, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 });
+            this.provider = new Rfc2898DeriveBytes(passphrase, new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 10000);
         }
 
         /// <summary>
