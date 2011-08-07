@@ -41,7 +41,7 @@
                 return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null);
             }
 
-            var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, context);
+            var routesThatMatchRequestedPath = this.GetRoutesThatMatchRequestedPath(routeCache, context).ToList();
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
@@ -49,7 +49,7 @@
             }
 
             var routesWithCorrectRequestMethod =
-                GetRoutesWithCorrectRequestMethod(context.Request, routesThatMatchRequestedPath);
+                GetRoutesWithCorrectRequestMethod(context.Request, routesThatMatchRequestedPath).ToList();
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
