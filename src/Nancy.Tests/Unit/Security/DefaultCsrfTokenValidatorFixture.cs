@@ -12,8 +12,9 @@
 
         public DefaultCsrfTokenValidatorFixture()
         {
-            this.hmacProvider = new DefaultHmacProvider(new RandomKeyGenerator());
-            this.validator = new DefaultCsrfTokenValidator(this.hmacProvider);            
+            var cryptoConfig = CryptographyConfiguration.Default;
+            this.hmacProvider = cryptoConfig.HmacProvider;
+            this.validator = new DefaultCsrfTokenValidator(cryptoConfig);            
         }
 
         [Fact]

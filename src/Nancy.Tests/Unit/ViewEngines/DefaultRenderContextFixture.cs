@@ -155,7 +155,7 @@
         [Fact]
         public void Should_generate_csrf_token()
         {
-            var context = new DefaultRenderContext(null, null, new DefaultHmacProvider(new RandomKeyGenerator()), new DefaultSessionObjectFormatter(), null);
+            var context = new DefaultRenderContext(null, null, CryptographyConfiguration.Default, new DefaultSessionObjectFormatter(), null);
 
             var result = context.GenerateCsrfToken();
 

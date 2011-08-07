@@ -8,9 +8,9 @@ namespace Nancy.Security
     {
         private readonly IHmacProvider hmacProvider;
 
-        public DefaultCsrfTokenValidator(IHmacProvider hmacProvider)
+        public DefaultCsrfTokenValidator(CryptographyConfiguration cryptoConfig)
         {
-            this.hmacProvider = hmacProvider;
+            this.hmacProvider = cryptoConfig.HmacProvider;
         }
 
         /// <summary>

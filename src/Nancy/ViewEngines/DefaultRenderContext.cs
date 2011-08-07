@@ -14,7 +14,7 @@
     {
         private readonly IViewResolver viewResolver;
         private readonly IViewCache viewCache;
-        private readonly IHmacProvider hmacProvider;
+        private readonly CryptographyConfiguration cryptographyConfiguration;
         private readonly ISessionObjectFormatter formatter;
         private readonly ViewLocationContext viewLocationContext;
 
@@ -23,14 +23,14 @@
         /// </summary>
         /// <param name="viewResolver"></param>
         /// <param name="viewCache"></param>
-        /// <param name="hmacProvider"></param>
+        /// <param name="cryptographyConfiguration"></param>
         /// <param name="formatter"></param>
         /// <param name="viewLocationContext"></param>
-        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, IHmacProvider hmacProvider, ISessionObjectFormatter formatter, ViewLocationContext viewLocationContext)
+        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, CryptographyConfiguration cryptographyConfiguration, ISessionObjectFormatter formatter, ViewLocationContext viewLocationContext)
         {
             this.viewResolver = viewResolver;
             this.viewCache = viewCache;
-            this.hmacProvider = hmacProvider;
+            this.cryptographyConfiguration = cryptographyConfiguration;
             this.formatter = formatter;
             this.viewLocationContext = viewLocationContext;
         }
@@ -85,14 +85,14 @@
         /// <returns>A tuple containing the name (cookie name and form/querystring name) and value</returns>
         public KeyValuePair<string, string> GenerateCsrfToken(string salt = null)
         {
-            if (this.hmacProvider == null || this.formatter == null)
+            if (this.cryptographyConfiguration == null || this.formatter == null)
             {
-                throw new InvalidOperationException("Csrf tokens cannot be generated as a HmacProvider and Formatter were not specified");
+                throw new InvalidOperationException("Csrf tokens cannot be generated as a cryptography configurati and Formatter were not specified");
             }
 
             var token = new CsrfToken { Salt = salt, CreatedDate = DateTime.Now };
             token.CreateRandomBytes();
-            token.CreateHmac(this.hmacProvider);
+            token.CreateHmac(this.cryptographyConfiguration.HmacProvider);
 
             var serializedToken = this.formatter.Serialize(token);
 

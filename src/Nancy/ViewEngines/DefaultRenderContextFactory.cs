@@ -10,7 +10,7 @@
     {
         private readonly IViewCache viewCache;
         private readonly IViewResolver viewResolver;
-        private readonly IHmacProvider hmacProvider;
+        private readonly CryptographyConfiguration cryptographyConfiguration;
         private readonly ISessionObjectFormatter formatter;
 
         /// <summary>
@@ -18,13 +18,13 @@
         /// </summary>
         /// <param name="viewCache">The view cache that should be used by the created render context.</param>
         /// <param name="viewResolver">The view resolver that should be sused by the created render context.</param>
-        /// <param name="hmacProvider"></param>
+        /// <param name="cryptographyConfiguration"></param>
         /// <param name="formatter"></param>
-        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver, IHmacProvider hmacProvider, ISessionObjectFormatter formatter)
+        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver, CryptographyConfiguration cryptographyConfiguration, ISessionObjectFormatter formatter)
         {
             this.viewCache = viewCache;
             this.viewResolver = viewResolver;
-            this.hmacProvider = hmacProvider;
+            this.cryptographyConfiguration = cryptographyConfiguration;
             this.formatter = formatter;
         }
 
@@ -35,7 +35,7 @@
         /// <returns>A <see cref="IRenderContext"/> instance.</returns>
         public IRenderContext GetRenderContext(ViewLocationContext viewLocationContext)
         {
-            return new DefaultRenderContext(this.viewResolver, this.viewCache, this.hmacProvider, this.formatter, viewLocationContext);
+            return new DefaultRenderContext(this.viewResolver, this.viewCache, this.cryptographyConfiguration, this.formatter, viewLocationContext);
         }
     }
 }
