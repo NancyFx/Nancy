@@ -510,9 +510,9 @@ namespace Nancy.Json
 					break;
 
 				case JsonType.FLOAT:
-					if (Decimal.TryParse (s, out decimalValue))
+					if (Decimal.TryParse(s,NumberStyles.Any, Json.DefaultNumberFormatInfo, out decimalValue))
 						result = decimalValue;
-					else if (Double.TryParse (s, out doubleValue))
+					else if (Double.TryParse (s,NumberStyles.Any, Json.DefaultNumberFormatInfo, out doubleValue))
 						result = doubleValue;
 					else
 						converted = false;

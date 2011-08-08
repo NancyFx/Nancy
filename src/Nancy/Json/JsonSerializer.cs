@@ -48,6 +48,8 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
+
+        
 		
 		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
 		
@@ -429,12 +431,13 @@ namespace Nancy.Json
 
 		void WriteValue (StringBuilder output, float value)
 		{
-			StringBuilderExtensions.AppendCount (output, maxJsonLength, value.ToString ("r"));
+			StringBuilderExtensions.AppendCount (output, maxJsonLength, value.ToString ("r",Json.DefaultNumberFormatInfo));
 		}
 
+        
 		void WriteValue (StringBuilder output, double value)
 		{
-			StringBuilderExtensions.AppendCount (output, maxJsonLength, value.ToString ("r"));
+            StringBuilderExtensions.AppendCount(output, maxJsonLength, value.ToString("r",Json.DefaultNumberFormatInfo));
 		}
 		
 		void WriteValue (StringBuilder output, Guid value)
