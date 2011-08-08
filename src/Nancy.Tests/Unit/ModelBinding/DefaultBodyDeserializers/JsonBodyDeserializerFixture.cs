@@ -1,3 +1,6 @@
+using System.Globalization;
+using System.Threading;
+
 namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System;
@@ -106,6 +109,22 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.DateProperty.ShouldEqual(default(DateTime));
         }
 
+        [Fact]
+        public void Should_Serialize_Doubles_In_Different_Cultures()
+        {
+            Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
+            var modelWithDoubleValues = new ModelWithDoubleValues();
+            modelWithDoubleValues.Latitude = 50.933984;
+            modelWithDoubleValues.Longitude = 7.330627;
+            var s = new JavaScriptSerializer();
+            var serialized = s.Serialize(modelWithDoubleValues);
+
+            var deserializedModelWithDoubleValues = s.Deserialize<ModelWithDoubleValues>(serialized);
+
+            Assert.Equal(modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
+            Assert.Equal(modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
+        }
+
         public class TestModel : IEquatable<TestModel>
         {
             public string StringProperty { get; set; }
@@ -176,5 +195,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 return !Equals(left, right);
             }
         }
+    }
+
+    public class ModelWithDoubleValues
+    {
+        public double Latitude { get; set; }
+
+        public double Longitude { get; set; }
     }
 }
