@@ -104,6 +104,19 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             called.ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_set_on_error_hook()
+        {
+            var called = false;
+            this.Bootstrapper.Initialise();
+            this.Bootstrapper.OnError += (c, e) => { called = true; return null; };
+            var engine = this.Bootstrapper.GetEngine();
+
+            engine.OnErrorHook.Invoke(new NancyContext(), new Exception());
+
+            called.ShouldBeTrue();
+        }
+
         public class FakeEngine : INancyEngine
         {
             private readonly IRouteResolver resolver;

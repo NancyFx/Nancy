@@ -50,6 +50,7 @@
 
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();
+            this.OnError = new ErrorPipeline();
 
             this.conventions = new NancyConventions();
         }
@@ -76,6 +77,17 @@
         /// </para>
         /// </summary>
         public AfterPipeline AfterRequest { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during the pipeline.
+        /// If no error hook exists a standard InternalServerError response is returned
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError { get; set; }
 
         /// <summary>
         /// Gets the Container instance - automatically set during initialise.
@@ -323,6 +335,7 @@
             var engine = this.GetEngineInternal();
             engine.PreRequestHook = this.BeforeRequest;
             engine.PostRequestHook = this.AfterRequest;
+            engine.OnErrorHook = this.OnError;
 
             return engine;
         }
