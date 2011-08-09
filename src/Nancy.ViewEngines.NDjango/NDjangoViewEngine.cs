@@ -24,6 +24,16 @@
         {
         }
 
+        private Object UnwrapDictionary(Object o)
+        {
+            var dict = o as DynamicDictionary;
+            if (dict != null)
+            {
+                return new DictionaryWrapper(dict);
+            }
+            return o;
+        }
+
         /// <summary>
         /// Renders the view.
         /// </summary>
@@ -38,7 +48,7 @@
 
                 var templateManager = provider.GetNewManager();
                 
-                var context = new Dictionary<string, object> { { "Model", model } };
+                var context = new Dictionary<string, object> { { "Model", UnwrapDictionary(model) } };
                 
                 var reader = templateManager.GetTemplate(viewLocationResult.Location).Walk(templateManager, context);
 
