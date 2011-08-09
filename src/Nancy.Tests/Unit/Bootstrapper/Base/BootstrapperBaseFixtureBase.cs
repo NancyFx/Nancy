@@ -129,6 +129,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Action<NancyContext> PostRequestHook { get; set; }
 
+            public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {
                 if (resolver == null)

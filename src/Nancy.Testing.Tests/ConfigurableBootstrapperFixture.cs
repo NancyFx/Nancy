@@ -127,6 +127,8 @@
 
             public Action<NancyContext> PostRequestHook { get; set; }
 
+            public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+
             public NancyContext HandleRequest(Request request)
             {
                 throw new NotImplementedException();
