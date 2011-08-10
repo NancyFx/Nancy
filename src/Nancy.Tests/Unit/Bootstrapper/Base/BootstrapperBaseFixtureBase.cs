@@ -109,7 +109,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var called = false;
             this.Bootstrapper.Initialise();
-            this.Bootstrapper.OnError += (c, e) => { called = true; return null; };
+            this.Bootstrapper.OnError += (c, e) => { called = true; return new Response(); };
             var engine = this.Bootstrapper.GetEngine();
 
             engine.OnErrorHook.Invoke(new NancyContext(), new Exception());
