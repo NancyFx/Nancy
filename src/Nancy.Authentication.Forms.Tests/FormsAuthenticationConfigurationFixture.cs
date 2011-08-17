@@ -20,7 +20,7 @@ namespace Nancy.Authentication.Forms.Tests
                               {
                                   CryptographyConfiguration = cryptographyConfiguration,
                                   RedirectUrl = "/login",
-                                  UsernameMapper = A.Fake<IUsernameMapper>(),
+                                  UserMapper = A.Fake<IUserMapper>(),
                               };
         }
 
@@ -45,7 +45,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_be_valid_with_null_username_mapper()
         {
-            config.UsernameMapper = null;
+            config.UserMapper = null;
 
             var result = config.IsValid;
 

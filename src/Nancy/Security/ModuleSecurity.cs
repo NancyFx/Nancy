@@ -47,13 +47,14 @@ namespace Nancy.Security
         /// <returns>Unauthorized response if not logged in, null otherwise</returns>
         private static Response RequiresAuthentication(NancyContext context)
         {
-            if (context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey) &&
-                !String.IsNullOrEmpty(context.Items[SecurityConventions.AuthenticatedUsernameKey].ToString()))
+            Response response = null;
+            if ( (context.CurrentUser == null) ||
+                String.IsNullOrWhiteSpace(context.CurrentUser.UserName) )
             {
-                return null;
+                response = new Response { StatusCode = HttpStatusCode.Unauthorized };
             }
 
-            return new Response() { StatusCode = HttpStatusCode.Unauthorized };
+            return response;
         }
 
         /// <summary>
@@ -64,24 +65,17 @@ namespace Nancy.Security
         private static Func<NancyContext, Response> RequiresClaims(IEnumerable<string> claims)
         {
             return (ctx) =>
-            {
-                var failResponse = new Response() { StatusCode = HttpStatusCode.Forbidden };
+                       {
+                           Response response = null;
+                           if (ctx.CurrentUser == null
+                               || ctx.CurrentUser.Claims == null
+                               || claims.Any(c => !ctx.CurrentUser.Claims.Contains(c)))
+                           {
+                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                           }
 
-                object userClaimsObject;
-
-                if (!ctx.Items.TryGetValue(SecurityConventions.AuthenticatedClaimsKey, out userClaimsObject))
-                {
-                    return failResponse;
-                }
-
-                var userClaims = userClaimsObject as IEnumerable<string>;
-                if (userClaims == null)
-                {
-                    return failResponse;
-                }
-
-                return claims.Any(claim => !userClaims.Contains(claim)) ? failResponse : null;
-            };
+                           return response;
+                       };
         }
 
         /// <summary>
@@ -92,23 +86,18 @@ namespace Nancy.Security
         private static Func<NancyContext, Response> RequiresValidatedClaims(Func<IEnumerable<string>, bool> isValid)
         {
             return (ctx) =>
-                {
-                    var failResponse = new Response() { StatusCode = HttpStatusCode.Forbidden };
-                    object userClaimsObject;
+                       {
+                           Response response = null;
+                           var userClaims = ctx.CurrentUser.Claims;
+                           if (ctx.CurrentUser == null
+                               || ctx.CurrentUser.Claims == null
+                               || !isValid(ctx.CurrentUser.Claims))
+                           {
+                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                           }
 
-                    if (!ctx.Items.TryGetValue(SecurityConventions.AuthenticatedClaimsKey, out userClaimsObject))
-                    {
-                        return failResponse;
-                    }
-
-                    var userClaims = userClaimsObject as IEnumerable<string>;
-                    if (userClaims == null)
-                    {
-                        return failResponse;
-                    }
-
-                    return isValid.Invoke(userClaims) ? null : failResponse;
-                };
+                           return response;
+                       };
         }
     }
 }

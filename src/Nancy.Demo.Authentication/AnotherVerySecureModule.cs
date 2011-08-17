@@ -15,7 +15,7 @@ namespace Nancy.Demo.Authentication
 
             Get["/"] = x =>
             {
-                var model = new UserModel(Context.Items[SecurityConventions.AuthenticatedUsernameKey].ToString());
+                var model = new UserModel(Context.CurrentUser.UserName);
                 return View["superSecure.cshtml", model];
             };
         }
