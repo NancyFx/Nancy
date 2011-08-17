@@ -95,6 +95,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AuthenticationBootstrapper.cs" />
+    <Compile Include="DemoUserIdentity.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="SecureModule.cs" />
     <Compile Include="UserValidator.cs" />

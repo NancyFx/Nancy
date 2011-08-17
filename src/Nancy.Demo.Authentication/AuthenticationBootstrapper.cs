@@ -21,8 +21,11 @@ namespace Nancy.Demo.Authentication
 
                 if (username.HasValue)
                 {
-                    ctx.Items[Nancy.Security.SecurityConventions.AuthenticatedUsernameKey] = username.ToString();
-                    ctx.Items[Nancy.Security.SecurityConventions.AuthenticatedClaimsKey] = BuildClaims(username.ToString());
+                    ctx.CurrentUser = new DemoUserIdentity
+                                          {
+                                              UserName = username.ToString(),
+                                              Claims = BuildClaims(username.ToString())
+                                          };
                 }
 
                 return null;

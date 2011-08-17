@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Nancy.Security;
 
 namespace Nancy.Authentication.Basic
 {
@@ -16,6 +17,6 @@ namespace Nancy.Authentication.Basic
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
 		/// <returns>A value indicating whether the user was authenticated or not</returns>
-		bool Validate(string username, string password);
+		IUserIdentity Validate(string username, string password);
 	}
 }

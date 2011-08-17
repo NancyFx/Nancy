@@ -65,6 +65,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -80,10 +81,6 @@
     <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
-    </Reference>
-    <Reference Include="FSharp.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\Library\Frameworks\Mono.framework\Versions\Current\lib\fsharp\v4.0\bin\FSharp.Core.dll</HintPath>
     </Reference>
     <Reference Include="NDjango.Core40, Version=0.9.9.0, Culture=neutral, PublicKeyToken=null">
       <HintPath>..\..\dependencies\ndjango\NDjango.Core40.dll</HintPath>
@@ -102,6 +99,9 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

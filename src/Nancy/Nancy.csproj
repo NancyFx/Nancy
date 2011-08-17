@@ -126,6 +126,7 @@
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="ResponseExtensions.cs" />
+    <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
@@ -200,7 +201,6 @@
     <Compile Include="Routing\MethodNotAllowedRoute.cs" />
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
-    <Compile Include="Security\SecurityConventions.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
