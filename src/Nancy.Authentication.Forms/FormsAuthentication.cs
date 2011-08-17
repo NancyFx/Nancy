@@ -126,13 +126,11 @@ namespace Nancy.Authentication.Forms
                 {
                     var userGuid = GetAuthenticatedUserFromCookie(context, configuration);
 
-                    if (userGuid == Guid.Empty)
+                    if (userGuid != Guid.Empty)
                     {
-                        return null;
+                        context.CurrentUser =
+                            configuration.UserMapper.GetUserFromIdentifier(userGuid);
                     }
-
-                    context.Items[SecurityConventions.AuthenticatedUsernameKey] =
-                        configuration.UsernameMapper.GetUsernameFromIdentifier(userGuid);
 
                     return null;
                 };

@@ -1,3 +1,5 @@
+using Nancy.Security;
+
 namespace Nancy.Authentication.Forms.Tests
 {
     using System;
@@ -43,7 +45,7 @@ namespace Nancy.Authentication.Forms.Tests
             {
                 CryptographyConfiguration = this.cryptographyConfiguration,
                 RedirectUrl = "/login",
-                UsernameMapper = A.Fake<IUsernameMapper>(),
+                UserMapper = A.Fake<IUserMapper>(),
             };
 
             this.context = new NancyContext()
@@ -205,90 +207,100 @@ namespace Nancy.Authentication.Forms.Tests
         public void Should_get_username_from_mapping_service_with_valid_cookie()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var mockMapper = A.Fake<IUsernameMapper>();
-            this.config.UsernameMapper = mockMapper;
+            var mockMapper = A.Fake<IUserMapper>();
+            this.config.UserMapper = mockMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
 
             fakePipelines.BeforeRequest.Invoke(this.context);
 
-            A.CallTo(() => mockMapper.GetUsernameFromIdentifier(this.userGuid))
+            A.CallTo(() => mockMapper.GetUserFromIdentifier(this.userGuid))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
-        public void Should_set_username_in_context_with_valid_cookie()
+        public void Should_set_user_in_context_with_valid_cookie()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var fakeMapper = A.Fake<IUsernameMapper>();
-            A.CallTo(() => fakeMapper.GetUsernameFromIdentifier(this.userGuid)).Returns("Bob");
-            this.config.UsernameMapper = fakeMapper;
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            fakeUser.UserName = "Bob";
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context);
 
-            context.Items[Security.SecurityConventions.AuthenticatedUsernameKey].ShouldEqual("Bob");
+            context.CurrentUser.ShouldBeSameAs(fakeUser);
         }
 
         [Fact]
-        public void Should_not_set_username_in_context_with_invalid_hmac()
+        public void Should_not_set_user_in_context_with_invalid_hmac()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var fakeMapper = A.Fake<IUsernameMapper>();
-            A.CallTo(() => fakeMapper.GetUsernameFromIdentifier(this.userGuid)).Returns("Bob");
-            this.config.UsernameMapper = fakeMapper;
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            fakeUser.UserName = "Bob";
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithInvalidHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context);
 
-            context.Items.ContainsKey(Security.SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
-        public void Should_not_set_username_in_context_with_empty_hmac()
+        public void Should_not_set_user_in_context_with_empty_hmac()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var fakeMapper = A.Fake<IUsernameMapper>();
-            A.CallTo(() => fakeMapper.GetUsernameFromIdentifier(this.userGuid)).Returns("Bob");
-            this.config.UsernameMapper = fakeMapper;
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            fakeUser.UserName = "Bob";
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithEmptyHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context);
 
-            context.Items.ContainsKey(Security.SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
-        public void Should_not_set_username_in_context_with_no_hmac()
+        public void Should_not_set_user_in_context_with_no_hmac()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var fakeMapper = A.Fake<IUsernameMapper>();
-            A.CallTo(() => fakeMapper.GetUsernameFromIdentifier(this.userGuid)).Returns("Bob");
-            this.config.UsernameMapper = fakeMapper;
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            fakeUser.UserName = "Bob";
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithNoHmac);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context);
 
-            context.Items.ContainsKey(Security.SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
         public void Should_not_set_username_in_context_with_broken_encryption_data()
         {
             var fakePipelines = new FakeApplicationPipelines();
-            var fakeMapper = A.Fake<IUsernameMapper>();
-            A.CallTo(() => fakeMapper.GetUsernameFromIdentifier(this.userGuid)).Returns("Bob");
-            this.config.UsernameMapper = fakeMapper;
+            var fakeMapper = A.Fake<IUserMapper>();
+            var fakeUser = A.Fake<IUserIdentity>();
+            fakeUser.UserName = "Bob";
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithBrokenEncryptedData);
 
             var result = fakePipelines.BeforeRequest.Invoke(this.context);
 
-            context.Items.ContainsKey(Security.SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         public class FakeApplicationPipelines : IApplicationPipelines

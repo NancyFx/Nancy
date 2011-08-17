@@ -32,7 +32,7 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Gets or sets the username/identifier mapper
         /// </summary>
-        public IUsernameMapper UsernameMapper { get; set; }
+        public IUserMapper UserMapper { get; set; }
 
         /// <summary>
         /// Gets or sets the cryptography configuration
@@ -51,7 +51,7 @@ namespace Nancy.Authentication.Forms
                     return false;
                 }
 
-                if (this.UsernameMapper == null)
+                if (this.UserMapper == null)
                 {
                     return false;
                 }
