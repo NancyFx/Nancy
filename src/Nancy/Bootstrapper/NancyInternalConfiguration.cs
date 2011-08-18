@@ -4,6 +4,7 @@ namespace Nancy.Bootstrapper
     using System.Collections.Generic;
     using System.Linq;
 
+    using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.ViewEngines;
@@ -43,6 +44,8 @@ namespace Nancy.Bootstrapper
                         ViewCache = typeof(DefaultViewCache),
                         RenderContextFactory = typeof(DefaultRenderContextFactory),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
+                        ViewLocationProvider = typeof(FileSystemViewLocationProvider),
+                        ErrorHandler = typeof(DefaultErrorHandler),
                     };
             }
         }
@@ -84,6 +87,10 @@ namespace Nancy.Bootstrapper
         public Type RenderContextFactory { get; set; }
 
         public Type ViewLocationCache { get; set; }
+
+        public Type ViewLocationProvider { get; set; }
+
+        public Type ErrorHandler { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -144,6 +151,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
                 new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
+                new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
+                new TypeRegistration(typeof(IErrorHandler), this.ErrorHandler), 
             };
         }
     }

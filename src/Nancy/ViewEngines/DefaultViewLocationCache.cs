@@ -6,13 +6,13 @@ namespace Nancy.ViewEngines
 
     public class DefaultViewLocationCache : IViewLocationCache
     {
-        private readonly IEnumerable<IViewLocationProvider> viewLocationProviders;
+        private readonly IViewLocationProvider viewLocationProvider;
         private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IEnumerable<ViewLocationResult> locatedViews;
 
-        public DefaultViewLocationCache(IEnumerable<IViewLocationProvider> viewLocationProviders, IEnumerable<IViewEngine> viewEngines)
+        public DefaultViewLocationCache(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
-            this.viewLocationProviders = viewLocationProviders;
+            this.viewLocationProvider = viewLocationProvider;
             this.viewEngines = viewEngines;
             this.locatedViews = GetLocatedViews();
         }
@@ -22,9 +22,8 @@ namespace Nancy.ViewEngines
             var supportedViewExtensions =
                 GetSupportedViewExtensions();
 
-            var viewsLocatedByProviders = this.viewLocationProviders
-                .SelectMany(x => x.GetLocatedViews(supportedViewExtensions))
-                .ToList();
+            var viewsLocatedByProviders = 
+                this.viewLocationProvider.GetLocatedViews(supportedViewExtensions);
 
             return viewsLocatedByProviders;
         }

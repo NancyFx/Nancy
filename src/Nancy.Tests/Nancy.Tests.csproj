@@ -107,6 +107,7 @@
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
+    <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />

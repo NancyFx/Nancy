@@ -26,6 +26,8 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+using System.Globalization;
+
 namespace Nancy.Json
 {
     using System;
@@ -34,7 +36,8 @@ namespace Nancy.Json
     
     internal static class Json
 	{
-        public static void Serialize (object obj, StringBuilder output)
+
+    public static void Serialize (object obj, StringBuilder output)
         {
             Serialize(obj, JavaScriptSerializer.DefaultSerializer, output);    
         }
@@ -84,5 +87,15 @@ namespace Nancy.Json
 			JsonDeserializer ser = new JsonDeserializer (jss);
 			return ser.Deserialize (input);
 		}
+
+        public static IFormatProvider DefaultNumberFormatInfo
+        {
+            get
+            {
+                return new NumberFormatInfo()
+                                                    {NumberDecimalSeparator = ".", NumberGroupSeparator = string.Empty};
+            }
+            
+        }
 	}
 }

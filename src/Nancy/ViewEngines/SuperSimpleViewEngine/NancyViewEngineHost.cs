@@ -55,5 +55,15 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         {
             throw new NotImplementedException();
         }
+
+        /// <summary>
+        /// Expands a path to include any base paths
+        /// </summary>
+        /// <param name="path">Path to expand</param>
+        /// <returns>Expanded path</returns>
+        public string ExpandPath(string path)
+        {
+            return this.renderContext.ParsePath(path);
+        }
     }
 }

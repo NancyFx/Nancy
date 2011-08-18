@@ -157,7 +157,7 @@
         }
 
         private static string GetAssemblyPath(Assembly assembly) {
-            return new Uri(assembly.CodeBase).LocalPath;
+            return new Uri(assembly.EscapedCodeBase).LocalPath;
         }
 
         private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly)
@@ -239,6 +239,7 @@
         {
             var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
             view.Html = new HtmlHelpers(this, renderContext);
+            view.Url = new UrlHelpers(this, renderContext);
             view.Model = model;
             return view;
         }

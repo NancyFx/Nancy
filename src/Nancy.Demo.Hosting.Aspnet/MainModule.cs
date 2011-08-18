@@ -20,6 +20,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return Response.AsJs("Content/" + (string)x.file);
             };
 
+            Get["/images/{file}"] = x =>
+            {
+                return Response.AsImage("Content/" + (string)x.file);
+            };
+
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };
@@ -68,16 +73,6 @@ namespace Nancy.Demo.Hosting.Aspnet
             {
                 var model = new RatPack { FirstName = "You" };
                 return View["ssve.sshtml", model];
-            };
-
-            Get["/embedded"] = x => {
-                var model = new RatPack { FirstName = "Embedded" };
-                return View["embedded", model];
-            };
-
-            Get["/embedded2"] = x => {
-                var model = new RatPack { FirstName = "Embedded2" };
-                return View["embedded.django", model];
             };
 
             Get["/viewmodelconvention"] = x => {
@@ -140,6 +135,11 @@ namespace Nancy.Demo.Hosting.Aspnet
 
                 return output;
             };
+
+            Get["/error"] = x =>
+                {
+                    throw new NotSupportedException("This is an exception thrown in a route.");
+                };
         }
     }
 }

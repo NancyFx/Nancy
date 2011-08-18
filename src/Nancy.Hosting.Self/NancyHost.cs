@@ -21,26 +21,31 @@
     /// </remarks>
     public class NancyHost  
     {
-        private readonly Uri baseUri;
+        private readonly IList<Uri> baseUriList;
         private readonly HttpListener listener;
         private readonly INancyEngine engine;
         private Thread thread;
         private bool shouldContinue;
 
-        public NancyHost(Uri baseUri)
-            : this(baseUri, NancyBootstrapperLocator.Bootstrapper)
-        {
-        }
+        public NancyHost(params Uri[] baseUris)
+            : this(NancyBootstrapperLocator.Bootstrapper, baseUris){}
 
-        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper)
+        public NancyHost(INancyBootstrapper bootStrapper, params Uri[] baseUris)
         {
-            this.baseUri = baseUri;
+            baseUriList = baseUris;
             listener = new HttpListener();
-            listener.Prefixes.Add(baseUri.ToString());
+
+            foreach (var baseUri in baseUriList)
+            {
+                listener.Prefixes.Add(baseUri.ToString());
+            }
 
             bootStrapper.Initialise();
             engine = bootStrapper.GetEngine();
         }
+
+        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper) : this (bootStrapper, baseUri) {}
+
 
         public void Start()
         {
@@ -99,6 +104,13 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
+            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsBaseOf(request.Url));
+
+            if (baseUri == null)
+            {
+                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+            }
+
             var expectedRequestLength =
                 GetExpectedRequestLength(request.Headers.ToDictionary());
 
@@ -176,7 +188,7 @@
         private static Cookie ConvertCookie(INancyCookie nancyCookie)
         {
             var cookie = 
-                new Cookie(nancyCookie.Name, nancyCookie.Value, nancyCookie.Path, nancyCookie.Domain);
+                new Cookie(nancyCookie.EncodedName, nancyCookie.EncodedValue, nancyCookie.Path, nancyCookie.Domain);
 
             if (nancyCookie.Expires.HasValue)
             {

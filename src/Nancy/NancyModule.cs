@@ -111,6 +111,15 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Gets <see cref="RouteIndexer"/> for declaring actions for OPTIONS requests.
+        /// </summary>
+        /// <value>A <see cref="RouteIndexer"/> instance.</value>
+        public RouteBuilder Options
+        {
+            get { return new RouteBuilder("OPTIONS", this); }
+        }
+
+        /// <summary>
         /// Gets or sets an <see cref="Request"/> instance that represents the current request.
         /// </summary>
         /// <value>An <see cref="Request"/> instance.</value>

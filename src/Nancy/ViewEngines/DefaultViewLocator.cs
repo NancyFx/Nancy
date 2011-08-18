@@ -29,29 +29,54 @@
                 return null;
             }
 
-            var viewsThatMatchesCritera = this.viewLocationCache.Where(
-                x => x.Name.Equals(Path.GetFileNameWithoutExtension(viewName), StringComparison.OrdinalIgnoreCase));
+            var viewsThatMatchesCritera = this.viewLocationCache
+                .Where(x => NameMatchesView(viewName, x))
+                .Where(x => ExtensionMatchesView(viewName, x))
+                .Where(x => LocationMatchesView(viewName, x))
+                .ToList();
 
-            viewsThatMatchesCritera = GetViewsThatMatchesViewExtension(viewName, viewsThatMatchesCritera);
-
-            if (viewsThatMatchesCritera.Count() > 1)
+            var count = viewsThatMatchesCritera.Count();
+            if (count > 1)
             {
-                throw new AmbiguousViewsException();
+                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(count, viewsThatMatchesCritera));
             }
 
-            return viewsThatMatchesCritera.FirstOrDefault();
+            return viewsThatMatchesCritera.SingleOrDefault();
         }
 
-        private static IEnumerable<ViewLocationResult> GetViewsThatMatchesViewExtension(string viewName, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
+        private static string GetAmgiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
         {
-            var viewExtension = Path.GetExtension(viewName);
+            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count, string.Join("\r\n\t", viewsThatMatchesCritera.Select(GetFullLocationOfView).ToArray()));
+        }
 
-            if (!string.IsNullOrEmpty(viewExtension))
-            {
-                viewsThatMatchesCritera = viewsThatMatchesCritera.Where(x => x.Extension.Equals(viewExtension.Substring(1), StringComparison.OrdinalIgnoreCase));    
-            }
+        private static string GetFullLocationOfView(ViewLocationResult viewLocationResult)
+        {
+            return string.Concat(viewLocationResult.Location, "/", viewLocationResult.Name, ".", viewLocationResult.Extension);
+        }
 
-            return viewsThatMatchesCritera;
+        private static bool ExtensionMatchesView(string viewName, ViewLocationResult viewLocationResult)
+        {
+            var extension = Path.GetExtension(viewName);
+
+            return string.IsNullOrEmpty(extension) ||
+                viewLocationResult.Extension.Equals(extension.Substring(1), StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool LocationMatchesView(string viewName, ViewLocationResult viewLocationResult)
+        {
+            var location = viewName
+                .Replace(Path.GetFileName(viewName), string.Empty)
+                .TrimEnd(new [] { '/' });
+
+            return viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool NameMatchesView(string viewName, ViewLocationResult viewLocationResult)
+        {
+            var name = Path.GetFileNameWithoutExtension(viewName);
+
+            return (!string.IsNullOrEmpty(name)) &&
+                viewLocationResult.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
         }
     }
 }

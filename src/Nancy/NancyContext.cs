@@ -23,6 +23,11 @@ namespace Nancy
         public IDictionary<string, object> Items { get; private set; }
 
         /// <summary>
+        /// Gets or sets the parameters for the resolved route 
+        /// </summary>
+        public dynamic Parameters { get; set; }
+
+        /// <summary>
         /// Gets or sets the incoming request
         /// </summary>
         public Request Request { get; set; }

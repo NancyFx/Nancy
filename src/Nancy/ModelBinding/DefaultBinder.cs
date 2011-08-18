@@ -4,6 +4,7 @@ namespace Nancy.ModelBinding
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Default binder - used as a fallback when a specific modelbinder
@@ -93,12 +94,26 @@ namespace Nancy.ModelBinding
 
         private IDictionary<string, string> GetDataFields(NancyContext context)
         {
-            // TODO - should we get querystring and captured variables too?
-            var formDictionary = (DynamicDictionary)context.Request.Form;
+            var dictionaries = new IDictionary<string, string>[]
+                {
+                    ConvertDynamicDictionary(context.Request.Form), 
+                    ConvertDynamicDictionary(context.Request.Query), 
+                    ConvertDynamicDictionary(context.Parameters),
+                };
 
-            return formDictionary.GetDynamicMemberNames().ToDictionary(
-                memberName => this.fieldNameConverter.Convert(memberName), 
-                memberName => (string)formDictionary[memberName]);
+            return dictionaries.Merge();
+        }
+
+        private IDictionary<string, string> ConvertDynamicDictionary(DynamicDictionary dictionary)
+        {
+            if (dictionary == null)
+            {
+                return null;
+            }
+
+            return dictionary.GetDynamicMemberNames().ToDictionary(
+                    memberName => this.fieldNameConverter.Convert(memberName),
+                    memberName => (string)dictionary[memberName]);
         }
 
         private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
@@ -155,7 +170,7 @@ namespace Nancy.ModelBinding
             {
                 return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
-        
+
             bodyDeserializer = this.defaults.DefaultBodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
             if (bodyDeserializer != null)
             {

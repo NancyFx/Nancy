@@ -123,17 +123,6 @@
         }
 
         /// <summary>
-        /// Gets the available view source provider types
-        /// </summary>
-        protected virtual IEnumerable<Type> ViewLocationProviders
-        {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IViewLocationProvider>();
-            }
-        }
-
-        /// <summary>
         /// Gets the available view engine types
         /// </summary>
         protected virtual IEnumerable<Type> ViewEngines
@@ -269,7 +258,7 @@
                                 {
                                     ContentType = "image/vnd.microsoft.icon",
                                     StatusCode = HttpStatusCode.OK,
-                                    Contents = s => s.Write(this.defaultFavIcon, 0, this.defaultFavIcon.Length)
+                                    Contents = s => s.Write(this.DefaultFavIcon, 0, this.DefaultFavIcon.Length)
                                 };
 
                             response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
@@ -455,7 +444,6 @@
             return new[]
                 {
                     new CollectionTypeRegistration(typeof(IViewEngine), this.ViewEngines),
-                    new CollectionTypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProviders),
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),

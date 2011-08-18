@@ -5,7 +5,12 @@ namespace Nancy.Demo.Hosting.Self
         public TestModule()
         {
             Get["/"] = parameters => {
-                return View["staticview"];
+                return View["staticview", Request.Url];
+            };
+
+            Get["/testing"] = parameters =>
+            {
+                return View["staticview", Request.Url];
             };
         }
     }

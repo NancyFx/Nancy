@@ -2,6 +2,7 @@
   <head>
     <global title='"Default Title"' type="string"/>
     <title>${title}</title>
+    <use content="head" />
   </head>
   <body>
     <div id="header">
