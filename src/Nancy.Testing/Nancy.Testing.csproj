@@ -102,6 +102,8 @@
     <Compile Include="BrowserContextExtensions.cs" />
     <Compile Include="BrowserContextMultipartFormData.cs" />
     <Compile Include="BrowserResponse.cs" />
+    <Compile Include="BrowserResponseBodyWrapper.cs" />
+    <Compile Include="BrowserResponseBodyWrapperExtensions.cs" />
     <Compile Include="BrowserResponseExtensions.cs" />
     <Compile Include="ConfigurableBootstrapper.cs" />
     <Compile Include="NancyContextExtensions.cs" />
