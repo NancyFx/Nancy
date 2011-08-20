@@ -93,6 +93,24 @@ namespace Nancy
         public string ModulePath { get; private set; }
 
         /// <summary>
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for OPTIONS requests.
+        /// </summary>
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Options
+        {
+            get { return new RouteBuilder("OPTIONS", this); }
+        }
+
+        /// <summary>
+        /// Gets <see cref="RouteBuilder"/> for declaring actions for PATCH requests.
+        /// </summary>
+        /// <value>A <see cref="RouteBuilder"/> instance.</value>
+        public RouteBuilder Patch
+        {
+            get { return new RouteBuilder("PATCH", this); }
+        }
+
+        /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for POST requests.
         /// </summary>
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
@@ -108,15 +126,6 @@ namespace Nancy
         public RouteBuilder Put
         {
             get { return new RouteBuilder("PUT", this); }
-        }
-
-        /// <summary>
-        /// Gets <see cref="RouteIndexer"/> for declaring actions for OPTIONS requests.
-        /// </summary>
-        /// <value>A <see cref="RouteIndexer"/> instance.</value>
-        public RouteBuilder Options
-        {
-            get { return new RouteBuilder("OPTIONS", this); }
         }
 
         /// <summary>

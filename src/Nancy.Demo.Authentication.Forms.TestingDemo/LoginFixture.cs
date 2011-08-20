@@ -1,10 +1,7 @@
 namespace Nancy.Demo.Authentication.Forms.TestingDemo
 {
     using System;
-    using System.IO;
-    using System.Text;
     using Testing;
-    using Tests;
     using Xunit;
 
     public class LoginFixture

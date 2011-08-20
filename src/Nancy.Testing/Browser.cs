@@ -70,6 +70,17 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Performs a PATCH requests against Nancy.
+        /// </summary>
+        /// <param name="path">The path that is being requested.</param>
+        /// <param name="browserContext">An closure for providing browser context for the request.</param>
+        /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
+        public BrowserResponse Patch(string path, Action<BrowserContext> browserContext)
+        {
+            return this.HandleRequest("PATCH", path, browserContext);
+        }
+
+        /// <summary>
         /// Performs a POST requests against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
