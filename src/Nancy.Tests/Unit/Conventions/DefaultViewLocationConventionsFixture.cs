@@ -116,5 +116,73 @@ namespace Nancy.Tests.Unit.Conventions
             // Then
             this.conventions.ViewLocationConventions.Count.ShouldBeGreaterThan(0);
         }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[0];
+
+            // When
+            var result = convention.Invoke(
+                "viewname", 
+                null, 
+                new ViewLocationContext { ModulePath = string.Empty });
+
+            // Then
+            result.ShouldEqual("viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_views_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[1];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModulePath = string.Empty });
+
+            // Then
+            result.ShouldEqual("views/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulepath_subfolder_of_views_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[2];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModulePath = "modulepath" });
+
+            // Then
+            result.ShouldEqual("views/modulepath/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulepath_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[3];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModulePath = "modulepath" });
+
+            // Then
+            result.ShouldEqual("modulepath/viewname");
+        }
     }
 }
