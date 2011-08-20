@@ -102,6 +102,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AndConnectorTests.cs" />
+    <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
     <Compile Include="DocumentWrapperTests.cs" />

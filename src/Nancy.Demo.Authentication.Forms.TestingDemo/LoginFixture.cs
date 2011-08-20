@@ -41,7 +41,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
                     with.Query("error", "true");
                 });
 
-            response.Body["#errorBox"]
+            response.Body.AsDocument()["#errorBox"]
                 .ShouldExistOnce()
                 .And.ShouldBeOfClass("floatingError")
                 .And.ShouldContain("invalid", StringComparison.InvariantCultureIgnoreCase);

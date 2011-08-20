@@ -2,14 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
 
     /// <summary>
     /// The value that is returned from a route that was invoked by a <see cref="Browser"/> instance.
     /// </summary>
     public class BrowserResponse
     {
-        private DocumentWrapper responseBody;
+        private BrowserResponseBodyWrapper body;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserResponse"/> class.
@@ -27,24 +26,14 @@
         }
 
         /// <summary>
-        /// Gets the HTTP response body wrapped in a <see cref="DocumentWrapper"/> instance.
+        /// Gets the HTTP response body as a <see cref="BrowserResponseBodyWrapper"/> instance.
         /// </summary>
-        /// <value>A <see cref="DocumentWrapper"/> instance that wrapps the HTTP response body.</value>
-        public DocumentWrapper Body
+        /// <value>A <see cref="BrowserResponseBodyWrapper"/> instance.</value>
+        public BrowserResponseBodyWrapper Body
         {
             get
             {
-                if (this.responseBody == null)
-                {
-                    using (var contentsStream = new MemoryStream())
-                    {
-                        this.Context.Response.Contents.Invoke(contentsStream);
-                        contentsStream.Position = 0;
-                        this.responseBody = new DocumentWrapper(contentsStream);
-                    }
-                }
-
-                return this.responseBody;
+                return this.body ?? (this.body = new BrowserResponseBodyWrapper(this.Context.Response));
             }
         }
 
@@ -62,7 +51,7 @@
         {
             get { return this.Context.Response.Headers; }
         }
-
+        
         /// <summary>
         /// Gets the HTTP status code of the response.
         /// </summary>
