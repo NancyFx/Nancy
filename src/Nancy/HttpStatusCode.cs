@@ -1,12 +1,15 @@
 namespace Nancy
 {
     /// <summary>
-    /// 
+    /// HTTP Status Codes
     /// </summary>
+    /// <remarks>The values are based on the list found at http://en.wikipedia.org/wiki/List_of_HTTP_status_codes </remarks>
     public enum HttpStatusCode
     {
         Continue = 100,
         SwitchingProtocols = 101,
+        Processing = 102,
+        Checkpoint = 103,
         OK = 200,
         Created = 201,
         Accepted = 202,
@@ -14,19 +17,17 @@ namespace Nancy
         NoContent = 204,
         ResetContent = 205,
         PartialContent = 206,
-        Ambiguous = 300,
+        MultipleStatus = 207,
+        IMUsed = 226,
         MultipleChoices = 300,
-        Moved = 301,
         MovedPermanently = 301,
         Found = 302,
-        Redirect = 302,
-        RedirectMethod = 303,
         SeeOther = 303,
         NotModified = 304,
         UseProxy = 305,
-        Unused = 306,
-        RedirectKeepVerb = 307,
+        SwitchProxy = 306,
         TemporaryRedirect = 307,
+        ResumeIncomplete = 308,
         BadRequest = 400,
         Unauthorized = 401,
         PaymentRequired = 402,
@@ -45,11 +46,25 @@ namespace Nancy
         UnsupportedMediaType = 415,
         RequestedRangeNotSatisfiable = 416,
         ExpectationFailed = 417,
+        ImATeapot = 418,
+        UnprocessableEntity = 422,
+        Locked = 423,
+        FailedDependency = 424,
+        UnorderedCollection = 425,
+        UpgradeRequired = 426,
+        NoResponse = 444,
+        RetryWith = 449,
+        BlockedByWindowsParentalControls = 450,
+        ClientClosedRequest = 499,
         InternalServerError = 500,
         NotImplemented = 501,
         BadGateway = 502,
         ServiceUnavailable = 503,
         GatewayTimeout = 504,
         HttpVersionNotSupported = 505,
+        VariantAlsoNegotiates = 506,
+        InsufficientStorage = 507,
+        BandwidthLimitExceeded = 509,
+        NotExtended = 510
     }
 }
