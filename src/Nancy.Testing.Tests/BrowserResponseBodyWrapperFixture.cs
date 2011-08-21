@@ -1,20 +1,14 @@
 ﻿namespace Nancy.Testing.Tests
 {
-    using System;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using FakeItEasy;
     using Nancy;
     using Nancy.Tests;
     using Xunit;
 
     public class BrowserResponseBodyWrapperFixture
     {
-        public BrowserResponseBodyWrapperFixture()
-        {
-        }
-
         [Fact]
         public void Should_contain_response_body()
         {
