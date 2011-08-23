@@ -132,7 +132,8 @@
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
-                request.Headers.ToDictionary());
+                request.Headers.ToDictionary(), 
+                (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
