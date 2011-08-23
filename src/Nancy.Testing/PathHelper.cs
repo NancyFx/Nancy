@@ -7,6 +7,18 @@ namespace Nancy.Testing
     public static class PathHelper
     {
         /// <summary>
+        /// Returns the directory for an assembly with the given <paramref name="type"/> in
+        /// </summary>
+        /// <param name="type">the type whose assembly location to return</param>
+        /// <returns>the directory of the assembly</returns>
+        public static string GetAssemblyDirectory(Type type)
+        {
+            var uri = new UriBuilder(type.Assembly.CodeBase);
+            var path = Uri.UnescapeDataString(uri.Path);
+            return Path.GetDirectoryName(path);
+        }
+
+        /// <summary>
         /// Traverses up a directory tree
         /// </summary>
         /// <param name="path">Start path.</param>
