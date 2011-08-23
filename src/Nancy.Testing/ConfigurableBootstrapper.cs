@@ -21,6 +21,7 @@ namespace Nancy.Testing
         private readonly List<object> registeredTypes;
         private readonly List<InstanceRegistration> registeredInstances;
         private readonly NancyInternalConfiguration configuration;
+        private bool disableAutoRegistration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -106,7 +107,7 @@ namespace Nancy.Testing
         {
             get
             {
-                var moduleRegistrations = 
+                var moduleRegistrations =
                     this.GetModuleRegistrations().ToList();
 
                 return (moduleRegistrations.Any()) ? moduleRegistrations : base.Modules;
@@ -160,11 +161,26 @@ namespace Nancy.Testing
         {
             get
             {
-                var rootPathProvider = 
+                var rootPathProvider =
                     this.Resolve<IRootPathProvider>();
 
                 return (rootPathProvider != null) ? rootPathProvider.First() : base.RootPathProvider;
             }
+        }
+
+        /// <summary>
+        /// Configures the container using AutoRegister followed by registration
+        /// of default INancyModuleCatalog and IRouteResolver.
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
+        {
+            if (!this.disableAutoRegistration)
+            {
+                container.AutoRegister();
+                this.RegisterBootstrapperTypes(container);
+            }
+
         }
 
         /// <summary>
@@ -388,9 +404,16 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="instance">The dependency instance that should be used registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            /// <remarks>This method will register the instance for all the interfaces it implements and the type itself.</remarks>
             public ConfigurableBoostrapperConfigurator Dependency(object instance)
             {
                 this.bootstrapper.registeredInstances.Add(new InstanceRegistration(instance.GetType(), instance));
+
+                foreach (var interfaceType in instance.GetType().GetInterfaces())
+                {
+                    this.bootstrapper.registeredInstances.Add(new InstanceRegistration(interfaceType, instance));
+                }
+
                 return this;
             }
 
@@ -417,6 +440,16 @@ namespace Nancy.Testing
                     this.Dependency(dependency);
                 }
 
+                return this;
+            }
+
+            /// <summary>
+            /// Disables the auto registration behavior of the bootstrapper
+            /// </summary>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator DisableAutoRegistration()
+            {
+                this.bootstrapper.disableAutoRegistration = true;
                 return this;
             }
 
