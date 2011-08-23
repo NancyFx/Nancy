@@ -3,6 +3,7 @@ namespace Nancy.Testing
     using System;
     using System.IO;
     using System.Linq;
+    using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
     using Nancy.Json;
@@ -29,7 +30,7 @@ namespace Nancy.Testing
         /// <value>A string containing the HTTP response body.</value>
         public static string AsString(this BrowserResponseBodyWrapper bodyWrapper)
         {
-            return Convert.ToString(bodyWrapper);
+            return Encoding.UTF8.GetString(bodyWrapper.ToArray());
         }
 
         /// <summary>
