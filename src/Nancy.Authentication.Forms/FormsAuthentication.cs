@@ -4,7 +4,7 @@ namespace Nancy.Authentication.Forms
     using Bootstrapper;
     using Cookies;
     using Cryptography;
-
+    using Helpers;
     using Nancy.Extensions;
 
     using Responses;
@@ -149,7 +149,11 @@ namespace Nancy.Authentication.Forms
                 {
                     if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                     {
-                        context.Response = context.GetRedirect(string.Format("{0}?{1}={2}", configuration.RedirectUrl, REDIRECT_QUERYSTRING_KEY, context.ToFullPath("~" + context.Request.Path)));
+                        context.Response = context.GetRedirect(
+                            string.Format("{0}?{1}={2}", 
+                            configuration.RedirectUrl, 
+                            REDIRECT_QUERYSTRING_KEY,
+                            context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode("?" + context.Request.Url.Query))));
                     }
                 };
         }
