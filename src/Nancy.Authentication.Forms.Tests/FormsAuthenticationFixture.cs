@@ -291,6 +291,45 @@ namespace Nancy.Authentication.Forms.Tests
             context.Items.ContainsKey(Security.SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
         }
 
+        [Fact]
+        public void Should_retain_querystring_when_redirecting_to_login_page()
+        {
+            // Given
+            var fakePipelines = new FakeApplicationPipelines();
+            
+            FormsAuthentication.Enable(fakePipelines, this.config);
+
+            var queryContext = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/secure", "foo=bar"),
+                Response = HttpStatusCode.Unauthorized
+            };
+
+            // When
+            fakePipelines.AfterRequest.Invoke(queryContext);
+
+            // Then
+            queryContext.Response.Headers["Location"].ShouldEqual("/login?returnUrl=/secure%3ffoo%3dbar");
+        }
+
+        [Fact]
+        public void Should_retain_querystring_when_redirecting_after_successfull_login()
+        {
+            // Given
+            var queryContext = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/secure", "returnUrl=/secure%3Ffoo%3Dbar")
+            };
+
+            FormsAuthentication.Enable(A.Fake<IApplicationPipelines>(), this.config);
+
+            // When
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(queryContext, userGuid, DateTime.Now.AddDays(1));
+
+            // Then
+            result.Headers["Location"].ShouldEqual("/secure?foo=bar");
+        }
+
         public class FakeApplicationPipelines : IApplicationPipelines
         {
             public BeforePipeline BeforeRequest { get; set; }
