@@ -2035,7 +2035,7 @@ namespace TinyIoC
                 }
                 catch (TinyIoCResolutionException ex)
                 {
-                    throw new TinyIoCResolutionException(typeof(RegisterImplementation), ex);
+                    throw new TinyIoCResolutionException(typeof(RegisterType), ex);
                 }
             }
 
@@ -2834,6 +2834,10 @@ namespace TinyIoC
                 {
                     return factory.GetObject(this, parameters, options);
                 }
+                catch (TinyIoCResolutionException)
+                {
+                    throw;
+                }
                 catch (Exception ex)
                 {
                     throw new TinyIoCResolutionException(registration.Type, ex);
@@ -2847,6 +2851,10 @@ namespace TinyIoC
                 try
                 {
                     return bubbledObjectFactory.GetObject(this, parameters, options);
+                }
+                catch (TinyIoCResolutionException)
+                {
+                    throw;
                 }
                 catch (Exception ex)
                 {
@@ -2866,6 +2874,10 @@ namespace TinyIoC
                     try
                     {
                         return factory.GetObject(this, parameters, options);
+                    }
+                    catch (TinyIoCResolutionException)
+                    {
+                        throw;
                     }
                     catch (Exception ex)
                     {
@@ -2958,25 +2970,25 @@ namespace TinyIoC
         {
             var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
 
-            //#if GETPARAMETERS_OPEN_GENERICS
-            //            // Using MakeGenericMethod (slow) because we need to
-            //            // cast the IEnumerable or constructing the type wil fail.
-            //            // We may as well use the ResolveAll<ResolveType> public
-            //            // method to do this.
-            //            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
-            //            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
-            //#else
-            //            var resolveAllMethods =    from member in this.GetType().GetMembers()
-            //                                       where member.MemberType == MemberTypes.Method
-            //                                       where member.Name == "ResolveAll"
-            //                                       let method = member as MethodInfo
-            //                                       where method.IsGenericMethod
-            //                                       let genericMethod = method.MakeGenericMethod(type.GetGenericArguments()[0])
-            //                                       where genericMethod.GetParameters().Count() == 0
-            //                                       select genericMethod;
+//#if GETPARAMETERS_OPEN_GENERICS
+//            // Using MakeGenericMethod (slow) because we need to
+//            // cast the IEnumerable or constructing the type wil fail.
+//            // We may as well use the ResolveAll<ResolveType> public
+//            // method to do this.
+//            var resolveAllMethod = this.GetType().GetMethod("ResolveAll", new Type[] { });
+//            var genericResolveAllMethod = resolveAllMethod.MakeGenericMethod(type.GetGenericArguments()[0]);
+//#else
+//            var resolveAllMethods =    from member in this.GetType().GetMembers()
+//                                       where member.MemberType == MemberTypes.Method
+//                                       where member.Name == "ResolveAll"
+//                                       let method = member as MethodInfo
+//                                       where method.IsGenericMethod
+//                                       let genericMethod = method.MakeGenericMethod(type.GetGenericArguments()[0])
+//                                       where genericMethod.GetParameters().Count() == 0
+//                                       select genericMethod;
 
-            //            var genericResolveAllMethod = resolveAllMethods.First();
-            //#endif
+//            var genericResolveAllMethod = resolveAllMethods.First();
+//#endif
             return genericResolveAllMethod.Invoke(this, new object[] { false });
         }
 
@@ -3012,17 +3024,14 @@ namespace TinyIoC
 
             // Get constructors in reverse order based on the number of parameters
             // i.e. be as "greedy" as possible so we satify the most amount of dependencies possible
-            var ctors = from ctor in type.GetConstructors()
-                        orderby ctor.GetParameters().Count() descending
-                        select ctor;
+            var ctors = this.GetTypeConstructors(type);
 
-            foreach (var ctor in ctors)
-            {
-                if (CanConstruct(ctor, parameters, options))
-                    return ctor;
-            }
+            return ctors.FirstOrDefault(ctor => this.CanConstruct(ctor, parameters, options));
+        }
 
-            return null;
+        private IEnumerable<ConstructorInfo> GetTypeConstructors(Type type)
+        {
+            return type.GetConstructors().OrderByDescending(ctor => ctor.GetParameters().Count());
         }
 
         private object ConstructType(Type type, ResolveOptions options)
@@ -3043,7 +3052,13 @@ namespace TinyIoC
         private object ConstructType(Type type, ConstructorInfo constructor, NamedParameterOverloads parameters, ResolveOptions options)
         {
             if (constructor == null)
-                constructor = GetBestConstructor(type, parameters, options);
+            {
+                // Try and get the best constructor that we can construct
+                // if we can't construct any then get the constructor
+                // with the least number of parameters so we can throw a meaningful
+                // resolve exception
+                constructor = GetBestConstructor(type, parameters, options) ?? GetTypeConstructors(type).LastOrDefault();
+            }
 
             if (constructor == null)
                 throw new TinyIoCResolutionException(type);
@@ -3055,7 +3070,26 @@ namespace TinyIoC
             {
                 var currentParam = ctorParams[parameterIndex];
 
-                args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ? parameters[currentParam.Name] : ResolveInternal(new TypeRegistration(currentParam.ParameterType), NamedParameterOverloads.Default, options);
+                try
+                {
+                    args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ? 
+                                            parameters[currentParam.Name] : 
+                                            ResolveInternal(
+                                                new TypeRegistration(currentParam.ParameterType), 
+                                                NamedParameterOverloads.Default, 
+                                                options);
+                }
+                catch (TinyIoCResolutionException ex)
+                {
+                    // If a constructor parameter can't be resolved
+                    // it will throw, so wrap it and throw that this can't
+                    // be resolved.
+                    throw new TinyIoCResolutionException(type, ex);
+                }
+                catch (Exception ex)
+                {
+                    throw new TinyIoCResolutionException(type, ex);
+                }
             }
 
             try
