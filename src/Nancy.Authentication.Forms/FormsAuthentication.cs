@@ -153,7 +153,7 @@ namespace Nancy.Authentication.Forms
                             string.Format("{0}?{1}={2}", 
                             configuration.RedirectUrl, 
                             REDIRECT_QUERYSTRING_KEY,
-                            context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode("?" + context.Request.Url.Query))));
+                            context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
                     }
                 };
         }
