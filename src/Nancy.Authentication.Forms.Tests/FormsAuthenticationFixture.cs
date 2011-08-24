@@ -301,7 +301,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var queryContext = new NancyContext()
             {
-                Request = new FakeRequest("GET", "/secure", "foo=bar"),
+                Request = new FakeRequest("GET", "/secure", "?foo=bar"),
                 Response = HttpStatusCode.Unauthorized
             };
 
