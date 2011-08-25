@@ -14,7 +14,8 @@ namespace Nancy.Testing.Tests
             var dir = PathHelper.GetAssemblyDirectory(typeof (PathHelperTests));
 
             // Then
-            dir.ShouldContain(@"\src\Nancy.Testing.Tests\");
+            var expectedPartOfPath = string.Format(@"{0}src{0}Nancy.Testing.Tests{0}", Path.PathSeparator);
+            dir.ShouldContain(expectedPartOfPath);
         }
 
         [Fact]
