@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Bootstrapper;
 
@@ -22,10 +23,7 @@
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            // TODO - Add a predicate delegate to autoregister to allow excluding module catalog
-            container.AutoRegister();
-
-            this.RegisterBootstrapperTypes(container);
+            this.AutoRegister(container);
         }
 
         /// <summary>
@@ -162,6 +160,19 @@
         protected override sealed NancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
         {
             return container.Resolve<NancyModule>(moduleKey);
+        }
+
+        /// <summary>
+        /// Executes auto registation with the given container.
+        /// </summary>
+        /// <param name="container">Container instance</param>
+        private void AutoRegister(TinyIoCContainer container)
+        {
+            var assembly = typeof(NancyEngine).Assembly;
+
+            var whitelist = new Type[] { };
+
+            container.AutoRegister(t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
         }
     }
 }

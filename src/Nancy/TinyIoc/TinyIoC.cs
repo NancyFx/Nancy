@@ -2698,7 +2698,7 @@ namespace TinyIoC
 
             if (registrationPredicate != null)
             {
-                ignoreChecks.Add(registrationPredicate);    
+                ignoreChecks.Add(t => !registrationPredicate(t));    
             }
 
             foreach (var check in ignoreChecks)
