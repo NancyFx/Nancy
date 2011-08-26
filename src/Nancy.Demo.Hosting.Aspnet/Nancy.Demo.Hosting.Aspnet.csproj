@@ -165,7 +165,7 @@
     <None Include="Views\anon.spark" />
     <None Include="Views\dot.liquid" />
     <None Include="Views\ndjango-base.django" />
-    <None Include="Views\razor-dependency.cshtml" />
+    <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
