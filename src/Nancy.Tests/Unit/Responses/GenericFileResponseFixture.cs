@@ -38,6 +38,17 @@
 			// Then
 			result.ShouldEqualSequence(expected);
 		}
+
+
+        [Fact]
+        public void Should_set_filename_property_to_filename()
+        {
+            // Given, When
+            var response = new GenericFileResponse(this.imagePath, imageContentType);
+
+            // Then
+            response.Filename.ShouldEqual("zip.png");
+        }
 		
 		private static IEnumerable<byte> GetResponseContents(Response response)
 		{
