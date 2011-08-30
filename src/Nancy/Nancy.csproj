@@ -125,7 +125,6 @@
     <Compile Include="Extensions\RequestExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
     <Compile Include="RequestHeaders.cs" />
-    <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
