@@ -39,5 +39,10 @@ namespace Nancy
         {
             return new XmlResponse<TModel>(model, "application/xml");
         }
+
+        public static Response AsStream<TModel>(this IResponseFormatter formatter, TModel stream, string contentType)
+        {
+            return new StreamResponse<TModel>(stream, contentType);
+        }
     }
 }
