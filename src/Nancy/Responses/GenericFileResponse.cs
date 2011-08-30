@@ -15,6 +15,11 @@
             InitializeGenericFileResonse(filePath, contentType);
         }
 
+        /// <summary>
+        /// Gets the filename of the file response
+        /// </summary>
+        public string Filename { get; protected set; }
+
         private static Action<Stream> GetFileContent(string filePath)
         {
             return stream =>
@@ -42,6 +47,8 @@
             }
             else
             {
+                this.Filename = Path.GetFileName(filePath);
+
                 var fi = new FileInfo(filePath);
                 // TODO - set a standard caching time and/or public?
                 this.Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
