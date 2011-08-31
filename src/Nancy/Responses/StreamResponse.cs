@@ -21,7 +21,10 @@ namespace Nancy.Responses
             {
                 if (source != null && source.CanRead)
                 {
-                    source.Position = 0;
+                    if (source.CanSeek)
+                    {
+                        source.Position = 0;
+                    }
                     source.CopyTo(stream);
                 }
             };
