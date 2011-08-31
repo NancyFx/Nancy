@@ -46,7 +46,8 @@ namespace Nancy.Hosting.Aspnet
                 context.Request.HttpMethod.ToUpperInvariant(),
                 nancyUrl,
                 RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
-                context.Request.Headers.ToDictionary());
+                context.Request.Headers.ToDictionary(),
+                context.Request.UserHostAddress);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
