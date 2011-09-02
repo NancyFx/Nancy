@@ -83,7 +83,7 @@
 
             // Then
             result.ShouldBeNull();
-            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
@@ -121,7 +121,7 @@
 
             // Then
             result.ShouldBeNull();
-            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
@@ -136,7 +136,7 @@
 
             // Then
             result.ShouldBeNull();
-            context.Items.ContainsKey(SecurityConventions.AuthenticatedUsernameKey).ShouldBeFalse();
+            context.CurrentUser.ShouldBeNull();
         }
 
         [Fact]
@@ -154,13 +154,14 @@
         }
 
         [Fact]
-        public void Should_set_username_in_context_with_valid_username_in_auth_header()
+        public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
             var fakePipelines = new FakeApplicationPipelines();
 
             var validator = A.Fake<IUserValidator>();
-            A.CallTo(() => validator.Validate("foo", "bar")).Returns(true);
+            var fakeUser = A.Fake<IUserIdentity>();
+            A.CallTo(() => validator.Validate("foo", "bar")).Returns(fakeUser);
 
             var cfg = new BasicAuthenticationConfiguration(validator, "realm");
 
@@ -173,7 +174,7 @@
             fakePipelines.BeforeRequest.Invoke(context);
 
             // Then
-            context.Items[SecurityConventions.AuthenticatedUsernameKey].ShouldEqual("foo");
+            context.CurrentUser.ShouldBeSameAs(fakeUser);
         }
 
         private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)

@@ -94,9 +94,11 @@ namespace Nancy.Authentication.Basic
 
             if (credentials != null && credentials.Length == 2)
             {
-                if (configuration.UserValidator.Validate(credentials[0], credentials[1]))
+                var user = configuration.UserValidator.Validate(credentials[0], credentials[1]);
+
+                if (user != null)
                 {
-                    context.Items[SecurityConventions.AuthenticatedUsernameKey] = credentials[0];
+                    context.CurrentUser = user;
                 }
             }
         }

@@ -1,3 +1,5 @@
+using Nancy.Security;
+
 namespace Nancy
 {
     using System;
@@ -36,6 +38,11 @@ namespace Nancy
         /// Gets or sets the outgoing response
         /// </summary>
         public Response Response { get; set; }
+
+        /// <summary>
+        /// Gets or sets the current user
+        /// </summary>
+        public IUserIdentity CurrentUser { get; set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

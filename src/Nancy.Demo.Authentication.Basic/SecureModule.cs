@@ -11,7 +11,7 @@ namespace Nancy.Demo.Authentication.Basic
 
 			Get["/"] = x =>
 			{
-				return "Hello " + Context.Items[SecurityConventions.AuthenticatedUsernameKey].ToString();
+				return "Hello " + Context.CurrentUser.UserName;
 			};
 		}
 	}

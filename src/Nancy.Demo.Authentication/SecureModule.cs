@@ -11,7 +11,7 @@ namespace Nancy.Demo.Authentication
             this.RequiresAuthentication();
 
             Get["/"] = x => {
-                var model = new UserModel(Context.Items[SecurityConventions.AuthenticatedUsernameKey].ToString());
+                var model = new UserModel(Context.CurrentUser.UserName);
                 return View["secure.cshtml", model];
             };
         }
