@@ -14,8 +14,6 @@
     {
         private readonly IViewResolver viewResolver;
         private readonly IViewCache viewCache;
-        private readonly CryptographyConfiguration cryptographyConfiguration;
-        private readonly IObjectSerializer serializer;
         private readonly ViewLocationContext viewLocationContext;
 
         /// <summary>
@@ -23,16 +21,21 @@
         /// </summary>
         /// <param name="viewResolver"></param>
         /// <param name="viewCache"></param>
-        /// <param name="cryptographyConfiguration"></param>
-        /// <param name="serializer"></param>
         /// <param name="viewLocationContext"></param>
-        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, CryptographyConfiguration cryptographyConfiguration, IObjectSerializer serializer, ViewLocationContext viewLocationContext)
+        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, ViewLocationContext viewLocationContext)
         {
             this.viewResolver = viewResolver;
             this.viewCache = viewCache;
-            this.cryptographyConfiguration = cryptographyConfiguration;
-            this.serializer = serializer;
             this.viewLocationContext = viewLocationContext;
+        }
+
+        /// <summary>
+        /// Gets the view cache that is used by Nancy.
+        /// </summary>
+        /// <value>An <see cref="IViewCache"/> instance.</value>
+        public IViewCache ViewCache
+        {
+            get { return this.viewCache; }
         }
 
         /// <summary>
@@ -57,15 +60,6 @@
         }
 
         /// <summary>
-        /// Gets the view cache that is used by Nancy.
-        /// </summary>
-        /// <value>An <see cref="IViewCache"/> instance.</value>
-        public IViewCache ViewCache
-        {
-            get { return this.viewCache; }
-        }
-
-        /// <summary>
         /// Locates a view that matches the provided <paramref name="viewName"/> and <paramref name="model"/>.
         /// </summary>
         /// <param name="viewName">The name of the view that should be located.</param>
@@ -81,22 +75,22 @@
         /// The token should be stored in a cookie and the form as a hidden field.
         /// In both cases the name should be the key of the returned key value pair.
         /// </summary>
-        /// <param name="salt">Optional salt</param>
         /// <returns>A tuple containing the name (cookie name and form/querystring name) and value</returns>
-        public KeyValuePair<string, string> GenerateCsrfToken(string salt = null)
+        public KeyValuePair<string, string> GetCsrfToken()
         {
-            if (this.cryptographyConfiguration == null || this.serializer == null)
+            object tokenObject;
+            if (!this.viewLocationContext.Context.Items.TryGetValue(CsrfToken.DEFAULT_CSRF_KEY, out tokenObject))
             {
-                throw new InvalidOperationException("Csrf tokens cannot be generated as a cryptography configurati and Formatter were not specified");
+                throw new InvalidOperationException("CSRF is not enabled on this request");
             }
 
-            var token = new CsrfToken { Salt = salt, CreatedDate = DateTime.Now };
-            token.CreateRandomBytes();
-            token.CreateHmac(this.cryptographyConfiguration.HmacProvider);
+            var tokenString = tokenObject as string;
+            if (string.IsNullOrEmpty(tokenString))
+            {
+                throw new InvalidOperationException("CSRF object is invalid");
+            }
 
-            var serializedToken = this.serializer.Serialize(token);
-
-            return new KeyValuePair<string, string>(CsrfToken.DEFAULT_CSRF_KEY, serializedToken);
+            return new KeyValuePair<string, string>(CsrfToken.DEFAULT_CSRF_KEY, tokenString);
         }
     }
 }

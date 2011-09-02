@@ -45,11 +45,9 @@
             return new NonEncodedHtmlString(text);
         }
 
-        public IHtmlString AntiForgeryToken(string salt = null)
+        public IHtmlString AntiForgeryToken()
         {
-            var tokenKeyValue = this.renderContext.GenerateCsrfToken(salt);
-
-//            this.engine.TokenKeyValue = tokenKeyValue;
+            var tokenKeyValue = this.renderContext.GetCsrfToken();
 
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"", tokenKeyValue.Key, tokenKeyValue.Value));
         }

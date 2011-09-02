@@ -10,22 +10,16 @@
     {
         private readonly IViewCache viewCache;
         private readonly IViewResolver viewResolver;
-        private readonly CryptographyConfiguration cryptographyConfiguration;
-        private readonly IObjectSerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRenderContextFactory"/> class.
         /// </summary>
         /// <param name="viewCache">The view cache that should be used by the created render context.</param>
         /// <param name="viewResolver">The view resolver that should be sused by the created render context.</param>
-        /// <param name="cryptographyConfiguration"></param>
-        /// <param name="serializer"></param>
-        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver, CryptographyConfiguration cryptographyConfiguration, IObjectSerializer serializer)
+        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver)
         {
             this.viewCache = viewCache;
             this.viewResolver = viewResolver;
-            this.cryptographyConfiguration = cryptographyConfiguration;
-            this.serializer = serializer;
         }
 
         /// <summary>
@@ -35,7 +29,7 @@
         /// <returns>A <see cref="IRenderContext"/> instance.</returns>
         public IRenderContext GetRenderContext(ViewLocationContext viewLocationContext)
         {
-            return new DefaultRenderContext(this.viewResolver, this.viewCache, this.cryptographyConfiguration, this.serializer, viewLocationContext);
+            return new DefaultRenderContext(this.viewResolver, this.viewCache, viewLocationContext);
         }
     }
 }

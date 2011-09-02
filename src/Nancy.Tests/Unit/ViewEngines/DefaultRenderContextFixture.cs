@@ -1,9 +1,12 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
+    using System;
+
     using FakeItEasy;
-    using Nancy.Cryptography;
+
+    using Nancy.Security;
     using Nancy.ViewEngines;
-    using Session;
+
     using Xunit;
 
     public class DefaultRenderContextFixture
@@ -12,7 +15,7 @@
         public void Should_html_encode_string()
         {
             // Given
-            var context = new DefaultRenderContext(null, null, null, null, null);
+            var context = new DefaultRenderContext(null, null, null);
 
             // When
             var result = context.HtmlEncode("This is a string value & should be HTML-encoded");
@@ -28,7 +31,7 @@
             var cache = A.Fake<IViewCache>();
 
             // When
-            var context = new DefaultRenderContext(null, cache, null, null, null);
+            var context = new DefaultRenderContext(null, cache, null);
 
             // Then
             context.ViewCache.ShouldBeSameAs(cache);
@@ -40,7 +43,7 @@
             // Given
             const string viewName = "view.html";
             var resolver = A.Fake<IViewResolver>();
-            var context = new DefaultRenderContext(resolver, null, null, null, null);
+            var context = new DefaultRenderContext(resolver, null, null);
 
             // When
             context.LocateView(viewName, null);
@@ -55,7 +58,7 @@
             // Given
             var model = new object();
             var resolver = A.Fake<IViewResolver>();
-            var context = new DefaultRenderContext(resolver, null, null, null, null);
+            var context = new DefaultRenderContext(resolver, null, null);
 
             // When
             context.LocateView(null, model);
@@ -70,7 +73,7 @@
             // Given
             var locationContext = new ViewLocationContext();
             var resolver = A.Fake<IViewResolver>();
-            var context = new DefaultRenderContext(resolver, null, null, null, locationContext);
+            var context = new DefaultRenderContext(resolver, null, locationContext);
 
             // When
             context.LocateView(null, null);
@@ -86,7 +89,7 @@
             var viewResult = new ViewLocationResult(null, null, null, null);
             var resolver = A.Fake<IViewResolver>();
             A.CallTo(() => resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(viewResult);
-            var context = new DefaultRenderContext(resolver, null, null, null, null);
+            var context = new DefaultRenderContext(resolver, null, null);
 
             // When
             var result = context.LocateView(null, null);
@@ -107,7 +110,7 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
             var viewLocationContext = new ViewLocationContext { Context = nancyContext };
-            var context = new DefaultRenderContext(null, null, null, null, viewLocationContext);
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
 
@@ -126,7 +129,7 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
             var viewLocationContext = new ViewLocationContext { Context = nancyContext };
-            var context = new DefaultRenderContext(null, null, null, null, viewLocationContext);
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
 
@@ -145,7 +148,7 @@
             var request = new Request("GET", url);
             var nancyContext = new NancyContext { Request = request };
             var viewLocationContext = new ViewLocationContext { Context = nancyContext };
-            var context = new DefaultRenderContext(null, null, null, null, viewLocationContext);
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
 
@@ -153,15 +156,43 @@
         }
 
         [Fact]
-        public void Should_generate_csrf_token()
+        public void Should_return_csrf_token_from_context_if_it_exists()
         {
-            var context = new DefaultRenderContext(null, null, CryptographyConfiguration.Default, new DefaultObjectSerializer(), null);
+            var nancyContext = new NancyContext();
+            nancyContext.Items[CsrfToken.DEFAULT_CSRF_KEY] = "testing";
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
 
-            var result = context.GenerateCsrfToken();
+            var result = context.GetCsrfToken();
 
             result.ShouldNotBeNull();
-            string.IsNullOrEmpty(result.Key).ShouldBeFalse();
-            string.IsNullOrEmpty(result.Value).ShouldBeFalse();
+            result.Key.ShouldEqual(CsrfToken.DEFAULT_CSRF_KEY);
+            result.Value.ShouldEqual("testing");
+        }
+
+        [Fact]
+        public void Should_throw_if_context_does_not_contain_csrf_token_and_its_requested()
+        {
+            var nancyContext = new NancyContext();
+            nancyContext.Items[CsrfToken.DEFAULT_CSRF_KEY] = new object();
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            var result = Record.Exception(() => context.GetCsrfToken());
+
+            result.ShouldBeOfType(typeof(InvalidOperationException));
+        }
+
+        [Fact]
+        public void Should_throw_if_context_does_not_contain_valid_csrf_token_and_its_requested()
+        {
+            var nancyContext = new NancyContext();
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            var result = Record.Exception(() => context.GetCsrfToken());
+
+            result.ShouldBeOfType(typeof(InvalidOperationException));
         }
     }
 }
