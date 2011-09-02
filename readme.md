@@ -73,7 +73,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [David Hong](http://github.com/davidhong)
 * [Graeme Foster](http://github.com/GraemeF)
 * [Guido Tapia](http://github.com/gatapia)
-* [Greg Banister](https://github.com/gbanister)
+* [Greg Banister](http://github.com/gbanister)
 * [Ian Davis](http://github.com/innovatian)
 * [Jonas Cannehag](http://github.com/knecke)
 * [José F. Romaniello](http://github.com/jfromaniello)
@@ -86,7 +86,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [João Bragança](http://github.com/thefringeninja)
 * [Johan Danforth](http://github.com/johandanforth)
 * [Johan Nilsson](http://github.com/Dashue)
-* [Jonathan Scoles](https://github.com/jscoles)
+* [Jonathan Scoles](http://github.com/jscoles)
 * [John Downey](http://github.com/jtdowney)
 * [Jonas Schmid](http://github.com/jschmid)
 * [Mark Rendle](http://github.com/markrendle)
@@ -100,10 +100,11 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Roy Jacobs](http://github.com/RoyJacobs)
 * [Simon Skov Boisen](http://github.com/ssboisen)
 * [Steven Robbins](http://github.com/grumpydev)
+* [Svetoslav Milenov](http://github.com/sloncho)
 * [Thomas Pedersen](http://github.com/thedersen)
 * [Troels Thomsen](http://github.com/troethom)
 * [Vidar L. Sømme](http://github.com/vidarls)
-* [Nathan Palmer](https://github.com/nathanpalmer)
+* [Nathan Palmer](http://github.com/nathanpalmer)
 
 ## Copyright
 
