@@ -17,8 +17,9 @@
         IEnumerable<string> Extensions { get; }
 
         /// <summary>
-        /// 
+        /// Initialise the view engine (if necessary)
         /// </summary>
+        /// <param name="viewEngineStartupContext">Startup context</param>
         void Initialize(ViewEngineStartupContext viewEngineStartupContext);
 
         /// <summary>
