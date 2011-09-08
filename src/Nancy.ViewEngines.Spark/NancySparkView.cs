@@ -19,7 +19,7 @@
 
         public string H(object value)
         {
-            return HttpUtility.HtmlEncode(value.ToString());
+            return HttpUtility.HtmlEncode(value);
         }
 
         public object HTML(object value)
