@@ -132,6 +132,8 @@
     <Compile Include="PipelineItem.cs" />
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="Responses\HtmlResponse.cs" />
+    <Compile Include="Security\Csrf.cs" />
+    <Compile Include="Security\CsrfStartup.cs" />
     <Compile Include="Security\CsrfToken.cs" />
     <Compile Include="Security\CsrfTokenExtensions.cs" />
     <Compile Include="Security\DefaultCsrfTokenValidator.cs" />

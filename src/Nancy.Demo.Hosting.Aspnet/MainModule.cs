@@ -3,6 +3,7 @@ namespace Nancy.Demo.Hosting.Aspnet
     using System;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
+    using Security;
 
     public class MainModule : NancyModule
     {
@@ -130,7 +131,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/csrf"] = x =>
                 {
-                    return View["csrf"];
+                    return View["csrf"].WithCsrfToken(this.Context);
                 };
         }
     }
