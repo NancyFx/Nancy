@@ -62,6 +62,16 @@
                 .ShouldEqual("<div>&lt;div&gt;&amp;lt;&amp;gt;&lt;/div&gt;</div>");
         }
 
+        [Fact]
+        public void Should_be_able_to_html_encode_null_using_H_function_from_views()
+        {
+            //Given, When
+            this.FindViewAndRender("ViewThatUsesNullHtmlEncoding");
+
+            //Then
+            this.output.ShouldEqual("<div></div>");
+        }
+
         [Fact] 
         public void Should_be_able_to_provide_global_setting_for_views()
         {
