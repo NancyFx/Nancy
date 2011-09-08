@@ -79,6 +79,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [José F. Romaniello](http://github.com/jfromaniello)
 * [Karl Seguin](http://github.com/karlseguin)
 * [Leo Duran](http://github.com/leoduran)
+* [Louis Haußknecht](http://github.com/lhaussknecht)
 * [Luke Smith](http://github.com/lukesmith)
 * [James Eggers](http://github.com/jameseggers1)
 * [Jason Mead](http://github.com/meadiagenic)
@@ -92,6 +93,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Mark Rendle](http://github.com/markrendle)
 * [Maciej Kowalewski](http://github.com/maciejk)
 * [Mindaugas Mozûras](http://github.com/mmozuras)
+* [Nathan Palmer](http://github.com/nathanpalmer)
 * [Patrik Hägne](http://github.com/patrik-hagne)
 * [Pedro Felix](http://github.com/pmhsfelix)
 * [Piotr Wlodek](http://github.com/pwlodek)
@@ -104,7 +106,6 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Thomas Pedersen](http://github.com/thedersen)
 * [Troels Thomsen](http://github.com/troethom)
 * [Vidar L. Sømme](http://github.com/vidarls)
-* [Nathan Palmer](http://github.com/nathanpalmer)
 
 ## Copyright
 
