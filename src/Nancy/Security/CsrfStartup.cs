@@ -11,10 +11,13 @@
 
         public static IObjectSerializer ObjectSerializer { get; private set; }
 
-        public CsrfStartup(CryptographyConfiguration cryptographyConfiguration, IObjectSerializer objectSerializer)
+        public static ICsrfTokenValidator TokenValidator { get; private set; }
+
+        public CsrfStartup(CryptographyConfiguration cryptographyConfiguration, IObjectSerializer objectSerializer, ICsrfTokenValidator tokenValidator)
         {
             CryptographyConfiguration = cryptographyConfiguration;
             ObjectSerializer = objectSerializer;
+            TokenValidator = tokenValidator;
         }
 
         /// <summary>

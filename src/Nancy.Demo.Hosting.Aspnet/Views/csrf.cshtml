@@ -3,7 +3,7 @@
     <title>CSRF Demo</title>
 </head>
 <body>
-    <form action='@Url.Content("~/csrfresult")'>
+    <form method="POST">
         <input type="text" name="Name"/>
         @Html.AntiForgeryToken();
         <input type="submit"/>

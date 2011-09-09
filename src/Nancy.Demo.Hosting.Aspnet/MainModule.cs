@@ -129,9 +129,13 @@ namespace Nancy.Demo.Hosting.Aspnet
                     throw new NotSupportedException("This is an exception thrown in a route.");
                 };
 
-            Get["/csrf"] = x =>
+            Get["/csrf"] = x => this.View["csrf"].WithCsrfToken(this.Context);
+
+            Post["/csrf"] = x =>
                 {
-                    return View["csrf"].WithCsrfToken(this.Context);
+                    this.ValidateCsrfToken(TimeSpan.FromSeconds(20));
+
+                    return string.Format("Hello {0}!", Request.Form.Name);
                 };
         }
     }
