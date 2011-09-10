@@ -10,13 +10,13 @@
 
         public PipelineItem(string name, TDelegate @delegate)
         {
-            this.Name = name;
+            this.Name = name ?? Guid.NewGuid().ToString();
             this.Delegate = @delegate;
         }
 
         public static implicit operator PipelineItem<TDelegate>(TDelegate action)
         {
-            return new PipelineItem<TDelegate>(Guid.NewGuid().ToString(), action);
+            return new PipelineItem<TDelegate>(null, action);
         }
 
         public static implicit operator TDelegate(PipelineItem<TDelegate> pipelineItem)
