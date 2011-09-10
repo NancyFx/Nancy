@@ -235,13 +235,28 @@
             this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, this.Conventions.GetInstanceRegistrations());
-            
-            this.InitialiseInternal(this.ApplicationContainer);
 
             foreach (var startupTask in this.GetStartupTasks())
             {
-                startupTask.Initialize();
+                startupTask.Initialize(this);
+
+                if (startupTask.TypeRegistrations != null)
+                {
+                    this.RegisterTypes(this.ApplicationContainer, startupTask.TypeRegistrations);
+                }
+
+                if (startupTask.CollectionTypeRegistrations != null)
+                {
+                    this.RegisterCollectionTypes(this.ApplicationContainer, startupTask.CollectionTypeRegistrations);
+                }
+
+                if (startupTask.InstanceRegistrations != null)
+                {
+                    this.RegisterInstances(this.ApplicationContainer, startupTask.InstanceRegistrations);
+                }
             }
+
+            this.InitialiseInternal(this.ApplicationContainer);
 
             if (this.DefaultFavIcon != null)
             {

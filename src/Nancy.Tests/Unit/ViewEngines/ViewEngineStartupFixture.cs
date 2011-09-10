@@ -28,7 +28,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
-            startup.Initialize();
+            startup.Initialize(null);
 
             // Then
             A.CallTo(() => engines[0].Initialize(A<ViewEngineStartupContext>.Ignored)).MustHaveHappened();
@@ -43,7 +43,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
-            startup.Initialize();
+            startup.Initialize(null);
 
             // Then
             A.CallTo(() => engines[0].Initialize(A<ViewEngineStartupContext>.That.Matches(x => x.ViewCache.Equals(this.viewCache)))).MustHaveHappened();
@@ -65,7 +65,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
-            startup.Initialize();
+            startup.Initialize(null);
 
             // Then
             A.CallTo(() => engines[0].Initialize(A<ViewEngineStartupContext>.That.Matches(x => x.ViewLocationResults.Count().Equals(2)))).MustHaveHappened();
