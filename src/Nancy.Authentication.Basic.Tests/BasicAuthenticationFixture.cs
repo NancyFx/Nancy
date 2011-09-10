@@ -46,7 +46,7 @@
 			BasicAuthentication.Enable(module, this.config);
 			
             // Then
-			module.Before.PipelineItems.ShouldHaveCount(2);
+			module.Before.PipelineDelegates.ShouldHaveCount(2);
 		}
 
 		[Fact]

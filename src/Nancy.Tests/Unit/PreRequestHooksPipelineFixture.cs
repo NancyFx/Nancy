@@ -83,8 +83,8 @@
 
             pipeline.AddItemToEndOfPipeline(item1);
 
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.Last());
+            Assert.Equal(2, pipeline.PipelineDelegates.Count());
+            Assert.Same(item1, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -96,8 +96,8 @@
 
             pipeline.AddItemToStartOfPipeline(item1);
 
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.First());
+            Assert.Equal(2, pipeline.PipelineDelegates.Count());
+            Assert.Same(item1, pipeline.PipelineDelegates.First());
         }
 
         [Fact]
@@ -111,9 +111,9 @@
 
             pipeline.InsertItemAtPipelineIndex(1, item2);
 
-            Assert.Same(item1, pipeline.PipelineItems.ElementAt(0));
-            Assert.Same(item2, pipeline.PipelineItems.ElementAt(1));
-            Assert.Same(item3, pipeline.PipelineItems.ElementAt(2));
+            Assert.Same(item1, pipeline.PipelineDelegates.ElementAt(0));
+            Assert.Same(item2, pipeline.PipelineDelegates.ElementAt(1));
+            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
         }
 
         [Fact]
@@ -125,8 +125,8 @@
 
             pipeline += item1;
 
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.Last());
+            Assert.Equal(2, pipeline.PipelineDelegates.Count());
+            Assert.Same(item1, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -144,9 +144,9 @@
 
             pipeline += pipeline2;
 
-            Assert.Equal(4, pipeline.PipelineItems.Count());
-            Assert.Same(item3, pipeline.PipelineItems.ElementAt(2));
-            Assert.Same(item4, pipeline.PipelineItems.Last());
+            Assert.Equal(4, pipeline.PipelineDelegates.Count());
+            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
+            Assert.Same(item4, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -177,8 +177,8 @@
 
             BeforePipeline castPipeline = item1;
 
-            Assert.Equal(1, castPipeline.PipelineItems.Count());
-            Assert.Same(item1, castPipeline.PipelineItems.First());
+            Assert.Equal(1, castPipeline.PipelineDelegates.Count());
+            Assert.Same(item1, castPipeline.PipelineDelegates.First());
         }
 
         [Fact]

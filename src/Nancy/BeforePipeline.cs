@@ -34,12 +34,17 @@
         /// <summary>
         /// Gets the current pipeline items
         /// </summary>
-        public IEnumerable<Func<NancyContext, Response>> PipelineItems
+        public IEnumerable<PipelineItem<Func<NancyContext, Response>>> PipelineItems
         {
-            get 
-            {
-                return this.pipelineItems.Select(pipelineItem => pipelineItem.Delegate);
-            }
+            get { return this.pipelineItems.AsReadOnly(); }
+        }
+
+        /// <summary>
+        /// Gets the current pipeline item delegates
+        /// </summary>
+        public IEnumerable<Func<NancyContext, Response>> PipelineDelegates
+        {
+            get { return this.pipelineItems.Select(pipelineItem => pipelineItem.Delegate); }
         }
 
         public static implicit operator Func<NancyContext, Response>(BeforePipeline pipeline)
@@ -80,7 +85,7 @@
         {
             Response returnValue = null;
 
-            using (var enumerator = this.PipelineItems.GetEnumerator())
+            using (var enumerator = this.PipelineDelegates.GetEnumerator())
             {
                 while (returnValue == null && enumerator.MoveNext())
                 {
@@ -101,12 +106,41 @@
         }
 
         /// <summary>
+        /// Add a named item to the start of the pipeline
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="item">Item to add</param>
+        public virtual void AddNamedItemToStartOfPipeline(string name, Func<NancyContext, Response> item)
+        {
+            this.RemoveByName(name);
+
+            this.InsertNamedItemAtPipelineIndex(0, name, item);
+        }
+
+        /// <summary>
         /// Add an item to the end of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
         public virtual void AddItemToEndOfPipeline(Func<NancyContext, Response> item)
         {
             this.pipelineItems.Add(item);
+        }
+
+        /// <summary>
+        /// Add an item to the end of the pipeline
+        /// </summary>
+        /// <param name="name">Name</param>
+        /// <param name="item">Item to add</param>
+        public virtual void AddNamedItemToEndOfPipeline(string name, Func<NancyContext, Response> item)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("name cannot be null or empty", "name");
+            }
+
+            this.RemoveByName(name);
+
+            this.pipelineItems.Add(new PipelineItem<Func<NancyContext, Response>>(name, item));
         }
 
         /// <summary>
@@ -118,5 +152,32 @@
         {
             this.pipelineItems.Insert(index, item);
         }
+
+        /// <summary>
+        /// Add a named item to a specific place in the pipeline.
+        /// </summary>
+        /// <param name="index">Index to add at</param>
+        /// <param name="name">Name</param>
+        /// <param name="item">Item to add</param>
+        public virtual void InsertNamedItemAtPipelineIndex(int index, string name, Func<NancyContext, Response> item)
+        {
+            if (string.IsNullOrEmpty(name))
+            {
+                throw new ArgumentException("name cannot be null or empty", "name");
+            }
+
+            this.RemoveByName(name);
+
+            this.pipelineItems.Insert(index, new PipelineItem<Func<NancyContext, Response>>(name, item));
+        }
+
+        /// <summary>
+        /// Remove a named pipeline item
+        /// </summary>
+        /// <param name="name">Name</param>
+        public virtual void RemoveByName(string name)
+        {
+            this.pipelineItems.RemoveAll(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+        }
     }
-}
+} 
