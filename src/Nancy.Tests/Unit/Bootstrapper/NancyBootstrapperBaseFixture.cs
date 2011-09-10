@@ -19,6 +19,8 @@
         public object AppContainer { get; set; }
         public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; set; }
+        public IEnumerable<InstanceRegistration> InstanceRegistrations { get; set; }
         public List<ModuleRegistration> PassedModules { get; set; }
         public IStartup[] OverriddenStartupTasks { get; set; }
 
@@ -106,8 +108,9 @@
             this.TypeRegistrations = typeRegistrations;
         }
 
-        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
+            this.CollectionTypeRegistrations = collectionTypeRegistrations;
         }
 
         protected override void RegisterModules(object container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
@@ -117,6 +120,7 @@
 
         protected override void RegisterInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
+            this.InstanceRegistrations = instanceRegistrations;
         }
 
         protected override byte[] DefaultFavIcon
@@ -329,8 +333,47 @@
 
             _Bootstrapper.Initialise();
 
-            A.CallTo(() => startupMock.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => startupMock2.Initialize()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock.Initialize(_Bootstrapper)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(_Bootstrapper)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_register_startup_task_type_registrations_into_container()
+        {
+            var typeRegistrations = new TypeRegistration[] { };
+            var startupStub = A.Fake<IStartup>();
+            A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
+            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+
+            _Bootstrapper.Initialise();
+
+            _Bootstrapper.TypeRegistrations.ShouldBeSameAs(typeRegistrations);
+        }
+
+        [Fact]
+        public void Should_register_startup_task_collection_registrations_into_container()
+        {
+            var collectionTypeRegistrations = new CollectionTypeRegistration[] { };
+            var startupStub = A.Fake<IStartup>();
+            A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionTypeRegistrations);
+            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+
+            _Bootstrapper.Initialise();
+
+            _Bootstrapper.CollectionTypeRegistrations.ShouldBeSameAs(collectionTypeRegistrations);
+        }
+
+        [Fact]
+        public void Should_register_startup_task_instance_registrations_into_container()
+        {
+            var instanceRegistrations = new InstanceRegistration[] { };
+            var startupStub = A.Fake<IStartup>();
+            A.CallTo(() => startupStub.InstanceRegistrations).Returns(instanceRegistrations);
+            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+
+            _Bootstrapper.Initialise();
+
+            _Bootstrapper.InstanceRegistrations.ShouldBeSameAs(instanceRegistrations);
         }
 
         [Fact]
