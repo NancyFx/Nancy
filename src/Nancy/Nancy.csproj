@@ -124,6 +124,7 @@
     <Compile Include="Extensions\ContextExtensions.cs" />
     <Compile Include="Extensions\RequestExtensions.cs" />
     <Compile Include="Extensions\StringExtensions.cs" />
+    <Compile Include="NamedPipelineBase.cs" />
     <Compile Include="PipelineItem.cs" />
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="ResponseExtensions.cs" />
