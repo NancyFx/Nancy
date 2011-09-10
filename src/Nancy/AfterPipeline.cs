@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// <para>
@@ -18,14 +19,14 @@
         /// <summary>
         /// Pipeline items to execute
         /// </summary>
-        protected List<Action<NancyContext>> pipelineItems;
+        protected List<PipelineItem<Action<NancyContext>>> pipelineItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
         /// </summary>
         public AfterPipeline()
         {
-            this.pipelineItems = new List<Action<NancyContext>>();
+            this.pipelineItems = new List<PipelineItem<Action<NancyContext>>>();
         }
 
         /// <summary>
@@ -35,7 +36,7 @@
         {
             get
             {
-                return this.pipelineItems.AsReadOnly();
+                return this.pipelineItems.Select(pipelineItem => pipelineItem.Delegate);
             }
         }
 
@@ -65,7 +66,7 @@
 
         public void Invoke(NancyContext context)
         {
-            foreach (var pipelineItem in this.pipelineItems)
+            foreach (var pipelineItem in this.PipelineItems)
             {
                 pipelineItem.Invoke(context);
             }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// <para>
@@ -20,14 +21,14 @@
         /// <summary>
         /// Pipeline items to execute
         /// </summary>
-        protected List<Func<NancyContext, Response>> pipelineItems;
+        protected List<PipelineItem<Func<NancyContext, Response>>> pipelineItems;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BeforePipeline"/> class.
         /// </summary>
         public BeforePipeline()
         {
-            this.pipelineItems = new List<Func<NancyContext, Response>>();
+            this.pipelineItems = new List<PipelineItem<Func<NancyContext, Response>>>();
         }
 
         /// <summary>
@@ -35,9 +36,9 @@
         /// </summary>
         public IEnumerable<Func<NancyContext, Response>> PipelineItems
         {
-            get
+            get 
             {
-                return this.pipelineItems.AsReadOnly();
+                return this.pipelineItems.Select(pipelineItem => pipelineItem.Delegate);
             }
         }
 
