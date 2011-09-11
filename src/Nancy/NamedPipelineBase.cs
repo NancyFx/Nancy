@@ -45,11 +45,13 @@ namespace Nancy
         /// Add an item to the start of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public virtual void AddItemToStartOfPipeline(PipelineItem<TDelegate> item)
+        /// <param name="replaceInPlace">
+        /// Whether to replace an existing item with the same name in its current place,
+        /// rather than at the position requested. Defaults to false.
+        /// </param>
+        public virtual void AddItemToStartOfPipeline(PipelineItem<TDelegate> item, bool replaceInPlace = false)
         {
-            this.RemoveByName(item.Name);
-
-            this.InsertItemAtPipelineIndex(0, item);
+            this.InsertItemAtPipelineIndex(0, item, replaceInPlace);
         }
 
         /// <summary>
@@ -65,11 +67,22 @@ namespace Nancy
         /// Add an item to the end of the pipeline
         /// </summary>
         /// <param name="item">Item to add</param>
-        public virtual void AddItemToEndOfPipeline(PipelineItem<TDelegate> item)
+        /// <param name="replaceInPlace">
+        /// Whether to replace an existing item with the same name in its current place,
+        /// rather than at the position requested. Defaults to false.
+        /// </param>
+        public virtual void AddItemToEndOfPipeline(PipelineItem<TDelegate> item, bool replaceInPlace = false)
         {
-            this.RemoveByName(item.Name);
+            var existingIndex = this.RemoveByName(item.Name);
 
-            this.pipelineItems.Add(item);
+            if (replaceInPlace && existingIndex != -1)
+            {
+                this.InsertItemAtPipelineIndex(existingIndex, item);
+            }
+            else
+            {
+                this.pipelineItems.Add(item);
+            }
         }
 
         /// <summary>
@@ -87,11 +100,17 @@ namespace Nancy
         /// </summary>
         /// <param name="index">Index to add at</param>
         /// <param name="item">Item to add</param>
-        public virtual void InsertItemAtPipelineIndex(int index, PipelineItem<TDelegate> item)
+        /// <param name="replaceInPlace">
+        /// Whether to replace an existing item with the same name in its current place,
+        /// rather than at the position requested. Defaults to false.
+        /// </param>
+        public virtual void InsertItemAtPipelineIndex(int index, PipelineItem<TDelegate> item, bool replaceInPlace = false)
         {
-            this.RemoveByName(item.Name);
+            var existingIndex = this.RemoveByName(item.Name);
 
-            this.pipelineItems.Insert(index, item);
+            var newIndex = (replaceInPlace && existingIndex != -1) ? existingIndex : index;
+
+            this.pipelineItems.Insert(newIndex, item);
         }
 
         /// <summary>
@@ -167,9 +186,18 @@ namespace Nancy
         /// Remove a named pipeline item
         /// </summary>
         /// <param name="name">Name</param>
-        public virtual void RemoveByName(string name)
+        /// <returns>Index of item that was removed or -1 if nothing removed</returns>
+        public virtual int RemoveByName(string name)
         {
-            this.pipelineItems.RemoveAll(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+            var existingIndex =
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+
+            if (existingIndex != -1)
+            {
+                this.pipelineItems.RemoveAt(existingIndex);
+            }
+
+            return existingIndex;
         }
     }
 }

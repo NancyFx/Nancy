@@ -175,5 +175,50 @@
             Assert.Same(item3, pipeline.Items.ElementAt(1));
             Assert.Same(item2, pipeline.Items.ElementAt(2));
         }
+
+        [Fact]
+        public void Should_replace_in_place_if_set_when_adding_to_start()
+        {
+            var existingItem = new PipelineItem<Action<string>>("item1", s => { });
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            pipeline.AddItemToEndOfPipeline(item2);
+            pipeline.AddItemToEndOfPipeline(existingItem);
+
+            pipeline.AddItemToStartOfPipeline(item1, true);
+
+            Assert.Equal(2, pipeline.Items.Count());
+            Assert.Same(item1, pipeline.Items.Last());
+        }
+
+        [Fact]
+        public void Should_replace_in_place_if_set_when_adding_to_end()
+        {
+            var existingItem = new PipelineItem<Action<string>>("item1", s => { });
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            pipeline.AddItemToEndOfPipeline(existingItem);
+            pipeline.AddItemToEndOfPipeline(item2);
+
+            pipeline.AddItemToEndOfPipeline(item1, true);
+
+            Assert.Equal(2, pipeline.Items.Count());
+            Assert.Same(item1, pipeline.Items.First());
+        }
+
+        [Fact]
+        public void Should_replace_in_place_if_set_when_adding_at_index()
+        {
+            var existingItem = new PipelineItem<Action<string>>("item1", s => { });
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            pipeline.AddItemToEndOfPipeline(item2);
+            pipeline.AddItemToEndOfPipeline(existingItem);
+
+            pipeline.InsertItemAtPipelineIndex(0, item1, true);
+
+            Assert.Equal(2, pipeline.Items.Count());
+            Assert.Same(item1, pipeline.Items.Last());
+        }
     }
 }
