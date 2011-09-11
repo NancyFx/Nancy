@@ -111,5 +111,69 @@
             Assert.Same(item2, pipeline.Items.ElementAt(1));
             Assert.Same(item3, pipeline.Items.ElementAt(2));
         }
+
+        [Fact]
+        public void Should_be_able_to_insert_before_a_named_item()
+        {
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            var item3 = new PipelineItem<Action<string>>("item3", s => { });
+            pipeline.AddItemToEndOfPipeline(item1);
+            pipeline.AddItemToEndOfPipeline(item3);
+
+            pipeline.InsertBefore("item3", item2);
+
+            Assert.Same(item1, pipeline.Items.ElementAt(0));
+            Assert.Same(item2, pipeline.Items.ElementAt(1));
+            Assert.Same(item3, pipeline.Items.ElementAt(2));
+        }
+
+        [Fact]
+        public void Should_be_able_to_insert_after_a_named_item()
+        {
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            var item3 = new PipelineItem<Action<string>>("item3", s => { });
+            pipeline.AddItemToEndOfPipeline(item1);
+            pipeline.AddItemToEndOfPipeline(item3);
+
+            pipeline.InsertAfter("item1", item2);
+
+            Assert.Same(item1, pipeline.Items.ElementAt(0));
+            Assert.Same(item2, pipeline.Items.ElementAt(1));
+            Assert.Same(item3, pipeline.Items.ElementAt(2));
+        }
+
+        [Fact]
+        public void Should_add_to_start_if_inserting_before_and_item_doesnt_exist()
+        {
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            var item3 = new PipelineItem<Action<string>>("item3", s => { });
+            pipeline.AddItemToEndOfPipeline(item1);
+            pipeline.AddItemToEndOfPipeline(item3);
+
+            pipeline.InsertBefore("nonexistant", item2);
+
+            Assert.Same(item2, pipeline.Items.ElementAt(0));
+            Assert.Same(item1, pipeline.Items.ElementAt(1));
+            Assert.Same(item3, pipeline.Items.ElementAt(2));
+        }
+
+        [Fact]
+        public void Should_add_to_end_if_inserting_after_and_item_doesnt_exist()
+        {
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            var item3 = new PipelineItem<Action<string>>("item3", s => { });
+            pipeline.AddItemToEndOfPipeline(item1);
+            pipeline.AddItemToEndOfPipeline(item3);
+
+            pipeline.InsertAfter("nonexistant", item2);
+
+            Assert.Same(item1, pipeline.Items.ElementAt(0));
+            Assert.Same(item3, pipeline.Items.ElementAt(1));
+            Assert.Same(item2, pipeline.Items.ElementAt(2));
+        }
     }
 }

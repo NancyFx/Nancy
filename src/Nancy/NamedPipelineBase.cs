@@ -94,14 +94,73 @@ namespace Nancy
             this.pipelineItems.Insert(index, item);
         }
 
-        public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
+        /// <summary>
+        /// Insert an item before a named item.
+        /// If the named item does not exist the item is inserted at the start of the pipeline.
+        /// </summary>
+        /// <param name="name">Name of the item to insert before</param>
+        /// <param name="item">Item to insert</param>
+        public virtual void InsertBefore(string name, TDelegate item)
         {
-            throw new NotImplementedException();
+            this.InsertBefore(name, (PipelineItem<TDelegate>)item);
         }
 
+        /// <summary>
+        /// Insert an item before a named item.
+        /// If the named item does not exist the item is inserted at the start of the pipeline.
+        /// </summary>
+        /// <param name="name">Name of the item to insert before</param>
+        /// <param name="item">Item to insert</param>
+        public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
+        {
+            var existingIndex =
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+
+            if (existingIndex == -1)
+            {
+                existingIndex = 0;
+            }
+
+            this.InsertItemAtPipelineIndex(existingIndex, item);
+        }
+
+        /// <summary>
+        /// Insert an item after a named item.
+        /// If the named item does not exist the item is inserted at the end of the pipeline.
+        /// </summary>
+        /// <param name="name">Name of the item to insert after</param>
+        /// <param name="item">Item to insert</param>
+        public virtual void InsertAfter(string name, TDelegate item)
+        {
+            this.InsertAfter(name, (PipelineItem<TDelegate>)item);
+        }
+
+        /// <summary>
+        /// Insert an item after a named item.
+        /// If the named item does not exist the item is inserted at the end of the pipeline.
+        /// </summary>
+        /// <param name="name">Name of the item to insert after</param>
+        /// <param name="item">Item to insert</param>
         public virtual void InsertAfter(string name, PipelineItem<TDelegate> item)
         {
-            throw new NotImplementedException();
+            var existingIndex =
+                this.pipelineItems.FindIndex(i => String.Equals(name, i.Name, StringComparison.InvariantCulture));
+
+            if (existingIndex == -1)
+            {
+                existingIndex = this.pipelineItems.Count;
+            }
+
+            existingIndex++;
+
+            if (existingIndex > this.pipelineItems.Count)
+            {
+                this.AddItemToEndOfPipeline(item);                
+            }
+            else
+            {
+                this.InsertItemAtPipelineIndex(existingIndex, item);
+            }
         }
 
         /// <summary>
