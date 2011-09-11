@@ -4,7 +4,7 @@
     using System.Linq;
     using Xunit;
 
-    public class PreRequestHooksPipelineFixture
+    public class BeforePipelineFixture
     {
         private BeforePipeline pipeline;
 
@@ -18,7 +18,7 @@
             return new NancyContext();
         }
 
-        public PreRequestHooksPipelineFixture()
+        public BeforePipelineFixture()
         {
             this.pipeline = new BeforePipeline();
         }
@@ -72,48 +72,6 @@
             var result = pipeline.Invoke(CreateContext());
 
             Assert.Null(result);
-        }
-
-        [Fact]
-        public void AddItemToEndOfPipeline_adds_to_the_end_of_the_pipeline()
-        {
-            Func<NancyContext, Response> item1 = (r) => { return null; };
-            Func<NancyContext, Response> item2 = (r) => { return CreateResponse(); };
-            pipeline.AddItemToEndOfPipeline(item2);
-
-            pipeline.AddItemToEndOfPipeline(item1);
-
-            Assert.Equal(2, pipeline.PipelineDelegates.Count());
-            Assert.Same(item1, pipeline.PipelineDelegates.Last());
-        }
-
-        [Fact]
-        public void AddItemToStartOfPipeline_adds_to_the_end_of_the_pipeline()
-        {
-            Func<NancyContext, Response> item1 = (r) => { return null; };
-            Func<NancyContext, Response> item2 = (r) => { return new Response(); };
-            pipeline.AddItemToEndOfPipeline(item2);
-
-            pipeline.AddItemToStartOfPipeline(item1);
-
-            Assert.Equal(2, pipeline.PipelineDelegates.Count());
-            Assert.Same(item1, pipeline.PipelineDelegates.First());
-        }
-
-        [Fact]
-        public void InsertItemAtPipelineIndex_adds_at_correct_index()
-        {
-            Func<NancyContext, Response> item1 = (r) => null;
-            Func<NancyContext, Response> item2 = (r) => null;
-            Func<NancyContext, Response> item3 = (r) => null;
-            pipeline.AddItemToEndOfPipeline(item1);
-            pipeline.AddItemToEndOfPipeline(item3);
-
-            pipeline.InsertItemAtPipelineIndex(1, item2);
-
-            Assert.Same(item1, pipeline.PipelineDelegates.ElementAt(0));
-            Assert.Same(item2, pipeline.PipelineDelegates.ElementAt(1));
-            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
         }
 
         [Fact]

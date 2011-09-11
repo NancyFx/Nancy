@@ -9,7 +9,7 @@ namespace Nancy
         /// <summary>
         /// Pipeline items to execute
         /// </summary>
-        private readonly List<PipelineItem<TDelegate>> pipelineItems;
+        protected readonly List<PipelineItem<TDelegate>> pipelineItems;
 
         protected NamedPipelineBase()
         {
@@ -38,19 +38,18 @@ namespace Nancy
         /// <param name="item">Item to add</param>
         public virtual void AddItemToStartOfPipeline(TDelegate item)
         {
-            this.InsertItemAtPipelineIndex(0, item);
+            this.AddItemToStartOfPipeline((PipelineItem<TDelegate>)item);
         }
 
         /// <summary>
-        /// Add a named item to the start of the pipeline
+        /// Add an item to the start of the pipeline
         /// </summary>
-        /// <param name="name">Name</param>
         /// <param name="item">Item to add</param>
-        public virtual void AddNamedItemToStartOfPipeline(string name, TDelegate item)
+        public virtual void AddItemToStartOfPipeline(PipelineItem<TDelegate> item)
         {
-            this.RemoveByName(name);
+            this.RemoveByName(item.Name);
 
-            this.InsertNamedItemAtPipelineIndex(0, name, item);
+            this.InsertItemAtPipelineIndex(0, item);
         }
 
         /// <summary>
@@ -59,24 +58,18 @@ namespace Nancy
         /// <param name="item">Item to add</param>
         public virtual void AddItemToEndOfPipeline(TDelegate item)
         {
-            this.pipelineItems.Add(item);
+            this.AddItemToEndOfPipeline((PipelineItem<TDelegate>)item);
         }
 
         /// <summary>
         /// Add an item to the end of the pipeline
         /// </summary>
-        /// <param name="name">Name</param>
         /// <param name="item">Item to add</param>
-        public virtual void AddNamedItemToEndOfPipeline(string name, TDelegate item)
+        public virtual void AddItemToEndOfPipeline(PipelineItem<TDelegate> item)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("name cannot be null or empty", "name");
-            }
+            this.RemoveByName(item.Name);
 
-            this.RemoveByName(name);
-
-            this.pipelineItems.Add(new PipelineItem<TDelegate>(name, item));
+            this.pipelineItems.Add(item);
         }
 
         /// <summary>
@@ -86,25 +79,29 @@ namespace Nancy
         /// <param name="item">Item to add</param>
         public virtual void InsertItemAtPipelineIndex(int index, TDelegate item)
         {
-            this.pipelineItems.Insert(index, item);
+            this.InsertItemAtPipelineIndex(index, (PipelineItem<TDelegate>)item);
         }
 
         /// <summary>
-        /// Add a named item to a specific place in the pipeline.
+        /// Add an item to a specific place in the pipeline.
         /// </summary>
         /// <param name="index">Index to add at</param>
-        /// <param name="name">Name</param>
         /// <param name="item">Item to add</param>
-        public virtual void InsertNamedItemAtPipelineIndex(int index, string name, TDelegate item)
+        public virtual void InsertItemAtPipelineIndex(int index, PipelineItem<TDelegate> item)
         {
-            if (string.IsNullOrEmpty(name))
-            {
-                throw new ArgumentException("name cannot be null or empty", "name");
-            }
+            this.RemoveByName(item.Name);
 
-            this.RemoveByName(name);
+            this.pipelineItems.Insert(index, item);
+        }
 
-            this.pipelineItems.Insert(index, new PipelineItem<TDelegate>(name, item));
+        public virtual void InsertBefore(string name, PipelineItem<TDelegate> item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public virtual void InsertAfter(string name, PipelineItem<TDelegate> item)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

@@ -38,7 +38,7 @@
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
             {
-                pipelineToAddTo.AddNamedItemToEndOfPipeline(pipelineItem.Name, pipelineItem.Delegate);
+                pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
             }
 
             return pipelineToAddTo;
