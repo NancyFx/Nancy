@@ -85,5 +85,15 @@ namespace Nancy
                 return false;
             }
         }
+
+        private static bool caseSensitive = false;
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
+        /// </summary>
+        public static bool CaseSensitive
+        {
+            get { return caseSensitive; }
+            set { caseSensitive = value; }
+        }
     }
 }
