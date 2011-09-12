@@ -16,7 +16,10 @@
         /// </summary>
         private readonly string[] extensions = new[] { "sshtml", "html", "htm" };
 
-        private SuperSimpleViewEngine viewEngine;
+        /// <summary>
+        /// The engine itself
+        /// </summary>
+        private readonly SuperSimpleViewEngine viewEngine = new SuperSimpleViewEngine();
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -40,15 +43,12 @@
         /// <returns>A response.</returns>
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            Interlocked.CompareExchange(ref this.viewEngine, new SuperSimpleViewEngine(new NancyViewEngineHost(renderContext)), null);
-
             return new HtmlResponse(contents: s =>
                 {
                     var writer = new StreamWriter(s);
-                    var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult,
-                                                                            vr => vr.Contents.Invoke().ReadToEnd());
+                    var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
 
-                    writer.Write(this.viewEngine.Render(templateContents, model));
+                    writer.Write(this.viewEngine.Render(templateContents, model, new NancyViewEngineHost(renderContext)));
                     writer.Flush();
                 });
         }
