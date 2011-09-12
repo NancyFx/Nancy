@@ -31,6 +31,8 @@
         /// </summary>
         public IList<Func<string, dynamic, ViewLocationContext, string>> ViewLocationConventions { get; set; }
 
+        public IStaticContentsConventionsProvider StaticContentsConventions { get; set; }
+
         /// <summary>
         /// Validates the conventions
         /// </summary>
@@ -58,6 +60,7 @@
             return new[]
             {
                 new InstanceRegistration(typeof(ViewLocationConventions), new ViewLocationConventions(this.ViewLocationConventions)),
+                new InstanceRegistration(typeof(IStaticContentsConventionsProvider), this.StaticContentsConventions), 
             };
         }
 
