@@ -184,5 +184,39 @@ namespace Nancy.Tests.Unit.Conventions
             // Then
             result.ShouldEqual("modulepath/viewname");
         }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_subfolder_of_views_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[4];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename" });
+
+            // Then
+            result.ShouldEqual("views/modulename/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[5];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename" });
+
+            // Then
+            result.ShouldEqual("modulename/viewname");
+        }
     }
 }

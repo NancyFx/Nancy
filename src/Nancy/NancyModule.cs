@@ -23,6 +23,10 @@ namespace Nancy
         protected NancyModule()
             : this(string.Empty)
         {
+            var typeName = GetType().Name;
+            var match =
+                System.Text.RegularExpressions.Regex.Match(typeName, "(?<name>[\\w]+)Module$").Groups["name"];
+            Name = match.Success ? match.Value : typeName;
         }
 
         /// <summary>
@@ -36,6 +40,16 @@ namespace Nancy
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
         }
+
+        /// <summary>
+        /// <para>
+        /// The friendly name of the module
+        /// </para>
+        /// <para>
+        /// The friendly name of the module that is taken from the actual class name.
+        /// </para>
+        /// </summary>
+        public string Name { get; protected set; }
 
         /// <summary>
         /// <para>
@@ -282,7 +296,12 @@ namespace Nancy
 
             private ViewLocationContext GetViewLocationContext()
             {
-                return new ViewLocationContext { ModulePath = module.ModulePath, Context = module.Context } ;
+                return new ViewLocationContext
+                       {
+                           ModulePath = module.ModulePath,
+                           ModuleName = module.Name,
+                           Context = module.Context
+                       };
             }
         }
     }
