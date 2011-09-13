@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using Xunit;
+    using Nancy.Extensions;
 
     public class ModuleNameFixture
     {
@@ -28,52 +29,52 @@
         public void Should_strip_module_from_name()
         {
             // Given
-            NancyModule module;
+            NancyModule module = new FakeModule();
 
             // When
-            module = new FakeModule();
+            var name = module.GetModuleName();
 
             // Then
-            module.Name.ShouldEqual("Fake");
+            name.ShouldEqual("Fake");
         }
 
         [Fact]
         public void Should_strip_module_from_really_long_name()
         {
             // Given
-            NancyModule module;
+            NancyModule module = new SuperDuperHappyModule();
 
             // When
-            module = new SuperDuperHappyModule();
+            var name = module.GetModuleName();
 
             // Then
-            module.Name.ShouldEqual("SuperDuperHappy");
+            name.ShouldEqual("SuperDuperHappy");
         }
 
         [Fact]
         public void Should_use_fullname_if_module_doesnt_exist()
         {
             // Given
-            NancyModule module;
+            NancyModule module = new ThisIsNoJoke();
 
             // When
-            module = new ThisIsNoJoke();
+            var name = module.GetModuleName();
 
             // Then
-            module.Name.ShouldEqual("ThisIsNoJoke");
+            name.ShouldEqual("ThisIsNoJoke");
         }
 
         [Fact]
         public void Should_use_fullname_if_module_is_not_at_the_end()
         {
             // Given
-            NancyModule module;
+            NancyModule module = new ModuleForNancy();
 
             // When
-            module = new ModuleForNancy();
+            var name = module.GetModuleName();
 
             // Then
-            module.Name.ShouldEqual("ModuleForNancy");
+            name.ShouldEqual("ModuleForNancy");
         }
 
     }

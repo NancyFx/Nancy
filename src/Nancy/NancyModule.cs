@@ -8,6 +8,7 @@ namespace Nancy
     using Nancy.Routing;
     using Nancy.Session;
     using Nancy.ViewEngines;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
@@ -23,10 +24,6 @@ namespace Nancy
         protected NancyModule()
             : this(string.Empty)
         {
-            var typeName = GetType().Name;
-            var match =
-                System.Text.RegularExpressions.Regex.Match(typeName, "(?<name>[\\w]+)Module$").Groups["name"];
-            Name = match.Success ? match.Value : typeName;
         }
 
         /// <summary>
@@ -40,16 +37,6 @@ namespace Nancy
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
         }
-
-        /// <summary>
-        /// <para>
-        /// The friendly name of the module
-        /// </para>
-        /// <para>
-        /// The friendly name of the module that is taken from the actual class name.
-        /// </para>
-        /// </summary>
-        public string Name { get; protected set; }
 
         /// <summary>
         /// <para>
@@ -299,7 +286,7 @@ namespace Nancy
                 return new ViewLocationContext
                        {
                            ModulePath = module.ModulePath,
-                           ModuleName = module.Name,
+                           ModuleName = module.GetModuleName(),
                            Context = module.Context
                        };
             }
