@@ -14,7 +14,7 @@ namespace Nancy.Conventions
         {
             conventions.StaticContentsConventions = new List<Func<NancyContext, string, Response>>
             {
-                StaticContentConventionBuilder.AddDirectory("content")
+                StaticContentConventionBuilder.AddDirectory("foo", "content")
             };
         }
 
@@ -31,6 +31,9 @@ namespace Nancy.Conventions
         }
     }
 
+    /// <summary>
+    /// Registers the static contents hook at the 
+    /// </summary>
     public class StaticContentStartup : IStartup
     {
         private readonly IRootPathProvider rootPathProvider;
@@ -42,24 +45,36 @@ namespace Nancy.Conventions
             this.conventions = conventions;
         }
 
+        /// <summary>
+        /// Gets the type registrations to register for this startup task`
+        /// </summary>
         public IEnumerable<TypeRegistration> TypeRegistrations
         {
             get { return Enumerable.Empty<TypeRegistration>(); }
         }
 
+        /// <summary>
+        /// Gets the collection registrations to register for this startup task
+        /// </summary>
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
         {
             get { return Enumerable.Empty<CollectionTypeRegistration>(); }
         }
 
+        /// <summary>
+        /// Gets the instance registrations to register for this startup task
+        /// </summary>
         public IEnumerable<InstanceRegistration> InstanceRegistrations
         {
             get { return Enumerable.Empty<InstanceRegistration>(); }
         }
 
+        /// <summary>
+        /// Perform any initialisation tasks
+        /// </summary>
         public void Initialize(IApplicationPipelines pipelines)
         {
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+            pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx =>
             {
                 return conventions
                     .Select(convention => convention.Invoke(ctx, rootPathProvider.GetRootPath()))
@@ -77,28 +92,26 @@ namespace Nancy.Conventions
             ResponseFactoryCache = new ConcurrentDictionary<string, Func<Response>>();
         }
 
-        public static Func<NancyContext, string, Response> AddDirectory(string contentPath, string virtualPath = null, params string[] allowedExtensions)
+        public static Func<NancyContext, string, Response> AddDirectory(string requestPath, string contentPath = null, params string[] allowedExtensions)
         {
             return (ctx, root) =>
             {
                 var path =
                     ctx.Request.Path.TrimStart(new[] { '/' });
 
-                virtualPath = virtualPath ?? contentPath;
-
-                if (!path.StartsWith(virtualPath, StringComparison.OrdinalIgnoreCase))
+                if (!path.StartsWith(requestPath, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(root, contentPath, virtualPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(root, contentPath ?? requestPath, allowedExtensions));
 
                 return responseFactory.Invoke();
             };
         }
 
-        private static Func<string, Func<Response>> BuildContentDelegate(string applicationRootPath, string contentPath, string virtualPath, string[] allowedExtensions)
+        private static Func<string, Func<Response>> BuildContentDelegate(string applicationRootPath, string contentPath, string[] allowedExtensions)
         {
             return requestPath =>
             {
@@ -114,9 +127,9 @@ namespace Nancy.Conventions
                     return () => null;
                 }
 
-                if(!contentPath.Equals(virtualPath, StringComparison.OrdinalIgnoreCase))
+                if(!requestPath.StartsWith(contentPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    requestPath = String.Concat(contentPath, requestPath.Substring(virtualPath.Length));
+                    requestPath = String.Concat(contentPath, requestPath.Substring(requestPath.IndexOf("/")));
                 }
 
                 if (!IsSafeToCombinePaths(applicationRootPath, requestPath))
