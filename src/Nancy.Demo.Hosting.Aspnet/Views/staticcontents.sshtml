@@ -5,6 +5,6 @@
 </head>
 <body>
     <h1>Static contents sample</h1>
-    <img src="@Path['~/content/face.png'];" alt="Face" />
+    <img src="@Path['~/foo/face.png'];" alt="Face" />
 </body>
 </html>
