@@ -90,6 +90,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Jonathan Scoles](http://github.com/jscoles)
 * [John Downey](http://github.com/jtdowney)
 * [Jonas Schmid](http://github.com/jschmid)
+* [Kevin Pullin](https://github.com/kppullin)
 * [Mark Rendle](http://github.com/markrendle)
 * [Maciej Kowalewski](http://github.com/maciejk)
 * [Mindaugas Mozûras](http://github.com/mmozuras)
