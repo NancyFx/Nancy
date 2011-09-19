@@ -14,7 +14,6 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
         private Func<ArraySegment<byte>, Action, bool> onNext;
         private Action<Exception> onError;
         private Action onComplete;
-        private bool active;
 
         private bool sendContinuation;
         private int currentIndex;
@@ -171,8 +170,6 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
         private void OnCancel()
         {
             this.Cancelled = true;
-
-            this.active = false;
         }
 
         public static implicit operator BodyDelegate(FakeProducer producer)
