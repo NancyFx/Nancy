@@ -4,7 +4,7 @@
     using System.Linq;
     using Xunit;
 
-    public class PostRequestHooksPipelineFixture
+    public class AfterPipelineFixture
     {
         private AfterPipeline pipeline;
 
@@ -13,50 +13,9 @@
             return new NancyContext();
         }
 
-        public PostRequestHooksPipelineFixture()
+        public AfterPipelineFixture()
         {
             pipeline = new AfterPipeline();
-        }
-
-        [Fact]
-        public void AddItemToEndOfPipeline_adds_to_the_end_of_the_pipeline()
-        {
-            Action<NancyContext> item1 = (r) => { };
-            Action<NancyContext> item2 = (r) => { };
-            pipeline.AddItemToEndOfPipeline(item2);
-            pipeline.AddItemToEndOfPipeline(item1);
-
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.Last());
-        }
-
-        [Fact]
-        public void AddItemToStartOfPipeline_adds_to_the_end_of_the_pipeline()
-        {
-            Action<NancyContext> item1 = (r) => { };
-            Action<NancyContext> item2 = (r) => { };
-            pipeline.AddItemToEndOfPipeline(item2);
-
-            pipeline.AddItemToStartOfPipeline(item1);
-
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.First());
-        }
-
-        [Fact]
-        public void InsertItemAtPipelineIndex_adds_at_correct_index()
-        {
-            Action<NancyContext> item1 = (r) => { };
-            Action<NancyContext> item2 = (r) => { };
-            Action<NancyContext> item3 = (r) => { };
-            pipeline.AddItemToEndOfPipeline(item1);
-            pipeline.AddItemToEndOfPipeline(item3);
-
-            pipeline.InsertItemAtPipelineIndex(1, item2);
-
-            Assert.Same(item1, pipeline.PipelineItems.ElementAt(0));
-            Assert.Same(item2, pipeline.PipelineItems.ElementAt(1));
-            Assert.Same(item3, pipeline.PipelineItems.ElementAt(2));
         }
 
         [Fact]
@@ -68,8 +27,8 @@
 
             pipeline += item1;
 
-            Assert.Equal(2, pipeline.PipelineItems.Count());
-            Assert.Same(item1, pipeline.PipelineItems.Last());
+            Assert.Equal(2, pipeline.PipelineDelegates.Count());
+            Assert.Same(item1, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -88,8 +47,8 @@
             pipeline += pipeline2;
 
             Assert.Equal(4, pipeline.PipelineItems.Count());
-            Assert.Same(item3, pipeline.PipelineItems.ElementAt(2));
-            Assert.Same(item4, pipeline.PipelineItems.Last());
+            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
+            Assert.Same(item4, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -120,8 +79,8 @@
 
             AfterPipeline castPipeline = item1;
 
-            Assert.Equal(1, castPipeline.PipelineItems.Count());
-            Assert.Same(item1, castPipeline.PipelineItems.First());
+            Assert.Equal(1, castPipeline.PipelineDelegates.Count());
+            Assert.Same(item1, castPipeline.PipelineDelegates.First());
         }
 
         [Fact]
@@ -149,6 +108,5 @@
             Assert.True(item3Called);
             Assert.True(item4Called);
         }
-
     }
 }

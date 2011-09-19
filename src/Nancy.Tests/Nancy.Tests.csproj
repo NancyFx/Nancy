@@ -109,6 +109,7 @@
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
+    <Compile Include="Unit\NamedPipelineBaseFixture.cs" />
     <Compile Include="Unit\NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
     <Compile Include="Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs" />
@@ -152,8 +153,8 @@
     <Compile Include="Unit\NancyCookieFixture.cs" />
     <Compile Include="Unit\NancyEngineFixture.cs" />
     <Compile Include="Unit\NancyModuleFixture.cs" />
-    <Compile Include="Unit\PostRequestHooksPipelineFixture.cs" />
-    <Compile Include="Unit\PreRequestHooksPipelineFixture.cs" />
+    <Compile Include="Unit\AfterPipelineFixture.cs" />
+    <Compile Include="Unit\BeforePipelineFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
     <Compile Include="Fakes\FakeModuleKeyGenerator.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
