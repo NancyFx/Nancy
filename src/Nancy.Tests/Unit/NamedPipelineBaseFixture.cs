@@ -220,5 +220,19 @@
             Assert.Equal(2, pipeline.Items.Count());
             Assert.Same(item1, pipeline.Items.Last());
         }
+
+        [Fact]
+        public void Should_be_able_to_remove_a_named_item()
+        {
+            var item1 = new PipelineItem<Action<string>>("item1", s => { });
+            var item2 = new PipelineItem<Action<string>>("item2", s => { });
+            pipeline.AddItemToEndOfPipeline(item1);
+            pipeline.AddItemToEndOfPipeline(item2);
+
+            pipeline.RemoveByName("item2");
+
+            Assert.Equal(1, pipeline.Items.Count());
+            Assert.Same(item1, pipeline.Items.First());
+        }
     }
 }
