@@ -132,6 +132,9 @@
     <None Include="TestViews\Shared\Partial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestViews\Stub\ViewThatUsesNullHtmlEncoding.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\Stub\ViewThatUsesTildeSubstitution.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
