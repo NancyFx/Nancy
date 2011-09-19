@@ -88,13 +88,33 @@ namespace Nancy.Tests.Unit
             var date = new DateTime(2016, 11, 8, 9, 10, 11, DateTimeKind.Utc);
             var tuesday = GetInvariantAbbreviatedWeekdayName(date);
             var november = GetInvariantAbbreviatedMonthName(date);
-            var cookie = new NancyCookie("paul", "blind") { Expires = date, Path = "/frank", Domain = "gmail.com" };
+            var cookie = new NancyCookie("paul", "blind", true, true) { Expires = date, Path = "/frank", Domain = "gmail.com" };
 
             // When
             var stringified = cookie.ToString();
 
             // Then
-            stringified.ShouldEqual(string.Format("paul=blind; path=/frank; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com", tuesday, november));
+            stringified.ShouldEqual(string.Format("paul=blind; path=/frank; expires={0}, 08-{1}-2016 09:10:11 GMT; domain=gmail.com; Secure; HttpOnly", tuesday, november));
+        }
+
+        [Fact]
+        public void Should_not_add_secure_if_set_to_false()
+        {
+            var cookie = new NancyCookie("Test", "Value", false, false);
+
+            var result = cookie.ToString();
+
+            result.ShouldNotContain("Secure");
+        }
+
+        [Fact]
+        public void Should_add_secure_if_set_to_true()
+        {
+            var cookie = new NancyCookie("Test", "Value", true, true);
+
+            var result = cookie.ToString();
+
+            result.ShouldContain("Secure");
         }
 
         [Fact]

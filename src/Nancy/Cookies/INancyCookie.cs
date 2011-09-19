@@ -44,5 +44,10 @@ namespace Nancy.Cookies
         /// Whether the cookie is http only
         /// </summary>
         bool HttpOnly { get; }
+
+        /// <summary>
+        /// Whether the cookie is secure (i.e. HTTPS only)
+        /// </summary>
+        bool Secure { get; }
     }
 }
