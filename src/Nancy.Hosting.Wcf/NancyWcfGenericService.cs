@@ -36,7 +36,7 @@
         public Message HandleRequests(Stream requestBody)
         {
             var webContext = WebOperationContext.Current;
-
+            
             var nancyRequest = CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
             var nancyContext = engine.HandleRequest(nancyRequest);
 
@@ -54,6 +54,9 @@
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
         {
+            var address =
+                ((RemoteEndpointMessageProperty)
+                 OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
             var relativeUri = GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri).MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
 
             var expectedRequestLength =
@@ -65,7 +68,8 @@
                 webRequest.Headers.ToDictionary(),
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.UriTemplateMatch.RequestUri.Scheme,
-                webRequest.UriTemplateMatch.RequestUri.Query);
+                webRequest.UriTemplateMatch.RequestUri.Query,
+                address.Address);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
