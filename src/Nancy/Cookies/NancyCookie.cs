@@ -14,10 +14,16 @@ namespace Nancy.Cookies
         }
 
         public NancyCookie(string name, string value, bool httpOnly)
+            : this(name, value, httpOnly, false)
+        {
+        }
+
+        public NancyCookie(string name, string value, bool httpOnly, bool secure)
         {
             this.Name = name;
             this.Value = value;
             this.HttpOnly = httpOnly;
+            this.Secure = secure;
         }
 
         /// <summary>
@@ -72,6 +78,11 @@ namespace Nancy.Cookies
         /// Whether the cookie is http only
         /// </summary>
         public bool HttpOnly { get; private set; }
+
+        /// <summary>
+        /// Whether the cookie is secure (i.e. HTTPS only)
+        /// </summary>
+        public bool Secure { get; private set; }
         
         public override string ToString()
         {
@@ -89,6 +100,11 @@ namespace Nancy.Cookies
             {
                 sb.Append("; domain=");
                 sb.Append(Domain);
+            }
+
+            if (Secure)
+            {
+                sb.Append("; Secure");
             }
 
             if (HttpOnly)
