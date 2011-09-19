@@ -164,7 +164,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider));
 
-            beforePipeline.PipelineItems.Count().ShouldEqual(1);
+            beforePipeline.PipelineDelegates.Count().ShouldEqual(1);
             afterPipeline.PipelineItems.Count().ShouldEqual(1);
         }
 

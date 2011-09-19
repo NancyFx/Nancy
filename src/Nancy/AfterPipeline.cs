@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// <para>
@@ -13,32 +12,8 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class AfterPipeline
+    public class AfterPipeline : NamedPipelineBase<Action<NancyContext>>
     {
-        /// <summary>
-        /// Pipeline items to execute
-        /// </summary>
-        protected List<Action<NancyContext>> pipelineItems;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AfterPipeline"/> class.
-        /// </summary>
-        public AfterPipeline()
-        {
-            this.pipelineItems = new List<Action<NancyContext>>();
-        }
-
-        /// <summary>
-        /// Gets the current pipeline items
-        /// </summary>
-        public IEnumerable<Action<NancyContext>> PipelineItems
-        {
-            get
-            {
-                return this.pipelineItems.AsReadOnly();
-            }
-        }
-
         public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;
@@ -59,44 +34,20 @@
 
         public static AfterPipeline operator +(AfterPipeline pipelineToAddTo, AfterPipeline pipelineToAdd)
         {
-            pipelineToAddTo.pipelineItems.AddRange(pipelineToAdd.pipelineItems);
+            foreach (var pipelineItem in pipelineToAdd.PipelineItems)
+            {
+                pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
+            }
+
             return pipelineToAddTo;
         }
 
         public void Invoke(NancyContext context)
         {
-            foreach (var pipelineItem in this.pipelineItems)
+            foreach (var pipelineItem in this.PipelineDelegates)
             {
                 pipelineItem.Invoke(context);
             }
-        }
-
-        /// <summary>
-        /// Add an item to the start of the pipeline
-        /// </summary>
-        /// <param name="item">Item to add</param>
-        public virtual void AddItemToStartOfPipeline(Action<NancyContext> item)
-        {
-            this.InsertItemAtPipelineIndex(0, item);
-        }
-
-        /// <summary>
-        /// Add an item to the end of the pipeline
-        /// </summary>
-        /// <param name="item">Item to add</param>
-        public virtual void AddItemToEndOfPipeline(Action<NancyContext> item)
-        {
-            this.pipelineItems.Add(item);
-        }
-
-        /// <summary>
-        /// Add an item to a specific place in the pipeline.
-        /// </summary>
-        /// <param name="index">Index to add at</param>
-        /// <param name="item">Item to add</param>
-        public virtual void InsertItemAtPipelineIndex(int index, Action<NancyContext> item)
-        {
-            this.pipelineItems.Insert(index, item);
         }
     }
 }
