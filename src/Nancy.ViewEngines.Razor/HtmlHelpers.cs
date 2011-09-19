@@ -39,5 +39,10 @@
 
             return new NonEncodedHtmlString(reader.ReadToEnd());
         }
+
+        public IHtmlString Raw(string text)
+        {
+            return new NonEncodedHtmlString(text);
+        }
     }
 }
