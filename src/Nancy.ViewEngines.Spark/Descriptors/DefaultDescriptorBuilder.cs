@@ -1,9 +1,11 @@
-﻿namespace Nancy.ViewEngines.Spark.Descriptors
+﻿using System;
+using System.Text.RegularExpressions;
+
+namespace Nancy.ViewEngines.Spark.Descriptors
 {
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using Spark;
+    using System.Linq;    
     using global::Spark;
     using global::Spark.Parser;
     using global::Spark.Parser.Syntax;
@@ -51,10 +53,11 @@
 
         public virtual SparkViewDescriptor BuildDescriptor(BuildDescriptorParams buildDescriptorParams, ICollection<string> searchedLocations)
         {
-            var descriptor = new SparkViewDescriptor
-                                 {
-                                     TargetNamespace = buildDescriptorParams.ViewPath
-                                 };
+            // Is there any other characters that are allowed in the path which 
+            // are not allowed in a c# class name / namespace?
+            Regex illegalNamespaceChars = new Regex(@"[\\/]+"); 
+            string namespage = illegalNamespaceChars.Replace(buildDescriptorParams.ViewPath, String.Empty);
+            var descriptor = new SparkViewDescriptor { TargetNamespace = namespage };
 
             if (!LocatePotentialTemplate(
                 PotentialViewLocations(buildDescriptorParams.ViewPath,
@@ -69,7 +72,8 @@
             if (!string.IsNullOrEmpty(buildDescriptorParams.MasterName))
             {
                 if (!LocatePotentialTemplate(
-                    PotentialMasterLocations(buildDescriptorParams.MasterName,
+                    PotentialMasterLocations(buildDescriptorParams.ViewPath,
+                                             buildDescriptorParams.MasterName,
                                              buildDescriptorParams.Extra),
                     descriptor.Templates,
                     searchedLocations))
@@ -90,7 +94,8 @@
             while (buildDescriptorParams.FindDefaultMaster && !string.IsNullOrEmpty(trailingUseMaster))
             {
                 if (!LocatePotentialTemplate(
-                    PotentialMasterLocations(trailingUseMaster,
+                    PotentialMasterLocations(buildDescriptorParams.ViewPath, 
+                                             trailingUseMaster,
                                              buildDescriptorParams.Extra),
                     descriptor.Templates,
                     searchedLocations))
@@ -162,22 +167,20 @@
                                     }, extra);
         }
 
-        protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
+        protected virtual IEnumerable<string> PotentialMasterLocations(string viewPath, string masterName, IDictionary<string, object> extra)
         {
             return ApplyFilters(new[]
                                     {
                                         Path.Combine("Layouts", masterName + ".spark"),
-                                        Path.Combine("Shared", masterName + ".spark")
+                                        Path.Combine("Shared", masterName + ".spark"),
+                                        Path.Combine(viewPath, "Layouts", masterName + ".spark"),
+                                        Path.Combine(viewPath, "Shared", masterName + ".spark")
                                     }, extra);
         }
 
-        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string controllerName, IDictionary<string, object> extra)
+        protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string viewPath, IDictionary<string, object> extra)
         {
-            return ApplyFilters(new[]
-                                    {
-                                        Path.Combine("Layouts", "Application.spark"),
-                                        Path.Combine("Shared", "Application.spark")
-                                    }, extra);
+            return PotentialMasterLocations(viewPath, "Application", extra);
         }
 
         /// <summary>
