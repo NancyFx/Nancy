@@ -8,6 +8,7 @@ namespace Nancy
     using Nancy.Routing;
     using Nancy.Session;
     using Nancy.ViewEngines;
+    using Nancy.Extensions;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
@@ -282,7 +283,12 @@ namespace Nancy
 
             private ViewLocationContext GetViewLocationContext()
             {
-                return new ViewLocationContext { ModulePath = module.ModulePath, Context = module.Context } ;
+                return new ViewLocationContext
+                       {
+                           ModulePath = module.ModulePath,
+                           ModuleName = module.GetModuleName(),
+                           Context = module.Context
+                       };
             }
         }
     }

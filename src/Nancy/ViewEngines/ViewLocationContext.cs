@@ -12,6 +12,12 @@ namespace Nancy.ViewEngines
         public string ModulePath { get; set; }
 
         /// <summary>
+        /// The name of the <see cref="NancyModule"/> that is locating a view.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the name of the module.</value>
+        public string ModuleName { get; set; }
+
+        /// <summary>
         /// The request/response context
         /// </summary>
         public NancyContext Context{ get; set; }
