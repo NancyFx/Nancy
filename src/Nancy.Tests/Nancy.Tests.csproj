@@ -110,6 +110,7 @@
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\NamedPipelineBaseFixture.cs" />
+    <Compile Include="Unit\ModuleNameFixture.cs" />
     <Compile Include="Unit\NancyContextFixture.cs" />
     <Compile Include="Resources\Views\SuperSimpleViewEngineSampleContent.cs" />
     <Compile Include="Unit\Bootstrapper\Base\BootstrapperBaseFixtureBase.cs" />

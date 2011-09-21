@@ -53,6 +53,14 @@
 
                 (viewName, model, viewLocationContext) => {
                     return string.Concat(viewLocationContext.ModulePath, "/", viewName);
+                },
+
+                (viewName, model, viewLocationContext) => {
+                    return string.Concat("views/", viewLocationContext.ModuleName, "/", viewName);
+                },
+
+                (viewName, model, viewLocationContext) => {
+                    return string.Concat(viewLocationContext.ModuleName, "/", viewName);
                 }
             };
         }
