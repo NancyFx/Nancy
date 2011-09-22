@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Responses
 {
     /// <summary>
-    /// Json serializer setings
+    /// Json serializer settings
     /// </summary>
     public static class JsonSettings
     {
