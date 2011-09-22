@@ -44,11 +44,20 @@
         [Fact]
         public void Should_use_filename_and_content_type_for_attachments_from_file_response_if_not_overridden()
         {
-            var filename = Path.Combine(@"..", @"..", "Resources", "zip.png");
+            // Given
+            var assemblyPath =
+                Path.GetDirectoryName(this.GetType().Assembly.Location);
+
+            GenericFileResponse.RootPath =
+                Path.GetFullPath(Path.Combine(assemblyPath, @"..", @".."));
+
+            var filename = Path.Combine("Resources", "zip.png");
             var response = new GenericFileResponse(filename, "image/png");
 
+            // When
             var result = response.AsAttachment();
-
+            
+            // Then
             result.Headers["Content-Disposition"].ShouldContain("zip.png");
             result.ContentType.ShouldEqual("image/png");
         }
