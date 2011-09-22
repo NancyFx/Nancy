@@ -9,7 +9,7 @@
     /// <remarks>If the response contains an invalid file (not found, empty name, missing extension and so on) the status code of the response will be set to <see cref="HttpStatusCode.NotFound"/>.</remarks>
     public class GenericFileResponse : Response
     {
-        public static string RootPath;
+        public static string RootPath { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
