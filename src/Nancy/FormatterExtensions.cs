@@ -1,13 +1,12 @@
 namespace Nancy
 {
-    using System.IO;
     using Nancy.Responses;
 
     public static class FormatterExtensions
     {
         public static Response AsFile(this IResponseFormatter formatter, string filePath)
         {            
-            return new GenericFileResponse(Path.Combine(formatter.RootPath, filePath));
+            return new GenericFileResponse(filePath);
         }
 
         public static Response AsCss(this IResponseFormatter formatter, string filePath)
