@@ -97,6 +97,8 @@
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
+    <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Conventions\StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />
