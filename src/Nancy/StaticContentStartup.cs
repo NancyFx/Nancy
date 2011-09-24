@@ -1,12 +1,13 @@
-namespace Nancy.Conventions
+namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Bootstrapper;
+    using Conventions;
+    using Nancy.Bootstrapper;
 
     /// <summary>
-    /// Registers the static contents hook at the 
+    /// Registers the static contents hook in the application pipeline at startup.
     /// </summary>
     public class StaticContentStartup : IStartup
     {
