@@ -25,7 +25,7 @@ namespace Nancy
         /// </summary>
         public IEnumerable<TypeRegistration> TypeRegistrations
         {
-            get { return Enumerable.Empty<TypeRegistration>(); }
+            get { return null; }
         }
 
         /// <summary>
@@ -33,7 +33,7 @@ namespace Nancy
         /// </summary>
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
         {
-            get { return Enumerable.Empty<CollectionTypeRegistration>(); }
+            get { return null; }
         }
 
         /// <summary>
@@ -41,7 +41,7 @@ namespace Nancy
         /// </summary>
         public IEnumerable<InstanceRegistration> InstanceRegistrations
         {
-            get { return Enumerable.Empty<InstanceRegistration>(); }
+            get { return null; }
         }
 
         /// <summary>
@@ -56,7 +56,7 @@ namespace Nancy
                     .FirstOrDefault(response => response != null);
             });
             
-            pipelines.BeforeRequest.AddItemToEndOfPipeline(item);
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(item);
         }
     }
 }
