@@ -65,11 +65,6 @@ namespace Nancy.Conventions
                     requestPath = String.Concat(contentPath, requestPath.Substring(requestPath.IndexOf("/")));
                 }
 
-                if (!IsSafeToCombinePaths(applicationRootPath, requestPath))
-                {
-                    return () => null;
-                }
-
                 var fileName = Path.Combine(applicationRootPath, requestPath);
 
                 if (!File.Exists(fileName))
@@ -79,14 +74,6 @@ namespace Nancy.Conventions
 
                 return () => new GenericFileResponse(fileName);
             };
-        }
-
-        private static bool IsSafeToCombinePaths(string contentsFolderPath, string requestedPath)
-        {
-            var combinedPath =
-                Path.GetFullPath(Path.Combine(contentsFolderPath, requestedPath));
-
-            return combinedPath.StartsWith(contentsFolderPath);
         }
     }
 }
