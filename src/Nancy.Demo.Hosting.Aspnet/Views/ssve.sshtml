@@ -6,6 +6,6 @@
 <body>
     <h1>SSVE - so simple, even @Model.FirstName can do it.</h1>
     <p>This is a sample SSVE view!</p>
-	<img src="@Path['~/images/face.png'];" alt="Face"/>
+	<img src="@Path['~/Content/face.png'];" alt="Face"/>
 </body>
 </html>

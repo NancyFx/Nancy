@@ -5,24 +5,24 @@
     using ViewEngines;
 
     /// <summary>
-    /// 
+    /// Defines the default static contents conventions.
     /// </summary>
     public class DefaultViewLocationConventions : IConvention
     {
         /// <summary>
-        /// Initialise any conventions this class "owns"
+        /// Initialise any conventions this class "owns".
         /// </summary>
-        /// <param name="conventions">Convention object instance</param>
+        /// <param name="conventions">Convention object instance.</param>
         public void Initialise(NancyConventions conventions)
         {
             ConfigureViewLocationConventions(conventions);
         }
 
         /// <summary>
-        /// Asserts that the conventions that this class "owns" are valid
+        /// Asserts that the conventions that this class "owns" are valid.
         /// </summary>
-        /// <param name="conventions">Conventions object instance</param>
-        /// <returns>Tuple containing true/false for valid/invalid, and any error messages</returns>
+        /// <param name="conventions">Conventions object instance.</param>
+        /// <returns>Tuple containing true/false for valid/invalid, and any error messages.</returns>
         public Tuple<bool, string> Validate(NancyConventions conventions)
         {
             if (conventions.ViewLocationConventions == null)

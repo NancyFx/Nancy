@@ -8,7 +8,7 @@ namespace Nancy.Demo.Hosting.Aspnet
     {
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
-            Get["/"] = x => {
+            Get["/"] = x =>{
                 return View["routes.cshtml", routeCacheProvider.GetCache()];
             };
 
