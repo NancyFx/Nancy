@@ -9,7 +9,6 @@ namespace Nancy
     public static class StaticConfiguration
     {
         private static bool? isRunningDebug;
-
         private static bool? disableCaches;
 
         private static bool? disableErrorTraces;
@@ -48,7 +47,6 @@ namespace Nancy
                 disableErrorTraces = value;
             }
         }
-
         /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.
         /// Checks the entry assembly to see whether it has been built in debug mode.

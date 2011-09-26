@@ -81,7 +81,12 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             this.Bootstrapper.BeforeRequest += (c) => { called = true; return null; };
             var engine = this.Bootstrapper.GetEngine();
 
-            engine.PreRequestHook.Invoke(new NancyContext());
+            var context = new NancyContext
+            {
+                Request = new Request("GET", "/", "http")
+            };
+
+            engine.PreRequestHook.Invoke(context);
 
             called.ShouldBeTrue();
         }
