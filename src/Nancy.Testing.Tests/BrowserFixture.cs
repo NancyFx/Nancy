@@ -46,7 +46,7 @@ namespace Nancy.Testing.Tests
             var result = browser.Post("/", with =>
                                            {
                                                with.HttpRequest();
-                                               with.Body(stream);
+                                               with.Body(stream, "text/plain");
                                            });
 
             // Then
