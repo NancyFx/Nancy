@@ -64,6 +64,15 @@
         }
 
         /// <summary>
+        /// Adds a body to the HTTP request.
+        /// </summary>
+        /// <param name="body">A stream that should be used as the HTTP request body.</param>
+        public void Body(Stream body)
+        {
+            this.Values.Body = body;
+        }
+
+        /// <summary>
         /// Adds an application/x-www-form-urlencoded form value.
         /// </summary>
         /// <param name="key">The name of the form element.</param>
