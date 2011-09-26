@@ -9,7 +9,7 @@ namespace Nancy.Authentication.Forms
     public static class ModuleExtensions
     {
         /// <summary>
-        /// Logs the user in.
+        /// Logs the user in and returns either an empty 200 response for ajax requests, or a redirect response for non-ajax. <seealso cref="RequestExtensions.IsAjaxRequest"/>
         /// </summary>
         /// <param name="module">Nancy module</param>
         /// <param name="userIdentifier">User identifier guid</param>
@@ -49,7 +49,7 @@ namespace Nancy.Authentication.Forms
         }
 
         /// <summary>
-        /// Logs the user out.
+        /// Logs the user out and returns either an empty 200 response for ajax requests, or a redirect response for non-ajax. <seealso cref="RequestExtensions.IsAjaxRequest"/>
         /// </summary>
         /// <param name="module">Nancy module</param>
         /// <param name="redirectUrl">URL to redirect to</param>
