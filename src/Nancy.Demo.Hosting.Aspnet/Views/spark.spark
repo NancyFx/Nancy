@@ -6,6 +6,6 @@
 <body>
     <h1>The name's Spark, ${Model.FirstName} Spark</h1>
     <p>This is a sample Spark view!</p>
-    <img src="~/images/face.png" alt="Face" />  
+    <img src="~/content/face.png" alt="Face" />  
 </body>
 </html>
