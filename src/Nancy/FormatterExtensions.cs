@@ -4,24 +4,29 @@ namespace Nancy
 
     public static class FormatterExtensions
     {
-        public static Response AsFile(this IResponseFormatter formatter, string filePath)
-        {            
-            return new GenericFileResponse(filePath);
-        }
-
-        public static Response AsCss(this IResponseFormatter formatter, string filePath)
+        public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath, string contentType)
         {
-            return AsFile(formatter, filePath);
+            return new GenericFileResponse(applicationRelativeFilePath, contentType);
         }
 
-        public static Response AsImage(this IResponseFormatter formatter, string imagePath)
-        {            
-            return AsFile(formatter, imagePath);
-        }
-
-        public static Response AsJs(this IResponseFormatter formatter, string filePath)
+        public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath)
         {
-            return AsFile(formatter, filePath);
+            return new GenericFileResponse(applicationRelativeFilePath);
+        }
+
+        public static Response AsCss(this IResponseFormatter formatter, string applicationRelativeFilePath)
+        {
+            return AsFile(formatter, applicationRelativeFilePath);
+        }
+
+        public static Response AsImage(this IResponseFormatter formatter, string applicationRelativeFilePath)
+        {
+            return AsFile(formatter, applicationRelativeFilePath);
+        }
+
+        public static Response AsJs(this IResponseFormatter formatter, string applicationRelativeFilePath)
+        {
+            return AsFile(formatter, applicationRelativeFilePath);
         }
 
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model)
