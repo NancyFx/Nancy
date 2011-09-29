@@ -197,11 +197,17 @@
         {
             try
             {
-                if (this.OnErrorHook == null) throw ex;
+                if (this.OnErrorHook == null)
+                { 
+                    throw ex;
+                }
 
                 var onErrorResponse = this.OnErrorHook.Invoke(context, ex);
 
-                if (onErrorResponse == null) throw ex;
+                if (onErrorResponse == null)
+                {
+                    throw ex;
+                }
 
                 context.Response = onErrorResponse;
             }

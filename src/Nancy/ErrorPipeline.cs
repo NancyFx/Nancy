@@ -81,10 +81,14 @@
             {
                 var response = pipelineItem.Invoke(context, ex);
                 if (response != null)
+                { 
                     return response;
+                }
             }
             if (context.Response != null)
+            { 
                 return context.Response;
+            }
             throw ex;
         }
         
