@@ -20,7 +20,6 @@
         {
             return token.RandomBytes
                         .Concat(BitConverter.GetBytes(token.CreatedDate.Ticks))
-                        .Concat(Encoding.UTF8.GetBytes(token.Salt ?? String.Empty))
                         .ToArray();
         }
 

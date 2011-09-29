@@ -11,28 +11,23 @@
     public static class Csrf
     {
         /// <summary>
-        /// Add a Csrf protection token to the response
+        /// Creates a new csrf token for this response with an optional salt.
+        /// Only necessary if a particular route requires a new token for each request.
         /// </summary>
-        /// <param name="response">Response object</param>
-        /// <param name="forceRecreation">Force the tokens to be regenerated even if the user already has one</param>
-        /// <param name="salt">Optional salt - must match verification call</param>
-        /// <returns>Modified response object</returns>
-        /// <seealso cref="CsrfTokenValidationResult"/>
-        public static Response WithCsrfToken(this Response response, bool forceRecreation = false, string salt = null)
+        /// <param name="module">Nancy module</param>
+        /// <returns></returns>
+        public static void CreateNewCsrfToken(this NancyModule module)
         {
             var token = new CsrfToken
-                            {
-                                CreatedDate = DateTime.Now,
-                                Salt = salt ?? string.Empty
-                            };
+            {
+                CreatedDate = DateTime.Now,
+            };
             token.CreateRandomBytes();
             token.CreateHmac(CsrfStartup.CryptographyConfiguration.HmacProvider);
 
             var tokenString = CsrfStartup.ObjectSerializer.Serialize(token);
 
-            response.AddCookie(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, true));
-
-            return response;
+            module.Context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
         }
 
         /// <summary>
@@ -41,9 +36,8 @@
         /// </summary>
         /// <param name="module">Module object</param>
         /// <param name="validityPeriod">Optional validity period before it times out</param>
-        /// <param name="salt">Optional salt - must match the creation call</param>
         /// <exception cref="CsrfValidationException">If validation fails</exception>
-        public static void ValidateCsrfToken(this NancyModule module, TimeSpan? validityPeriod = null, string salt = null)
+        public static void ValidateCsrfToken(this NancyModule module, TimeSpan? validityPeriod = null)
         {
             var request = module.Request;
 
@@ -55,7 +49,7 @@
             var cookieToken = GetCookieToken(request);
             var formToken = GetFormToken(request);
 
-            var result = CsrfStartup.TokenValidator.Validate(cookieToken, formToken, salt, validityPeriod);
+            var result = CsrfStartup.TokenValidator.Validate(cookieToken, formToken, validityPeriod);
 
             if (result != CsrfTokenValidationResult.Ok)
             {

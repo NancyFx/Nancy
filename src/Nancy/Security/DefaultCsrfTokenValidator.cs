@@ -18,19 +18,13 @@ namespace Nancy.Security
         /// </summary>
         /// <param name="tokenOne">First token (usually from either a form post or querystring)</param>
         /// <param name="tokenTwo">Second token (usually from a cookie)</param>
-        /// <param name="salt">Optional salt value specified during creation</param>
         /// <param name="validityPeriod">Optional period that the tokens are valid for</param>
         /// <returns>Token validation result</returns>
-        public CsrfTokenValidationResult Validate(CsrfToken tokenOne, CsrfToken tokenTwo, string salt = null, TimeSpan? validityPeriod = new TimeSpan?())
+        public CsrfTokenValidationResult Validate(CsrfToken tokenOne, CsrfToken tokenTwo, TimeSpan? validityPeriod = new TimeSpan?())
         {
             if (tokenOne == null || tokenTwo == null)
             {
                 return CsrfTokenValidationResult.TokenMissing;
-            }
-
-            if (!String.Equals(tokenOne.Salt ?? String.Empty, salt ?? String.Empty, StringComparison.Ordinal))
-            {
-                return CsrfTokenValidationResult.SaltMismatch;
             }
 
             if (!tokenOne.Equals(tokenTwo))
@@ -47,7 +41,6 @@ namespace Nancy.Security
                                {
                                    CreatedDate = tokenOne.CreatedDate,
                                    RandomBytes = tokenOne.RandomBytes,
-                                   Salt = tokenOne.Salt,
                                };
             newToken.CreateHmac(this.hmacProvider);
             if (!newToken.Hmac.SequenceEqual(tokenOne.Hmac))

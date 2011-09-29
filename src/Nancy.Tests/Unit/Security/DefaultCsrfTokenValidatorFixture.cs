@@ -37,40 +37,26 @@
         public void Should_return_token_mismatch_if_tokens_differ()
         {
             DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 }, Salt = "salt" };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 4, 3 }, Salt = "salt" };
+            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 4, 3 } };
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
-            var result = this.validator.Validate(tokenOne, tokenTwo, "salt");
+            var result = this.validator.Validate(tokenOne, tokenTwo);
 
             result.ShouldEqual(CsrfTokenValidationResult.TokenMismatch);
-        }
-
-        [Fact]
-        public void Should_return_salt_mismatch_if_salt_does_not_match()
-        {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 }, Salt = "salt" };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 }, Salt = "salt" };
-            tokenOne.CreateHmac(this.hmacProvider);
-            tokenTwo.CreateHmac(this.hmacProvider);
-
-            var result = this.validator.Validate(tokenOne, tokenTwo, "different salt");
-
-            result.ShouldEqual(CsrfTokenValidationResult.SaltMismatch);
         }
 
         [Fact]
         public void Should_return_token_ok_if_tokens_match_and_no_expiry_set()
         {
             DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 }, Salt = "salt" };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 }, Salt = "salt" };
+            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
-            var result = this.validator.Validate(tokenOne, tokenTwo, "salt");
+            var result = this.validator.Validate(tokenOne, tokenTwo);
 
             result.ShouldEqual(CsrfTokenValidationResult.Ok);
         }

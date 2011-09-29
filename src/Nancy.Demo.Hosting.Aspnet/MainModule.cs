@@ -129,9 +129,24 @@ namespace Nancy.Demo.Hosting.Aspnet
                     throw new NotSupportedException("This is an exception thrown in a route.");
                 };
 
-            Get["/csrf"] = x => this.View["csrf"].WithCsrfToken();
+            Get["/csrf"] = x => this.View["csrf", new { Blurb = "CSRF without an expiry using the 'session' token" }];
 
             Post["/csrf"] = x =>
+            {
+                this.ValidateCsrfToken();
+
+                return string.Format("Hello {0}!", Request.Form.Name);
+            };
+
+            Get["/csrfWithExpiry"] = x =>
+                {
+                    // Create a new one because we have an expiry to check
+                    this.CreateNewCsrfToken();
+
+                    return this.View["csrf", new { Blurb = "You have 20 seconds to submit the page.. TICK TOCK :-)" }];
+                };
+
+            Post["/csrfWithExpiry"] = x =>
                 {
                     this.ValidateCsrfToken(TimeSpan.FromSeconds(20));
 
