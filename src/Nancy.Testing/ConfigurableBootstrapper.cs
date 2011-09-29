@@ -9,6 +9,7 @@ namespace Nancy.Testing
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
+    using Nancy.Security;
     using Nancy.ViewEngines;
 
     using TinyIoC;
@@ -951,6 +952,54 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator ViewResolver<T>() where T : IViewResolver
             {
                 this.bootstrapper.configuration.ViewResolver = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="ICsrfTokenValidator"/>.
+            /// </summary>
+            /// <param name="tokenValidator">The <see cref="ICsrfTokenValidator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator CsrfTokenValidator(ICsrfTokenValidator tokenValidator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(ICsrfTokenValidator), tokenValidator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ICsrfTokenValidator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ICsrfTokenValidator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator CsrfTokenValidator<T>() where T : ICsrfTokenValidator
+            {
+                this.bootstrapper.configuration.CsrfTokenValidator = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IObjectSerializer"/>.
+            /// </summary>
+            /// <param name="objectSerializer">The <see cref="IObjectSerializer"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ObjectSerializer(IObjectSerializer objectSerializer)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IObjectSerializer), objectSerializer));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IObjectSerializer"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IObjectSerializer"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ObjectSerializer<T>() where T : IObjectSerializer
+            {
+                this.bootstrapper.configuration.ObjectSerializer = typeof(T);
                 return this;
             }
         }
