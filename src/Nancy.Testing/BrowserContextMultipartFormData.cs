@@ -9,18 +9,30 @@
     /// </summary>
     public class BrowserContextMultipartFormData
     {
-        private const string Boundary = "--NancyMultiPartBoundary123124";
+        public const string DefaultBoundaryName = "--NancyMultiPartBoundary123124";
+
+        private readonly string boundaryName;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BrowserContextMultipartFormData"/> class using the default boundary name
+        /// </summary>
+        /// <param name="configuration">The configuration that should be used to create the multipart/form-data encoded data.</param>
+        public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> configuration)
+            : this(configuration, DefaultBoundaryName)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserContextMultipartFormData"/> class.
         /// </summary>
         /// <param name="configuration">The configuration that should be used to create the multipart/form-data encoded data.</param>
-        public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> configuration)
+        /// <param name="boundaryName">Boundary name to be used</param>
+        public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> configuration, string boundaryName)
         {
+            this.boundaryName = boundaryName;
             this.Body = new MemoryStream();
 
             var configurator =
-                new BrowserContextMultipartFormDataConfigurator(this.Body, Boundary);
+                new BrowserContextMultipartFormDataConfigurator(this.Body, boundaryName);
 
             configuration.Invoke(configurator);
             this.TerminateBoundary();
@@ -37,15 +49,10 @@
 
         private void TerminateBoundary()
         {
-            var builder = new StringBuilder();
-
-            builder.Append('\r');
-            builder.Append('\n');
-            builder.Append(Boundary);
-            builder.Append("--");
+            var endBoundary = String.Format("--{0}--\r\n", this.boundaryName);
 
             var encodedHeaders =
-                Encoding.ASCII.GetBytes(builder.ToString());
+                Encoding.ASCII.GetBytes(endBoundary);
 
             this.Body.Write(encodedHeaders, 0, encodedHeaders.Length);
         }
@@ -55,6 +62,7 @@
         /// </summary>
         public class BrowserContextMultipartFormDataConfigurator
         {
+            private const string CRLF = "\r\n";
             private readonly Stream body;
             private readonly string boundary;
 
@@ -78,33 +86,43 @@
             /// <param name="file">The content of the file</param>
             public void AddFile(string name, string fileName, string contentType, Stream file)
             {
-                this.AddFileHeaders(name, fileName, contentType);
+                this.AddFieldHeaders(name, contentType, fileName);
                 this.AddContent(file);
             }
 
-            private void AddContent(Stream file)
+            public void AddFormField(string name, string contentType, string data)
             {
-                file.Position = 0;
-                file.CopyTo(this.body);
+                this.AddFormField(name, contentType, new MemoryStream(Encoding.ASCII.GetBytes(data)));
             }
 
-            private void AddFileHeaders(string name, string filename, string contentType)
+            public void AddFormField(string name, string contentType, Stream data)
+            {
+                this.AddFieldHeaders(name, contentType);
+                this.AddContent(data);
+            }
+
+            private void AddContent(Stream data)
+            {
+                data.Position = 0;
+                data.CopyTo(this.body);
+            }
+
+            private void AddFieldHeaders(string name, string contentType, string filename = null)
             {
                 var builder = new StringBuilder();
 
-                builder.Append('\r');
-                builder.Append('\n'); 
-                builder.Append(this.boundary);
-                builder.Append('\r');
-                builder.Append('\n');  
-                builder.AppendFormat(@"Content-Disposition: form-data; name=""{0}""; filename=""{1}""", name, filename);
-                builder.Append('\r');
-                builder.Append('\n');
+                builder.Append(CRLF);
+                builder.Append("--" + this.boundary);
+                builder.Append(CRLF);  
+                builder.AppendFormat(@"Content-Disposition: form-data; name=""{0}""", name);
+                if (!String.IsNullOrWhiteSpace(filename))
+                {
+                    builder.AppendFormat(@"; filename=""{0}""", filename);
+                }
+                builder.Append(CRLF);
                 builder.AppendFormat(@"Content-Type: {0}", contentType);
-                builder.Append('\r');
-                builder.Append('\n');
-                builder.Append('\r');
-                builder.Append('\n');
+                builder.Append(CRLF);
+                builder.Append(CRLF);
 
                 var encodedHeaders =
                     Encoding.ASCII.GetBytes(builder.ToString());
