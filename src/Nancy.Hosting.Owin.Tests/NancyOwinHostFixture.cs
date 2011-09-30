@@ -36,6 +36,7 @@ namespace Nancy.Tests
             this.fakeEngine = A.Fake<INancyEngine>();
 
             this.fakeBootstrapper = A.Fake<INancyBootstrapper>();
+
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
 
             this.host = new NancyOwinHost(fakeBootstrapper);
@@ -302,6 +303,21 @@ namespace Nancy.Tests
             output.ShouldEqual("This is some request body content");
         }
 
+        [Fact]
+        public void Should_set_cookie_with_valid_header()
+        {
+            var fakeResponse = new Response() { StatusCode = HttpStatusCode.OK };
+            fakeResponse.AddCookie("test", "testvalue");
+            var fakeContext = new NancyContext() { Response = fakeResponse };
+            
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+            var respHeaders = new Dictionary<string, string>();
+            ResponseCallBack callback = (status, headers, bodyDelegate) =>respHeaders=(Dictionary<string,string>)headers;
+
+            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+            respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
+            (respHeaders["Set-Cookie"]=="test=testvalue; path=/").ShouldBeTrue();
+        }
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
         /// </summary>
