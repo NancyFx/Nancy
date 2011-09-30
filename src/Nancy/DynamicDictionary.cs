@@ -6,7 +6,8 @@
 
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers
     {
-        private readonly Dictionary<string, object> dictionary = new Dictionary<string, object>();
+        private readonly Dictionary<string, object> dictionary =
+            new Dictionary<string, object>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Returns an empty dynamic dictionary.

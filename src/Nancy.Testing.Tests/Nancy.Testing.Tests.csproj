@@ -104,6 +104,7 @@
     <Compile Include="AndConnectorTests.cs" />
     <Compile Include="BrowserResponseBodyWrapperExtensionsFixture.cs" />
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
+    <Compile Include="CaseSensitivityFixture.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
     <Compile Include="DocumentWrapperTests.cs" />

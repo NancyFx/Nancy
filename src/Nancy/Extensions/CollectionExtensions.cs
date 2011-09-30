@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.Specialized;
     using System.Linq;
@@ -26,9 +27,10 @@
             return collection;
         }
 
-        public static IDictionary<TKey, TValue> Merge<TKey, TValue>(this IEnumerable<IDictionary<TKey, TValue>> dictionaries)
+        public static IDictionary<string, string> Merge(this IEnumerable<IDictionary<string, string>> dictionaries)
         {
-            var output = new Dictionary<TKey, TValue>();
+            var output =
+                new Dictionary<string, string>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var dictionary in dictionaries.Where(d => d != null))
             {
