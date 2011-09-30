@@ -136,8 +136,11 @@
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
+    <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
+    <Compile Include="ViewEngines\DefaultResourceAssemblyProvider.cs" />
+    <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
@@ -235,8 +238,11 @@
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\DefaultViewResolver.cs" />
+    <Compile Include="ViewEngines\IFileSystemReader.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
+    <Compile Include="ViewEngines\IResourceAssemblyProvider.cs" />
+    <Compile Include="ViewEngines\IResourceReader.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewLocationCache.cs" />
