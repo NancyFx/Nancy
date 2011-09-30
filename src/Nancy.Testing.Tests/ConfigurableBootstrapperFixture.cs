@@ -114,7 +114,7 @@
             var ignoreList = new[]
             {
                 "AfterRequest", "BeforeRequest", "IsValid", "ModuleKeyGenerator",
-                "BindingDefaults"
+                "BindingDefaults", "OnError"
             };
 
             var typesToReflect =
@@ -131,6 +131,8 @@
             public Func<NancyContext, Response> PreRequestHook { get; set; }
 
             public Action<NancyContext> PostRequestHook { get; set; }
+
+            public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
             public NancyContext HandleRequest(Request request)
             {

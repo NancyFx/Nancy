@@ -483,6 +483,8 @@ namespace Nancy.Authentication.Forms.Tests
 
             public AfterPipeline AfterRequest { get; set; }
 
+            public ErrorPipeline OnError { get; set; }
+
             public FakeApplicationPipelines()
             {
                 this.BeforeRequest = new BeforePipeline();

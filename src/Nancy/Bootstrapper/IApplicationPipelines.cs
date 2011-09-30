@@ -24,5 +24,16 @@ namespace Nancy.Bootstrapper
         /// </para>
         /// </summary>
         AfterPipeline AfterRequest { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during the pipeline.
+        /// If no error hook exists a standard InternalServerError response is returned
+        /// </para>
+        /// </summary>
+        ErrorPipeline OnError { get; set; }
     }
 }
