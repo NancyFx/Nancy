@@ -65,5 +65,16 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         {
             return this.renderContext.ParsePath(path);
         }
+
+        /// <summary>
+        /// Get the anti forgery token form element
+        /// </summary>
+        /// <returns>String containin the form element</returns>
+        public string AntiForgeryToken()
+        {
+            var tokenKeyValue = this.renderContext.GetCsrfToken();
+
+            return string.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"", tokenKeyValue.Key, tokenKeyValue.Value);
+        }
     }
 }

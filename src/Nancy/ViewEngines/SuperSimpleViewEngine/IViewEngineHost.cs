@@ -35,5 +35,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="path">Path to expand</param>
         /// <returns>Expanded path</returns>
         string ExpandPath(string path);
+
+        /// <summary>
+        /// Get the anti forgery token form element
+        /// </summary>
+        /// <returns>String containin the form element</returns>
+        string AntiForgeryToken();
     }
 }

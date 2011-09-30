@@ -678,6 +678,18 @@
 
             Assert.Equal("<script src='/BasePath/scripts/test.js'></script>", result);
         }
+
+        [Fact]
+        public void Should_expand_anti_forgery_tokens()
+        {
+            const string input = "<html><body><form>@AntiForgeryToken</form><body></html>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            var viewEngine = new SuperSimpleViewEngine();
+
+            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+
+            Assert.Equal("<html><body><form>CSRF</form><body></html>", result);
+        }
     }
 
     public class User
