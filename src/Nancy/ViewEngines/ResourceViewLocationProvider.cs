@@ -5,20 +5,33 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Contains the functionality for locating a view that has been embedded into an assembly resource.
     /// </summary>
     public class ResourceViewLocationProvider : IViewLocationProvider
     {
+        private readonly IResourceReader resourceReader;
+        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
         public static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
         /// </summary>
         public ResourceViewLocationProvider()
+            : this(new DefaultResourceReader(), new DefaultResourceAssemblyProvider())
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
+        /// </summary>
+        /// <param name="resourceReader">An <see cref="IResourceReader"/> instance that should be used when extracting embedded views.</param>
+        /// <param name="resourceAssemblyProvider">An <see cref="IResourceAssemblyProvider"/> instance that should be used to determine which assemblies to scan for embedded views.</param>
+        public ResourceViewLocationProvider(IResourceReader resourceReader, IResourceAssemblyProvider resourceAssemblyProvider)
+        {
+            this.resourceReader = resourceReader;
+            this.resourceAssemblyProvider = resourceAssemblyProvider;
         }
 
         /// <summary>
@@ -29,38 +42,32 @@
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
         public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions)
         {
-            if (supportedViewExtensions == null)
+            if (supportedViewExtensions == null || !supportedViewExtensions.Any())
             {
-                return null;
+                return Enumerable.Empty<ViewLocationResult>();
             }
 
-            var excludedAssemblies = new List<Func<Assembly, bool>>()
-            {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Microsoft,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-            };
-
-            var resourceStreamMatches = AppDomainAssemblyTypeScanner.Assemblies
-                .Where(x => !excludedAssemblies.Any(asm => asm.Invoke(x)))
+            return this.resourceAssemblyProvider
+                .GetAssembliesToScan()
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
-
-            return resourceStreamMatches;
         }
 
-        private static IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)
+        private IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)
         {
             var resourceStreams = 
-                GetResourceStreamMatches(assembly, supportedViewExtensions);
+                this.resourceReader.GetResourceStreamMatches(assembly, supportedViewExtensions);
 
             if (!resourceStreams.Any())
             {
                 return Enumerable.Empty<ViewLocationResult>();
+            }
+
+            if (resourceStreams.Count() == 1 && !RootNamespaces.ContainsKey(assembly))
+            {
+                var errorMessage =
+                    string.Format("Only one view was found in assembly {0}, but no rootnamespace had been registered.", assembly.FullName);
+
+                throw new InvalidOperationException(errorMessage);
             }
 
             var commonNamespace = RootNamespaces.ContainsKey(assembly) ?
@@ -80,7 +87,7 @@
                     GetResourceLocation(commonNamespace, resource.Item1, resourceFileName),
                     Path.GetFileNameWithoutExtension(resourceFileName),
                     GetResourceExtension(resource.Item1),
-                    () => new StreamReader(resource.Item2));
+                    resource.Item2);
         }
 
         private static string GetResourceLocation(string commonNamespace, string resource, string resourceName)
@@ -92,7 +99,7 @@
                 .Replace(".", "/");
         }
 
-        private static string ExtractCommonResourceNamespace(IList<string> resources)
+        private static string ExtractCommonResourceNamespace(IEnumerable<string> resources)
         {
             if (resources.Count() == 1)
             {
@@ -139,17 +146,6 @@
         private static string GetResourceExtension(string resourceName)
         {
             return Path.GetExtension(resourceName).Substring(1);
-        }
-
-        private static IList<Tuple<string, Stream>> GetResourceStreamMatches(Assembly assembly, IEnumerable<string> supportedViewEngineExtensions)
-        {
-            var resourceStreams =
-                from resourceName in assembly.GetManifestResourceNames()
-                from viewEngineExtension in supportedViewEngineExtensions
-                where GetResourceExtension(resourceName).Equals(viewEngineExtension, StringComparison.OrdinalIgnoreCase)
-                select new Tuple<string, Stream>(resourceName, assembly.GetManifestResourceStream(resourceName));
-
-            return resourceStreams.ToList();
         }
     }
 }

@@ -9,14 +9,27 @@
     /// </summary>
     public class FileSystemViewLocationProvider : IViewLocationProvider
     {
+        private readonly IFileSystemReader fileSystemReader;
         private readonly string rootPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
         /// </summary>
-        /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance..</param>
+        /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
+        /// <remarks>Creating an instance using this constructor will result in the <see cref="DefaultFileSystemReader"/> being used internally.</remarks>
         public FileSystemViewLocationProvider(IRootPathProvider rootPathProvider)
+            : this(rootPathProvider, new DefaultFileSystemReader())
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
+        /// </summary>
+        /// <param name="rootPathProvider">A <see cref="IRootPathProvider"/> instance.</param>
+        /// <param name="fileSystemReader">An <see cref="IFileSystemReader"/> instance that should be used when retrieving view information from the file system.</param>
+        public FileSystemViewLocationProvider(IRootPathProvider rootPathProvider, IFileSystemReader fileSystemReader)
+        {
+            this.fileSystemReader = fileSystemReader;
             this.rootPath = rootPathProvider.GetRootPath();
         }
 
@@ -33,13 +46,16 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
+            var matches =
+                this.fileSystemReader.GetViewsWithSupportedExtensions(this.rootPath, supportedViewExtensions);
+
             return
-                from match in GetViewsWithSupportedExtensions(supportedViewExtensions)
+                from match in matches
                 select new ViewLocationResult(
-                    GetViewLocation(match, rootPath),
-                    Path.GetFileNameWithoutExtension(match),
-                    Path.GetExtension(match).Substring(1),
-                    () => new StreamReader(new FileStream(match, FileMode.Open, FileAccess.Read, FileShare.ReadWrite)));
+                    GetViewLocation(match.Item1, rootPath),
+                    Path.GetFileNameWithoutExtension(match.Item1),
+                    Path.GetExtension(match.Item1).Substring(1),
+                    match.Item2);
         }
 
         private static string GetViewLocation(string match, string rootPath)
@@ -52,15 +68,6 @@
                 .TrimEnd(new [] { '/' });
 
             return location;
-        }
-
-        private IEnumerable<string> GetViewsWithSupportedExtensions(IEnumerable<string> supportedViewExtensions)
-        {
-            return supportedViewExtensions
-                .SelectMany(extensions => Directory.GetFiles(this.rootPath,
-                string.Concat("*.", extensions),
-                SearchOption.AllDirectories)
-                ).Distinct().ToList();
         }
     }
 }

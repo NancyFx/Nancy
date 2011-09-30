@@ -190,6 +190,8 @@
     <Compile Include="Unit\ViewEngines\DefaultViewLocationCacheFixture.cs" />
     <Compile Include="Fakes\FakeViewLocationCache.cs" />
     <Compile Include="Fakes\FakeViewEngine.cs" />
+    <Compile Include="Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs" />
+    <Compile Include="Unit\ViewEngines\ResourceViewLocationProviderFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineStartupFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewLocatorFixture.cs" />
