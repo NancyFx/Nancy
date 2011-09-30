@@ -12,7 +12,7 @@ namespace Nancy.Session
     /// <summary>
     /// Cookie based session storage
     /// </summary>
-    public class CookieBasedSessions : IFormatterSelector
+    public class CookieBasedSessions : IObjectSerializerSelector
     {
         /// <summary>
         /// Encryption provider
@@ -27,7 +27,7 @@ namespace Nancy.Session
         /// <summary>
         /// Formatter for de/serializing the session objects
         /// </summary>
-        private ISessionObjectFormatter formatter;
+        private IObjectSerializer serializer;
 
         /// <summary>
         /// Cookie name for storing session information
@@ -39,12 +39,12 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="encryptionProvider">The encryption provider.</param>
         /// <param name="hmacProvider">The hmac provider</param>
-        /// <param name="sessionObjectFormatter">Session object formatter to use</param>
-        public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, ISessionObjectFormatter sessionObjectFormatter)
+        /// <param name="objectSerializer">Session object serializer to use</param>
+        public CookieBasedSessions(IEncryptionProvider encryptionProvider, IHmacProvider hmacProvider, IObjectSerializer objectSerializer)
         {
             this.encryptionProvider = encryptionProvider;
             this.hmacProvider = hmacProvider;
-            this.formatter = sessionObjectFormatter;
+            this.serializer = objectSerializer;
         }
 
         /// <summary>
@@ -61,10 +61,10 @@ namespace Nancy.Session
         /// </summary>
         /// <param name="applicationPipelines">Application pipelines</param>
         /// <param name="cryptographyConfiguration">Cryptography configuration</param>
-        /// <returns>Formatter selector for choosing a non-default formatter</returns>
-        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines, CryptographyConfiguration cryptographyConfiguration)
+        /// <returns>Formatter selector for choosing a non-default serializer</returns>
+        public static IObjectSerializerSelector Enable(IApplicationPipelines applicationPipelines, CryptographyConfiguration cryptographyConfiguration)
         {
-            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultSessionObjectFormatter());
+            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultObjectSerializer());
 
             applicationPipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
             applicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
@@ -76,19 +76,19 @@ namespace Nancy.Session
         /// Initialise and add cookie based session hooks to the application pipeine with the default encryption provider.
         /// </summary>
         /// <param name="applicationPipelines">Application pipelines</param>
-        /// <returns>Formatter selector for choosing a non-default formatter</returns>
-        public static IFormatterSelector Enable(IApplicationPipelines applicationPipelines)
+        /// <returns>Formatter selector for choosing a non-default serializer</returns>
+        public static IObjectSerializerSelector Enable(IApplicationPipelines applicationPipelines)
         {
             return Enable(applicationPipelines, CryptographyConfiguration.Default);
         }
 
         /// <summary>
-        /// Using the specified formatter
+        /// Using the specified serializer
         /// </summary>
-        /// <param name="newFormatter">Formatter to use</param>
-        public void WithFormatter(ISessionObjectFormatter newFormatter)
+        /// <param name="newSerializer">Formatter to use</param>
+        public void WithSerializer(IObjectSerializer newSerializer)
         {
-            this.formatter = newFormatter;
+            this.serializer = newSerializer;
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Nancy.Session
                 sb.Append(HttpUtility.UrlEncode(kvp.Key));
                 sb.Append("=");
 
-                var objectString = this.formatter.Serialize(kvp.Value);
+                var objectString = this.serializer.Serialize(kvp.Value);
 
                 sb.Append(HttpUtility.UrlEncode(objectString));
                 sb.Append(";");
@@ -149,7 +149,7 @@ namespace Nancy.Session
                 var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
-                    var valueObject = this.formatter.Deserialize(HttpUtility.UrlDecode(part[1]));
+                    var valueObject = this.serializer.Deserialize(HttpUtility.UrlDecode(part[1]));
 
                     dictionary[HttpUtility.UrlDecode(part[0])] = valueObject;
                 }

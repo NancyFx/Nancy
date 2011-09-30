@@ -1,0 +1,14 @@
+﻿<html>
+<head>
+    <title>CSRF Demo</title>
+</head>
+<body>
+    <form method="POST">
+        <h1>CSRF Test</h1>
+        <p>@Model.Blurb</p>
+        <input type="text" name="Name"/>
+        @Html.AntiForgeryToken();
+        <input type="submit"/>
+    </form>
+</body>
+</html>

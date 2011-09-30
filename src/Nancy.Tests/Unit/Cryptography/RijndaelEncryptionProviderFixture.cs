@@ -10,7 +10,7 @@ namespace Nancy.Tests.Unit.Cryptography
 
         public RijndaelEncryptionProviderFixture()
         {
-            this.provider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Passphrase"));
+            this.provider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Passphrase", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }));
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit.Cryptography
             var inputText = "this is some text";
             var encText = provider.Encrypt(inputText);
 
-            var result = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Wrong")).Decrypt(encText);
+            var result = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("Wrong", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })).Decrypt(encText);
 
             result.ShouldNotEqual(inputText);
         }

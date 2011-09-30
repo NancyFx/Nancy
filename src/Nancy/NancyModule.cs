@@ -253,7 +253,7 @@ namespace Nancy
             /// <param name="model">The model that should be passed into the view.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
-            public Action<Stream> this[dynamic model]
+            public Response this[dynamic model]
             {
                 get { return this.module.ViewFactory.RenderView(null, model, this.GetViewLocationContext()); }
             }
@@ -264,7 +264,7 @@ namespace Nancy
             /// <param name="viewName">The name of the view to render.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Action<Stream> this[string viewName]
+            public Response this[string viewName]
             {
                 get { return this.module.ViewFactory.RenderView(viewName, null, this.GetViewLocationContext()); }
             }
@@ -276,7 +276,7 @@ namespace Nancy
             /// <param name="model">The model that should be passed into the view.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Action<Stream> this[string viewName, dynamic model]
+            public Response this[string viewName, dynamic model]
             {
                 get { return this.module.ViewFactory.RenderView(viewName, model, this.GetViewLocationContext()); }
             }

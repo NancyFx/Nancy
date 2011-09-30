@@ -9,6 +9,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Xunit;
+    using Xunit.Sdk;
 
     public class ConfigurableBootstrapperFixture
     {
@@ -30,7 +31,8 @@
         public void Should_use_type_override_when_it_has_been_configured()
         {
             // Given
-            var bootstrapper = new ConfigurableBootstrapper(with => {
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
                 with.NancyEngine<FakeNancyEngine>();
             });
 
@@ -88,7 +90,7 @@
         public void Should_provide_configuration_for_all_base_properties()
         {
             // Given
-            var availableMembers = 
+            var availableMembers =
                 typeof(ConfigurableBootstrapper.ConfigurableBoostrapperConfigurator)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Select(x => x.Name)
@@ -98,10 +100,13 @@
                 this.GetConfigurableBootstrapperMembers();
 
             // When
-            var result = expectedConfigurableMembers.All(x => availableMembers.Contains(x, StringComparer.OrdinalIgnoreCase));
+            var result = expectedConfigurableMembers.Where(x => !availableMembers.Contains(x, StringComparer.OrdinalIgnoreCase)).ToArray();
 
             // Then
-            result.ShouldBeTrue();
+            if (result.Any())
+            {
+                throw new AssertException(string.Format("Types missing from configurable versions: {0} ", result.Aggregate((t1, t2) => t1 + ", " + t2)));
+            }
         }
 
         public IEnumerable<string> GetConfigurableBootstrapperMembers()
@@ -112,7 +117,7 @@
                 "BindingDefaults"
             };
 
-            var typesToReflect = 
+            var typesToReflect =
                 new[] { typeof(NancyBootstrapperBase<>), typeof(NancyInternalConfiguration) };
 
             return typesToReflect

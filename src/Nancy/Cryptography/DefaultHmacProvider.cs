@@ -47,9 +47,19 @@ namespace Nancy.Cryptography
         /// <returns>String representation of the hmac</returns>
         public byte[] GenerateHmac(string data)
         {
+            return this.GenerateHmac(Encoding.UTF8.GetBytes(data));
+        }
+
+        /// <summary>
+        /// Create a hmac from the given data
+        /// </summary>
+        /// <param name="data">Data to create hmac from</param>
+        /// <returns>Hmac bytes</returns>
+        public byte[] GenerateHmac(byte[] data)
+        {
             var hmacGenerator = new HMACSHA256(this.key);
 
-            return hmacGenerator.ComputeHash(Encoding.UTF8.GetBytes(data));
+            return hmacGenerator.ComputeHash(data);
         }
     }
 }

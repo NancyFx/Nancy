@@ -8,6 +8,7 @@ namespace Nancy.Bootstrapper
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.ViewEngines;
+    using Security;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -46,6 +47,8 @@ namespace Nancy.Bootstrapper
                         ViewLocationCache = typeof(DefaultViewLocationCache),
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                         ErrorHandler = typeof(DefaultErrorHandler),
+                        CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
+                        ObjectSerializer = typeof(DefaultObjectSerializer),
                     };
             }
         }
@@ -91,6 +94,10 @@ namespace Nancy.Bootstrapper
         public Type ViewLocationProvider { get; set; }
 
         public Type ErrorHandler { get; set; }
+
+        public Type CsrfTokenValidator { get; set; }
+
+        public Type ObjectSerializer { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -153,6 +160,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(IErrorHandler), this.ErrorHandler), 
+                new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
+                new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
             };
         }
     }

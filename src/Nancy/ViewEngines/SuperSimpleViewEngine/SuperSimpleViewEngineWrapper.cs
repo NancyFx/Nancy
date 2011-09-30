@@ -3,6 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Threading;
+    using Responses;
 
     /// <summary>
     /// Nancy IViewEngine wrapper for the super simple view engine
@@ -29,10 +31,6 @@
             get { return this.extensions; }
         }
 
-        /// <summary>
-        /// Initialise the view engine (if necessary)
-        /// </summary>
-        /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
         }
@@ -42,17 +40,17 @@
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        /// <returns>A response.</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return s =>
-            {
-                var writer = new StreamWriter(s);
-                var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
+            return new HtmlResponse(contents: s =>
+                {
+                    var writer = new StreamWriter(s);
+                    var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
 
-                writer.Write(this.viewEngine.Render(templateContents, model, new NancyViewEngineHost(renderContext)));
-                writer.Flush();
-            };
+                    writer.Write(this.viewEngine.Render(templateContents, model, new NancyViewEngineHost(renderContext)));
+                    writer.Flush();
+                });
         }
     }
 }

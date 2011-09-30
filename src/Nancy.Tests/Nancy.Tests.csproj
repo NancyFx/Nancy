@@ -102,9 +102,10 @@
     <Compile Include="Fakes\FakeNancyModuleWithPreAndPostHooks.cs" />
     <Compile Include="Fakes\FakeRoute.cs" />
     <Compile Include="Fakes\FakeRouteResolver.cs" />
-    <Compile Include="Fakes\FakeSessionObjectFormatter.cs" />
+    <Compile Include="Fakes\FakeObjectSerializer.cs" />
     <Compile Include="Fakes\FakeHookedModule.cs" />
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
+    <Compile Include="Fakes\MockApplicationPipelines.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
@@ -177,6 +178,8 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
+    <Compile Include="Unit\Security\CsrfStartupFixture.cs" />
+    <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />

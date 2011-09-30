@@ -10,6 +10,7 @@
     using System.Web.Razor;
     using System.Web.Razor.Generator;
     using Microsoft.CSharp;
+    using Responses;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -193,8 +194,8 @@
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
         /// <param name="renderContext"></param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        /// <returns>A response.</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             //@(section)?[\s]*(?<name>[A-Za-z]*)[\s]*{(?<content>[^\}]*)}?
 
@@ -208,31 +209,34 @@
                 }
             }
 
-            return stream =>
-            {
-                var writer =
-                    new StreamWriter(stream);
-
-                NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
-                view.ExecuteView(null, null);
-                var body = view.Body;
-                var sectionContents = view.SectionContents;
-                var root = !view.HasLayout;
-                var layout = view.Layout;
-                
-                while (!root)
+            var response = new HtmlResponse();
+            
+            response.Contents = stream =>
                 {
-                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
-                    view.ExecuteView(body, sectionContents);
+                    var writer =
+                        new StreamWriter(stream);
+                    NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                    view.ExecuteView(null, null);
+                    var body = view.Body;
+                    var sectionContents = view.SectionContents;
+                    var root = !view.HasLayout;
+                    var layout = view.Layout;
+                
+                    while (!root)
+                    {
+                        view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                        view.ExecuteView(body, sectionContents);
 
-                    body = view.Body;
-                    sectionContents = view.SectionContents;
-                    root = !view.HasLayout;
-                }
+                        body = view.Body;
+                        sectionContents = view.SectionContents;
+                        root = !view.HasLayout;
+                    }
 
-                writer.Write(body);
-                writer.Flush();
-            };
+                    writer.Write(body);
+                    writer.Flush();
+                };
+
+            return response;
         }
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)

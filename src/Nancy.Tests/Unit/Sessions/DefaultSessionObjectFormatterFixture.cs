@@ -8,20 +8,20 @@ namespace Nancy.Tests.Unit.Sessions
 
     public class DefaultSessionObjectFormatterFixture
     {
-        private DefaultSessionObjectFormatter formatter;
+        private DefaultObjectSerializer serializer;
 
         public DefaultSessionObjectFormatterFixture()
         {
-            this.formatter = new DefaultSessionObjectFormatter();
+            this.serializer = new DefaultObjectSerializer();
         }
 
         [Fact]
         public void Should_serialize_and_deserialize_simple_string()
         {
             var input = @"This is a sample string";
-            var serialised = this.formatter.Serialize(input);
+            var serialised = this.serializer.Serialize(input);
 
-            var output = (string)this.formatter.Deserialize(serialised);
+            var output = (string)this.serializer.Deserialize(serialised);
 
             output.ShouldEqual(input);
         }
@@ -30,9 +30,9 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_serialize_and_deserialize_serializable_object()
         {
             var input = new Payload(27, true, "This is some text");
-            var serialised = this.formatter.Serialize(input);
+            var serialised = this.serializer.Serialize(input);
 
-            var output = (Payload)this.formatter.Deserialize(serialised);
+            var output = (Payload)this.serializer.Deserialize(serialised);
 
             output.ShouldEqual(input);
         }
@@ -42,7 +42,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             object input = null;
             
-            var output = this.formatter.Serialize(input);
+            var output = this.serializer.Serialize(input);
 
             output.ShouldEqual(string.Empty);
         }
@@ -52,7 +52,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             string input = null;
 
-            var output = this.formatter.Deserialize(input);
+            var output = this.serializer.Deserialize(input);
 
             output.ShouldBeNull();
         }
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var input = String.Empty;
 
-            var output = this.formatter.Deserialize(input);
+            var output = this.serializer.Deserialize(input);
 
             output.ShouldBeNull();
         }

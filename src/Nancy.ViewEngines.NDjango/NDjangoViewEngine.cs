@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Responses;
     using global::NDjango;
 
     /// <summary>
@@ -40,10 +41,11 @@
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
         /// <param name="renderContext"></param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        /// <returns>A response</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return stream =>{
+            return new HtmlResponse(contents: stream =>
+            {
                 var provider = new TemplateManagerProvider().WithLoader(new TemplateLoader(renderContext, viewLocationResult));
 
                 var templateManager = provider.GetNewManager();
@@ -56,7 +58,7 @@
 
                 writer.Write(reader.ReadToEnd());           
                 writer.Flush();
-            };
+            });
         }
     }
 }

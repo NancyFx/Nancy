@@ -37,7 +37,7 @@
         /// <param name="model">The model that should be passed into the view.</param>
         /// <param name="viewLocationContext">A <see cref="ViewLocationContext"/> instance, containing information about the context for which the view is being rendered.</param>
         /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        public Response RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
         {
             if (viewName == null && model == null)
             {
@@ -60,7 +60,7 @@
             return this.GetRenderedView(actualViewName, model, viewLocationContext);
         }
 
-        private Action<Stream> GetRenderedView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        private Response GetRenderedView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
         {
             var viewLocationResult =
                 this.viewResolver.GetViewLocation(viewName, model, viewLocationContext);
@@ -119,7 +119,7 @@
             return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }
 
-        private static Action<Stream> SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model, IRenderContext renderContext)
+        private static Response SafeInvokeViewEngine(IViewEngine viewEngine, ViewLocationResult locationResult, dynamic model, IRenderContext renderContext)
         {
             try
             {

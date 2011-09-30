@@ -1,10 +1,10 @@
-namespace Nancy.Session
+namespace Nancy
 {
     using System;
     using System.IO;
     using System.Runtime.Serialization.Formatters.Binary;
 
-    public class DefaultSessionObjectFormatter : ISessionObjectFormatter
+    public class DefaultObjectSerializer : IObjectSerializer
     {
         /// <summary>
         /// Serialize an object

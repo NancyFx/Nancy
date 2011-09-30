@@ -5,7 +5,7 @@
     using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Linq;
-
+    using Cryptography;
     using ModelBinding;
 
     using Nancy.Conventions;
@@ -201,6 +201,14 @@
         }
 
         /// <summary>
+        /// Gets the cryptography configuration
+        /// </summary>
+        protected CryptographyConfiguration CryptographyConfiguration
+        {
+            get { return CryptographyConfiguration.Default; }
+        }
+
+        /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.
         /// </summary>
         public void Initialise()
@@ -231,10 +239,13 @@
                 throw new InvalidOperationException(string.Format("Conventions are invalid:\n\n{0}", conventionValidationResult.Item2));
             }
 
+            var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
+                                            .Concat(this.GetAdditionalInstances());
+
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
             this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
             this.RegisterModules(this.ApplicationContainer, this.Modules);
-            this.RegisterInstances(this.ApplicationContainer, this.Conventions.GetInstanceRegistrations());
+            this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 
             foreach (var startupTask in this.GetStartupTasks())
             {
@@ -446,6 +457,14 @@
             return new[]
                 {
                     new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider),   
+                };
+        }
+
+        private IEnumerable<InstanceRegistration> GetAdditionalInstances()
+        {
+            return new[]
+                {
+                    new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
                 };
         }
 

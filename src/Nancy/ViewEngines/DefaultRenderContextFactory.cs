@@ -1,5 +1,8 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using Cryptography;
+    using Session;
+
     /// <summary>
     /// Default render context factory implementation.
     /// </summary>

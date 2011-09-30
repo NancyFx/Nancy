@@ -4,7 +4,7 @@ namespace Nancy.Tests.Fakes
 
     using Nancy.Session;
 
-    public class FakeSessionObjectFormatter : ISessionObjectFormatter
+    public class FakeObjectSerializer : IObjectSerializer
     {
         /// <summary>
         /// Serialize an object
