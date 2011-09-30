@@ -57,7 +57,7 @@ namespace Nancy.Hosting.Owin
         {
             if (this.isCompleted)
             {
-                throw new InvalidOperationException("Stream is already closed");
+                return;
             }
 
             this.isCompleted = true;
