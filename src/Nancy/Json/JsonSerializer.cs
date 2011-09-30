@@ -367,8 +367,10 @@ namespace Nancy.Json
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, "{");
 			bool first = true;
 			
-			foreach (KeyValuePair <TKey, TValue> kvp in dict) {
-				WriteDictionaryEntry (output, first, kvp.Key as string, kvp.Value);
+			foreach (KeyValuePair <TKey, TValue> kvp in dict)
+			{
+			    var key = typeof(TKey) == typeof(Guid) ? kvp.Key.ToString() : kvp.Key as string;
+				WriteDictionaryEntry (output, first, key, kvp.Value);
 				if (first)
 					first = false;
 			}
@@ -379,7 +381,7 @@ namespace Nancy.Json
 		void WriteDictionaryEntry (StringBuilder output, bool skipComma, string key, object value)
 		{
 			if (key == null)
-				throw new InvalidOperationException ("Only dictionaries with keys convertible to string are supported.");
+				throw new InvalidOperationException ("Only dictionaries with keys convertible to string, or guid keys are supported.");
 			
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');

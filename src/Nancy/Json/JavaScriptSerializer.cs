@@ -30,6 +30,7 @@ namespace Nancy.Json
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.IO;
     using System.Collections;
@@ -283,19 +284,23 @@ namespace Nancy.Json
                 }
             }
 
+            var isDictionaryWithGuidKey = false;
             if (type.IsGenericType)
             {
-                if (type.GetGenericTypeDefinition().IsAssignableFrom(typeof(IDictionary<,>)))
+                var genericTypeDefinition = type.GetGenericTypeDefinition();
+                if (genericTypeDefinition.IsAssignableFrom(typeof(IDictionary<,>)) || genericTypeDefinition.GetInterfaces().Any(i => i == typeof(IDictionary)))
                 {
                     Type[] arguments = type.GetGenericArguments();
-                    if (arguments == null || arguments.Length != 2 || (arguments[0] != typeof(object) && arguments[0] != typeof(string)))
+                    if (arguments == null || arguments.Length != 2 || (arguments[0] != typeof(object) && arguments[0] != typeof(string) && arguments[0] != typeof(Guid)))
                         throw new InvalidOperationException(
-                            "Type '" + type + "' is not not supported for serialization/deserialization of a dictionary, keys must be strings or objects.");
+                            "Type '" + type + "' is not not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
                     if (type.IsAbstract)
                     {
                         Type dictType = typeof(Dictionary<,>);
                         type = dictType.MakeGenericType(arguments[0], arguments[1]);
                     }
+
+                    isDictionaryWithGuidKey = arguments[0] == typeof(Guid);
                 }
             }
             else if (type.IsAssignableFrom(typeof(IDictionary)))
@@ -312,7 +317,14 @@ namespace Nancy.Json
                     if (value != null && valueType == typeof(System.Object))
                         valueType = value.GetType();
 
-                    ((IDictionary)target).Add(entry.Key, ConvertToType(valueType, value));
+                    if (isDictionaryWithGuidKey)
+                    {
+                        ((IDictionary)target).Add(new Guid(entry.Key), ConvertToType(valueType, value));
+                    }
+                    else
+                    {
+                        ((IDictionary)target).Add(entry.Key, ConvertToType(valueType, value));
+                    }
                     continue;
                 }
                 MemberInfo[] memberCollection = type.GetMember(entry.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
