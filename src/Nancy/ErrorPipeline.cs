@@ -15,32 +15,8 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class ErrorPipeline
+    public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, Response>>
     {
-        /// <summary>
-        /// Pipeline items to execute
-        /// </summary>
-        private List<Func<NancyContext, Exception, Response>> pipelineItems;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorPipeline"/> class.
-        /// </summary>
-        public ErrorPipeline()
-        {
-            this.pipelineItems = new List<Func<NancyContext, Exception, Response>>();
-        }
-
-        /// <summary>
-        /// Gets the current pipeline items
-        /// </summary>
-        public IEnumerable<Func<NancyContext, Exception, Response>> PipelineItems
-        {
-            get
-            {
-                return this.pipelineItems.AsReadOnly();
-            }
-        }
-
         public static implicit operator Func<NancyContext, Exception, Response>(ErrorPipeline pipeline)
         {
             return pipeline.Invoke;
@@ -61,7 +37,11 @@
 
         public static ErrorPipeline operator +(ErrorPipeline pipelineToAddTo, ErrorPipeline pipelineToAdd)
         {
-            pipelineToAddTo.pipelineItems.AddRange(pipelineToAdd.pipelineItems);
+            foreach (var pipelineItem in pipelineToAdd.PipelineItems)
+            {
+                pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
+            }
+
             return pipelineToAddTo;
         }
 
@@ -75,49 +55,22 @@
         /// <param name="ex">
         /// The exception currently being handled by the error pipeline
         /// </param>
+        /// <returns>
+        /// Response from an item invocation, or null if no response was generated.
+        /// </returns>
         public Response Invoke(NancyContext context, Exception ex)
         {
-            foreach (var pipelineItem in this.pipelineItems)
+            Response returnValue = null;
+
+            using (var enumerator = this.PipelineDelegates.GetEnumerator())
             {
-                var response = pipelineItem.Invoke(context, ex);
-                if (response != null)
-                { 
-                    return response;
+                while (returnValue == null && enumerator.MoveNext())
+                {
+                    returnValue = enumerator.Current.Invoke(context, ex);
                 }
             }
-            if (context.Response != null)
-            { 
-                return context.Response;
-            }
-            throw ex;
-        }
-        
-        /// <summary>
-        /// Add an item to the start of the pipeline
-        /// </summary>
-        /// <param name="item">Item to add</param>
-        public void AddItemToStartOfPipeline(Func<NancyContext, Exception, Response> item)
-        {
-            this.InsertItemAtPipelineIndex(0, item);
-        }
 
-        /// <summary>
-        /// Add an item to the end of the pipeline
-        /// </summary>
-        /// <param name="item">Item to add</param>
-        public void AddItemToEndOfPipeline(Func<NancyContext, Exception, Response> item)
-        {
-            this.pipelineItems.Add(item);
-        }
-
-        /// <summary>
-        /// Add an item to a specific place in the pipeline.
-        /// </summary>
-        /// <param name="index">Index to add at</param>
-        /// <param name="item">Item to add</param>
-        public void InsertItemAtPipelineIndex(int index, Func<NancyContext, Exception, Response> item)
-        {
-            this.pipelineItems.Insert(index, item);
+            return returnValue;
         }
     }
 }
