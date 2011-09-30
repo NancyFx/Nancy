@@ -16,6 +16,7 @@ namespace Nancy
         static StaticConfiguration()
         {
             DisableCaches = DisableCaches = IsRunningDebug;
+            CaseSensitive = false;
         }
 
         /// <summary>
@@ -47,6 +48,12 @@ namespace Nancy
                 disableErrorTraces = value;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
+        /// </summary>
+        public static bool CaseSensitive { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether we are running in debug mode or not.
         /// Checks the entry assembly to see whether it has been built in debug mode.
@@ -82,16 +89,6 @@ namespace Nancy
                 // Evil catch all - don't want to blow up trying to detect debug mode!
                 return false;
             }
-        }
-
-        private static bool caseSensitive = false;
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
-        /// </summary>
-        public static bool CaseSensitive
-        {
-            get { return caseSensitive; }
-            set { caseSensitive = value; }
         }
     }
 }
