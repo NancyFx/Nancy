@@ -28,6 +28,18 @@ namespace Nancy
         Action<NancyContext> PostRequestHook { get; set; }
 
         /// <summary>
+        /// <para>
+        /// Gets or sets the error handling hook.
+        /// </para>
+        /// <para>
+        /// The error handling hook is called if an uncaught exception occurs during the handling of a request.
+        /// This includes exceptions thrown during the Before/After pipline.  It can be used to rewrite the 
+        /// response or add/remove items from the context
+        /// </para>
+        /// </summary>
+        Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+
+        /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>

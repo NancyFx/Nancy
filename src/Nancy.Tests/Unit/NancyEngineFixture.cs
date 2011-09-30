@@ -429,5 +429,28 @@ namespace Nancy.Tests.Unit
             engine.HandleRequest(request);
             Assert.Equal(this.context.Parameters, parameters);
         }
+
+        [Fact]
+        public void Should_invoke_the_error_request_hook_if_one_exists_when_route_throws()
+        {
+            var testEx = new Exception();
+            var errorRoute = new Route("GET", "/", null, x => { throw testEx; });
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
+            Exception handledException = null;
+            NancyContext handledContext = null;
+            var errorResponse = new Response();
+            Func<NancyContext, Exception, Response> routeErrorHook = (ctx, ex) =>
+            {
+                handledContext = ctx;
+                handledException = ex;
+                return errorResponse;
+            };
+            this.engine.OnErrorHook += routeErrorHook;
+            var request = new Request("GET", "/", "http");
+            var result = this.engine.HandleRequest(request);
+            Assert.Equal(testEx, handledException);
+            Assert.Equal(result, handledContext);
+            Assert.Equal(result.Response, errorResponse);
+        }
     }
 }
