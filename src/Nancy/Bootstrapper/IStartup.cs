@@ -25,6 +25,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Perform any initialisation tasks
         /// </summary>
+        /// <param name="pipelines">Application pipelines</param>
         void Initialize(IApplicationPipelines pipelines);
     }
 }

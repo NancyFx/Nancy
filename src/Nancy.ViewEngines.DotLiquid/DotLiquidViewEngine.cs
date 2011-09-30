@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Responses;
     using global::DotLiquid;
     using global::DotLiquid.FileSystems;
 
@@ -49,10 +50,10 @@
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
         /// <param name="renderContext"></param>
-        /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        /// <returns>A response</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return stream =>
+            return new HtmlResponse(contents: stream =>
             {
                 var hashedModel =
                     Hash.FromAnonymousObject(new { model = new DynamicDrop(model) });
@@ -67,7 +68,7 @@
 
                 writer.Write(rendered);
                 writer.Flush();
-            };
+            });
         }
     }
 }

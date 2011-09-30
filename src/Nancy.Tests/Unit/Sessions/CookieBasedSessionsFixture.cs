@@ -32,10 +32,10 @@ namespace Nancy.Tests.Unit.Sessions
         {
             this.fakeEncryptionProvider = A.Fake<IEncryptionProvider>();
             this.fakeHmacProvider = A.Fake<IHmacProvider>();
-            this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, new Fakes.FakeSessionObjectFormatter());
+            this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, new Fakes.FakeObjectSerializer());
 
-			this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("password"));
-            this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword"));
+            this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("password", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
+            this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithFormatter(new Fakes.FakeSessionObjectFormatter());
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(new Fakes.FakeObjectSerializer());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -196,7 +196,7 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithFormatter(new Fakes.FakeSessionObjectFormatter());
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(new Fakes.FakeObjectSerializer());
             var request = CreateRequest("encryptedkey1=value1");
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
@@ -212,7 +212,7 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_call_formatter_on_load()
         {
-            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            var fakeFormatter = A.Fake<IObjectSerializer>();
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var store = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1", false);
@@ -228,7 +228,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>());
             session["key1"] = "value1";
-            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            var fakeFormatter = A.Fake<IObjectSerializer>();
             var store = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, fakeFormatter);
 
             store.Save(session, response);
@@ -244,9 +244,9 @@ namespace Nancy.Tests.Unit.Sessions
             var hooks = A.Fake<IApplicationPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
-            var fakeFormatter = A.Fake<ISessionObjectFormatter>();
+            var fakeFormatter = A.Fake<IObjectSerializer>();
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
-            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithFormatter(fakeFormatter);
+            CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(fakeFormatter);
             var request = CreateRequest("encryptedkey1=value1");
             var nancyContext = new NancyContext() { Request = request };
 
@@ -261,7 +261,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             session["testObject"] = payload;
 
             store.Save(session, response);
@@ -279,7 +279,7 @@ namespace Nancy.Tests.Unit.Sessions
             var response = new Response();
             var session = new Session(new Dictionary<string, object>());
             var payload = new DefaultSessionObjectFormatterFixture.Payload(27, true, "Test string");
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             session["testObject"] = payload;
             store.Save(session, response);
             var request = new Request("GET", "/", "http");
@@ -327,7 +327,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var inputValue = ValidHmac + ValidData;
             inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
             request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
 
@@ -342,7 +342,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var inputValue = "b" + ValidHmac.Substring(1) + ValidData;
             inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
             request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
 
@@ -356,7 +356,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var inputValue = ValidData;
             inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
             request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
 
@@ -370,7 +370,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var inputValue = ValidHmac + ValidData.Substring(0, ValidData.Length - 1) + "Z";
             inputValue = HttpUtility.UrlEncode(inputValue);
-            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultSessionObjectFormatter());
+            var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
             request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
 

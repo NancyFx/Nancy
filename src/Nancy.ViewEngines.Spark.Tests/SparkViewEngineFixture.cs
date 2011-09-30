@@ -277,8 +277,8 @@
             engine.Initialize(context);
 
             //When
-            var action = engine.RenderView(viewLocationResult, viewModel, this.renderContext);
-            action.Invoke(stream);
+            var response = engine.RenderView(viewLocationResult, viewModel, this.renderContext);
+            response.Contents.Invoke(stream);
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
             {

@@ -43,8 +43,8 @@ namespace Nancy.ViewEngines.NDjango.Tests
             var stream = new MemoryStream();
 
             // When
-            var action = engine.RenderView(location, null, this.renderContext);
-            action.Invoke(stream);
+            var response = engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");

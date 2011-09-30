@@ -1,9 +1,9 @@
-namespace Nancy.Session
+namespace Nancy
 {
     /// <summary>
     /// De/Serialisation for cookie objects
     /// </summary>
-    public interface ISessionObjectFormatter
+    public interface IObjectSerializer
     {
         /// <summary>
         /// Serialize an object

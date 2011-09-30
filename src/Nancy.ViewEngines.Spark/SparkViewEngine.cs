@@ -5,6 +5,7 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
+    using Responses;
     using global::Spark;
     using global::Spark.FileSystem;
     using Nancy.ViewEngines.Spark.Descriptors;
@@ -119,9 +120,9 @@
             this.engine.ViewFolder = GetMemoryViewMap(viewEngineStartupContext.ViewLocationResults);
         }
 
-        public Action<Stream> RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return stream =>
+            return new HtmlResponse(contents: stream =>
             {
                 SparkViewEngineResult sparkViewEngineResult =
                     this.CreateView(viewLocationResult, model ?? new ExpandoObject(), renderContext);
@@ -134,7 +135,7 @@
                 sparkViewEngineResult.View.Execute();
 
                 writer.Flush();
-            };
+            });
         }
     }
 }
