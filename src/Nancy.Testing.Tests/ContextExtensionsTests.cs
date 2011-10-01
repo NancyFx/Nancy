@@ -67,5 +67,23 @@ namespace Nancy.Testing.Tests
 
 			result.Dummy.ShouldEqual("Data");
 		}
+
+		[Fact]
+		public void Should_use_xmlresponse_from_context_if_it_is_present()
+		{
+			
+		}
+
+		[Fact]
+		public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
+		{
+
+		}
+
+		[Fact]
+		public void Should_fail_to_return_xml_body_on_non_xml_response()
+		{
+
+		}
 	}
 }
