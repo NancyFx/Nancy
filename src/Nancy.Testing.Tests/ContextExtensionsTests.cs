@@ -71,19 +71,33 @@ namespace Nancy.Testing.Tests
 		[Fact]
 		public void Should_use_xmlresponse_from_context_if_it_is_present()
 		{
-			
+			var model = new JsonModel() { Dummy = "Data" };
+			var context = new NancyContext();
+			context.Items["@@@@XMLRESPONSE@@@@"] = model; // Yucky hardcoded stringyness
+
+			var result = context.XmlBody<JsonModel>();
+
+			result.ShouldBeSameAs(model);
 		}
 
 		[Fact]
 		public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
 		{
+			var response = new XmlResponse<JsonModel>(new JsonModel() { Dummy = "Data" }, "text/xml");
+			var context = new NancyContext() { Response = response };
 
+			var result = context.XmlBody<JsonModel>();
+
+			result.Dummy.ShouldEqual("Data");
 		}
 
 		[Fact]
 		public void Should_fail_to_return_xml_body_on_non_xml_response()
 		{
+			var response = new JsonResponse<JsonModel>(new JsonModel() { Dummy = "Data" });
+			var context = new NancyContext() { Response = response };
 
+			Assert.Throws<InvalidOperationException>(() => context.XmlBody<JsonModel>());
 		}
 	}
 }
