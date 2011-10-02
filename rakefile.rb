@@ -115,10 +115,6 @@ task :nuget_package => [:publish] do
             # Override the version number in the nuspec file with the one from this rake file (set above)
             xml.root.elements["metadata/version"].text = NANCY_VERSION
 
-            # Override the Nancy dependencies to match this version
-            nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
-            nancy_dependencies.attributes["version"] = "[#{NANCY_VERSION}]" unless nancy_dependencies.nil?
-
             # Override common values
             xml.root.elements["metadata/authors"].text = "Andreas Håkansson, Steven Robbins and contributors"
             xml.root.elements["metadata/summary"].text = "Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications."
