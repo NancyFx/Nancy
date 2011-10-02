@@ -4,7 +4,7 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "0.7.1"
+NANCY_VERSION = "0.8.0"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 CONFIGURATIONMONO = 'MonoRelease'
@@ -51,11 +51,10 @@ msbuild :compile => [:version] do |msb|
 end
 
 desc "Compile solution file for Mono"
-msbuild :compilemono => [:version] do |msb|
-    msb.command = "xbuild"
-    msb.properties :configuration => CONFIGURATIONMONO
-    msb.targets :Clean, :Build
-    msb.solution = SOLUTION_FILE
+xbuild :compilemono => [:version] do |xb|
+    xb.properties :configuration => CONFIGURATIONMONO
+    xb.targets :Clean, :Build
+    xb.solution = SOLUTION_FILE
 end
 
 
