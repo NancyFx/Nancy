@@ -1,3 +1,4 @@
+#if !__MonoCS__
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
@@ -189,3 +190,4 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         }
     }
 }
+#endif

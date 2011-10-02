@@ -1,4 +1,5 @@
-﻿namespace Nancy.Tests.Unit
+﻿#if !__MonoCS__ 
+namespace Nancy.Tests.Unit
 {
     using Nancy.Bootstrapper;
     using Bootstrapper.Base;
@@ -34,3 +35,4 @@
         }
     }
 }
+#endif
