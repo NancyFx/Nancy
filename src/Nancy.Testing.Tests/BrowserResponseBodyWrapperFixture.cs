@@ -49,7 +49,11 @@
             var result = body["#bar"];
 
             // Then
-            result.ShouldContain("inner");
+#if __MonoCS__
+			AssertExtensions.ShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
+#else
+			result.ShouldContain("inner");
+#endif			
         }
     }
 }
