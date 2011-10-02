@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
     using System.Collections.Generic;
+    using Conventions;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 
@@ -26,6 +27,8 @@
         protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
         {
             base.InitialiseInternal(container);
+
+            this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
             CookieBasedSessions.Enable(this);
 
