@@ -29,7 +29,8 @@
         {
             ViewLocationResult view = this.renderContext.LocateView(viewName, model);
 
-            Action<Stream> action = this.engine.RenderView(view, model, this.renderContext);
+            Response response = this.engine.RenderView(view, model, this.renderContext);
+            Action<Stream> action = response.Contents;
             var mem = new MemoryStream();
 
             action.Invoke(mem);

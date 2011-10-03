@@ -49,5 +49,35 @@
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
+
+        [Fact]
+        public void Should_be_able_to_render_view_with_partial_to_stream()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1> @Html.Partial(""partial.cshtml"")")
+            );
+
+            var partialLocation = new ViewLocationResult(
+                string.Empty,
+                "partial.cshtml",
+                "cshtml",
+                () => new StringReader(@"this is partial")
+            );
+
+            A.CallTo(() => this.renderContext.LocateView("partial.cshtml",null)).Returns(partialLocation);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null,this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1> this is partial");
+        }
     }
 }
