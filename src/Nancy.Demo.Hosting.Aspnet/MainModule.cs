@@ -38,7 +38,7 @@ namespace Nancy.Demo.Hosting.Aspnet
             };
 
             Get["/static"] = x => {
-                return View["static.htm"];
+                return View["static"];
             };
 
             Get["/razor"] = x => {

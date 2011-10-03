@@ -19,17 +19,15 @@
         public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, IEnumerable<string> supportedViewExtensions)
         {
             return supportedViewExtensions
-                .SelectMany(extension => GetFileInformation(path, extension))
-                .Distinct().ToList();
+                .SelectMany(extension => GetFilenames(path, extension))
+                .Distinct()
+                .Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
+                .ToList();
         }
 
-        private static IEnumerable<Tuple<string, Func<StreamReader>>> GetFileInformation(string path, string extension)
+        private static IEnumerable<string> GetFilenames(string path, string extension)
         {
-            var files = Directory
-                .GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories)
-                .Distinct();
-
-            return files.Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))));
+            return Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);
         }
     }
 }

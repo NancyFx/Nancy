@@ -101,7 +101,7 @@
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
     <Content Include="Views\javascript.html" />
-    <Content Include="Views\static.htm" />
+    <Content Include="Views\static.html" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

@@ -28,6 +28,8 @@
         {
             base.InitialiseInternal(container);
 
+            StaticConfiguration.DisableErrorTraces = false;
+
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
             CookieBasedSessions.Enable(this);
