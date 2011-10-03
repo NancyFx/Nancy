@@ -99,6 +99,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Pedro Felix](http://github.com/pmhsfelix)
 * [Piotr Wlodek](http://github.com/pwlodek)
 * [Phil Haack](http://github.com/haacked)
+* [Rafal Spacjer](https://github.com/rspacjer)
 * [Robert Greyling](http://github.com/robertthegrey)
 * [Rodrigo Guerreiro](https://github.com/rguerreiro)
 * [Roy Jacobs](http://github.com/RoyJacobs)
