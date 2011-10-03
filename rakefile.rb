@@ -114,8 +114,8 @@ task :nuget_package => [:publish] do
         update_xml nuspec do |xml|
             # Override the version number in the nuspec file with the one from this rake file (set above)
             xml.root.elements["metadata/version"].text = NANCY_VERSION
-
-            # Override the Nancy dependencies to match this version
+			
+			# Override the Nancy dependencies to match this version
             nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
             nancy_dependencies.attributes["version"] = "[#{NANCY_VERSION}]" unless nancy_dependencies.nil?
 

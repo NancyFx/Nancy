@@ -8,6 +8,8 @@
     <description>Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.</description>
     <summary>Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.</summary>
     <language>en-US</language>
+	<copyright>Andreas Håkansson, Steven Robbins and contributors</copyright>
+	<iconUrl>http://nancyfx.org/nancy-nuget.png</iconUrl>
     <licenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</licenseUrl>
     <projectUrl>http://nancyfx.org</projectUrl>
     <tags>Nancy</tags>
