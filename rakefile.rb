@@ -116,8 +116,8 @@ task :nuget_package => [:publish] do
             xml.root.elements["metadata/version"].text = NANCY_VERSION
 			
 			# Override the Nancy dependencies to match this version
-			nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
-			nancy_dependencies.attributes["version"] = "[#{NANCY_VERSION}]" unless nancy_dependencies.nil?
+            nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
+            nancy_dependencies.attributes["version"] = "[#{NANCY_VERSION}]" unless nancy_dependencies.nil?
 
             # Override common values
             xml.root.elements["metadata/authors"].text = "Andreas Håkansson, Steven Robbins and contributors"
