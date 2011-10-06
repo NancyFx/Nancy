@@ -63,15 +63,27 @@ namespace Nancy.Conventions
 
                 requestPath = Regex.Replace(requestPath, requestedPath, Regex.Escape(contentPath), RegexOptions.IgnoreCase);
 
-                var fileName = Path.Combine(applicationRootPath, requestPath);
+                var fileName = Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
 
-                if (!File.Exists(fileName))
+                var contentRootPath = Path.Combine(applicationRootPath, contentPath);
+                if (!IsWithinContentFolder(contentRootPath, fileName) || !File.Exists(fileName))
                 {
                     return () => null;
                 }
 
                 return () => new GenericFileResponse(fileName);
             };
+        }
+
+        /// <summary>
+        /// Returns whether the given filename is contained within the content folder
+        /// </summary>
+        /// <param name="contentRootPath">Content root path</param>
+        /// <param name="fileName">Filename requested</param>
+        /// <returns>True if contained within the content root, false otherwise</returns>
+        private static bool IsWithinContentFolder(string contentRootPath, string fileName)
+        {
+            return fileName.StartsWith(contentRootPath, StringComparison.Ordinal);
         }
     }
 }

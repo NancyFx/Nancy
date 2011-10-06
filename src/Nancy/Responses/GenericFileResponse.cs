@@ -63,11 +63,6 @@
                 return false;
             }
 
-            if (string.IsNullOrEmpty(filePath))
-            {
-                return false;
-            }
-
             if (!Path.HasExtension(filePath))
             {
                 return false;
@@ -78,27 +73,34 @@
                 return false;
             }
 
-            var combinedPath =
-                Path.GetFullPath(Path.Combine(rootPath, filePath));
+            var fullPath = Path.GetFullPath(filePath);
 
-            return combinedPath.StartsWith(rootPath);
+            return fullPath.StartsWith(rootPath, StringComparison.Ordinal);
         }
 
         private void InitializeGenericFileResonse(string filePath, string contentType)
         {
-            if (!IsSafeFilePath(RootPath, filePath))
+            if (string.IsNullOrEmpty(filePath))
+            {
+                this.StatusCode = HttpStatusCode.NotFound;
+                return;
+            }
+
+            var fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(RootPath, filePath);
+
+            if (!IsSafeFilePath(RootPath, fullPath))
             {
                 this.StatusCode = HttpStatusCode.NotFound;
             }
             else
             {
-                this.Filename = Path.GetFileName(filePath);
+                this.Filename = Path.GetFileName(fullPath);
 
-                var fi = new FileInfo(filePath);
+                var fi = new FileInfo(fullPath);
                 // TODO - set a standard caching time and/or public?
                 this.Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
                 this.Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
-                this.Contents = GetFileContent(filePath);
+                this.Contents = GetFileContent(fullPath);
                 this.ContentType = contentType;
                 this.StatusCode = HttpStatusCode.OK;
             }
