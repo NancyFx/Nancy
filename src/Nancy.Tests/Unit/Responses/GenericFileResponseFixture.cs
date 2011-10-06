@@ -15,11 +15,10 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            GenericFileResponse.RootPath =
-                Path.GetFullPath(Path.Combine(assemblyPath, @"..", @".."));
+            GenericFileResponse.RootPath = assemblyPath;
 
-			this.imagePath = 
-                Path.Combine("Resources", "zip.png");
+			this.imagePath =
+                Path.GetFileName(this.GetType().Assembly.Location);
 		}
 
         [Fact]
@@ -113,7 +112,7 @@
             var response = new GenericFileResponse(this.imagePath, imageContentType);
 
             // Then
-            response.Filename.ShouldEqual("zip.png");
+            response.Filename.ShouldEqual(Path.GetFileName(this.imagePath));
         }
 		
 		private static IEnumerable<byte> GetResponseContents(Response response)
