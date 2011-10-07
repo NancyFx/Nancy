@@ -48,17 +48,16 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            GenericFileResponse.RootPath =
-                Path.GetFullPath(Path.Combine(assemblyPath, @"..", @".."));
+            GenericFileResponse.RootPath = assemblyPath;
 
-            var filename = Path.Combine("Resources", "zip.png");
+            var filename = Path.GetFileName(this.GetType().Assembly.Location);
             var response = new GenericFileResponse(filename, "image/png");
 
             // When
             var result = response.AsAttachment();
             
             // Then
-            result.Headers["Content-Disposition"].ShouldContain("zip.png");
+            result.Headers["Content-Disposition"].ShouldContain(filename);
             result.ContentType.ShouldEqual("image/png");
         }
 
