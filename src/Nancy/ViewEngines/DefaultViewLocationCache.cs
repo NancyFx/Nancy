@@ -37,7 +37,7 @@ namespace Nancy.ViewEngines
 
         public IEnumerator<ViewLocationResult> GetEnumerator()
         {
-            return this.locatedViews.GetEnumerator();
+            return StaticConfiguration.DisableCaches ? this.GetLocatedViews().GetEnumerator() : this.locatedViews.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

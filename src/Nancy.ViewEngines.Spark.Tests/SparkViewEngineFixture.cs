@@ -272,7 +272,8 @@
 
             var context = new ViewEngineStartupContext(
                 A.Fake<IViewCache>(),
-                this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"spark"}));
+                this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"spark"}),
+                new[] {"spark"});
 
             engine.Initialize(context);
 
