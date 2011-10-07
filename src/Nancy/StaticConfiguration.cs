@@ -15,7 +15,7 @@ namespace Nancy
 
         static StaticConfiguration()
         {
-            DisableCaches = DisableCaches = IsRunningDebug;
+            disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
         }
 
