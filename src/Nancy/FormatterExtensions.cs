@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using Nancy.Responses;
+    using System.IO;
 
     public static class FormatterExtensions
     {
@@ -43,5 +44,10 @@ namespace Nancy
         {
             return new XmlResponse<TModel>(model, "application/xml");
         }
-    }
+        
+        public static Response AsStream(this IResponseFormatter formatter, Stream stream, string contentType)
+        {
+            return new StreamResponse<Stream>(stream, contentType);
+        }
+}
 }
