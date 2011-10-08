@@ -19,10 +19,16 @@ namespace Nancy.Responses
         {
             return stream =>
             {
-                if (source != null && source.CanRead)
+                if (source != null)
                 {
-                    source.Position = 0;
-                    source.CopyTo(stream);
+                    if (source.CanSeek)
+                    {
+                        source.Position = 0;
+                    }
+                    if (source.CanRead)
+                    {
+                        source.CopyTo(stream);
+                    }
                 }
             };
         }
