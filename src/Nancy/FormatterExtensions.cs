@@ -49,5 +49,5 @@ namespace Nancy
         {
             return new StreamResponse<Stream>(stream, contentType);
         }
-}
+    }
 }
