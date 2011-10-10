@@ -20,7 +20,7 @@ namespace Nancy.ViewEngines.Spark
         {
             var searchPath = ConvertPath(path);
 
-            var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults.FirstOrDefault(v => v.Location + "/" + v.Name + "." + v.Extension == searchPath);
+            var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults.FirstOrDefault(v => String.Equals(v.Location + "/" + v.Name + "." + v.Extension, searchPath, StringComparison.OrdinalIgnoreCase));
 
             if (viewLocationResult == null)
             {
@@ -34,8 +34,11 @@ namespace Nancy.ViewEngines.Spark
         {
             return this.viewEngineStartupContext.
                 ViewLocationResults.
-                Where(v => v.Location.StartsWith(path)).
-                Select(v => v.Location).
+                Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
+                Select(v =>
+                    v.Location.Length == path.Length ?
+                        v.Name + "." + v.Extension : 
+                        v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
                 ToList();
         }
 
@@ -43,7 +46,7 @@ namespace Nancy.ViewEngines.Spark
         {
             var searchPath = ConvertPath(path);
 
-            return this.viewEngineStartupContext.ViewLocationResults.Any(v => v.Location + "/" + v.Name + "." + v.Extension == searchPath);
+            return this.viewEngineStartupContext.ViewLocationResults.Any(v => String.Equals(v.Location + "/" + v.Name + "." + v.Extension, searchPath, StringComparison.OrdinalIgnoreCase));
         }
 
         private static string ConvertPath(string path)
