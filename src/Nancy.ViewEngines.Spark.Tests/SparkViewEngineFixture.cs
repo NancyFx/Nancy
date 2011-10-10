@@ -109,6 +109,16 @@
         }
 
         [Fact]
+        public void Should_be_able_to_render_a_subfolder_view()
+        {
+            var viewLocationResult = new ViewLocationResult("Stub\\Subfolder", "Subfolderview", "spark", GetEmptyContentReader());
+            this.FindViewAndRender<dynamic>("subfolder\\Subfolderview", null, viewLocationResult);
+
+            //Then
+            this.output.ShouldEqual("<div>Subfolder</div>");
+        }
+
+        [Fact]
         public void Should_be_able_to_render_a_view_even_with_null_view_model()
         {
             //Given, When
@@ -264,9 +274,13 @@
             this.output.ShouldContain(@"<script type=""text/javascript"" src=""/mysensationalrootfolder/scripts/test.js""/>");
         }
 
-        private void FindViewAndRender<T>(string viewName, T viewModel) where T : class
+        private void FindViewAndRender<T>(string viewName, T viewModel, ViewLocationResult viewLocationResult = null) where T : class
         {
-            var viewLocationResult = new ViewLocationResult("Stub", viewName, "spark", GetEmptyContentReader());
+            if (viewLocationResult == null)
+            {
+                viewLocationResult = new ViewLocationResult("Stub", viewName, "spark", GetEmptyContentReader());
+            }
+
             var stream = new MemoryStream();
             var engine = new SparkViewEngine();
 

@@ -53,7 +53,7 @@
         {
             var descriptor = new SparkViewDescriptor
                                  {
-                                     TargetNamespace = buildDescriptorParams.ViewPath
+                                     TargetNamespace = GetNamespaceEncodedPathViewPath(buildDescriptorParams.ViewPath)
                                  };
 
             if (!LocatePotentialTemplate(
@@ -178,6 +178,11 @@
                                         Path.Combine("Layouts", "Application.spark"),
                                         Path.Combine("Shared", "Application.spark")
                                     }, extra);
+        }
+
+        private static string GetNamespaceEncodedPathViewPath(string viewPath)
+        {
+            return viewPath.Replace('\\', '_');
         }
 
         /// <summary>
