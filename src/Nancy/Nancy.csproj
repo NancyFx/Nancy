@@ -98,6 +98,8 @@
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Json\Converters\TimeSpanConverter.cs" />
+    <Compile Include="Json\JsonSettings.cs" />
     <Compile Include="StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
@@ -205,7 +207,6 @@
     <Compile Include="IO\RequestStream.cs" />
     <Compile Include="Responses\GenericFileResponse.cs" />
     <Compile Include="Responses\JsonResponse.cs" />
-    <Compile Include="Responses\JsonSettings.cs" />
     <Compile Include="Responses\RedirectResponse.cs" />
     <Compile Include="Responses\XmlResponse.cs" />
     <Compile Include="Routing\DefaultNancyModuleBuilder.cs" />
@@ -279,6 +280,7 @@
   <ItemGroup>
     <EmbeddedResource Include="ErrorHandling\Resources\500.html" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

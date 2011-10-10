@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -95,6 +95,7 @@
     <Compile Include="Descriptors\IDescriptorBuilder.cs" />
     <Compile Include="Descriptors\DefaultDescriptorBuilder.cs" />
     <Compile Include="NancySparkView.cs" />
+    <Compile Include="NancyViewFolder.cs" />
     <Compile Include="SparkViewEngineResult.cs" />
     <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>

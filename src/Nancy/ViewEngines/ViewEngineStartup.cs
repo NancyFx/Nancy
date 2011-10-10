@@ -53,7 +53,8 @@ namespace Nancy.ViewEngines
         {
             return new ViewEngineStartupContext(
                 this.viewCache,
-                GetViewsThatEngineCanRender(viewEngine));
+                this.viewLocationCache,
+                viewEngine.Extensions);
         }
 
         private IEnumerable<ViewLocationResult> GetViewsThatEngineCanRender(IViewEngine viewEngine)

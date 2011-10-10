@@ -62,14 +62,9 @@
             return result;
         }
 
-        private static InMemoryViewFolder GetMemoryViewMap(IEnumerable<ViewLocationResult> viewLocationResults)
+        private static IViewFolder GetViewFolder(ViewEngineStartupContext viewLocationResults)
         {
-            var memoryViewMap = new InMemoryViewFolder();
-            foreach (var viewLocationResult in viewLocationResults)
-            {
-                memoryViewMap.Add(GetViewFolderKey(viewLocationResult), viewLocationResult.Contents.Invoke().ReadToEnd());
-            }
-            return memoryViewMap;
+            return new NancyViewFolder(viewLocationResults);
         }
 
         private static string GetViewFolderKey(ViewLocationResult viewLocationResult)
@@ -117,7 +112,7 @@
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
-            this.engine.ViewFolder = GetMemoryViewMap(viewEngineStartupContext.ViewLocationResults);
+            this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext);
         }
 
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
