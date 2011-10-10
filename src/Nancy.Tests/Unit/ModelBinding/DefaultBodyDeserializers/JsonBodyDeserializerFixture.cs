@@ -16,6 +16,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
     public class JsonBodyDeserializerFixture
     {
+        private readonly JavaScriptSerializer serializer;
+
         private readonly JsonBodyDeserializer deserialize;
 
         private readonly TestModel testModel;
@@ -34,8 +36,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                     ArrayProperty = new[] { "Ping", "Pong" }
                 };
 
-            var serializer = new JavaScriptSerializer();
-            this.testModelJson = serializer.Serialize(this.testModel);
+            this.serializer = new JavaScriptSerializer();
+            serializer.RegisterConverters(JsonSettings.Converters);
+            this.testModelJson = this.serializer.Serialize(this.testModel);
         }
 
         [Fact]
@@ -109,6 +112,25 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.DateProperty.ShouldEqual(default(DateTime));
         }
 
+        [Fact]
+        public void Should_deserialize_timespan()
+        {
+            var json = this.serializer.Serialize(TimeSpan.FromDays(14));
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TimeSpan),
+                ValidModelProperties = typeof(TimeSpan).GetProperties(),
+            };
+
+            var result = (TimeSpan)this.deserialize.Deserialize(
+                            "application/json",
+                            bodyStream,
+                            context);
+
+            result.Days.ShouldEqual(14);
+        }
+
 #if !__MonoCS__
         [Fact]
         public void Should_Serialize_Doubles_In_Different_Cultures()
@@ -127,7 +149,6 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             Assert.Equal(modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
         }
 #endif
-		
         public class TestModel : IEquatable<TestModel>
         {
             public string StringProperty { get; set; }

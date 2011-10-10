@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using Nancy.Json;
+    using Json;
 
     public class JsonResponse<TModel> : Response
     {
@@ -18,6 +18,7 @@
             return stream =>
             {
                 var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
+                serializer.RegisterConverters(JsonSettings.Converters);
                 var json = serializer.Serialize(model);
 
                 var writer = new StreamWriter(stream);
