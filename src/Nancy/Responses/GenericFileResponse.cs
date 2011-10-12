@@ -45,13 +45,7 @@
             {
                 using (var file = File.OpenRead(filePath))
                 {
-                    var buffer = new byte[4096];
-                    var read = -1;
-                    while (read != 0)
-                    {                                   
-                        read = file.Read(buffer, 0, buffer.Length);
-                        stream.Write(buffer, 0, read);
-                    }
+                    file.CopyTo(stream);
                 }
             };
         }
