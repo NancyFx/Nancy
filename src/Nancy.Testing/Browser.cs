@@ -1,10 +1,14 @@
 namespace Nancy.Testing
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Nancy.Bootstrapper;
     using IO;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.
@@ -13,6 +17,8 @@ namespace Nancy.Testing
     {
         private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
+
+        private IDictionary<string, string> cookies = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.
@@ -107,7 +113,43 @@ namespace Nancy.Testing
             var request =
                 CreateRequest(method, path, browserContext);
 
-            return new BrowserResponse(this.engine.HandleRequest(request));
+            var response = new BrowserResponse(this.engine.HandleRequest(request), this);
+
+            this.CaptureCookies(response);
+
+            return response;
+        }
+
+        private void SetCookies(BrowserContext context)
+        {
+            if (!this.cookies.Any())
+            {
+                return;
+            }
+
+            var cookieString = this.cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+
+            context.Header("Cookie", cookieString);
+        }
+
+        private void CaptureCookies(BrowserResponse response)
+        {
+            if (response.Cookies == null || !response.Cookies.Any())
+            {
+                return;
+            }
+
+            foreach (var cookie in response.Cookies)
+            {
+                if (string.IsNullOrEmpty(cookie.Value))
+                {
+                    this.cookies.Remove(cookie.Name);
+                }
+                else
+                {
+                    this.cookies[cookie.Name] = cookie.Value;
+                }
+            }
         }
 
         private static void BuildRequestBody(IBrowserContextValues contextValues)
@@ -129,10 +171,12 @@ namespace Nancy.Testing
             contextValues.Body = new MemoryStream(bodyBytes);
         }
 
-        private static Request CreateRequest(string method, string path, Action<BrowserContext> browserContext)
+        private Request CreateRequest(string method, string path, Action<BrowserContext> browserContext)
         {
             var context =
                 new BrowserContext();
+
+            this.SetCookies(context);
 
             browserContext.Invoke(context);
 
