@@ -28,4 +28,9 @@ namespace Nancy.Bootstrapper
         /// <param name="pipelines">Application pipelines</param>
         void Initialize(IApplicationPipelines pipelines);
     }
+
+    public interface IRequestStartup
+    {
+        void Initialize(IApplicationPipelines pipelines);
+    }
 }

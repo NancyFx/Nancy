@@ -14,6 +14,14 @@
     /// </summary>
     public class AfterPipeline : NamedPipelineBase<Action<NancyContext>>
     {
+        public AfterPipeline()
+        {
+        }
+
+        public AfterPipeline(NamedPipelineBase<Action<NancyContext>> pipeline) : base(pipeline)
+        {
+        }
+
         public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;

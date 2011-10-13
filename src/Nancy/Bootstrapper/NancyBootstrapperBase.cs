@@ -12,6 +12,11 @@
 
     using ViewEngines;
 
+    public interface IRequestPipelinesFactory
+    {
+        IApplicationPipelines CreateRequestPipeline();
+    }
+
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
@@ -88,6 +93,15 @@
         /// </para>
         /// </summary>
         public ErrorPipeline OnError { get; set; }
+
+        public IApplicationPipelines Clone()
+        {
+            this.AfterRequest = new AfterPipeline(this.AfterRequest);
+            this.BeforeRequest = new BeforePipeline(this.BeforeRequest);
+            this.OnError = new ErrorPipeline(this.OnError);
+
+            return this;
+        }
 
         /// <summary>
         /// Gets the Container instance - automatically set during initialise.
@@ -172,10 +186,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> BodyDeserializers
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(true);
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(true); }
         }
 
         /// <summary>
@@ -183,10 +194,15 @@
         /// </summary>
         protected virtual IEnumerable<Type> StartupTasks
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IStartup>();
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IStartup>(); }
+        }
+
+        /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestStartupTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
         }
 
         /// <summary>
@@ -194,11 +210,7 @@
         /// </summary>
         protected virtual Type RootPathProvider
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true)
-                        .FirstOrDefault() ?? typeof(DefaultRootPathProvider);
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true).FirstOrDefault() ?? typeof(DefaultRootPathProvider); }
         }
 
         /// <summary>
@@ -206,10 +218,7 @@
         /// </summary>
         protected virtual byte[] DefaultFavIcon
         {
-            get
-            {
-                return this.defaultFavIcon ?? (this.defaultFavIcon = this.LoadFavIcon());
-            }
+            get { return this.defaultFavIcon ?? (this.defaultFavIcon = LoadFavIcon()); }
         }
 
         /// <summary>
@@ -320,6 +329,8 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
         protected abstract IEnumerable<IStartup> GetStartupTasks();
 
+        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks();
+
         /// <summary>
         /// Get all NancyModule implementation instances
         /// </summary>
@@ -347,9 +358,12 @@
             }
 
             var engine = this.GetEngineInternal();
-            engine.PreRequestHook = this.BeforeRequest;
-            engine.PostRequestHook = this.AfterRequest;
-            engine.OnErrorHook = this.OnError;
+
+            var clone = this.BeforeRequest.Clone();
+
+            //engine.PreRequestHook = this.BeforeRequest;
+            //engine.PostRequestHook = this.AfterRequest;
+            //engine.OnErrorHook = this.OnError;
 
             return engine;
         }
@@ -373,6 +387,8 @@
             return base.GetHashCode();
         }
 
+        
+
         /// <summary>
         /// Hides ToString from the overrides list
         /// </summary>
@@ -389,6 +405,10 @@
         /// </summary>
         /// <param name="container">Container instance for resolving types if required.</param>
         protected virtual void InitialiseInternal(TContainer container)
+        {
+        }
+
+        protected virtual void InitialiseRequestInternal(TContainer requestContainer)
         {
         }
 
@@ -470,18 +490,12 @@
         /// <returns>Collection of TypeRegistration types</returns>
         private IEnumerable<TypeRegistration> GetAdditionalTypes()
         {
-            return new[]
-                {
-                    new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider),   
-                };
+            return new[] { new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider) };
         }
 
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
-            return new[]
-                {
-                    new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                };
+            return new[] { new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration) };
         }
 
         /// <summary>
@@ -506,15 +520,19 @@
         /// Loads the default favicon from the assembly
         /// </summary>
         /// <returns>Favicon byte array</returns>
-        private byte[] LoadFavIcon()
+        private static byte[] LoadFavIcon()
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+            var resourceStream = 
+                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+
             if (resourceStream == null)
             {
                 return null;
             }
 
-            var result = new byte[resourceStream.Length];
+            var result = 
+                new byte[resourceStream.Length];
+
             resourceStream.Read(result, 0, (int)resourceStream.Length);
 
             return result;

@@ -16,6 +16,14 @@
     /// </summary>
     public class BeforePipeline : NamedPipelineBase<Func<NancyContext, Response>> 
     {
+        public BeforePipeline()
+        {
+        }
+
+        public BeforePipeline(NamedPipelineBase<Func<NancyContext, Response>> pipeline) : base(pipeline)
+        {
+        }
+
         public static implicit operator Func<NancyContext, Response>(BeforePipeline pipeline)
         {
             return pipeline.Invoke;

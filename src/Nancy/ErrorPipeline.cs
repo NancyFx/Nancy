@@ -17,6 +17,14 @@
     /// </summary>
     public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, Response>>
     {
+        public ErrorPipeline()
+        {
+        }
+
+        public ErrorPipeline(NamedPipelineBase<Func<NancyContext, Exception, Response>> pipeline) : base(pipeline)
+        {
+        }
+
         public static implicit operator Func<NancyContext, Exception, Response>(ErrorPipeline pipeline)
         {
             return pipeline.Invoke;
