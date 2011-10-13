@@ -4,6 +4,8 @@ using Xunit;
 
 namespace Nancy.Testing.Tests
 {
+    using Nancy.Session;
+
     public class BrowserFixture
     {
         private readonly Browser browser;
@@ -12,6 +14,8 @@ namespace Nancy.Testing.Tests
         {
             var bootstrapper =
                 new ConfigurableBootstrapper(config => config.Modules(typeof (EchoModule)));
+
+            CookieBasedSessions.Enable(bootstrapper);
 
             browser = new Browser(bootstrapper);
         }
@@ -53,24 +57,108 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual(thisIsMyRequestBody);
         }
 
+        [Fact]
+        public void Should_be_able_to_continue_with_another_request()
+        {
+            // Given
+            const string FirstRequestBody = "This is my first request body";
+            const string SecondRequestBody = "This is my second request body";
+            var firstRequestStream = new MemoryStream();
+            var firstRequestWriter = new StreamWriter(firstRequestStream);
+            firstRequestWriter.Write(FirstRequestBody);
+            firstRequestWriter.Flush();
+            var secondRequestStream = new MemoryStream();
+            var secondRequestWriter = new StreamWriter(secondRequestStream);
+            secondRequestWriter.Write(SecondRequestBody);
+            secondRequestWriter.Flush();
+
+            // When
+            var result = browser.Post("/", with =>
+            {
+                with.HttpRequest();
+                with.Body(firstRequestStream, "text/plain");
+            }).Then.Post("/", with =>
+            {
+                with.HttpRequest();
+                with.Body(secondRequestStream, "text/plain");
+            });
+
+            // Then
+            result.Body.AsString().ShouldEqual(SecondRequestBody);
+        }
+
+        [Fact]
+        public void Should_maintain_cookies_when_chaining_requests()
+        {
+            // Given
+            // When
+            var result = browser.Get(
+                    "/session", 
+                    with => with.HttpRequest())
+                .Then
+                .Get(
+                    "/session", 
+                    with => with.HttpRequest());
+
+            result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
+        }
+
+        [Fact]
+        public void Should_maintain_cookies_even_if_not_set_on_directly_preceding_request()
+        {
+            // Given
+            // When
+            var result = browser.Get(
+                    "/session",
+                    with => with.HttpRequest())
+                .Then
+                .Get(
+                    "/nothing",
+                    with => with.HttpRequest())
+                .Then
+                .Get(
+                    "/session",
+                    with => with.HttpRequest());
+
+            result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
+        }
+
         public class EchoModule : NancyModule
         {
             public EchoModule()
             {
 
                 Post["/"] = ctx =>
-                            {
-                                var body = new StreamReader(Context.Request.Body).ReadToEnd();
-                                return new Response
-                                       {
-                                           Contents = stream =>
-                                                      {
-                                                          var writer = new StreamWriter(stream);
-                                                          writer.Write(body);
-                                                          writer.Flush();
-                                                      }
-                                       };
-                            };
+                    {
+                        var body = new StreamReader(Context.Request.Body).ReadToEnd();
+                        return new Response
+                                {
+                                    Contents = stream =>
+                                                {
+                                                    var writer = new StreamWriter(stream);
+                                                    writer.Write(body);
+                                                    writer.Flush();
+                                                }
+                                };
+                    };
+
+                Get["/nothing"] = ctx => string.Empty;
+
+                Get["/session"] = ctx =>
+                    {
+                        var value = Session["moo"] ?? "";
+
+                        var output = "Current session value is: " + value;
+
+                        if (string.IsNullOrEmpty(value.ToString()))
+                        {
+                            Session["moo"] = "I've created a session!";
+                        }
+
+                        var response = (Response)output;
+
+                        return response;
+                    };
             }
 
         }
