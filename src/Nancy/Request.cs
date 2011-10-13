@@ -155,7 +155,7 @@ namespace Nancy
                 return cookieDictionary;
             }
 
-            var cookies = this.Headers["cookie"].First().Split(';');
+            var cookies = this.Headers["cookie"].First().TrimEnd(';').Split(';');
 			foreach (var parts in cookies.Select (c => c.Split (new[] { '=' }, 2)))
             {
                 cookieDictionary[parts[0].Trim()] = parts[1];
