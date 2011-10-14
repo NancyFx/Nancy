@@ -68,12 +68,14 @@ namespace Nancy.Bootstrapper
             var requestContainer = 
                 this.GetRequestContainer(context);
 
+            this.ConfigureRequestContainer(requestContainer);
+
             var requestPipelines =
                 new RequestPipelines(this);
             
             this.InitialiseRequestInternal(requestContainer, requestPipelines);
 
-            return this;
+            return requestPipelines;
         }
 
         /// <summary>

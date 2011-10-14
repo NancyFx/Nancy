@@ -403,10 +403,6 @@
 
             engine.RequestPipelinesFactory = this.CreateRequestPipeline;
 
-            //engine.PreRequestHook = this.BeforeRequest;
-            //engine.PostRequestHook = this.AfterRequest;
-            //engine.OnErrorHook = this.OnError;
-
             return engine;
         }
 
@@ -431,7 +427,12 @@
 
         public virtual IApplicationPipelines CreateRequestPipeline(NancyContext context)
         {
-            return new RequestPipelines(this);
+            var requestPipelines =
+                new RequestPipelines(this);
+
+            this.InitialiseRequestInternal(this.ApplicationContainer, requestPipelines);
+
+            return requestPipelines;
         }
 
         /// <summary>
@@ -453,7 +454,12 @@
         {
         }
 
-        protected virtual void InitialiseRequestInternal(TContainer requestContainer, IApplicationPipelines pipelines)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="pipelines"></param>
+        protected virtual void InitialiseRequestInternal(TContainer container, IApplicationPipelines pipelines)
         {
         }
 
