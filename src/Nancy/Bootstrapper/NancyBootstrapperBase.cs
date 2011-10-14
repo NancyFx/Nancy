@@ -3,18 +3,79 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
-    using Cryptography;
-    using ModelBinding;
-
+    using Nancy.Cryptography;
+    using Nancy.ModelBinding;
     using Nancy.Conventions;
+    using Nancy.ViewEngines;
 
-    using ViewEngines;
+    public class RequestPipelines : IApplicationPipelines
+    {
+        public RequestPipelines(IApplicationPipelines pipelines)
+        {
+            this.AfterRequest = 
+                new AfterPipeline(pipelines.AfterRequest.PipelineItems.Count());
+
+            foreach (var pipelineItem in pipelines.AfterRequest.PipelineItems)
+            {
+                this.AfterRequest.AddItemToEndOfPipeline(pipelineItem);
+            }
+
+            this.BeforeRequest = 
+                new BeforePipeline(pipelines.BeforeRequest.PipelineItems.Count());
+
+            foreach (var pipelineItem in pipelines.BeforeRequest.PipelineItems)
+            {
+                this.BeforeRequest.AddItemToEndOfPipeline(pipelineItem);
+            }
+
+            this.OnError = 
+                new ErrorPipeline(pipelines.OnError.PipelineItems.Count());
+
+            foreach (var pipelineItem in pipelines.OnError.PipelineItems)
+            {
+                this.OnError.AddItemToEndOfPipeline(pipelineItem);
+            }
+        }
+
+        /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        public BeforePipeline BeforeRequest { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created. It can be used
+        /// to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        public AfterPipeline AfterRequest { get; set; }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during the pipeline.
+        /// If no error hook exists a standard InternalServerError response is returned
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError { get; set; }
+    }
 
     public interface IRequestPipelinesFactory
     {
-        IApplicationPipelines CreateRequestPipeline();
+        IApplicationPipelines CreateRequestPipeline(NancyContext context);
     }
 
     /// <summary>
@@ -22,7 +83,7 @@
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, INancyModuleCatalog
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, INancyModuleCatalog, IRequestPipelinesFactory
         where TContainer : class
     {
         /// <summary>
@@ -93,15 +154,6 @@
         /// </para>
         /// </summary>
         public ErrorPipeline OnError { get; set; }
-
-        public IApplicationPipelines Clone()
-        {
-            this.AfterRequest = new AfterPipeline(this.AfterRequest);
-            this.BeforeRequest = new BeforePipeline(this.BeforeRequest);
-            this.OnError = new ErrorPipeline(this.OnError);
-
-            return this;
-        }
 
         /// <summary>
         /// Gets the Container instance - automatically set during initialise.
@@ -195,14 +247,6 @@
         protected virtual IEnumerable<Type> StartupTasks
         {
             get { return AppDomainAssemblyTypeScanner.TypesOf<IStartup>(); }
-        }
-
-        /// <summary>
-        /// Gets all request startup tasks
-        /// </summary>
-        protected virtual IEnumerable<Type> RequestStartupTasks
-        {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
         }
 
         /// <summary>
@@ -329,8 +373,6 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
         protected abstract IEnumerable<IStartup> GetStartupTasks();
 
-        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks();
-
         /// <summary>
         /// Get all NancyModule implementation instances
         /// </summary>
@@ -359,7 +401,7 @@
 
             var engine = this.GetEngineInternal();
 
-            var clone = this.BeforeRequest.Clone();
+            engine.RequestPipelinesFactory = this.CreateRequestPipeline;
 
             //engine.PreRequestHook = this.BeforeRequest;
             //engine.PostRequestHook = this.AfterRequest;
@@ -387,7 +429,10 @@
             return base.GetHashCode();
         }
 
-        
+        public virtual IApplicationPipelines CreateRequestPipeline(NancyContext context)
+        {
+            return new RequestPipelines(this);
+        }
 
         /// <summary>
         /// Hides ToString from the overrides list
@@ -408,7 +453,7 @@
         {
         }
 
-        protected virtual void InitialiseRequestInternal(TContainer requestContainer)
+        protected virtual void InitialiseRequestInternal(TContainer requestContainer, IApplicationPipelines pipelines)
         {
         }
 

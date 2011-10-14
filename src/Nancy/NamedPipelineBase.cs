@@ -18,9 +18,9 @@ namespace Nancy
             this.pipelineItems = new List<PipelineItem<TDelegate>>();
         }
 
-        protected NamedPipelineBase(NamedPipelineBase<TDelegate> source)
+        protected NamedPipelineBase(int capacity)
         {
-            this.pipelineItems = new List<PipelineItem<TDelegate>>(source.pipelineItems);
+            this.pipelineItems = new List<PipelineItem<TDelegate>>(capacity);
         }
 
         /// <summary>

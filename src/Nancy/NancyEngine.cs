@@ -2,7 +2,7 @@
 {
     using System;
     using System.Threading;
-
+    using Bootstrapper;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
 
@@ -83,7 +83,9 @@
         /// response or add/remove items from the context
         /// </para>
         /// </summary>
-        public Func<NancyContext, Exception, Response> OnErrorHook { get; set; } 
+        public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+
+        public Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
 
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
@@ -100,7 +102,10 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
-            this.InvokeRequestLifeCycle(context);
+            var pipelines =
+                this.RequestPipelinesFactory.Invoke(context);
+
+            this.InvokeRequestLifeCycle(context, pipelines);
             AddNancyVersionHeaderToResponse(context);
 
             CheckErrorHandler(context);
@@ -158,33 +163,33 @@
             }
         }
 
-        private void InvokeRequestLifeCycle(NancyContext context)
+        private void InvokeRequestLifeCycle(NancyContext context, IApplicationPipelines pipelines)
         {
             try
             {
-                this.InvokePreRequestHook(context);
+                this.InvokePreRequestHook(context, pipelines.BeforeRequest);
 
                 if (context.Response == null) 
                 {
                     this.ResolveAndInvokeRoute(context);
                 }
 
-                if (this.PostRequestHook != null) 
+                if (pipelines.AfterRequest != null) 
                 {
-                    this.PostRequestHook.Invoke(context);
+                    pipelines.AfterRequest.Invoke(context);
                 }
             }
             catch (Exception ex)
             {
-                InvokeOnErrorHook(context, ex);
+                InvokeOnErrorHook(context, pipelines.OnError, ex);
             }
         }
 
-        private void InvokePreRequestHook(NancyContext context)
+        private void InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
         {
-            if (this.PreRequestHook != null)
+            if (pipeline != null)
             {
-                var preRequestResponse = this.PreRequestHook.Invoke(context);
+                var preRequestResponse = pipeline.Invoke(context);
 
                 if (preRequestResponse != null)
                 {
@@ -193,16 +198,16 @@
             }
         }
 
-        private void InvokeOnErrorHook(NancyContext context, Exception ex)
+        private void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
         {
             try
             {
-                if (this.OnErrorHook == null)
+                if (pipeline == null)
                 { 
                     throw ex;
                 }
 
-                var onErrorResponse = this.OnErrorHook.Invoke(context, ex);
+                var onErrorResponse = pipeline.Invoke(context, ex);
 
                 if (onErrorResponse == null)
                 {

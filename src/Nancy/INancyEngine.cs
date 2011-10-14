@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System;
+    using Bootstrapper;
 
     public interface INancyEngine
     {
@@ -39,6 +40,8 @@ namespace Nancy
         /// </summary>
         Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
+        Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+            
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>

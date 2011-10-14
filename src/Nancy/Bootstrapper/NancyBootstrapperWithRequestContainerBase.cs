@@ -10,7 +10,7 @@ namespace Nancy.Bootstrapper
     /// container will be disposed at the end of the request.
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
-    public abstract class NancyBootstrapperWithRequestContainerBase<TContainer> : NancyBootstrapperBase<TContainer>, IRequestPipelinesFactory
+    public abstract class NancyBootstrapperWithRequestContainerBase<TContainer> : NancyBootstrapperBase<TContainer>
         where TContainer : class
     {
         /// <summary>
@@ -63,20 +63,15 @@ namespace Nancy.Bootstrapper
             return this.GetModuleByKey(requestContainer, moduleKey);
         }
 
-        IApplicationPipelines IRequestPipelinesFactory.CreateRequestPipeline(NancyContext context)
+        public override IApplicationPipelines CreateRequestPipeline(NancyContext context)
         {
-            var pipeline =
-                this.Clone();
-
-            foreach (var startupTask in this.GetRequestStartupTasks())
-            {
-                startupTask.Initialize(pipeline);
-            }
-
-            var requestContainer =
+            var requestContainer = 
                 this.GetRequestContainer(context);
 
-            this.InitialiseRequestInternal(requestContainer);
+            var requestPipelines =
+                new RequestPipelines(this);
+            
+            this.InitialiseRequestInternal(requestContainer, requestPipelines);
 
             return this;
         }

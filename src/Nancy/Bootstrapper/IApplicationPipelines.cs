@@ -35,7 +35,5 @@ namespace Nancy.Bootstrapper
         /// </para>
         /// </summary>
         ErrorPipeline OnError { get; set; }
-
-        IApplicationPipelines Clone();
     }
 }

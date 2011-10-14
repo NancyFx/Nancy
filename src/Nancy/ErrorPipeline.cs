@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
 
     /// <summary>
     /// <para>
@@ -21,7 +20,7 @@
         {
         }
 
-        public ErrorPipeline(NamedPipelineBase<Func<NancyContext, Exception, Response>> pipeline) : base(pipeline)
+        public ErrorPipeline(int capacity) : base(capacity)
         {
         }
 

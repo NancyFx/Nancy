@@ -145,6 +145,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
+            public Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {
                 if (resolver == null)
