@@ -9,81 +9,12 @@
     using Nancy.Conventions;
     using Nancy.ViewEngines;
 
-    public class RequestPipelines : IApplicationPipelines
-    {
-        public RequestPipelines(IApplicationPipelines pipelines)
-        {
-            this.AfterRequest = 
-                new AfterPipeline(pipelines.AfterRequest.PipelineItems.Count());
-
-            foreach (var pipelineItem in pipelines.AfterRequest.PipelineItems)
-            {
-                this.AfterRequest.AddItemToEndOfPipeline(pipelineItem);
-            }
-
-            this.BeforeRequest = 
-                new BeforePipeline(pipelines.BeforeRequest.PipelineItems.Count());
-
-            foreach (var pipelineItem in pipelines.BeforeRequest.PipelineItems)
-            {
-                this.BeforeRequest.AddItemToEndOfPipeline(pipelineItem);
-            }
-
-            this.OnError = 
-                new ErrorPipeline(pipelines.OnError.PipelineItems.Count());
-
-            foreach (var pipelineItem in pipelines.OnError.PipelineItems)
-            {
-                this.OnError.AddItemToEndOfPipeline(pipelineItem);
-            }
-        }
-
-        /// <summary>
-        /// <para>
-        /// The pre-request hook
-        /// </para>
-        /// <para>
-        /// The PreRequest hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
-        /// </summary>
-        public BeforePipeline BeforeRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The post-request hook
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after the response is created. It can be used
-        /// to rewrite the response or add/remove items from the context.
-        /// </para>
-        /// </summary>
-        public AfterPipeline AfterRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError { get; set; }
-    }
-
-    public interface IRequestPipelinesFactory
-    {
-        IApplicationPipelines CreateRequestPipeline(NancyContext context);
-    }
-
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, INancyModuleCatalog, IRequestPipelinesFactory
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, INancyModuleCatalog, IRequestPipelinesFactory
         where TContainer : class
     {
         /// <summary>
@@ -95,7 +26,9 @@
         /// <summary>
         /// Default Nancy conventions
         /// </summary>
-        private NancyConventions conventions;
+        private readonly NancyConventions conventions;
+
+        public IPipelines ApplicationPipelines { get; private set; }
 
         /// <summary>
         /// Nancy modules - built on startup from the app domain scanner
@@ -114,46 +47,9 @@
         {
             AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
 
-            this.BeforeRequest = new BeforePipeline();
-            this.AfterRequest = new AfterPipeline();
-            this.OnError = new ErrorPipeline();
-
+            this.ApplicationPipelines = new Pipelines();
             this.conventions = new NancyConventions();
         }
-
-        /// <summary>
-        /// <para>
-        /// The pre-request hook
-        /// </para>
-        /// <para>
-        /// The PreRequest hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
-        /// </summary>
-        public BeforePipeline BeforeRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The post-request hook
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after the response is created. It can be used
-        /// to rewrite the response or add/remove items from the context.
-        /// </para>
-        /// </summary>
-        public AfterPipeline AfterRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError { get; set; }
 
         /// <summary>
         /// Gets the Container instance - automatically set during initialise.
@@ -317,7 +213,7 @@
 
             foreach (var startupTask in this.GetStartupTasks())
             {
-                startupTask.Initialize(this);
+                startupTask.Initialize(this.ApplicationPipelines);
 
                 if (startupTask.TypeRegistrations != null)
                 {
@@ -335,11 +231,11 @@
                 }
             }
 
-            this.InitialiseInternal(this.ApplicationContainer);
+            this.InitialiseInternal(this.ApplicationContainer, this.ApplicationPipelines);
 
             if (this.DefaultFavIcon != null)
             {
-                this.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
                         if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
                         {
@@ -425,10 +321,10 @@
             return base.GetHashCode();
         }
 
-        public virtual IApplicationPipelines CreateRequestPipeline(NancyContext context)
+        public virtual IPipelines CreateRequestPipeline(NancyContext context)
         {
             var requestPipelines =
-                new RequestPipelines(this);
+                new Pipelines(this.ApplicationPipelines);
 
             this.InitialiseRequestInternal(this.ApplicationContainer, requestPipelines);
 
@@ -450,7 +346,7 @@
         /// related
         /// </summary>
         /// <param name="container">Container instance for resolving types if required.</param>
-        protected virtual void InitialiseInternal(TContainer container)
+        protected virtual void InitialiseInternal(TContainer container, IPipelines pipelines)
         {
         }
 
@@ -459,7 +355,7 @@
         /// </summary>
         /// <param name="container"></param>
         /// <param name="pipelines"></param>
-        protected virtual void InitialiseRequestInternal(TContainer container, IApplicationPipelines pipelines)
+        protected virtual void InitialiseRequestInternal(TContainer container, IPipelines pipelines)
         {
         }
 

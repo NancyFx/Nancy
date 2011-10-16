@@ -85,7 +85,7 @@
         /// </summary>
         public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
-        public Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+        public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
@@ -163,7 +163,7 @@
             }
         }
 
-        private void InvokeRequestLifeCycle(NancyContext context, IApplicationPipelines pipelines)
+        private void InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
         {
             try
             {

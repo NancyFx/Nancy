@@ -63,7 +63,7 @@ namespace Nancy.Bootstrapper
             return this.GetModuleByKey(requestContainer, moduleKey);
         }
 
-        public override IApplicationPipelines CreateRequestPipeline(NancyContext context)
+        public override IPipelines CreateRequestPipeline(NancyContext context)
         {
             var requestContainer = 
                 this.GetRequestContainer(context);
@@ -71,7 +71,7 @@ namespace Nancy.Bootstrapper
             this.ConfigureRequestContainer(requestContainer);
 
             var requestPipelines =
-                new RequestPipelines(this);
+                new Pipelines(this.ApplicationPipelines);
             
             this.InitialiseRequestInternal(requestContainer, requestPipelines);
 

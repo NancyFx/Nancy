@@ -18,13 +18,13 @@
         /// <summary>
         /// Enables basic authentication for the application
         /// </summary>
-        /// <param name="applicationPipelines">Pipelines to add handlers to (usually "this")</param>
+        /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
         /// <param name="configuration">Forms authentication configuration</param>
-        public static void Enable(IApplicationPipelines applicationPipelines, BasicAuthenticationConfiguration configuration)
+        public static void Enable(IPipelines pipelines, BasicAuthenticationConfiguration configuration)
         {
-            if (applicationPipelines == null)
+            if (pipelines == null)
             {
-                throw new ArgumentNullException("applicationPipelines");
+                throw new ArgumentNullException("pipelines");
             }
 
             if (configuration == null)
@@ -32,8 +32,8 @@
                 throw new ArgumentNullException("configuration");
             }
 
-            applicationPipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
+            pipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
         }
 
         /// <summary>

@@ -79,7 +79,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var called = false;
             this.Bootstrapper.Initialise();
-            this.Bootstrapper.BeforeRequest += (c) => { called = true; return null; };
+            this.Bootstrapper.ApplicationPipelines.BeforeRequest += (c) => { called = true; return null; };
             var engine = this.Bootstrapper.GetEngine();
 
             var context = new NancyContext
@@ -97,7 +97,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var called = false;
             this.Bootstrapper.Initialise();
-            this.Bootstrapper.AfterRequest += (c) => { called = true; };
+            this.Bootstrapper.ApplicationPipelines.AfterRequest += (c) => { called = true; };
             var engine = this.Bootstrapper.GetEngine();
 
             engine.PostRequestHook.Invoke(new NancyContext());
@@ -110,7 +110,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var called = false;
             this.Bootstrapper.Initialise();
-            this.Bootstrapper.OnError += (c, e) => { called = true; return new Response(); };
+            this.Bootstrapper.ApplicationPipelines.OnError += (c, e) => { called = true; return new Response(); };
             var engine = this.Bootstrapper.GetEngine();
 
             engine.OnErrorHook.Invoke(new NancyContext(), new Exception());
@@ -145,7 +145,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
-            public Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+            public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {

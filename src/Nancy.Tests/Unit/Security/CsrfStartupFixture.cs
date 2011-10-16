@@ -13,7 +13,7 @@
 
     public class CsrfStartupFixture
     {
-        private readonly IApplicationPipelines pipelines;
+        private readonly IPipelines pipelines;
                  
         private readonly Request request;
                  
@@ -21,7 +21,7 @@
                  
         public CsrfStartupFixture()
         {
-            this.pipelines = new MockApplicationPipelines();
+            this.pipelines = new MockPipelines();
             
             var csrfStartup = new CsrfStartup(
                 CryptographyConfiguration.Default,

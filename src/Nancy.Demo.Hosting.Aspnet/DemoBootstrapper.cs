@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
     using System.Collections.Generic;
+    using Bootstrapper;
     using Conventions;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
@@ -24,17 +25,18 @@
             existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
         }
 
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container);
+            base.InitialiseInternal(container, pipelines);
 
+            StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
-            CookieBasedSessions.Enable(this);
+            CookieBasedSessions.Enable(pipelines);
 
-            this.AfterRequest += (ctx) =>
+            pipelines.AfterRequest += (ctx) =>
             {
                 var username = ctx.Request.Query.pirate;
 
@@ -65,7 +67,5 @@
         {
             return new string[] { };
         }
-
-
     }
 }

@@ -158,7 +158,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var beforePipeline = new BeforePipeline();
             var afterPipeline = new AfterPipeline();
-            var hooks = A.Fake<IApplicationPipelines>();
+            var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
 
@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var beforePipeline = new BeforePipeline();
             var afterPipeline = new AfterPipeline();
-            var hooks = A.Fake<IApplicationPipelines>();
+            var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(new Fakes.FakeObjectSerializer());
@@ -193,7 +193,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var beforePipeline = new BeforePipeline();
             var afterPipeline = new AfterPipeline();
-            var hooks = A.Fake<IApplicationPipelines>();
+            var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             CookieBasedSessions.Enable(hooks, new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider)).WithSerializer(new Fakes.FakeObjectSerializer());
@@ -241,7 +241,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var beforePipeline = new BeforePipeline();
             var afterPipeline = new AfterPipeline();
-            var hooks = A.Fake<IApplicationPipelines>();
+            var hooks = A.Fake<IPipelines>();
             A.CallTo(() => hooks.BeforeRequest).Returns(beforePipeline);
             A.CallTo(() => hooks.AfterRequest).Returns(afterPipeline);
             var fakeFormatter = A.Fake<IObjectSerializer>();

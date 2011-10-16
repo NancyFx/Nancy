@@ -1,13 +1,14 @@
 namespace Nancy.Demo.Authentication.Forms
 {
+    using Bootstrapper;
     using Nancy;
     using Nancy.Authentication.Forms;
 
     public class FormsAuthBootstrapper : DefaultNancyBootstrapper
     {
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container);
+            base.InitialiseInternal(container, pipelines);
 
             var formsAuthConfiguration = 
                 new FormsAuthenticationConfiguration()
@@ -16,7 +17,7 @@ namespace Nancy.Demo.Authentication.Forms
                     UserMapper = container.Resolve<IUserMapper>(),
                 };
 
-            FormsAuthentication.Enable(this, formsAuthConfiguration);
+            FormsAuthentication.Enable(pipelines, formsAuthConfiguration);
         }
     }
 }

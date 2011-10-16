@@ -40,7 +40,7 @@ namespace Nancy
         /// </summary>
         Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
-        Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+        Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
             
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.

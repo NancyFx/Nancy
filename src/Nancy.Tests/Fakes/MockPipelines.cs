@@ -2,7 +2,7 @@
 {
     using Nancy.Bootstrapper;
 
-    public class MockApplicationPipelines : IApplicationPipelines
+    public class MockPipelines : IPipelines
     {
         public BeforePipeline BeforeRequest { get; set; }
 
@@ -10,7 +10,7 @@
 
         public ErrorPipeline OnError { get; set; }
 
-        public MockApplicationPipelines()
+        public MockPipelines()
         {
             this.BeforeRequest = new BeforePipeline();
             this.AfterRequest = new AfterPipeline();

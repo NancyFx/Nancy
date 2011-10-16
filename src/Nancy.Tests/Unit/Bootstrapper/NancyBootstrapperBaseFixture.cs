@@ -130,14 +130,14 @@
 
         public BeforePipeline PreRequest
         {
-            get { return this.BeforeRequest; }
-            set { this.BeforeRequest = value; }
+            get { return this.ApplicationPipelines.BeforeRequest; }
+            set { this.ApplicationPipelines.BeforeRequest = value; }
         }
 
         public AfterPipeline PostRequest
         {
-            get { return this.AfterRequest; }
-            set { this.AfterRequest = value; }
+            get { return this.ApplicationPipelines.AfterRequest; }
+            set { this.ApplicationPipelines.AfterRequest = value; }
         }
 
         public byte[] Favicon { get; set; }
@@ -333,8 +333,8 @@
 
             _Bootstrapper.Initialise();
 
-            A.CallTo(() => startupMock.Initialize(_Bootstrapper)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => startupMock2.Initialize(_Bootstrapper)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock.Initialize(_Bootstrapper.ApplicationPipelines)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(_Bootstrapper.ApplicationPipelines)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

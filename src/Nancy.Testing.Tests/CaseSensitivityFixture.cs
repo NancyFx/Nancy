@@ -89,7 +89,7 @@
         public void Should_not_pull_parameter_with_different_case_when_sensitivity_is_on()
         {
             StaticConfiguration.CaseSensitive = true;
-            string animal = "dog";
+            
             var response = browser.Get("/dog", with =>
             {
             });

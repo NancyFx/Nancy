@@ -134,7 +134,7 @@
 
             public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
-            public Func<NancyContext, IApplicationPipelines> RequestPipelinesFactory { get; set; }
+            public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
             public NancyContext HandleRequest(Request request)
             {

@@ -105,7 +105,7 @@
     <Compile Include="Fakes\FakeObjectSerializer.cs" />
     <Compile Include="Fakes\FakeHookedModule.cs" />
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
-    <Compile Include="Fakes\MockApplicationPipelines.cs" />
+    <Compile Include="Fakes\MockPipelines.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
