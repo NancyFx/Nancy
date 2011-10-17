@@ -6,14 +6,18 @@
     public class CryptographyConfiguration
     {
         /// <summary>
-        /// Gets the encryption provider
+        /// Initializes static members of the <see cref="CryptographyConfiguration"/> class.
         /// </summary>
-        public IEncryptionProvider EncryptionProvider { get; private set; }
+        static CryptographyConfiguration()
+        {
+            Default = new CryptographyConfiguration(
+                    new RijndaelEncryptionProvider(new RandomKeyGenerator()),
+                    new DefaultHmacProvider(new RandomKeyGenerator()));
 
-        /// <summary>
-        /// Gets the hmac provider
-        /// </summary>
-        public IHmacProvider HmacProvider { get; private set; }
+            NoEncryption = new CryptographyConfiguration(
+                    new NoEncryptionProvider(),
+                    new DefaultHmacProvider(new RandomKeyGenerator()));
+        }
 
         /// <summary>
         /// Creates a new instance of the CryptographyConfiguration class
@@ -27,29 +31,23 @@
         }
 
         /// <summary>
-        /// Default configuration - Rijndael encryption, HMACSHA256 HMAC, random keys
+        /// Gets the default configuration - Rijndael encryption, HMACSHA256 HMAC, random keys
         /// </summary>
-        public static CryptographyConfiguration Default
-        {
-            get
-            {
-                return new CryptographyConfiguration(
-                    new RijndaelEncryptionProvider(new RandomKeyGenerator()), 
-                    new DefaultHmacProvider(new RandomKeyGenerator()));
-            }
-        }
+        public static CryptographyConfiguration Default { get; private set; }
 
         /// <summary>
-        /// Configuration with no encryption and HMACSHA256 HMAC with a random key
+        /// Gets configuration with no encryption and HMACSHA256 HMAC with a random key
         /// </summary>
-        public static CryptographyConfiguration NoEncryption
-        {
-            get
-            {
-                return new CryptographyConfiguration(
-                    new NoEncryptionProvider(),
-                    new DefaultHmacProvider(new RandomKeyGenerator()));
-            }
-        }
+        public static CryptographyConfiguration NoEncryption { get; private set; }
+
+        /// <summary>
+        /// Gets the encryption provider
+        /// </summary>
+        public IEncryptionProvider EncryptionProvider { get; private set; }
+
+        /// <summary>
+        /// Gets the hmac provider
+        /// </summary>
+        public IHmacProvider HmacProvider { get; private set; }
     }
 }
