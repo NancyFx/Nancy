@@ -13,11 +13,13 @@
     public class BasicAuthenticationFixture
     {
         private readonly BasicAuthenticationConfiguration config;
+        private readonly BasicAuthenticationConfiguration noPromptConfig;
         private readonly IApplicationPipelines hooks;
 
         public BasicAuthenticationFixture()
         {
             this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm");
+            this.noPromptConfig = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", false);
             this.hooks = new FakeApplicationPipelines();
             BasicAuthentication.Enable(this.hooks, this.config);
         }
@@ -34,6 +36,23 @@
             // Then
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_not_add_a_post_hook_in_application_when_promptuser_disabled() {
+            // Given
+            var pipelines = A.Fake<IApplicationPipelines>();
+
+            // When
+            BasicAuthentication.Enable(pipelines, this.noPromptConfig);
+
+            // Then
+            A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustNotHaveHappened();
         }
 
         [Fact]
@@ -47,6 +66,20 @@
             
             // Then
             module.Before.PipelineDelegates.ShouldHaveCount(2);
+            module.After.PipelineDelegates.ShouldHaveCount(1);
+        }
+
+        [Fact]
+        public void Should_not_add_auth_post_hooks_in_module_when_promptuser_disabled() {
+            // Given
+            var module = new FakeModule();
+
+            // When
+            BasicAuthentication.Enable(module, this.noPromptConfig);
+
+            // Then
+            module.Before.PipelineDelegates.ShouldHaveCount(2);
+            module.After.PipelineDelegates.ShouldHaveCount(0);
         }
 
         [Fact]

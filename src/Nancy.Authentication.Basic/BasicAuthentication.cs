@@ -32,7 +32,10 @@ namespace Nancy.Authentication.Basic
             }
 
             applicationPipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+            if (configuration.PromptUser)
+            {
+                applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+            }
         }
 
         /// <summary>
@@ -54,7 +57,11 @@ namespace Nancy.Authentication.Basic
 
             module.RequiresAuthentication();
             module.Before.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-            module.After.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+
+            if (configuration.PromptUser)
+            {
+                module.After.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+            }
         }
 
         /// <summary>

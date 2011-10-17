@@ -15,7 +15,8 @@ namespace Nancy.Authentication.Basic
         /// </summary>
 		/// <param name="userValidator">A valid instance of <see cref="IUserValidator"/> class</param>
 		/// <param name="realm">Basic authentication realm</param>
-		public BasicAuthenticationConfiguration(IUserValidator userValidator, string realm)
+        /// <param name="promptUser">Tell the browser to prompt the user for credentials</param>
+		public BasicAuthenticationConfiguration(IUserValidator userValidator, string realm, bool promptUser = true)
         {
 			if (userValidator == null)
 				throw new ArgumentNullException("userValidator");
@@ -25,6 +26,7 @@ namespace Nancy.Authentication.Basic
 
 			this.UserValidator = userValidator;
 			this.Realm = realm;
+            this.PromptUser = promptUser;
         }
 
 		/// <summary>
@@ -44,5 +46,14 @@ namespace Nancy.Authentication.Basic
 			get;
 			private set;
 		}
+
+        /// <summary>
+        /// Determines whether the browser should prompt for credentials
+        /// </summary>
+        public bool PromptUser
+        {
+            get;
+            private set;
+        }
 	}
 }
