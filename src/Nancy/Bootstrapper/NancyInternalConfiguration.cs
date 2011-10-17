@@ -8,6 +8,7 @@ namespace Nancy.Bootstrapper
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.ViewEngines;
+    using Responses;
     using Security;
 
     /// <summary>
@@ -49,6 +50,7 @@ namespace Nancy.Bootstrapper
                         ErrorHandler = typeof(DefaultErrorHandler),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                         ObjectSerializer = typeof(DefaultObjectSerializer),
+                        Serializers = new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) },
                     };
             }
         }
@@ -99,6 +101,8 @@ namespace Nancy.Bootstrapper
 
         public Type ObjectSerializer { get; set; }
 
+        public IList<Type> Serializers { get; set; } 
+
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
         /// </summary>
@@ -132,7 +136,7 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Raturns the configuration types as a TypeRegistration collection
+        /// Returns the configuration types as a TypeRegistration collection
         /// </summary>
         /// <returns>TypeRegistration collection representing the configurationt types</returns>
         public IEnumerable<TypeRegistration> GetTypeRegistations()
@@ -162,6 +166,18 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IErrorHandler), this.ErrorHandler), 
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
+            };
+        }
+
+        /// <summary>
+        /// Returns the collection configuration types as a CollectionTypeRegistration collection
+        /// </summary>
+        /// <returns>CollectionTypeRegistration collection representing the configuration types</returns>
+        public IEnumerable<CollectionTypeRegistration> GetCollectionTypeRegistrations()
+        {
+            return new[]
+            {
+                new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
             };
         }
     }

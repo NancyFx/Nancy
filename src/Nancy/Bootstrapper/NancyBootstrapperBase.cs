@@ -243,6 +243,9 @@
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());
 
+            var collectionTypeRegistrations = this.InternalConfiguration.GetCollectionTypeRegistrations()
+                                                  .Concat(this.GetApplicationCollections());
+
             // TODO - should this be after initialiseinternal?
             this.ConfigureConventions(this.Conventions);
             var conventionValidationResult = this.Conventions.Validate();
@@ -255,7 +258,7 @@
                                             .Concat(this.GetAdditionalInstances());
 
             this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
-            this.RegisterCollectionTypes(this.ApplicationContainer, this.GetApplicationCollections());
+            this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 

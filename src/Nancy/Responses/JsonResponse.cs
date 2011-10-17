@@ -8,6 +8,11 @@
     {
         public JsonResponse(TModel model)
         {
+            if (DefaultSerializersStartup.JsonSerializer == null)
+            {
+                throw new InvalidOperationException("JSON Serializer not set");
+            }
+
             this.Contents = GetJsonContents(model);
             this.ContentType = "application/json";
             this.StatusCode = HttpStatusCode.OK;
@@ -15,17 +20,7 @@
      
         private static Action<Stream> GetJsonContents(TModel model)
         {
-            return stream =>
-            {
-                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
-                serializer.RegisterConverters(JsonSettings.Converters);
-                var json = serializer.Serialize(model);
-
-                var writer = new StreamWriter(stream);
-
-                writer.Write(json);
-                writer.Flush();
-            };
+            return stream => DefaultSerializersStartup.JsonSerializer.Serialize("application/json", model, stream);
         }
     }
 
