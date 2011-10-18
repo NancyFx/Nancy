@@ -50,7 +50,7 @@ namespace Nancy.Bootstrapper
                         ErrorHandler = typeof(DefaultErrorHandler),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                         ObjectSerializer = typeof(DefaultObjectSerializer),
-                        Serializers = new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) },
+                        Serializers = new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) }),
                     };
             }
         }
