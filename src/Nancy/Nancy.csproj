@@ -98,8 +98,13 @@
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="IO\UnclosableStreamWrapper.cs" />
+    <Compile Include="ISerializer.cs" />
     <Compile Include="Json\Converters\TimeSpanConverter.cs" />
     <Compile Include="Json\JsonSettings.cs" />
+    <Compile Include="Responses\DefaultJsonSerializer.cs" />
+    <Compile Include="Responses\DefaultSerializersStartup.cs" />
+    <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
