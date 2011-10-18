@@ -4,6 +4,8 @@
     using System.IO;
     using Json;
 
+    using Nancy.IO;
+
     public class DefaultJsonSerializer : ISerializer
     {
         /// <summary>
@@ -25,7 +27,7 @@
         /// <returns>Serialised object</returns>
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
-            using (var writer = new StreamWriter(outputStream))
+            using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
                 var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
             

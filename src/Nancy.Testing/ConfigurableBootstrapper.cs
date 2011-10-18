@@ -1002,6 +1002,17 @@ namespace Nancy.Testing
                 this.bootstrapper.configuration.ObjectSerializer = typeof(T);
                 return this;
             }
+
+            /// <summary>
+            /// Configures the bootstrapper to use specific serializers
+            /// </summary>
+            /// <param name="serializers">Sollection of serializer types</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Serializers(IEnumerable<Type> serializers)
+            {
+                this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
+                return this;
+            }
         }
     }
 }
