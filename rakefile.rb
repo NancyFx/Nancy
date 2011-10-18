@@ -151,6 +151,32 @@ task :nuget_publish do
     end
 end
 
+desc "Updates the SharedAssemblyInfo version"
+assemblyinfo :update_version, :version do |asm, args|
+    asm.input_file = SHARED_ASSEMBLY_INFO
+    asm.version = args.version if !args.version.nil?
+    asm.output_file = SHARED_ASSEMBLY_INFO
+end
+
+desc "Tags the current release"
+task :tag, :version do |asm, args|
+    args.with_defaults(:version => NANCY_VERSION)
+
+    sh "git tag \"v#{args.version}\""
+end
+
+desc "Updates the version and tags the release"
+task :prep_release, :version do |task, args|
+  if !args.version.nil?
+    task(:update_version).invoke(args.version)
+
+    sh "git add #{SHARED_ASSEMBLY_INFO}"
+    sh "git commit -m \"Updated version to #{args.version}\""
+
+    task(:tag).invoke(args.version)
+  end
+end
+
 def update_xml(xml_path)
     #Open up the xml file
     xml_file = File.new(xml_path)
