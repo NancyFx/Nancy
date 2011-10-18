@@ -123,6 +123,14 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
 
+        [Fact]
+        public void Should_be_able_to_not_specify_delegate_for_basic_http_request()
+        {
+            var result = browser.Get("/type");
+
+            result.Body.AsString().ShouldEqual("http");
+        }
+
         public class EchoModule : NancyModule
         {
             public EchoModule()
@@ -159,6 +167,8 @@ namespace Nancy.Testing.Tests
 
                         return response;
                     };
+
+                Get["/type"] = _ => Request.Url.Scheme.ToLower();
             }
 
         }
