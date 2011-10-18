@@ -37,7 +37,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Delete(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Delete(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("DELETE", path, browserContext);
         }
@@ -48,7 +48,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Get(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Get(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("GET", path, browserContext);
         }
@@ -59,7 +59,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Head(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Head(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("HEAD", path, browserContext);
         }
@@ -70,7 +70,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Options(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Options(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("OPTIONS", path, browserContext);
         }
@@ -81,7 +81,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Patch(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Patch(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PATCH", path, browserContext);
         }
@@ -92,7 +92,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Post(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Post(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("POST", path, browserContext);
         }
@@ -103,7 +103,7 @@ namespace Nancy.Testing
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
         /// <returns>An <see cref="BrowserResponse"/> instance of the executed request.</returns>
-        public BrowserResponse Put(string path, Action<BrowserContext> browserContext)
+        public BrowserResponse Put(string path, Action<BrowserContext> browserContext = null)
         {
             return this.HandleRequest("PUT", path, browserContext);
         }
@@ -111,13 +111,18 @@ namespace Nancy.Testing
         private BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
             var request =
-                CreateRequest(method, path, browserContext);
+                CreateRequest(method, path, browserContext ?? this.DefaultBrowserContext);
 
             var response = new BrowserResponse(this.engine.HandleRequest(request), this);
 
             this.CaptureCookies(response);
 
             return response;
+        }
+
+        private void DefaultBrowserContext(BrowserContext context)
+        {
+            context.HttpRequest();
         }
 
         private void SetCookies(BrowserContext context)
