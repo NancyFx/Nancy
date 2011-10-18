@@ -139,11 +139,12 @@ task :nuget_package => [:publish] do
 end
 
 desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
-task :nuget_publish do
+task :nuget_publish, :api_key do |task, args|
     nupkgs = FileList["#{OUTPUT}/nuget/*#{NANCY_VERSION}.nupkg"]
     nupkgs.each do |nupkg| 
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
+	nuget_push.apikey = args.api_key if !args.empty?
         nuget_push.command = "tools/nuget/nuget.exe"
         nuget_push.package = "\"" + nupkg + "\""
         nuget_push.create_only = false
