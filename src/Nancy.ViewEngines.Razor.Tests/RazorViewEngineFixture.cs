@@ -8,7 +8,7 @@
     using Nancy.Tests;
     using Xunit;
 
-    public class RazorViewCompilerFixture
+    public class RazorViewEngineFixture
     {
         private readonly RazorViewEngine engine;
         private readonly IRenderContext renderContext;
@@ -16,7 +16,7 @@
         private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRootPathProvider rootPathProvider;
 
-        public RazorViewCompilerFixture()
+        public RazorViewEngineFixture()
         {
             this.configuration = A.Fake<IRazorConfiguration>();
             this.engine = new RazorViewEngine(this.configuration);
