@@ -1,6 +1,8 @@
 namespace Nancy.Testing
 {
     using System;
+	using System.IO;
+	using System.Xml.Linq;
     
     /// <summary>
     /// Defines extensions for the <see cref="BrowserResponse"/> type.
@@ -25,5 +27,15 @@ namespace Nancy.Testing
                 throw new AssertException(String.Format("Location should have been: {0}, but was {1}", location, response.Headers["Location"]));
             }
         }
+
+		public static XDocument BodyAsXml(this BrowserResponse response)
+		{
+			using (var contentsStream = new MemoryStream())
+			{
+				response.Context.Response.Contents.Invoke(contentsStream);
+				contentsStream.Position = 0;
+				return XDocument.Load(contentsStream);
+			}
+		}
     }
 }

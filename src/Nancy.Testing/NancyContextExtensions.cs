@@ -1,7 +1,9 @@
+
 namespace Nancy.Testing
 {
 	using System;
 	using System.IO;
+	using System.Xml.Serialization;
 	using Nancy.Json;
 
     /// <summary>
@@ -11,6 +13,7 @@ namespace Nancy.Testing
     {
 		private const string DOCUMENT_WRAPPER_KEY_NAME = "@@@@DOCUMENT_WRAPPER@@@@";
 		private const string JSONRESPONSE_KEY_NAME = "@@@@JSONRESPONSE@@@@";
+		private const string XMLRESPONSE_KEY_NAME = "@@@@XMLRESPONSE@@@@";
 
 		private static T Cache<T>(NancyContext context, string key, Func<T> getData)
 		{
@@ -62,5 +65,21 @@ namespace Nancy.Testing
 				}
 			});
 		}
+
+		public static TModel XmlBody<TModel>(this NancyContext context)
+		{
+			return Cache(context, XMLRESPONSE_KEY_NAME, () =>
+			{
+				using (var contentsStream = new MemoryStream())
+				{
+					context.Response.Contents.Invoke(contentsStream);
+					contentsStream.Position = 0;
+					var serializer = new XmlSerializer(typeof (TModel));
+					var model = serializer.Deserialize(contentsStream);
+					return (TModel) model;
+				}
+			});
+		}
+		
 	}
 }
