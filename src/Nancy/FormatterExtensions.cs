@@ -1,5 +1,6 @@
 namespace Nancy
 {
+    using System;
     using Nancy.Responses;
     using System.IO;
 
@@ -45,9 +46,14 @@ namespace Nancy
             return new XmlResponse<TModel>(model, "application/xml");
         }
         
-        public static Response AsStream(this IResponseFormatter formatter, Stream stream, string contentType)
+        public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)
         {
-            return new StreamResponse<Stream>(stream, contentType);
+            return new StreamResponse(() => stream, contentType);
+        }
+
+        public static Response FromStream(this IResponseFormatter formatter, Func<Stream> streamDelegate, string contentType)
+        {
+            return new StreamResponse(streamDelegate, contentType);
         }
     }
 }

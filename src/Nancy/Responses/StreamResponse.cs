@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.IO;
-
-namespace Nancy.Responses
+﻿namespace Nancy.Responses
 {
-    public class StreamResponse<TModel> : Response
+    using System;
+    using System.IO;
+
+    public class StreamResponse : Response
     {
-        public StreamResponse(Stream source, string contentType)
+        public StreamResponse(Func<Stream> source, string contentType)
         {
-            this.Contents = GetStream(source);
+            this.Contents = GetResponseBodyDelegate(source);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private static Action<Stream> GetStream(Stream source)
+        private static Action<Stream> GetResponseBodyDelegate(Func<Stream> sourceDelegate)
         {
             return stream =>
-            {
-                if (source != null)
                 {
-                    if (source.CanSeek)
+                    using (var source = sourceDelegate.Invoke())
                     {
-                        source.Position = 0;
+                        if (source.CanSeek)
+                        {
+                            source.Position = 0;
+                        }
+
+                        if (source.CanRead)
+                        {
+                            source.CopyTo(stream);
+                        }
                     }
-                    if (source.CanRead)
-                    {
-                        source.CopyTo(stream);
-                    }
-                }
-            };
+                };
         }
     }
 }
