@@ -8,9 +8,9 @@ namespace Nancy.Demo.Authentication
 
     public class AuthenticationBootstrapper : DefaultNancyBootstrapper
     {
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container, pipelines);
+            base.ApplicationStartup(container, pipelines);
 
             // In reality you would use a pre-built authentication/claims provider
             pipelines.BeforeRequest += (ctx) =>

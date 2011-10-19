@@ -25,9 +25,9 @@
             existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
         }
 
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container, pipelines);
+            base.ApplicationStartup(container, pipelines);
 
             StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;

@@ -231,7 +231,7 @@
                 }
             }
 
-            this.InitialiseInternal(this.ApplicationContainer, this.ApplicationPipelines);
+            this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
             if (this.DefaultFavIcon != null)
             {
@@ -326,7 +326,7 @@
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
-            this.InitialiseRequestInternal(this.ApplicationContainer, requestPipelines);
+            this.RequestStartup(this.ApplicationContainer, requestPipelines);
 
             return requestPipelines;
         }
@@ -346,7 +346,7 @@
         /// related
         /// </summary>
         /// <param name="container">Container instance for resolving types if required.</param>
-        protected virtual void InitialiseInternal(TContainer container, IPipelines pipelines)
+        protected virtual void ApplicationStartup(TContainer container, IPipelines pipelines)
         {
         }
 
@@ -355,7 +355,7 @@
         /// </summary>
         /// <param name="container"></param>
         /// <param name="pipelines"></param>
-        protected virtual void InitialiseRequestInternal(TContainer container, IPipelines pipelines)
+        protected virtual void RequestStartup(TContainer container, IPipelines pipelines)
         {
         }
 

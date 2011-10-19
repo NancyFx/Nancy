@@ -9,7 +9,7 @@ namespace Nancy.Demo.Authentication.Forms
         {
         }
 
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, Bootstrapper.IPipelines pipelines)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, Bootstrapper.IPipelines pipelines)
         {
         }
 
@@ -20,7 +20,7 @@ namespace Nancy.Demo.Authentication.Forms
             container.Register<IUserMapper, UserDatabase>();
         }
 
-        protected override void InitialiseRequestInternal(TinyIoC.TinyIoCContainer requestContainer, Bootstrapper.IPipelines pipelines)
+        protected override void RequestStartup(TinyIoC.TinyIoCContainer requestContainer, Bootstrapper.IPipelines pipelines)
         {
             var formsAuthConfiguration =
                 new FormsAuthenticationConfiguration()

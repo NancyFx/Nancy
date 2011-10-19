@@ -12,9 +12,9 @@ namespace Nancy.Demo.Caching
 
         private readonly Dictionary<string, Tuple<DateTime, Response, int>> cachedResponses = new Dictionary<string, Tuple<DateTime, Response, int>>();
 
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container, pipelines);
+            base.ApplicationStartup(container, pipelines);
 
             pipelines.BeforeRequest += CheckCache;
 
