@@ -28,7 +28,7 @@
         /// </summary>
         private readonly NancyConventions conventions;
 
-        public IPipelines ApplicationPipelines { get; private set; }
+        protected IPipelines ApplicationPipelines { get; private set; }
 
         /// <summary>
         /// Nancy modules - built on startup from the app domain scanner

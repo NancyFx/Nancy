@@ -2,8 +2,14 @@ namespace Nancy.Bootstrapper
 {
     using System.Linq;
 
+    /// <summary>
+    /// Default implementation of the Nancy pipelines
+    /// </summary>
     public class Pipelines : IPipelines
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pipelines"/> class.
+        /// </summary>
         public Pipelines()
         {
             this.AfterRequest = new AfterPipeline();
@@ -11,6 +17,10 @@ namespace Nancy.Bootstrapper
             this.OnError = new ErrorPipeline();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Pipelines"/> class and clones the hooks from
+        /// the provided <see cref="IPipelines"/> instance.
+        /// </summary>
         public Pipelines(IPipelines pipelines)
         {
             this.AfterRequest = 

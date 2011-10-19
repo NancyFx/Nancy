@@ -3,11 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Bootstrapper;
-
-    using Nancy.ViewEngines;
-
     using TinyIoC;
 
     /// <summary>
@@ -23,7 +19,7 @@
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            this.AutoRegister(container);
+            AutoRegister(container);
         }
 
         /// <summary>
@@ -166,7 +162,7 @@
         /// Executes auto registation with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
-        private void AutoRegister(TinyIoCContainer container)
+        private static void AutoRegister(TinyIoCContainer container)
         {
             var assembly = typeof(NancyEngine).Assembly;
 

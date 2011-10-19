@@ -236,50 +236,50 @@
 
     public class NancyBootstrapperBaseFixture
     {
-        private FakeBootstrapperBaseImplementation _Bootstrapper;
+        private FakeBootstrapperBaseImplementation bootstrapper;
 
         /// <summary>
         /// Initializes a new instance of the NancyBootstrapperBaseFixture class.
         /// </summary>
         public NancyBootstrapperBaseFixture()
         {
-            _Bootstrapper = new FakeBootstrapperBaseImplementation();
-            _Bootstrapper.Initialise();
+            bootstrapper = new FakeBootstrapperBaseImplementation();
+            bootstrapper.Initialise();
         }
 
         [Fact]
         public void GetEngine_Returns_Engine_From_GetEngineInternal()
         {
-            var result = _Bootstrapper.GetEngine();
+            var result = bootstrapper.GetEngine();
 
-            result.ShouldBeSameAs(_Bootstrapper.FakeNancyEngine);
+            result.ShouldBeSameAs(bootstrapper.FakeNancyEngine);
         }
 
         [Fact]
         public void GetEngine_Calls_ConfigureApplicationContainer_With_Container_From_GetContainer()
         {
-            _Bootstrapper.GetEngine();
+            bootstrapper.GetEngine();
 
-            _Bootstrapper.AppContainer.ShouldBeSameAs(_Bootstrapper.FakeContainer);
+            bootstrapper.AppContainer.ShouldBeSameAs(bootstrapper.FakeContainer);
         }
 
         [Fact]
         public void GetEngine_Calls_RegisterModules_With_Assembly_Modules()
         {
-            _Bootstrapper.GetEngine();
+            bootstrapper.GetEngine();
 
-            _Bootstrapper.PassedModules.ShouldNotBeNull();
-            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
-            _Bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
+            bootstrapper.PassedModules.ShouldNotBeNull();
+            bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithBasePath)).FirstOrDefault().ShouldNotBeNull();
+            bootstrapper.PassedModules.Where(mr => mr.ModuleType == typeof(Fakes.FakeNancyModuleWithoutBasePath)).FirstOrDefault().ShouldNotBeNull();
         }
 
         [Fact]
         public void GetEngine_Gets_ModuleRegistration_Keys_For_Each_Module_From_IModuleKeyGenerator_From_GetModuleKeyGenerator()
         {
-            _Bootstrapper.GetEngine();
+            bootstrapper.GetEngine();
 
-            var totalKeyEntries = _Bootstrapper.PassedModules.Count();
-            var called = (_Bootstrapper.Generator as Fakes.FakeModuleKeyGenerator).CallCount;
+            var totalKeyEntries = bootstrapper.PassedModules.Count();
+            var called = (bootstrapper.Generator as Fakes.FakeModuleKeyGenerator).CallCount;
 
             called.ShouldEqual(totalKeyEntries);
         }
@@ -297,44 +297,43 @@
         [Fact]
         public void RegisterTypes_Passes_In_User_Types_If_Custom_Config_Set()
         {
-            _Bootstrapper.GetEngine();
+            // Given
+            bootstrapper.GetEngine();
 
-            var moduleKeyGeneratorEntry = _Bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
+            // When
+            var moduleKeyGeneratorEntry = bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
 
+            // Then
             moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
         }
 
         [Fact]
-        public void GetEngine_sets_pre_request_hook()
+        public void GetEngine_sets_request_pipelines_factory()
         {
-            _Bootstrapper.PreRequest += ctx => null;
+            // Given
+            this.bootstrapper.PreRequest += ctx => null;
 
-            var result = _Bootstrapper.GetEngine();
+            // When
+            var result = this.bootstrapper.GetEngine();
 
-            result.PreRequestHook.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public void GetEngine_sets_post_request_hook()
-        {
-            _Bootstrapper.PostRequest += ctx => { };
-
-            var result = _Bootstrapper.GetEngine();
-
-            result.PostRequestHook.ShouldNotBeNull();
+            // Then
+            result.RequestPipelinesFactory.ShouldNotBeNull();
         }
 
         [Fact]
         public void Should_invoke_startup_tasks()
         {
+            // Given
             var startupMock = A.Fake<IStartup>();
             var startupMock2 = A.Fake<IStartup>();
-            _Bootstrapper.OverriddenStartupTasks = new[] { startupMock, startupMock2 };
+            bootstrapper.OverriddenStartupTasks = new[] { startupMock, startupMock2 };
 
-            _Bootstrapper.Initialise();
+            // When
+            bootstrapper.Initialise();
 
-            A.CallTo(() => startupMock.Initialize(_Bootstrapper.ApplicationPipelines)).MustHaveHappened(Repeated.Exactly.Once);
-            A.CallTo(() => startupMock2.Initialize(_Bootstrapper.ApplicationPipelines)).MustHaveHappened(Repeated.Exactly.Once);
+            // Then
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -343,11 +342,11 @@
             var typeRegistrations = new TypeRegistration[] { };
             var startupStub = A.Fake<IStartup>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
-            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
 
-            _Bootstrapper.Initialise();
+            bootstrapper.Initialise();
 
-            _Bootstrapper.TypeRegistrations.ShouldBeSameAs(typeRegistrations);
+            bootstrapper.TypeRegistrations.ShouldBeSameAs(typeRegistrations);
         }
 
         [Fact]
@@ -356,11 +355,11 @@
             var collectionTypeRegistrations = new CollectionTypeRegistration[] { };
             var startupStub = A.Fake<IStartup>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionTypeRegistrations);
-            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
 
-            _Bootstrapper.Initialise();
+            bootstrapper.Initialise();
 
-            _Bootstrapper.CollectionTypeRegistrations.ShouldBeSameAs(collectionTypeRegistrations);
+            bootstrapper.CollectionTypeRegistrations.ShouldBeSameAs(collectionTypeRegistrations);
         }
 
         [Fact]
@@ -369,23 +368,23 @@
             var instanceRegistrations = new InstanceRegistration[] { };
             var startupStub = A.Fake<IStartup>();
             A.CallTo(() => startupStub.InstanceRegistrations).Returns(instanceRegistrations);
-            _Bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
 
-            _Bootstrapper.Initialise();
+            bootstrapper.Initialise();
 
-            _Bootstrapper.InstanceRegistrations.ShouldBeSameAs(instanceRegistrations);
+            bootstrapper.InstanceRegistrations.ShouldBeSameAs(instanceRegistrations);
         }
 
         [Fact]
         public void Should_allow_favicon_override()
         {
             var favicon = new byte[] { 1, 2, 3 };
-            _Bootstrapper.Favicon = favicon;
+            bootstrapper.Favicon = favicon;
             var favIconRequest = new FakeRequest("GET", "/favicon.ico");
             var context = new NancyContext { Request = favIconRequest };
-            _Bootstrapper.Initialise();
+            bootstrapper.Initialise();
 
-            var result = _Bootstrapper.PreRequest.Invoke(context);
+            var result = bootstrapper.PreRequest.Invoke(context);
 
             result.ShouldNotBeNull();
             result.ContentType.ShouldEqual("image/vnd.microsoft.icon");

@@ -3,43 +3,15 @@ namespace Nancy
     using System;
     using Bootstrapper;
 
+    /// <summary>
+    /// Defines the functionality of an engine that can handle Nancy <see cref="Request"/>s.
+    /// </summary>
     public interface INancyEngine
     {
         /// <summary>
-        /// <para>
-        /// Gets or sets the pre-request hook.
-        /// </para>
-        /// <para>
-        /// The Pre-request hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
+        /// Factory for creating an <see cref="IPipelines"/> instance for a incoming request.
         /// </summary>
-        Func<NancyContext, Response> PreRequestHook { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Gets or sets the post-requets hook.
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after a route is located and invoked. The post
-        /// request hook can rewrite the response or add/remove items from the context
-        /// </para>
-        /// </summary>
-        Action<NancyContext> PostRequestHook { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Gets or sets the error handling hook.
-        /// </para>
-        /// <para>
-        /// The error handling hook is called if an uncaught exception occurs during the handling of a request.
-        /// This includes exceptions thrown during the Before/After pipline.  It can be used to rewrite the 
-        /// response or add/remove items from the context
-        /// </para>
-        /// </summary>
-        Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
-
+        /// <value>An <see cref="IPipelines"/> instance.</value>
         Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
             
         /// <summary>
