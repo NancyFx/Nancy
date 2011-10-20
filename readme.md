@@ -86,6 +86,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Jason Mead](http://github.com/meadiagenic)
 * [Jeremy Skinner](http://github.com/jeremyskinner)
 * [João Bragança](http://github.com/thefringeninja)
+* [Jo-Herman Haugholt](https://github.com/huyderman/Nancy)
 * [Johan Danforth](http://github.com/johandanforth)
 * [Johan Nilsson](http://github.com/Dashue)
 * [Jonathan Scoles](http://github.com/jscoles)
