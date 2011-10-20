@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Testing
 {
-    using Nancy.Json;
+    using System.IO;
+    using Nancy.Responses;
 
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
@@ -37,11 +38,20 @@
         /// </summary>
         /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
         /// <param name="model">The model to be serialized to json.</param>
-        public static void JsonBody(this BrowserContext browserContext, object model)
+        /// <param name="serializer">Optionally opt in to using a different JSON serializer.</param>
+        public static void JsonBody<TModel>(this BrowserContext browserContext, TModel model, ISerializer serializer = null)
         {
-            var serializer = new JavaScriptSerializer();
-            var content = serializer.Serialize(model);
-            browserContext.Body(content);
+            if (serializer == null)
+            {
+                serializer = new DefaultJsonSerializer();
+            }
+
+            var contextValues =
+                (IBrowserContextValues)browserContext;
+
+            contextValues.Body = new MemoryStream();
+
+            serializer.Serialize("application/json", model, contextValues.Body);
             browserContext.Header("Content-Type", "application/json");
         }
     }
