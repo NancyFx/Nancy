@@ -34,7 +34,7 @@ namespace Nancy.Hosting.Aspnet
             var nancyUrl = new Url
                                {
                                    Scheme = context.Request.Url.Scheme,
-                                   HostName = context.Request.UserHostName,
+                                   HostName = context.Url.Host,
                                    Port = context.Request.Url.Port,
                                    BasePath = context.Request.ApplicationPath.TrimEnd('/'),
                                    Path = context.Request.AppRelativeCurrentExecutionFilePath.Replace("~", string.Empty),
