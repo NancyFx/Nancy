@@ -106,6 +106,7 @@ Nancy is not a one man project and many of the features that are availble would 
 * [Robert Greyling](http://github.com/robertthegrey)
 * [Rodrigo Guerreiro](https://github.com/rguerreiro)
 * [Roy Jacobs](http://github.com/RoyJacobs)
+* [Simon Cropp](http://github.com/SimonCropp)
 * [Simon Skov Boisen](http://github.com/ssboisen)
 * [Steven Robbins](http://github.com/grumpydev)
 * [Svetoslav Milenov](http://github.com/sloncho)
