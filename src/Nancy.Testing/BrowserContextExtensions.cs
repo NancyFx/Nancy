@@ -1,5 +1,8 @@
 ﻿namespace Nancy.Testing
 {
+    using System.IO;
+    using Nancy.Responses;
+
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
     /// </summary>
@@ -28,6 +31,28 @@
 
             contextValues.Body = multipartFormData.Body;
             contextValues.Headers["Content-Type"] = new[] { "multipart/form-data; boundary=" + boundaryName };
+        }
+
+        /// <summary>
+        /// Adds a application/json request body to the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="model">The model to be serialized to json.</param>
+        /// <param name="serializer">Optionally opt in to using a different JSON serializer.</param>
+        public static void JsonBody<TModel>(this BrowserContext browserContext, TModel model, ISerializer serializer = null)
+        {
+            if (serializer == null)
+            {
+                serializer = new DefaultJsonSerializer();
+            }
+
+            var contextValues =
+                (IBrowserContextValues)browserContext;
+
+            contextValues.Body = new MemoryStream();
+
+            serializer.Serialize("application/json", model, contextValues.Body);
+            browserContext.Header("Content-Type", "application/json");
         }
     }
 }

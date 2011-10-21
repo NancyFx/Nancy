@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using Nancy.Tests;
 using Xunit;
@@ -13,7 +14,7 @@ namespace Nancy.Testing.Tests
         public BrowserFixture()
         {
             var bootstrapper =
-                new ConfigurableBootstrapper(config => config.Modules(typeof (EchoModule)));
+                new ConfigurableBootstrapper(config => config.Modules(typeof(EchoModule)));
 
             CookieBasedSessions.Enable(bootstrapper);
 
@@ -58,6 +59,27 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void Should_be_able_to_send_json_in_body()
+        {
+            // Given
+            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+
+            // When
+            var result = browser.Post("/", with =>
+                                            {
+                                                with.JsonBody(model);
+                                            });
+
+            // Then
+            var actualModel = result.Body.DeserializeJson<EchoModel>();
+            
+            actualModel.ShouldNotBeNull();
+            actualModel.SomeString.ShouldEqual(model.SomeString);
+            actualModel.SomeInt.ShouldEqual(model.SomeInt);
+            actualModel.SomeBoolean.ShouldEqual(model.SomeBoolean);
+        }
+
+        [Fact]
         public void Should_be_able_to_continue_with_another_request()
         {
             // Given
@@ -93,11 +115,11 @@ namespace Nancy.Testing.Tests
             // Given
             // When
             var result = browser.Get(
-                    "/session", 
+                    "/session",
                     with => with.HttpRequest())
                 .Then
                 .Get(
-                    "/session", 
+                    "/session",
                     with => with.HttpRequest());
 
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
@@ -129,6 +151,13 @@ namespace Nancy.Testing.Tests
             var result = browser.Get("/type");
 
             result.Body.AsString().ShouldEqual("http");
+        }
+
+        public class EchoModel
+        {
+            public string SomeString { get; set; }
+            public int SomeInt { get; set; }
+            public bool SomeBoolean { get; set; }
         }
 
         public class EchoModule : NancyModule
