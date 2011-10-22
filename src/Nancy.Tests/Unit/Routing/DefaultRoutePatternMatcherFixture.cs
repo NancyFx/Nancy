@@ -118,14 +118,13 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_properly_handle_uri_escaped_route_parameters_that_were_matched()
+        public void Should_not_url_decode_captured_parameters()
         {
             // Given
-            const string parameter = "baa ram ewe{}";
-            var escapedParameter = Uri.EscapeUriString(parameter);
+            var parameter = Uri.EscapeUriString("baa ram ewe{}");
             
             // When
-            var results = this.matcher.Match("/foo/" + escapedParameter, "/foo/{bar}");
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
 
             //Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);

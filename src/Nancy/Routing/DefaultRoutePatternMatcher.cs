@@ -6,7 +6,6 @@
     using System.Globalization;
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
-    using Nancy.Helpers;
 
     /// <summary>
     /// Default implementation of a route pattern matcher.
@@ -17,10 +16,14 @@
 
         public IRoutePatternMatchResult Match(string requestedPath, string routePath)
         {
-            var routePathPattern = this.matcherCache.GetOrAdd(routePath, (s) => BuildRegexMatcher(routePath));
+            var routePathPattern = 
+                this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(routePath));
 
-            requestedPath = TrimTrailingSlashFromRequestedPath(requestedPath);
-            var match = routePathPattern.Match(HttpUtility.UrlDecode(requestedPath));
+            requestedPath = 
+                TrimTrailingSlashFromRequestedPath(requestedPath);
+
+            var match = 
+                routePathPattern.Match(requestedPath);
 
             return new RoutePatternMatchResult(
                 match.Success,
@@ -55,9 +58,9 @@
         {
             dynamic data = new DynamicDictionary();
 
-            for (int i = 1; i <= groups.Count; i++)
+            for (var i = 1; i <= groups.Count; i++)
             {
-                data[regex.GroupNameFromNumber(i)] = Uri.UnescapeDataString(groups[i].Value);
+                data[regex.GroupNameFromNumber(i)] = groups[i].Value;
             }
 
             return data;
