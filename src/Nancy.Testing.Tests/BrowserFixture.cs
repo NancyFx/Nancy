@@ -86,10 +86,13 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
+            // Given
             var context = new BrowserContext();
 
+            // When
             context.BasicAuth("username", "password");
 
+            // Then
             IBrowserContextValues values = context;
 
             var credentials = string.Format("{0}:{1}", "username", "password");
