@@ -1,11 +1,9 @@
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Nancy.Testing.Tests
 {
     using System;
     using System.IO;
     using System.Text;
+    using System.Linq;
     using Nancy.Tests;
     using Xunit;
 
