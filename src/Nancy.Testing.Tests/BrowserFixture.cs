@@ -1,9 +1,7 @@
-using System.Collections.Generic;
-using Nancy.Cookies;
-
 namespace Nancy.Testing.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Text;
     using System.Linq;
