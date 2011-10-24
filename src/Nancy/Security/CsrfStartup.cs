@@ -53,6 +53,11 @@
             }
         }
 
+        public int Order
+        {
+            get { return 0; }
+        }
+
         /// <summary>
         /// Gets the configured crypto config
         /// </summary>

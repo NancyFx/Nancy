@@ -23,6 +23,11 @@ namespace Nancy.Bootstrapper
         IEnumerable<InstanceRegistration> InstanceRegistrations { get; }
 
         /// <summary>
+        /// Specifies in which order the startup task will be executed.
+        /// </summary>
+        int Order { get; }
+
+        /// <summary>
         /// Perform any initialisation tasks
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>

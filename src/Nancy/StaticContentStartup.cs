@@ -44,6 +44,11 @@ namespace Nancy
             get { return null; }
         }
 
+        public int Order
+        {
+            get { return 0; }
+        }
+
         /// <summary>
         /// Perform any initialisation tasks
         /// </summary>
