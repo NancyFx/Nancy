@@ -1,10 +1,14 @@
-using System;
-using System.IO;
-using Nancy.Tests;
-using Xunit;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Nancy.Testing.Tests
 {
+    using System;
+    using System.IO;
+    using System.Text;
+    using Nancy.Tests;
+    using Xunit;
+
     using Nancy.Session;
 
     public class BrowserFixture
@@ -77,6 +81,22 @@ namespace Nancy.Testing.Tests
             actualModel.SomeString.ShouldEqual(model.SomeString);
             actualModel.SomeInt.ShouldEqual(model.SomeInt);
             actualModel.SomeBoolean.ShouldEqual(model.SomeBoolean);
+        }
+
+        [Fact]
+        public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
+        {
+            var context = new BrowserContext();
+
+            context.BasicAuth("username", "password");
+
+            IBrowserContextValues values = context;
+
+            var credentials = string.Format("{0}:{1}", "username", "password");
+            var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
+
+            values.Headers["Authorization"].ShouldHaveCount(1);
+            values.Headers["Authorization"].First().ShouldEqual("Basic " + encodedCredentials);
         }
 
         [Fact]

@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Testing
 {
+    using System;
+    using System.Text;
     using System.IO;
     using Nancy.Responses;
 
@@ -53,6 +55,21 @@
 
             serializer.Serialize("application/json", model, contextValues.Body);
             browserContext.Header("Content-Type", "application/json");
+        }
+
+        /// <summary>
+        /// Adds basic authorization credentials to the headers of the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="username">The username to be encoded.</param>
+        /// <param name="password">The password to be encoded.</param>
+        public static void BasicAuth(this BrowserContext browserContext, string username, string password)
+        {
+            var credentials = string.Format("{0}:{1}", username, password);
+
+            var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
+
+            browserContext.Header("Authorization", "Basic " + encodedCredentials);
         }
     }
 }
