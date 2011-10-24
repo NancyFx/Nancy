@@ -12,7 +12,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route(null, "", null, x => null));
+                Record.Exception(() => new Route(null, "", null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -23,7 +23,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("", "/", null, x => null));
+                Record.Exception(() => new Route("", "/", null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -34,7 +34,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, x => null));
+                Record.Exception(() => new Route("GET", null, null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -45,7 +45,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, x => null));
+                Record.Exception(() => new Route("GET", null, null, null, x => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -56,7 +56,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", "/", null, null));
+                Record.Exception(() => new Route("GET", "/", null, null, null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -77,7 +77,7 @@
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = new Route("GET", "/", null, action);
+            var route = new Route("GET", "/", null, null, action);
 
             // When
             route.Invoke(parameters);
@@ -93,7 +93,7 @@
             var expectedResponse = new Response();
             Func<object, Response> action = x => expectedResponse;
 
-            var route = new Route("GET", "/", null, action);
+            var route = new Route("GET", "/", null, null, action);
 
             // When
             var response = route.Invoke(new DynamicDictionary());

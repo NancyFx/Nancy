@@ -211,7 +211,7 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, Response> this[string path]
             {
-                set { this.AddRoute(path, null, value); }
+                set { this.AddRoute(path, null, null, value); }
             }
 
             /// <summary>
@@ -220,14 +220,24 @@ namespace Nancy
             /// <value>A delegate that is used to invoke the route.</value>
             public Func<dynamic, Response> this[string path, Func<NancyContext, bool> condition]
             {
-                set { this.AddRoute(path, condition, value); }
+                set { this.AddRoute(path, condition, null, value); }
             }
 
-            private void AddRoute(string path, Func<NancyContext, bool> condition, Func<object, Response> value)
+            public Func<dynamic, Response> this[string path, Dictionary<string, object> metadata]
+            {
+                set { this.AddRoute(path, null, metadata, value); }
+            }
+
+            public Func<dynamic, Response> this[string path, Func<NancyContext, bool> condition, Dictionary<string, object> metadata]
+            {
+                set { this.AddRoute(path, condition, metadata, value); }
+            }
+
+            private void AddRoute(string path, Func<NancyContext, bool> condition, Dictionary<string, object> metadata, Func<object, Response> value)
             {
                 var fullPath = string.Concat(this.parentModule.ModulePath, path);
 
-                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, metadata, value));
             }
         }
 

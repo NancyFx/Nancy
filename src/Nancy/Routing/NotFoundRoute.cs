@@ -7,7 +7,7 @@
     public class NotFoundRoute : Route
     {
         public NotFoundRoute(string method, string path)
-            : base(method, path, null, x => new NotFoundResponse())
+            : base(method, path, null, null, x => new NotFoundResponse())
         {
         }
     }
