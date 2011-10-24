@@ -1,3 +1,4 @@
+using System.Threading;
 using Nancy.Security;
 
 namespace Nancy
@@ -11,12 +12,20 @@ namespace Nancy
     /// </summary>
     public sealed class NancyContext : IDisposable
     {
+
+        [ThreadStatic]
+        private static NancyContext _current;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
         /// </summary>
         public NancyContext()
         {
+
+            _current = this;
+
             this.Items = new Dictionary<string, object>();
+
         }
 
         /// <summary>
@@ -44,17 +53,23 @@ namespace Nancy
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }
 
+        public static NancyContext Current { get { return _current; } }
+
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.
         /// </summary>
         public void Dispose()
         {
+
             foreach (var disposableItem in this.Items.Values.OfType<IDisposable>())
             {
                 disposableItem.Dispose();
             }
 
             this.Items.Clear();
+
         }
+
     }
+
 }
