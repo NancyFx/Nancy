@@ -1,4 +1,8 @@
-﻿namespace Nancy.Testing
+﻿using System.Collections.Generic;
+using System.Linq;
+using Nancy.Helpers;
+
+namespace Nancy.Testing
 {
     using System;
     using System.Text;
@@ -70,6 +74,23 @@
             var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
 
             browserContext.Header("Authorization", "Basic " + encodedCredentials);
+        }
+
+        /// <summary>
+        /// Adds a cookie to the headers of the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="cookies">The collection of cookies to add to the cookie request header.</param>
+        public static void Cookie(this BrowserContext browserContext, IDictionary<string, string> cookies)
+        {
+            if (!cookies.Any())
+            {
+                return;
+            }
+
+            var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+
+            browserContext.Header("Cookie", cookieString);
         }
     }
 }

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using Nancy.Cookies;
+
 namespace Nancy.Testing.Tests
 {
     using System;
@@ -5,6 +8,7 @@ namespace Nancy.Testing.Tests
     using System.Text;
     using System.Linq;
     using Nancy.Tests;
+    using Nancy.Helpers;
     using Xunit;
 
     using Nancy.Session;
@@ -74,7 +78,7 @@ namespace Nancy.Testing.Tests
 
             // Then
             var actualModel = result.Body.DeserializeJson<EchoModel>();
-            
+
             actualModel.ShouldNotBeNull();
             actualModel.SomeString.ShouldEqual(model.SomeString);
             actualModel.SomeInt.ShouldEqual(model.SomeInt);
@@ -98,6 +102,53 @@ namespace Nancy.Testing.Tests
 
             values.Headers["Authorization"].ShouldHaveCount(1);
             values.Headers["Authorization"].First().ShouldEqual("Basic " + encodedCredentials);
+        }
+
+        [Fact]
+        public void Should_add_cookie_to_the_request()
+        {
+            // Given
+            var context = new BrowserContext();
+
+            var cookies =
+                new Dictionary<string, string>
+                {
+                    {"CookieName", "CookieValue"},
+                    {"SomeCookieName", "SomeCookieValue"}
+                };
+
+            // When
+            context.Cookie(cookies);
+
+            // Then
+            IBrowserContextValues values = context;
+
+            var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+
+            values.Headers["Cookie"].ShouldHaveCount(1);
+            values.Headers["Cookie"].First().ShouldEqual(cookieString);
+        }
+
+        [Fact]
+        public void Should_add_cookie_to_the_request_and_get_a_cookie_in_response()
+        {
+            // Given
+            var cookies =
+                new Dictionary<string, string>
+                {
+                    {"CookieName", "CookieValue"},
+                    {"SomeCookieName", "SomeCookieValue"}
+                };
+
+            // When
+            var result = browser.Get("/cookie", with =>
+            {
+                with.Cookie(cookies);
+            });
+
+            // Then
+            result.Cookies.Single(x => x.Name == "CookieName").Value.ShouldEqual("CookieValue");
+            result.Cookies.Single(x => x.Name == "SomeCookieName").Value.ShouldEqual("SomeCookieValue");
         }
 
         [Fact]
@@ -199,6 +250,18 @@ namespace Nancy.Testing.Tests
                                                 }
                                 };
                     };
+
+                Get["/cookie"] = ctx =>
+                {
+                    var response = (Response)"Cookies";
+
+                    foreach (var cookie in Request.Cookies)
+                    {
+                        response.AddCookie(cookie.Key, cookie.Value);
+                    }
+
+                    return response;
+                };
 
                 Get["/nothing"] = ctx => string.Empty;
 
