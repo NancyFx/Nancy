@@ -66,7 +66,7 @@ namespace Nancy.Session
         {
             var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultObjectSerializer());
 
-            pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx => LoadSession(ctx, sessionStore));
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
 
             return sessionStore;
