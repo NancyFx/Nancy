@@ -15,8 +15,8 @@ namespace Nancy.Authentication.Basic
         /// </summary>
         /// <param name="userValidator">A valid instance of <see cref="IUserValidator"/> class</param>
         /// <param name="realm">Basic authentication realm</param>
-        /// <param name="promptUser">Tell the browser to prompt the user for credentials</param>
-        public BasicAuthenticationConfiguration(IUserValidator userValidator, string realm, bool promptUser = true)
+        /// <param name="userPromptBehaviour">Control when the browser should be instructed to prompt for credentials</param>
+        public BasicAuthenticationConfiguration(IUserValidator userValidator, string realm, UserPromptBehaviour userPromptBehaviour = Basic.UserPromptBehaviour.NonAjax)
         {
             if (userValidator == null)
                 throw new ArgumentNullException("userValidator");
@@ -26,7 +26,7 @@ namespace Nancy.Authentication.Basic
 
             this.UserValidator = userValidator;
             this.Realm = realm;
-            this.PromptUser = promptUser;
+            this.UserPromptBehaviour = userPromptBehaviour;
         }
 
         /// <summary>
@@ -48,12 +48,33 @@ namespace Nancy.Authentication.Basic
         }
 
         /// <summary>
-        /// Determines whether the browser should prompt for credentials
+        /// Determines when the browser should prompt the user for credentials
         /// </summary>
-        public bool PromptUser
+        public UserPromptBehaviour UserPromptBehaviour
         {
             get;
             private set;
         }
+    }
+
+    /// <summary>
+    /// Options to control when the browser prompts the user for credentials
+    /// </summary>
+    public enum UserPromptBehaviour
+    {
+        /// <summary>
+        /// Never present user with login prompt
+        /// </summary>
+        Never,
+        
+        /// <summary>
+        /// Always present user with login prompt
+        /// </summary>
+        Always,
+
+        /// <summary>
+        /// Only prompt the user for credentials on non-ajax requests
+        /// </summary>
+        NonAjax
     }
 }

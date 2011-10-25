@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using Nancy.Security;
-
-namespace Nancy.Authentication.Basic
+﻿namespace Nancy.Authentication.Basic
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Nancy.Bootstrapper;
+    using Nancy.Extensions;
+    using Nancy.Security;
+    
     /// <summary>
     /// Nancy basic authentication implementation
     /// </summary>
@@ -32,10 +33,7 @@ namespace Nancy.Authentication.Basic
             }
 
             applicationPipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-            if (configuration.PromptUser)
-            {
-                applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
-            }
+            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
         }
 
         /// <summary>
@@ -57,11 +55,7 @@ namespace Nancy.Authentication.Basic
 
             module.RequiresAuthentication();
             module.Before.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-
-            if (configuration.PromptUser)
-            {
-                module.After.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
-            }
+            module.After.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
         }
 
         /// <summary>
@@ -88,7 +82,7 @@ namespace Nancy.Authentication.Basic
         {
             return context =>
                 {
-                    if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
+                    if (context.Response.StatusCode == HttpStatusCode.Unauthorized && SendAuthenticateResponseHeader(context, configuration))
                     {
                         context.Response.Headers["WWW-Authenticate"] = String.Format("{0} realm=\"{1}\"", SCHEME, configuration.Realm);
                     }
@@ -136,6 +130,11 @@ namespace Nancy.Authentication.Basic
             {
                 return null;
             }
+        }
+
+        private static bool SendAuthenticateResponseHeader(NancyContext context, BasicAuthenticationConfiguration configuration)
+        {
+            return configuration.UserPromptBehaviour == UserPromptBehaviour.Always || (configuration.UserPromptBehaviour == UserPromptBehaviour.NonAjax && !context.Request.IsAjaxRequest());
         }
     }
 }
