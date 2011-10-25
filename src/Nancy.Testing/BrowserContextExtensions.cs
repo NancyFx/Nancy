@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Nancy.Helpers;
-
-namespace Nancy.Testing
+﻿namespace Nancy.Testing
 {
     using System;
     using System.Text;
     using System.IO;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nancy.Helpers;
     using Nancy.Responses;
 
     /// <summary>
