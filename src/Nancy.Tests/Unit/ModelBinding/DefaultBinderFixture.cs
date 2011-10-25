@@ -141,7 +141,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             // Given
             var typeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments().Returns(false);
+            A.CallTo(() => typeConverter.CanConvertTo(null, null)).WithAnyArguments().Returns(false);
             var binder = this.GetBinder(typeConverters: new[] { typeConverter });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
@@ -151,7 +151,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel));
 
             // Then
-            A.CallTo(() => typeConverter.CanConvertTo(null)).WithAnyArguments()
+            A.CallTo(() => typeConverter.CanConvertTo(null, null)).WithAnyArguments()
                 .MustHaveHappened(Repeated.Exactly.Times(2));
         }
 
@@ -160,7 +160,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             // Given
             var typeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => typeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             var binder = this.GetBinder(typeConverters: new[] { typeConverter });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
@@ -251,7 +251,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             // Given
             var typeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => typeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => typeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { typeConverter });
             var binder = this.GetBinder();
@@ -296,10 +296,10 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             // Given
             var userTypeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => userTypeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => userTypeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => userTypeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             var defaultTypeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => defaultTypeConverter.CanConvertTo(typeof(string))).WithAnyArguments().Returns(true);
+            A.CallTo(() => defaultTypeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => defaultTypeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { defaultTypeConverter });
             var binder = this.GetBinder(new[] { userTypeConverter });
