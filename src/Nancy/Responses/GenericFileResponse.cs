@@ -11,11 +11,17 @@ namespace Nancy.Responses
     /// <remarks>If the response contains an invalid file (not found, empty name, missing extension and so on) the status code of the response will be set to <see cref="HttpStatusCode.NotFound"/>.</remarks>
     public class GenericFileResponse : Response
     {
-        public static List<string> RootPaths { get; set; }
+        /// <summary>
+        /// Represents a list of "base paths" where it is safe to
+        /// serve files from.
+        /// Attempting to server a file outside of these safe paths
+        /// will fail with a 404.
+        /// </summary>
+        public static IList<string> SafePaths { get; set; }
                 
         static GenericFileResponse()
         {
-            RootPaths = new List<string>();
+            SafePaths = new List<string>();
         }
 
         /// <summary>
@@ -81,11 +87,11 @@ namespace Nancy.Responses
                 StatusCode = HttpStatusCode.NotFound;
                 return;
             }
-            if (RootPaths == null || RootPaths.Count == 0)
+            if (SafePaths == null || SafePaths.Count == 0)
             {
-                throw new InvalidOperationException("No RootPaths defined.");
+                throw new InvalidOperationException("No SafePaths defined.");
             }
-            foreach (var rootPath in RootPaths)
+            foreach (var rootPath in SafePaths)
             {
                 string fullPath;
                 if (Path.IsPathRooted(filePath))
