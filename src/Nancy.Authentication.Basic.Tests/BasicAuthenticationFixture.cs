@@ -14,10 +14,12 @@
     {
         private readonly BasicAuthenticationConfiguration config;
         private readonly IApplicationPipelines hooks;
+        const string ajaxRequestHeaderKey = "X-Requested-With";
+        const string ajaxRequestHeaderValue = "XMLHttpRequest";
 
         public BasicAuthenticationFixture()
         {
-            this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm");
+            this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Always);
             this.hooks = new FakeApplicationPipelines();
             BasicAuthentication.Enable(this.hooks, this.config);
         }
@@ -34,6 +36,8 @@
             // Then
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
                 .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -47,6 +51,7 @@
             
             // Then
             module.Before.PipelineDelegates.ShouldHaveCount(2);
+            module.After.PipelineDelegates.ShouldHaveCount(1);
         }
 
         [Fact]
@@ -108,6 +113,75 @@
             context.Response.Headers["WWW-Authenticate"].ShouldContain("Basic");
             context.Response.Headers["WWW-Authenticate"].ShouldContain("realm=\"" + this.config.Realm + "\"");
         }
+
+        [Fact]
+        public void Post_request_hook_should_not_return_a_challenge_when_set_to_never()
+        {
+            // Given
+            var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Never);
+            var hooks = new FakeApplicationPipelines();
+            BasicAuthentication.Enable(hooks, config);
+
+            var context = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/")
+            };
+
+            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+
+            // When
+            hooks.AfterRequest.Invoke(context);
+
+            // Then
+            context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Post_request_hook_should_not_return_a_challenge_on_an_ajax_request_when_set_to_nonajax()
+        {
+            // Given
+            var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
+            var hooks = new FakeApplicationPipelines();
+            BasicAuthentication.Enable(hooks, config);
+            var headers = new Dictionary<string,IEnumerable<string>>();
+            headers.Add(ajaxRequestHeaderKey, new [] { ajaxRequestHeaderValue });
+
+            var context = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/", headers)
+            };
+
+            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+
+            // When
+            hooks.AfterRequest.Invoke(context);
+
+            // Then
+            context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Post_request_hook_should_return_a_challenge_on_a_nonajax_request_when_set_to_nonajax()
+        {
+            // Given
+            var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
+            var hooks = new FakeApplicationPipelines();
+            BasicAuthentication.Enable(hooks, config);
+
+            var context = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/")
+            };
+
+            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+
+            // When
+            hooks.AfterRequest.Invoke(context);
+
+            // Then
+            context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
+        }
+
 
         [Fact]
         public void Pre_request_hook_should_not_set_auth_details_when_invalid_scheme_in_auth_header()
