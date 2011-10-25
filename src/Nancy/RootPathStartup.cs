@@ -16,7 +16,7 @@ namespace Nancy
         /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
         public RootPathStartup(IRootPathProvider rootPathProvider)
         {
-            GenericFileResponse.RootPath = rootPathProvider.GetRootPath();
+            GenericFileResponse.RootPaths.Add(rootPathProvider.GetRootPath());
         }
         
         /// <summary>

@@ -1,4 +1,6 @@
-﻿namespace Nancy.Responses
+﻿using System.Collections.Generic;
+
+namespace Nancy.Responses
 {
     using System;
     using System.IO;
@@ -9,7 +11,12 @@
     /// <remarks>If the response contains an invalid file (not found, empty name, missing extension and so on) the status code of the response will be set to <see cref="HttpStatusCode.NotFound"/>.</remarks>
     public class GenericFileResponse : Response
     {
-        public static string RootPath { get; set; }
+        public static List<string> RootPaths { get; set; }
+                
+        static GenericFileResponse()
+        {
+            RootPaths = new List<string>();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
@@ -50,13 +57,8 @@
             };
         }
 
-        private static bool IsSafeFilePath(string rootPath, string filePath)
+        static bool IsSafeFilePath(string rootPath, string filePath)
         {
-            if (string.IsNullOrEmpty(RootPath))
-            {
-                return false;
-            }
-
             if (!Path.HasExtension(filePath))
             {
                 return false;
@@ -76,29 +78,41 @@
         {
             if (string.IsNullOrEmpty(filePath))
             {
-                this.StatusCode = HttpStatusCode.NotFound;
+                StatusCode = HttpStatusCode.NotFound;
                 return;
             }
-
-            var fullPath = Path.IsPathRooted(filePath) ? filePath : Path.Combine(RootPath, filePath);
-
-            if (!IsSafeFilePath(RootPath, fullPath))
+            if (RootPaths == null || RootPaths.Count == 0)
             {
-                this.StatusCode = HttpStatusCode.NotFound;
+                throw new InvalidOperationException("No RootPaths defined.");
             }
-            else
+            foreach (var rootPath in RootPaths)
             {
-                this.Filename = Path.GetFileName(fullPath);
+                string fullPath;
+                if (Path.IsPathRooted(filePath))
+                {
+                    fullPath = filePath;
+                }
+                else
+                {
+                    fullPath = Path.Combine(rootPath, filePath);
+                }
 
-                var fi = new FileInfo(fullPath);
-                // TODO - set a standard caching time and/or public?
-                this.Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
-                this.Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
-                this.Headers["Content-Length"] = fi.Length.ToString();
-                this.Contents = GetFileContent(fullPath);
-                this.ContentType = contentType;
-                this.StatusCode = HttpStatusCode.OK;
+                if (IsSafeFilePath(rootPath, fullPath))
+                {
+                    Filename = Path.GetFileName(fullPath);
+
+                    var fi = new FileInfo(fullPath);
+                    // TODO - set a standard caching time and/or public?
+                    Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
+                    Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
+                    Contents = GetFileContent(fullPath);
+                    ContentType = contentType;
+                    StatusCode = HttpStatusCode.OK;
+                    return;
+                }
             }
+
+            StatusCode = HttpStatusCode.NotFound;
         }
     }
 }

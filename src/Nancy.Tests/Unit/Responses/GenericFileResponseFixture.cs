@@ -15,7 +15,7 @@
             var assemblyPath =
                 Path.GetDirectoryName(this.GetType().Assembly.Location);
 
-            GenericFileResponse.RootPath = assemblyPath;
+            GenericFileResponse.RootPaths = new List<string> {assemblyPath};
 
 			this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);
