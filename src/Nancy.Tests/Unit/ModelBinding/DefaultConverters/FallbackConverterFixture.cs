@@ -19,7 +19,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
         [Fact]
         public void Should_respond_true_for_any_type()
         {
-            var result = converter.CanConvertTo(null);
+            var result = converter.CanConvertTo(null, null);
 
             result.ShouldBeTrue();
         }

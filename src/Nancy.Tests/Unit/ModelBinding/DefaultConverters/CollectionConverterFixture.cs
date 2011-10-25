@@ -23,7 +23,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             this.context = new BindingContext() { TypeConverters = new[] { new FallbackConverter() } };
 
             this.mockStringTypeConverter = A.Fake<ITypeConverter>();
-            A.CallTo(() => mockStringTypeConverter.CanConvertTo(null)).WithAnyArguments().Returns(true);
+            A.CallTo(() => mockStringTypeConverter.CanConvertTo(null, null)).WithAnyArguments().Returns(true);
             A.CallTo(() => mockStringTypeConverter.Convert(null, null, null)).WithAnyArguments().Returns(string.Empty);
         }
 

@@ -18,8 +18,9 @@ namespace Nancy.ModelBinding.DefaultConverters
         /// Whether the converter can convert to the destination type
         /// </summary>
         /// <param name="destinationType">Destination type</param>
+        /// <param name="context">The current binding context</param>
         /// <returns>True if conversion supported, false otherwise</returns>
-        public bool CanConvertTo(Type destinationType)
+        public bool CanConvertTo(Type destinationType, BindingContext context)
         {
             return IsCollection(destinationType) || IsEnumerable(destinationType) || IsArray(destinationType);
         }
@@ -85,7 +86,7 @@ namespace Nancy.ModelBinding.DefaultConverters
             var genericType = destinationType.GetGenericArguments().First();
             var returnCollection = Activator.CreateInstance(destinationType);
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType)).FirstOrDefault();
+            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType, context)).FirstOrDefault();
             if (converter == null)
             {
                 return null;
@@ -110,7 +111,7 @@ namespace Nancy.ModelBinding.DefaultConverters
                 return null;
             }
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(elementType)).FirstOrDefault();
+            var converter = context.TypeConverters.Where(c => c.CanConvertTo(elementType, context)).FirstOrDefault();
 
             if (converter == null)
             {
@@ -131,7 +132,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         {
             var genericType = destinationType.GetGenericArguments().First();
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType)).FirstOrDefault();
+            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType, context)).FirstOrDefault();
 
             if (converter == null)
             {

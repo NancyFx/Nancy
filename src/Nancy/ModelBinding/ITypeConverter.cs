@@ -12,8 +12,9 @@ namespace Nancy.ModelBinding
         /// Whether the converter can convert to the destination type
         /// </summary>
         /// <param name="destinationType">Destination type</param>
+        /// <param name="context">The current binding context</param>
         /// <returns>True if conversion supported, false otherwise</returns>
-        bool CanConvertTo(Type destinationType);
+        bool CanConvertTo(Type destinationType, BindingContext context);
 
         /// <summary>
         /// Convert the string representation to the destination type
