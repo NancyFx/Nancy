@@ -14,7 +14,7 @@
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, INancyModuleCatalog, IRequestPipelinesFactory
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, INancyModuleCatalog
         where TContainer : class
     {
         /// <summary>
@@ -28,6 +28,11 @@
         /// </summary>
         private readonly NancyConventions conventions;
 
+        /// <summary>
+        /// Application pipelines.
+        /// Pipelines are "cloned" per request so they can be modified
+        /// at the request level.
+        /// </summary>
         protected IPipelines ApplicationPipelines { get; private set; }
 
         /// <summary>
@@ -297,7 +302,7 @@
 
             var engine = this.GetEngineInternal();
 
-            engine.RequestPipelinesFactory = this.CreateRequestPipeline;
+            engine.RequestPipelinesFactory = this.InitializeRequestPipelines;
 
             return engine;
         }
@@ -321,7 +326,12 @@
             return base.GetHashCode();
         }
 
-        public virtual IPipelines CreateRequestPipeline(NancyContext context)
+        /// <summary>
+        /// Creates and initializes the request pipelines.
+        /// </summary>
+        /// <param name="context">The <see cref="NancyContext"/> used by the request.</param>
+        /// <returns>An <see cref="IPipelines"/> instance.</returns>
+        protected virtual IPipelines InitializeRequestPipelines(NancyContext context)
         {
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
@@ -440,6 +450,11 @@
             return new[] { new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider) };
         }
 
+        /// <summary>
+        /// Gets any additional instance registrations that need to
+        /// be registered into the container
+        /// </summary>
+        /// <returns>Collection of InstanceRegistation types</returns>
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
             return new[] { new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration) };

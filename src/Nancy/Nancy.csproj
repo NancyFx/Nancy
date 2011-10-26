@@ -91,7 +91,6 @@
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
-    <Compile Include="Bootstrapper\IRequestPipelinesFactory.cs" />
     <Compile Include="Bootstrapper\IStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />

@@ -43,6 +43,16 @@
         }
 
         /// <summary>
+        /// Creates and initializes the request pipelines.
+        /// </summary>
+        /// <param name="context">The <see cref="NancyContext"/> used by the request.</param>
+        /// <returns>An <see cref="IPipelines"/> instance.</returns>
+        protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
+        {
+            return base.InitializeRequestPipelines(context);
+        }
+
+        /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
