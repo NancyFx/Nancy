@@ -1,13 +1,11 @@
 ﻿namespace Nancy.Authentication.Basic
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Nancy.Bootstrapper;
+using System.Text;
+using Nancy.Bootstrapper;
     using Nancy.Extensions;
-    using Nancy.Security;
-    
+using Nancy.Security;
+
     /// <summary>
     /// Nancy basic authentication implementation
     /// </summary>
@@ -18,13 +16,13 @@
         /// <summary>
         /// Enables basic authentication for the application
         /// </summary>
-        /// <param name="applicationPipelines">Pipelines to add handlers to (usually "this")</param>
+        /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
         /// <param name="configuration">Forms authentication configuration</param>
-        public static void Enable(IApplicationPipelines applicationPipelines, BasicAuthenticationConfiguration configuration)
+        public static void Enable(IPipelines pipelines, BasicAuthenticationConfiguration configuration)
         {
-            if (applicationPipelines == null)
+            if (pipelines == null)
             {
-                throw new ArgumentNullException("applicationPipelines");
+                throw new ArgumentNullException("pipelines");
             }
 
             if (configuration == null)
@@ -32,8 +30,8 @@
                 throw new ArgumentNullException("configuration");
             }
 
-            applicationPipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
-            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(GetCredentialRetrievalHook(configuration));
+            pipelines.AfterRequest.AddItemToEndOfPipeline(GetAuthenticationPromptHook(configuration));
         }
 
         /// <summary>
@@ -91,7 +89,8 @@
 
         private static void RetrieveCredentials(NancyContext context, BasicAuthenticationConfiguration configuration)
         {
-            var credentials = ExtractCredentialsFromHeaders(context.Request);
+            var credentials = 
+                ExtractCredentialsFromHeaders(context.Request);
 
             if (credentials != null && credentials.Length == 2)
             {

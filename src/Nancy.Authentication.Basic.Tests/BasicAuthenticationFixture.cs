@@ -13,14 +13,14 @@
     public class BasicAuthenticationFixture
     {
         private readonly BasicAuthenticationConfiguration config;
-        private readonly IApplicationPipelines hooks;
         const string ajaxRequestHeaderKey = "X-Requested-With";
         const string ajaxRequestHeaderValue = "XMLHttpRequest";
+        private readonly IPipelines hooks;
 
         public BasicAuthenticationFixture()
         {
             this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Always);
-            this.hooks = new FakeApplicationPipelines();
+            this.hooks = new Pipelines();
             BasicAuthentication.Enable(this.hooks, this.config);
         }
 
@@ -28,7 +28,7 @@
         public void Should_add_a_pre_and_post_hook_in_application_when_enabled()
         {
             // Given
-            var pipelines = A.Fake<IApplicationPipelines>();
+            var pipelines = A.Fake<IPipelines>();
 
             // When
             BasicAuthentication.Enable(pipelines, this.config);
@@ -58,7 +58,7 @@
         public void Should_throw_with_null_config_passed_to_enable_with_application()
         {
             // Given, When
-            var result = Record.Exception(() => BasicAuthentication.Enable(A.Fake<IApplicationPipelines>(), null));
+            var result = Record.Exception(() => BasicAuthentication.Enable(A.Fake<IPipelines>(), null));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -119,7 +119,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Never);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
 
             var context = new NancyContext()
@@ -141,7 +141,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
             var headers = new Dictionary<string,IEnumerable<string>>();
             headers.Add(ajaxRequestHeaderKey, new [] { ajaxRequestHeaderValue });
@@ -165,7 +165,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
 
             var context = new NancyContext()
@@ -231,7 +231,7 @@
         public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
-            var fakePipelines = new FakeApplicationPipelines();
+            var fakePipelines = new Pipelines();
 
             var validator = A.Fake<IUserValidator>();
             var fakeUser = A.Fake<IUserIdentity>();
@@ -275,21 +275,6 @@
 
         class FakeModule : NancyModule
         {
-        }
-
-        public class FakeApplicationPipelines : IApplicationPipelines
-        {
-            public BeforePipeline BeforeRequest { get; set; }
-
-            public AfterPipeline AfterRequest { get; set; }
-
-            public ErrorPipeline OnError { get; set; }
-
-            public FakeApplicationPipelines()
-            {
-                this.BeforeRequest = new BeforePipeline();
-                this.AfterRequest = new AfterPipeline();
-            }
         }
     }
 }

@@ -22,7 +22,7 @@ namespace Nancy.Authentication.Basic
 		/// </summary>
 		/// <param name="pipeline">Bootstrapper to enable</param>
 		/// <param name="configuration">Basic authentication configuration</param>
-		public static void EnableBasicAuthentication(this IApplicationPipelines pipeline, BasicAuthenticationConfiguration configuration)
+		public static void EnableBasicAuthentication(this IPipelines pipeline, BasicAuthenticationConfiguration configuration)
 		{
 			BasicAuthentication.Enable(pipeline, configuration);
 		}

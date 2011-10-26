@@ -47,7 +47,7 @@ namespace Nancy
         /// <summary>
         /// Perform any initialisation tasks
         /// </summary>
-        public void Initialize(IApplicationPipelines pipelines)
+        public void Initialize(IPipelines pipelines)
         {
             var item = new PipelineItem<Func<NancyContext, Response>>("Static content", ctx =>
             {

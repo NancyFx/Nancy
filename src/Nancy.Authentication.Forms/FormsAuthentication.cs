@@ -44,13 +44,13 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Enables forms authentication for the application
         /// </summary>
-        /// <param name="applicationPipelines">Pipelines to add handlers to (usually "this")</param>
+        /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
         /// <param name="configuration">Forms authentication configuration</param>
-        public static void Enable(IApplicationPipelines applicationPipelines, FormsAuthenticationConfiguration configuration)
+        public static void Enable(IPipelines pipelines, FormsAuthenticationConfiguration configuration)
         {
-            if (applicationPipelines == null)
+            if (pipelines == null)
             {
-                throw new ArgumentNullException("applicationPipelines");
+                throw new ArgumentNullException("pipelines");
             }
 
             if (configuration == null)
@@ -65,8 +65,8 @@ namespace Nancy.Authentication.Forms
 
             currentConfiguration = configuration;
 
-            applicationPipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
-            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+            pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
         }
 
         /// <summary>

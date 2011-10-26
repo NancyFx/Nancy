@@ -1,6 +1,7 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.Linq;
 
     /// <summary>
     /// <para>
@@ -14,6 +15,14 @@
     /// </summary>
     public class AfterPipeline : NamedPipelineBase<Action<NancyContext>>
     {
+        public AfterPipeline()
+        {
+        }
+
+        public AfterPipeline(int capacity) : base(capacity)
+        {
+        }
+
         public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;

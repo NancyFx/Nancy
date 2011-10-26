@@ -6,13 +6,15 @@ using Nancy.Authentication.Basic;
 
 namespace Nancy.Demo.Authentication.Basic
 {
-	public class AuthenticationBootstrapper : DefaultNancyBootstrapper
-	{
-		protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
-		{
-			base.InitialiseInternal(container);
+    using Bootstrapper;
 
-            this.EnableBasicAuthentication(new BasicAuthenticationConfiguration(
+    public class AuthenticationBootstrapper : DefaultNancyBootstrapper
+	{
+		protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+		{
+            base.ApplicationStartup(container, pipelines);
+
+            pipelines.EnableBasicAuthentication(new BasicAuthenticationConfiguration(
                 container.Resolve<IUserValidator>(),
                 "MyRealm"));
 		}

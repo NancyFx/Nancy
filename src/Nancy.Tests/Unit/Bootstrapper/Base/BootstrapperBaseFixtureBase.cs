@@ -9,14 +9,14 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
     /// <summary>
     /// Base class for testing the basic behaviour of a bootstrapper that
     /// implements either of the two bootstrapper base classes.
-    /// These tests only test basic extenral behaviour, they are not exhaustive;
+    /// These tests only test basic external behaviour, they are not exhaustive;
     /// it is expected that additional tests specific to the bootstrapper implementation
     /// are also created.
     /// </summary>
     public abstract class BootstrapperBaseFixtureBase<TContainer>
         where TContainer : class
     {
-        private NancyInternalConfiguration configuration;
+        private readonly NancyInternalConfiguration configuration;
 
         protected abstract NancyBootstrapperBase<TContainer> Bootstrapper { get; }
 
@@ -74,50 +74,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             result1.ShouldBeSameAs(result2);
         }
 
-        [Fact]
-        public void Should_set_pre_request_hook()
-        {
-            var called = false;
-            this.Bootstrapper.Initialise();
-            this.Bootstrapper.BeforeRequest += (c) => { called = true; return null; };
-            var engine = this.Bootstrapper.GetEngine();
-
-            var context = new NancyContext
-            {
-                Request = new Request("GET", "/", "http")
-            };
-
-            engine.PreRequestHook.Invoke(context);
-
-            called.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_set_post_request_hook()
-        {
-            var called = false;
-            this.Bootstrapper.Initialise();
-            this.Bootstrapper.AfterRequest += (c) => { called = true; };
-            var engine = this.Bootstrapper.GetEngine();
-
-            engine.PostRequestHook.Invoke(new NancyContext());
-
-            called.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_set_on_error_hook()
-        {
-            var called = false;
-            this.Bootstrapper.Initialise();
-            this.Bootstrapper.OnError += (c, e) => { called = true; return new Response(); };
-            var engine = this.Bootstrapper.GetEngine();
-
-            engine.OnErrorHook.Invoke(new NancyContext(), new Exception());
-
-            called.ShouldBeTrue();
-        }
-
         public class FakeEngine : INancyEngine
         {
             private readonly IRouteResolver resolver;
@@ -144,6 +100,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             public Action<NancyContext> PostRequestHook { get; set; }
 
             public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
+
+            public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {

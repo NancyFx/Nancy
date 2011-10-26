@@ -41,7 +41,7 @@ namespace Nancy.ViewEngines
             get { return null; }
         }
 
-        public void Initialize(IApplicationPipelines pipelines)
+        public void Initialize(IPipelines pipelines)
         {
             foreach (var viewEngine in viewEngines)
             {

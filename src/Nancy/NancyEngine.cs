@@ -2,10 +2,13 @@
 {
     using System;
     using System.Threading;
-
+    using Bootstrapper;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
 
+    /// <summary>
+    /// Default engine for handling Nancy <see cref="Request"/>s.
+    /// </summary>
     public class NancyEngine : INancyEngine
     {
         internal const string ERROR_KEY = "ERROR_TRACE";
@@ -51,39 +54,10 @@
         }
 
         /// <summary>
-        /// <para>
-        /// Gets or sets the pre-request hook.
-        /// </para>
-        /// <para>
-        /// The Pre-request hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
+        /// Factory for creating an <see cref="IPipelines"/> instance for a incoming request.
         /// </summary>
-        public Func<NancyContext, Response> PreRequestHook { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Gets or sets the post-requets hook.
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after a route is located and invoked. The post
-        /// request hook can rewrite the response or add/remove items from the context
-        /// </para>
-        /// </summary>
-        public Action<NancyContext> PostRequestHook { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// Gets or sets the error handling hook.
-        /// </para>
-        /// <para>
-        /// The error handling hook is called if an uncaught exception occurs during the handling of a request.
-        /// This includes exceptions thrown during the Before/After pipline.  It can be used to rewrite the 
-        /// response or add/remove items from the context
-        /// </para>
-        /// </summary>
-        public Func<NancyContext, Exception, Response> OnErrorHook { get; set; } 
+        /// <value>An <see cref="IPipelines"/> instance.</value>
+        public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
@@ -100,7 +74,10 @@
             var context = this.contextFactory.Create();
             context.Request = request;
 
-            this.InvokeRequestLifeCycle(context);
+            var pipelines =
+                this.RequestPipelinesFactory.Invoke(context);
+
+            this.InvokeRequestLifeCycle(context, pipelines);
             AddNancyVersionHeaderToResponse(context);
 
             CheckErrorHandler(context);
@@ -119,7 +96,7 @@
             // TODO - potentially do some things sync like the pre-req hooks?
             // Possibly not worth it as the thread pool is quite clever
             // when it comes to fast running tasks such as ones where the prehook returns a redirect.
-            ThreadPool.QueueUserWorkItem((s) =>
+            ThreadPool.QueueUserWorkItem(s =>
                 {
                     try
                     {
@@ -158,33 +135,33 @@
             }
         }
 
-        private void InvokeRequestLifeCycle(NancyContext context)
+        private void InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
         {
             try
             {
-                this.InvokePreRequestHook(context);
+                InvokePreRequestHook(context, pipelines.BeforeRequest);
 
                 if (context.Response == null) 
                 {
                     this.ResolveAndInvokeRoute(context);
                 }
 
-                if (this.PostRequestHook != null) 
+                if (pipelines.AfterRequest != null) 
                 {
-                    this.PostRequestHook.Invoke(context);
+                    pipelines.AfterRequest.Invoke(context);
                 }
             }
             catch (Exception ex)
             {
-                InvokeOnErrorHook(context, ex);
+                InvokeOnErrorHook(context, pipelines.OnError, ex);
             }
         }
 
-        private void InvokePreRequestHook(NancyContext context)
+        private static void InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
         {
-            if (this.PreRequestHook != null)
+            if (pipeline != null)
             {
-                var preRequestResponse = this.PreRequestHook.Invoke(context);
+                var preRequestResponse = pipeline.Invoke(context);
 
                 if (preRequestResponse != null)
                 {
@@ -193,16 +170,16 @@
             }
         }
 
-        private void InvokeOnErrorHook(NancyContext context, Exception ex)
+        private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
         {
             try
             {
-                if (this.OnErrorHook == null)
+                if (pipeline == null)
                 { 
                     throw ex;
                 }
 
-                var onErrorResponse = this.OnErrorHook.Invoke(context, ex);
+                var onErrorResponse = pipeline.Invoke(context, ex);
 
                 if (onErrorResponse == null)
                 {
@@ -213,7 +190,7 @@
             }
             catch (Exception e)
             {
-                context.Response = new Response() { StatusCode = HttpStatusCode.InternalServerError };
+                context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
                 context.Items[ERROR_KEY] = e.ToString();
             }
         }
@@ -225,7 +202,7 @@
             context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;
             var resolveResultPostReq = resolveResult.Item4;
-            this.ExecuteRoutePreReq(context, resolveResultPreReq);
+            ExecuteRoutePreReq(context, resolveResultPreReq);
 
             if (context.Response == null)
             {
@@ -243,7 +220,7 @@
             }
         }
 
-        private void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
         {
             if (resolveResultPreReq == null)
             {

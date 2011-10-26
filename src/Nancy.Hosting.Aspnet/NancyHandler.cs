@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Aspnet
     using System.Globalization;
     using System.Linq;
     using System.Web;
+    using Bootstrapper;
     using IO;
     using Nancy.Extensions;
 

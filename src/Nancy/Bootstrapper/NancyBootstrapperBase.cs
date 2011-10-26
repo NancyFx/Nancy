@@ -3,21 +3,18 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.IO;
     using System.Linq;
-    using Cryptography;
-    using ModelBinding;
-
+    using Nancy.Cryptography;
+    using Nancy.ModelBinding;
     using Nancy.Conventions;
-
-    using ViewEngines;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
-    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, IApplicationPipelines, INancyModuleCatalog
+    public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, INancyModuleCatalog, IRequestPipelinesFactory
         where TContainer : class
     {
         /// <summary>
@@ -29,7 +26,9 @@
         /// <summary>
         /// Default Nancy conventions
         /// </summary>
-        private NancyConventions conventions;
+        private readonly NancyConventions conventions;
+
+        protected IPipelines ApplicationPipelines { get; private set; }
 
         /// <summary>
         /// Nancy modules - built on startup from the app domain scanner
@@ -48,46 +47,9 @@
         {
             AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
 
-            this.BeforeRequest = new BeforePipeline();
-            this.AfterRequest = new AfterPipeline();
-            this.OnError = new ErrorPipeline();
-
+            this.ApplicationPipelines = new Pipelines();
             this.conventions = new NancyConventions();
         }
-
-        /// <summary>
-        /// <para>
-        /// The pre-request hook
-        /// </para>
-        /// <para>
-        /// The PreRequest hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
-        /// </summary>
-        public BeforePipeline BeforeRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The post-request hook
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after the response is created. It can be used
-        /// to rewrite the response or add/remove items from the context.
-        /// </para>
-        /// </summary>
-        public AfterPipeline AfterRequest { get; set; }
-
-        /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError { get; set; }
 
         /// <summary>
         /// Gets the Container instance - automatically set during initialise.
@@ -172,10 +134,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> BodyDeserializers
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(true);
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(true); }
         }
 
         /// <summary>
@@ -183,10 +142,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> StartupTasks
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IStartup>();
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IStartup>(); }
         }
 
         /// <summary>
@@ -194,11 +150,7 @@
         /// </summary>
         protected virtual Type RootPathProvider
         {
-            get
-            {
-                return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true)
-                        .FirstOrDefault() ?? typeof(DefaultRootPathProvider);
-            }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true).FirstOrDefault() ?? typeof(DefaultRootPathProvider); }
         }
 
         /// <summary>
@@ -206,10 +158,7 @@
         /// </summary>
         protected virtual byte[] DefaultFavIcon
         {
-            get
-            {
-                return this.defaultFavIcon ?? (this.defaultFavIcon = this.LoadFavIcon());
-            }
+            get { return this.defaultFavIcon ?? (this.defaultFavIcon = LoadFavIcon()); }
         }
 
         /// <summary>
@@ -264,7 +213,7 @@
 
             foreach (var startupTask in this.GetStartupTasks())
             {
-                startupTask.Initialize(this);
+                startupTask.Initialize(this.ApplicationPipelines);
 
                 if (startupTask.TypeRegistrations != null)
                 {
@@ -282,11 +231,11 @@
                 }
             }
 
-            this.InitialiseInternal(this.ApplicationContainer);
+            this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
             if (this.DefaultFavIcon != null)
             {
-                this.BeforeRequest.AddItemToStartOfPipeline(ctx =>
+                this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
                         if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
                         {
@@ -347,9 +296,8 @@
             }
 
             var engine = this.GetEngineInternal();
-            engine.PreRequestHook = this.BeforeRequest;
-            engine.PostRequestHook = this.AfterRequest;
-            engine.OnErrorHook = this.OnError;
+
+            engine.RequestPipelinesFactory = this.CreateRequestPipeline;
 
             return engine;
         }
@@ -373,6 +321,16 @@
             return base.GetHashCode();
         }
 
+        public virtual IPipelines CreateRequestPipeline(NancyContext context)
+        {
+            var requestPipelines =
+                new Pipelines(this.ApplicationPipelines);
+
+            this.RequestStartup(this.ApplicationContainer, requestPipelines);
+
+            return requestPipelines;
+        }
+
         /// <summary>
         /// Hides ToString from the overrides list
         /// </summary>
@@ -388,7 +346,16 @@
         /// related
         /// </summary>
         /// <param name="container">Container instance for resolving types if required.</param>
-        protected virtual void InitialiseInternal(TContainer container)
+        protected virtual void ApplicationStartup(TContainer container, IPipelines pipelines)
+        {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="container"></param>
+        /// <param name="pipelines"></param>
+        protected virtual void RequestStartup(TContainer container, IPipelines pipelines)
         {
         }
 
@@ -470,18 +437,12 @@
         /// <returns>Collection of TypeRegistration types</returns>
         private IEnumerable<TypeRegistration> GetAdditionalTypes()
         {
-            return new[]
-                {
-                    new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider),   
-                };
+            return new[] { new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider) };
         }
 
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
-            return new[]
-                {
-                    new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
-                };
+            return new[] { new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration) };
         }
 
         /// <summary>
@@ -506,15 +467,19 @@
         /// Loads the default favicon from the assembly
         /// </summary>
         /// <returns>Favicon byte array</returns>
-        private byte[] LoadFavIcon()
+        private static byte[] LoadFavIcon()
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+            var resourceStream = 
+                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+
             if (resourceStream == null)
             {
                 return null;
             }
 
-            var result = new byte[resourceStream.Length];
+            var result = 
+                new byte[resourceStream.Length];
+
             resourceStream.Read(result, 0, (int)resourceStream.Length);
 
             return result;

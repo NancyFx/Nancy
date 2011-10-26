@@ -59,15 +59,15 @@ namespace Nancy.Session
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeine
         /// </summary>
-        /// <param name="applicationPipelines">Application pipelines</param>
+        /// <param name="pipelines">Application pipelines</param>
         /// <param name="cryptographyConfiguration">Cryptography configuration</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IApplicationPipelines applicationPipelines, CryptographyConfiguration cryptographyConfiguration)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration)
         {
             var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultObjectSerializer());
 
-            applicationPipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
-            applicationPipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
+            pipelines.BeforeRequest.AddItemToEndOfPipeline(ctx => LoadSession(ctx, sessionStore));
+            pipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
 
             return sessionStore;
         }
@@ -75,11 +75,11 @@ namespace Nancy.Session
         /// <summary>
         /// Initialise and add cookie based session hooks to the application pipeine with the default encryption provider.
         /// </summary>
-        /// <param name="applicationPipelines">Application pipelines</param>
+        /// <param name="pipelines">Application pipelines</param>
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
-        public static IObjectSerializerSelector Enable(IApplicationPipelines applicationPipelines)
+        public static IObjectSerializerSelector Enable(IPipelines pipelines)
         {
-            return Enable(applicationPipelines, CryptographyConfiguration.Default);
+            return Enable(pipelines, CryptographyConfiguration.Default);
         }
 
         /// <summary>

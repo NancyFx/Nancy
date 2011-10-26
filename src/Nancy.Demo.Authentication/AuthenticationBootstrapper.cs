@@ -2,17 +2,18 @@ namespace Nancy.Demo.Authentication
 {
     using System;
     using System.Collections.Generic;
+    using Bootstrapper;
     using Nancy;
     using Nancy.Responses;
 
     public class AuthenticationBootstrapper : DefaultNancyBootstrapper
     {
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container);
+            base.ApplicationStartup(container, pipelines);
 
             // In reality you would use a pre-built authentication/claims provider
-            this.BeforeRequest += (ctx) =>
+            pipelines.BeforeRequest += (ctx) =>
             {
                 // World's-worse-authentication (TM)
                 // Pull the username out of the querystring if it exists
@@ -31,7 +32,7 @@ namespace Nancy.Demo.Authentication
                 return null;
             };
 
-            this.AfterRequest += (ctx) =>
+            pipelines.AfterRequest += (ctx) =>
             {
                 // If status code comes back as Unauthorized then
                 // forward the user to the login page

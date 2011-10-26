@@ -2,6 +2,7 @@ namespace Nancy.Demo.Caching
 {
     using System;
     using System.Collections.Generic;
+    using Bootstrapper;
     using Nancy;
     using Nancy.Demo.Caching.CachingExtensions;
 
@@ -11,13 +12,13 @@ namespace Nancy.Demo.Caching
 
         private readonly Dictionary<string, Tuple<DateTime, Response, int>> cachedResponses = new Dictionary<string, Tuple<DateTime, Response, int>>();
 
-        protected override void InitialiseInternal(TinyIoC.TinyIoCContainer container)
+        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
         {
-            base.InitialiseInternal(container);
+            base.ApplicationStartup(container, pipelines);
 
-            this.BeforeRequest += CheckCache;
+            pipelines.BeforeRequest += CheckCache;
 
-            this.AfterRequest += SetCache;
+            pipelines.AfterRequest += SetCache;
         }
 
         /// <summary>

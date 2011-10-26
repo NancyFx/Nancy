@@ -72,7 +72,7 @@
         /// Perform any initialisation tasks
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
-        public void Initialize(IApplicationPipelines pipelines)
+        public void Initialize(IPipelines pipelines)
         {
             pipelines.AfterRequest.AddItemToEndOfPipeline(
                 context =>

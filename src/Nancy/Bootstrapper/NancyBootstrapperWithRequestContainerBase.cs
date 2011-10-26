@@ -63,6 +63,26 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
+        /// Creates and initializes a request pipeline.
+        /// </summary>
+        /// <param name="context">The <see cref="NancyContext"/> used by the request.</param>
+        /// <returns>An <see cref="IPipelines"/> instance.</returns>
+        public override IPipelines CreateRequestPipeline(NancyContext context)
+        {
+            var requestContainer = 
+                this.GetRequestContainer(context);
+
+            this.ConfigureRequestContainer(requestContainer);
+
+            var requestPipelines =
+                new Pipelines(this.ApplicationPipelines);
+            
+            this.RequestStartup(requestContainer, requestPipelines);
+
+            return requestPipelines;
+        }
+
+        /// <summary>
         /// Gets the per-request container
         /// </summary>
         /// <param name="context">Current context</param>

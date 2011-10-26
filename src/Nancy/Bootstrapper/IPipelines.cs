@@ -1,6 +1,6 @@
 namespace Nancy.Bootstrapper
 {
-    public interface IApplicationPipelines
+    public interface IPipelines
     {
         /// <summary>
         /// <para>
