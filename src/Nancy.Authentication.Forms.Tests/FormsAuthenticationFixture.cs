@@ -1,5 +1,3 @@
-using Nancy.Security;
-
 namespace Nancy.Authentication.Forms.Tests
 {
     using System;
@@ -8,6 +6,7 @@ namespace Nancy.Authentication.Forms.Tests
     using Cryptography;
     using FakeItEasy;
     using Helpers;
+    using Nancy.Security;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -341,7 +340,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_get_username_from_mapping_service_with_valid_cookie()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var mockMapper = A.Fake<IUserMapper>();
             this.config.UserMapper = mockMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -356,7 +355,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_set_user_in_context_with_valid_cookie()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
@@ -373,7 +372,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_set_user_in_context_with_invalid_hmac()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
@@ -390,7 +389,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_set_user_in_context_with_empty_hmac()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
@@ -407,7 +406,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_set_user_in_context_with_no_hmac()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
@@ -424,7 +423,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_set_username_in_context_with_broken_encryption_data()
         {
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
@@ -442,7 +441,7 @@ namespace Nancy.Authentication.Forms.Tests
         public void Should_retain_querystring_when_redirecting_to_login_page()
         {
             // Given
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
             
             FormsAuthentication.Enable(fakePipelines, this.config);
 
@@ -475,21 +474,6 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Headers["Location"].ShouldEqual("/secure?foo=bar");
-        }
-
-        public class FakePipelines : IPipelines
-        {
-            public BeforePipeline BeforeRequest { get; set; }
-
-            public AfterPipeline AfterRequest { get; set; }
-
-            public ErrorPipeline OnError { get; set; }
-
-            public FakePipelines()
-            {
-                this.BeforeRequest = new BeforePipeline();
-                this.AfterRequest = new AfterPipeline();
-            }
         }
     }
 }

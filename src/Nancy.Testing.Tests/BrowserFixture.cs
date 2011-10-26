@@ -1,11 +1,9 @@
-using System;
-using System.IO;
-using Nancy.Tests;
-using Xunit;
-
 namespace Nancy.Testing.Tests
 {
+    using System.IO;
     using Nancy.Session;
+    using Nancy.Tests;
+    using Xunit;
 
     public class BrowserFixture
     {

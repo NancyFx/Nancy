@@ -17,7 +17,7 @@ namespace Nancy.Testing
     /// <summary>
     /// A Nancy boostrapper that can be configured with either Type or Instance overrides for all Nancy types.
     /// </summary>
-    public class ConfigurableBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
+    public class ConfigurableBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>, IPipelines
     {
         private readonly List<object> registeredTypes;
         private readonly List<InstanceRegistration> registeredInstances;
@@ -339,6 +339,53 @@ namespace Nancy.Testing
                     moduleRegistrationType.ModuleKey).
                     AsSingleton();
             }
+        }
+
+
+        /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        public BeforePipeline BeforeRequest
+        {
+            get { return this.ApplicationPipelines.BeforeRequest; }
+            set { this.ApplicationPipelines.BeforeRequest = value; }
+        }
+
+        /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created. It can be used
+        /// to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        public AfterPipeline AfterRequest
+        {
+            get { return this.ApplicationPipelines.AfterRequest; }
+            set { this.ApplicationPipelines.AfterRequest = value; }
+        }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during the pipeline.
+        /// If no error hook exists a standard InternalServerError response is returned
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError
+        {
+            get { return this.ApplicationPipelines.OnError; }
+            set { this.ApplicationPipelines.OnError = value; }
         }
 
         /// <summary>

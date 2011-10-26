@@ -20,7 +20,7 @@
         public BasicAuthenticationFixture()
         {
             this.config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Always);
-            this.hooks = new FakePipelines();
+            this.hooks = new Pipelines();
             BasicAuthentication.Enable(this.hooks, this.config);
         }
 
@@ -119,7 +119,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.Never);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
 
             var context = new NancyContext()
@@ -141,7 +141,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
             var headers = new Dictionary<string,IEnumerable<string>>();
             headers.Add(ajaxRequestHeaderKey, new [] { ajaxRequestHeaderValue });
@@ -165,7 +165,7 @@
         {
             // Given
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
-            var hooks = new FakeApplicationPipelines();
+            var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
 
             var context = new NancyContext()
@@ -231,7 +231,7 @@
         public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
-            var fakePipelines = new FakePipelines();
+            var fakePipelines = new Pipelines();
 
             var validator = A.Fake<IUserValidator>();
             var fakeUser = A.Fake<IUserIdentity>();
@@ -275,21 +275,6 @@
 
         class FakeModule : NancyModule
         {
-        }
-
-        public class FakePipelines : IPipelines
-        {
-            public BeforePipeline BeforeRequest { get; set; }
-
-            public AfterPipeline AfterRequest { get; set; }
-
-            public ErrorPipeline OnError { get; set; }
-
-            public FakePipelines()
-            {
-                this.BeforeRequest = new BeforePipeline();
-                this.AfterRequest = new AfterPipeline();
-            }
         }
     }
 }
