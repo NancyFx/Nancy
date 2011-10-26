@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System;
+    using Extensions;
     using Nancy.Responses;
     using System.IO;
 
@@ -36,9 +37,9 @@ namespace Nancy
             return new JsonResponse<TModel>(model);
         }
 
-        public static Response AsRedirect(this IResponseFormatter response, string location)
+        public static Response AsRedirect(this IResponseFormatter formatter, string location)
         {
-            return new RedirectResponse(location);
+            return new RedirectResponse(formatter.Context.ToFullPath(location));
         }
 
         public static Response AsXml<TModel>(this IResponseFormatter formatter, TModel model)
