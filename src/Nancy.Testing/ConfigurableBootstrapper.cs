@@ -627,26 +627,26 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseFormatter"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseFormatterFactory"/>.
             /// </summary>
-            /// <param name="responseFormatter">The <see cref="IResponseFormatter"/> instance that should be used by the bootstrapper.</param>
+            /// <param name="responseFormatterFactory">The <see cref="IResponseFormatterFactory"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResponseFormatter(IResponseFormatter responseFormatter)
+            public ConfigurableBoostrapperConfigurator ResponseFormatterFactory(IResponseFormatterFactory responseFormatterFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IResponseFormatter), responseFormatter));
+                    new InstanceRegistration(typeof(IResponseFormatterFactory), responseFormatterFactory));
 
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IResponseFormatter"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IResponseFormatterFactory"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IResponseFormatter"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IResponseFormatterFactory"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResponseFormatter<T>() where T : IResponseFormatter
+            public ConfigurableBoostrapperConfigurator ResponseFormatterFactory<T>() where T : IResponseFormatterFactory
             {
-                this.bootstrapper.configuration.ResponseFormatter = typeof(T);
+                this.bootstrapper.configuration.ResponseFormatterFactory = typeof(T);
                 return this;
             }
 

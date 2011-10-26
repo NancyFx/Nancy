@@ -37,7 +37,7 @@ namespace Nancy.Bootstrapper
                         ViewLocator = typeof(DefaultViewLocator),
                         ViewFactory = typeof(DefaultViewFactory),
                         NancyModuleBuilder = typeof(DefaultNancyModuleBuilder),
-                        ResponseFormatter = typeof(DefaultResponseFormatter),
+                        ResponseFormatterFactory = typeof(DefaultResponseFormatterFactory),
                         ModelBinderLocator = typeof(DefaultModelBinderLocator),
                         Binder = typeof(DefaultBinder),
                         BindingDefaults = typeof(BindingDefaults),
@@ -75,7 +75,7 @@ namespace Nancy.Bootstrapper
 
         public Type NancyModuleBuilder { get; set; }
 
-        public Type ResponseFormatter { get; set; }
+        public Type ResponseFormatterFactory { get; set; }
 
         public Type ModelBinderLocator { get; set; }
 
@@ -153,7 +153,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewFactory), this.ViewFactory),
                 new TypeRegistration(typeof(INancyContextFactory), this.ContextFactory),
                 new TypeRegistration(typeof(INancyModuleBuilder), this.NancyModuleBuilder),
-                new TypeRegistration(typeof(IResponseFormatter), this.ResponseFormatter),
+                new TypeRegistration(typeof(IResponseFormatterFactory), this.ResponseFormatterFactory),
                 new TypeRegistration(typeof(IModelBinderLocator), this.ModelBinderLocator), 
                 new TypeRegistration(typeof(IBinder), this.Binder), 
                 new TypeRegistration(typeof(BindingDefaults), this.BindingDefaults), 

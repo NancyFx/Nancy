@@ -9,19 +9,19 @@
     public class DefaultNancyModuleBuilder : INancyModuleBuilder
     {
         private readonly IViewFactory viewFactory;
-        private readonly IResponseFormatter responseFormatter;
+        private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelBinderLocator modelBinderLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
         /// </summary>
         /// <param name="viewFactory">The <see cref="IViewFactory"/> instance that should be assigned to the module.</param>
-        /// <param name="responseFormatter">An <see cref="DefaultResponseFormatter"/> instance that should be assigned to the module.</param>
+        /// <param name="responseFormatterFactory">An <see cref="IResponseFormatterFactory"/> instance that should be used to create a response formatter for the module.</param>
         /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatter responseFormatter, IModelBinderLocator modelBinderLocator)
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator)
         {
             this.viewFactory = viewFactory;
-            this.responseFormatter = responseFormatter;
+            this.responseFormatterFactory = responseFormatterFactory;
             this.modelBinderLocator = modelBinderLocator;
         }
 
@@ -34,7 +34,7 @@
         public NancyModule BuildModule(NancyModule module, NancyContext context)
         {
             module.Context = context;
-            module.Response = this.responseFormatter;
+            module.Response = this.responseFormatterFactory.Create(context);
             module.ViewFactory = this.viewFactory;
             module.ModelBinderLocator = this.modelBinderLocator;
 

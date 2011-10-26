@@ -10,8 +10,7 @@
     public class DefaultNancyModuleBuilderFixture
     {
         private readonly DefaultNancyModuleBuilder builder;
-        private readonly DefaultResponseFormatter responseFormatter;
-        private readonly IRootPathProvider rootPathProvider;
+        private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
@@ -19,11 +18,13 @@
         public DefaultNancyModuleBuilderFixture()
         {
             this.module = new FakeNancyModule();
-            this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
+
+            this.responseFormatterFactory =
+                A.Fake<IResponseFormatterFactory>();
+
             this.viewFactory = A.Fake<IViewFactory>();
             this.modelBinderLocator = A.Fake<IModelBinderLocator>();
-            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatter, this.modelBinderLocator);
+            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator);
         }
 
         [Fact]
@@ -66,16 +67,31 @@
         }
 
         [Fact]
-        public void Should_set_response_on_module_to_resolved_response_formatter()
+        public void Should_pass_context_to_response_formatter_factory()
         {
             // Given
             var context = new NancyContext();
 
             // When
+            this.builder.BuildModule(this.module, context);
+
+            // Then
+            A.CallTo(() => this.responseFormatterFactory.Create(context)).MustHaveHappened();
+        }
+        
+        [Fact]
+        public void Should_set_response_on_module_to_resolved_response_formatter()
+        {
+            // Given
+            var context = new NancyContext();
+            var formatter = A.Fake<IResponseFormatter>();
+            A.CallTo(() => this.responseFormatterFactory.Create(context)).Returns(formatter);
+
+            // When
             var result = this.builder.BuildModule(this.module, context);
 
             // Then
-            result.Response.ShouldBeSameAs(this.responseFormatter);
+            result.Response.ShouldBeSameAs(formatter);
         }
 
         [Fact]

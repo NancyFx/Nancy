@@ -17,7 +17,10 @@ namespace Nancy.Tests.Unit
         public XmlFormatterExtensionsFixtures()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            this.responseFormatter = new DefaultResponseFormatter(this.rootPathProvider);
+            
+            this.responseFormatter = 
+                new DefaultResponseFormatter(this.rootPathProvider, new NancyContext());
+
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.responseFormatter.AsXml(model);
         }
