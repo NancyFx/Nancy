@@ -765,5 +765,24 @@ namespace Nancy.Tests.Unit
 			// Then
 			Assert.True(names.SequenceEqual(new[] {"test", "rest"}));
 		}
+
+        [Fact]
+        public void Should_be_able_to_enumerate_keys()
+        {
+            // Given
+            dynamic parameters = new DynamicDictionary();
+
+            parameters["test"] = "10";
+            parameters["rest"] = "20";
+
+            // When
+            var names = new List<string>();
+            foreach (var name in parameters) {
+                names.Add(name);
+            }
+
+            // Then
+            Assert.True(names.SequenceEqual(new[] { "test", "rest" }));
+        }
 	}
 }

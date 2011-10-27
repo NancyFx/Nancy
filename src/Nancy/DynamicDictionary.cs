@@ -1,10 +1,11 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
-
-    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers
+    
+    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>
     {
         private readonly Dictionary<string, object> dictionary =
             new Dictionary<string, object>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
@@ -65,12 +66,29 @@
         }
 
         /// <summary>
-        /// Returns the enumeration of all dynamic member names. </summary>
+        /// Returns the enumeration of all dynamic member names.
+        /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
         public override IEnumerable<string> GetDynamicMemberNames()
 		{
 			return dictionary.Keys;
 		}
+
+        /// <summary>
+        /// Returns the enumeration of all dynamic member names.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
+        public IEnumerator<string> GetEnumerator() {
+            return dictionary.Keys.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns the enumeration of all dynamic member names.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerator"/> that contains dynamic member names.</returns>
+        IEnumerator IEnumerable.GetEnumerator() {
+            return dictionary.Keys.GetEnumerator();
+        }
 
         /// <summary>
         /// Gets or sets the <see cref="DynamicDictionaryValue"/> with the specified name.
