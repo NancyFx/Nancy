@@ -70,9 +70,9 @@
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
         public override IEnumerable<string> GetDynamicMemberNames()
-		{
-			return dictionary.Keys;
-		}
+        {
+            return dictionary.Keys;
+        }
 
         /// <summary>
         /// Returns the enumeration of all dynamic member names.
