@@ -77,7 +77,7 @@ namespace Nancy.Responses
 
             var fullPath = Path.GetFullPath(filePath);
 
-            return fullPath.StartsWith(rootPath, StringComparison.Ordinal);
+            return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
         private void InitializeGenericFileResonse(string filePath, string contentType)
