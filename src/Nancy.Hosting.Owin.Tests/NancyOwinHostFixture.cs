@@ -180,8 +180,30 @@ namespace Nancy.Tests
 
             this.host.ProcessRequest(environment, callback, fakeErrorCallback);
 
-            headers.Count.ShouldEqual(1);
+            // 2 headers because the default content-type is text/html
+            headers.Count.ShouldEqual(2);
+            headers["Content-Type"].ShouldEqual("text/html");
             headers["TestHeader"].ShouldEqual("TestValue");
+        }
+
+        [Fact]
+        public void Should_set_contenttype_in_response_callback()
+        {
+            var fakeResponse = new Response
+                                   {
+                                       StatusCode = HttpStatusCode.OK,
+                                       ContentType = "text/html",
+                                       Contents = s => { }
+                                   };
+            var fakeContext = new NancyContext {Response = fakeResponse};
+            SetupFakeNancyCompleteCallback(fakeContext);
+            IDictionary<string, string> headers = null;
+            ResponseCallBack callback = (r, h, b) => headers = h;
+
+            host.ProcessRequest(environment, callback, fakeErrorCallback);
+            
+            headers.Count.ShouldEqual(1);
+            headers["Content-Type"].ShouldEqual("text/html");
         }
 
         [Fact]
