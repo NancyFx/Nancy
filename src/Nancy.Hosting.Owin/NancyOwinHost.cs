@@ -147,6 +147,7 @@
                         {
                             headers.Add("Set-Cookie", cookie.ToString());
                         }
+                        headers.Add("Content-Type", result.Response.ContentType);
                         responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
                     },
                     errorCallback);
