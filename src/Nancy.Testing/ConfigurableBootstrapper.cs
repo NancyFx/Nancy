@@ -504,12 +504,11 @@ namespace Nancy.Testing
             /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="IErrorHandler"/>.
             /// </summary>
-            /// <param name="errorHandler">The <see cref="IErrorHandler"/> instance that should be used by the bootstrapper.</param>
+            /// <param name="errorHandlers">The <see cref="IErrorHandler"/> types that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ErrorHandler(IErrorHandler errorHandler)
+            public ConfigurableBoostrapperConfigurator ErrorHandlers(params Type[] errorHandlers)
             {
-                this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IErrorHandler), errorHandler));
+                this.bootstrapper.configuration.ErrorHandlers = new List<Type>(errorHandlers);
 
                 return this;
             }
@@ -521,7 +520,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator ErrorHandler<T>() where T : IErrorHandler
             {
-                this.bootstrapper.configuration.ErrorHandler = typeof(T);
+                this.bootstrapper.configuration.ErrorHandlers = new List<Type>( new[] { typeof(T) } );
                 return this;
             }
 

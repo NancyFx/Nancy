@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit
             var applicationPipelines = new Pipelines();
 
             this.engine = 
-                new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(resolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -51,7 +51,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>(), this.errorHandler));
+                Record.Exception(() => new NancyEngine(null, A.Fake<IRouteCache>(), A.Fake<INancyContextFactory>(), new IErrorHandler[] { this.errorHandler }));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>(), this.errorHandler));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, A.Fake<INancyContextFactory>(), new IErrorHandler[] { this.errorHandler }));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -73,7 +73,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null, this.errorHandler));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<IRouteCache>(), null, new IErrorHandler[] { this.errorHandler }));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -159,7 +159,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -315,7 +315,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -343,7 +343,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -366,7 +366,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -389,7 +389,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -411,7 +411,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -460,7 +460,7 @@ namespace Nancy.Tests.Unit
             pipelines.AfterRequest.AddItemToStartOfPipeline(postHook);
 
             var localEngine =
-                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, this.errorHandler)
+                new NancyEngine(prePostResolver, A.Fake<IRouteCache>(), contextFactory, new IErrorHandler[] { this.errorHandler })
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };

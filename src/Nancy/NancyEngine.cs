@@ -1,6 +1,8 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using System.Threading;
     using Bootstrapper;
     using Nancy.ErrorHandling;
@@ -16,7 +18,7 @@
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
-        private readonly IErrorHandler errorHandler;
+        private readonly IEnumerable<IErrorHandler> errorHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -24,8 +26,8 @@
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="routeCache">Cache of all available routes</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
-        /// <param name="errorHandler">Error handler</param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IErrorHandler errorHandler)
+        /// <param name="errorHandlers">Error handlers</param>
+        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers)
         {
             if (resolver == null)
             {
@@ -42,15 +44,15 @@
                 throw new ArgumentNullException("contextFactory");
             }
 
-            if (errorHandler == null)
+            if (errorHandlers == null)
             {
-                throw new ArgumentNullException("errorHandler");
+                throw new ArgumentNullException("errorHandlers");
             }
 
             this.resolver = resolver;
             this.routeCache = routeCache;
             this.contextFactory = contextFactory;
-            this.errorHandler = errorHandler;
+            this.errorHandlers = errorHandlers;
         }
 
         /// <summary>
@@ -129,9 +131,9 @@
                 return;
             }
 
-            if (this.errorHandler.HandlesStatusCode(context.Response.StatusCode))
+            foreach (var errorHandler in this.errorHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode)))
             {
-                this.errorHandler.Handle(context.Response.StatusCode, context);
+                errorHandler.Handle(context.Response.StatusCode, context);
             }
         }
 

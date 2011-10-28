@@ -47,7 +47,7 @@ namespace Nancy.Bootstrapper
                         RenderContextFactory = typeof(DefaultRenderContextFactory),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
-                        ErrorHandler = typeof(DefaultErrorHandler),
+                        ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IErrorHandler>(true))),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                         ObjectSerializer = typeof(DefaultObjectSerializer),
                         Serializers = new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) }),
@@ -95,7 +95,7 @@ namespace Nancy.Bootstrapper
 
         public Type ViewLocationProvider { get; set; }
 
-        public Type ErrorHandler { get; set; }
+        public IList<Type> ErrorHandlers { get; set; }
 
         public Type CsrfTokenValidator { get; set; }
 
@@ -163,7 +163,6 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
                 new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
-                new TypeRegistration(typeof(IErrorHandler), this.ErrorHandler), 
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
             };
@@ -178,6 +177,7 @@ namespace Nancy.Bootstrapper
             return new[]
             {
                 new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
+                new CollectionTypeRegistration(typeof(IErrorHandler), this.ErrorHandlers), 
             };
         }
     }
