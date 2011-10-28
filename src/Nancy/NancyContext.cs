@@ -1,4 +1,5 @@
 using System.Threading;
+using Nancy.Routing;
 using Nancy.Security;
 
 namespace Nancy
@@ -48,11 +49,18 @@ namespace Nancy
         /// </summary>
         public Response Response { get; set; }
 
+        public Route Route { get; internal set; }
+
+        public NancyModule Module { get; internal set; }
+
         /// <summary>
         /// Gets or sets the current user
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }
 
+        /// <summary>
+        /// Provides a thread-static context access point
+        /// </summary>
         public static NancyContext Current { get { return _current; } }
 
         /// <summary>
