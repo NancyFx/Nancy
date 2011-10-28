@@ -129,6 +129,8 @@ namespace Nancy.Demo.Hosting.Aspnet
                     throw new NotSupportedException("This is an exception thrown in a route.");
                 };
 
+            Get["/customErrorHandler"] = _ => HttpStatusCode.ImATeapot;
+
             Get["/csrf"] = x => this.View["csrf", new { Blurb = "CSRF without an expiry using the 'session' token" }];
 
             Post["/csrf"] = x =>
