@@ -13,7 +13,16 @@
     {
         private readonly IResourceReader resourceReader;
         private readonly IResourceAssemblyProvider resourceAssemblyProvider;
+        
+        /// <summary>
+        /// User-configured root namespaces for assemblies.
+        /// </summary>
         public static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
+        
+        /// <summary>
+        /// A list of assemblies to ignore when scanning for embedded views.
+        /// </summary>
+        public static IList<Assembly> Ignore = new List<Assembly>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
@@ -49,6 +58,7 @@
 
             return this.resourceAssemblyProvider
                 .GetAssembliesToScan()
+                .Where(x => !Ignore.Contains(x))
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
         }
 
