@@ -171,5 +171,47 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Then
             result.First().Location.ShouldEqual("Path/With/Sub/Folder");
         }
+
+        [Fact]
+        public void Should_scan_assemblies_returned_by_assembly_provider()
+        {
+            // Given
+            A.CallTo(() => this.assemblyProvider.GetAssembliesToScan()).Returns(new[]
+            {
+                typeof(NancyEngine).Assembly,
+                this.GetType().Assembly
+            });
+
+            var extensions = new[] { "html" };
+
+            // When
+            this.viewProvider.GetLocatedViews(extensions).ToList();
+
+            // Then
+            A.CallTo(() => this.reader.GetResourceStreamMatches(this.GetType().Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
+            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof(NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_not_scan_ignored_assemblies()
+        {
+            // Given
+            A.CallTo(() => this.assemblyProvider.GetAssembliesToScan()).Returns(new[]
+            {
+                typeof(NancyEngine).Assembly,
+                this.GetType().Assembly
+            });
+
+            ResourceViewLocationProvider.Ignore.Add(this.GetType().Assembly);
+
+            var extensions = new[] { "html" };
+
+            // When
+            this.viewProvider.GetLocatedViews(extensions).ToList();
+
+            // Then
+            A.CallTo(() => this.reader.GetResourceStreamMatches(this.GetType().Assembly, A<IEnumerable<string>>._)).MustNotHaveHappened();
+            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof(NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
+        }
     }
 }
