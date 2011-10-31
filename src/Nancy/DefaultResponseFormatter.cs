@@ -1,6 +1,7 @@
 ﻿namespace Nancy
 {
-    using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// The default implementation of the <see cref="IResponseFormatter"/> interface.
@@ -8,6 +9,7 @@
     public class DefaultResponseFormatter : IResponseFormatter
     {
         private readonly IRootPathProvider rootPathProvider;
+        private readonly IEnumerable<ISerializer> serializers;
         private readonly NancyContext context;
 
         /// <summary>
@@ -15,10 +17,22 @@
         /// </summary>
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used by the instance.</param>
         /// <param name="context">The <see cref="NancyContext"/> that should be used by the instance.</param>
-        public DefaultResponseFormatter(IRootPathProvider rootPathProvider, NancyContext context)
+        public DefaultResponseFormatter(IRootPathProvider rootPathProvider, NancyContext context, IEnumerable<ISerializer> serializers)
         {
+            this.serializers = serializers.ToArray();
             this.rootPathProvider = rootPathProvider;
             this.context = context;
+        }
+
+        /// <summary>
+        /// Gets all serializers currently registered
+        /// </summary>
+        public IEnumerable<ISerializer> Serializers
+        {
+            get
+            {
+                return this.serializers;
+            }
         }
 
         /// <summary>

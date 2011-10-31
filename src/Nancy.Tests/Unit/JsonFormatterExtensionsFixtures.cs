@@ -1,5 +1,6 @@
 namespace Nancy.Tests.Unit
 {
+    using System;
     using System.IO;
     using System.Text;
     using FakeItEasy;
@@ -16,8 +17,8 @@ namespace Nancy.Tests.Unit
         public JsonFormatterExtensionsFixtures()
         {
             this.formatter = A.Fake<IResponseFormatter>();
+            A.CallTo(() => this.formatter.Serializers).Returns(new[] { new DefaultJsonSerializer() });
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
-            DefaultSerializersStartup.JsonSerializer = new DefaultJsonSerializer();
             this.response = this.formatter.AsJson(model);
         }
 

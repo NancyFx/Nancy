@@ -2,25 +2,24 @@
 {
     using System;
     using System.IO;
-    using System.Xml.Serialization;
 
     public class XmlResponse<TModel> : Response
     {
-        public XmlResponse(TModel model, string contentType)
+        public XmlResponse(TModel model, string contentType, ISerializer serializer)
         {
-            if (DefaultSerializersStartup.XmlSerializer == null)
+            if (serializer == null)
             {
                 throw new InvalidOperationException("XML Serializer not set");
             }
 
-            this.Contents = GetXmlContents(model);
+            this.Contents = GetXmlContents(model, serializer);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private static Action<Stream> GetXmlContents(TModel model)
+        private static Action<Stream> GetXmlContents(TModel model, ISerializer serializer)
         {
-            return stream => DefaultSerializersStartup.XmlSerializer.Serialize("application/xml", model, stream);
+            return stream => serializer.Serialize("application/xml", model, stream);
         }
     }
 }

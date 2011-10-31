@@ -1,12 +1,18 @@
 namespace Nancy
 {
     using System;
+    using System.Linq;
+
     using Extensions;
     using Nancy.Responses;
     using System.IO;
 
     public static class FormatterExtensions
     {
+        private static ISerializer jsonSerializer;
+
+        private static ISerializer xmlSerializer;
+
         public static Response AsFile(this IResponseFormatter formatter, string applicationRelativeFilePath, string contentType)
         {
             return new GenericFileResponse(applicationRelativeFilePath, contentType);
@@ -34,7 +40,9 @@ namespace Nancy
 
         public static Response AsJson<TModel>(this IResponseFormatter formatter, TModel model)
         {
-            return new JsonResponse<TModel>(model);
+            var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
+
+            return new JsonResponse<TModel>(model, serializer);
         }
 
         public static Response AsRedirect(this IResponseFormatter formatter, string location)
@@ -44,7 +52,9 @@ namespace Nancy
 
         public static Response AsXml<TModel>(this IResponseFormatter formatter, TModel model)
         {
-            return new XmlResponse<TModel>(model, "application/xml");
+            var serializer = xmlSerializer ?? (xmlSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/xml")));
+
+            return new XmlResponse<TModel>(model, "application/xml", serializer);
         }
         
         public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)

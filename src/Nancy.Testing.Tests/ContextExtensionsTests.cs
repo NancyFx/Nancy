@@ -60,7 +60,7 @@ namespace Nancy.Testing.Tests
 		[Fact]
 		public void Should_create_new_wrapper_from_json_response_if_not_already_present()
 		{
-			var response = new JsonResponse<Model>(new Model() { Dummy = "Data" });
+			var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
 			var context = new NancyContext() { Response = response };
 
 			var result = context.JsonBody<Model>();
@@ -83,7 +83,7 @@ namespace Nancy.Testing.Tests
 		[Fact]
 		public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
 		{
-			var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, "text/xml");
+			var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, "text/xml", new DefaultXmlSerializer());
 			var context = new NancyContext() { Response = response };
 
 			var result = context.XmlBody<Model>();
@@ -94,7 +94,7 @@ namespace Nancy.Testing.Tests
 		[Fact]
 		public void Should_fail_to_return_xml_body_on_non_xml_response()
 		{
-			var response = new JsonResponse<Model>(new Model() { Dummy = "Data" });
+			var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
 			var context = new NancyContext() { Response = response };
 
 			Assert.Throws<InvalidOperationException>(() => context.XmlBody<Model>());

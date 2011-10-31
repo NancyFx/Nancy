@@ -18,6 +18,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
         public ResourceViewLocationProviderFixture()
         {
+            ResourceViewLocationProvider.Ignore.Clear(); 
             this.reader = A.Fake<IResourceReader>();
             this.assemblyProvider = A.Fake<IResourceAssemblyProvider>();
             this.viewProvider = new ResourceViewLocationProvider(this.reader, this.assemblyProvider);

@@ -3,6 +3,8 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Xml;
     using FakeItEasy;
+
+    using Nancy.Responses;
     using Nancy.Tests.Fakes;
     using Xunit;
 
@@ -18,8 +20,8 @@ namespace Nancy.Tests.Unit
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             
-            this.responseFormatter = 
-                new DefaultResponseFormatter(this.rootPathProvider, new NancyContext());
+            this.responseFormatter =
+                new DefaultResponseFormatter(this.rootPathProvider, new NancyContext(), new ISerializer[] { new DefaultXmlSerializer() });
 
             this.model = new Person { FirstName = "Andy", LastName = "Pike" };
             this.response = this.responseFormatter.AsXml(model);
