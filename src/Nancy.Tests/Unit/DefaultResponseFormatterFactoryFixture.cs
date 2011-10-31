@@ -7,13 +7,15 @@
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly DefaultResponseFormatterFactory factory;
+        private readonly ISerializer[] serializers;
 
         public DefaultResponseFormatterFactoryFixture()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns("RootPath");
 
-            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider);
+            this.serializers = new[] { A.Fake<ISerializer>() };
+            this.factory = new DefaultResponseFormatterFactory(this.rootPathProvider, this.serializers);
         }
 
         [Fact]
@@ -37,6 +39,19 @@
 
             // Then
             formatter.Context.ShouldBeSameAs(context);
+        }
+
+        [Fact]
+        public void Should_create_response_formmater_with_serializers_set()
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            var formatter = this.factory.Create(context);
+
+            // Then
+            formatter.Serializers.ShouldEqualSequence(this.serializers);
         }
     }
 }
