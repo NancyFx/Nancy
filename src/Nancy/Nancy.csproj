@@ -107,7 +107,6 @@
     <Compile Include="Json\Converters\TimeSpanConverter.cs" />
     <Compile Include="Json\JsonSettings.cs" />
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
-    <Compile Include="Responses\DefaultSerializersStartup.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />

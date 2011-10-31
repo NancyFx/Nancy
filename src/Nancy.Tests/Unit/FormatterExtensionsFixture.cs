@@ -11,7 +11,7 @@
         public FormatterExtensionsFixture()
         {
             this.context = new NancyContext();
-            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context);
+            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context, new ISerializer[] { });
         }
 
         [Fact]
