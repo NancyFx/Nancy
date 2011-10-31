@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Unit.Routing
+﻿using System.Collections.Generic;
+
+namespace Nancy.Tests.Unit.Routing
 {
     using System;
     using Fakes;
@@ -101,5 +103,24 @@
             // Then
             response.ShouldBeSameAs(expectedResponse);
         }
+
+        [Fact]
+        public void Should_contain_expected_metadata()
+        {
+
+            //Given
+            var expectedResponse = new Response();
+            Func<object, Response> action = x => expectedResponse;
+
+            var metadata = new Dictionary<string, object> { { "Test", new object() } };
+
+            var route = new Route("GET", "/", null, metadata, action);
+
+            // Then
+            route.Description.Metadata.ShouldEqual(metadata);
+
+        }
+
     }
+
 }
