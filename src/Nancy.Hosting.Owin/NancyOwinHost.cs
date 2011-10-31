@@ -143,10 +143,8 @@
                     {
                         var returnCode = GetReturnCode(result);
                         var headers = result.Response.Headers;
-                        foreach (var cookie in result.Response.Cookies)
-                        {
-                            headers.Add("Set-Cookie", cookie.ToString());
-                        }
+                        if (result.Response.HasCookies())
+                            result.Response.AddCookiesToHeader();
                         headers.Add("Content-Type", result.Response.ContentType);
                         responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
                     },
