@@ -1,6 +1,11 @@
 ﻿namespace Nancy.Testing
 {
+    using System;
+    using System.Text;
     using System.IO;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nancy.Helpers;
     using Nancy.Responses;
 
     /// <summary>
@@ -53,6 +58,59 @@
 
             serializer.Serialize("application/json", model, contextValues.Body);
             browserContext.Header("Content-Type", "application/json");
+        }
+
+        /// <summary>
+        /// Adds basic authorization credentials to the headers of the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="username">The username to be encoded.</param>
+        /// <param name="password">The password to be encoded.</param>
+        public static void BasicAuth(this BrowserContext browserContext, string username, string password)
+        {
+            var credentials = string.Format("{0}:{1}", username, password);
+
+            var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
+
+            browserContext.Header("Authorization", "Basic " + encodedCredentials);
+        }
+
+        /// <summary>
+        /// Adds a cookie to the headers of the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="cookies">The collection of cookies to add to the cookie request header.</param>
+        public static void Cookie(this BrowserContext browserContext, IDictionary<string, string> cookies)
+        {
+            if (!cookies.Any())
+            {
+                return;
+            }
+
+            foreach (var cookie in cookies)
+            {
+                browserContext.Cookie(cookie.Key, cookie.Value);
+            }
+        }
+
+        /// <summary>
+        /// Adds a cookie to the headers of the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="key">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        public static void Cookie(this BrowserContext browserContext, string key, string value)
+        {
+            var contextValues =
+                (IBrowserContextValues)browserContext;
+
+            if (!contextValues.Headers.ContainsKey("Cookie"))
+            {
+                contextValues.Headers.Add("Cookie", new List<string> { string.Empty });
+            }
+
+            var values = (List<string>)contextValues.Headers["Cookie"];
+            values[0] += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
         }
     }
 }
