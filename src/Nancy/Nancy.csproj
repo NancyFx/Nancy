@@ -101,6 +101,7 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
+    <Compile Include="JsonpStartup.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
     <Compile Include="ISerializer.cs" />

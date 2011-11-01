@@ -49,6 +49,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Modules\JsonpTestModule.cs" />
+    <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\StaticContentTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -70,7 +72,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Modules\" />
     <Folder Include="Views\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
