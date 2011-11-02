@@ -34,6 +34,11 @@ namespace Nancy
         /// </summary>
         public IEnumerable<InstanceRegistration> InstanceRegistrations { get { return null; } }
 
+        public int Order
+        {
+            get { return 0; }
+        }
+
         /// <summary>
         /// Perform any initialisation tasks
         /// </summary>

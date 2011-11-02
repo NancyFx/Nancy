@@ -48,41 +48,41 @@
 
             public FakeRouteCacheConfigurator AddDeleteRoute(string path)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("DELETE", path, null) }, String.Empty);
+                this.AddRoutesToCache(new[] { new RouteDescription("DELETE", path, null, null) }, String.Empty);
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null) }, String.Empty);
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null, null) }, String.Empty);
                 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null) }, moduleKey);
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, null, null) }, moduleKey);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddGetRoute(string path, string moduleKey, Func<NancyContext, bool> condition)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, condition) }, moduleKey);
+                this.AddRoutesToCache(new[] { new RouteDescription("GET", path, condition, null) }, moduleKey);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddPostRoute(string path)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("POST", path, null) }, String.Empty);
+                this.AddRoutesToCache(new[] { new RouteDescription("POST", path, null, null) }, String.Empty);
 
                 return this;
             }
 
             public FakeRouteCacheConfigurator AddPutRoute(string path)
             {
-                this.AddRoutesToCache(new[] { new RouteDescription("PUT", path, null) }, String.Empty);
+                this.AddRoutesToCache(new[] { new RouteDescription("PUT", path, null, null) }, String.Empty);
 
                 return this;
             }

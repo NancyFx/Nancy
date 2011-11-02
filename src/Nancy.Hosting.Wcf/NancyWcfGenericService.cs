@@ -13,7 +13,7 @@
     using Nancy.Extensions;
 
     [ServiceContract]
-    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single)]
+    [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class NancyWcfGenericService
     {
         private readonly INancyEngine engine;

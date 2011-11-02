@@ -74,12 +74,16 @@
 
         private ResolveResult CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
+
             var associatedModule =
                 this.GetInitializedModuleForMatch(context, routeMatchToReturn);
 
             var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
+            context.Route = route;
+
             return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, associatedModule.Before, associatedModule.After);
+
         }
 
         private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)

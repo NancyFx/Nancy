@@ -34,6 +34,7 @@
         public NancyModule BuildModule(NancyModule module, NancyContext context)
         {
             module.Context = context;
+            module.Context.Module = module;
             module.Response = this.responseFormatterFactory.Create(context);
             module.ViewFactory = this.viewFactory;
             module.ModelBinderLocator = this.modelBinderLocator;
