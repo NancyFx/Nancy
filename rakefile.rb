@@ -4,7 +4,6 @@ require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
 
-NANCY_VERSION = "0.8.1"
 OUTPUT = "build"
 CONFIGURATION = 'Release'
 CONFIGURATIONMONO = 'MonoRelease'
@@ -17,13 +16,13 @@ Albacore.configure do |config|
 end
 
 desc "Compiles solution and runs unit tests"
-task :default => [:clean, :version, :compile, :test, :publish, :package]
+task :default => [:clean, :assembly_info, :compile, :test, :publish, :package]
 
 desc "Executes all MSpec and Xunit tests"
 task :test => [:mspec, :xunit]
 
 desc "Compiles solution and runs unit tests for Mono"
-task :mono => [:clean, :version, :compilemono, :testmono]
+task :mono => [:clean, :assembly_info, :compilemono, :testmono]
 
 desc "Executes all tests with Mono"
 task :testmono => [:xunitmono]
@@ -33,8 +32,7 @@ CLEAN.include(OUTPUT)
 CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 
 desc "Update shared assemblyinfo file for the build"
-assemblyinfo :version => [:clean] do |asm|
-    asm.version = NANCY_VERSION
+assemblyinfo :assembly_info => [:clean] do |asm|
     asm.company_name = "Nancy"
     asm.product_name = "Nancy"
     asm.title = "Nancy"
@@ -44,14 +42,14 @@ assemblyinfo :version => [:clean] do |asm|
 end
 
 desc "Compile solution file"
-msbuild :compile => [:version] do |msb|
+msbuild :compile => [:assembly_info] do |msb|
     msb.properties :configuration => CONFIGURATION
     msb.targets :Clean, :Build
     msb.solution = SOLUTION_FILE
 end
 
 desc "Compile solution file for Mono"
-xbuild :compilemono => [:version] do |xb|
+xbuild :compilemono => [:assembly_info] do |xb|
     xb.properties :configuration => CONFIGURATIONMONO
     xb.targets :Clean, :Build
     xb.solution = SOLUTION_FILE
@@ -113,11 +111,11 @@ task :nuget_package => [:publish] do
     nuspecs.each do |nuspec|
         update_xml nuspec do |xml|
             # Override the version number in the nuspec file with the one from this rake file (set above)
-            xml.root.elements["metadata/version"].text = NANCY_VERSION
+            xml.root.elements["metadata/version"].text = $nancy_version
 			
 			# Override the Nancy dependencies to match this version
             nancy_dependencies = xml.root.elements["metadata/dependencies/dependency[contains(@id,'Nancy')]"]
-            nancy_dependencies.attributes["version"] = "[#{NANCY_VERSION}]" unless nancy_dependencies.nil?
+            nancy_dependencies.attributes["version"] = "[#{$nancy_version}]" unless nancy_dependencies.nil?
 
             # Override common values
             xml.root.elements["metadata/authors"].text = "Andreas Håkansson, Steven Robbins and contributors"
@@ -140,7 +138,7 @@ end
 
 desc "Pushes the nuget packages in the nuget folder up to the nuget gallary and symbolsource.org. Also publishes the packages into the feeds."
 task :nuget_publish, :api_key do |task, args|
-    nupkgs = FileList["#{OUTPUT}/nuget/*#{NANCY_VERSION}.nupkg"]
+    nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
     nupkgs.each do |nupkg| 
         puts "Pushing #{nupkg}"
         nuget_push = NuGetPush.new
@@ -153,21 +151,21 @@ task :nuget_publish, :api_key do |task, args|
 end
 
 desc "Updates the SharedAssemblyInfo version"
-assemblyinfo :update_version, :version do |asm, args|
+assemblyinfo :update_version, :assembly_info do |asm, args|
     asm.input_file = SHARED_ASSEMBLY_INFO
     asm.version = args.version if !args.version.nil?
     asm.output_file = SHARED_ASSEMBLY_INFO
 end
 
 desc "Tags the current release"
-task :tag, :version do |asm, args|
-    args.with_defaults(:version => NANCY_VERSION)
+task :tag, :assembly_info do |asm, args|
+    args.with_defaults(:assembly_info => $nancy_version)
 
     sh "git tag \"v#{args.version}\""
 end
 
 desc "Updates the version and tags the release"
-task :prep_release, :version do |task, args|
+task :prep_release, :assembly_info do |task, args|
   if !args.version.nil?
     task(:update_version).invoke(args.version)
 
@@ -195,6 +193,21 @@ def update_xml(xml_path)
     xml_file.close 
 end
 
+def get_assembly_version(file)
+  return '' if file.nil?
+
+  File.open(file, 'r') do |file|
+    file.each_line do |line|
+      result = /\[assembly: AssemblyVersion\(\"(.*?)\"\)\]/.match(line)
+
+      return result[1] if !result.nil?
+    end
+  end
+
+  ''
+end
+
+$nancy_version = get_assembly_version SHARED_ASSEMBLY_INFO
 
 #TODO:
 #-----
