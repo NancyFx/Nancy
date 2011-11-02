@@ -32,14 +32,18 @@ CLEAN.include(OUTPUT)
 CLEAN.include(FileList["src/**/#{CONFIGURATION}"])
 
 desc "Update shared assemblyinfo file for the build"
-assemblyinfo :assembly_info => [:clean] do |asm|
-    asm.company_name = "Nancy"
-    asm.product_name = "Nancy"
-    asm.title = "Nancy"
-    asm.description = "A Sinatra inspired web framework for the .NET platform"
-    asm.copyright = "Copyright (C) Andreas Hakansson, Steven Robbins and contributors"
-    asm.output_file = SHARED_ASSEMBLY_INFO
+#assemblyinfo :assembly_info => [:clean] do |asm|
+#    asm.company_name = "Nancy"
+#    asm.product_name = "Nancy"
+#    asm.title = "Nancy"
+#    asm.description = "A Sinatra inspired web framework for the .NET platform"
+#    asm.copyright = "Copyright (C) Andreas Hakansson, Steven Robbins and contributors"
+#    asm.output_file = SHARED_ASSEMBLY_INFO
+#end
+task :assembly_info do
+  puts "Main project does not update assembly info"
 end
+
 
 desc "Compile solution file"
 msbuild :compile => [:assembly_info] do |msb|
@@ -208,7 +212,7 @@ def get_assembly_version(file)
 end
 
 $nancy_version = get_assembly_version SHARED_ASSEMBLY_INFO
-
+puts "Version: #{$nancy_version}"
 #TODO:
 #-----
 #  8. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
