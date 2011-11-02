@@ -5,6 +5,8 @@ namespace Nancy.Testing.Tests
     using System.IO;
     using System.Text;
     using System.Linq;
+
+    using Nancy.Extensions;
     using Nancy.Tests;
     using Nancy.Helpers;
     using Nancy.Session;
@@ -261,6 +263,14 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual("http");
         }
 
+        [Fact]
+        public void Should_add_ajax_header()
+        {
+            var result = browser.Get("/ajax", with => with.AjaxRequest());
+
+            result.Body.AsString().ShouldEqual("ajax");
+        }
+
         public class EchoModel
         {
             public string SomeString { get; set; }
@@ -318,6 +328,8 @@ namespace Nancy.Testing.Tests
                     };
 
                 Get["/type"] = _ => Request.Url.Scheme.ToLower();
+
+                Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
             }
 
         }

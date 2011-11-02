@@ -5,6 +5,8 @@
     using System.IO;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
 
@@ -111,6 +113,16 @@
 
             var values = (List<string>)contextValues.Headers["Cookie"];
             values[0] += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
+        }
+
+        /// <summary>
+        /// Adds a header to indicate this request is an "ajax request"
+        /// <seealso cref="RequestExtensions.IsAjaxRequest"/>
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        public static void AjaxRequest(this BrowserContext browserContext)
+        {
+            browserContext.Header("X-Requested-With", "XMLHttpRequest");
         }
     }
 }
