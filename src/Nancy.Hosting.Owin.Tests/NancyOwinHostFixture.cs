@@ -330,6 +330,7 @@ namespace Nancy.Tests
         {
             var fakeResponse = new Response() { StatusCode = HttpStatusCode.OK };
             fakeResponse.AddCookie("test", "testvalue");
+            fakeResponse.AddCookie("test1", "testvalue1");
             var fakeContext = new NancyContext() { Response = fakeResponse };
             
             this.SetupFakeNancyCompleteCallback(fakeContext);
@@ -338,7 +339,7 @@ namespace Nancy.Tests
 
             this.host.ProcessRequest(environment, callback, fakeErrorCallback);
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
-            (respHeaders["Set-Cookie"]=="test=testvalue; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"] == "test=testvalue; path=/\r\ntest1=testvalue1; path=/").ShouldBeTrue();
         }
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
