@@ -52,13 +52,6 @@
                 }
             };
         }
-
-        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
-        {
-            base.RequestStartup(container, pipelines, context);
-
-            context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
-        }
     }
 
     public class MyRazorConfiguration : IRazorConfiguration

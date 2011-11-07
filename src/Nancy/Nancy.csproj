@@ -102,7 +102,6 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpStartup.cs" />
@@ -127,7 +126,6 @@
     <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticSession.cs" />
-    <Compile Include="Diagnostics\Hooks.cs" />
     <Compile Include="Diagnostics\IDiagnosticSessions.cs" />
     <Compile Include="Diagnostics\RequestDiagnostic.cs" />
     <Compile Include="Diagnostics\TraceLog.cs" />

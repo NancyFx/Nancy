@@ -39,7 +39,7 @@
                     foreach (var diag in session.RequestDiagnostics)
                     {
                         responseBuilder.AppendFormat(
-                            "*******<br/>Request: {0}</br/>Log:<br/>{1}<br/>*******<br/>", diag.RequestUrl.Path, diag.TraceLog.ToString());
+                            "*******<br/>Request: {0}</br/>Type: {2}<br/>Log:<br/>{1}<br/>*******<br/>", diag.RequestUrl.Path, diag.TraceLog.ToString(), diag.ResponseType);
                     }
 
                     return responseBuilder.ToString();

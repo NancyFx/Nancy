@@ -11,7 +11,11 @@ namespace Nancy
         /// <returns>NancyContext instance</returns>
         public NancyContext Create()
         {
-            return new NancyContext();
+            var nancyContext = new NancyContext();
+
+            nancyContext.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
+
+            return nancyContext;
         }
     }
 }

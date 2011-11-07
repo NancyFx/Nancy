@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Diagnostics
 {
+    using System;
     using System.Collections.Generic;
 
     public class RequestDiagnostic
@@ -11,6 +12,8 @@
         public TraceLog TraceLog { get; private set; }
 
         public IDictionary<string, object> Items { get; private set; }
+
+        public Type ResponseType { get; set; }
 
         public RequestDiagnostic()
         {

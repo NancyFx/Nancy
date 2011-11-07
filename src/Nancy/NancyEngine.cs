@@ -5,6 +5,8 @@
     using System.Linq;
     using System.Threading;
     using Bootstrapper;
+
+    using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
 
@@ -19,6 +21,7 @@
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
+        private readonly IDiagnosticSessions sessionProvider;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
 
         /// <summary>
@@ -28,7 +31,7 @@
         /// <param name="routeCache">Cache of all available routes</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers)
+        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IDiagnosticSessions sessionProvider)
         {
             if (resolver == null)
             {
@@ -54,6 +57,7 @@
             this.routeCache = routeCache;
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
+            this.sessionProvider = sessionProvider;
         }
 
         /// <summary>
@@ -85,7 +89,43 @@
 
             CheckErrorHandler(context);
 
+            SaveDiagnostics(context);
+
             return context;
+        }
+
+        private void SaveDiagnostics(NancyContext ctx)
+        {
+            if (!StaticConfiguration.EnableDiagnostics)
+            {
+                return;
+            }
+
+            if (ctx.Request == null || ctx.Response == null)
+            {
+                return;
+            }
+
+            string sessionId;
+            if (!ctx.Request.Cookies.TryGetValue("NancyDiagnosticsSession", out sessionId))
+            {
+                sessionId = sessionProvider.CreateSession().ToString();
+                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionId);
+            }
+            var sessionGuid = new Guid(sessionId);
+
+            if (!sessionProvider.GetSessions().Any(s => s.Id == sessionGuid))
+            {
+                sessionGuid = sessionProvider.CreateSession();
+                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionGuid.ToString());
+            }
+
+            if (ctx.Response != null)
+            {
+                ctx.Diagnostic.ResponseType = ctx.Response.GetType();
+            }
+
+            sessionProvider.AddRequestDiagnosticToSession(sessionGuid, ctx);
         }
 
         /// <summary>
