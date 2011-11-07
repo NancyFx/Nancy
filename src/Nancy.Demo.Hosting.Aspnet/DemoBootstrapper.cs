@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using Bootstrapper;
     using Conventions;
+
+    using Nancy.Diagnostics;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 
@@ -18,6 +20,7 @@
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
             existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
+            existingContainer.Register<IDiagnosticSessions, DefaultDiagnosticSessions>().AsSingleton();
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)
@@ -31,6 +34,7 @@
         {
             base.ApplicationStartup(container, pipelines);
 
+            StaticConfiguration.EnableDiagnostics = true;
             StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 
@@ -47,6 +51,13 @@
                     ctx.Response = new HereBeAResponseYouScurvyDog(ctx.Response);
                 }
             };
+        }
+
+        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            base.RequestStartup(container, pipelines, context);
+
+            context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
         }
     }
 

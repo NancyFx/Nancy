@@ -102,6 +102,7 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpStartup.cs" />

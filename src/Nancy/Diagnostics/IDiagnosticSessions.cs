@@ -21,9 +21,11 @@
 
         public Guid CreateSession()
         {
-            var id = new Guid();
+            var id = Guid.NewGuid();
 
-            this.sessions.Add(id);
+            this.sessions.Add(new DiagnosticSession(id));
+
+            return id;
         }
 
         // TODO - remove above method and return guid from here?

@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Diagnostics
 {
     using System;
+    using System.Linq;
+
     using Bootstrapper;
 
     public static class Hooks
@@ -25,9 +27,15 @@
                         sessionId = sessionProvider.CreateSession().ToString();
                     }
                     var sessionGuid = new Guid(sessionId);
+
+                    if (!sessionProvider.GetSessions().Any(s => s.Id == sessionGuid))
+                    {
+                        sessionGuid = sessionProvider.CreateSession();
+                    }
+
                     sessionProvider.AddRequestDiagnosticToSession(sessionGuid, ctx);
 
-                    ctx.Response.AddCookie("NancyDiagnosticsSession", sessionId);
+                    ctx.Response.AddCookie("NancyDiagnosticsSession", sessionGuid.ToString());
 
                     return;
                 };
