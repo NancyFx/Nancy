@@ -55,7 +55,6 @@ end
 desc "Compile solution file for Mono"
 xbuild :compilemono => [:assembly_info] do |xb|
     xb.properties :configuration => CONFIGURATIONMONO
-    xb.targets :Clean, :Build
     xb.solution = SOLUTION_FILE
 end
 
