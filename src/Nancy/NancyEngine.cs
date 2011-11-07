@@ -106,19 +106,7 @@
                 return;
             }
 
-            string sessionId;
-            if (!ctx.Request.Cookies.TryGetValue("NancyDiagnosticsSession", out sessionId))
-            {
-                sessionId = sessionProvider.CreateSession().ToString();
-                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionId);
-            }
-            var sessionGuid = new Guid(sessionId);
-
-            if (!sessionProvider.GetSessions().Any(s => s.Id == sessionGuid))
-            {
-                sessionGuid = sessionProvider.CreateSession();
-                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionGuid.ToString());
-            }
+            var sessionGuid = this.GetDiagnosticsSessionGuid(ctx);
 
             if (ctx.Response != null)
             {
@@ -126,6 +114,29 @@
             }
 
             sessionProvider.AddRequestDiagnosticToSession(sessionGuid, ctx);
+        }
+
+        private Guid GetDiagnosticsSessionGuid(NancyContext ctx)
+        {
+            string sessionId;
+            Guid sessionGuid;
+            if (!ctx.Request.Cookies.TryGetValue("NancyDiagnosticsSession", out sessionId))
+            {
+                sessionGuid = this.sessionProvider.CreateSession();
+                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionGuid.ToString());
+            }
+            else
+            {
+                sessionGuid = new Guid(sessionId);
+            }
+
+            if (!this.sessionProvider.GetSessions().Any(s => s.Id == sessionGuid))
+            {
+                sessionGuid = this.sessionProvider.CreateSession();
+                ctx.Response.AddCookie("NancyDiagnosticsSession", sessionGuid.ToString());
+            }
+
+            return sessionGuid;
         }
 
         /// <summary>

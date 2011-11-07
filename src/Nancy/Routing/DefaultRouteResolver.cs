@@ -38,6 +38,7 @@
         {
             if (routeCache.IsEmpty())
             {
+                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[RouteResolver] No Routes Available"));
                 return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null);
             }
 
@@ -45,6 +46,7 @@
 
             if (NoRoutesWereAbleToBeMatchedInRouteCache(routesThatMatchRequestedPath))
             {
+                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[RouteResolver] No Matching Routes Available"));
                 return new ResolveResult(new NotFoundRoute(context.Request.Method, context.Request.Path), DynamicDictionary.Empty, null, null);
             }
 
@@ -54,12 +56,15 @@
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
                 var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
+                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[RouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
             }
 
             var exactMatch = GetRouteMatchesWithExactPathMatch(routesWithCorrectRequestMethod).FirstOrDefault();
             if (exactMatch != null)
             {
+                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[RouteResolver] Found exact match route"));
+
                 return this.CreateRouteAndParametersFromMatch(context, exactMatch);
             }
 
@@ -68,6 +73,8 @@
 
             var routeMatchToReturn = 
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
+
+            context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[RouteResolver] Selected best match"));
 
             return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
         }
