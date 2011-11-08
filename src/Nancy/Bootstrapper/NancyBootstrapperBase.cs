@@ -336,7 +336,7 @@
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
-            this.RequestStartup(this.ApplicationContainer, requestPipelines);
+            this.RequestStartup(this.ApplicationContainer, requestPipelines, context);
 
             return requestPipelines;
         }
@@ -361,11 +361,14 @@
         }
 
         /// <summary>
-        /// 
+        /// Initialise the request - can be used for adding pre/post hooks and
+        /// any other per-request initialisation tasks that aren't specifically container setup
+        /// related
         /// </summary>
-        /// <param name="container"></param>
-        /// <param name="pipelines"></param>
-        protected virtual void RequestStartup(TContainer container, IPipelines pipelines)
+        /// <param name="container">Container</param>
+        /// <param name="pipelines">Current pipelines</param>
+        /// <param name="context">Current context</param>
+        protected virtual void RequestStartup(TContainer container, IPipelines pipelines, NancyContext context)
         {
         }
 

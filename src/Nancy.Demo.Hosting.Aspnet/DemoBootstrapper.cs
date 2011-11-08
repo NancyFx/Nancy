@@ -6,6 +6,8 @@
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 
+    using TinyIoC;
+
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
         // Overriding this just to show how it works, not actually necessary as autoregister
@@ -18,9 +20,9 @@
             existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
         }
 
-        protected override void ConfigureRequestContainer(TinyIoC.TinyIoCContainer existingContainer)
+        protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)
         {
-            base.ConfigureRequestContainer(existingContainer);
+            base.ConfigureRequestContainer(existingContainer, context);
 
             existingContainer.Register<IRequestDependency, RequestDependencyClass>().AsSingleton();
         }
