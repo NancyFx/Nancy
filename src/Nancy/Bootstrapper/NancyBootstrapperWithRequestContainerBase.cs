@@ -40,9 +40,7 @@ namespace Nancy.Bootstrapper
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
         public override sealed IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            var requestContainer = this.GetRequestContainer(context);
-
-            this.ConfigureRequestContainer(requestContainer);
+            var requestContainer = this.GetConfiguredRequestContainer(context);
 
             return this.GetAllModules(requestContainer);
         }
@@ -55,9 +53,7 @@ namespace Nancy.Bootstrapper
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
         public override sealed NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var requestContainer = this.GetRequestContainer(context);
-
-            this.ConfigureRequestContainer(requestContainer);
+            var requestContainer = this.GetConfiguredRequestContainer(context);
 
             return this.GetModuleByKey(requestContainer, moduleKey);
         }
@@ -70,14 +66,12 @@ namespace Nancy.Bootstrapper
         protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
         {
             var requestContainer = 
-                this.GetRequestContainer(context);
-
-            this.ConfigureRequestContainer(requestContainer);
+                this.GetConfiguredRequestContainer(context);
 
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
             
-            this.RequestStartup(requestContainer, requestPipelines);
+            this.RequestStartup(requestContainer, requestPipelines, context);
 
             return requestPipelines;
         }
@@ -87,7 +81,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="context">Current context</param>
         /// <returns>Request container instance</returns>
-        protected TContainer GetRequestContainer(NancyContext context)
+        protected TContainer GetConfiguredRequestContainer(NancyContext context)
         {
             object contextObject;
             context.Items.TryGetValue(this.ContextKey, out contextObject);
@@ -100,6 +94,8 @@ namespace Nancy.Bootstrapper
                 this.RegisterRequestContainerModules(requestContainer, this.moduleRegistrationTypeCache);
 
                 context.Items[this.ContextKey] = requestContainer;
+
+                this.ConfigureRequestContainer(requestContainer, context);
             }
 
             return requestContainer;
@@ -109,7 +105,8 @@ namespace Nancy.Bootstrapper
         /// Configure the request container
         /// </summary>
         /// <param name="container">Request container instance</param>
-        protected virtual void ConfigureRequestContainer(TContainer container)
+        /// <param name="context"></param>
+        protected virtual void ConfigureRequestContainer(TContainer container, NancyContext context)
         {
         }
 
