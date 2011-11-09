@@ -271,10 +271,13 @@ namespace Nancy
 
         private static DateTime ParseDateTime(string value)
         {
-            return DateTime.ParseExact(
-                value,
-                "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
-                CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None);
+            DateTime result;
+            // note CultureInfo.InvariantCulture is ignored
+            if (DateTime.TryParseExact(value, "R", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+            {
+                return result;
+            }
+            return default(DateTime);
         }
 
     }
