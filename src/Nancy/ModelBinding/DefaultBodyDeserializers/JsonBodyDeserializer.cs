@@ -20,7 +20,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>True if supported, false otherwise</returns>
         public bool CanDeserialize(string contentType)
         {
-            return this.IsJsonType(contentType);
+            return Json.IsJsonContentType(contentType);
         }
 
         /// <summary>
@@ -69,31 +69,6 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         private void CopyPropertyValue(PropertyInfo property, object sourceObject, object destinationObject)
         {
             property.SetValue(destinationObject, property.GetValue(sourceObject, null), null);
-        }
-
-        /// <summary>
-        /// Attempts to detect if the content type is JSON.
-        /// Supports:
-        ///   application/json
-        ///   text/json
-        ///   application/vnd[something]+json
-        /// Matches are case insentitive to try and be as "accepting" as possible.
-        /// </summary>
-        /// <param name="contentType">Request content type</param>
-        /// <returns>True if content type is JSON, false otherwise</returns>
-        private bool IsJsonType(string contentType)
-        {
-            if (String.IsNullOrEmpty(contentType))
-            {
-                return false;
-            }
-
-            var contentMimeType = contentType.Split(';')[0];
-
-            return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }
