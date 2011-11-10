@@ -400,7 +400,7 @@
         }
 
         [Fact]
-        public void Should_return_min_date_when_date_headers_are_not_available()
+        public void Should_return_null_date_when_date_headers_are_not_available()
         {
             // Given
             var rawHeaders = new Dictionary<string, IEnumerable<string>>();
@@ -409,11 +409,12 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Date.ShouldEqual(DateTime.MinValue);
+            headers.Date.ShouldBeNull();;
         }
 
+
         [Fact]
-        public void Should_return_date_when_available()
+        public void Should_return_date_when_date_headers_available()
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
@@ -425,6 +426,20 @@
 
             // Then
             headers.Date.ShouldEqual(expectedDate);
+        }
+
+        [Fact]
+        public void Should_be_null_when_date_headers_are_invalid()
+        {
+            // Given
+            var expectedValues = new[] { "Bad Date Header" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Date", expectedValues } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.Date.ShouldBeNull();
         }
 
         [Fact]
@@ -576,7 +591,7 @@
         }
 
         [Fact]
-        public void Should_return_min_date_when_ifmodifiedsince_headers_are_not_available()
+        public void Should_return_null_when_ifmodifiedsince_headers_are_not_available()
         {
             // Given
             var rawHeaders = new Dictionary<string, IEnumerable<string>>();
@@ -585,7 +600,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfModifiedSince.ShouldEqual(DateTime.MinValue);
+            headers.IfModifiedSince.ShouldBeNull();
         }
 
         [Fact]
@@ -601,6 +616,20 @@
 
             // Then
             headers.IfModifiedSince.ShouldEqual(expectedDate);
+        }
+
+        [Fact]
+        public void Should_return_null_when_ifmodifiedsince_when_invalid()
+        {
+            // Given
+            var expectedValues = new[] { "Bad Date" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", expectedValues } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.IfModifiedSince.ShouldBeNull();
         }
 
         [Theory]
@@ -707,7 +736,7 @@
         }
 
         [Fact]
-        public void Should_return_min_date_when_ifunmodifiedsince_headers_are_not_available()
+        public void Should_return_null_when_ifunmodifiedsince_headers_are_not_available()
         {
             // Given
             var rawHeaders = new Dictionary<string, IEnumerable<string>>();
@@ -716,11 +745,11 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.IfUnmodifiedSince.ShouldEqual(DateTime.MinValue);
+            headers.IfUnmodifiedSince.ShouldBeNull();
         }
 
         [Fact]
-        public void Should_return_ifunmodifiedsince_when_available()
+        public void Should_return_date_ifunmodifiedsince_when_available()
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
@@ -732,6 +761,20 @@
 
             // Then
             headers.IfUnmodifiedSince.ShouldEqual(expectedDate);
+        }
+
+        [Fact]
+        public void Should_return_null_ifunmodifiedsince_is_invalid()
+        {
+            // Given
+            var expectedValues = new[] { "Bad Date" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", expectedValues } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders);
+
+            // Then
+            headers.IfUnmodifiedSince.ShouldBeNull();
         }
 
         [Theory]
