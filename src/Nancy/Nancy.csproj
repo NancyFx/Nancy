@@ -74,6 +74,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition">
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration">
     </Reference>
     <Reference Include="System.Core">
@@ -159,6 +160,31 @@
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
+    <Compile Include="Validation\CompositeValidator.cs" />
+    <Compile Include="Validation\DataAnnotations\StringLengthValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\RangeValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\RequiredValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\DataAnnotationsValidatableObjectValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\DataAnnotationsValidator.cs" />
+    <Compile Include="Validation\DataAnnotations\DataAnnotationsValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\DataAnnotationsValidatorFactory.cs" />
+    <Compile Include="Validation\DataAnnotations\IDataAnnotationsValidatorAdapter.cs" />
+    <Compile Include="Validation\DataAnnotations\RegexValidatorAdapter.cs" />
+    <Compile Include="Validation\DefaultValidatorLocator.cs" />
+    <Compile Include="Validation\IValidator.cs" />
+    <Compile Include="Validation\IValidatorFactory.cs" />
+    <Compile Include="Validation\IValidatorLocator.cs" />
+    <Compile Include="Validation\ModuleExtensions.cs" />
+    <Compile Include="Validation\Rules\ComparisonOperator.cs" />
+    <Compile Include="Validation\Rules\NotEmptyValidationRule.cs" />
+    <Compile Include="Validation\Rules\NotNullValidationRule.cs" />
+    <Compile Include="Validation\Rules\ComparisonValidationRule.cs" />
+    <Compile Include="Validation\Rules\RegexValidationRule.cs" />
+    <Compile Include="Validation\Rules\StringLengthValidationRule.cs" />
+    <Compile Include="Validation\ValidationDescriptor.cs" />
+    <Compile Include="Validation\ValidationError.cs" />
+    <Compile Include="Validation\ValidationResult.cs" />
+    <Compile Include="Validation\ValidationRule.cs" />
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />

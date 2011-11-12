@@ -10,6 +10,7 @@ namespace Nancy.Bootstrapper
     using Nancy.ViewEngines;
     using Responses;
     using Security;
+    using Nancy.Validation;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -45,6 +46,7 @@ namespace Nancy.Bootstrapper
                         ViewResolver = typeof(DefaultViewResolver),
                         ViewCache = typeof(DefaultViewCache),
                         RenderContextFactory = typeof(DefaultRenderContextFactory),
+                        ValidatorLocator = typeof(DefaultValidatorLocator),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                         ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IErrorHandler>(true))),
@@ -84,6 +86,8 @@ namespace Nancy.Bootstrapper
         public Type BindingDefaults { get; set; }
 
         public Type FieldNameConverter { get; set; }
+
+        public Type ValidatorLocator { get; set; }
 
         public Type ViewResolver { get; set; }
 
@@ -165,6 +169,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
+                new TypeRegistration(typeof(IValidatorLocator), this.ValidatorLocator)
             };
         }
 

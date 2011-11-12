@@ -70,6 +70,7 @@
     </Reference>
     <Reference Include="System">
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Web">
@@ -192,6 +193,12 @@
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
+    <Compile Include="Unit\Validation\DataAnnotations\DataAnnotationValidatorFixture.cs" />
+    <Compile Include="Unit\Validation\DataAnnotations\DataAnnotationValidatorFactoryFixture.cs" />
+    <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
+    <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
+    <Compile Include="Unit\Validation\DefaultValidatorLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultRenderContextFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewLocationCacheFixture.cs" />
     <Compile Include="Fakes\FakeViewLocationCache.cs" />

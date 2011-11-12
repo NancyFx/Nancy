@@ -6,6 +6,7 @@
     using Nancy.Routing;
     using Nancy.ViewEngines;
     using Xunit;
+    using Nancy.Validation;
 
     public class DefaultNancyModuleBuilderFixture
     {
@@ -14,6 +15,7 @@
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly IValidatorLocator validatorLocator;
 
         public DefaultNancyModuleBuilderFixture()
         {
@@ -24,7 +26,8 @@
 
             this.viewFactory = A.Fake<IViewFactory>();
             this.modelBinderLocator = A.Fake<IModelBinderLocator>();
-            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator);
+            this.validatorLocator = A.Fake<IValidatorLocator>();
+            this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator, this.validatorLocator);
         }
 
         [Fact]

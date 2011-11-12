@@ -9,6 +9,7 @@ namespace Nancy
     using Nancy.Session;
     using Nancy.ViewEngines;
     using Nancy.Extensions;
+    using Nancy.Validation;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
@@ -185,6 +186,12 @@ namespace Nancy
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public IModelBinderLocator ModelBinderLocator { get; set; }
+
+        /// <summary>
+        /// Gets or sets the validator locator.
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public IValidatorLocator ValidatorLocator { get; set; }
 
         /// <summary>
         /// Helper class for configuring a route handler in a module.
