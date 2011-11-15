@@ -25,6 +25,14 @@ namespace Nancy
             get { return null; }
         }
 
+        public int Order
+        {
+            get
+            {
+                return 0;
+            }
+        }
+
         public void Initialize(IPipelines pipelines)
         {
             Nancy.Jsonp.Enable(pipelines);

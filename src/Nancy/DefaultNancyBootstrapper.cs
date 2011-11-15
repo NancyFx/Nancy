@@ -134,7 +134,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
         protected override IEnumerable<IStartup> GetStartupTasks()
         {
-            return this.ApplicationContainer.ResolveAll<IStartup>(false);
+            return this.ApplicationContainer.ResolveAll<IStartup>(false).OrderBy(x => x.Order);
         }
 
         /// <summary>
