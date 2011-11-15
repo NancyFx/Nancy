@@ -31,6 +31,13 @@ namespace Nancy.Extensions
             {
                 types = new Type[] { };
             }
+            catch (FileLoadException)
+            {
+                types = new Type[] { };
+            } 
+            catch (TypeLoadException) {
+                types = new Type[] { };
+            }
 
             return types;
         }
