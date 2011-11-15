@@ -169,7 +169,7 @@
 
             foreach (var nancyCookie in nancyResponse.Cookies)
             {
-                response.Cookies.Add(ConvertCookie(nancyCookie));
+                response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
             response.ContentType = nancyResponse.ContentType;
