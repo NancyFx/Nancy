@@ -40,6 +40,11 @@ namespace Nancy
         public Response Response { get; set; }
 
         /// <summary>
+        /// Gets or sets the exception, if any ocurred
+        /// </summary>
+        public Exception Exception { get; set; }
+
+        /// <summary>
         /// Gets or sets the current user
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }

@@ -7,13 +7,13 @@
     using Bootstrapper;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
+    using ResolveResult = System.Tuple<Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
     /// </summary>
     public class NancyEngine : INancyEngine
     {
-        internal const string ERROR_KEY = "ERROR_TRACE";
 
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
@@ -139,24 +139,45 @@
 
         private void InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
         {
+
+             ResolveResult resolveResult;
+
             try
             {
+                resolveResult = this.resolver.Resolve(context, this.routeCache);
                 InvokePreRequestHook(context, pipelines.BeforeRequest);
-
-                if (context.Response == null) 
-                {
-                    this.ResolveAndInvokeRoute(context);
-                }
-
-                if (pipelines.AfterRequest != null) 
-                {
-                    pipelines.AfterRequest.Invoke(context);
-                }
             }
             catch (Exception ex)
             {
-                InvokeOnErrorHook(context, pipelines.OnError, ex);
+                ReturnDefaultErrorResponse(context, ex);
+                return;
             }
+
+            if (context.Response == null)
+            {
+                ResolveAndInvokeRoute(context, resolveResult);
+            }
+
+            try
+            {
+                InvokePostRequestHook(context, pipelines.AfterRequest);
+            }
+            catch (Exception ex)
+            {
+                ReturnDefaultErrorResponse(context, ex);
+            }
+
+
+        }
+
+        private static void InvokePostRequestHook(NancyContext context, AfterPipeline afterRequest)
+        {
+        
+            if (afterRequest != null)
+            {
+                afterRequest.Invoke(context);
+            }
+
         }
 
         private static void InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
@@ -172,54 +193,59 @@
             }
         }
 
-        private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
+        private static void ResolveAndInvokeRoute(NancyContext context, ResolveResult resolveResult)
         {
-            try
-            {
-                if (pipeline == null)
-                { 
-                    throw ex;
-                }
-
-                var onErrorResponse = pipeline.Invoke(context, ex);
-
-                if (onErrorResponse == null)
-                {
-                    throw ex;
-                }
-
-                context.Response = onErrorResponse;
-            }
-            catch (Exception e)
-            {
-                context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
-                context.Items[ERROR_KEY] = e.ToString();
-            }
-        }
-
-        private void ResolveAndInvokeRoute(NancyContext context)
-        {
-            var resolveResult = this.resolver.Resolve(context, this.routeCache);
 
             context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;
             var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(context, resolveResultPreReq);
 
-            if (context.Response == null)
+            try
             {
-                context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                ExecuteRoutePreReq(context, resolveResultPreReq);
+            }
+            catch (Exception ex)
+            {
+                ReturnDefaultErrorResponse(context, ex);
+                return;
             }
 
-            if (context.Request.Method.ToUpperInvariant() == "HEAD")
+            try
+            {
+                if (context.Response == null)
+                {
+                    context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                }
+            }
+            catch (Exception ex)
+            {
+                ReturnDefaultErrorResponse(context, ex);
+            }
+
+            if (context.Request.Method.ToUpperInvariant() == "HEAD" && context.Response.StatusCode != HttpStatusCode.InternalServerError)
             {
                 context.Response = new HeadResponse(context.Response);
             }
+
+            try
+            {
+                ExecuteRoutePostReq(context, resolveResultPostReq);
+            }
+            catch (Exception ex)
+            {
+                ReturnDefaultErrorResponse(context, ex);
+            }
+
+        }
+
+        private static void ExecuteRoutePostReq(NancyContext context, Action<NancyContext> resolveResultPostReq)
+        {
 
             if (resolveResultPostReq != null)
             {
                 resolveResultPostReq.Invoke(context);
             }
+
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
@@ -236,5 +262,13 @@
                 context.Response = resolveResultPreReqResponse;
             }
         }
+
+        private static void ReturnDefaultErrorResponse(NancyContext context, Exception ex)
+        {
+            context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
+            context.Exception = ex;
+        }
+
     }
+
 }

@@ -67,10 +67,7 @@ namespace Nancy.Extensions
         /// <returns>Exception details</returns>
         public static string GetExceptionDetails(this NancyContext context)
         {
-            object errorObject;
-            context.Items.TryGetValue(NancyEngine.ERROR_KEY, out errorObject);
-
-            return (errorObject as string) ?? "None";
+            return (context.Exception != null) ? context.Exception.ToString() : "None";
         }
     }
 }

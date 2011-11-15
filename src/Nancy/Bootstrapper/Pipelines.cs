@@ -14,7 +14,6 @@ namespace Nancy.Bootstrapper
         {
             this.AfterRequest = new AfterPipeline();
             this.BeforeRequest = new BeforePipeline();
-            this.OnError = new ErrorPipeline();
         }
 
         /// <summary>
@@ -39,13 +38,6 @@ namespace Nancy.Bootstrapper
                 this.BeforeRequest.AddItemToEndOfPipeline(pipelineItem);
             }
 
-            this.OnError = 
-                new ErrorPipeline(pipelines.OnError.PipelineItems.Count());
-
-            foreach (var pipelineItem in pipelines.OnError.PipelineItems)
-            {
-                this.OnError.AddItemToEndOfPipeline(pipelineItem);
-            }
         }
 
         /// <summary>
@@ -71,15 +63,5 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public AfterPipeline AfterRequest { get; set; }
 
-        /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError { get; set; }
     }
 }

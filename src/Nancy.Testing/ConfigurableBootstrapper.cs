@@ -374,21 +374,6 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError
-        {
-            get { return this.ApplicationPipelines.OnError; }
-            set { this.ApplicationPipelines.OnError = value; }
-        }
-
-        /// <summary>
         /// Provides an API for configuring a <see cref="ConfigurableBootstrapper"/> instance.
         /// </summary>
         public class ConfigurableBoostrapperConfigurator

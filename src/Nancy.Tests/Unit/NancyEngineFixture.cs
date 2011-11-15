@@ -546,39 +546,38 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_invoke_the_error_request_hook_if_one_exists_when_route_throws()
+        public void Should_receive_exceptions_on_post_request_hook_when_route_throws()
         {
+
             // Given
             var testEx = new Exception();
             var errorRoute = new Route("GET", "/", null, x => { throw testEx; });
-            
+
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
-            
+
             Exception handledException = null;
             NancyContext handledContext = null;
             var errorResponse = new Response();
-            
-            Func<NancyContext, Exception, Response> routeErrorHook = (ctx, ex) =>
+
+            Action<NancyContext> routeErrorHook = (ctx) =>
             {
                 handledContext = ctx;
-                handledException = ex;
-                return errorResponse;
+                handledException = ctx.Exception;
             };
 
             var pipelines = new Pipelines();
-            pipelines.OnError.AddItemToStartOfPipeline(routeErrorHook);
+            pipelines.AfterRequest.AddItemToStartOfPipeline(routeErrorHook);
 
             engine.RequestPipelinesFactory = (ctx) => pipelines;
 
             var request = new Request("GET", "/", "http");
-            
+
             // When
             var result = this.engine.HandleRequest(request);
 
             // Then
-            Assert.Equal(testEx, handledException);
             Assert.Equal(result, handledContext);
-            Assert.Equal(result.Response, errorResponse);
+            Assert.Equal(result.Exception, handledException);
         }
     }
 }

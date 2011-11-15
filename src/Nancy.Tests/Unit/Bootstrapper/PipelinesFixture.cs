@@ -28,16 +28,6 @@
         }
 
         [Fact]
-        public void Should_create_default_error_hook_when_created_with_default_ctor()
-        {
-            // Given, When
-            var pipelines = new Pipelines();
-
-            // Then
-            pipelines.OnError.ShouldNotBeNull();
-        }
-
-        [Fact]
         public void Should_clone_after_request_hooks_when_created_with_existing_pipeline()
         {
             // Given
@@ -69,20 +59,5 @@
             pipelines.BeforeRequest.PipelineItems.First().Delegate.ShouldBeSameAs(hook);
         }
 
-        [Fact]
-        public void Should_clone_error_hooks_when_created_with_existing_pipeline()
-        {
-            // Given
-            Func<NancyContext, Exception, Response> hook = (ctx, ex) => null;
-
-            var existing = new Pipelines();
-            existing.OnError.AddItemToEndOfPipeline(hook);
-
-            // When
-            var pipelines = new Pipelines(existing);
-
-            // Then
-            pipelines.OnError.PipelineItems.First().Delegate.ShouldBeSameAs(hook);
-        }
     }
 }
