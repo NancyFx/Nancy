@@ -45,7 +45,7 @@ namespace Nancy
         /// <param name="context">Current Nancy Context</param>
         private static void PrepareJsonp(NancyContext context)
         {
-            bool isJson = context.Response.ContentType == "application/json";
+            bool isJson = Nancy.Json.Json.IsJsonContentType(context.Response.ContentType);
             bool hasCallback = context.Request.Query["callback"].HasValue;
 
             if (isJson && hasCallback)
