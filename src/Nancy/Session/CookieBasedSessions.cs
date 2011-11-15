@@ -34,6 +34,18 @@ namespace Nancy.Session
         /// </summary>
         private static string cookieName = "_nc";
 
+		/// <summary>
+		/// This delegate receives a cookie that is going to be sent to the user when saving the session.
+		/// Can be used to change the cookie path for example.
+		/// </summary>
+		/// <param name="cookie">Cookie filled by <see cref="CookieBasedSessions"/></param>
+		public delegate void Configurator(NancyCookie cookie);
+
+		/// <summary>
+		/// Cookie configurator. See <see cref="Configurator"/>
+		/// </summary>
+		public Configurator CookieConfigurator;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="CookieBasedSessions"/> class.
         /// </summary>
@@ -115,12 +127,15 @@ namespace Nancy.Session
                 sb.Append(";");
             }
 
-            // TODO - configurable path?
             var encryptedData = this.encryptionProvider.Encrypt(sb.ToString());
             var hmacBytes = this.hmacProvider.GenerateHmac(encryptedData);
             var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
 
             var cookie = new NancyCookie(cookieName, cookieData, true);
+			if (CookieConfigurator != null)
+			{
+				CookieConfigurator (cookie);
+			}
             response.AddCookie(cookie);
         }
 
@@ -133,7 +148,6 @@ namespace Nancy.Session
         {
             var dictionary = new Dictionary<string, object>();
 
-            // TODO - configurable path?
             if (request.Cookies.ContainsKey(cookieName))
             {
                 var cookieData = HttpUtility.UrlDecode(request.Cookies[cookieName]);
