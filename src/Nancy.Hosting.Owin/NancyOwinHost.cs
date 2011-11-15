@@ -141,14 +141,12 @@
                     request,
                     (result) =>
                     {
-                        var returnCode = GetReturnCode(result);
-                        var headers = result.Response.Headers;
-                        foreach (var cookie in result.Response.Cookies)
+                        if (result.Response.Cookies.Count > 0)
                         {
-                            headers.Add("Set-Cookie", cookie.ToString());
+                            result.Response.Headers["Set-Cookie"] = result.Response.GetAllCookies();
                         }
-                        headers.Add("Content-Type", result.Response.ContentType);
-                        responseCallBack.Invoke(returnCode, headers, GetResponseBodyBuilder(result));
+                        result.Response.Headers["Content-Type"] = result.Response.ContentType;
+                        responseCallBack.Invoke(GetReturnCode(result), result.Response.Headers, GetResponseBodyBuilder(result));
                     },
                     errorCallback);
             }
