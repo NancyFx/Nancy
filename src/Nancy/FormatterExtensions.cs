@@ -45,9 +45,9 @@ namespace Nancy
             return new JsonResponse<TModel>(model, serializer);
         }
 
-        public static Response AsRedirect(this IResponseFormatter formatter, string location)
+        public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
         {
-            return new RedirectResponse(formatter.Context.ToFullPath(location));
+            return new RedirectResponse(formatter.Context.ToFullPath(location), type);
         }
 
         public static Response AsXml<TModel>(this IResponseFormatter formatter, TModel model)
