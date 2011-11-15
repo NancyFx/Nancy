@@ -9,7 +9,7 @@
     public class MethodNotAllowedRoute : Route
     {
         public MethodNotAllowedRoute(string path, string method, IEnumerable<string> allowedMethods)
-            : base(method, path, null, x => CreateMethodNotAllowedResponse(allowedMethods))
+            : base(method, path, null, null, x => CreateMethodNotAllowedResponse(allowedMethods))
         {
         }
 

@@ -1,4 +1,6 @@
-﻿namespace Nancy.Routing
+﻿using System.Collections.Generic;
+
+namespace Nancy.Routing
 {
     using System;
 
@@ -6,6 +8,7 @@
     {
         public Route(RouteDescription description, Func<dynamic, Response> action)
         {
+
             if (action == null)
             {
                 throw new ArgumentNullException("action");
@@ -13,10 +16,11 @@
 
             this.Description = description;
             this.Action = action;
+
         }
 
-        public Route (string method, string path, Func<NancyContext, bool> condition, Func<dynamic, Response> action)
-            : this(new RouteDescription(method, path, condition), action)
+        public Route(string method, string path, Func<NancyContext, bool> condition, Dictionary<string, object> metadata, Func<dynamic, Response> action)
+            : this(new RouteDescription(method, path, condition, metadata), action)
         {
         }
 
@@ -28,5 +32,7 @@
         {
             return this.Action.Invoke(parameters);
         }
+
     }
+
 }

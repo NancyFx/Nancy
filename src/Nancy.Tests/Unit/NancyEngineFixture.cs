@@ -507,7 +507,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_set_status_code_to_500_if_route_throws()
         {
-            var errorRoute = new Route("GET", "/", null, x => { throw new NotImplementedException(); });
+            var errorRoute = new Route("GET", "/", null, null, x => { throw new NotImplementedException(); });
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
             var request = new Request("GET", "/", "http");
 
@@ -519,7 +519,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_store_exception_details_if_route_throws()
         {
-            var errorRoute = new Route("GET", "/", null, x => { throw new NotImplementedException(); });
+            var errorRoute = new Route("GET", "/", null, null, x => { throw new NotImplementedException(); });
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
             var request = new Request("GET", "/", "http");
 
@@ -550,7 +550,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var testEx = new Exception();
-            var errorRoute = new Route("GET", "/", null, x => { throw testEx; });
+            var errorRoute = new Route("GET", "/", null, null, x => { throw testEx; });
             
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(new ResolveResult(errorRoute, DynamicDictionary.Empty, null, null));
             
