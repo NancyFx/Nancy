@@ -216,7 +216,7 @@
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 
-            foreach (var startupTask in this.GetStartupTasks())
+            foreach (var startupTask in this.GetStartupTasks().ToList())
             {
                 startupTask.Initialize(this.ApplicationPipelines);
 
