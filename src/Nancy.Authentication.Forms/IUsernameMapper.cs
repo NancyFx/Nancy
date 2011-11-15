@@ -13,8 +13,8 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Get the real username from an indentifier
         /// </summary>
-        /// <param name="indentifier">User identifier</param>
+        /// <param name="identifier">User identifier</param>
         /// <returns>Matching username, or empty</returns>
-        IUserIdentity GetUserFromIdentifier(Guid indentifier);
+        IUserIdentity GetUserFromIdentifier(Guid identifier);
     }
 }
