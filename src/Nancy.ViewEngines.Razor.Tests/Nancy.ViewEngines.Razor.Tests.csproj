@@ -108,6 +108,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestViews\ViewThatUsesModel.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\Layouts\LayoutWithManySections.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

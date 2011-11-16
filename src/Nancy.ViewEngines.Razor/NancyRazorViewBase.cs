@@ -8,17 +8,36 @@
     public abstract class NancyRazorViewBase
     {
         private StringBuilder contents;
-
         private string childBody;
-
         private IDictionary<string, string> childSections;
 
+        /// <summary>
+        /// Gets the body.
+        /// </summary>
         public String Body { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the section contents.
+        /// </summary>
+        /// <value>
+        /// The section contents.
+        /// </value>
         public IDictionary<string, string> SectionContents { get; set; }
 
+        /// <summary>
+        /// Gets or sets the layout.
+        /// </summary>
+        /// <value>
+        /// The layout.
+        /// </value>
         public string Layout { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this instance has layout.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance has layout; otherwise, <c>false</c>.
+        /// </value>
         public bool HasLayout
         {
             get
@@ -27,19 +46,34 @@
             }
         }
 
+        /// <summary>
+        /// Gets or sets the code.
+        /// </summary>
+        /// <value>
+        /// The code.
+        /// </value>
         public string Code { get; set; }
 
+        /// <summary>
+        /// Gets or sets the path.
+        /// </summary>
+        /// <value>
+        /// The path.
+        /// </value>
         public string Path { get; set; }
 
-        public dynamic Model { get; set; }
-
-        public HtmlHelpers Html { get; set; }
-
-        public UrlHelpers Url { get; set; }
-
+        /// <summary>
+        /// Gets or sets the sections.
+        /// </summary>
+        /// <value>
+        /// The sections.
+        /// </value>
         public IDictionary<string, Action> Sections { get; set; }
 
         public abstract void Execute();
+
+        public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
+        { }
 
         protected NancyRazorViewBase()
         {
@@ -108,6 +142,22 @@
                 section.Value.Invoke();
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
+        }
+    }
+
+    public abstract class NancyRazorViewBase<TModel> : NancyRazorViewBase
+    {
+        public HtmlHelpers<TModel> Html { get; private set; }
+
+        public TModel Model { get; private set; }
+
+        public UrlHelpers<TModel> Url { get; private set; }
+
+        public override void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
+        {
+            Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
+            Model = (TModel)model;
+            Url = new UrlHelpers<TModel>(engine, renderContext);
         }
     }
 }

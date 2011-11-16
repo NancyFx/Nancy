@@ -35,47 +35,25 @@
         public RazorViewEngine(IRazorConfiguration configuration)
         {
             this.razorConfiguration = configuration;
-            this.engine = this.GetRazorTemplateEngine();
+            this.engine = this.GetRazorTemplateEngine(configuration);
             this.codeDomProvider = new CSharpCodeProvider();
         }
 
-        private RazorTemplateEngine GetRazorTemplateEngine()
+        private RazorTemplateEngine GetRazorTemplateEngine(IRazorConfiguration configuration)
         {
-            var host = 
-                new RazorEngineHost(new CSharpRazorCodeLanguage())
-                {
-                    DefaultBaseClass = typeof(NancyRazorViewBase).FullName,
-                    DefaultNamespace = "RazorOutput",
-                    DefaultClassName = "RazorView"
-                };
-
-            host.GeneratedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", null, null, null, "DefineSection");
-
-            host.NamespaceImports.Add("System");
-            host.NamespaceImports.Add("System.IO");
-            host.NamespaceImports.Add("System.Web");
-            host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
-
-            if (this.razorConfiguration != null)
-            {
-                var namespaces = this.razorConfiguration.GetDefaultNamespaces();
-                if (namespaces != null)
-                {
-                    foreach (var n in namespaces)
-                    {
-                        host.NamespaceImports.Add(n);
-                    }
-                }
-            }
-
-            return new RazorTemplateEngine(host);
+            return new RazorTemplateEngine(
+                new NancyRazorEngineHost(
+                    new CSharpRazorCodeLanguage(), 
+                    configuration));
         }
 
-        private Func<NancyRazorViewBase> GetCompiledViewFactory<TModel>(TextReader reader, Assembly referencingAssembly) 
+        private Func<NancyRazorViewBase> GetCompiledViewFactory(TextReader reader, Assembly referencingAssembly) 
         {
             var razorResult = this.engine.GenerateCode(reader);
 
-            //using (var sw = new StringWriter()) {
+            //string code;
+            //using (var sw = new StringWriter())
+            //{
             //    this.codeDomProvider.GenerateCodeFromCompileUnit(razorResult.GeneratedCode, sw, new CodeGeneratorOptions());
             //    code = sw.GetStringBuilder().ToString();
             //}
@@ -165,7 +143,7 @@
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult, 
-                x => this.GetCompiledViewFactory<dynamic>(x.Contents.Invoke(), referencingAssembly));
+                x => this.GetCompiledViewFactory(x.Contents.Invoke(), referencingAssembly));
 
             var view = viewFactory.Invoke();
 
@@ -185,8 +163,7 @@
         }
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-        }
+        { }
 
         /// <summary>
         /// Renders the view.
@@ -212,29 +189,28 @@
             var response = new HtmlResponse();
             
             response.Contents = stream =>
-                {
-                    var writer =
-                        new StreamWriter(stream);
-                    NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
-                    view.ExecuteView(null, null);
-                    var body = view.Body;
-                    var sectionContents = view.SectionContents;
-                    var root = !view.HasLayout;
-                    var layout = view.Layout;
+            {
+                var writer = new StreamWriter(stream);
+                NancyRazorViewBase view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                view.ExecuteView(null, null);
+                var body = view.Body;
+                var sectionContents = view.SectionContents;
+                var root = !view.HasLayout;
+                var layout = view.Layout;
                 
-                    while (!root)
-                    {
-                        view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
-                        view.ExecuteView(body, sectionContents);
+                while (!root)
+                {
+                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view.ExecuteView(body, sectionContents);
 
-                        body = view.Body;
-                        sectionContents = view.SectionContents;
-                        root = !view.HasLayout;
-                    }
+                    body = view.Body;
+                    sectionContents = view.SectionContents;
+                    root = !view.HasLayout;
+                }
 
-                    writer.Write(body);
-                    writer.Flush();
-                };
+                writer.Write(body);
+                writer.Flush();
+            };
 
             return response;
         }
@@ -242,9 +218,7 @@
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
             var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly);
-            view.Html = new HtmlHelpers(this, renderContext);
-            view.Url = new UrlHelpers(this, renderContext);
-            view.Model = model;
+            view.Initialize(this, renderContext, model);
             return view;
         }
     }

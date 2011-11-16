@@ -1,6 +1,6 @@
 namespace Nancy.ViewEngines.Razor
 {
-    public class UrlHelpers
+    public class UrlHelpers<TModel>
     {
         private readonly RazorViewEngine razorViewEngine;
         private readonly IRenderContext renderContext;

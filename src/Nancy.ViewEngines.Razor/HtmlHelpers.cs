@@ -4,8 +4,10 @@
     using System.IO;
     using System.Web;
 
-    public class HtmlHelpers
+    public class HtmlHelpers<TModel>
     {
+        private readonly TModel model;
+
         public readonly RazorViewEngine engine;
         public readonly IRenderContext renderContext;
 
@@ -14,10 +16,11 @@
         /// </summary>
         /// <param name="engine"></param>
         /// <param name="renderContext"></param>
-        public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext)
+        public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model)
         {
             this.engine = engine;
             this.renderContext = renderContext;
+            this.model = model;
         }
 
         public IHtmlString Partial(string viewName)
