@@ -14,9 +14,9 @@
         {
             // Given 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                     {
-                        { "X-Requested-With", new[] { "XMLHttpRequest" } }
+                        { "X-Requested-With", "XMLHttpRequest" }
                     };
 
             // When

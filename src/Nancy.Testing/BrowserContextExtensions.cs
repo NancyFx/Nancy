@@ -37,7 +37,7 @@
                 (IBrowserContextValues)browserContext;
 
             contextValues.Body = multipartFormData.Body;
-            contextValues.Headers["Content-Type"] = new[] { "multipart/form-data; boundary=" + boundaryName };
+            contextValues.Headers["Content-Type"] = "multipart/form-data; boundary=" + boundaryName;
         }
 
         /// <summary>
@@ -108,11 +108,11 @@
 
             if (!contextValues.Headers.ContainsKey("Cookie"))
             {
-                contextValues.Headers.Add("Cookie", new List<string> { string.Empty });
+                contextValues.Headers["Cookie"] = string.Empty;
             }
 
-            var values = (List<string>)contextValues.Headers["Cookie"];
-            values[0] += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
+            var values = contextValues.Headers["Cookie"];
+            values += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
         }
 
         /// <summary>

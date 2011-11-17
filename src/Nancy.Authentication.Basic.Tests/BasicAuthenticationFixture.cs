@@ -143,8 +143,8 @@
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
             var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
-            var headers = new Dictionary<string,IEnumerable<string>>();
-            headers.Add(ajaxRequestHeaderKey, new [] { ajaxRequestHeaderValue });
+            var headers = new Dictionary<string,string>();
+            headers.Add(ajaxRequestHeaderKey, ajaxRequestHeaderValue);
 
             var context = new NancyContext()
             {
@@ -188,7 +188,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-                "Authorization", new[] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
+                "Authorization", "FooScheme" + " " + EncodeCredentials("foo", "bar"));
 
             // When
             var result = this.hooks.BeforeRequest.Invoke(context);
@@ -203,7 +203,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-               "Authorization", new[] { "Basic" + " " + "some credentials" });
+               "Authorization", "Basic" + " " + "some credentials");
 
             // When
             var result = this.hooks.BeforeRequest.Invoke(context);
@@ -218,7 +218,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-               "Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+               "Authorization", "Basic" + " " + EncodeCredentials("foo", "bar"));
 
             // When
             this.hooks.BeforeRequest.Invoke(context);
@@ -240,7 +240,7 @@
             var cfg = new BasicAuthenticationConfiguration(validator, "realm");
 
             var context = CreateContextWithHeader(
-               "Authorization", new [] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+               "Authorization", "Basic" + " " + EncodeCredentials("foo", "bar"));
 
             BasicAuthentication.Enable(fakePipelines, cfg);
 
@@ -251,11 +251,11 @@
             context.CurrentUser.ShouldBeSameAs(fakeUser);
         }
 
-        private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)
+        private static NancyContext CreateContextWithHeader(string name, string value)
         {
-            var header = new Dictionary<string, IEnumerable<string>>
+            var header = new Dictionary<string, string>
             {
-                { name, values }
+                { name, value }
             };
 
             return new NancyContext()

@@ -7,9 +7,11 @@
 
     public static class CollectionExtensions
     {
-        public static IDictionary<string, IEnumerable<string>> ToDictionary(this NameValueCollection source)
+        public static IDictionary<string, string> ToDictionary(this NameValueCollection source)
         {
-            return source.AllKeys.ToDictionary<string, string, IEnumerable<string>>(key => key, source.GetValues);
+            return source.AllKeys.ToDictionary<string, string, string>(
+                key => key, 
+                val => source.GetValues(val).Aggregate("", (acc, v) => acc == "" ? v : acc + "," + v));
         }
 
         public static NameValueCollection ToNameValueCollection(this IDictionary<string, IEnumerable<string>> source)

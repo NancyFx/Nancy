@@ -19,7 +19,7 @@
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the name and values of the headers.</value>
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
-        public IDictionary<string, IEnumerable<string>> Headers { get; set; }
+        public IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the HTTP data transfer method used by the client.

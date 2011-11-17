@@ -14,7 +14,7 @@
         /// </summary>
         public BrowserContext()
         {
-            this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
+            this.Values.Headers = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase);
             this.Values.Protocol = "http";
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
@@ -52,7 +52,7 @@
         /// Gets or sets the headers that should be sent with the HTTP request.
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains the headers that should be sent with the HTTP request.</value>
-        IDictionary<string, IEnumerable<string>> IBrowserContextValues.Headers { get; set; }
+        IDictionary<string, string> IBrowserContextValues.Headers { get; set; }
 
         /// <summary>
         /// Adds a body to the HTTP request.
@@ -100,15 +100,7 @@
         /// <param name="value">The value of the header.</param>
         public void Header(string name, string value)
         {
-            if (!this.Values.Headers.ContainsKey(name))
-            {
-                this.Values.Headers.Add(name, new List<string>());
-            }
-
-            var values = (List<string>)this.Values.Headers[name];
-            values.Add(value);
-
-            this.Values.Headers[name] = values;
+            this.Values.Headers[name] = value;
         }
 
         /// <summary>

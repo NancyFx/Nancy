@@ -23,7 +23,7 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers =
-                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+                new Dictionary<string, string> { { "content-type", "application/x-www-form-urlencoded" } };
 
             // When
             var request = new Request("POST", "/", headers, memory, "http");
@@ -48,7 +48,7 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers =
-                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+                new Dictionary<string, string> { { "content-type", "application/x-www-form-urlencoded" } };
 
             // When
             var request = new Request(method, "/", headers, memory, "http");
@@ -131,9 +131,9 @@ namespace Nancy.Tests.Unit
         public void Should_set_header_parameter_value_to_header_property_when_initialized()
         {
             // Given
-            var headers = new Dictionary<string, IEnumerable<string>>()
+            var headers = new Dictionary<string, string>()
                 {
-                    { "content-type", new[] {"foo"} }
+                    { "content-type", "foo" }
                 };
 
             // When
@@ -150,7 +150,7 @@ namespace Nancy.Tests.Unit
             var body = CreateRequestStream();
 
             // When
-            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), body, "http");
+            var request = new Request("GET", "/", new Dictionary<string, string>(), body, "http");
 
             // Then
             request.Body.ShouldBeSameAs(body);
@@ -168,9 +168,9 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers = 
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    { "content-type", "application/x-www-form-urlencoded" }
                 };
 
             // When
@@ -192,9 +192,9 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded; charset=UTF-8" } }
+                    { "content-type", "application/x-www-form-urlencoded; charset=UTF-8" }
                 };
 
             // When
@@ -216,9 +216,9 @@ namespace Nancy.Tests.Unit
                 }));
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    { "content-type", "multipart/form-data; boundary=----NancyFormBoundary" }
                 };
 
             // When
@@ -240,9 +240,9 @@ namespace Nancy.Tests.Unit
                 }));
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    { "content-type", "multipart/form-data; boundary=----NancyFormBoundary" }
                 };
 
             // When
@@ -263,9 +263,9 @@ namespace Nancy.Tests.Unit
                 }));
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    { "content-type", "multipart/form-data; boundary=----NancyFormBoundary" }
                 };
 
             // When
@@ -286,9 +286,9 @@ namespace Nancy.Tests.Unit
                 }));
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    { "content-type", "multipart/form-data; boundary=----NancyFormBoundary" }
                 };
 
             // When
@@ -309,9 +309,9 @@ namespace Nancy.Tests.Unit
                 }));
 
             var headers =
-                new Dictionary<string, IEnumerable<string>>
+                new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    { "content-type", "multipart/form-data; boundary=----NancyFormBoundary" }
                 };
 
             // When
@@ -338,9 +338,9 @@ namespace Nancy.Tests.Unit
 			memory.Position = 0;
 
 			var headers =
-				new Dictionary<string, IEnumerable<string>>
+				new Dictionary<string, string>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    { "content-type", "application/x-www-form-urlencoded" }
                 };
 
 			// When
@@ -391,10 +391,8 @@ namespace Nancy.Tests.Unit
 			// Given, when
 			var cookieName = "_nc";
 			var cookieData = "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
-			var headers = new Dictionary<string, IEnumerable<string>> ();
-			var cookies = new List<string> ();
-			cookies.Add (string.Format ("{0}={1}", cookieName, cookieData));
-			headers.Add ("cookie", cookies);
+			var headers = new Dictionary<string, string> ();
+			headers.Add ("cookie", string.Format ("{0}={1}", cookieName, cookieData));
 			var newUrl = new Url
 			{
 				Path = "/"
