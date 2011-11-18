@@ -21,6 +21,7 @@
     <file src="build\binaries\Nancy.Viewengines.Razor.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Viewengines.Razor.pdb" target="lib\net40" />
     <file src="build\binaries\System.Web.Razor.dll" target="lib\net40" />
+	<file src="src\Nancy.Viewengines.Razor\web.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\**\*.cs" target="src" />
   </files>
 </package>
