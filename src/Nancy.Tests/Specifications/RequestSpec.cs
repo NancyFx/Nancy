@@ -1,7 +1,5 @@
 namespace Nancy.Tests.Specifications
 {
-    using Nancy.Routing;
-
     public abstract class RequestSpec
     {
         protected static INancyEngine engine;
