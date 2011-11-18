@@ -100,8 +100,7 @@ namespace Nancy.Testing.Tests
             var credentials = string.Format("{0}:{1}", "username", "password");
             var encodedCredentials = Convert.ToBase64String(Encoding.UTF8.GetBytes(credentials));
 
-            values.Headers["Authorization"].ShouldHaveCount(1);
-            values.Headers["Authorization"].First().ShouldEqual("Basic " + encodedCredentials);
+            values.Headers["Authorization"].ShouldEqual("Basic " + encodedCredentials);
         }
 
         [Fact]
@@ -125,8 +124,7 @@ namespace Nancy.Testing.Tests
 
             var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
 
-            values.Headers["Cookie"].ShouldHaveCount(1);
-            values.Headers["Cookie"].First().ShouldEqual(cookieString);
+            values.Headers["Cookie"].ShouldEqual(cookieString);
         }
 
         [Fact]
@@ -153,8 +151,7 @@ namespace Nancy.Testing.Tests
 
             var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
 
-            values.Headers["Cookie"].ShouldHaveCount(1);
-            values.Headers["Cookie"].First().ShouldEqual(cookieString);
+            values.Headers["Cookie"].ShouldEqual(cookieString);
         }
 
         [Fact]

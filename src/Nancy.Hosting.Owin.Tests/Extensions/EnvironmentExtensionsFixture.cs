@@ -52,18 +52,6 @@ namespace Nancy.Tests.Extensions
             result.Url.Query.ShouldEqual("var=value");
         }
 
-        [Fact]
-        public void Should_create_ienumerable_for_headers_with_multiple_values()
-        {
-            var req = environment.AsNancyRequestParameters();
-
-            var result = req.Headers["Header"];
-
-            result.Count().ShouldEqual(2);
-            result.Contains("Value1").ShouldBeTrue();
-            result.Contains("Value2").ShouldBeTrue();
-        }
-
 
         [Fact]
         public void Should_initialise_requeststream_using_content_length_header()

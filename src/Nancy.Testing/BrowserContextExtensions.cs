@@ -111,8 +111,7 @@
                 contextValues.Headers["Cookie"] = string.Empty;
             }
 
-            var values = contextValues.Headers["Cookie"];
-            values += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
+            contextValues.Headers["Cookie"] += string.Format("{0}={1};", HttpUtility.UrlEncode(key), HttpUtility.UrlEncode(value));
         }
 
         /// <summary>
