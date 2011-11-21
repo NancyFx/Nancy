@@ -92,6 +92,10 @@
             return null;
         }
 
+        public virtual Boolean IsSectionDefined(string sectionName) {
+            return this.childSections.ContainsKey(sectionName);
+        }
+
         public void ExecuteView(string body, IDictionary<string, string> sectionContents)
         {
             this.childBody = body ?? string.Empty;
