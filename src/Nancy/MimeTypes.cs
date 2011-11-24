@@ -43,6 +43,7 @@ namespace Nancy
 			mimeTypes.Add ("323", "text/h323");
 			mimeTypes.Add ("3dmf", "x-world/x-3dmf");
 			mimeTypes.Add ("3dm", "x-world/x-3dmf");
+			mimeTypes.Add ("7z", "application/x-7z-compressed");
 			mimeTypes.Add ("aab", "application/x-authorware-bin");
 			mimeTypes.Add ("aam", "application/x-authorware-map");
 			mimeTypes.Add ("aas", "application/x-authorware-seg");
@@ -66,6 +67,9 @@ namespace Nancy
 			mimeTypes.Add ("asp", "text/asp");
 			mimeTypes.Add ("asr", "video/x-ms-asf");
 			mimeTypes.Add ("asx", "application/x-mplayer2");
+			mimeTypes.Add ("atom", "application/atom.xml");
+			mimeTypes.Add ("atomcat", "application/atomcat+xml");
+			mimeTypes.Add ("atomsvc", "application/atomsvc+xml");
 			mimeTypes.Add ("au", "audio/x-au");
 			mimeTypes.Add ("avi", "video/avi");
 			mimeTypes.Add ("avs", "video/avs-video");
@@ -104,6 +108,7 @@ namespace Nancy
 			mimeTypes.Add ("css", "text/css");
 			mimeTypes.Add ("c", "text/plain");
 			mimeTypes.Add ("c++", "text/plain");
+			mimeTypes.Add ("cs", "text/plain");
 			mimeTypes.Add ("cxx", "text/plain");
 			mimeTypes.Add ("dcr", "application/x-director");
 			mimeTypes.Add ("deepv", "application/x-deepv");
@@ -208,6 +213,7 @@ namespace Nancy
 			mimeTypes.Add ("jpg", "image/jpeg");
 			mimeTypes.Add ("jps", "image/x-jps");
 			mimeTypes.Add ("js", "application/x-javascript");
+			mimeTypes.Add ("json", "application/application/json");
 			mimeTypes.Add ("jut", "image/jutvision");
 			mimeTypes.Add ("kar", "audio/midi");
 			mimeTypes.Add ("ksh", "text/x-script.ksh");
@@ -227,6 +233,12 @@ namespace Nancy
 			mimeTypes.Add ("m2a", "audio/mpeg");
 			mimeTypes.Add ("m2v", "video/mpeg");
 			mimeTypes.Add ("m3u", "audio/x-mpequrl");
+			mimeTypes.Add ("m4u", "video/x-mpegurl");
+			mimeTypes.Add ("m4v", "video/mp4");
+			mimeTypes.Add ("m4a", "audio/mp4");
+			mimeTypes.Add ("m4r", "audio/mp4");
+			mimeTypes.Add ("m4b", "audio/mp4");
+			mimeTypes.Add ("m4p", "audio/mp4");
 			mimeTypes.Add ("man", "application/x-troff-man");
 			mimeTypes.Add ("manifest", "application/x-ms-manifest");
 			mimeTypes.Add ("map", "application/x-navimap");
@@ -255,12 +267,15 @@ namespace Nancy
 			mimeTypes.Add ("mov", "video/quicktime");
 			mimeTypes.Add ("mp2", "video/mpeg");
 			mimeTypes.Add ("mp3", "audio/mpeg3");
+			mimeTypes.Add ("mp4", "video/mp4");
+			mimeTypes.Add ("mp4v", "video/mp4");
 			mimeTypes.Add ("mpa", "audio/mpeg");
 			mimeTypes.Add ("mpc", "application/x-project");
 			mimeTypes.Add ("mpeg", "video/mpeg");
 			mimeTypes.Add ("mpe", "video/mpeg");
 			mimeTypes.Add ("mpga", "audio/mpeg");
 			mimeTypes.Add ("mpg", "video/mpeg");
+			mimeTypes.Add ("mpg4", "video/mp4");
 			mimeTypes.Add ("mpp", "application/vnd.ms-project");
 			mimeTypes.Add ("mpt", "application/x-project");
 			mimeTypes.Add ("mpv2", "video/mpeg");
@@ -285,9 +300,13 @@ namespace Nancy
 			mimeTypes.Add ("nws", "message/rfc822");
 			mimeTypes.Add ("oda", "application/oda");
 			mimeTypes.Add ("ods", "application/oleobject");
+			mimeTypes.Add ("oga", "audio/ogg");
+			mimeTypes.Add ("ogg", "audio/ogg");
+			mimeTypes.Add ("ogv", "video/ogg");
 			mimeTypes.Add ("omc", "application/x-omc");
 			mimeTypes.Add ("omcd", "application/x-omcdatamaker");
 			mimeTypes.Add ("omcr", "application/x-omcregerator");
+			mimeTypes.Add ("otf", "application/x-font-otf");
 			mimeTypes.Add ("p10", "application/pkcs10");
 			mimeTypes.Add ("p12", "application/pkcs-12");
 			mimeTypes.Add ("p7a", "application/x-pkcs7-signature");
@@ -401,6 +420,7 @@ namespace Nancy
 			mimeTypes.Add ("spl", "application/futuresplash");
 			mimeTypes.Add ("spr", "application/x-sprite");
 			mimeTypes.Add ("sprite", "application/x-sprite");
+			mimeTypes.Add ("spx", "audio/ogg");
 			mimeTypes.Add ("src", "application/x-wais-source");
 			mimeTypes.Add ("ssi", "text/x-server-parsed-html");
 			mimeTypes.Add ("ssm", "application/streamingmedia");
@@ -413,6 +433,8 @@ namespace Nancy
 			mimeTypes.Add ("sv4cpio", "application/x-sv4cpio");
 			mimeTypes.Add ("sv4crc", "application/x-sv4crc");
 			mimeTypes.Add ("svf", "image/x-dwg");
+			mimeTypes.Add ("svg", "image/svg+xml");
+			mimeTypes.Add ("svgz", "image/svg+xml");
 			mimeTypes.Add ("svr", "application/x-world");
 			mimeTypes.Add ("swf", "application/x-shockwave-flash");
 			mimeTypes.Add ("talk", "text/x-speech");
@@ -428,6 +450,7 @@ namespace Nancy
 			mimeTypes.Add ("tgz", "application/x-compressed");
 			mimeTypes.Add ("tiff", "image/tiff");
 			mimeTypes.Add ("tif", "image/tiff");
+			mimeTypes.Add ("torrent", "application/x-bittorrent");
 			mimeTypes.Add ("tr", "application/x-troff");
 			mimeTypes.Add ("trm", "application/x-msterminal");
 			mimeTypes.Add ("tsi", "audio/tsp-audio");
@@ -476,6 +499,7 @@ namespace Nancy
 			mimeTypes.Add ("wcm", "application/vnd.ms-works");
 			mimeTypes.Add ("wdb", "application/vnd.ms-works");
 			mimeTypes.Add ("web", "application/vnd.xara");
+			mimeTypes.Add ("webm", "video/webm");
 			mimeTypes.Add ("wiz", "application/msword");
 			mimeTypes.Add ("wk1", "application/x-123");
 			mimeTypes.Add ("wks", "application/vnd.ms-works");
@@ -506,6 +530,8 @@ namespace Nancy
 			mimeTypes.Add ("xbm", "image/x-xbitmap");
 			mimeTypes.Add ("xdr", "video/x-amt-demorun");
 			mimeTypes.Add ("xgz", "xgl/drawing");
+			mimeTypes.Add ("xhtml", "application/xhtml+xml");
+			mimeTypes.Add ("xht", "application/xhtml+xml");
 			mimeTypes.Add ("xif", "image/vnd.xiff");
 			mimeTypes.Add ("xla", "application/excel");
 			mimeTypes.Add ("xl", "application/excel");
