@@ -228,6 +228,39 @@
                                         "<div>ViewThatUsesLayoutAndOptionalSection</div>");
         }
 
+        [Fact]
+        public void Should_be_able_to_render_view_with_layout_and_optional_section_with_default_to_stream() { 
+            //Given
+            var location = FindView("ViewThatUsesLayoutAndOptionalSectionWithDefaults");
+            var stream = new MemoryStream();
+
+            //When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            string output = ReadAll(stream);
+            output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
+                                        "<div>OptionalSectionDefault</div>",
+                                        "<div>ViewThatUsesLayoutAndOptionalSectionWithDefaults</div>");
+        }
+        [Fact]
+        public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream() {
+            //Given
+            var location = FindView("ViewThatUsesLayoutAndOptionalSectionOverridingDefaults");
+            var stream = new MemoryStream();
+
+            //When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            string output = ReadAll(stream);
+            output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
+                                        "<div>OptionalSectionOverride</div>",
+                                        "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
+        }
+
         private string ReadAll(Stream stream)
         {
             stream.Position = 0;

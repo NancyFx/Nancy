@@ -114,6 +114,9 @@
     <None Include="TestViews\Layouts\LayoutWithOptionalSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestViews\Layouts\LayoutWithOptionalSectionWithDefaults.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\Layouts\LayoutWithSection.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -130,6 +133,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestViews\ViewThatUsesLayoutAndOptionalSection.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestViews\ViewThatUsesLayoutAndOptionalSectionOverridingDefaults.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestViews\ViewThatUsesLayoutAndOptionalSectionWithDefaults.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestViews\ViewThatUsesLayoutAndSection.cshtml">
