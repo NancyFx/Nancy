@@ -271,6 +271,14 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual("ajax");
         }
 
+        [Fact]
+        public void Should_handle_querystring_parameters()
+        {
+            var result = browser.Get("/queryfoo?foo=hello");
+
+            result.Body.AsString().ShouldEqual("hello");
+        }
+
         public class EchoModel
         {
             public string SomeString { get; set; }
@@ -330,6 +338,8 @@ namespace Nancy.Testing.Tests
                 Get["/type"] = _ => Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
+
+                Get["/queryfoo"] = _ => this.Request.Headers["foo"].Single();
             }
 
         }
