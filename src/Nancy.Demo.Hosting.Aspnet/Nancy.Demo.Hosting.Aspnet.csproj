@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -147,6 +147,10 @@
       <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
       <Name>Nancy.ViewEngines.NDjango</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj">
+      <Project>{A1A9E636-A37C-4170-B2E4-99D4F69B415D}</Project>
+      <Name>Nancy.ViewEngines.Nustache</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
@@ -169,6 +173,7 @@
     <None Include="Views\ndjango-base.django" />
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
+    <None Include="Views\nustache.nustache" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ndjango.django" />
