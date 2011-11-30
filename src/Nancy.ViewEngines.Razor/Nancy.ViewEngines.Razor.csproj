@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -91,15 +91,24 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IRazorConfiguration.cs" />
+    <Compile Include="IRazorViewRenderer.cs" />
+    <Compile Include="ModelSpan.cs" />
+    <Compile Include="CSharp\NancyCSharpRazorCodeGenerator.cs" />
+    <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
     <Compile Include="NonEncodedHtmlString.cs" />
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="UrlHelpers.cs" />
+    <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
+    <Compile Include="VisualBasic\NancyVisualBasicRazorCodeGenerator.cs" />
+    <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

@@ -102,8 +102,8 @@
             var extensions = this.engine.Extensions;
 
             // Then
-            extensions.ShouldHaveCount(1);
-            extensions.ShouldEqualSequence(new[] { "cshtml" });
+            extensions.ShouldHaveCount(2);
+            extensions.ShouldEqualSequence(new[] { "cshtml", "vbhtml" });
         }
 
         [Fact]
@@ -119,8 +119,6 @@
 
             var stream = new MemoryStream();
 
-            //Razor view engine can't work with  anonymous objects, 
-            //so lets create ExpandoObject for our model
             dynamic model = new ExpandoObject();
             model.Name = "test";
 
@@ -130,6 +128,42 @@
 
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
+
+        [Fact]
+        public void RenderView_csharp_should_use_model_directive_for_strongly_typed_view()
+        {
+            // Given
+            var location = FindView("ViewThatUsesModelCSharp");
+
+            var stream = new MemoryStream();
+
+            var model = new DateTime(2000, 1, 1);
+
+            // When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("\r\n<h1>Hello at 01/01/2000</h1>");
+        }
+
+        [Fact]
+        public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
+        {
+            // Given
+            var location = FindView("ViewThatUsesModelVB");
+
+            var stream = new MemoryStream();
+
+            var model = new DateTime(2000, 1, 1);
+
+            // When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("\r\n<h1>Hello at 01/01/2000</h1>");
         }
 
         [Fact]
@@ -272,7 +306,7 @@
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "cshtml" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "cshtml", "vbhtml" }).First(r => r.Name == viewName);
             return location;
         }
     }
