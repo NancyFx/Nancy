@@ -117,7 +117,7 @@ namespace Nancy
         /// The date and time that the message was sent.
         /// </summary>
         /// <value>A <see cref="DateTime"/> instance that specifies when the message was sent. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
-        public DateTime Date
+        public DateTime? Date
         {
             get { return this.GetValue("Date", x => ParseDateTime(x.First())); }
         }
@@ -144,7 +144,7 @@ namespace Nancy
         /// Allows a 304 Not Modified to be returned if content is unchanged
         /// </summary>
         /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource must have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
-        public DateTime IfModifiedSince
+        public DateTime? IfModifiedSince
         {
             get { return this.GetValue("If-Modified-Since", x => ParseDateTime(x.First())); }
         }
@@ -171,7 +171,7 @@ namespace Nancy
         /// Only send the response if the entity has not been modified since a specific time.
         /// </summary>
         /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource may not have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
-        public DateTime IfUnmodifiedSince
+        public DateTime? IfUnmodifiedSince
         {
             get { return this.GetValue("If-Unmodified-Since", x => ParseDateTime(x.First())); }
         }
@@ -229,7 +229,7 @@ namespace Nancy
 
             if (T.Equals(typeof(DateTime)))
             {
-                return DateTime.MinValue;
+                return null;
             }
 
             return T.Equals(typeof(string)) ?
@@ -262,20 +262,25 @@ namespace Nancy
             }
 
             return converter.Invoke(this.headers[name]);
-        }
+        } 
 
         private static bool IsGenericEnumerable(Type T)
         {
             return !(T.Equals(typeof(string))) && T.IsGenericType && T.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>));
         }
 
-        private static DateTime ParseDateTime(string value)
+
+        private static DateTime? ParseDateTime(string value)
         {
-            return DateTime.ParseExact(
-                value,
-                "ddd, dd MMM yyyy HH:mm:ss 'GMT'",
-                CultureInfo.InvariantCulture.DateTimeFormat, DateTimeStyles.None);
+            DateTime result;
+            // note CultureInfo.InvariantCulture is ignored
+            if (DateTime.TryParseExact(value, "R", CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+            {
+                return result;
+            }
+            return null;
         }
+
 
     }
 }
