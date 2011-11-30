@@ -103,6 +103,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NancyViewFolderFixture.cs" />
     <Compile Include="ViewModels\FakeViewModel.cs" />
     <Compile Include="SparkViewEngineFixture.cs" />
   </ItemGroup>

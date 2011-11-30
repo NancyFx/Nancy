@@ -7,20 +7,34 @@ namespace Nancy.ViewEngines.Spark
     using System.Text;
     using global::Spark.FileSystem;
 
+    /// <summary>
+    /// Implementation of the IViewFolder interface to have Spark use views that's been discovered by Nancy's view locator.
+    /// </summary>
     public class NancyViewFolder : IViewFolder
     {
         private readonly ViewEngineStartupContext viewEngineStartupContext;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyViewFolder"/> class, using the provided
+        /// <see cref="viewEngineStartupContext"/> instance.
+        /// </summary>
+        /// <param name="viewEngineStartupContext"></param>
         public NancyViewFolder(ViewEngineStartupContext viewEngineStartupContext)
         {
             this.viewEngineStartupContext = viewEngineStartupContext;
         }
 
+        /// <summary>
+        /// Gets the source of the requested view.
+        /// </summary>
+        /// <param name="path">The view to get the source for</param>
+        /// <returns>A <see cref="IViewFile"/> instance.</returns>
         public IViewFile GetViewSource(string path)
         {
             var searchPath = ConvertPath(path);
 
-            var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults.FirstOrDefault(v => String.Equals(v.Location + "/" + v.Name + "." + v.Extension, searchPath, StringComparison.OrdinalIgnoreCase));
+            var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults
+                .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
 
             if (viewLocationResult == null)
             {
@@ -30,6 +44,11 @@ namespace Nancy.ViewEngines.Spark
             return new NancyViewFile(viewLocationResult);
         }
 
+        /// <summary>
+        /// Lists all view for the specified <paramref name="path"/>.
+        /// </summary>
+        /// <param name="path">The path to return views for.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains the matched views.</returns>
         public IList<string> ListViews(string path)
         {
             return this.viewEngineStartupContext.
@@ -42,16 +61,34 @@ namespace Nancy.ViewEngines.Spark
                 ToList();
         }
 
+        /// <summary>
+        /// Gets a value that indicates wether or not the view folder contains a specific view.
+        /// </summary>
+        /// <param name="path">The view to check for.</param>
+        /// <returns><see langword="true"/> if the view exists in the view folder; otherwise <see langword="false"/>.</returns>
         public bool HasView(string path)
         {
-            var searchPath = ConvertPath(path);
+            var searchPath = 
+                ConvertPath(path);
 
-            return this.viewEngineStartupContext.ViewLocationResults.Any(v => String.Equals(v.Location + "/" + v.Name + "." + v.Extension, searchPath, StringComparison.OrdinalIgnoreCase));
+            return this.viewEngineStartupContext.ViewLocationResults.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+        }
+
+        private static bool CompareViewPaths(string storedViewPath, string requestedViewPath)
+        {
+            return String.Equals(storedViewPath, requestedViewPath, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string ConvertPath(string path)
         {
             return path.Replace(@"\", "/");
+        }
+
+        private static string GetSafeViewPath(ViewLocationResult result)
+        {
+            return string.IsNullOrEmpty(result.Location) ? 
+                string.Concat(result.Name, ".", result.Extension) : 
+                string.Concat(result.Location, "/", result.Name, ".", result.Extension);
         }
 
         public class NancyViewFile : IViewFile
