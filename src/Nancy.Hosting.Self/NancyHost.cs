@@ -10,6 +10,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using Nancy.Extensions;
+	using Nancy.Helpers;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -118,7 +119,7 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = string.Concat("/", relativeUrl),
+                Path = string.Concat("/", HttpUtility.UrlDecode(relativeUrl.ToString())),
                 Query = request.Url.Query,
                 Fragment = request.Url.Fragment,
             };
