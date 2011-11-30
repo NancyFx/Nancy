@@ -139,24 +139,30 @@
 
         private void InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
         {
+
             try
             {
+
+                var resolveResult = this.resolver.Resolve(context, this.routeCache);
+
                 InvokePreRequestHook(context, pipelines.BeforeRequest);
 
                 if (context.Response == null) 
                 {
-                    this.ResolveAndInvokeRoute(context);
+                    this.ResolveAndInvokeRoute(context, resolveResult);
                 }
 
                 if (pipelines.AfterRequest != null) 
                 {
                     pipelines.AfterRequest.Invoke(context);
                 }
+
             }
             catch (Exception ex)
             {
                 InvokeOnErrorHook(context, pipelines.OnError, ex);
             }
+
         }
 
         private static void InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
@@ -197,9 +203,8 @@
             }
         }
 
-        private void ResolveAndInvokeRoute(NancyContext context)
+        private void ResolveAndInvokeRoute(NancyContext context, Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>> resolveResult)
         {
-            var resolveResult = this.resolver.Resolve(context, this.routeCache);
 
             context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;
@@ -220,6 +225,7 @@
             {
                 resolveResultPostReq.Invoke(context);
             }
+
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)

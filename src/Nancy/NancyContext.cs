@@ -1,3 +1,5 @@
+using System.Threading;
+using Nancy.Routing;
 using Nancy.Security;
 
 namespace Nancy
@@ -11,12 +13,16 @@ namespace Nancy
     /// </summary>
     public sealed class NancyContext : IDisposable
     {
+
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
         /// </summary>
         public NancyContext()
         {
+
             this.Items = new Dictionary<string, object>();
+
         }
 
         /// <summary>
@@ -40,6 +46,16 @@ namespace Nancy
         public Response Response { get; set; }
 
         /// <summary>
+        /// Gets the current root.
+        /// </summary>
+        public Route Route { get; internal set; }
+
+        /// <summary>
+        /// Gets the current module.
+        /// </summary>
+        public NancyModule Module { get; internal set; }
+
+        /// <summary>
         /// Gets or sets the current user
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }
@@ -49,12 +65,16 @@ namespace Nancy
         /// </summary>
         public void Dispose()
         {
+
             foreach (var disposableItem in this.Items.Values.OfType<IDisposable>())
             {
                 disposableItem.Dispose();
             }
 
             this.Items.Clear();
+
         }
+
     }
+
 }
