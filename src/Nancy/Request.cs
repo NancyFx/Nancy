@@ -203,6 +203,7 @@ namespace Nancy
             {
                 var reader = new StreamReader(this.Body);
                 this.form = reader.ReadToEnd().AsQueryDictionary();
+                this.Body.Position = 0;
             }
 
             if (!mimeType.Equals("multipart/form-data", StringComparison.OrdinalIgnoreCase))
@@ -229,6 +230,8 @@ namespace Nancy
                                        ));
                 }
             }
+
+            this.Body.Position = 0;
         }
 
         private void RewriteMethod()
