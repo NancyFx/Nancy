@@ -403,8 +403,54 @@ namespace Nancy.Tests.Unit
 
 			// Then
 			request.Cookies[cookieName].ShouldEqual (cookieData);
-
 		}
+
+        [Fact]
+        public void Should_move_request_body_position_to_zero_after_parsing_url_encoded_data()
+        {
+            // Given
+            const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded; charset=UTF-8" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            memory.Position.ShouldEqual(0L);
+        }
+
+        [Fact]
+        public void Should_move_request_body_position_to_zero_after_parsing_multipart_encoded_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            memory.Position.ShouldEqual(0L);
+        }
 
         private static RequestStream CreateRequestStream()
         {
