@@ -10,7 +10,7 @@ namespace Nancy.Demo.Hosting.Aspnet
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
             Get["/"] = x =>{
-                return View["routes.cshtml", routeCacheProvider.GetCache()];
+                return View["razorvb.vbhtml", routeCacheProvider.GetCache()];
             };
 
             Get["/filtered", r => true] = x => {
@@ -59,6 +59,16 @@ namespace Nancy.Demo.Hosting.Aspnet
             Get["/razor-dynamic"] = x =>
             {
                 return View["razor.cshtml", new { FirstName = "Frank" }];
+            };
+
+            Get["/razor-cs-strong"] = x =>
+            {
+                return View["razor-strong.cshtml", new RatPack { FirstName = "Frank" }];
+            };
+
+            Get["/razor-vb-strong"] = x =>
+            {
+                return View["razor-strong.vbhtml", new RatPack { FirstName = "Frank" }];
             };
 
             Get["/ssve"] = x =>
