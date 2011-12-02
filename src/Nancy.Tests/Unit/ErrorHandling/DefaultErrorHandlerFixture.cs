@@ -60,6 +60,18 @@ namespace Nancy.Tests.Unit.ErrorHandling
         }
 
         [Fact]
+        public void Should_not_overwrite_response_contents()
+        {
+            var context = new NancyContext();
+            Action<Stream> contents = stream => { };
+            context.Response = new Response() { StatusCode = HttpStatusCode.NotFound, Contents = contents };
+
+            this.errorHandler.Handle(HttpStatusCode.NotFound, context);
+
+            context.Response.Contents.ShouldEqual(contents);
+        }
+
+        [Fact]
         public void Should_create_response_if_it_doesnt_exist_in_context()
         {
             var context = new NancyContext();
