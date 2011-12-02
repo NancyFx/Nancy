@@ -64,6 +64,17 @@
 
                     return View["interactive-diags-results", new { Json = json }];
                 };
+
+            Get["/interactive/template/{name}/{method}"] = ctx =>
+                {
+                    var diag = this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(id => id.Name.Equals(ctx.name));
+                    var method = diag.Methods.FirstOrDefault(m => m.MethodName.Equals(ctx.method, StringComparison.OrdinalIgnoreCase));
+
+                    var result = this.interactiveDiagnostics.GetTemplate(method);
+
+                    return result == null ? HttpStatusCode.NotFound : (Response)result;
+                };
+
         }
     }
 }

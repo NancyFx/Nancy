@@ -6,6 +6,8 @@ namespace Nancy.Diagnostics
     {
         IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; }
 
-        object ExecuteDiagnostic(InteractiveDiagnosticMethod interactiveDiagnostic, object[] arguments);
+        object ExecuteDiagnostic(InteractiveDiagnosticMethod interactiveDiagnosticMethod, object[] arguments);
+        
+        string GetTemplate(InteractiveDiagnosticMethod interactiveDiagnosticMethod);
     }
 }
