@@ -21,6 +21,7 @@
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
             existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
             existingContainer.Register<IDiagnosticSessions, DefaultDiagnosticSessions>().AsSingleton();
+            existingContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>().AsSingleton();
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)

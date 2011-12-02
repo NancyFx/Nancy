@@ -5,15 +5,19 @@
     using System.Text;
 
     using Nancy.Diagnostics;
+    using Nancy.Json;
 
     public class DiagnosticsModule : NancyModule
     {
         private readonly IDiagnosticSessions sessionProvider;
 
-        public DiagnosticsModule(IDiagnosticSessions sessionProvider)
+        private readonly IInteractiveDiagnostics interactiveDiagnostics;
+
+        public DiagnosticsModule(IDiagnosticSessions sessionProvider, IInteractiveDiagnostics interactiveDiagnostics)
             :base("/diags")
         {
             this.sessionProvider = sessionProvider;
+            this.interactiveDiagnostics = interactiveDiagnostics;
 
             Get["/"] = _ =>
                 {
@@ -43,6 +47,22 @@
                     }
 
                     return responseBuilder.ToString();
+                };
+
+            Get["/interactive"] = _ => View["interactive-diags", this.interactiveDiagnostics.AvailableDiagnostics];
+
+            Get["/interactive/{name}"] = ctx => View["interactive-diags-methods", this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(id => id.Name.Equals(ctx.Name))];
+
+            Post["/interactive/{name}/{method}"] = ctx =>
+                {
+                    var diag = this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(id => id.Name.Equals(ctx.name));
+                    var method = diag.Methods.FirstOrDefault(m => m.MethodName.Equals(ctx.method, StringComparison.OrdinalIgnoreCase));
+
+                    var result = this.interactiveDiagnostics.ExecuteDiagnostic(method, new object[] { });
+
+                    var json = new JavaScriptSerializer().Serialize(result);
+
+                    return View["interactive-diags-results", new { Json = json }];
                 };
         }
     }
