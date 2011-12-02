@@ -29,6 +29,10 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return "Test";
             };
 
+            Get["/nustache"] = parameters => {
+                return View["nustache", new { name = "Nancy", value = 1000000 }];
+            };
+
             Get["/dotliquid"] = parameters => {
                 return View["dot", new { name = "dot" }];
             };
