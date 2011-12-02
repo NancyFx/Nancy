@@ -10,7 +10,6 @@ namespace Nancy.Testing.Tests
     using Nancy.Tests;
     using Nancy.Helpers;
     using Nancy.Session;
-    using Nancy.Tests;
     using Xunit;
 
     public class BrowserFixture
