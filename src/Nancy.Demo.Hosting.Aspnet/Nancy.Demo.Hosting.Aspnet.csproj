@@ -171,7 +171,6 @@
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
     <None Include="Views\razor-strong.vbhtml" />
-    <None Include="Views\razorvb.vbhtml" />
     <None Include="Views\dot.liquid" />
     <None Include="Views\ndjango-base.django" />
     <Content Include="Views\razor-dependency.cshtml" />
