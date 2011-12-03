@@ -3,7 +3,7 @@
     using System.Web;
 
     /// <summary>
-    /// 
+    /// An html string that is not encoded.
     /// </summary>
     public class NonEncodedHtmlString : IHtmlString
     {
