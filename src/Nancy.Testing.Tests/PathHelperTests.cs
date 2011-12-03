@@ -8,6 +8,17 @@ namespace Nancy.Testing.Tests
     public class PathHelperTests
     {
         [Fact]
+        public void Should_return_the_directory_for_an_assembly_by_type()
+        {
+            // When
+            var dir = PathHelper.GetAssemblyDirectory(typeof (PathHelperTests));
+
+            // Then
+            var expectedPartOfPath = string.Format(@"{0}src{0}Nancy.Testing.Tests{0}", Path.PathSeparator);
+            dir.ShouldContain(expectedPartOfPath);
+        }
+
+        [Fact]
         public void Should_return_same_path_for_zero_levels()
         {
             // Given

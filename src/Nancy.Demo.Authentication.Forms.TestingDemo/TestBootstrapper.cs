@@ -11,12 +11,10 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
         {
             get
             {
-                // TODO - figure out a nicer way to do this
-                var assemblyPath = Path.GetDirectoryName(typeof(FormsAuthBootstrapper).Assembly.CodeBase).Replace(@"file:\", string.Empty);
+                var assemblyPath = PathHelper.GetAssemblyDirectory(typeof (FormsAuthBootstrapper));
                 var rootPath = PathHelper.GetParent(assemblyPath, 3);
-                rootPath = Path.Combine(rootPath, @"Nancy.Demo.Authentication.Forms");
-
-                FakeRootPathProvider.RootPath = rootPath;
+                
+                FakeRootPathProvider.RootPath = Path.Combine(rootPath, @"Nancy.Demo.Authentication.Forms"); ;
 
                 return typeof(FakeRootPathProvider);
             }
