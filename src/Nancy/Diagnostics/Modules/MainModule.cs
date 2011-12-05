@@ -4,7 +4,7 @@
     {
         public MainModule()
         {
-            Get["/"] = _ => "Dashboard!";
+            Get["/"] = _ => View["Dashboard", new { Test = "Foobar" }];
         }
     }
 }

@@ -2,10 +2,14 @@
 {
     public abstract class DiagnosticModule : NancyModule
     {
-        public DiagnosticModule()
+        protected DiagnosticModule()
             : base(DiagnosticsHook.ControlPanelPrefix)
         {
-            
+        }
+
+        public new DiagnosticsViewRenderer View
+        {
+            get { return new DiagnosticsViewRenderer(); }
         }
     }
 }

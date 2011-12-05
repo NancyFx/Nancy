@@ -1,0 +1,12 @@
+﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html>
+	<head>
+		<title></title>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/backbone.js']"></script>
+	</head>
+	<body>
+		diagnostics dashboard with backbone.js!
+		<img src="@Path['~/_Nancy/Diagnostics/Resources/face.png']">
+		@Model.Test
+	</body>
+</html>

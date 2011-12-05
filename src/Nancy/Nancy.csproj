@@ -108,6 +108,7 @@
     <Compile Include="Diagnostics\DiagnosticsModuleBuilder.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
+    <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Diagnostics\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
@@ -334,7 +335,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Resources\backbone.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Dashboard.sshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
