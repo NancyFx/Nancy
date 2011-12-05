@@ -102,6 +102,8 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
+    <Compile Include="Diagnostics\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnostic.cs" />
@@ -320,7 +322,12 @@
   <ItemGroup>
     <EmbeddedResource Include="ErrorHandling\Resources\500.html" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\face.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\backbone.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

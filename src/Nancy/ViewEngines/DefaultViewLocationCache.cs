@@ -1,10 +1,12 @@
+using Nancy.Diagnostics;
+
 namespace Nancy.ViewEngines
 {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
-    public class DefaultViewLocationCache : IViewLocationCache
+    public class DefaultViewLocationCache : IViewLocationCache, IDiagnosticsProvider
     {
         private readonly IViewLocationProvider viewLocationProvider;
         private readonly IEnumerable<IViewEngine> viewEngines;
@@ -43,6 +45,38 @@ namespace Nancy.ViewEngines
         IEnumerator IEnumerable.GetEnumerator()
         {
             return GetEnumerator();
+        }
+
+        public string Name
+        {
+            get { return "View location cache"; }
+        }
+
+        public object DiagnosticObject
+        {
+            get { return new DefaultViewLocationCacheDiagnostics(this); }
+        }
+
+        public class DefaultViewLocationCacheDiagnostics
+        {
+            private readonly DefaultViewLocationCache cache;
+
+            public DefaultViewLocationCacheDiagnostics(DefaultViewLocationCache cache)
+            {
+                this.cache = cache;
+            }
+
+            public IEnumerable<object> GetAllViews()
+            {
+                var x = this.cache.GetLocatedViews().Select(v => new
+                                                                {
+                                                                    v.Name,
+                                                                    v.Location,
+                                                                    v.Extension
+                                                                }).ToArray();
+
+                return x;
+            }
         }
     }
 }
