@@ -19,6 +19,9 @@ namespace Nancy
         {
             this.Items = new Dictionary<string, object>();
             this.Diagnostic = new RequestDiagnostic();
+            
+            // TODO - some logic needs to go here
+            this.ControlPanelEnabled = true;
         }
 
         /// <summary>
@@ -65,6 +68,11 @@ namespace Nancy
         /// Diagnostics
         /// </summary>
         public RequestDiagnostic Diagnostic { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether control panel access is enabled for this request
+        /// </summary>
+        public bool ControlPanelEnabled { get; private set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

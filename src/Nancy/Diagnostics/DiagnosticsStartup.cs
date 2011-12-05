@@ -1,9 +1,9 @@
 ﻿namespace Nancy.Diagnostics
 {
-    using System;
     using System.Collections.Generic;
-    using System.IO;
+
     using Nancy.Bootstrapper;
+    using Nancy.ModelBinding;
 
     public class DiagnosticsStartup : IStartup
     {
@@ -38,31 +38,6 @@
         public void Initialize(IPipelines pipelines)
         {
             DiagnosticsHook.Enable(pipelines);
-        }
-    }
-
-    public static class DiagnosticsHook
-    {
-        public static void Enable(IPipelines pipelines)
-        {
-            //if (!StaticConfiguration.EnableDiagnostics)
-            //{
-            //    return;
-            //}
-
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
-            {
-                if (ctx.Request.Path.StartsWith("/_Nancy/Diagnostics/Resources/", StringComparison.OrdinalIgnoreCase))
-                {
-                    return new EmbeddedFileResponse(
-                        typeof(DiagnosticsHook).Assembly,
-                        "Nancy.Diagnostics.Resources",
-                        Path.GetFileName(ctx.Request.Url.Path)
-                    );
-                }
-
-                return null;
-            });
         }
     }
 }
