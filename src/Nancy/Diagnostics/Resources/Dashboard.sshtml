@@ -1,8 +1,12 @@
-﻿<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+﻿<!DOCTYPE HTML>
 <html>
 	<head>
 		<title></title>
-		<script src="@Path['~/_Nancy/Diagnostics/Resources/backbone.js']"></script>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/jquery-1.7.1.min.js']"></script>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/underscore-min.js']"></script>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/backbone-min.js']"></script>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/mustache.js']"></script>
+		<script src="@Path['~/_Nancy/Diagnostics/Resources/diagnostics.js']"></script>
 	</head>
 	<body>
 		diagnostics dashboard with backbone.js!

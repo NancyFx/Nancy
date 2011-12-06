@@ -25,8 +25,8 @@
         {
             var resourceName = assembly
                 .GetManifestResourceNames()
-                .Where(x => GetFileNameFromResourceName(x).Equals(name, StringComparison.OrdinalIgnoreCase))
-                .Select(GetFileNameFromResourceName)
+                .Where(x => GetFileNameFromResourceName(resourcePath, x).Equals(name, StringComparison.OrdinalIgnoreCase))
+                .Select(x => GetFileNameFromResourceName(resourcePath, x))
                 .FirstOrDefault();
 
             resourceName =
@@ -35,12 +35,9 @@
             return this.GetType().Assembly.GetManifestResourceStream(resourceName);
         }
 
-        private static string GetFileNameFromResourceName(string resourceName)
+        private static string GetFileNameFromResourceName(string resourcePath, string resourceName)
         {
-            var segments =
-                resourceName.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
-
-            return string.Concat(segments[segments.Count() - 2], ".", segments[segments.Count() - 1]);
+            return resourceName.Replace(resourcePath, string.Empty).Substring(1);
         }
     }
 }
