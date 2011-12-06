@@ -4,6 +4,7 @@
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text.RegularExpressions;
     using Nancy.Extensions;
 
@@ -60,7 +61,10 @@
 
             for (var i = 1; i <= groups.Count; i++)
             {
-                data[regex.GroupNameFromNumber(i)] = groups[i].Value;
+                if (groups[i].Success)
+                {
+                    data[regex.GroupNameFromNumber(i)] = groups[i].Value;
+                }
             }
 
             return data;
