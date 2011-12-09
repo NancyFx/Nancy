@@ -45,11 +45,18 @@ namespace Nancy.Diagnostics
 
                     if (ctx.Request.Path.StartsWith(ResourcePrefix, StringComparison.OrdinalIgnoreCase))
                     {
+                        var resourceNamespace = "Nancy.Diagnostics.Resources";
+
+                        var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(ResourcePrefix, string.Empty)) ?? string.Empty;
+                        if (!string.IsNullOrEmpty(path))
+                        {
+                            resourceNamespace += string.Format(".{0}", path.Replace('\\', '.'));
+                        }
+
                         return new EmbeddedFileResponse(
                             typeof(DiagnosticsHook).Assembly,
-                            "Nancy.Diagnostics.Resources",
-                            Path.GetFileName(ctx.Request.Url.Path)
-                            );
+                            resourceNamespace,
+                            Path.GetFileName(ctx.Request.Url.Path));
                     }
 
                     return ExecuteDiagnosticsModule(ctx);

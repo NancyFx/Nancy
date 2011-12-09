@@ -7,6 +7,12 @@
         {
         }
 
+        protected DiagnosticModule(string basePath)
+            : base(DiagnosticsHook.ControlPanelPrefix + basePath)
+        {
+            
+        }
+
         public new DiagnosticsViewRenderer View
         {
             get { return new DiagnosticsViewRenderer(); }

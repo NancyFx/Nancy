@@ -1,19 +1,21 @@
-(function () {
+diagnostics = {
+    // Create this closure to contain the cached modules
+    module: (function () {
+        // Internal module cache.
+        var modules = {};
 
-    var Diagnostics = {
-        start: function () {
-            new Diagnostics.Router();
-        }
-    };
+        // Create a new module reference scaffold or load an
+        // existing module.
+        return function (name) {
+            // If this module has already been created, return it.
+            if (modules[name]) {
+                return modules[name];
+            }
 
-    Diagnostics.Router = Backbone.Router.extend({
-        initialize: function () {
+            // Create a module and save it under this name
+            return (modules[name] = { Views: {} });
+        };
+    } ()),
 
-        },
-            
-        routes: {
-            
-        }
-    });
-
-})();
+    app: _.extend({}, Backbone.Events)
+};

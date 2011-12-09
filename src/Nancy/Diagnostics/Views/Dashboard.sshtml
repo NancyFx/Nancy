@@ -7,9 +7,8 @@
 @EndSection
 
 @Section['Body']
-	diagnostics dashboard with backbone.js!
-	<img src="@Path['~/_Nancy/Resources/face.png']">
-	@Model.Test
+	<h1>Dashboard</h1>
+	<a href="@Path['~/_Nancy/interactive']">Interactive</a>
 @EndSection
 
 

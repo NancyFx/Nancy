@@ -1,0 +1,45 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Interactive Diagnostics@EndSection
+
+@Section['Header']
+	<script src="@Path['~/_Nancy/Resources/interactive-diagnostics.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
+
+	<script type="text/javascript" language="javascript">
+		Backbone.LayoutManager.configure({
+/*			fetch: function (path) {
+				var done = this.async();
+
+				$.get("@Path['~/_Nancy/interactive/template/']" + path)
+					.success(function (contents) { done(contents); })
+					.error(function () { done(null); });
+			},
+*/
+			render: function (template, context) {
+				return Handlebars.compile(template)(context);
+			}
+		});
+	</script>
+@EndSection
+
+@Section['Body']
+	<h1>Interactive Diagnostics</h1>
+
+	<div id="container"></div>
+
+	<script id="#providers-list" type="text/x-handlebars-template">
+		{{#if providers.length}}
+		  <ul>
+			{{#each provider}}
+			  <li>{{this.Name}}</li>
+			{{/each}}
+		  </ul>
+		{{else}}
+		  No providers found.
+		{{/if}}
+	</script>
+@EndSection
+
+
+

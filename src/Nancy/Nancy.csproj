@@ -115,6 +115,7 @@
     <Compile Include="Diagnostics\InteractiveDiagnostic.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnosticMethod.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnostics.cs" />
+    <Compile Include="Diagnostics\Modules\InteractiveModule.cs" />
     <Compile Include="Diagnostics\Modules\MainModule.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
@@ -351,6 +352,17 @@
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Resources\nancy-common.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\interactive-diagnostics.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\jsonreport.js" />
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\providers.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\InteractiveDiagnostics.sshtml" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
