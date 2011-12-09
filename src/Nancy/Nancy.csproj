@@ -345,7 +345,12 @@
     <EmbeddedResource Include="Diagnostics\Resources\backbone.layoutmanager.js" />
     <EmbeddedResource Include="Diagnostics\Resources\handlebars.js" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\_DiagnosticsMaster.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\nancy-common.js" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
