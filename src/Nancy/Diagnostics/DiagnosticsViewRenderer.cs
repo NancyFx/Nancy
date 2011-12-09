@@ -25,7 +25,7 @@ namespace Nancy.Diagnostics
             name = string.Concat(name, ".sshtml");
 
             var view =
-                new EmbeddedFileResponse(typeof(DiagnosticsViewRenderer).Assembly, "Nancy.Diagnostics.Resources", name);
+                new EmbeddedFileResponse(typeof(DiagnosticsViewRenderer).Assembly, "Nancy.Diagnostics.Views", name);
 
             var stream =
                 new MemoryStream();
@@ -34,7 +34,7 @@ namespace Nancy.Diagnostics
             stream.Position = 0;
 
             var location = new ViewLocationResult(
-                "Nancy/Diagnostics/Resources",
+                "Nancy/Diagnostics/Views",
                 name,
                 "sshtml",
                 () => new StreamReader(stream));

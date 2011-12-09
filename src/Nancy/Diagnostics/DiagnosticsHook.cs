@@ -10,7 +10,7 @@ namespace Nancy.Diagnostics
     {
         internal const string ControlPanelPrefix = "/_Nancy";
 
-        internal const string ResourcePrefix = ControlPanelPrefix + "/Diagnostics/Resources/";
+        internal const string ResourcePrefix = ControlPanelPrefix + "/Resources/";
 
         private static readonly IRouteResolver DiagnosticsRouteResolver;
 

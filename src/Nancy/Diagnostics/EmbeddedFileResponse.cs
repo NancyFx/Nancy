@@ -4,9 +4,17 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     public class EmbeddedFileResponse : Response
     {
+        private static readonly byte[] ErrorText;
+
+        static EmbeddedFileResponse()
+        {
+            ErrorText = Encoding.UTF8.GetBytes("NOT FOUND");
+        }
+
         public EmbeddedFileResponse(Assembly assembly, string resourcePath, string name)
         {
             this.ContentType = MimeTypes.GetMimeType(name);
@@ -17,7 +25,14 @@
                 var content = 
                     GetResourceContent(assembly, resourcePath, name);
 
-                content.CopyTo(stream);
+                if (content != null)
+                {
+                    content.CopyTo(stream);
+                }
+                else
+                {
+                    stream.Write(ErrorText, 0, ErrorText.Length);
+                }
             };
         }
 
