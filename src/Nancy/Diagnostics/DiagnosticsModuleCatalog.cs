@@ -5,25 +5,15 @@ namespace Nancy.Diagnostics
     using System.Linq;
 
     using Nancy.Bootstrapper;
+    using TinyIoC;
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
     {
-        private readonly IDictionary<string, Type> diagnosticModules;
- 
-        private readonly IModuleKeyGenerator keyGenerator;
+        private readonly TinyIoC.TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator)
+        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers)
         {
-            this.keyGenerator = keyGenerator;
-
-            var modules = AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray();
-
-            this.diagnosticModules = new Dictionary<string, Type>(modules.Length);
-            
-            foreach (var module in modules)
-            {
-                this.diagnosticModules.Add(keyGenerator.GetKeyForModuleType(module), module);
-            }
+            this.container = ConfigureContainer(keyGenerator, providers);
         }
 
         /// <summary>
@@ -33,7 +23,7 @@ namespace Nancy.Diagnostics
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
         public IEnumerable<NancyModule> GetAllModules(NancyContext context)
         {
-            return this.diagnosticModules.Values.Select(t => (NancyModule)Activator.CreateInstance(t));
+            return this.container.ResolveAll<NancyModule>(false);
         }
 
         /// <summary>
@@ -44,7 +34,28 @@ namespace Nancy.Diagnostics
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
         public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            return (NancyModule)Activator.CreateInstance(this.diagnosticModules[moduleKey]);
+            return this.container.Resolve<NancyModule>(moduleKey);
+        }
+
+        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers)
+        {
+            var diagContainer = new TinyIoCContainer();
+
+            diagContainer.Register<IModuleKeyGenerator>(moduleKeyGenerator);
+            diagContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>();
+            diagContainer.Register<IDiagnosticSessions, DefaultDiagnosticSessions>();
+
+            foreach (var diagnosticsProvider in providers)
+            {
+                diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, diagnosticsProvider.GetType().FullName);
+            }
+
+            foreach (var moduleType in AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray())
+            {
+                diagContainer.Register(typeof(NancyModule), moduleType, moduleKeyGenerator.GetKeyForModuleType(moduleType)).AsMultiInstance();
+            }
+
+            return diagContainer;
         }
     }
 }

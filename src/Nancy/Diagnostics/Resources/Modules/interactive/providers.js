@@ -3,7 +3,7 @@
 
     Provider.Collection = Backbone.Collection.extend({
         url: function () {
-            return Nancy.config.basePath + "interactive/";
+            return Nancy.config.basePath + "interactive/providers/";
         }
     });
 
@@ -11,7 +11,7 @@
         template: "#providers-list",
 
         serialize: function() {
-          return { tweet: this.model.toJSON() };
+          return { providers: this.model.toJSON() };
         }
     });
     

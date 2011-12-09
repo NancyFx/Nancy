@@ -1,9 +1,20 @@
 namespace Nancy.Diagnostics
 {
+    using System.Collections.Generic;
     using Nancy.Routing;
 
     internal class DiagnosticsModuleBuilder : INancyModuleBuilder
     {
+        private readonly IRootPathProvider rootPathProvider;
+
+        private readonly IEnumerable<ISerializer> serializers;
+
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
+        {
+            this.rootPathProvider = rootPathProvider;
+            this.serializers = serializers;
+        }
+
         /// <summary>
         /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="module"/>.
         /// </summary>
@@ -14,6 +25,7 @@ namespace Nancy.Diagnostics
         {
             // Currently we don't connect view location, binders etc.
             module.Context = context;
+            module.Response = new DefaultResponseFormatter(rootPathProvider, context, serializers);
 
             return module;
         }

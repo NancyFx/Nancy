@@ -1,10 +1,11 @@
 namespace Nancy.Diagnostics
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
 
-    using Nancy.Bootstrapper;
-    using Nancy.Routing;
+    using Bootstrapper;
+    using Routing;
 
     public static class DiagnosticsHook
     {
@@ -12,25 +13,18 @@ namespace Nancy.Diagnostics
 
         internal const string ResourcePrefix = ControlPanelPrefix + "/Resources/";
 
-        private static readonly IRouteResolver DiagnosticsRouteResolver;
-
-        private static readonly IRouteCache DiagnosticsRouteCache;
-
-        static DiagnosticsHook()
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator);
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers);
 
-            DiagnosticsRouteResolver = new DefaultRouteResolver(
+            var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
                 new DefaultRoutePatternMatcher(),
-                new DiagnosticsModuleBuilder());
+                new DiagnosticsModuleBuilder(rootPathProvider, serializers));
 
-            DiagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, keyGenerator, new DefaultNancyContextFactory());
-        }
-
-        public static void Enable(IPipelines pipelines)
-        {
+            var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, keyGenerator, new DefaultNancyContextFactory());
+            
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                 {
                     if (!ctx.ControlPanelEnabled)
@@ -59,14 +53,14 @@ namespace Nancy.Diagnostics
                             Path.GetFileName(ctx.Request.Url.Path));
                     }
 
-                    return ExecuteDiagnosticsModule(ctx);
+                    return ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver, diagnosticsRouteCache);
                 });
         }
 
-        private static Response ExecuteDiagnosticsModule(NancyContext ctx)
+        private static Response ExecuteDiagnosticsModule(NancyContext ctx, IRouteResolver routeResolver, RouteCache routeCache)
         {
             // TODO - duplicate the context and strip out the "_/Nancy" bit so we don't need to use it in the module
-            var resolveResult = DiagnosticsRouteResolver.Resolve(ctx, DiagnosticsRouteCache);
+            var resolveResult = routeResolver.Resolve(ctx, routeCache);
 
             ctx.Parameters = resolveResult.Item2;
             var resolveResultPreReq = resolveResult.Item3;

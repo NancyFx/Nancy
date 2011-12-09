@@ -7,6 +7,19 @@
 
     public class DiagnosticsStartup : IStartup
     {
+        private readonly IEnumerable<IDiagnosticsProvider> diagnosticProviders;
+
+        private readonly IRootPathProvider rootPathProvider;
+
+        private readonly IEnumerable<ISerializer> serializers;
+
+        public DiagnosticsStartup(IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
+        {
+            this.diagnosticProviders = diagnosticProviders;
+            this.rootPathProvider = rootPathProvider;
+            this.serializers = serializers;
+        }
+
         /// <summary>
         /// Gets the type registrations to register for this startup task`
         /// </summary>
@@ -37,7 +50,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(pipelines);
+            DiagnosticsHook.Enable(pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers);
         }
     }
 }

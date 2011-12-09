@@ -53,10 +53,10 @@ jQuery(function ($) {
 
             this.fetchProviders(function (providers) {
                 var list = new Provider.Views.List({ providers: providers });
-                
+
                 // Render into the page
-                main.render(function (contents) {
-                    $(".container").html(contents);
+                list.render(function (contents) {
+                    $("#container").html(contents);
                 });
             });
         }
