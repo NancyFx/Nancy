@@ -22,12 +22,10 @@
                                         .Select(p => new
                                             {
                                                 Name = p.Name,
-                                                //Methods = p.Methods.Select(m => new
-                                                //    {
-                                                //        m.MethodName,
-                                                //        m.Arguments, 
-                                                //        m.ReturnType,
-                                                //    }).ToArray()
+                                                Methods = p.Methods.Select(m => new
+                                                    {
+                                                        m.MethodName
+                                                    }).ToArray()
                                             }).ToArray();
 
                     return Response.AsJson(providers);

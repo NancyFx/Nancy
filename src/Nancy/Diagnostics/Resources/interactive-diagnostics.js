@@ -18,8 +18,7 @@
     }
 });
 
-jQuery(function ($) {
-    // Shorten the app namespace
+$(function () {
     var app = diagnostics.app;
 
     var Provider = diagnostics.module("provider");
@@ -30,34 +29,26 @@ jQuery(function ($) {
         },
 
         fetchProviders: function () {
-            var _cache;
+            var cache;
 
             return function (done) {
-                if (_cache) {
-                    return done(_cache);
+                if (cache) {
+                    return done(cache);
                 }
 
                 var providers = new Provider.Collection();
 
                 providers.fetch().success(function () {
-                    _cache = providers;
-                    done(_cache);
+                    cache = providers;
+                    done(cache);
                 });
             };
         } (),
 
         index: function () {
-            var main = new Backbone.LayoutManager({
-                name: "main"
-            });
-
             this.fetchProviders(function (providers) {
-                var list = new Provider.Views.List({ providers: providers });
-
-                // Render into the page
-                list.render(function (contents) {
-                    $("#container").html(contents);
-                });
+                var list = new Provider.Views.List({ model: providers });
+                list.render();
             });
         }
     });
