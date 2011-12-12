@@ -42,7 +42,12 @@
     Method.Views.Item = Backbone.View.extend({
         tagName: 'li',
 
+        events: {
+            'click input[type=button]': 'executeMethod'
+        },
+
         initialize: function () {
+            this.app = app;
             this.router = app.router;
             this.template = $("#method").html();
             this.render();
@@ -51,6 +56,10 @@
         render: function () {
             var html = Handlebars.compile(this.template)({ model: this.model });
             $(this.el).append(html);
+        },
+
+        executeMethod: function () {
+            this.app.trigger("execute", { methodName: this.model.MethodName });
         }
     });
 })(diagnostics.module("method"));

@@ -48,7 +48,8 @@
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">
-		<a>{{model.MethodName}}</a>
+		{{model.MethodName}}
+		<input type="button" value="Execute"/>
 	</script>
 @EndSection
 

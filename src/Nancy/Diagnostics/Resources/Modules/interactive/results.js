@@ -2,7 +2,7 @@
     var app = diagnostics.app;
 
     Results.execute = function (target) {
-        console.log("executing");
+        console.log("executing: " + target.methodName);
     };
 
     app.bind("execute", Results.execute);
