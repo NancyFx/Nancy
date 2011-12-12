@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Diagnostics.Modules
 {
+    using System;
     using System.Linq;
 
     public class InteractiveModule : DiagnosticModule
@@ -24,6 +25,24 @@
                                         .ToArray();
 
                     return Response.AsJson(providers);
+                };
+
+            Get["/providers/{providerName}"] = ctx =>
+                {
+                    var provider =
+                        this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(
+                            d => string.Equals(d.Name, ctx.providerName, StringComparison.OrdinalIgnoreCase));
+
+                    if (provider == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+
+                    var methods = provider.Methods
+                                          .Select(m => new { m.MethodName })
+                                          .ToArray();
+
+                    return Response.AsJson(methods);
                 };
         } 
 

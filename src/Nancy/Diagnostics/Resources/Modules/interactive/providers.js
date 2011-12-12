@@ -15,15 +15,15 @@
         el: '#providers',
 
         initialize: function () {
-            this.template = $("#providers-list").html();
+            this.template = $("#list").html();
         },
 
         render: function () {
             var providers = this.model.toJSON();
 
-            var html = Handlebars.compile(this.template)({ providers: providers });
+            var html = Handlebars.compile(this.template)({ collection: providers });
 
-            $(this.el).append(html);
+            $(this.el).html(html);
 
             _.each(providers, this.renderItem, this);
         },

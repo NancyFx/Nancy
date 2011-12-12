@@ -363,7 +363,10 @@
     <EmbeddedResource Include="Diagnostics\Views\InteractiveDiagnostics.sshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Diagnostics\Resources\Modules\interactive\methods.js" />
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\methods.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\results.js" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -5,6 +5,8 @@
 @Section['Header']
 	<script src="@Path['~/_Nancy/Resources/interactive-diagnostics.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/results.js']"></script>
 
 	<script type="text/javascript" language="javascript">
 		Backbone.LayoutManager.configure({
@@ -26,20 +28,27 @@
 @Section['Body']
 	<h1>Interactive Diagnostics</h1>
 
-	<div id="providers">
+	<div id="providers" style="width: 200px; float: left;">
 	</div>
 
-	<script id="providers-list" type="text/x-handlebars-template">
-		{{#if providers.length}}
+	<div id="methods" style="width: 200px; float: left;">
+	</div>
+
+	<script id="list" type="text/x-handlebars-template">
+		{{#if collection.length}}
 		  <ul>
 		  </ul>
 		{{else}}
-		  No providers found.
+		  None found.
 		{{/if}}
 	</script>
 
 	<script id="provider" type="text/x-handlebars-template">
 		<a title="{{model.Description}}">{{model.Name}}</a>
+	</script>
+
+	<script id="method" type="text/x-handlebars-template">
+		<a>{{model.MethodName}}</a>
 	</script>
 @EndSection
 
