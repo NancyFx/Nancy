@@ -52,6 +52,14 @@ namespace Nancy.ViewEngines
             get { return "View location cache"; }
         }
 
+        public string Description
+        {
+            get
+            {
+                return "Provides methods for viewing and manipulating the view cache.";
+            }
+        }
+
         public object DiagnosticObject
         {
             get { return new DefaultViewLocationCacheDiagnostics(this); }

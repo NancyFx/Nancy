@@ -4,6 +4,8 @@
     {
         string Name { get; }
 
+        string Description { get; }
+
         object DiagnosticObject { get; }
     }
 }

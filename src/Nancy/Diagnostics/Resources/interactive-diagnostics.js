@@ -25,31 +25,20 @@ $(function () {
 
     var Router = Backbone.Router.extend({
         routes: {
-            "": "index"
+            "": "index",
+            ":providerName": "methods"
         },
 
-        fetchProviders: function () {
-            var cache;
-
-            return function (done) {
-                if (cache) {
-                    return done(cache);
-                }
-
-                var providers = new Provider.Collection();
-
-                providers.fetch().success(function () {
-                    cache = providers;
-                    done(cache);
-                });
-            };
-        } (),
-
         index: function () {
-            this.fetchProviders(function (providers) {
+            var providers = new Provider.Collection();
+            providers.fetch().success(function () {
                 var list = new Provider.Views.List({ model: providers });
                 list.render();
             });
+        },
+
+        methods: function (providerName) {
+            console.log(providerName);
         }
     });
 

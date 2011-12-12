@@ -6,6 +6,8 @@ namespace Nancy.Diagnostics
     {
         public string Name { get; set; }
 
+        public string Description { get; set; } 
+
         public IEnumerable<InteractiveDiagnosticMethod> Methods { get; set; }
     }
 }

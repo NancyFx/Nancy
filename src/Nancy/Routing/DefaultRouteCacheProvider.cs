@@ -26,6 +26,14 @@
             }
         }
 
+        public string Description
+        {
+            get
+            {
+                return "Provides methods for viewing and querying the route cache.";
+            }
+        }
+
         public object DiagnosticObject
         {
             get

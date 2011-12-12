@@ -26,27 +26,20 @@
 @Section['Body']
 	<h1>Interactive Diagnostics</h1>
 
-	<div id="container"></div>
+	<div id="providers">
+	</div>
 
 	<script id="providers-list" type="text/x-handlebars-template">
 		{{#if providers.length}}
 		  <ul>
-			{{#each providers}}
-			  <li>{{this.Name}}</li>
-			  {{#if this.Methods.length}}
-			    <ul>
-				  {{#each this.Methods}}
-					<li>{{this.MethodName}}</li>
-				  {{/each}}
-				</ul>
-			  {{else}}
-			    No methods found.
-			  {{/if}}
-			{{/each}}
 		  </ul>
 		{{else}}
 		  No providers found.
 		{{/if}}
+	</script>
+
+	<script id="provider" type="text/x-handlebars-template">
+		<a title="{{model.Description}}">{{model.Name}}</a>
 	</script>
 @EndSection
 

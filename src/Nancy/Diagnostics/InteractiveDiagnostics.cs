@@ -57,6 +57,7 @@
                 diags.Add(new InteractiveDiagnostic
                     {
                         Name = diagnosticsProvider.Name,
+                        Description = diagnosticsProvider.Description,
                         Methods = this.GetDiagnosticMethods(diagnosticsProvider)
                     });
             }
