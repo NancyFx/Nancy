@@ -25,11 +25,11 @@ namespace Nancy.Extensions
             }
             catch (FileNotFoundException)
             {
-                types = new Type[] { };
+                types = Type.EmptyTypes;
             }
             catch (NotSupportedException)
             {
-                types = new Type[] { };
+                types = Type.EmptyTypes;
             }
 
             return types;
