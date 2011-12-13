@@ -39,7 +39,16 @@
                     }
 
                     var methods = provider.Methods
-                                          .Select(m => new { m.MethodName })
+                                          .Select(m => new
+                                              {
+                                                  m.MethodName, 
+                                                  ReturnType = m.ReturnType.ToString(), 
+                                                  Arguments = m.Arguments.Select(a => new
+                                                      {
+                                                          ArgumentName = a.Item1, 
+                                                          ArgumentType = a.Item2.ToString()
+                                                      })
+                                              })
                                           .ToArray();
 
                     return Response.AsJson(methods);

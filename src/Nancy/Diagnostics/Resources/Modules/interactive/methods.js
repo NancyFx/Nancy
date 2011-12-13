@@ -59,7 +59,21 @@
         },
 
         executeMethod: function () {
-            this.app.trigger("execute", { methodName: this.model.MethodName });
+            var parameters = this.$("input");
+
+            var executionContext = {};
+
+            executionContext.providerName = this.model.ProviderName; // need to make sure this is passed in :)
+            executionContext.methodName = this.model.MethodName;
+            executionContext.arguments = [];
+
+            _.each(parameters, function (input) {
+                if (input.type !== "submit" && input.type !== "button") {
+                    executionContext.arguments.push({ name: input.id, value: this.$(input).val() });
+                }
+            }, this);
+
+            this.app.trigger("execute", executionContext);
         }
     });
 })(diagnostics.module("method"));

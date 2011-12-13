@@ -28,10 +28,10 @@
 @Section['Body']
 	<h1>Interactive Diagnostics</h1>
 
-	<div id="providers" style="width: 200px; float: left;">
+	<div id="providers" style="width: 300px; float: left;">
 	</div>
 
-	<div id="methods" style="width: 200px; float: left;">
+	<div id="methods" style="width: 300px; float: left;">
 	</div>
 
 	<script id="list" type="text/x-handlebars-template">
@@ -48,7 +48,21 @@
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">
-		{{model.MethodName}}
+		Name: {{model.MethodName}}<br/>
+		Return Type: {{model.ReturnType}}<br/>
+		Arguments: 
+			{{#if model.Arguments.length}}
+				<ul>
+					{{#each model.Arguments}}
+						<li>
+							{{this.ArgumentName}} : <input type="text" id="{{this.ArgumentName}}"/> ({{this.ArgumentType}})
+						</li>
+					{{/each}}
+				</ul>
+			{{else}}
+				None.
+			{{/if}}
+		<br/>
 		<input type="button" value="Execute"/>
 	</script>
 @EndSection
