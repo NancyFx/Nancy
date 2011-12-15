@@ -28,20 +28,19 @@
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-        /// <param name="routeCache">Cache of all available routes</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IDiagnosticSessions sessionProvider)
+        public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IDiagnosticSessions sessionProvider)
         {
             if (resolver == null)
             {
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
-            if (routeCache == null)
-            {
-                throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
-            }
+            //if (routeCache == null)
+            //{
+            //    throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
+            //}
 
             if (contextFactory == null)
             {
@@ -54,7 +53,7 @@
             }
 
             this.resolver = resolver;
-            this.routeCache = routeCache;
+            //this.routeCache = routeCache;
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
             this.sessionProvider = sessionProvider;
@@ -252,7 +251,7 @@
 
         private void ResolveAndInvokeRoute(NancyContext context)
         {
-            var resolveResult = this.resolver.Resolve(context, this.routeCache);
+            var resolveResult = this.resolver.Resolve(context);
 
             context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;

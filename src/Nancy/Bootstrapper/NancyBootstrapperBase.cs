@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Diagnostics;
     using Nancy.Cryptography;
     using Nancy.ModelBinding;
     using Nancy.Conventions;
@@ -97,6 +98,7 @@
                     ?? 
                     (this.modules = AppDomainAssemblyTypeScanner
                                         .TypesOf<NancyModule>(true)
+                                        .NotOfType<DiagnosticModule>()
                                         .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
                                         .ToArray());
             }

@@ -18,12 +18,13 @@ namespace Nancy.Diagnostics
             var keyGenerator = new DefaultModuleKeyGenerator();
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers);
 
+            var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, keyGenerator, new DefaultNancyContextFactory());
+
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
                 new DefaultRoutePatternMatcher(),
-                new DiagnosticsModuleBuilder(rootPathProvider, serializers));
-
-            var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, keyGenerator, new DefaultNancyContextFactory());
+                new DiagnosticsModuleBuilder(rootPathProvider, serializers),
+                diagnosticsRouteCache);
             
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                 {
@@ -53,14 +54,14 @@ namespace Nancy.Diagnostics
                             Path.GetFileName(ctx.Request.Url.Path));
                     }
 
-                    return ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver, diagnosticsRouteCache);
+                    return ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver);
                 });
         }
 
-        private static Response ExecuteDiagnosticsModule(NancyContext ctx, IRouteResolver routeResolver, RouteCache routeCache)
+        private static Response ExecuteDiagnosticsModule(NancyContext ctx, IRouteResolver routeResolver)
         {
             // TODO - duplicate the context and strip out the "_/Nancy" bit so we don't need to use it in the module
-            var resolveResult = routeResolver.Resolve(ctx, routeCache);
+            var resolveResult = routeResolver.Resolve(ctx);
 
             ctx.Parameters = resolveResult.Item2;
             var resolveResultPreReq = resolveResult.Item3;

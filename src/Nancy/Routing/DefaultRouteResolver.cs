@@ -3,18 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Diagnostics;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     /// <summary>
     /// The default implementation for deciding if any of the available routes is a match for the incoming HTTP request.
     /// </summary>
-    public class DefaultRouteResolver : IRouteResolver
+    public class DefaultRouteResolver : IRouteResolver, IDiagnosticsProvider
     {
         private readonly INancyModuleCatalog nancyModuleCatalog;
         private readonly IRoutePatternMatcher routePatternMatcher;
         private readonly INancyModuleBuilder moduleBuilder;
+        private readonly IRouteCache cache;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class.
@@ -22,23 +23,25 @@
         /// <param name="nancyModuleCatalog">The module catalog that modules should be</param>
         /// <param name="routePatternMatcher">The route pattern matcher that should be used to verify if the route is a match to any of the registered routes.</param>
         /// <param name="moduleBuilder">The module builder that will make sure that the resolved module is full configured.</param>
-        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, INancyModuleBuilder moduleBuilder)
+        /// <param name="cache">The route cache that should be used to resolve modules from.</param>
+        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, INancyModuleBuilder moduleBuilder, IRouteCache cache)
         {
             this.nancyModuleCatalog = nancyModuleCatalog;
             this.routePatternMatcher = routePatternMatcher;
             this.moduleBuilder = moduleBuilder;
+            this.cache = cache;
         }
 
         /// <summary>
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        /// <param name="routeCache">Route cache</param>
+        
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
-        public ResolveResult Resolve(NancyContext context, IRouteCache routeCache)
+        public ResolveResult Resolve(NancyContext context)
         {
             var result =
-                this.Resolve(context.Request.Path, context, routeCache);
+                this.Resolve(context.Request.Path, context, this.cache);
 
             return result.Selected;
         }
@@ -226,6 +229,42 @@
             public ResolveResult Selected { get; set; }
 
             public Dictionary<string, List<RouteCandidate>> Rejected { get; set; }
+        }
+
+        public string Name
+        {
+            get { return "Default route resolver"; }
+        }
+
+        public string Description
+        {
+            get { return "A description"; }
+        }
+
+        public object DiagnosticObject
+        {
+            get { return new DefaultRouteResolverDiagnosticsProvider(this); }
+        }
+
+        public class DefaultRouteResolverDiagnosticsProvider
+        {
+            private readonly DefaultRouteResolver resolver;
+            private readonly IRouteCache cache;
+
+            public DefaultRouteResolverDiagnosticsProvider(DefaultRouteResolver resolver)
+            {
+                this.resolver = resolver;
+            }
+
+            //public string ResolveRoute(string method, string path)
+            //{
+            //    this.resolver.Resolve()
+            //}
+
+            private NancyContext CreateContext(string method, string path)
+            {
+                return new NancyContext();
+            }
         }
     }
 

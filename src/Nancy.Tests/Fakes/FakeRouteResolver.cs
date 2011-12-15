@@ -9,7 +9,7 @@ namespace Nancy.Tests.Fakes
 
         public string ModulePath { get; private set; }
 
-        ResolveResult IRouteResolver.Resolve(NancyContext context, IRouteCache cache)
+        ResolveResult IRouteResolver.Resolve(NancyContext context)
         {
             return new ResolveResult(new FakeRoute(), new DynamicDictionary(), null, null);
         }

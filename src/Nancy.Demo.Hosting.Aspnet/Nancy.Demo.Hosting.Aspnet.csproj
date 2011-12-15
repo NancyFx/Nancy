@@ -121,7 +121,6 @@
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
     <Compile Include="CustomErrorHandler.cs" />
-    <Compile Include="DiagnosticsModule.cs" />
     <Compile Include="HereBeAResponseYouScurvyDog.cs" />
     <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="DependencyModule.cs" />
