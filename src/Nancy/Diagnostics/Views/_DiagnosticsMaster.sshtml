@@ -12,7 +12,6 @@
 		<script src="@Path['~/_Nancy/Resources/jquery-1.7.1.min.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/underscore-min.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/backbone-min.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/backbone.layoutmanager.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/handlebars.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/nancy-common.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
