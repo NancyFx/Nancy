@@ -1,24 +1,4 @@
-﻿Backbone.StaticDiagnosticsView = Backbone.LayoutManager.extend({
-    fetch: function (path) {
-        var done = this.async();
-
-        $.get(path + ".html")
-         .success(function (contents) { done(contents); })
-         .error(function () { done(null); });
-    },
-
-    render: function (template, context) {
-        // If we have a template then render it with handlebars
-        if (template) {
-            return Handlebars.compile(template)(context);
-        }
-
-        // Otherwise fallback to using the json renderer
-        return _.modelreport(context);
-    }
-});
-
-$(function () {
+﻿$(function () {
     var app = diagnostics.app;
 
     var Provider = diagnostics.module("provider");

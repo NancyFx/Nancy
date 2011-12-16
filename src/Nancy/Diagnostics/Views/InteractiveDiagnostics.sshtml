@@ -8,22 +8,6 @@
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/results.js']"></script>
-
-	<script type="text/javascript" language="javascript">
-		Backbone.LayoutManager.configure({
-/*			fetch: function (path) {
-				var done = this.async();
-
-				$.get("@Path['~/_Nancy/interactive/template/']" + path)
-					.success(function (contents) { done(contents); })
-					.error(function () { done(null); });
-			},
-*/
-			render: function (template, context) {
-				return Handlebars.compile(template)(context);
-			}
-		});
-	</script>
 @EndSection
 
 @Section['Body']
