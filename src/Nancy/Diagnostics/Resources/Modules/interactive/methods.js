@@ -36,7 +36,7 @@
         renderItem: function (model) {
             var itemView = new Method.Views.Item({ model: model, providerName: this.providerName });
 
-            this.$('ul').append(itemView.el);
+            this.$('#root').append(itemView.el);
         }
     });
 

@@ -49,6 +49,11 @@
             {
                 return string.Format("Hello {0}!", name);
             }
+
+            public string SayHelloWithAge(string myName, int myAge)
+            {
+                return string.Format("Hello {0}, you are {1} years old!", myName, myAge);
+            }
         }
     }
 }

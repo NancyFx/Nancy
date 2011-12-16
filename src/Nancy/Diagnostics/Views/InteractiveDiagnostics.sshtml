@@ -3,6 +3,7 @@
 @Section['Title']Interactive Diagnostics@EndSection
 
 @Section['Header']
+	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/interactive-diagnostics.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
@@ -34,9 +35,12 @@
 	<div id="methods" style="width: 300px; float: left;">
 	</div>
 
+	<div id="results" style="width: 300px; float: left;">
+	</div>
+
 	<script id="list" type="text/x-handlebars-template">
 		{{#if collection.length}}
-		  <ul>
+		  <ul id="root">
 		  </ul>
 		{{else}}
 		  None found.
