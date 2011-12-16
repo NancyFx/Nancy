@@ -27,7 +27,7 @@
     });
 
     Results.execute = function (executionContext) {
-        console.log("executing: " + executionContext.methodName);
+        console.log("executing: " + executionContext.providerName + "/" + executionContext.methodName);
         console.log("Arguments:");
         _.each(executionContext.arguments, function (arg) {
             console.log("Name: " + arg.name + " Value:" + arg.value);
@@ -36,6 +36,7 @@
         var resultsView = new Results.Views.Result({
                 providerName: executionContext.providerName,
                 methodName: executionContext.methodName,
+                arguments: executionContext.arguments
             });
     };
 

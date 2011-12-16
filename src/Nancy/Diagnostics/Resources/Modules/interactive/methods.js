@@ -20,6 +20,7 @@
 
         initialize: function () {
             this.template = $("#list").html();
+            this.providerName = this.model.providerName;
         },
 
         render: function () {
@@ -33,7 +34,7 @@
         },
 
         renderItem: function (model) {
-            var itemView = new Method.Views.Item({ model: model });
+            var itemView = new Method.Views.Item({ model: model, providerName: this.providerName });
 
             this.$('ul').append(itemView.el);
         }
@@ -46,7 +47,8 @@
             'click input[type=button]': 'executeMethod'
         },
 
-        initialize: function () {
+        initialize: function (args) {
+            this.providerName = args.providerName;
             this.app = app;
             this.router = app.router;
             this.template = $("#method").html();
@@ -63,7 +65,7 @@
 
             var executionContext = {};
 
-            executionContext.providerName = this.model.ProviderName; // need to make sure this is passed in :)
+            executionContext.providerName = this.providerName;
             executionContext.methodName = this.model.MethodName;
             executionContext.arguments = [];
 
