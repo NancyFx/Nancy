@@ -8,7 +8,7 @@
 
 var cssText =
 		  ".modelreport TABLE { border-collapse:collapse; border: solid 1px #ccc; clear: left; }\r\n" +
-		  ".modelreport TH { text-align: left; padding: 4px 8px; text-shadow: #fff 1px 1px -1px; background: #f1f1f1; white-space:nowrap; cursor:pointer; font-weight: bold; }\r\n" +
+		  ".modelreport TH { text-align: left; padding: 4px 8px; text-shadow: #fff 1px 1px -1px; background: #f1f1f1; color: black; white-space:nowrap; cursor:pointer; font-weight: bold; }\r\n" +
 		  ".modelreport TH, .modelreport TD, .modelreport TD DT, .modelreport TD DD { font-size: 13px; font-family: Arial; }\r\n" +
 		  ".modelreport TD { padding: 8px 8px 0 8px; vertical-align: top; }\r\n" +
 		  ".modelreport DL { clear: left; }\r\n" +

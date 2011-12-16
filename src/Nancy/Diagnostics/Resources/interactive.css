@@ -1,0 +1,13 @@
+﻿div#main {
+    width: 400px; 
+    float: left;
+}
+
+div#results {
+    width: 600px; 
+    float: left;
+}
+
+.execute-button {
+    margin-top: 4px;
+}

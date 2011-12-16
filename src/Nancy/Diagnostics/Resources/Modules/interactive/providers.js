@@ -12,10 +12,10 @@
     });
 
     Provider.Views.List = Backbone.View.extend({
-        el: '#providers',
+        el: '#main',
 
         initialize: function () {
-            this.template = $("#list").html();
+            this.template = $("#providerList").html();
         },
 
         render: function () {

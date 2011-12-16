@@ -16,10 +16,15 @@
     });
 
     Method.Views.List = Backbone.View.extend({
-        el: '#methods',
+        el: '#main',
+
+        events: {
+            'click #back': 'back'
+        },
 
         initialize: function () {
-            this.template = $("#list").html();
+            this.router = app.router;
+            this.template = $("#methodList").html();
             this.providerName = this.model.providerName;
         },
 
@@ -37,6 +42,10 @@
             var itemView = new Method.Views.Item({ model: model, providerName: this.providerName });
 
             this.$('#root').append(itemView.el);
+        },
+            
+        back: function () {
+            this.router.navigate("", true);
         }
     });
 

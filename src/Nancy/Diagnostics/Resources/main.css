@@ -1,0 +1,36 @@
+﻿*
+{
+    margin: 0;
+}
+
+html, body
+{
+    height: 100%;
+}
+
+body
+{
+    background-color: black;
+    color: white;
+    font-family: Consolas, 'Andale Mono' , 'Lucida Console' , 'DejaVu Sans Mono' ,monospace;
+}
+
+ul
+{
+    list-style: none;
+}
+
+button.g-button, a.g-button, input[type=submit].g-button, input[type=button].g-button
+{
+    padding: 6px 10px;
+    -webkit-border-radius: 2px 2px;
+    border: solid 1px rgb(153, 153, 153);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(rgb(255, 255, 255)), to(rgb(221, 221, 221)));
+    color: #333;
+    text-decoration: none;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    text-shadow: 0px 1px 1px rgba(255,255,255,1);
+    line-height: 1;
+}

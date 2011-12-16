@@ -8,21 +8,31 @@
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
 	<script src="@Path['~/_Nancy/Resources/Modules/interactive/results.js']"></script>
+
+	<link href="@Path['~/_Nancy/Resources/interactive.css']" rel="Stylesheet" />
 @EndSection
 
 @Section['Body']
 	<h1>Interactive Diagnostics</h1>
 
-	<div id="providers" style="width: 300px; float: left;">
+	<div id="main">
 	</div>
 
-	<div id="methods" style="width: 300px; float: left;">
+	<div id="results">
 	</div>
 
-	<div id="results" style="width: 300px; float: left;">
-	</div>
+	<script id="providerList" type="text/x-handlebars-template">
+		providers
+		{{#if collection.length}}
+		  <ul id="root">
+		  </ul>
+		{{else}}
+		  None found.
+		{{/if}}
+	</script>
 
-	<script id="list" type="text/x-handlebars-template">
+	<script id="methodList" type="text/x-handlebars-template">
+		<a id="back"><< back</a>
 		{{#if collection.length}}
 		  <ul id="root">
 		  </ul>
@@ -37,7 +47,6 @@
 
 	<script id="method" type="text/x-handlebars-template">
 		Name: {{model.MethodName}}<br/>
-		Return Type: {{model.ReturnType}}<br/>
 		Arguments: 
 			{{#if model.Arguments.length}}
 				<ul>
@@ -51,7 +60,7 @@
 				None.
 			{{/if}}
 		<br/>
-		<input type="button" value="Execute"/>
+		<input type="button" value="Execute" class="g-button execute-button"/>
 	</script>
 @EndSection
 
