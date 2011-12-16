@@ -141,8 +141,7 @@ _.jsonreport = (function () {
         setTableBody(tbody, makeRows(h, tbl));
     });
 
-    return function (json) {
-        var model = JSON.parse(json);
+    return function (model) {
         return val(model);
     };
 })();

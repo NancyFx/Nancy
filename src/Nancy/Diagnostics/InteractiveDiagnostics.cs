@@ -48,6 +48,23 @@
             return (string)property.GetValue(interactiveDiagnosticMethod.ParentDiagnosticObject, null);
         }
 
+        public InteractiveDiagnostic GetDiagnostic(string providerName)
+        {
+            return this.AvailableDiagnostics.FirstOrDefault(d => string.Equals(d.Name, providerName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public InteractiveDiagnosticMethod GetMethod(string providerName, string methodName)
+        {
+            var diagnostic = this.GetDiagnostic(providerName);
+
+            if (diagnostic == null)
+            {
+                return null;
+            }
+
+            return diagnostic.Methods.FirstOrDefault(m => string.Equals(m.MethodName, methodName, StringComparison.OrdinalIgnoreCase));
+        }
+
         private void BuildAvailableDiagnostics()
         {
             var diags = new List<InteractiveDiagnostic>(this.providers.Length);

@@ -31,16 +31,14 @@
 
             Get["/providers/{providerName}"] = ctx =>
                 {
-                    var provider =
-                        this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(
-                            d => string.Equals(d.Name, ctx.providerName, StringComparison.OrdinalIgnoreCase));
+                    InteractiveDiagnostic diagnostic = this.interactiveDiagnostics.GetDiagnostic(ctx.providerName);
 
-                    if (provider == null)
+                    if (diagnostic == null)
                     {
                         return HttpStatusCode.NotFound;
                     }
 
-                    var methods = provider.Methods
+                    var methods = diagnostic.Methods
                                           .Select(m => new
                                               {
                                                   m.MethodName, 
@@ -58,18 +56,7 @@
 
             Get["/providers/{providerName}/{methodName}"] = ctx =>
                 {
-                    var provider =
-                        this.interactiveDiagnostics.AvailableDiagnostics.FirstOrDefault(
-                            d => string.Equals(d.Name, ctx.providerName, StringComparison.OrdinalIgnoreCase));
-
-                    if (provider == null)
-                    {
-                        return HttpStatusCode.NotFound;
-                    }
-
-                    var method =
-                        provider.Methods.FirstOrDefault(
-                            m => string.Equals(m.MethodName, ctx.methodName, StringComparison.OrdinalIgnoreCase));
+                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(ctx.providerName, ctx.methodName);
 
                     if (method == null)
                     {
@@ -79,6 +66,25 @@
                     object[] arguments = this.GetArguments(method, this.Request.Query);
 
                     return Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
+                };
+
+            Get["/templates/{providerName}/{methodName}"] = ctx =>
+                {
+                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(ctx.providerName, ctx.methodName);
+
+                    if (method == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+
+                    var template = this.interactiveDiagnostics.GetTemplate(method);
+
+                    if (template == null)
+                    {
+                        return HttpStatusCode.NotFound;
+                    }
+
+                    return template;
                 };
         }
 

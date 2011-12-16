@@ -1,20 +1,6 @@
 ﻿(function (Results, Handlebars, $) {
     var app = diagnostics.app;
 
-    Results.LayoutManager = new Backbone.LayoutManager({
-        fetch: function (path) {
-            var done = this.async();
-
-            $.get(Nancy.config.basePath + "interactive/templates/" + path)
-					.success(function (contents) { done(contents); })
-					.error(function () { done(null); });
-        },
-
-        render: function (template, context) {
-            return Handlebars.compile(template)(context);
-        }
-    });
-
     Results.Views.Result = Backbone.View.extend({
         el: '#results',
 
@@ -37,7 +23,7 @@
 
         renderWithTemplate: function (template) {
             var html = Handlebars.compile(template)({ model: this.model });
-            $(this.el).append(html);
+            $(this.el).html(html);
         },
 
         renderWithoutTemplate: function () {
@@ -54,7 +40,7 @@
 
         $.ajax({
                 url: Nancy.config.basePath + "interactive/providers/" + executionContext.providerName + "/" + executionContext.methodName,
-                dataType: "text",
+                dataType: "json",
                 data: executionContext.arguments,
                 success: function (data) {
                     var resultsView = new Results.Views.Result({
