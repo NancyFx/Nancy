@@ -27,7 +27,7 @@
         },
 
         renderWithoutTemplate: function () {
-            $(this.el).html(_.jsonreport(this.model));
+            $(this.el).html("<div class=\"modelreport\">" + _.modelreport(this.model) + "</div>");
         }
     });
 

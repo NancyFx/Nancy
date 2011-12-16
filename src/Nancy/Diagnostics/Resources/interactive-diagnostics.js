@@ -14,7 +14,7 @@
         }
 
         // Otherwise fallback to using the json renderer
-        return _.jsonreport(context);
+        return _.modelreport(context);
     }
 });
 

@@ -7,33 +7,33 @@
 !window.JSON && document.write(unescape('%3Cscript src=""http://ajax.cdnjs.com/ajax/libs/json2/20110223/json2.js""%3E%3C/script%3E'));
 
 var cssText =
-		  ".jsonreport TABLE { border-collapse:collapse; border: solid 1px #ccc; clear: left; }\r\n" +
-		  ".jsonreport TH { text-align: left; padding: 4px 8px; text-shadow: #fff 1px 1px -1px; background: #f1f1f1; white-space:nowrap; cursor:pointer; font-weight: bold; }\r\n" +
-		  ".jsonreport TH, .jsonreport TD, .jsonreport TD DT, .jsonreport TD DD { font-size: 13px; font-family: Arial; }\r\n" +
-		  ".jsonreport TD { padding: 8px 8px 0 8px; vertical-align: top; }\r\n" +
-		  ".jsonreport DL { clear: left; }\r\n" +
-		  ".jsonreport DT { margin: 10px 0 5px 0; font: bold 18px Helvetica, Verdana, Arial; width: 200px; clear: left; float: left; display:block; white-space:nowrap; }\r\n" +
-		  ".jsonreport DD { margin: 5px 10px; font: 18px Arial; padding: 2px; display: block; float: left; }\r\n" +
-		  ".jsonreport DL DL DT { font: bold 16px Arial; }\r\n" +
-		  ".jsonreport DL DL DD { font: 16px Arial; }\r\n" +
-		  ".jsonreport HR { display:none; }\r\n" +
-		  ".jsonreport TD DL HR { display:block; padding: 0; clear: left; border: none; }\r\n" +
-		  ".jsonreport TD DL { padding: 4px; margin: 0; height:100%; max-width: 700px; }\r\n" +
-		  ".jsonreport DL TD DL DT { padding: 2px; margin: 0 10px 0 0; font-weight: bold; font-size: 13px; width: 120px; overflow: hidden; clear: left; float: left; display:block; }\r\n" +
-		  ".jsonreport DL TD DL DD { margin: 0; padding: 2px; font-size: 13px; display: block; float: left; }\r\n" +
-		  ".jsonreport TBODY>TR:last-child>TD { padding: 8px; }\r\n" +
-		  ".jsonreport THEAD { -webkit-user-select:none; -moz-user-select:none; }\r\n" +
-		  ".jsonreport .desc, .jsonreport .asc { background-color: #FAFAD2; }\r\n" +
-		  ".jsonreport .desc { background-color: #D4EDC9; }\r\n" +
-		  ".jsonreport TH B { display:block; float:right; margin: 0 0 0 5px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #ccc; border-bottom: none; }\r\n" +
-		  ".jsonreport .asc B { border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; border-bottom: none; }\r\n" +
-		  ".jsonreport .desc B { border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid #333; border-top: none; }\r\n" +
-		  ".jsonreport H3 { font-size: 18px; margin: 0 0 10px 0; }";
+		  ".modelreport TABLE { border-collapse:collapse; border: solid 1px #ccc; clear: left; }\r\n" +
+		  ".modelreport TH { text-align: left; padding: 4px 8px; text-shadow: #fff 1px 1px -1px; background: #f1f1f1; white-space:nowrap; cursor:pointer; font-weight: bold; }\r\n" +
+		  ".modelreport TH, .modelreport TD, .modelreport TD DT, .modelreport TD DD { font-size: 13px; font-family: Arial; }\r\n" +
+		  ".modelreport TD { padding: 8px 8px 0 8px; vertical-align: top; }\r\n" +
+		  ".modelreport DL { clear: left; }\r\n" +
+		  ".modelreport DT { margin: 10px 0 5px 0; font: bold 18px Helvetica, Verdana, Arial; width: 200px; clear: left; float: left; display:block; white-space:nowrap; }\r\n" +
+		  ".modelreport DD { margin: 5px 10px; font: 18px Arial; padding: 2px; display: block; float: left; }\r\n" +
+		  ".modelreport DL DL DT { font: bold 16px Arial; }\r\n" +
+		  ".modelreport DL DL DD { font: 16px Arial; }\r\n" +
+		  ".modelreport HR { display:none; }\r\n" +
+		  ".modelreport TD DL HR { display:block; padding: 0; clear: left; border: none; }\r\n" +
+		  ".modelreport TD DL { padding: 4px; margin: 0; height:100%; max-width: 700px; }\r\n" +
+		  ".modelreport DL TD DL DT { padding: 2px; margin: 0 10px 0 0; font-weight: bold; font-size: 13px; width: 120px; overflow: hidden; clear: left; float: left; display:block; }\r\n" +
+		  ".modelreport DL TD DL DD { margin: 0; padding: 2px; font-size: 13px; display: block; float: left; }\r\n" +
+		  ".modelreport TBODY>TR:last-child>TD { padding: 8px; }\r\n" +
+		  ".modelreport THEAD { -webkit-user-select:none; -moz-user-select:none; }\r\n" +
+		  ".modelreport .desc, .modelreport .asc { background-color: #FAFAD2; }\r\n" +
+		  ".modelreport .desc { background-color: #D4EDC9; }\r\n" +
+		  ".modelreport TH B { display:block; float:right; margin: 0 0 0 5px; width: 0; height: 0; border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #ccc; border-bottom: none; }\r\n" +
+		  ".modelreport .asc B { border-left: 5px solid transparent; border-right: 5px solid transparent; border-top: 5px solid #333; border-bottom: none; }\r\n" +
+		  ".modelreport .desc B { border-left: 5px solid transparent; border-right: 5px solid transparent; border-bottom: 5px solid #333; border-top: none; }\r\n" +
+		  ".modelreport H3 { font-size: 18px; margin: 0 0 10px 0; }";
 
 document.write('<style type="text/css">' + cssText + '</style>\r\n');
 
 if (!_) var _ = {};
-_.jsonreport = (function () {
+_.modelreport = (function () {
     var root = this, doc = document,
 				$ = function (id) { return doc.getElementById(id); },
 				$$ = function (sel) { return doc.getElementsByTagName(sel); },
