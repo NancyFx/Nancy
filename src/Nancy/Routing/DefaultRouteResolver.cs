@@ -176,7 +176,7 @@
 
             if (!routes.Item1.Any())
             {
-                var allowedMethods = routes.Item1.Select(x => x.Item3.Method);
+                var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
                 context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResults
                 {
