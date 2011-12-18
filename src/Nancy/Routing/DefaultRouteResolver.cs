@@ -219,15 +219,30 @@
             };
         }
 
+        /// <summary>
+        /// Used internally by the <see cref="DefaultRouteResolver"/> to store information about the routes that were
+        /// rejected during route resolution. The information is used by diagnostics to provide insight into why routes
+        /// where rejected.
+        /// </summary>
         private class ResolveResults
         {
+            /// <summary>
+            /// Initializes a new instance of the <see cref="ResolveResults"/> class.
+            /// </summary>
             public ResolveResults()
             {
                 this.Rejected = new Dictionary<string, List<RouteCandidate>>();
             }
 
+            /// <summary>
+            /// The route that was selected as the most suitable match for the current request.
+            /// </summary>
+            /// <value></value>
             public ResolveResult Selected { get; set; }
 
+            /// <summary>
+            /// The routes (value) and reason (key) that were rejected during route resolution.
+            /// </summary>
             public Dictionary<string, List<RouteCandidate>> Rejected { get; set; }
         }
 
