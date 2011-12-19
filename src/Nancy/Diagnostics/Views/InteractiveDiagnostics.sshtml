@@ -42,7 +42,7 @@
 	</script>
 
 	<script id="provider" type="text/x-handlebars-template">
-		<a title="{{model.Description}}">{{model.Name}}</a>
+		<a title="{{model.Description}}">{{model.Name}}</a> (Name: {{model.Type}}, Namespace: {{model.Namespace}}, Assembly: {{model.Assembly}})
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">

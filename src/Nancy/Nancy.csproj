@@ -129,6 +129,7 @@
     <Compile Include="Json\JsonSettings.cs" />
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
+    <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
