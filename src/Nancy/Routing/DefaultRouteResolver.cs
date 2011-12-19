@@ -264,21 +264,36 @@
         public class DefaultRouteResolverDiagnosticsProvider
         {
             private readonly DefaultRouteResolver resolver;
-            private readonly IRouteCache cache;
 
             public DefaultRouteResolverDiagnosticsProvider(DefaultRouteResolver resolver)
             {
                 this.resolver = resolver;
             }
 
-            //public string ResolveRoute(string method, string path)
-            //{
-            //    this.resolver.Resolve()
-            //}
-
-            private NancyContext CreateContext(string method, string path)
+            public IEnumerable<object> ResolveRoute(string method, string path)
             {
-                return new NancyContext();
+                var context =
+                    CreateContext(method, path);
+
+                var results = 
+                    this.resolver.Resolve(path, context, this.resolver.cache);
+
+                return from result in results.Rejected
+                       select new {
+                            Reason = result.Key,
+                            Routes = from route in result.Value
+                                     select new
+                                                {
+                                                    route.Item3.Method,
+                                                    route.Item3.Path,
+                                                    Module = route.Item1
+                                                }
+                       };
+            }
+
+            private static NancyContext CreateContext(string method, string path)
+            {
+                return new NancyContext { Request = new Request(method, path, "http")};
             }
         }
     }
