@@ -12,13 +12,15 @@
 	<link href="@Path['~/_Nancy/Resources/interactive.css']" rel="Stylesheet" />
 @EndSection
 
-@Section['Body']
+@Section['Page_Title']
 	<h1>Interactive Diagnostics</h1>
+@EndSection
 
-	<div id="main">
+@Section['Body']
+	<div id="main" class="grid_4">
 	</div>
 
-	<div id="results">
+	<div id="results" class="grid_8">
 	</div>
 
 	<script id="providerList" type="text/x-handlebars-template">

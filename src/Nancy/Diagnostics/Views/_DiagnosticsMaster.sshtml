@@ -16,15 +16,26 @@
 		<script src="@Path['~/_Nancy/Resources/nancy-common.js']"></script>
 		<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
 
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/reset.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/text.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/960.css']" />
+
 		<link href="@Path['~/_Nancy/Resources/main.css']" rel="Stylesheet" />
 
 		@Section['Header'];
 	</head>
 	<body>
-		<div style="display:block; float: left; clear: both; margin-bottom: 8px; width: 100%; height: 128px;">
-			<img src="@Path['~/_Nancy/Resources/logo.png']" height="128px" alt="Nancy" />
-		</div>
+		<div class="container_12">
 
-		@Section['Body'];
+			<div class="grid_6 header">
+				<img src="@Path['~/_Nancy/Resources/logo.png']" height="100px" alt="Nancy" />
+			</div>
+
+			<div class="grid_6 header">
+				@Section['Page_Title'];
+			</div>
+
+			@Section['Body'];
+		</div>
 	</body>
 </html>

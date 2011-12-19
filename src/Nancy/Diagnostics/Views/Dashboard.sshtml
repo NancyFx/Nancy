@@ -6,9 +6,14 @@
 	<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
 @EndSection
 
-@Section['Body']
+@Section['Page_Title']
 	<h1>Dashboard</h1>
-	<a href="@Path['~/_Nancy/interactive']">Interactive</a>
+@EndSection
+
+@Section['Body']
+	<div class="grid_12">
+		<a href="@Path['~/_Nancy/interactive']">Interactive</a>
+	</div>
 @EndSection
 
 
