@@ -13,6 +13,52 @@
     public class RequestHeadersFixture
     {
         [Fact]
+        public void Should_return_all_header_values_when_values_are_retrieved()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    {"accept", new[] {"text/plain", "text/html"}},
+                    {"charset", new[] {"utf-8"}}
+                };
+
+            var headers = new RequestHeaders(rawHeaders);
+
+            // When
+            var values = headers.Values;
+
+            // Then
+            values.Count().ShouldEqual(2);
+            values.First().Count().ShouldEqual(2);
+            values.First().First().ShouldEqual("text/plain");
+            values.First().Last().ShouldEqual("text/html");
+            values.Last().First().ShouldEqual("utf-8");
+        }
+
+        [Fact]
+        public void Should_return_all_header_names_when_keys_are_retrieved()
+        {
+            // Given
+            var rawHeaders = 
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    {"accept", null},
+                    {"charset", null}
+                };
+
+            var headers = new RequestHeaders(rawHeaders);
+
+            // When
+            var keys = headers.Keys;
+
+            // Then
+            keys.Count().ShouldEqual(2);
+            keys.First().ShouldEqual("accept");
+            keys.Last().ShouldEqual("charset");
+        }
+
+        [Fact]
         public void Should_return_empty_enumerable_when_accept_headers_are_not_available()
         {
             // Given
