@@ -206,7 +206,7 @@
         /// <summary>
         /// Gets the Html helper.
         /// </summary>
-        public HtmlHelpers<TModel> Html { get; private set; }
+        public IHtmlHelpers Html { get; private set; }
 
         /// <summary>
         /// Gets the model.

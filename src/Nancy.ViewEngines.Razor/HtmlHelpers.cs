@@ -8,15 +8,14 @@
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class HtmlHelpers<TModel>
+    public class HtmlHelpers<TModel> : IHtmlHelpers
     {
         private readonly TModel model;
-
         public readonly RazorViewEngine engine;
         public readonly IRenderContext renderContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlHelpers"/> class.
+        /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
         /// </summary>
         /// <param name="engine"></param>
         /// <param name="renderContext"></param>
