@@ -1,6 +1,6 @@
 ﻿body
 {
-    background-color: black;
+    background: url(bg-texture.jpg) repeat;
     color: white;
     font-family: Consolas, 'Andale Mono' , 'Lucida Console' , 'DejaVu Sans Mono' ,monospace;
 }
