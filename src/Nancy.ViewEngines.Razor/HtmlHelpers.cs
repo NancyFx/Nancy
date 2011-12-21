@@ -39,13 +39,13 @@
         /// <summary>
         /// Renders a partial with the given view name.
         /// </summary>
-        /// <param name="viewName">Name of the view.</param>
-        /// <param name="model">The model.</param>
-        public IHtmlString Partial(string viewName, dynamic model)
+        /// <param name="viewName">Name of the partial view.</param>
+        /// <param name="modelForPartial">The model that is passed to the partial.</param>
+        public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
-            var view = this.renderContext.LocateView(viewName, model);
+            var view = this.renderContext.LocateView(viewName, modelForPartial);
 
-            var response = this.engine.RenderView(view, model, this.renderContext);
+            var response = this.engine.RenderView(view, modelForPartial, this.renderContext);
             Action<Stream> action = response.Contents;
             var mem = new MemoryStream();
 
