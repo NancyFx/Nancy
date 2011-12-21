@@ -49,6 +49,7 @@
 
 	<script id="method" type="text/x-handlebars-template">
 		Name: {{model.MethodName}}<br/>
+		Description: {{model.Description}}<br/>
 		Arguments: 
 			{{#if model.Arguments.length}}
 				<ul>

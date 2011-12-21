@@ -103,6 +103,7 @@
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultDiagnosticSessions.cs" />
+    <Compile Include="Diagnostics\DescriptionAttribute.cs" />
     <Compile Include="Diagnostics\DiagnosticModule.cs" />
     <Compile Include="Diagnostics\DiagnosticsHook.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleBuilder.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="Diagnostics\InteractiveDiagnostics.cs" />
     <Compile Include="Diagnostics\Modules\InteractiveModule.cs" />
     <Compile Include="Diagnostics\Modules\MainModule.cs" />
+    <Compile Include="Diagnostics\TemplateAttribute.cs" />
     <Compile Include="Diagnostics\TestingDiagnosticProvider.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />

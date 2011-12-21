@@ -22,9 +22,7 @@
 
         public object ExecuteDiagnostic(InteractiveDiagnosticMethod interactiveDiagnosticMethod, object[] arguments)
         {
-            var diagObjectType = interactiveDiagnosticMethod.ParentDiagnosticObject.GetType();
-
-            var method = diagObjectType.GetMethod(interactiveDiagnosticMethod.MethodName, Flags);
+            var method = GetMethodInfo(interactiveDiagnosticMethod);
 
             if (method == null)
             {
@@ -37,15 +35,9 @@
         public string GetTemplate(InteractiveDiagnosticMethod interactiveDiagnosticMethod)
         {
             var diagObjectType = interactiveDiagnosticMethod.ParentDiagnosticObject.GetType();
-            var propertyName = String.Format("{0}{1}", interactiveDiagnosticMethod.MethodName, "Template");
-            var property = diagObjectType.GetProperty(propertyName);
 
-            if (property == null)
-            {
-                return null;
-            }
-
-            return (string)property.GetValue(interactiveDiagnosticMethod.ParentDiagnosticObject, null);
+            return GetTemplateFromProperty(interactiveDiagnosticMethod, diagObjectType) ??
+                   GetTemplateFromAttribute(interactiveDiagnosticMethod);
         }
 
         public InteractiveDiagnostic GetDiagnostic(string providerName)
@@ -93,10 +85,17 @@
                                             diagnosticsProvider.DiagnosticObject,
                                             methodInfo.ReturnType,
                                             methodInfo.Name,
-                                            this.GetArguments(methodInfo)));
+                                            this.GetArguments(methodInfo),
+                                            this.GetDescription(diagnosticsProvider, methodInfo)));
             }
 
             return diagnosticMethods;
+        }
+
+        private string GetDescription(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
+        {
+            return GetDescriptionFromProperty(diagnosticsProvider, methodInfo) ??
+                   GetDescriptionFromAttribute(diagnosticsProvider, methodInfo);
         }
 
         private IEnumerable<Tuple<string, Type>> GetArguments(MethodInfo methodInfo)
@@ -110,6 +109,58 @@
             }
 
             return arguments;
+        }
+
+        private static string GetTemplateFromProperty(
+            InteractiveDiagnosticMethod interactiveDiagnosticMethod, Type diagObjectType)
+        {
+            var propertyName = String.Format("{0}{1}", interactiveDiagnosticMethod.MethodName, "Template");
+            var property = diagObjectType.GetProperty(propertyName);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            return (string)property.GetValue(interactiveDiagnosticMethod.ParentDiagnosticObject, null);
+        }
+
+        private static string GetTemplateFromAttribute(InteractiveDiagnosticMethod interactiveDiagnosticMethod)
+        {
+            var method = GetMethodInfo(interactiveDiagnosticMethod);
+
+            var attribute = (TemplateAttribute)Attribute.GetCustomAttribute(method, typeof(TemplateAttribute));
+
+            return attribute != null ? attribute.Template : null;
+        }
+
+        private static string GetDescriptionFromProperty(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
+        {
+            var propertyName = String.Format("{0}{1}", methodInfo.Name, "Description");
+            var property = diagnosticsProvider.DiagnosticObject.GetType().GetProperty(propertyName);
+
+            if (property == null)
+            {
+                return null;
+            }
+
+            return (string)property.GetValue(diagnosticsProvider.DiagnosticObject, null);
+        }
+
+        private static string GetDescriptionFromAttribute(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
+        {
+            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(DescriptionAttribute));
+
+            return attribute != null ? attribute.Description : null;
+        }
+
+        private static MethodInfo GetMethodInfo(InteractiveDiagnosticMethod interactiveDiagnosticMethod)
+        {
+            var diagObjectType = interactiveDiagnosticMethod.ParentDiagnosticObject.GetType();
+
+            var method = diagObjectType.GetMethod(interactiveDiagnosticMethod.MethodName, Flags);
+
+            return method;
         }
     }
 }

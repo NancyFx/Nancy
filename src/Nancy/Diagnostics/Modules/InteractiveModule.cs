@@ -43,6 +43,7 @@
                                               {
                                                   m.MethodName, 
                                                   ReturnType = m.ReturnType.ToString(), 
+                                                  m.Description,
                                                   Arguments = m.Arguments.Select(a => new
                                                       {
                                                           ArgumentName = a.Item1, 

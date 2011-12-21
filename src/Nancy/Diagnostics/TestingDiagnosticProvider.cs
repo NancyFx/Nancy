@@ -58,7 +58,22 @@
                 }
             }
 
+            public string SayHelloWithAgeDescription
+            {
+                get
+                {
+                    return "Simple test method that takes a name and an age and returns a result with a template.";
+                }
+            }
+
             public string SayHelloWithAge(string myName, int myAge)
+            {
+                return string.Format("Hello {0}, you are {1} years old!", myName, myAge);
+            }
+
+            [Template("<h1>Templated Results</h1><p>{{model.Result}}</p>")]
+            [Description("Simple test method that takes a name and an age and returns a result with a template.")]
+            public string SayHelloWithAge2(string myName, int myAge)
             {
                 return string.Format("Hello {0}, you are {1} years old!", myName, myAge);
             }
