@@ -8,18 +8,18 @@
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class HtmlHelpers<TModel>
+    public class HtmlHelpers<TModel> : IHtmlHelpers
     {
         private readonly TModel model;
-
         public readonly RazorViewEngine engine;
         public readonly IRenderContext renderContext;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlHelpers"/> class.
+        /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
         /// </summary>
-        /// <param name="engine"></param>
-        /// <param name="renderContext"></param>
+        /// <param name="engine">The razor view engine instance that the helpers are being used by.</param>
+        /// <param name="renderContext">The <see cref="IRenderContext"/> that the helper are being used by.</param>
+        /// <param name="model">The model that is used by the page where the helpers are invoked.</param>
         public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model)
         {
             this.engine = engine;
@@ -39,13 +39,13 @@
         /// <summary>
         /// Renders a partial with the given view name.
         /// </summary>
-        /// <param name="viewName">Name of the view.</param>
-        /// <param name="model">The model.</param>
-        public IHtmlString Partial(string viewName, dynamic model)
+        /// <param name="viewName">Name of the partial view.</param>
+        /// <param name="modelForPartial">The model that is passed to the partial.</param>
+        public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
-            var view = this.renderContext.LocateView(viewName, model);
+            var view = this.renderContext.LocateView(viewName, modelForPartial);
 
-            var response = this.engine.RenderView(view, model, this.renderContext);
+            var response = this.engine.RenderView(view, modelForPartial, this.renderContext);
             Action<Stream> action = response.Contents;
             var mem = new MemoryStream();
 
