@@ -145,7 +145,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("\r\n<h1>Hello at 01/01/2000</h1>");
+            stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
         }
 
         [Fact]
@@ -163,7 +163,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("\r\n<h1>Hello at 01/01/2000</h1>");
+            stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
         }
 
         [Fact]
