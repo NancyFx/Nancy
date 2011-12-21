@@ -17,8 +17,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
         /// </summary>
-        /// <param name="engine"></param>
-        /// <param name="renderContext"></param>
+        /// <param name="engine">The razor view engine instance that the helpers are being used by.</param>
+        /// <param name="renderContext">The <see cref="IRenderContext"/> that the helper are being used by.</param>
+        /// <param name="model">The model that is used by the page where the helpers are invoked.</param>
         public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model)
         {
             this.engine = engine;
