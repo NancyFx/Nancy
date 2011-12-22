@@ -174,8 +174,11 @@
     <Compile Include="Validation\DataAnnotations\IDataAnnotationsValidatorAdapter.cs" />
     <Compile Include="Validation\DataAnnotations\RegexValidatorAdapter.cs" />
     <Compile Include="Validation\DefaultValidatorLocator.cs" />
+    <Compile Include="Validation\Fluent\FluentAdapter.cs" />
     <Compile Include="Validation\Fluent\FluentValidationValidator.cs" />
     <Compile Include="Validation\Fluent\FluentValidationValidatorFactory.cs" />
+    <Compile Include="Validation\Fluent\IFluentAdapter.cs" />
+    <Compile Include="Validation\Fluent\RegexAdapter.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\IValidatorFactory.cs" />
     <Compile Include="Validation\IValidatorLocator.cs" />

@@ -3,20 +3,23 @@ namespace Nancy.Validation.Fluent
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using FV = FluentValidation;
 
-    /// <summary>
-    /// 
-    /// </summary>
     public class FluentValidationValidator : IValidator
     {
-        private readonly FluentValidation.IValidator validator;
+        private static readonly Dictionary<Type, Func<string, FV.Validators.IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<string, FV.Validators.IPropertyValidator, IFluentAdapter>>
+        {
+            { typeof(FV.Validators.RegularExpressionValidator), (memberName, propertyValdiator) => new RegexAdapter(memberName, (FV.Validators.RegularExpressionValidator)propertyValdiator) }
+        };
+
+        private readonly FV.IValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class for the
         /// specified <see cref="FluentValidation.IValidator"/>.
         /// </summary>
         /// <param name="validator"></param>
-        public FluentValidationValidator(FluentValidation.IValidator validator)
+        public FluentValidationValidator(FV.IValidator validator)
         {
             this.validator = validator;
         }
@@ -46,12 +49,38 @@ namespace Nancy.Validation.Fluent
             return new ValidationResult(errors);
         }
 
+        /// <summary>
+        /// Creates the descriptor.
+        /// </summary>
+        /// <returns></returns>
         private ValidationDescriptor CreateDescriptor()
         {
             var fluentDescriptor =
                 this.validator.CreateDescriptor();
 
-            return new ValidationDescriptor(Enumerable.Empty<ValidationRule>());
+            var rules = new List<ValidationRule>();
+
+            var membersWithValidators = fluentDescriptor.GetMembersWithValidators();
+            foreach (var memberValidators in membersWithValidators)
+            {
+                foreach (var validator in memberValidators)
+                {
+                    rules.AddRange(GetValidationRule(memberValidators.Key, validator));
+                }
+            }
+
+            return new ValidationDescriptor(rules);
+        }
+
+        private static IEnumerable<ValidationRule> GetValidationRule(string propertyName, FV.Validators.IPropertyValidator propertyValidator)
+        {
+            Func<string, FV.Validators.IPropertyValidator, IFluentAdapter> factory;
+            if (!factories.TryGetValue(propertyValidator.GetType(), out factory))
+            {
+                factory = (a, d) => new FluentAdapter("Custom", propertyName, propertyValidator);
+            }
+
+            return factory(propertyName, propertyValidator).GetRules();
         }
 
         private static IEnumerable<ValidationError> GetErrors(FluentValidation.Results.ValidationResult results)
