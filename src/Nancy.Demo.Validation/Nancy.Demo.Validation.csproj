@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Web.DynamicData" />
@@ -68,6 +71,8 @@
     <Compile Include="Database\DB.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\Product.cs" />
+    <Compile Include="ProductsModule.cs" />
     <Compile Include="ValidationBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -85,6 +90,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="packages.config" />
     <None Include="Views\CustomerError.spark" />
     <None Include="Views\Customers.spark" />
   </ItemGroup>

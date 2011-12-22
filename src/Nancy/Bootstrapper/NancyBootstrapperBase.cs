@@ -165,7 +165,8 @@
         /// </summary>
         protected virtual IEnumerable<Type> ValidatorFactories
         {
-            get { return new[] { typeof(DataAnnotationsValidatorFactory) }; }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IValidatorFactory>(); }
+            //get { return new[] { typeof(DataAnnotationsValidatorFactory) }; }
         }
 
         /// <summary>

@@ -68,6 +68,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="FluentValidation">
+      <HintPath>..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="System">
@@ -171,6 +174,8 @@
     <Compile Include="Validation\DataAnnotations\IDataAnnotationsValidatorAdapter.cs" />
     <Compile Include="Validation\DataAnnotations\RegexValidatorAdapter.cs" />
     <Compile Include="Validation\DefaultValidatorLocator.cs" />
+    <Compile Include="Validation\Fluent\FluentValidationValidator.cs" />
+    <Compile Include="Validation\Fluent\FluentValidationValidatorFactory.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\IValidatorFactory.cs" />
     <Compile Include="Validation\IValidatorLocator.cs" />
@@ -316,6 +321,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ErrorHandling\Resources\500.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
