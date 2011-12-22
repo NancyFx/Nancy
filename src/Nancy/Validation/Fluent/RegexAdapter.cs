@@ -4,24 +4,23 @@ using System.Linq;
 using System.Text;
 using FluentValidation.Validators;
 using Nancy.Validation.Rules;
+using FluentValidation.Internal;
 
 namespace Nancy.Validation.Fluent
 {
-    public class RegexAdapter : IFluentAdapter
+    public class RegexAdapter : AdapterBase
     {
-        private readonly string memberName;
-        private readonly RegularExpressionValidator validator;
+        private readonly string pattern;
 
-        public RegexAdapter(string memberName, RegularExpressionValidator validator)
+        public RegexAdapter(PropertyRule rule, RegularExpressionValidator validator)
+            : base(rule, validator)
         {
-            this.memberName = memberName;
-            this.validator = validator;
+            this.pattern = validator.Expression;
         }
 
-        public IEnumerable<ValidationRule> GetRules()
+        public override IEnumerable<ValidationRule> GetRules()
         {
-            //TODO: need to get error message out...
-            yield return new RegexValidationRule(s => s, new[] { this.memberName }, this.validator.Expression);
+            yield return new RegexValidationRule(FormatMessage, GetMemberNames(), this.pattern);
         }
 
 

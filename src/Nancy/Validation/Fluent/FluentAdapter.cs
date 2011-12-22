@@ -4,27 +4,23 @@ using System.Linq;
 using System.Text;
 using FluentValidation.Validators;
 using Nancy.Validation.Rules;
+using FluentValidation.Internal;
 
 namespace Nancy.Validation.Fluent
 {
-    public class FluentAdapter : IFluentAdapter
+    public class FluentAdapter : AdapterBase
     {
         private readonly string ruleType;
-        private readonly string memberName;
-        private readonly IPropertyValidator validator;
 
-        public FluentAdapter(string ruleType, string memberName, IPropertyValidator validator)
+        public FluentAdapter(string ruleType, PropertyRule rule, IPropertyValidator validator)
+            : base(rule, validator)
         {
             this.ruleType = ruleType;
-            this.memberName = memberName;
-            this.validator = validator;
         }
 
-        public virtual IEnumerable<ValidationRule> GetRules()
+        public override IEnumerable<ValidationRule> GetRules()
         {
-            //TODO: need to get error message out...
-            yield return new ValidationRule(this.ruleType, s => s, new[] { this.memberName });
+            yield return new ValidationRule(this.ruleType, FormatMessage, GetMemberNames());
         }
-
     }
 }
