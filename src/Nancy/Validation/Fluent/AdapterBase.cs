@@ -4,29 +4,30 @@
     using FluentValidation.Validators;
     using FluentValidation.Internal;
 
-    public abstract class AdapterBase : IFluentAdapter
+    public abstract class AdapterBase<T> : IFluentAdapter where T : IPropertyValidator
     {
-        private readonly PropertyRule rule;
-        private readonly IPropertyValidator validator;
-
-        protected AdapterBase(PropertyRule rule, IPropertyValidator validator)
+        protected AdapterBase(PropertyRule rule, T validator)
         {
-            this.rule = rule;
-            this.validator = validator;
+            this.Rule = rule;
+            this.Validator = validator;
         }
+
+        public PropertyRule Rule { get; private set; }
+
+        public T Validator { get; set; }
 
         public abstract IEnumerable<ValidationRule> GetRules();
 
         protected virtual IEnumerable<string> GetMemberNames()
         {
-            yield return this.rule.PropertyName;
+            yield return this.Rule.PropertyName;
         }
 
         protected virtual string FormatMessage(string displayName)
         {
             return new MessageFormatter()
-                .AppendPropertyName(displayName ?? this.rule.GetDisplayName())
-                .BuildMessage(this.validator.ErrorMessageSource.GetString());
+                .AppendPropertyName(displayName ?? this.Rule.GetDisplayName())
+                .BuildMessage(this.Validator.ErrorMessageSource.GetString());
         }
     }
 }

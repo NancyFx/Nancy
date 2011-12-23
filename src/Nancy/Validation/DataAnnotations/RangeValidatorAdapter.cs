@@ -17,7 +17,8 @@
         /// <param name="descriptor">The descriptor.</param>
         public RangeValidatorAdapter(DA.RangeAttribute attribute, PropertyDescriptor descriptor)
             : base("Comparison", attribute, descriptor)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the the rules the adapter provides.
@@ -26,10 +27,12 @@
         public override System.Collections.Generic.IEnumerable<ValidationRule> GetRules()
         {
             var ra = (DA.RangeAttribute)attribute;
+            
             yield return new ComparisonValidationRule(attribute.FormatErrorMessage,
                 new[] { descriptor.Name },
                 ComparisonOperator.GreaterThanOrEqual,
                 Convert(ra.OperandType, ra.Minimum));
+
             yield return new ComparisonValidationRule(attribute.FormatErrorMessage,
                 new[] { descriptor.Name },
                 ComparisonOperator.LessThanOrEqual,
@@ -43,7 +46,9 @@
 
             if(value.GetType() == typeof(string))
             {
-                TypeConverter converter = TypeDescriptor.GetConverter(type);
+                var converter = 
+                    TypeDescriptor.GetConverter(type);
+
                 return converter.ConvertFromString((string)value);
             }
 

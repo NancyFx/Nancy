@@ -11,6 +11,39 @@
         private readonly Func<string, string> errorMessageFormatter;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
+        /// </summary>
+        /// <param name="ruleType">Type of the rule.</param>
+        /// <param name="errorMessageFormatter">The error message formatter.</param>
+        public ValidationRule(string ruleType, Func<string, string> errorMessageFormatter)
+        {
+            if (ruleType == null)
+            {
+                throw new ArgumentNullException("ruleType");
+            }
+
+            if (errorMessageFormatter == null)
+            {
+                throw new ArgumentNullException("errorMessageFormatter");
+            }
+
+            this.RuleType = ruleType;
+            this.errorMessageFormatter = errorMessageFormatter;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
+        /// </summary>
+        /// <param name="ruleType">Type of the rule.</param>
+        /// <param name="errorMessageFormatter">The error message formatter.</param>
+        /// <param name="memberNames">Name of the member.</param>
+        public ValidationRule(string ruleType, Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames)
+            : this(ruleType, errorMessageFormatter)
+        {
+            this.MemberNames = memberNames;
+        }
+
+        /// <summary>
         /// Gets the names of the members this rule validates.
         /// </summary>
         /// <value>
@@ -25,39 +58,6 @@
         /// The type of the rule.
         /// </value>
         public string RuleType { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
-        /// </summary>
-        /// <param name="ruleType">Type of the rule.</param>
-        /// <param name="errorMessageFormatter">The error message formatter.</param>
-        public ValidationRule(string ruleType, Func<string, string> errorMessageFormatter)
-        {
-            if (ruleType == null)
-            {
-                throw new ArgumentNullException("ruleType");
-            }
-
-            if (errorMessageFormatter == null)
-            {
-                throw new ArgumentNullException("errorFormatter");
-            }
-
-            RuleType = ruleType;
-            this.errorMessageFormatter = errorMessageFormatter;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationRule"/> class.
-        /// </summary>
-        /// <param name="ruleType">Type of the rule.</param>
-        /// <param name="errorMessageFormatter">The error message formatter.</param>
-        /// <param name="memberNames">Name of the member.</param>
-        public ValidationRule(string ruleType, Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames)
-            : this(ruleType, errorMessageFormatter)
-        {
-            MemberNames = memberNames;
-        }
 
         /// <summary>
         /// Gets the error message that this rule will provide upon error.

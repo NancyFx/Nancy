@@ -1,13 +1,13 @@
 ﻿namespace Nancy.Validation.Fluent
 {
     using System.Collections.Generic;
-    using FluentValidation.Validators;
-    using Nancy.Validation.Rules;
     using FluentValidation.Internal;
+    using FluentValidation.Validators;
+    using Rules;
 
-    public class RegexAdapter : AdapterBase<RegularExpressionValidator>
+    public class EmailAdapter : AdapterBase<EmailValidator>
     {
-        public RegexAdapter(PropertyRule rule, RegularExpressionValidator validator)
+        public EmailAdapter(PropertyRule rule, EmailValidator validator)
             : base(rule, validator)
         {
         }

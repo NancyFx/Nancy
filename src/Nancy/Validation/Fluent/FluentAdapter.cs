@@ -4,7 +4,7 @@
     using FluentValidation.Validators;
     using FluentValidation.Internal;
 
-    public class FluentAdapter : AdapterBase
+    public class FluentAdapter : AdapterBase<IPropertyValidator>
     {
         private readonly string ruleType;
 

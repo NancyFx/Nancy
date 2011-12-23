@@ -1,13 +1,13 @@
-namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.Fluent
 {
     using System.Collections.Generic;
     using FluentValidation.Internal;
     using FluentValidation.Validators;
     using Rules;
 
-    public class RequiredAdapter : AdapterBase
+    public class NotNullAdapter : AdapterBase<INotNullValidator>
     {
-        public RequiredAdapter(PropertyRule rule, INotEmptyValidator validator)
+        public NotNullAdapter(PropertyRule rule, INotNullValidator validator)
             : base(rule, validator)
         {
         }
@@ -15,7 +15,6 @@ namespace Nancy.Validation.Fluent
         public override IEnumerable<ValidationRule> GetRules()
         {
             yield return new NotNullValidationRule(FormatMessage, GetMemberNames());
-            yield return new NotEmptyValidationRule(FormatMessage, GetMemberNames());
         }
     }
 }

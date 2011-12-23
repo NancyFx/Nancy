@@ -9,8 +9,19 @@ namespace Nancy.Validation.Fluent
     {
         private static readonly Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>>
         {
+            { typeof(FV.Validators.EmailValidator), (memberName, propertyValdiator) => new EmailAdapter(memberName, (FV.Validators.EmailValidator)propertyValdiator) },
+            { typeof(FV.Validators.EqualValidator), (memberName, propertyValidator) => new EqualAdapter(memberName, (FV.Validators.EqualValidator)propertyValidator) },
+            { typeof(FV.Validators.ExclusiveBetweenValidator), (memberName, propertyValidator) => new ExclusiveBetweenAdapter(memberName, (FV.Validators.ExclusiveBetweenValidator)propertyValidator) },
+            { typeof(FV.Validators.GreaterThanValidator), (memberName, propertyValidator) => new GreaterThanAdapter(memberName, (FV.Validators.GreaterThanValidator)propertyValidator) },
+            { typeof(FV.Validators.GreaterThanOrEqualValidator), (memberName, propertyValidator) => new GreaterThanOrEqualAdapter(memberName, (FV.Validators.GreaterThanOrEqualValidator)propertyValidator) },
+            { typeof(FV.Validators.InclusiveBetweenValidator), (memberName, propertyValidator) => new InclusiveBetweenAdapter(memberName, (FV.Validators.InclusiveBetweenValidator)propertyValidator) },
+            { typeof(FV.Validators.LengthValidator), (memberName, propertyValidator) => new LengthAdapter(memberName, (FV.Validators.LengthValidator)propertyValidator) },
+            { typeof(FV.Validators.LessThanValidator), (memberName, propertyValidator) => new LessThanAdapter(memberName, (FV.Validators.LessThanValidator)propertyValidator) },
+            { typeof(FV.Validators.LessThanOrEqualValidator), (memberName, propertyValidator) => new LessThanOrEqualAdapter(memberName, (FV.Validators.LessThanOrEqualValidator)propertyValidator) },
+            { typeof(FV.Validators.NotEmptyValidator), (memberName, propertyValidator) => new NotEmptyAdapter(memberName, (FV.Validators.NotEmptyValidator)propertyValidator) },
+            { typeof(FV.Validators.NotEqualValidator), (memberName, propertyValidator) => new NotEqualAdapter(memberName, (FV.Validators.NotEqualValidator)propertyValidator) },
+            { typeof(FV.Validators.NotNullValidator), (memberName, propertyValidator) => new NotNullAdapter(memberName, (FV.Validators.NotNullValidator)propertyValidator) },
             { typeof(FV.Validators.RegularExpressionValidator), (memberName, propertyValdiator) => new RegexAdapter(memberName, (FV.Validators.RegularExpressionValidator)propertyValdiator) },
-            { typeof(FV.Validators.NotEmptyValidator), (memberName, propertyValidator) => new RequiredAdapter(memberName, (FV.Validators.INotEmptyValidator)propertyValidator) }
         };
 
         private readonly FV.IValidator validator;
@@ -96,8 +107,8 @@ namespace Nancy.Validation.Fluent
         private static IEnumerable<ValidationError> GetErrors(FluentValidation.Results.ValidationResult results)
         {
             return results.IsValid ? 
-                Enumerable.Empty<ValidationError>() : 
-                results.Errors.Select(error => new ValidationError(new[] {error.PropertyName}, s => error.ErrorMessage));
+                Enumerable.Empty<ValidationError>() :
+                results.Errors.Select(error => new ValidationError(new[] { error.PropertyName }, s => error.ErrorMessage));
         }
     }
 }
