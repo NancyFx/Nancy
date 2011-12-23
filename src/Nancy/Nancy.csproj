@@ -180,6 +180,7 @@
     <Compile Include="Validation\Fluent\FluentValidationValidatorFactory.cs" />
     <Compile Include="Validation\Fluent\IFluentAdapter.cs" />
     <Compile Include="Validation\Fluent\RegexAdapter.cs" />
+    <Compile Include="Validation\Fluent\RequiredAdapter.cs" />
     <Compile Include="Validation\IValidator.cs" />
     <Compile Include="Validation\IValidatorFactory.cs" />
     <Compile Include="Validation\IValidatorLocator.cs" />

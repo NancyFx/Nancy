@@ -13,6 +13,14 @@
                 return "Products module";
             };
 
+            Get["/poke"] = parameters => {
+
+                var validator = 
+                    this.ValidatorLocator.GetValidatorForType(typeof(Product));
+
+                return Response.AsJson(validator.Description);
+            };
+
             Post["/"] = parameters => {
 
                 Product model = this.Bind();

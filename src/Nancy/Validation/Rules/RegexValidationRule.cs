@@ -5,12 +5,12 @@
 
     public class RegexValidationRule : ValidationRule
     {
-        public string Pattern { get; private set; }
-
         public RegexValidationRule(Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames, string pattern)
             : base("Regex", errorMessageFormatter, memberNames)
         {
-            Pattern = pattern;
+            this.Pattern = pattern;
         }
+
+        public string Pattern { get; private set; }
     }
 }

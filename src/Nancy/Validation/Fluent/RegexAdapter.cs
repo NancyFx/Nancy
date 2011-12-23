@@ -1,18 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FluentValidation.Validators;
-using Nancy.Validation.Rules;
-using FluentValidation.Internal;
-
-namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.Fluent
 {
+    using System.Collections.Generic;
+    using FluentValidation.Validators;
+    using Nancy.Validation.Rules;
+    using FluentValidation.Internal;
+
     public class RegexAdapter : AdapterBase
     {
         private readonly string pattern;
 
-        public RegexAdapter(PropertyRule rule, RegularExpressionValidator validator)
+        public RegexAdapter(PropertyRule rule, IRegularExpressionValidator validator)
             : base(rule, validator)
         {
             this.pattern = validator.Expression;
@@ -22,7 +19,5 @@ namespace Nancy.Validation.Fluent
         {
             yield return new RegexValidationRule(FormatMessage, GetMemberNames(), this.pattern);
         }
-
-
     }
 }

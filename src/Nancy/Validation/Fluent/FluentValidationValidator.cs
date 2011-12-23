@@ -9,7 +9,8 @@ namespace Nancy.Validation.Fluent
     {
         private static readonly Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>>
         {
-            { typeof(FV.Validators.RegularExpressionValidator), (memberName, propertyValdiator) => new RegexAdapter(memberName, (FV.Validators.RegularExpressionValidator)propertyValdiator) }
+            { typeof(FV.Validators.RegularExpressionValidator), (memberName, propertyValdiator) => new RegexAdapter(memberName, (FV.Validators.RegularExpressionValidator)propertyValdiator) },
+            { typeof(FV.Validators.NotEmptyValidator), (memberName, propertyValidator) => new RequiredAdapter(memberName, (FV.Validators.INotEmptyValidator)propertyValidator) }
         };
 
         private readonly FV.IValidator validator;
@@ -60,7 +61,9 @@ namespace Nancy.Validation.Fluent
 
             var rules = new List<ValidationRule>();
 
-            var membersWithValidators = fluentDescriptor.GetMembersWithValidators();
+            var membersWithValidators = 
+                fluentDescriptor.GetMembersWithValidators();
+
             foreach (var memberWithValidators in membersWithValidators)
             {
                 var fluentRules = fluentDescriptor.GetRulesForMember(memberWithValidators.Key)
@@ -81,6 +84,7 @@ namespace Nancy.Validation.Fluent
         private static IEnumerable<ValidationRule> GetValidationRule(FV.Internal.PropertyRule rule, FV.Validators.IPropertyValidator propertyValidator)
         {
             Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter> factory;
+
             if (!factories.TryGetValue(propertyValidator.GetType(), out factory))
             {
                 factory = (a, d) => new FluentAdapter("Custom", rule, propertyValidator);
@@ -91,12 +95,9 @@ namespace Nancy.Validation.Fluent
 
         private static IEnumerable<ValidationError> GetErrors(FluentValidation.Results.ValidationResult results)
         {
-            if(results.IsValid)
-            {
-                return Enumerable.Empty<ValidationError>();
-            }
-
-            return results.Errors.Select(error => new ValidationError(new[] {error.PropertyName}, s => error.ErrorMessage));
+            return results.IsValid ? 
+                Enumerable.Empty<ValidationError>() : 
+                results.Errors.Select(error => new ValidationError(new[] {error.PropertyName}, s => error.ErrorMessage));
         }
     }
 }

@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using FluentValidation.Validators;
-using Nancy.Validation.Rules;
-using FluentValidation.Internal;
-
-namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.Fluent
 {
+    using System.Collections.Generic;
+    using FluentValidation.Validators;
+    using FluentValidation.Internal;
+
     public class FluentAdapter : AdapterBase
     {
         private readonly string ruleType;
