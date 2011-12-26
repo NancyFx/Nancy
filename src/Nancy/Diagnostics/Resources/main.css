@@ -1,8 +1,8 @@
 ﻿body
 {
-    background: url(bg-texture.jpg) repeat;
+    background: black;
     color: white;
-    font-family: Consolas, 'Andale Mono' , 'Lucida Console' , 'DejaVu Sans Mono' ,monospace;
+    font-family: Arial;
 }
 
 ul
@@ -33,15 +33,70 @@ button.g-button, a.g-button, input[type=submit].g-button, input[type=button].g-b
 
 .header
 {
-    padding: 0  0  20px 0;
+    padding: 0  0  28px 0;
     height: 100px;
     position: relative;
 }
 
 .header h1
 {
+    font-size: 24pt;
     position: absolute; 
     bottom: 0; 
-    right: 0; 
+    right: 0;
+    margin-bottom: 18px; 
 }
 
+a.icon-block
+{
+    display: block;
+    background-color: white;
+    height: 180px;
+    line-height: 0; 
+    font-size: 0;
+    color: transparent; 
+}
+
+a.icon-block:hover
+{
+    border: 2px solid #555555;
+    height: 176px;
+    margin-right: 8px;
+    margin-left: 8px;
+}
+
+div.description-text h2
+{
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 0px;
+    margin-top: 5px;
+}
+
+#infoBox
+{
+    background-image: url(info.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#interactiveBox
+{
+    background-image: url(interactive.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#traceBox
+{
+    background-image: url(logs.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+}
+
+#settingsBox
+{
+    background-image: url(settings.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+}

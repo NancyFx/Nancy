@@ -11,8 +11,29 @@
 @EndSection
 
 @Section['Body']
-	<div class="grid_12">
-		<a href="@Path['~/_Nancy/interactive']">Interactive</a>
+	<a id="infoBox" class="grid_3 icon-block" href="@Path['~/_Nancy/info']"></a>
+	<a id="interactiveBox" class="grid_3 icon-block" href="@Path['~/_Nancy/interactive']"></a>
+	<a id="traceBox" class="grid_3 icon-block" href="@Path['~/_Nancy/trace']"></a>
+	<a id="settingsBox" class="grid_3 icon-block" href="@Path['~/_Nancy/settings']"></a>
+
+	<div class="grid_3 description-text">
+		<h2>Information</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Interactive Diagnostics</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Trace Logs</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Settings</h2>
+		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
 	</div>
 @EndSection
 

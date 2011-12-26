@@ -28,7 +28,7 @@
 		<div class="container_12">
 
 			<div class="grid_6 header">
-				<img src="@Path['~/_Nancy/Resources/logo.png']" height="100px" alt="Nancy" />
+				<img src="@Path['~/_Nancy/Resources/logo.png']" width="380px" alt="Nancy" />
 			</div>
 
 			<div class="grid_6 header">
