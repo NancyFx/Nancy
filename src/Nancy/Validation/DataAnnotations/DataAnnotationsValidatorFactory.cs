@@ -4,16 +4,16 @@
     using System.Linq;
 
     /// <summary>
-    /// Creates and IValidator for DataAnnotations.
+    /// Creates and <see cref="IValidator"/> for DataAnnotations.
     /// </summary>
     public class DataAnnotationsValidatorFactory : IValidatorFactory
     {
         /// <summary>
-        /// Creates a validator for the given type.
+        /// Creates a data annotations <see cref="IValidator"/> instance for the given type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns></returns>
-        public IValidator Create(Type type)
+        /// <returns>An <see cref="IValidator"/> instance. If no data annotation rules were found for the specified <paramref name="type"/> then <see langword="null"/> is returned.</returns>
+        public IValidator Create(Type type) 
         {
             var validator = new DataAnnotationsValidator(type);
             return validator.Description.Rules.Any()

@@ -177,6 +177,7 @@
     <Compile Include="Validation\Fluent\AdapterBase.cs" />
     <Compile Include="Validation\Fluent\EmailAdapter.cs" />
     <Compile Include="Validation\Fluent\EqualAdapter.cs" />
+    <Compile Include="Validation\Fluent\ExactLengthAdapater.cs" />
     <Compile Include="Validation\Fluent\FluentAdapter.cs" />
     <Compile Include="Validation\Fluent\FluentValidationValidator.cs" />
     <Compile Include="Validation\Fluent\FluentValidationValidatorFactory.cs" />

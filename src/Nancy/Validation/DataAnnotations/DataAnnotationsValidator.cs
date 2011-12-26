@@ -7,7 +7,7 @@
     using DA = System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// The default DataAnnotations implementation of IValidator.
+    /// The default DataAnnotations implementation of <see cref="IValidator"/>.
     /// </summary>
     public class DataAnnotationsValidator : IValidator
     {
@@ -46,7 +46,7 @@
         /// </returns>
         public ValidationResult Validate(object instance)
         {
-            List<ValidationError> errors = new List<ValidationError>();
+            var errors = new List<ValidationError>();
             foreach (var adapter in adapters)
             {
                 errors.AddRange(adapter.Validate(instance));
@@ -82,7 +82,8 @@
 
         private static List<IDataAnnotationsValidatorAdapter> GetAdapters(PropertyDescriptor descriptor, Type type, IEnumerable<DA.ValidationAttribute> attributes)
         {
-            List<IDataAnnotationsValidatorAdapter> adapters = new List<IDataAnnotationsValidatorAdapter>();
+            var adapters = new List<IDataAnnotationsValidatorAdapter>();
+
             foreach (var attribute in attributes)
             {
                 Func<DA.ValidationAttribute, PropertyDescriptor, IDataAnnotationsValidatorAdapter> factory;

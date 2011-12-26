@@ -5,6 +5,9 @@ namespace Nancy.Validation.Fluent
     using System.Linq;
     using FV = FluentValidation;
 
+    /// <summary>
+    /// The default Fluent Validation implementation of <see cref="IValidator"/>.
+    /// </summary>
     public class FluentValidationValidator : IValidator
     {
         private static readonly Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<FV.Internal.PropertyRule, FV.Validators.IPropertyValidator, IFluentAdapter>>
@@ -30,7 +33,7 @@ namespace Nancy.Validation.Fluent
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class for the
         /// specified <see cref="FluentValidation.IValidator"/>.
         /// </summary>
-        /// <param name="validator"></param>
+        /// <param name="validator">The Fluent Validation validator that should be used.</param>
         public FluentValidationValidator(FV.IValidator validator)
         {
             this.validator = validator;
@@ -61,10 +64,6 @@ namespace Nancy.Validation.Fluent
             return new ValidationResult(errors);
         }
 
-        /// <summary>
-        /// Creates the descriptor.
-        /// </summary>
-        /// <returns></returns>
         private ValidationDescriptor CreateDescriptor()
         {
             var fluentDescriptor =

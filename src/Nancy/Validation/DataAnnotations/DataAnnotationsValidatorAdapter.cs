@@ -3,11 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using System.Linq;
     using DA = System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// A default implementation of an IDataAnnotationsValidatorAdapter.
+    /// A default implementation of an <see cref="IDataAnnotationsValidatorAdapter"/>.
     /// </summary>
     public class DataAnnotationsValidatorAdapter : IDataAnnotationsValidatorAdapter
     {
@@ -22,7 +21,8 @@
         /// <param name="attribute">The attribute.</param>
         public DataAnnotationsValidatorAdapter(string ruleType, DA.ValidationAttribute attribute)
             : this(ruleType, attribute, null)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
@@ -53,15 +53,24 @@
         /// <returns></returns>
         public virtual IEnumerable<ValidationError> Validate(object instance)
         {
-            var context = new DA.ValidationContext(instance, null, null);
-            context.MemberName = descriptor == null ? null : descriptor.Name;
+            var context = 
+                new DA.ValidationContext(instance, null, null)
+                {
+                    MemberName = descriptor == null ? null : descriptor.Name
+                };
 
             if(descriptor != null)
+            {
                 instance = descriptor.GetValue(instance);
+            }
 
-            var result = attribute.GetValidationResult(instance, context);
+            var result = 
+                attribute.GetValidationResult(instance, context);
+
             if (result != null)
+            {
                 yield return new ValidationError(result.MemberNames, attribute.FormatErrorMessage);
+            }
 
             yield break;
         }
