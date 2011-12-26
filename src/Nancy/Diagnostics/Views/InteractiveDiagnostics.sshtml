@@ -24,12 +24,9 @@
 	</div>
 
 	<script id="providerList" type="text/x-handlebars-template">
-		providers
 		{{#if collection.length}}
-		  <ul id="root">
-		  </ul>
 		{{else}}
-		  None found.
+		  None providers found.
 		{{/if}}
 	</script>
 
@@ -44,7 +41,8 @@
 	</script>
 
 	<script id="provider" type="text/x-handlebars-template">
-		<a title="{{model.Description}}">{{model.Name}}</a> (Name: {{model.Type}}, Namespace: {{model.Namespace}}, Assembly: {{model.Assembly}})
+		<h2>{{model.Name}}</h2>
+		<p>{{model.Description}}</p>
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">

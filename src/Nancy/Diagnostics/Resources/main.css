@@ -100,3 +100,28 @@ div.description-text h2
     background-position: center center;
     background-repeat: no-repeat;
 }
+    
+div.provider
+{
+    background: white;
+    color: Black;
+    width: 100%;
+    padding: 7px;
+    margin-bottom: 5px;
+    min-height: 100px;
+    cursor: pointer;
+}
+
+div.provider:hover
+{
+    width: 100%;
+    padding: 5px;
+    border: 2px solid #555555;
+}
+
+div.provider h2
+{
+    font-size: 14pt;
+    font-weight: bold;
+    margin-bottom: 0px;
+}

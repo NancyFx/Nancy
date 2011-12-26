@@ -31,15 +31,15 @@
         renderItem: function (model) {
             var itemView = new Provider.Views.Item({ model: model });
 
-            this.$('ul').append(itemView.el);
+            $(this.el).append(itemView.el);
         }
     });
 
     Provider.Views.Item = Backbone.View.extend({
-        tagName: 'li',
+        className: "provider",
 
         events: {
-            'click a': 'showMethods'
+            'click': 'showMethods'
         },
 
         initialize: function () {
