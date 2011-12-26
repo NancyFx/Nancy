@@ -32,6 +32,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -44,6 +45,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DataAnnotationsValidatableObjectValidatorAdapter.cs" />
+    <Compile Include="DataAnnotationsValidator.cs" />
+    <Compile Include="DataAnnotationsValidatorAdapter.cs" />
+    <Compile Include="DataAnnotationsValidatorFactory.cs" />
+    <Compile Include="IDataAnnotationsValidatorAdapter.cs" />
+    <Compile Include="RangeValidatorAdapter.cs" />
+    <Compile Include="RegexValidatorAdapter.cs" />
+    <Compile Include="RequiredValidatorAdapter.cs" />
+    <Compile Include="StringLengthValidatorAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
