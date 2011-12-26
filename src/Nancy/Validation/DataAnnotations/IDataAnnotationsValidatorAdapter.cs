@@ -10,14 +10,14 @@
         /// <summary>
         /// Gets the the rules the adapter provides.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ValidationResult"/> instances.</returns>
         IEnumerable<ValidationRule> GetRules();
 
         /// <summary>
         /// Validates the given instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ValidationError"/> instances.</returns>
         IEnumerable<ValidationError> Validate(object instance);
     }
 }

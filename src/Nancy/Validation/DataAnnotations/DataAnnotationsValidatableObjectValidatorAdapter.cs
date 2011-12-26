@@ -25,8 +25,12 @@
         /// <returns></returns>
         public IEnumerable<ValidationError> Validate(object instance)
         {
-            var context = new ValidationContext(instance, null, null);
-            var result = ((IValidatableObject)instance).Validate(context);
+            var context = 
+                new ValidationContext(instance, null, null);
+
+            var result = 
+                ((IValidatableObject)instance).Validate(context);
+
             return result.Select(r => new ValidationError(r.MemberNames, s => r.ErrorMessage));
         }
     }

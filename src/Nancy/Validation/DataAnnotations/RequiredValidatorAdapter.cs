@@ -16,7 +16,8 @@
         /// <param name="descriptor">The descriptor.</param>
         public RequiredValidatorAdapter(DA.RequiredAttribute attribute, PropertyDescriptor descriptor)
             : base("Required", attribute, descriptor)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the the rules the adapter provides.

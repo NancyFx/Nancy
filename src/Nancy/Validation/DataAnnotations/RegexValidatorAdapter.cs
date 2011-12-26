@@ -16,7 +16,8 @@
         /// <param name="descriptor">The descriptor.</param>
         public RegexValidatorAdapter(DA.RegularExpressionAttribute attribute, PropertyDescriptor descriptor)
             : base("Regex", attribute, descriptor)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the the rules the adapter provides.

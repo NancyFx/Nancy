@@ -42,9 +42,11 @@
         private static object Convert(Type type, object value)
         {
             if(value == null)
-                return value;
+            {
+                return null;
+            }
 
-            if(value.GetType() == typeof(string))
+            if(value is string)
             {
                 var converter = 
                     TypeDescriptor.GetConverter(type);

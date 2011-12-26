@@ -16,7 +16,8 @@
         /// <param name="descriptor">The descriptor.</param>
         public StringLengthValidatorAdapter(DA.StringLengthAttribute attribute, PropertyDescriptor descriptor)
             : base("StringLength", attribute, descriptor)
-        { }
+        {
+        }
 
         /// <summary>
         /// Gets the the rules the adapter provides.
