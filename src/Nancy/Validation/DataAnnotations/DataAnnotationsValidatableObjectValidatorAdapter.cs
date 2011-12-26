@@ -5,7 +5,7 @@
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// An adapter for an IValidatableObject.
+    /// An adapter for an <see cref="IValidatableObject"/>.
     /// </summary>
     public class DataAnnotationsValidatableObjectValidatorAdapter : IDataAnnotationsValidatorAdapter
     {
@@ -13,9 +13,9 @@
         /// Gets the rules.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<ValidationRule> GetRules()
+        public IEnumerable<ModelValidationRule> GetRules()
         {
-            yield return new ValidationRule("Self", s => string.Format("{0} is invalid.", s));
+            yield return new ModelValidationRule("Self", s => string.Format("{0} is invalid.", s));
         }
 
         /// <summary>
@@ -23,7 +23,7 @@
         /// </summary>
         /// <param name="instance">The instance.</param>
         /// <returns></returns>
-        public IEnumerable<ValidationError> Validate(object instance)
+        public IEnumerable<ModelValidationError> Validate(object instance)
         {
             var context = 
                 new ValidationContext(instance, null, null);
@@ -31,7 +31,7 @@
             var result = 
                 ((IValidatableObject)instance).Validate(context);
 
-            return result.Select(r => new ValidationError(r.MemberNames, s => r.ErrorMessage));
+            return result.Select(r => new ModelValidationError(r.MemberNames, s => r.ErrorMessage));
         }
     }
 }

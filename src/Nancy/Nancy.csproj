@@ -68,9 +68,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FluentValidation">
-      <HintPath>..\packages\FluentValidation.3.2.0.0\lib\Net40\FluentValidation.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="System">
@@ -174,28 +171,9 @@
     <Compile Include="Validation\DataAnnotations\IDataAnnotationsValidatorAdapter.cs" />
     <Compile Include="Validation\DataAnnotations\RegexValidatorAdapter.cs" />
     <Compile Include="Validation\DefaultValidatorLocator.cs" />
-    <Compile Include="Validation\Fluent\AdapterBase.cs" />
-    <Compile Include="Validation\Fluent\EmailAdapter.cs" />
-    <Compile Include="Validation\Fluent\EqualAdapter.cs" />
-    <Compile Include="Validation\Fluent\ExactLengthAdapater.cs" />
-    <Compile Include="Validation\Fluent\FluentAdapter.cs" />
-    <Compile Include="Validation\Fluent\FluentValidationValidator.cs" />
-    <Compile Include="Validation\Fluent\FluentValidationValidatorFactory.cs" />
-    <Compile Include="Validation\Fluent\GreaterThanAdapter.cs" />
-    <Compile Include="Validation\Fluent\GreaterThanOrEqualAdapter.cs" />
-    <Compile Include="Validation\Fluent\IFluentAdapter.cs" />
-    <Compile Include="Validation\Fluent\ExclusiveBetweenAdapter.cs" />
-    <Compile Include="Validation\Fluent\InclusiveBetweenAdapter.cs" />
-    <Compile Include="Validation\Fluent\LessThanAdapter.cs" />
-    <Compile Include="Validation\Fluent\LessThanOrEqualAdapter.cs" />
-    <Compile Include="Validation\Fluent\NotEqualAdapter.cs" />
-    <Compile Include="Validation\Fluent\NotNullAdapter.cs" />
-    <Compile Include="Validation\Fluent\RegexAdapter.cs" />
-    <Compile Include="Validation\Fluent\NotEmptyAdapter.cs" />
-    <Compile Include="Validation\Fluent\LengthAdapter.cs" />
-    <Compile Include="Validation\IValidator.cs" />
-    <Compile Include="Validation\IValidatorFactory.cs" />
-    <Compile Include="Validation\IValidatorLocator.cs" />
+    <Compile Include="Validation\IModelValidator.cs" />
+    <Compile Include="Validation\IModelValidatorFactory.cs" />
+    <Compile Include="Validation\IModelValidatorLocator.cs" />
     <Compile Include="Validation\ModuleExtensions.cs" />
     <Compile Include="Validation\Rules\ComparisonOperator.cs" />
     <Compile Include="Validation\Rules\NotEmptyValidationRule.cs" />
@@ -203,10 +181,10 @@
     <Compile Include="Validation\Rules\ComparisonValidationRule.cs" />
     <Compile Include="Validation\Rules\RegexValidationRule.cs" />
     <Compile Include="Validation\Rules\StringLengthValidationRule.cs" />
-    <Compile Include="Validation\ValidationDescriptor.cs" />
-    <Compile Include="Validation\ValidationError.cs" />
-    <Compile Include="Validation\ValidationResult.cs" />
-    <Compile Include="Validation\ValidationRule.cs" />
+    <Compile Include="Validation\ModelValidationDescriptor.cs" />
+    <Compile Include="Validation\ModelValidationError.cs" />
+    <Compile Include="Validation\ModelValidationResult.cs" />
+    <Compile Include="Validation\ModelValidationRule.cs" />
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
@@ -338,9 +316,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ErrorHandling\Resources\500.html" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -820,13 +820,26 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IValidatorLocator"/> instance of the specified type.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IModelValidatorLocator"/>.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IValidatorLocator"/> that the bootstrapper should use.</typeparam>
+            /// <param name="modelValidatorLocator">The <see cref="IModelValidatorLocator"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ValidatorLocator<T>() where T : IValidatorLocator
+            public ConfigurableBoostrapperConfigurator ModelValidatorLocator(IModelValidatorLocator modelValidatorLocator)
             {
-                this.bootstrapper.configuration.ValidatorLocator = typeof(T);
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IModelValidatorLocator), modelValidatorLocator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IModelValidatorLocator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IModelValidatorLocator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ModelValidatorLocator<T>() where T : IModelValidatorLocator
+            {
+                this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
                 return this;
             }
 

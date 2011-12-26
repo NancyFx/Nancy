@@ -6,20 +6,20 @@
     /// <summary>
     /// A composite validator to combine other validators.
     /// </summary>
-    public class CompositeValidator : IValidator
+    public class CompositeValidator : IModelValidator
     {
-        private readonly IEnumerable<IValidator> validators;
+        private readonly IEnumerable<IModelValidator> validators;
 
         /// <summary>
         /// Gets the description of the validator.
         /// </summary>
-        public ValidationDescriptor Description { get; private set; }
+        public ModelValidationDescriptor Description { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
         /// </summary>
         /// <param name="validators">The validators.</param>
-        public CompositeValidator(IEnumerable<IValidator> validators)
+        public CompositeValidator(IEnumerable<IModelValidator> validators)
         {
             Description = CreateCompositeDescription(validators);
             this.validators = validators;
@@ -32,23 +32,25 @@
         /// <returns>
         /// A ValidationResult with the result of the validation.
         /// </returns>
-        public ValidationResult Validate(object instance)
+        public ModelValidationResult Validate(object instance)
         {
             var errors = validators
                 .Select(v => v.Validate(instance))
                 .Where(r => r != null)
-                .SelectMany(r => r.Errors);
+                .SelectMany(r => r.Errors)
+                .ToArray();
 
-            if (!errors.Any())
-                return ValidationResult.Valid;
-
-            return new ValidationResult(errors);
+            return !errors.Any() ?
+                ModelValidationResult.Valid :
+                new ModelValidationResult(errors);
         }
 
-        private static ValidationDescriptor CreateCompositeDescription(IEnumerable<IValidator> validators)
+        private static ModelValidationDescriptor CreateCompositeDescription(IEnumerable<IModelValidator> validators)
         {
-            var rules = validators.SelectMany(v => v.Description.Rules);
-            return new ValidationDescriptor(rules);
+            var rules = 
+                validators.SelectMany(v => v.Description.Rules);
+
+            return new ModelValidationDescriptor(rules);
         }
     }
 }

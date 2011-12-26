@@ -1,9 +1,9 @@
-﻿namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using FluentValidation.Internal;
-    using FluentValidation.Validators;
-    using Rules;
+    using Nancy.Validation.Rules;
+    using global::FluentValidation.Internal;
+    using global::FluentValidation.Validators;
 
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="GreaterThanOrEqualValidator"/> and the Nancy validation rules.
@@ -22,10 +22,10 @@
         }
 
         /// <summary>
-        /// Get the <see cref="ValidationRule"/> instances that are mapped from the fluent validation rule.
+        /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ValidationRule"/> instances.</returns>
-        public override IEnumerable<ValidationRule> GetRules()
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public override IEnumerable<ModelValidationRule> GetRules()
         {
             yield return new ComparisonValidationRule(FormatMessage,
                 GetMemberNames(),

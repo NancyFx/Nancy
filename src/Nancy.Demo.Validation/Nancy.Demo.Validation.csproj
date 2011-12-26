@@ -80,6 +80,14 @@
       <Project>{15B7F794-0BB2-4B66-AD78-4A951F1209B2}</Project>
       <Name>Nancy.Hosting.Aspnet</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
+      <Project>{701765DC-F4F2-4943-A37F-6ED253198158}</Project>
+      <Name>Nancy.Validation.DataAnnotations</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
+      <Project>{01230F2A-D108-480C-B834-8CE0569FD3B3}</Project>
+      <Name>Nancy.Validation.FluentValidation</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>
       <Name>Nancy.ViewEngines.Spark</Name>

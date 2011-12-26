@@ -5,13 +5,13 @@
     /// <summary>
     /// Creates instances of IValidator.
     /// </summary>
-    public interface IValidatorFactory
+    public interface IModelValidatorFactory
     {
         /// <summary>
         /// Creates a validator for the given type.
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>A validator for the given type or null if none exists.</returns>
-        IValidator Create(Type type);
+        IModelValidator Create(Type type);
     }
 }

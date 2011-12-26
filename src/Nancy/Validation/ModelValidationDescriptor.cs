@@ -6,21 +6,22 @@
     /// <summary>
     /// A description of the rules a validator provides.
     /// </summary>
-    public class ValidationDescriptor
+    public class ModelValidationDescriptor
     {
         /// <summary>
         /// Gets the rules.
         /// </summary>
-        public IEnumerable<ValidationRule> Rules { get; private set; }
+        /// <value>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</value>
+        public IEnumerable<ModelValidationRule> Rules { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ValidationDescriptor"/> class.
+        /// Initializes a new instance of the <see cref="ModelValidationDescriptor"/> class.
         /// </summary>
         /// <param name="rules">The rules.</param>
-        public ValidationDescriptor(IEnumerable<ValidationRule> rules)
+        public ModelValidationDescriptor(IEnumerable<ModelValidationRule> rules)
         {
             Rules = rules == null
-                ? new List<ValidationRule>().AsReadOnly()
+                ? new List<ModelValidationRule>().AsReadOnly()
                 : rules.ToList().AsReadOnly();
         }
     }

@@ -8,34 +8,34 @@
     /// <summary>
     /// The default Nancy implementation of IValidatorLocator.
     /// </summary>
-    public class DefaultValidatorLocator : IValidatorLocator
+    public class DefaultValidatorLocator : IModelValidatorLocator
     {
-        private readonly ConcurrentDictionary<Type, IValidator> cachedValidators;
-        private readonly IEnumerable<IValidatorFactory> factories;
+        private readonly ConcurrentDictionary<Type, IModelValidator> cachedValidators;
+        private readonly IEnumerable<IModelValidatorFactory> factories;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultValidatorLocator"/> class.
         /// </summary>
         /// <param name="factories">The factories.</param>
-        public DefaultValidatorLocator(IEnumerable<IValidatorFactory> factories)
+        public DefaultValidatorLocator(IEnumerable<IModelValidatorFactory> factories)
         {
-            this.cachedValidators = new ConcurrentDictionary<Type, IValidator>();
-            this.factories = factories ?? new List<IValidatorFactory>();
+            this.cachedValidators = 
+                new ConcurrentDictionary<Type, IModelValidator>();
+
+            this.factories = factories ?? new List<IModelValidatorFactory>();
         }
 
         /// <summary>
         /// Gets a validator for a given type.
         /// </summary>
         /// <param name="type">The type to validate.</param>
-        /// <returns>
-        /// IValidator instance or null if none found.
-        /// </returns>
-        public IValidator GetValidatorForType(Type type)
+        /// <returns>An <see cref="IModelValidator"/> instance or <see langword="null"/> if none found.</returns>
+        public IModelValidator GetValidatorForType(Type type)
         {
             return cachedValidators.GetOrAdd(type, CreateValidator);
         }
 
-        private IValidator CreateValidator(Type type)
+        private IModelValidator CreateValidator(Type type)
         {
             var validators = factories
                 .Select(f => f.Create(type))
@@ -43,12 +43,13 @@
                 .ToList();
 
             if(validators.Count == 0)
+            {
                 return null;
+            }
 
-            if (validators.Count == 1)
-                return validators[0];
-
-            return new CompositeValidator(validators);
+            return validators.Count == 1 ? 
+                validators[0] : 
+                new CompositeValidator(validators);
         }
     }
 }

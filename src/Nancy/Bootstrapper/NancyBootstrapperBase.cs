@@ -163,9 +163,9 @@
         /// <summary>
         /// Gets the validator factories.
         /// </summary>
-        protected virtual IEnumerable<Type> ValidatorFactories
+        protected virtual IEnumerable<Type> ModelValidatorFactories
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IValidatorFactory>(); }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IModelValidatorFactory>(); }
             //get { return new[] { typeof(DataAnnotationsValidatorFactory) }; }
         }
 
@@ -488,7 +488,7 @@
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
                     new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
-                    new CollectionTypeRegistration(typeof(IValidatorFactory), this.ValidatorFactories)
+                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }
 

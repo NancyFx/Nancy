@@ -1,37 +1,43 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
-    using System;
-    using FakeItEasy;
     using Nancy.Validation;
     using Xunit;
 
-    public class ValidationResultFixture
+    public class ModelValidationResultFixture
     {
         [Fact]
         public void Should_not_throw_if_null_errors_collection_is_passed()
         {
-            var result = Record.Exception(() => new ValidationResult(null));
+            // Given, When
+            var result = Record.Exception(() => new ModelValidationResult(null));
 
+            // Then
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Should_return_valid_when_no_errors_exist()
         {
-            var subject = new ValidationResult(null);
+            // Given
+            var subject = new ModelValidationResult(null);
 
+            // When
             var result = subject.IsValid;
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_return_invalid_if_any_errors_exist()
         {
-            var subject = new ValidationResult(new[] { new ValidationError("blah", s => "blah") });
+            // Given
+            var subject = new ModelValidationResult(new[] { new ModelValidationError("blah", s => "blah") });
 
+            // When
             var result = subject.IsValid;
 
+            // Then
             result.ShouldBeFalse();
         }
     }

@@ -1,9 +1,9 @@
-﻿namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using FluentValidation.Internal;
-    using FluentValidation.Validators;
-    using Rules;
+    using Nancy.Validation.Rules;
+    using global::FluentValidation.Internal;
+    using global::FluentValidation.Validators;
 
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="GreaterThanValidator"/> and the Nancy validation rules.
@@ -15,17 +15,17 @@
         /// <paramref name="rule"/> and <paramref name="validator"/>.
         /// </summary>
         /// <param name="rule">The fluent validation <see cref="PropertyRule"/> that is being mapped.</param>
-        /// <param name="validator">The <see cref="IPropertyValidator"/> of the rule.</param>
+        /// <param name="validator">The <see cref="PropertyRule"/> of the rule.</param>
         public GreaterThanAdapter(PropertyRule rule, GreaterThanValidator validator)
             : base(rule, validator)
         {
         }
 
         /// <summary>
-        /// Get the <see cref="ValidationRule"/> instances that are mapped from the fluent validation rule.
+        /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ValidationRule"/> instances.</returns>
-        public override IEnumerable<ValidationRule> GetRules()
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public override IEnumerable<ModelValidationRule> GetRules()
         {
             yield return new ComparisonValidationRule(FormatMessage,
                 GetMemberNames(),

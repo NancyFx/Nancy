@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
 
-    public class NotEmptyValidationRule : ValidationRule
+    public class NotEmptyValidationRule : ModelValidationRule
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NotEmptyValidationRule"/> class.

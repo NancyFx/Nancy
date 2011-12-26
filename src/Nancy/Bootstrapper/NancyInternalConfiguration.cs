@@ -46,7 +46,7 @@ namespace Nancy.Bootstrapper
                         ViewResolver = typeof(DefaultViewResolver),
                         ViewCache = typeof(DefaultViewCache),
                         RenderContextFactory = typeof(DefaultRenderContextFactory),
-                        ValidatorLocator = typeof(DefaultValidatorLocator),
+                        ModelValidatorLocator = typeof(DefaultValidatorLocator),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                         ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IErrorHandler>(true))),
@@ -87,7 +87,7 @@ namespace Nancy.Bootstrapper
 
         public Type FieldNameConverter { get; set; }
 
-        public Type ValidatorLocator { get; set; }
+        public Type ModelValidatorLocator { get; set; }
 
         public Type ViewResolver { get; set; }
 
@@ -169,7 +169,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
-                new TypeRegistration(typeof(IValidatorLocator), this.ValidatorLocator)
+                new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator)
             };
         }
 

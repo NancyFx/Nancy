@@ -12,7 +12,7 @@
         private readonly IViewFactory viewFactory;
         private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelBinderLocator modelBinderLocator;
-        private readonly IValidatorLocator validatorLocator;
+        private readonly IModelValidatorLocator validatorLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
@@ -20,8 +20,8 @@
         /// <param name="viewFactory">The <see cref="IViewFactory"/> instance that should be assigned to the module.</param>
         /// <param name="responseFormatterFactory">An <see cref="IResponseFormatterFactory"/> instance that should be used to create a response formatter for the module.</param>
         /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
-        /// <param name="validatorLocator">A <see cref="IValidatorLocator"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IValidatorLocator validatorLocator)
+        /// <param name="validatorLocator">A <see cref="IModelValidatorLocator"/> instance that should be assigned to the module.</param>
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator)
         {
             this.viewFactory = viewFactory;
             this.responseFormatterFactory = responseFormatterFactory;

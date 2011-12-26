@@ -15,7 +15,7 @@
         private readonly IViewFactory viewFactory;
         private readonly NancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
-        private readonly IValidatorLocator validatorLocator;
+        private readonly IModelValidatorLocator validatorLocator;
 
         public DefaultNancyModuleBuilderFixture()
         {
@@ -26,7 +26,7 @@
 
             this.viewFactory = A.Fake<IViewFactory>();
             this.modelBinderLocator = A.Fake<IModelBinderLocator>();
-            this.validatorLocator = A.Fake<IValidatorLocator>();
+            this.validatorLocator = A.Fake<IModelValidatorLocator>();
             this.builder = new DefaultNancyModuleBuilder(this.viewFactory, this.responseFormatterFactory, this.modelBinderLocator, this.validatorLocator);
         }
 

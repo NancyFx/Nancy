@@ -1,12 +1,13 @@
 ﻿namespace Nancy.Validation.DataAnnotations
 {
     using System;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.ComponentModel.DataAnnotations;
     using Nancy.Validation.Rules;
-    using DA = System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// An adapter for the System.ComponentModel.DataAnnotations.RangeAttribute.
+    /// An adapter for the <see cref="System.ComponentModel.DataAnnotations.RangeAttribute"/>.
     /// </summary>
     public class RangeValidatorAdapter : DataAnnotationsValidatorAdapter
     {
@@ -15,7 +16,7 @@
         /// </summary>
         /// <param name="attribute">The attribute.</param>
         /// <param name="descriptor">The descriptor.</param>
-        public RangeValidatorAdapter(DA.RangeAttribute attribute, PropertyDescriptor descriptor)
+        public RangeValidatorAdapter(RangeAttribute attribute, PropertyDescriptor descriptor)
             : base("Comparison", attribute, descriptor)
         {
         }
@@ -23,10 +24,10 @@
         /// <summary>
         /// Gets the the rules the adapter provides.
         /// </summary>
-        /// <returns></returns>
-        public override System.Collections.Generic.IEnumerable<ValidationRule> GetRules()
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public override IEnumerable<ModelValidationRule> GetRules()
         {
-            var ra = (DA.RangeAttribute)attribute;
+            var ra = (RangeAttribute)attribute;
             
             yield return new ComparisonValidationRule(attribute.FormatErrorMessage,
                 new[] { descriptor.Name },

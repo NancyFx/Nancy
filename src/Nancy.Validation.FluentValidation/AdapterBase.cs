@@ -1,8 +1,8 @@
-﻿namespace Nancy.Validation.Fluent
+﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using FluentValidation.Validators;
-    using FluentValidation.Internal;
+    using global::FluentValidation.Internal;
+    using global::FluentValidation.Validators;
 
     /// <summary>
     /// Defines the core functionality of an adapter between Fluent Validation validators and Nancy validation rules.
@@ -35,10 +35,10 @@
         public T Validator { get; set; }
 
         /// <summary>
-        /// Get the <see cref="ValidationRule"/> instances that are mapped from the fluent validation rule.
+        /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ValidationRule"/> instances.</returns>
-        public abstract IEnumerable<ValidationRule> GetRules();
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
+        public abstract IEnumerable<ModelValidationRule> GetRules();
 
         /// <summary>
         /// Gets the name of the members that the validator applied to.

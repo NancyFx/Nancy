@@ -191,7 +191,7 @@ namespace Nancy
         /// Gets or sets the validator locator.
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public IValidatorLocator ValidatorLocator { get; set; }
+        public IModelValidatorLocator ValidatorLocator { get; set; }
 
         /// <summary>
         /// Helper class for configuring a route handler in a module.
