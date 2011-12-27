@@ -9,7 +9,6 @@
     using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Nancy.Validation;
-    using Nancy.Validation.DataAnnotations;
 
     /// <summary>
     /// Nancy bootstrapper base class

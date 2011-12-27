@@ -22,7 +22,7 @@
             this.cachedValidators = 
                 new ConcurrentDictionary<Type, IModelValidator>();
 
-            this.factories = factories ?? new List<IModelValidatorFactory>();
+            this.factories = factories ?? Enumerable.Empty<IModelValidatorFactory>();
         }
 
         /// <summary>
@@ -32,6 +32,11 @@
         /// <returns>An <see cref="IModelValidator"/> instance or <see langword="null"/> if none found.</returns>
         public IModelValidator GetValidatorForType(Type type)
         {
+            if (!this.factories.Any())
+            {
+                throw new ModelValidationException("No model validator factory could be located.");
+            }
+
             return cachedValidators.GetOrAdd(type, CreateValidator);
         }
 

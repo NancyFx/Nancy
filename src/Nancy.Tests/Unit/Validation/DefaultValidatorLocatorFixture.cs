@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System;
+    using System.Linq;
     using FakeItEasy;
     using Nancy.Validation;
     using Xunit;
@@ -8,7 +9,7 @@
     public class DefaultValidatorLocatorFixture
     {
         [Fact]
-        public void Should_not_throw_if_null_validator_locatorss_collection_is_passed()
+        public void Should_not_throw_if_null_validator_locators_collection_is_passed()
         {
             // Given, When
             var result = Record.Exception(() => new DefaultValidatorLocator(null));
@@ -70,6 +71,19 @@
 
             // Then
             result.ShouldBeOfType<CompositeValidator>();
+        }
+
+        [Fact]
+        public void Should_throw_modelvalidationexception_when_retrieving_validator_but_no_factories_have_been_registered()
+        {
+            // Given
+            var subject = new DefaultValidatorLocator(null);
+
+            // When
+            var exception = Record.Exception(() => subject.GetValidatorForType(typeof(string)));
+
+            // Then
+            exception.ShouldBeOfType<ModelValidationException>();
         }
     }
 }

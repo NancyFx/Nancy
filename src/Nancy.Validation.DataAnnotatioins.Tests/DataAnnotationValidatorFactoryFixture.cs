@@ -1,10 +1,7 @@
-﻿namespace Nancy.Tests.Unit.Validation.DataAnnotations
+﻿namespace Nancy.Validation.DataAnnotatioins.Tests
 {
-    using System;
     using System.ComponentModel.DataAnnotations;
-    using System.Linq;
-    using FakeItEasy;
-    using Nancy.Validation;
+    using Nancy.Tests;
     using Nancy.Validation.DataAnnotations;
     using Xunit;
 
@@ -14,32 +11,27 @@
 
         public DataAnnotationValidatorFactoryFixture()
         {
-            subject = new DataAnnotationsValidatorFactory();
+            this.subject = new DataAnnotationsValidatorFactory();
         }
 
         [Fact]
         public void Should_provide_null_validator_when_no_rules_exist()
         {
-            var result = subject.Create(typeof(string));
+            // Given, When
+            var result = this.subject.Create(typeof(string));
 
+            // Then
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Should_provide_non_null_validator_when_validation_exists()
         {
-            var result = subject.Create(typeof(TestModel));
+            // Given, When
+            var result = this.subject.Create(typeof(TestModel));
 
+            // Then
             result.ShouldNotBeNull();
-        }
-
-        [Fact]
-        public void Should_return_the_same_validator_for_every_call()
-        {
-            var result = subject.Create(typeof(TestModel));
-            var result2 = subject.Create(typeof(TestModel));
-
-            result2.ShouldBeSameAs(result);
         }
 
         private class TestModel

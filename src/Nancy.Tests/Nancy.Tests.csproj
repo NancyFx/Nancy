@@ -194,8 +194,6 @@
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
-    <Compile Include="Unit\Validation\DataAnnotations\DataAnnotationValidatorFixture.cs" />
-    <Compile Include="Unit\Validation\DataAnnotations\DataAnnotationValidatorFactoryFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
     <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
     <Compile Include="Unit\Validation\DefaultValidatorLocatorFixture.cs" />

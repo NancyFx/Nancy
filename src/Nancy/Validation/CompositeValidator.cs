@@ -21,7 +21,7 @@
         /// <param name="validators">The validators.</param>
         public CompositeValidator(IEnumerable<IModelValidator> validators)
         {
-            Description = CreateCompositeDescription(validators);
+            this.Description = CreateCompositeDescription(validators);
             this.validators = validators;
         }
 

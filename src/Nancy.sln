@@ -91,6 +91,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnota
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.FluentValidation", "Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj", "{01230F2A-D108-480C-B834-8CE0569FD3B3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotatioins.Tests", "Nancy.Validation.DataAnnotatioins.Tests\Nancy.Validation.DataAnnotatioins.Tests.csproj", "{8F9F910D-416E-4B28-BE59-D76670405F56}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -749,6 +751,22 @@ Global
 		{01230F2A-D108-480C-B834-8CE0569FD3B3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{01230F2A-D108-480C-B834-8CE0569FD3B3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{01230F2A-D108-480C-B834-8CE0569FD3B3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoDebug|Any CPU.Build.0 = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoDebug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoDebug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoRelease|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.MonoRelease|Mixed Platforms.Build.0 = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{8F9F910D-416E-4B28-BE59-D76670405F56}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -781,6 +799,7 @@ Global
 		{A3BF6450-DE9A-4C11-8E3C-66D9A8EC93F5} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{2026DD2D-E041-4A14-8A04-D5B39B8B7C40} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{BDA5E175-07D7-4E6F-B46F-C2CF7D63E231} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
+		{8F9F910D-416E-4B28-BE59-D76670405F56} = {A427F9F8-0A6F-4EEA-837F-FCDAB6E7D4B3}
 		{5F2DD52D-471B-4946-8F7B-F050C88EFC52} = {4A24657F-9695-437B-9702-2541ED280628}
 		{98940A30-1B48-4F71-A6BA-85F0AAF31A2F} = {4A24657F-9695-437B-9702-2541ED280628}
 		{EF660223-4DFD-4E36-BF36-9DD6AFB3F837} = {4A24657F-9695-437B-9702-2541ED280628}
