@@ -20,14 +20,14 @@ namespace Nancy.Diagnostics
         // TODO - remove above method and return guid from here?
         public void AddRequestDiagnosticToSession(Guid id, NancyContext context)
         {
-            var diagnostic = this.sessions.FirstOrDefault(s => s.Id == id);
+            var session = this.sessions.FirstOrDefault(s => s.Id == id);
 
-            if (diagnostic == null)
+            if (session == null)
             {
                 return;
             }
 
-            diagnostic.RequestDiagnostics.Add(context.Diagnostic);
+            session.AddDiagnostic(context.Diagnostic);
         }
 
         public IEnumerable<DiagnosticSession> GetSessions()
