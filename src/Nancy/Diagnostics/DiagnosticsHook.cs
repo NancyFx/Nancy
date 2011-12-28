@@ -16,7 +16,7 @@ namespace Nancy.Diagnostics
         public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
-            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers);
+            var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers, rootPathProvider);
 
             var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, keyGenerator, new DefaultNancyContextFactory());
 

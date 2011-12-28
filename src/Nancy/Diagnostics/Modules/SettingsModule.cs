@@ -1,15 +1,11 @@
 ﻿namespace Nancy.Diagnostics.Modules
 {
-    public class InfoModule : DiagnosticModule
+    public class SettingsModule : DiagnosticModule
     {
-        private readonly IRequestTracing sessionProvider;
-
-        public InfoModule(IRequestTracing sessionProvider)
-            : base("/info")
+        public SettingsModule()
+            : base("/settings")
         {
-            this.sessionProvider = sessionProvider;
-
-            Get["/"] = _ => View["Info"];
+            Get["/"] = _ => View["Settings"];
         }
     }
 }

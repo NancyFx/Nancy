@@ -116,8 +116,8 @@
     <Compile Include="Diagnostics\InteractiveDiagnostic.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnosticMethod.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnostics.cs" />
-    <Compile Include="Diagnostics\Modules\SettingsModule.cs" />
     <Compile Include="Diagnostics\Modules\InfoModule.cs" />
+    <Compile Include="Diagnostics\Modules\SettingsModule.cs" />
     <Compile Include="Diagnostics\Modules\InteractiveModule.cs" />
     <Compile Include="Diagnostics\Modules\MainModule.cs" />
     <Compile Include="Diagnostics\Modules\TraceModule.cs" />

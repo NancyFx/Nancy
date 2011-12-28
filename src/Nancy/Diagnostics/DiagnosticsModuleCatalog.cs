@@ -11,9 +11,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoC.TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers)
+        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider)
         {
-            this.container = ConfigureContainer(keyGenerator, providers);
+            this.container = ConfigureContainer(keyGenerator, providers, rootPathProvider);
         }
 
         /// <summary>
@@ -37,13 +37,14 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<NancyModule>(moduleKey);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers)
+        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider)
         {
             var diagContainer = new TinyIoCContainer();
 
             diagContainer.Register<IModuleKeyGenerator>(moduleKeyGenerator);
             diagContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>();
             diagContainer.Register<IRequestTracing, DefaultRequestTracing>();
+            diagContainer.Register<IRootPathProvider>(rootPathProvider);
 
             foreach (var diagnosticsProvider in providers)
             {
