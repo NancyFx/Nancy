@@ -7,14 +7,11 @@
 
     public class InteractiveModule : DiagnosticModule
     {
-        private readonly IDiagnosticSessions sessionProvider;
-
         private readonly IInteractiveDiagnostics interactiveDiagnostics;
 
-        public InteractiveModule(IDiagnosticSessions sessionProvider, IInteractiveDiagnostics interactiveDiagnostics)
+        public InteractiveModule(IRequestTracing sessionProvider, IInteractiveDiagnostics interactiveDiagnostics)
             :base ("/interactive")
         {
-            this.sessionProvider = sessionProvider;
             this.interactiveDiagnostics = interactiveDiagnostics;
 
             Get["/"] = _ => View["InteractiveDiagnostics"];

@@ -2,6 +2,15 @@
 <html>
 	<head>
 		<title>@Section['Title'];</title>
+		<style type="text/css">
+			body 
+			{
+				background: black;
+			}
+		</style>
+
+		<link href="@Path['~/_Nancy/Resources/main.css']" rel="Stylesheet" />
+
 		<script language="javascript" type="text/javascript">
 			Nancy = { };
 
@@ -20,15 +29,15 @@
 		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/text.css']" />
 		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/960.css']" />
 
-		<link href="@Path['~/_Nancy/Resources/main.css']" rel="Stylesheet" />
-
 		@Section['Header'];
 	</head>
 	<body>
 		<div class="container_12">
 
 			<div class="grid_6 header">
-				<img src="@Path['~/_Nancy/Resources/logo.png']" width="380px" alt="Nancy" />
+				<a href="@Path['~/_Nancy']">
+					<img src="@Path['~/_Nancy/Resources/logo.png']" width="380px" alt="Nancy" />
+				</a>
 			</div>
 
 			<div class="grid_6 header">

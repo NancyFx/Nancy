@@ -102,7 +102,7 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
-    <Compile Include="Diagnostics\DefaultDiagnosticSessions.cs" />
+    <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
     <Compile Include="Diagnostics\DescriptionAttribute.cs" />
     <Compile Include="Diagnostics\DiagnosticModule.cs" />
     <Compile Include="Diagnostics\DiagnosticsHook.cs" />
@@ -116,8 +116,11 @@
     <Compile Include="Diagnostics\InteractiveDiagnostic.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnosticMethod.cs" />
     <Compile Include="Diagnostics\InteractiveDiagnostics.cs" />
+    <Compile Include="Diagnostics\Modules\SettingsModule.cs" />
+    <Compile Include="Diagnostics\Modules\InfoModule.cs" />
     <Compile Include="Diagnostics\Modules\InteractiveModule.cs" />
     <Compile Include="Diagnostics\Modules\MainModule.cs" />
+    <Compile Include="Diagnostics\Modules\TraceModule.cs" />
     <Compile Include="Diagnostics\TemplateAttribute.cs" />
     <Compile Include="Diagnostics\TestingDiagnosticProvider.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
@@ -144,9 +147,9 @@
     <Compile Include="Cryptography\PassphraseKeyGenerator.cs" />
     <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
-    <Compile Include="Diagnostics\DiagnosticSession.cs" />
-    <Compile Include="Diagnostics\IDiagnosticSessions.cs" />
-    <Compile Include="Diagnostics\RequestDiagnostic.cs" />
+    <Compile Include="Diagnostics\RequestTraceSession.cs" />
+    <Compile Include="Diagnostics\IRequestTracing.cs" />
+    <Compile Include="Diagnostics\RequestTrace.cs" />
     <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultErrorHandler.cs" />
@@ -390,6 +393,15 @@
     <EmbeddedResource Include="Diagnostics\Resources\interactive.png" />
     <EmbeddedResource Include="Diagnostics\Resources\logs.png" />
     <EmbeddedResource Include="Diagnostics\Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\RequestTracing.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\Info.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\Settings.sshtml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

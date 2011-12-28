@@ -13,7 +13,7 @@ namespace Nancy
         {
             var nancyContext = new NancyContext();
 
-            nancyContext.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
+            nancyContext.Trace.TraceLog.WriteLog(s => s.AppendLine("New Request Started"));
 
             return nancyContext;
         }

@@ -43,7 +43,7 @@ namespace Nancy.Diagnostics
 
             diagContainer.Register<IModuleKeyGenerator>(moduleKeyGenerator);
             diagContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>();
-            diagContainer.Register<IDiagnosticSessions, DefaultDiagnosticSessions>();
+            diagContainer.Register<IRequestTracing, DefaultRequestTracing>();
 
             foreach (var diagnosticsProvider in providers)
             {

@@ -20,7 +20,7 @@
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
             existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
-            existingContainer.Register<IDiagnosticSessions, DefaultDiagnosticSessions>().AsSingleton();
+            existingContainer.Register<IRequestTracing, DefaultRequestTracing>().AsSingleton();
             existingContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>().AsSingleton();
         }
 

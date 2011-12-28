@@ -1,0 +1,16 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Info@EndSection
+
+@Section['Header']
+@EndSection
+
+@Section['Page_Title']
+	<h1>Info</h1>
+@EndSection
+
+@Section['Body']
+@EndSection
+
+
+

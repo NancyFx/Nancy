@@ -1,0 +1,52 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Request Tracing@EndSection
+
+@Section['Header']
+	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/request-tracing.js']"></script>
+
+	<link href="@Path['~/_Nancy/Resources/request-tracing.css']" rel="Stylesheet" />
+@EndSection
+
+@Section['Page_Title']
+	<h1>Request Tracing</h1>
+@EndSection
+
+@Section['Body']
+	<div id="main" class="grid_4">
+	</div>
+
+	<div id="results" class="grid_8">
+	</div>
+
+	<script id="sessionList" type="text/x-handlebars-template">
+		{{#if collection.length}}
+		{{else}}
+		  No sessions found.
+		{{/if}}
+	</script>
+
+	<script id="requestList" type="text/x-handlebars-template">
+		<a id="back"><< back</a>
+		{{#if collection.length}}
+		  <ul id="root">
+		  </ul>
+		{{else}}
+		  None found.
+		{{/if}}
+	</script>
+
+	<script id="session" type="text/x-handlebars-template">
+		<h2>{{model.Id}}</h2>
+	</script>
+
+	<script id="request" type="text/x-handlebars-template">
+		Status: {{model.StatusCode}}<br/>
+		Method: {{model.Method}}<br/>
+		Path: {{model.Url.Path}}<br/>
+	</script>
+@EndSection
+
+
+

@@ -99,7 +99,7 @@
         {
             if (routeCache.IsEmpty())
             {
-                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No routes available"));
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No routes available"));
                 return new ResolveResults
                 {
                     Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null)
@@ -123,7 +123,7 @@
 
             if (!routes.Item1.Any())
             {
-                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route had a valid condition"));
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route had a valid condition"));
                 return new ResolveResults
                 {
                     Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null),
@@ -148,7 +148,7 @@
 
             if (!routes.Item1.Any())
             {
-                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route matched the requested path"));
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route matched the requested path"));
                 return new ResolveResults
                 {
                     Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null),
@@ -177,7 +177,7 @@
             if (!routes.Item1.Any())
             {
                 var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
-                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResults
                 {
                     Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
@@ -199,7 +199,7 @@
 
             if (exactMatchResults.Item1.Any())
             {
-                context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Found exact match route"));
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Found exact match route"));
                 return new ResolveResults
                 {
                     Selected = this.CreateRouteAndParametersFromMatch(context, exactMatchResults.Item1.First()),
@@ -211,7 +211,7 @@
             var selected =
                 GetTopRouteMatchesNew(routes).First();
 
-            context.Diagnostic.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Selected best match"));
+            context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Selected best match"));
             return new ResolveResults
             {
                 Selected = this.CreateRouteAndParametersFromMatch(context, selected),

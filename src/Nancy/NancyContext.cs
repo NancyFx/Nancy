@@ -18,7 +18,7 @@ namespace Nancy
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
-            this.Diagnostic = new RequestDiagnostic();
+            this.Trace = new RequestTrace();
             
             // TODO - some logic needs to go here
             this.ControlPanelEnabled = true;
@@ -49,8 +49,8 @@ namespace Nancy
             set
             {
                 this.request = value;
-                this.Diagnostic.Method = request.Method;
-                this.Diagnostic.RequestUrl = request.Url;
+                this.Trace.Method = request.Method;
+                this.Trace.RequestUrl = request.Url;
             }
         }
 
@@ -65,9 +65,9 @@ namespace Nancy
         public IUserIdentity CurrentUser { get; set; }
 
         /// <summary>
-        /// Diagnostics
+        /// Diagnostic request tracing
         /// </summary>
-        public RequestDiagnostic Diagnostic { get; private set; }
+        public RequestTrace Trace { get; private set; }
 
         /// <summary>
         /// Gets a value indicating whether control panel access is enabled for this request
