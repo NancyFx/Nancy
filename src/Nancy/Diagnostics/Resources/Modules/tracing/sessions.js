@@ -36,7 +36,7 @@
     });
 
     Session.Views.Item = Backbone.View.extend({
-        className: "session",
+        className: "item-list",
 
         events: {
             'click': 'showSession'

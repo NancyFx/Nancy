@@ -33,15 +33,15 @@
 	<script id="traceList" type="text/x-handlebars-template">
 		<a id="back"><< back</a>
 		{{#if collection.length}}
-		  <ul id="root">
-		  </ul>
+		  <div id="root">
+		  </div>
 		{{else}}
 		  None found.
 		{{/if}}
 	</script>
 
 	<script id="session" type="text/x-handlebars-template">
-		<h3>{{model.Id}}</h3>
+		{{model.Id}}
 	</script>
 
 	<script id="trace" type="text/x-handlebars-template">

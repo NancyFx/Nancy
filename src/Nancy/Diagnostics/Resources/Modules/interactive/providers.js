@@ -36,7 +36,7 @@
     });
 
     Provider.Views.Item = Backbone.View.extend({
-        className: "provider",
+        className: "item-list",
 
         events: {
             'click': 'showMethods'

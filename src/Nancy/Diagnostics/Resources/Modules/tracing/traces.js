@@ -49,7 +49,7 @@
     });
 
     Trace.Views.Item = Backbone.View.extend({
-        tagName: 'li',
+        className: 'item-list',
 
         events: {
             'click': 'viewDetails'
