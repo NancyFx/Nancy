@@ -38,8 +38,10 @@
                             ResponseType = t.ResponseType.ToString(),
                             t.RequestContentType,
                             t.ResponseContentType,
+                            t.RequestHeaders,
+                            t.ResponseHeaders,
                             t.StatusCode,
-                            Log = t.TraceLog.ToString(),
+                            Log = t.TraceLog.ToString().Split(new [] { "\r\n" }, StringSplitOptions.None),
                         }).ToArray());
                 };
         }

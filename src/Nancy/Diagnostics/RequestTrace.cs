@@ -21,6 +21,10 @@
 
         public string ResponseContentType { get; set; }
 
+        public IDictionary<string, IEnumerable<string>> RequestHeaders { get; set; }
+
+        public IDictionary<string, string> ResponseHeaders { get; set; }
+
         public RequestTrace()
         {
             this.TraceLog = new TraceLog();

@@ -25,7 +25,7 @@ button.g-button, a.g-button, input[type=submit].g-button, input[type=button].g-b
     line-height: 1;
 }
 
-.container_12 
+.container_12
 {
     padding: 20px 0;
     position: relative;
@@ -33,7 +33,7 @@ button.g-button, a.g-button, input[type=submit].g-button, input[type=button].g-b
 
 .header
 {
-    padding: 0  0  28px 0;
+    padding: 0 0 28px 0;
     height: 100px;
     position: relative;
 }
@@ -41,10 +41,10 @@ button.g-button, a.g-button, input[type=submit].g-button, input[type=button].g-b
 .header h1
 {
     font-size: 24pt;
-    position: absolute; 
-    bottom: 0; 
+    position: absolute;
+    bottom: 0;
     right: 0;
-    margin-bottom: 18px; 
+    margin-bottom: 18px;
 }
 
 a.icon-block
@@ -52,9 +52,9 @@ a.icon-block
     display: block;
     background-color: white;
     height: 180px;
-    line-height: 0; 
+    line-height: 0;
     font-size: 0;
-    color: transparent; 
+    color: transparent;
 }
 
 a.icon-block:hover
@@ -101,7 +101,7 @@ div.description-text h2
     background-position: center center;
     background-repeat: no-repeat;
 }
-    
+
 div.provider
 {
     background: white;
@@ -125,4 +125,159 @@ div.provider h2
     font-size: 14pt;
     font-weight: bold;
     margin-bottom: 0px;
+}
+
+/* JSON Report CSS */
+
+.modelreport TABLE
+{
+    border-collapse: collapse;
+    border: solid 1px #ccc;
+    clear: left;
+}
+
+.modelreport TH
+{
+    text-align: left;
+    padding: 4px 8px;
+    text-shadow: #fff 1px 1px -1px;
+    background: #f1f1f1;
+    color: black;
+    white-space: nowrap;
+    cursor: pointer;
+    font-weight: bold;
+}
+.modelreport TH, .modelreport TD, .modelreport TD DT, .modelreport TD DD
+{
+    font-size: 11px;
+    font-family: Arial;
+}
+
+.modelreport TD
+{
+    padding: 8px 8px 0 8px;
+    vertical-align: top;
+}
+
+.modelreport DL
+{
+    clear: left;
+    margin: 0px;
+}
+
+.modelreport DT
+{
+/*    margin: 10px 0 5px 0;*/
+    font-weight: bold;
+    font-size: 13px;
+    width: 160px;
+    clear: left;
+    float: left;
+    display: block;
+    white-space: nowrap;
+}
+
+.modelreport DD
+{
+/*    margin: 5px 10px;*/
+    font-weight: bold;
+    font-size: 13px;
+    display: block;
+    float: left;
+}
+.modelreport DL DL DT
+{
+    font-weight: bold;
+    font-size: 13px;
+}
+.modelreport DL DL DD
+{
+    font-size: 13px;
+    max-width: 200px;
+}
+.modelreport HR
+{
+    display: none;
+}
+.modelreport TD DL HR
+{
+    display: block;
+    padding: 0;
+    clear: left;
+    border: none;
+}
+.modelreport TD DL
+{
+    padding: 4px;
+    margin: 0;
+    height: 100%;
+    max-width: 700px;
+}
+.modelreport DL TD DL DT
+{
+    padding: 2px;
+    margin: 0 10px 0 0;
+    font-weight: bold;
+    font-size: 11px;
+    width: 120px;
+    overflow: hidden;
+    clear: left;
+    float: left;
+    display: block;
+}
+.modelreport DL TD DL DD
+{
+    margin: 0;
+    padding: 2px;
+    font-size: 8px;
+    display: block;
+    float: left;
+}
+.modelreport TBODY > TR:last-child > TD
+{
+    padding: 8px;
+}
+.modelreport THEAD
+{
+    -webkit-user-select: none;
+    -moz-user-select: none;
+}
+.modelreport .desc, .modelreport .asc
+{
+    background-color: #FAFAD2;
+}
+.modelreport .desc
+{
+    background-color: #D4EDC9;
+}
+.modelreport TH B
+{
+    display: block;
+    float: right;
+    margin: 0 0 0 5px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #ccc;
+    border-bottom: none;
+}
+.modelreport .asc B
+{
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid #333;
+    border-bottom: none;
+}
+.modelreport .desc B
+{
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-bottom: 5px solid #333;
+    border-top: none;
+}
+.modelreport H3
+{
+    font-size: 13px;
+    margin: 0 0 10px 0;
 }

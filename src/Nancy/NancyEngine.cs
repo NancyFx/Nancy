@@ -112,8 +112,8 @@
             ctx.Trace.StatusCode = ctx.Response.StatusCode;
             ctx.Trace.RequestContentType = ctx.Request.Headers.ContentType;
             ctx.Trace.ResponseContentType = ctx.Response.ContentType;
-//            ctx.Trace.RequestHeaders = ctx.Request.Headers;
-//            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
+            ctx.Trace.RequestHeaders = ctx.Request.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
+            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
 
             this.requestTracing.AddRequestDiagnosticToSession(sessionGuid, ctx);
 
