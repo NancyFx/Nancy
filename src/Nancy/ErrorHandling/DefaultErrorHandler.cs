@@ -51,7 +51,7 @@ namespace Nancy.ErrorHandling
         /// <returns>Nancy Response</returns>
         public void Handle(HttpStatusCode statusCode, NancyContext context)
         {
-            if (context.Response != null && context.Response.Contents != null)
+            if (context.Response != null && context.Response.Contents != null && !ReferenceEquals(context.Response.Contents, Response.NoBody))
             {
                 return;
             }
@@ -79,11 +79,6 @@ namespace Nancy.ErrorHandling
 
         private void ModifyResponse(HttpStatusCode statusCode, NancyContext context, string errorPage)
         {
-            if (context.Response != null && context.Response.Contents != null)
-            {
-                return;
-            }
-
             if (context.Response == null)
             {
                 context.Response = new Response() { StatusCode = statusCode };

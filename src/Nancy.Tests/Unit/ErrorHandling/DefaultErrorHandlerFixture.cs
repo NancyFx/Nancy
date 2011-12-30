@@ -72,6 +72,21 @@ namespace Nancy.Tests.Unit.ErrorHandling
         }
 
         [Fact]
+        public void Should_overwrite_response_contents_if_the_body_is_null_object()
+        {
+            var context = new NancyContext();
+            context.Response = new Response { StatusCode = HttpStatusCode.NotFound };
+
+            this.errorHandler.Handle(HttpStatusCode.NotFound, context);
+
+            using (var stream = new MemoryStream())
+            {
+                context.Response.Contents.Invoke(stream);
+                stream.ToArray().Length.ShouldBeGreaterThan(0);
+            }
+        }
+
+        [Fact]
         public void Should_create_response_if_it_doesnt_exist_in_context()
         {
             var context = new NancyContext();
