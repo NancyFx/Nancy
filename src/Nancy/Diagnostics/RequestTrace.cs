@@ -17,7 +17,9 @@
 
         public HttpStatusCode StatusCode { get; set; }
 
-        public string ContentType { get; set; }
+        public string RequestContentType { get; set; }
+
+        public string ResponseContentType { get; set; }
 
         public RequestTrace()
         {

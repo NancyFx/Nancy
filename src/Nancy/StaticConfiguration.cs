@@ -92,17 +92,17 @@ namespace Nancy
         }
 
 #if DEBUG
-        private static bool enableDiagnostics = false;
+        private static bool enableRequestTracing = true;
 #else
-        private static bool enableDiagnostics = true;
+        private static bool enableDiagnostics = false;
 #endif
         /// <summary>
         /// Gets or sets a value indicating whether or not to enable diagnostics
         /// </summary>
-        public static bool EnableDiagnostics
+        public static bool EnableRequestTracing
         {
-            get { return enableDiagnostics; }
-            set { enableDiagnostics = value; }
+            get { return enableRequestTracing; }
+            set { enableRequestTracing = value; }
         }
     }
 }

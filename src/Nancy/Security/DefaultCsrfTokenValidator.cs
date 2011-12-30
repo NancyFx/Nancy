@@ -60,5 +60,32 @@ namespace Nancy.Security
 
             return CsrfTokenValidationResult.Ok;
         }
+
+        /// <summary>
+        /// Validates that a cookie token is still valid with the current configuration / keys
+        /// </summary>
+        /// <param name="cookieToken">Token to validate</param>
+        /// <returns>True if valid, false otherwise</returns>
+        public bool CookieTokenStillValid(CsrfToken cookieToken)
+        {
+            if (cookieToken.RandomBytes == null || cookieToken.RandomBytes.Length == 0)
+            {
+                return false;
+            }
+
+            var newToken = new CsrfToken
+            {
+                CreatedDate = cookieToken.CreatedDate,
+                RandomBytes = cookieToken.RandomBytes,
+            };
+            newToken.CreateHmac(this.hmacProvider);
+
+            if (!newToken.Hmac.SequenceEqual(cookieToken.Hmac))
+            {
+                return false;
+            }
+
+            return true;
+        }
     }
 }

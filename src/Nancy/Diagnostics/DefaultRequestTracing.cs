@@ -18,9 +18,9 @@ namespace Nancy.Diagnostics
         }
 
         // TODO - remove above method and return guid from here?
-        public void AddRequestDiagnosticToSession(Guid id, NancyContext context)
+        public void AddRequestDiagnosticToSession(Guid sessionId, NancyContext context)
         {
-            var session = this.sessions.FirstOrDefault(s => s.Id == id);
+            var session = this.sessions.FirstOrDefault(s => s.Id == sessionId);
 
             if (session == null)
             {
@@ -38,6 +38,11 @@ namespace Nancy.Diagnostics
         public void Clear()
         {
             this.sessions.Clear();
+        }
+
+        public bool IsValidSessionId(Guid sessionId)
+        {
+            return this.sessions.Any(s => s.Id == sessionId);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Nancy.Diagnostics
 
         public void WriteLog(Action<StringBuilder> logDelegate)
         {
-            if (!StaticConfiguration.EnableDiagnostics)
+            if (!StaticConfiguration.EnableRequestTracing)
             {
                 return;
             }

@@ -1,6 +1,5 @@
 namespace Nancy.Diagnostics
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -9,11 +8,11 @@ namespace Nancy.Diagnostics
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
     {
-        private readonly TinyIoC.TinyIoCContainer container;
+        private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider)
+        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing)
         {
-            this.container = ConfigureContainer(keyGenerator, providers, rootPathProvider);
+            this.container = ConfigureContainer(keyGenerator, providers, rootPathProvider, requestTracing);
         }
 
         /// <summary>
@@ -37,13 +36,13 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<NancyModule>(moduleKey);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider)
+        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing)
         {
             var diagContainer = new TinyIoCContainer();
 
             diagContainer.Register<IModuleKeyGenerator>(moduleKeyGenerator);
             diagContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>();
-            diagContainer.Register<IRequestTracing, DefaultRequestTracing>();
+            diagContainer.Register<IRequestTracing>(requestTracing);
             diagContainer.Register<IRootPathProvider>(rootPathProvider);
 
             foreach (var diagnosticsProvider in providers)

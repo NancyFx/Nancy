@@ -3,10 +3,13 @@
 @Section['Title']Request Tracing@EndSection
 
 @Section['Header']
-	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/request-tracing.js']"></script>
-
 	<link href="@Path['~/_Nancy/Resources/request-tracing.css']" rel="Stylesheet" />
+
+	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/tracing/sessions.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/tracing/traces.js']"></script>
+
+	<script src="@Path['~/_Nancy/Resources/request-tracing.js']"></script>
 @EndSection
 
 @Section['Page_Title']
@@ -17,7 +20,7 @@
 	<div id="main" class="grid_4">
 	</div>
 
-	<div id="results" class="grid_8">
+	<div id="details" class="grid_8">
 	</div>
 
 	<script id="sessionList" type="text/x-handlebars-template">
@@ -27,7 +30,7 @@
 		{{/if}}
 	</script>
 
-	<script id="requestList" type="text/x-handlebars-template">
+	<script id="traceList" type="text/x-handlebars-template">
 		<a id="back"><< back</a>
 		{{#if collection.length}}
 		  <ul id="root">
@@ -38,13 +41,15 @@
 	</script>
 
 	<script id="session" type="text/x-handlebars-template">
-		<h2>{{model.Id}}</h2>
+		<h3>{{model.Id}}</h3>
 	</script>
 
-	<script id="request" type="text/x-handlebars-template">
+	<script id="trace" type="text/x-handlebars-template">
 		Status: {{model.StatusCode}}<br/>
 		Method: {{model.Method}}<br/>
-		Path: {{model.Url.Path}}<br/>
+		Path: {{model.RequestUrl.Path}}<br/>
+		Request Type: {{model.RequestContentType}}<br/>
+		Response Type: {{model.ResponseContentType}}
 	</script>
 @EndSection
 

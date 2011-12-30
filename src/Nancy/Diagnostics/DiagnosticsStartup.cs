@@ -13,11 +13,14 @@
 
         private readonly IEnumerable<ISerializer> serializers;
 
-        public DiagnosticsStartup(IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
+        private readonly IRequestTracing requestTracing;
+
+        public DiagnosticsStartup(IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing)
         {
             this.diagnosticProviders = diagnosticProviders;
             this.rootPathProvider = rootPathProvider;
             this.serializers = serializers;
+            this.requestTracing = requestTracing;
         }
 
         /// <summary>
@@ -50,7 +53,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers);
+            DiagnosticsHook.Enable(pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing);
         }
     }
 }

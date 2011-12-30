@@ -20,8 +20,8 @@
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
             existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
-            existingContainer.Register<IRequestTracing, DefaultRequestTracing>().AsSingleton();
-            existingContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>().AsSingleton();
+            //existingContainer.Register<IRequestTracing, DefaultRequestTracing>().AsSingleton();
+            //existingContainer.Register<IInteractiveDiagnostics, InteractiveDiagnostics>().AsSingleton();
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)
@@ -35,7 +35,7 @@
         {
             base.ApplicationStartup(container, pipelines);
 
-            StaticConfiguration.EnableDiagnostics = true;
+            StaticConfiguration.EnableRequestTracing = true;
             StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 

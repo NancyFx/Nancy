@@ -7,10 +7,12 @@
     {
         Guid CreateSession();
 
-        void AddRequestDiagnosticToSession(Guid id, NancyContext context);
+        void AddRequestDiagnosticToSession(Guid sessionId, NancyContext context);
 
         IEnumerable<RequestTraceSession> GetSessions();
 
         void Clear();
+
+        bool IsValidSessionId(Guid sessionId);
     }
 }
