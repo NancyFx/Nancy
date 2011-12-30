@@ -9,13 +9,18 @@ namespace Nancy
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
     public class Response
-    {        
+    {
+        /// <summary>
+        /// Null object representing no body    
+        /// </summary>
+        public static Action<Stream> NoBody = s => { };
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Response"/> class.
         /// </summary>
         public Response()
         {
-            this.Contents = GetStringContents(string.Empty);
+            this.Contents = NoBody;
             this.ContentType = "text/html";
             this.Headers = new Dictionary<string, string>();
             this.StatusCode = HttpStatusCode.OK;
