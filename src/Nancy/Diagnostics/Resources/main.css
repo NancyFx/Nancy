@@ -106,7 +106,7 @@ div.item-list
 {
     background: white;
     color: Black;
-    width: 100%;
+    width: 95%;
     padding: 7px;
     margin-bottom: 5px;
     min-height: 100px;
@@ -115,7 +115,6 @@ div.item-list
 
 div.item-list:hover
 {
-    width: 100%;
     padding: 5px;
     border: 2px solid #555555;
 }
