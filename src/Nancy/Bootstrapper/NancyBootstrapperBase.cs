@@ -8,6 +8,7 @@
     using Nancy.ModelBinding;
     using Nancy.Conventions;
     using Nancy.ViewEngines;
+    using Nancy.Validation;
 
     /// <summary>
     /// Nancy bootstrapper base class
@@ -156,6 +157,15 @@
         protected virtual Type RootPathProvider
         {
             get { return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true).FirstOrDefault() ?? typeof(DefaultRootPathProvider); }
+        }
+
+        /// <summary>
+        /// Gets the validator factories.
+        /// </summary>
+        protected virtual IEnumerable<Type> ModelValidatorFactories
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IModelValidatorFactory>(); }
+            //get { return new[] { typeof(DataAnnotationsValidatorFactory) }; }
         }
 
         /// <summary>
@@ -477,9 +487,9 @@
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
                     new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
+                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }
-
 
         /// <summary>
         /// Loads the default favicon from the assembly
