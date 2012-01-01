@@ -60,7 +60,6 @@
     </Compile>
     <Compile Include="DefaultFluentAdapterFactoryFixture.cs" />
     <Compile Include="FluentValidationValidatorFactoryFixture.cs" />
-    <Compile Include="FluentValidationValidatorFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
