@@ -9,20 +9,20 @@
     public class ModelValidationDescriptor
     {
         /// <summary>
-        /// Gets the rules.
-        /// </summary>
-        /// <value>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</value>
-        public IEnumerable<ModelValidationRule> Rules { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ModelValidationDescriptor"/> class.
         /// </summary>
         /// <param name="rules">The rules.</param>
         public ModelValidationDescriptor(IEnumerable<ModelValidationRule> rules)
         {
-            Rules = rules == null
+            this.Rules = rules == null
                 ? new List<ModelValidationRule>().AsReadOnly()
                 : rules.ToList().AsReadOnly();
         }
+
+        /// <summary>
+        /// Gets the rules.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</value>
+        public IEnumerable<ModelValidationRule> Rules { get; private set; }
     }
 }

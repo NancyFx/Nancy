@@ -13,33 +13,19 @@ namespace Nancy.Validation.FluentValidation
     /// </summary>
     public class FluentValidationValidator : IModelValidator
     {
-        private static readonly Dictionary<Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>>
-        {
-            { typeof(EmailValidator), (memberName, propertyValdiator) => new EmailAdapter(memberName, (EmailValidator)propertyValdiator) },
-            { typeof(EqualValidator), (memberName, propertyValidator) => new EqualAdapter(memberName, (EqualValidator)propertyValidator) },
-            { typeof(ExclusiveBetweenValidator), (memberName, propertyValidator) => new ExclusiveBetweenAdapter(memberName, (ExclusiveBetweenValidator)propertyValidator) },
-            { typeof(GreaterThanValidator), (memberName, propertyValidator) => new GreaterThanAdapter(memberName, (GreaterThanValidator)propertyValidator) },
-            { typeof(GreaterThanOrEqualValidator), (memberName, propertyValidator) => new GreaterThanOrEqualAdapter(memberName, (GreaterThanOrEqualValidator)propertyValidator) },
-            { typeof(InclusiveBetweenValidator), (memberName, propertyValidator) => new InclusiveBetweenAdapter(memberName, (InclusiveBetweenValidator)propertyValidator) },
-            { typeof(LengthValidator), (memberName, propertyValidator) => new LengthAdapter(memberName, (LengthValidator)propertyValidator) },
-            { typeof(LessThanValidator), (memberName, propertyValidator) => new LessThanAdapter(memberName, (LessThanValidator)propertyValidator) },
-            { typeof(LessThanOrEqualValidator), (memberName, propertyValidator) => new LessThanOrEqualAdapter(memberName, (LessThanOrEqualValidator)propertyValidator) },
-            { typeof(NotEmptyValidator), (memberName, propertyValidator) => new NotEmptyAdapter(memberName, (NotEmptyValidator)propertyValidator) },
-            { typeof(NotEqualValidator), (memberName, propertyValidator) => new NotEqualAdapter(memberName, (NotEqualValidator)propertyValidator) },
-            { typeof(NotNullValidator), (memberName, propertyValidator) => new NotNullAdapter(memberName, (NotNullValidator)propertyValidator) },
-            { typeof(RegularExpressionValidator), (memberName, propertyValdiator) => new RegexAdapter(memberName, (RegularExpressionValidator)propertyValdiator) },
-        };
-
         private readonly IValidator validator;
+        private readonly IFluentAdapterFactory factory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class for the
         /// specified <see cref="IValidator"/>.
         /// </summary>
         /// <param name="validator">The Fluent Validation validator that should be used.</param>
-        public FluentValidationValidator(IValidator validator)
+        /// <param name="factory"> </param>
+        public FluentValidationValidator(IValidator validator, IFluentAdapterFactory factory)
         {
             this.validator = validator;
+            this.factory = factory;
         }
 
         /// <summary>
@@ -54,7 +40,7 @@ namespace Nancy.Validation.FluentValidation
         /// <summary>
         /// Validates the specified instance.
         /// </summary>
-        /// <param name="instance">The instance.</param>
+        /// <param name="instance">The instance that is being validated.</param>
         /// <returns>A ValidationResult with the result of the validation.</returns>
         public ModelValidationResult Validate(object instance)
         {
@@ -79,14 +65,15 @@ namespace Nancy.Validation.FluentValidation
 
             foreach (var memberWithValidators in membersWithValidators)
             {
-                var fluentRules = fluentDescriptor.GetRulesForMember(memberWithValidators.Key)
+                var fluentRules = fluentDescriptor
+                    .GetRulesForMember(memberWithValidators.Key)
                     .OfType<PropertyRule>();
 
                 foreach (var rule in fluentRules)
                 {
-                    foreach (var validator in rule.Validators)
+                    foreach (var v in rule.Validators)
                     {
-                        rules.AddRange(GetValidationRule(rule, validator));
+                        rules.AddRange(GetValidationRule(rule, v));
                     }
                 }
             }
@@ -94,23 +81,16 @@ namespace Nancy.Validation.FluentValidation
             return new ModelValidationDescriptor(rules);
         }
 
-        private static IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
-        {
-            Func<PropertyRule, IPropertyValidator, IFluentAdapter> factory;
-
-            if (!factories.TryGetValue(propertyValidator.GetType(), out factory))
-            {
-                factory = (a, d) => new FluentAdapter("Custom", rule, propertyValidator);
-            }
-
-            return factory(rule, propertyValidator).GetRules();
-        }
-
         private static IEnumerable<ModelValidationError> GetErrors(ValidationResult results)
         {
             return results.IsValid ? 
                 Enumerable.Empty<ModelValidationError>() :
                 results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, s => error.ErrorMessage));
+        }
+
+        private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
+        {
+            return this.factory.Create(rule, propertyValidator).GetRules();
         }
     }
 }

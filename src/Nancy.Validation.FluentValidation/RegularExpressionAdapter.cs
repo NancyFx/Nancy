@@ -8,15 +8,15 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="IRegularExpressionValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class RegexAdapter : AdapterBase<IRegularExpressionValidator>
+    public class RegularExpressionAdapter : AdapterBase<IRegularExpressionValidator>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RegexAdapter"/> class for the specified
+        /// Initializes a new instance of the <see cref="RegularExpressionAdapter"/> class for the specified
         /// <paramref name="rule"/> and <paramref name="validator"/>.
         /// </summary>
         /// <param name="rule">The fluent validation <see cref="PropertyRule"/> that is being mapped.</param>
         /// <param name="validator">The <see cref="PropertyRule"/> of the rule.</param>
-        public RegexAdapter(PropertyRule rule, IRegularExpressionValidator validator)
+        public RegularExpressionAdapter(PropertyRule rule, IRegularExpressionValidator validator)
             : base(rule, validator)
         {
         }

@@ -10,6 +10,18 @@
     /// </summary>
     public class FluentValidationValidatorFactory : IModelValidatorFactory
     {
+        private readonly IFluentAdapterFactory adapterFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FluentValidationValidatorFactory"/> instance, with the
+        /// provided <see cref="IFluentAdapterFactory"/>.
+        /// </summary>
+        /// <param name="adapterFactory">The factory that should be usdd to create <see cref="IFluentAdapter"/> instances.</param>
+        public FluentValidationValidatorFactory(IFluentAdapterFactory adapterFactory)
+        {
+            this.adapterFactory = adapterFactory;
+        }
+
         /// <summary>
         /// Creates a fluent validation <see cref="IValidator"/> instance for the given type.
         /// </summary>
@@ -31,7 +43,7 @@
             var instance =
                 CreateFluentValidatorInstance(validator);
 
-            return new FluentValidationValidator(instance);
+            return new FluentValidationValidator(instance, adapterFactory);
         }
 
         private static Type GetValidator(Type type)

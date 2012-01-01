@@ -47,6 +47,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AdapterBase.cs" />
+    <Compile Include="DefaultFluentAdapterFactory.cs" />
     <Compile Include="EmailAdapter.cs" />
     <Compile Include="EqualAdapter.cs" />
     <Compile Include="ExactLengthAdapater.cs" />
@@ -57,6 +58,7 @@
     <Compile Include="GreaterThanAdapter.cs" />
     <Compile Include="GreaterThanOrEqualAdapter.cs" />
     <Compile Include="IFluentAdapter.cs" />
+    <Compile Include="IFluentAdapterFactory.cs" />
     <Compile Include="InclusiveBetweenAdapter.cs" />
     <Compile Include="LengthAdapter.cs" />
     <Compile Include="LessThanAdapter.cs" />
@@ -64,7 +66,7 @@
     <Compile Include="NotEmptyAdapter.cs" />
     <Compile Include="NotEqualAdapter.cs" />
     <Compile Include="NotNullAdapter.cs" />
-    <Compile Include="RegexAdapter.cs" />
+    <Compile Include="RegularExpressionAdapter.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
