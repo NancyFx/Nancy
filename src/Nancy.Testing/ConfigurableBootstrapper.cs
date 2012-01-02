@@ -13,6 +13,7 @@ namespace Nancy.Testing
     using Nancy.ViewEngines;
 
     using TinyIoC;
+    using Nancy.Validation;
 
     /// <summary>
     /// A Nancy boostrapper that can be configured with either Type or Instance overrides for all Nancy types.
@@ -815,6 +816,30 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator RouteResolver<T>() where T : IRouteResolver
             {
                 this.bootstrapper.configuration.RouteResolver = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IModelValidatorLocator"/>.
+            /// </summary>
+            /// <param name="modelValidatorLocator">The <see cref="IModelValidatorLocator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ModelValidatorLocator(IModelValidatorLocator modelValidatorLocator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IModelValidatorLocator), modelValidatorLocator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IModelValidatorLocator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IModelValidatorLocator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ModelValidatorLocator<T>() where T : IModelValidatorLocator
+            {
+                this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
                 return this;
             }
 

@@ -1,0 +1,25 @@
+﻿<viewdata model="Nancy.Demo.Validation.Models.Customer[]"/>
+<html>
+  <head>
+    <title>Customers</title>
+  </head>
+  <body>
+    <h1>Customers</h1>
+    <p>Customer is added twice, one using the dynamic binder adapter, the other using the generic one.</p>
+    <p>Current customers:</p>
+    <ul>
+      <li each="var v in Model">
+        <a href="customer/${v.Id}"> ${v.Name} - ${v.RenewalDate.ToShortDateString()} </a>
+      </li>
+    </ul>
+
+    <h2>Add another</h2>
+    <form method="POST" action="/customers">
+      <label for="Name">Name</label>
+      <input type="text" name="Name" />
+      <label for="Location">Renewal Date</label>
+      <input type="text" name="RenewalDate" />
+      <input type="submit"/>
+    </form>
+  </body>
+</html>
