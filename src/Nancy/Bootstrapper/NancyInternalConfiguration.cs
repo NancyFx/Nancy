@@ -176,7 +176,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
-                new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator)
+                new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
                 new TypeRegistration(typeof(IRequestTracing), this.RequestTracing), 
             };
         }
