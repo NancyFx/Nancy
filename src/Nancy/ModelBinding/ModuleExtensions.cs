@@ -22,7 +22,7 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model instance</returns>
         public static TModel Bind<TModel>(this NancyModule module, params string[] blacklistedProperties)
         {
-            return (TModel)module.Bind(blacklistedProperties);
+            return module.Bind(blacklistedProperties);
         }
     }
 }
