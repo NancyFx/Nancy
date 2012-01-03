@@ -35,6 +35,10 @@
         /// <remarks>This is a <see cref="HttpMultiparSubStream"/> instance that sits ontop of the request stream.</remarks>
         public Stream Value { get; private set; }
 
+		/// <summary>
+		/// Gets or sets the form element name of this file
+		/// </summary>
+		/// <Key>A <see cref="string"/> containg the key</Key>
 		public string Key { get; private set; }
     }
 }
