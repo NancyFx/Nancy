@@ -180,23 +180,6 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
-        public void Should_return_empty_action_when_view_could_not_be_located()
-        {
-            var factory = this.CreateFactory();
-
-            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
-
-            var response = factory.RenderView("foo", null, new ViewLocationContext());
-            var stream = new MemoryStream();
-
-            // When
-            response.Contents.Invoke(stream);
-
-            // Then
-            stream.Length.ShouldEqual(0L);
-        }
-
-        [Fact]
         public void Should_call_first_view_engine_that_supports_extension_with_view_location_results()
         {
             // Given
@@ -401,6 +384,18 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => this.resolver.GetViewLocation("View", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_throw_when_view_could_not_be_located()
+        {
+            var factory = this.CreateFactory();
+
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
+
+            var result = Record.Exception(() => factory.RenderView("foo", null, new ViewLocationContext()));
+
+            result.ShouldBeOfType<ViewNotFoundException>();
         }
 
         private static Func<TextReader> GetEmptyContentReader()

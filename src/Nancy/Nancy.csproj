@@ -299,6 +299,7 @@
     <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\ViewNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="favicon.ico" />
