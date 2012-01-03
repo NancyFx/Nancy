@@ -168,6 +168,8 @@ namespace Nancy.Demo.Hosting.Aspnet
 
                     return string.Format("Hello {0}!", Request.Form.Name);
                 };
+
+            Get["/viewNotFound"] = _ => View["I-do-not-exist"];
         }
     }
 }
