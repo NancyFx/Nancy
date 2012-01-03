@@ -16,6 +16,7 @@
         private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IRenderContextFactory renderContextFactory;
         private static readonly Action<Stream> EmptyView = x => { };
+        private readonly string[] viewEngineExtensions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewFactory"/> class.
@@ -28,6 +29,8 @@
             this.viewResolver = viewResolver;
             this.viewEngines = viewEngines;
             this.renderContextFactory = renderContextFactory;
+
+            this.viewEngineExtensions = this.viewEngines.SelectMany(ive => ive.Extensions).ToArray();
         }
 
         /// <summary>
@@ -70,7 +73,7 @@
 
             if (resolvedViewEngine == null)
             {
-                return EmptyView;
+                throw new ViewNotFoundException(viewName, this.viewEngineExtensions);
             }
 
             return SafeInvokeViewEngine(

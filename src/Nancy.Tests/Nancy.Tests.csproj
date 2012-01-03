@@ -208,6 +208,7 @@
     <Compile Include="Unit\ViewEngines\DefaultViewLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewResolverFixture.cs" />
     <Compile Include="Unit\ViewEngines\SuperSimpleViewEngineTests.cs" />
+    <Compile Include="Unit\ViewEngines\ViewNotFoundExceptionFixture.cs" />
     <Compile Include="Unit\XmlFormatterExtensionsFixtures.cs" />
     <Compile Include="xUnitExtensions\SkipException.cs" />
     <Compile Include="xUnitExtensions\SkippableFactAttribute.cs" />
