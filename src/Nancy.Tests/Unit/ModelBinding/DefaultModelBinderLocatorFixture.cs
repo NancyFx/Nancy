@@ -5,6 +5,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using FakeItEasy;
 
     using Nancy.ModelBinding;
+    using Nancy.Tests.Fakes;
 
     using Xunit;
 
@@ -62,6 +63,65 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = locator.GetBinderForType(typeof(Model));
 
             result.ShouldBeSameAs(fakeBinder);
+        }
+
+        [Fact]
+        public void Should_be_able_to_bind_interfaces()
+        {
+            var binder = new InterfaceModelBinder();
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
+            var locatedBinder = locator.GetBinderForType(typeof(Concrete));
+
+            var result = locatedBinder.Bind(null, typeof(Concrete)) as IAmAnInterface;
+
+            result.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_be_able_to_bind_interfaces_using_module_extensions()
+        {
+            var binder = new InterfaceModelBinder();
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
+            var module = new TestBindingModule();
+            module.Context = new NancyContext() { Request =  new FakeRequest("GET", "/") };
+            module.ModelBinderLocator = locator;
+
+            var result = module.TestBind() as IAmAnInterface;
+
+            result.ShouldNotBeNull();
+        }
+
+        private class TestBindingModule : NancyModule
+        {
+            public object TestBind()
+            {
+                var result = this.Bind<IAmAnInterface>();
+
+                return result;
+            }
+        }
+
+        interface IAmAnInterface
+        {
+             
+        }
+
+        class Concrete : IAmAnInterface
+        {
+             
+        }
+
+        class InterfaceModelBinder : IModelBinder
+        {
+            public object Bind(NancyContext context, Type modelType, params string[] blackList)
+            {
+                return new Concrete() as IAmAnInterface;
+            }
+
+            public bool CanBind(Type modelType)
+            {
+                return typeof(IAmAnInterface).IsAssignableFrom(modelType);
+            }
         }
     }
 }
