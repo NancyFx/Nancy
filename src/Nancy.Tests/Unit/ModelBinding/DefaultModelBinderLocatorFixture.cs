@@ -86,16 +86,25 @@ namespace Nancy.Tests.Unit.ModelBinding
             module.Context = new NancyContext() { Request =  new FakeRequest("GET", "/") };
             module.ModelBinderLocator = locator;
 
-            var result = module.TestBind() as IAmAnInterface;
+            var result = module.TestBindInterface();
+            var result2 = module.TestBindConcrete();
 
             result.ShouldNotBeNull();
+            result2.ShouldNotBeNull();
         }
 
         private class TestBindingModule : NancyModule
         {
-            public object TestBind()
+            public IAmAnInterface TestBindInterface()
             {
                 var result = this.Bind<IAmAnInterface>();
+
+                return result;
+            }
+
+            public IAmAnInterface TestBindConcrete()
+            {
+                var result = this.Bind<Concrete>();
 
                 return result;
             }
