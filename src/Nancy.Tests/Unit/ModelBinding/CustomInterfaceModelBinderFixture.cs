@@ -86,6 +86,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 		[Fact]
 		public void generic_bindmethod_for_interfaces_should_work()
 		{
+			// generic method
 			var instance = _myModule.UseGenericBinderMethod();
 			object_is_myimplementation_type(instance);
 		}
