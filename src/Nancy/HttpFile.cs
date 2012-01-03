@@ -7,11 +7,12 @@
     /// </summary>
     public class HttpFile
     {
-        public HttpFile(string contentType, string name, Stream value)
+        public HttpFile(string contentType, string name, Stream value, string key)
         {
             this.ContentType = contentType;
             this.Name = name;
             this.Value = value;
+        	this.Key = key;
         }
 
         /// <summary>
@@ -33,5 +34,7 @@
         /// <value>A <see cref="Stream"/> containing the contents of the file.</value>
         /// <remarks>This is a <see cref="HttpMultiparSubStream"/> instance that sits ontop of the request stream.</remarks>
         public Stream Value { get; private set; }
+
+		public string Key { get; private set; }
     }
 }
