@@ -398,6 +398,24 @@ namespace Nancy.Tests.Unit.ViewEngines
             result.ShouldBeOfType<ViewNotFoundException>();
         }
 
+        [Fact]
+        public void Should_provide_view_name_and_available_extensions_in_not_found_exception()
+        {
+            var viewEngines = new[] {
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
+            };
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "sshtml" });
+            var factory = this.CreateFactory(viewEngines);
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
+
+            var result = Record.Exception(() => factory.RenderView("foo", null, new ViewLocationContext())) as ViewNotFoundException;
+
+            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
+            result.ViewName.ShouldEqual("foo");
+        }
+
         private static Func<TextReader> GetEmptyContentReader()
         {
             return () => new StreamReader(new MemoryStream());
