@@ -144,7 +144,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            factory.RenderView("viewname.html", null, new ViewLocationContext());
+            Record.Exception(() => factory.RenderView("viewname.html", null, new ViewLocationContext()));
 
             // Then)
             A.CallTo(() => this.resolver.GetViewLocation("viewname.html", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -158,7 +158,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var model = new object();
 
             // When
-            factory.RenderView(null, model, new ViewLocationContext());
+            Record.Exception(() => factory.RenderView(null, model, new ViewLocationContext()));
 
             // Then)
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, model, A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var viewLocationContext = new ViewLocationContext { ModulePath = "/bar" };
 
             // When
-            factory.RenderView(null, model, viewLocationContext);
+            Record.Exception(() => factory.RenderView(null, model, viewLocationContext));
 
             // Then)
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.That.Matches(x => x.ModulePath.Equals("/bar")))).MustHaveHappened();
@@ -223,24 +223,6 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored)).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_return_empty_action_when_no_view_engine_could_be_resolved()
-        {
-            // Given
-            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
-            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
-
-            var stream = new MemoryStream();
-            var factory = this.CreateFactory();
-
-            // When
-            var response = factory.RenderView("foo", null, new ViewLocationContext());
-            response.Contents.Invoke(stream);
-
-            // Then
-            stream.Length.ShouldEqual(0L);
         }
 
         [Fact]
@@ -367,7 +349,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            factory.RenderView(null, new object(), new ViewLocationContext());
+            Record.Exception(() => factory.RenderView(null, new object(), new ViewLocationContext()));
 
             // Then
             A.CallTo(() => this.resolver.GetViewLocation("Object", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -380,7 +362,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            factory.RenderView(null, new ViewModel(), new ViewLocationContext());
+            Record.Exception(() => factory.RenderView(null, new ViewModel(), new ViewLocationContext()));
 
             // Then
             A.CallTo(() => this.resolver.GetViewLocation("View", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
