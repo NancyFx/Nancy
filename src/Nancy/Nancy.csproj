@@ -90,9 +90,10 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
+    <Compile Include="Bootstrapper\IApplicationStartup.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
-    <Compile Include="Bootstrapper\IStartup.cs" />
+    <Compile Include="Bootstrapper\IRequestStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />

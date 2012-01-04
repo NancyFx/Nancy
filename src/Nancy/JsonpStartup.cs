@@ -8,7 +8,7 @@ using System.IO;
 
 namespace Nancy
 {
-    public class JsonpStartup : IStartup
+    public class JsonpStartup : IApplicationStartup
     {
         public IEnumerable<TypeRegistration> TypeRegistrations
         {

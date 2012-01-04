@@ -9,7 +9,7 @@ namespace Nancy
     /// <summary>
     /// Registers the static contents hook in the application pipeline at startup.
     /// </summary>
-    public class StaticContentStartup : IStartup
+    public class StaticContentStartup : IApplicationStartup
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly StaticContentsConventions conventions;

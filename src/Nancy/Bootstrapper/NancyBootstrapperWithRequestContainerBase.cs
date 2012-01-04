@@ -1,6 +1,7 @@
 namespace Nancy.Bootstrapper
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Nancy bootstrapper base with per-request container support.
@@ -70,6 +71,26 @@ namespace Nancy.Bootstrapper
 
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
+
+            foreach (var startupTask in this.GetRequestStartupTasks(requestContainer).ToList())
+            {
+                startupTask.Initialize(requestPipelines);
+
+                if (startupTask.TypeRegistrations != null)
+                {
+                    this.RegisterTypes(requestContainer, startupTask.TypeRegistrations);
+                }
+
+                if (startupTask.CollectionTypeRegistrations != null)
+                {
+                    this.RegisterCollectionTypes(requestContainer, startupTask.CollectionTypeRegistrations);
+                }
+
+                if (startupTask.InstanceRegistrations != null)
+                {
+                    this.RegisterInstances(requestContainer, startupTask.InstanceRegistrations);
+                }
+            }
             
             this.RequestStartup(requestContainer, requestPipelines, context);
 

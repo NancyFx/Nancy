@@ -11,7 +11,7 @@
     using Nancy.Cookies;
     using Nancy.Helpers;
 
-    public class CsrfStartup : IStartup
+    public class CsrfStartup : IApplicationStartup
     {
         public CsrfStartup(CryptographyConfiguration cryptographyConfiguration, IObjectSerializer objectSerializer, ICsrfTokenValidator tokenValidator)
         {
