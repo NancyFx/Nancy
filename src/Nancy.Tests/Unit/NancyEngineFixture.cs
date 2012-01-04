@@ -580,5 +580,111 @@ namespace Nancy.Tests.Unit
             Assert.Equal(result, handledContext);
             Assert.Equal(result.Response, errorResponse);
         }
+
+        [Fact]
+        public void Should_add_unhandled_exception_to_context_as_requestexecutionexception()
+        {
+            // Given
+            var routeUnderTest =
+                new Route("GET", "/", null, x => { throw new Exception(); });
+
+            var resolved =
+                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(resolved);
+
+            var pipelines = new Pipelines();
+            pipelines.OnError.AddItemToStartOfPipeline((ctx, exception) => null);
+            engine.RequestPipelinesFactory = (ctx) => pipelines;
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Items.Keys.Contains("ERROR_EXCEPTION").ShouldBeTrue();
+            result.Items["ERROR_EXCEPTION"].ShouldBeOfType<RequestExecutionException>();
+        }
+
+        [Fact]
+        public void Should_persist_original_exception_in_requestexecutionexception()
+        {
+            // Given
+            var expectedException = new Exception();
+
+            var routeUnderTest =
+                new Route("GET", "/", null, x => { throw expectedException; });
+
+            var resolved =
+                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(resolved);
+
+            var pipelines = new Pipelines();
+            pipelines.OnError.AddItemToStartOfPipeline((ctx, exception) => null);
+            engine.RequestPipelinesFactory = (ctx) => pipelines;
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+            var returnedException = result.Items["ERROR_EXCEPTION"] as RequestExecutionException;
+
+            // Then
+            returnedException.InnerException.ShouldBeSameAs(expectedException);
+        }
+
+        [Fact]
+        public void Should_add_requestexecutionexception_to_context_when_pipeline_is_null()
+        {
+            // Given
+            var routeUnderTest =
+                new Route("GET", "/", null, x => { throw new Exception(); });
+
+            var resolved =
+                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(resolved);
+
+            var pipelines = new Pipelines {OnError = null};
+            engine.RequestPipelinesFactory = (ctx) => pipelines;
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Items.Keys.Contains("ERROR_EXCEPTION").ShouldBeTrue();
+            result.Items["ERROR_EXCEPTION"].ShouldBeOfType<RequestExecutionException>();
+        }
+
+        [Fact]
+        public void Should_persist_original_exception_in_requestexecutionexception_when_pipeline_is_null()
+        {
+            // Given
+            var expectedException = new Exception();
+
+            var routeUnderTest =
+                new Route("GET", "/", null, x => { throw expectedException; });
+
+            var resolved =
+                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored, A<IRouteCache>.Ignored)).Returns(resolved);
+
+            var pipelines = new Pipelines { OnError = null };
+            engine.RequestPipelinesFactory = (ctx) => pipelines;
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+            var returnedException = result.Items["ERROR_EXCEPTION"] as RequestExecutionException;
+
+            // Then
+            returnedException.InnerException.ShouldBeSameAs(expectedException);
+        }
     }
 }
