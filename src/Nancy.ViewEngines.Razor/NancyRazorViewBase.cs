@@ -2,15 +2,17 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Text;
-    using System.Web;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Base class for nancy razor views.
     /// </summary>
     public abstract class NancyRazorViewBase
     {
-        private StringBuilder contents;
+        private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
 
@@ -102,7 +104,7 @@
         /// <param name="value">The value.</param>
         public virtual void Write(object value)
         {
-            WriteLiteral(HttpUtility.HtmlEncode(value));
+            WriteLiteral(HtmlEncode(value));
         }
 
         /// <summary>
@@ -194,6 +196,23 @@
                 section.Value.Invoke();
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
+        }
+
+        /// <summary>
+        /// Html encodes an object if required
+        /// </summary>
+        /// <param name="value">Object to potentially encode</param>
+        /// <returns>String representation, encoded if necessary</returns>
+        private static string HtmlEncode(object value)
+        {
+            if (value == null)
+            {
+                return null;
+            }
+
+            var str = value as IHtmlString;
+
+            return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
         }
     }
 

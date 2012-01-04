@@ -1,7 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
-    using System.Collections.Generic;
     using System.CodeDom.Compiler;
+    using System.Collections.Generic;
     using System.Web.Razor;
 
     /// <summary>

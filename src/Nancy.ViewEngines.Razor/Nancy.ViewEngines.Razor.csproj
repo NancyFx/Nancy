@@ -12,6 +12,7 @@
     <AssemblyName>Nancy.ViewEngines.Razor</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -70,8 +71,6 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Web">
-    </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
@@ -96,6 +95,7 @@
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlHelpers.cs" />
+    <Compile Include="IHtmlString.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="ModelSpan.cs" />
