@@ -1,7 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
-    using System.Web;
-
     /// <summary>
     /// An html string that is not encoded.
     /// </summary>

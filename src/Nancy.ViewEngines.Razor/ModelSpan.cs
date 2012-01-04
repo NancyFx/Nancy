@@ -1,9 +1,9 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
     using System;
+    using System.Web.Razor.Parser;
     using System.Web.Razor.Parser.SyntaxTree;
     using System.Web.Razor.Text;
-    using System.Web.Razor.Parser;
 
     /// <summary>
     /// A special codespan for the model keyword.
