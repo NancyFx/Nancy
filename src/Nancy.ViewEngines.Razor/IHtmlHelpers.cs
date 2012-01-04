@@ -1,7 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
-    using System.Web;
-
     /// <summary>
     /// Defines the functionality of a html helper
     /// </summary>

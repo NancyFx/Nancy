@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Web;
 
     /// <summary>
     /// Helpers to generate html content.

@@ -6,9 +6,9 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Web;
     using System.Web.Razor;
-    using Responses;
+
+    using Nancy.Responses;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -110,7 +110,6 @@
         {
             engineHost.NamespaceImports.Add("System");
             engineHost.NamespaceImports.Add("System.IO");
-            engineHost.NamespaceImports.Add("System.Web");
 
             if (this.razorConfiguration != null)
             {

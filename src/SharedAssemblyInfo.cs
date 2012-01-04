@@ -1,5 +1,5 @@
 using System.Reflection;
-using System.Runtime.InteropServices;
+
 [assembly: AssemblyTitle("Nancy")]
 [assembly: AssemblyDescription("A Sinatra inspired web framework for the .NET platform")]
 [assembly: AssemblyCompany("Nancy")]
