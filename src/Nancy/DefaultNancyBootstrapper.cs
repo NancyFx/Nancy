@@ -142,7 +142,8 @@
         /// </summary>
         /// <param name="container">Request container instance</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances. </returns>
-        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(TinyIoCContainer container) {
+        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(TinyIoCContainer container)
+        {
             return container.ResolveAll<IRequestStartup>(false);
         }
 
