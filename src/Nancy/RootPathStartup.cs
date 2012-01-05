@@ -8,7 +8,7 @@ namespace Nancy
     /// Assigns the root path of the application whom ever needs it.
     /// </summary>
     /// <remarks>This task is run at application startup.</remarks>
-    public class RootPathStartup : IStartup
+    public class RootPathStartup : IApplicationStartup
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RootPathStartup"/> class.

@@ -144,11 +144,19 @@
         }
 
         /// <summary>
-        /// Gets all startup tasks
+        /// Gets all application startup tasks
         /// </summary>
-        protected virtual IEnumerable<Type> StartupTasks
+        protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IStartup>(); }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationStartup>(); }
+        }
+
+        /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestStartupTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
         }
 
         /// <summary>
@@ -226,7 +234,7 @@
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 
-            foreach (var startupTask in this.GetStartupTasks().ToList())
+            foreach (var startupTask in this.GetApplicationStartupTasks().ToList())
             {
                 startupTask.Initialize(this.ApplicationPipelines);
 
@@ -279,10 +287,17 @@
         }
 
         /// <summary>
-        /// Gets all registered startup tasks
+        /// Gets all registered application startup tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
-        protected abstract IEnumerable<IStartup> GetStartupTasks();
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
+        protected abstract IEnumerable<IApplicationStartup> GetApplicationStartupTasks();
+
+        /// <summary>
+        /// Gets all registered request startup tasks
+        /// </summary>
+        /// <param name="container">Request container instance</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances. </returns>
+        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks(TContainer container);
 
         /// <summary>
         /// Get all NancyModule implementation instances
@@ -345,6 +360,26 @@
         {
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
+
+            foreach (var startupTask in this.GetRequestStartupTasks(this.ApplicationContainer).ToList())
+            {
+                startupTask.Initialize(this.ApplicationPipelines);
+
+                if (startupTask.TypeRegistrations != null)
+                {
+                    this.RegisterTypes(this.ApplicationContainer, startupTask.TypeRegistrations);
+                }
+
+                if (startupTask.CollectionTypeRegistrations != null)
+                {
+                    this.RegisterCollectionTypes(this.ApplicationContainer, startupTask.CollectionTypeRegistrations);
+                }
+
+                if (startupTask.InstanceRegistrations != null)
+                {
+                    this.RegisterInstances(this.ApplicationContainer, startupTask.InstanceRegistrations);
+                }
+            }
 
             this.RequestStartup(this.ApplicationContainer, requestPipelines, context);
 
@@ -486,7 +521,8 @@
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
+                    new CollectionTypeRegistration(typeof(IRequestStartup), this.RequestStartupTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }

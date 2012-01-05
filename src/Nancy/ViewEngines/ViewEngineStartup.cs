@@ -4,7 +4,7 @@ namespace Nancy.ViewEngines
     using System.Linq;
     using Nancy.Bootstrapper;
 
-    public class ViewEngineStartup : IStartup
+    public class ViewEngineStartup : IApplicationStartup
     {
         private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IViewLocationCache viewLocationCache;
