@@ -226,7 +226,8 @@ namespace Nancy
                     this.files.Add(new HttpFile(
                                        httpMultipartBoundary.ContentType,
                                        httpMultipartBoundary.Filename,
-                                       httpMultipartBoundary.Value
+                                       httpMultipartBoundary.Value,
+									   httpMultipartBoundary.Name //include the form field that posted this file
                                        ));
                 }
             }
