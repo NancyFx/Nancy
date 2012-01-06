@@ -78,21 +78,21 @@ namespace Nancy
         {
             return this.Scheme + "://" + 
                 GetHostName(this.HostName) + 
-                GetPort(this.Port) + "/" +
+                GetPort(this.Port) +
                 GetCorrectPath(this.BasePath) +
-                GetCorrectPath(this.Path);
+                GetCorrectPath(this.Path) +
+                this.Query +
+                GetFragment(this.Fragment);
+        }
+
+        private static string GetFragment(string fragment)
+        {
+            return (string.IsNullOrEmpty(fragment)) ? string.Empty : string.Concat("#", fragment);
         }
 
         private static string GetCorrectPath(string path)
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                return string.Empty;
-            }
-
-            return (path.Equals("/")) ?
-                string.Empty :
-                string.Concat(path.TrimStart(new[] {'/'}), "/");
+            return (string.IsNullOrEmpty(path) || path.Equals("/")) ? string.Empty : path;
         }
 
         //private static string GetBasePath(string path)
