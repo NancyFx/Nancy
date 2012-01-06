@@ -222,23 +222,51 @@
             var modelFinder = new ModelFinder();
             block.Accept(modelFinder);
 
-            if (string.IsNullOrWhiteSpace(modelFinder.ModelTypeName) || passedModelType == typeof(object))
+            if (string.IsNullOrWhiteSpace(modelFinder.ModelTypeName))
             {
-                return passedModelType;
+                return passedModelType ?? typeof(object);
             }
 
-            Type current = passedModelType;
-            while (current != typeof(object))
+            Type modelType;
+
+            if (passedModelType != null)
             {
-                if (current.FullName == modelFinder.ModelTypeName || current.Name == modelFinder.ModelTypeName)
+                modelType = passedModelType;
+                while (modelType != null)
                 {
-                    return current;
+                    if (modelType.FullName == modelFinder.ModelTypeName || modelType.Name == modelFinder.ModelTypeName)
+                    {
+                        return modelType;
+                    }
+
+                    modelType = modelType.BaseType;
                 }
 
-                current = current.BaseType;
+                throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}.  Ensure that the model passed to the view is assignable to the model declared in the view.", modelFinder.ModelTypeName));
             }
 
-            throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}.  Ensure that the model passed to the view is assignable to the model declared in the view.  Also, try using a fully qualified type name and also ensure that the assembly is added to the configuration file.", modelFinder.ModelTypeName));
+            modelType = Type.GetType(modelFinder.ModelTypeName);
+
+            if (modelType != null)
+            {
+                return modelType;
+            }
+
+            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName == modelFinder.ModelTypeName).FirstOrDefault();
+
+            if (modelType != null)
+            {
+                return modelType;
+            }
+
+            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.Name == modelFinder.ModelTypeName).FirstOrDefault();
+
+            if (modelType != null)
+            {
+                return modelType;
+            }
+
+            throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}. Try using a fully qualified type name and ensure that the assembly is added to the configuration file.", modelFinder.ModelTypeName));
         }
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
@@ -276,7 +304,7 @@
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = model == null ? typeof(object) : model.GetType();
+            var modelType = model == null ? null : model.GetType();
             var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
             view.Initialize(this, renderContext, model);
             return view;

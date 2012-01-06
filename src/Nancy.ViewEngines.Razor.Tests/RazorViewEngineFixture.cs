@@ -178,6 +178,34 @@
         }
 
         [Fact]
+        public void RenderView_csharp_should_be_able_to_find_the_model_when_a_null_model_is_passed()
+        {
+            // Given
+            var view = new StringBuilder()
+                .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
+                .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
+                .Append("<h1>Mr. Somebody likes @hobby.Name!</h1>");
+
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            A.CallTo(() => this.configuration.AutoIncludeModelNamespace).Returns(true);
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Mr. Somebody likes Music!</h1>");
+        }
+
+        [Fact]
         public void RenderView_csharp_should_include_namespace_of_model_if_specified_in_the_configuration()
         {
             // Given
