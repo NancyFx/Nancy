@@ -178,6 +178,35 @@
         }
 
         [Fact]
+        public void RenderView_csharp_should_be_able_to_use_a_using_statement()
+        {
+            var view = new StringBuilder()
+                .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
+                .AppendLine("@using Nancy.ViewEngines.Razor.Tests.Models")
+                .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
+                .Append("<h1>Mr. @Model.Name likes @hobby.Name!</h1>");
+
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            var model = new Person { Name = "Jeff" };
+
+            // When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>");
+        }
+
+        [Fact]
         public void RenderView_csharp_should_be_able_to_find_the_model_when_a_null_model_is_passed()
         {
             // Given
