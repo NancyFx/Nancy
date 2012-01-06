@@ -7,6 +7,8 @@
     using FakeItEasy;
     using Nancy.Tests;
     using Xunit;
+    using System.Text;
+    using Nancy.ViewEngines.Razor.Tests.Models;
 
     public class RazorViewEngineFixture
     {
@@ -146,6 +148,63 @@
 
             // Then
             stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
+        }
+
+        [Fact]
+        public void RenderView_csharp_should_be_able_to_use_a_model_from_another_assembly()
+        {
+            var view = new StringBuilder()
+                .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
+                .Append("<h1>Hello Mr. @Model.Name</h1>");
+
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            var model = new Person { Name = "Jeff" };
+
+            // When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. Jeff</h1>");
+        }
+
+        [Fact]
+        public void RenderView_csharp_should_include_namespace_of_model_if_specified_in_the_configuration()
+        {
+            // Given
+            var view = new StringBuilder()
+                .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
+                .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
+                .Append("<h1>Mr. @Model.Name likes @hobby.Name!</h1>");
+
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            var model = new Person { Name = "Jeff" };
+
+            A.CallTo(() => this.configuration.AutoIncludeModelNamespace).Returns(true);
+
+            // When
+            var response = this.engine.RenderView(location, model, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>");
         }
 
         [Fact]
