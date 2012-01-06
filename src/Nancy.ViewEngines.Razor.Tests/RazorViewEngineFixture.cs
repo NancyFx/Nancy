@@ -4,10 +4,10 @@
     using System.Dynamic;
     using System.IO;
     using System.Linq;
-    using FakeItEasy;
-    using Nancy.Tests;
-    using Xunit;
     using System.Text;
+    using FakeItEasy;
+    using Xunit;
+    using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
 
     public class RazorViewEngineFixture

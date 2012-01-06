@@ -1,17 +1,17 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
     using System;
+    using System.CodeDom;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Web.Razor;
-
-    using Nancy.Responses;
-    using System.CodeDom;
-    using Nancy.Bootstrapper;
     using System.Web.Razor.Parser.SyntaxTree;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Responses;
 
     /// <summary>
     /// View engine for rendering razor views.
