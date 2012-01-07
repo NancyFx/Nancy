@@ -13,8 +13,8 @@
     /// </summary>
     public class NancyEngine : INancyEngine
     {
-        internal const string ERROR_KEY = "ERROR_TRACE";
-        internal const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
+        public const string ERROR_KEY = "ERROR_TRACE";
+        public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;

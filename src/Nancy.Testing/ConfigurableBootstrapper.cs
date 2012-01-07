@@ -48,6 +48,8 @@ namespace Nancy.Testing
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
+                configurator.ErrorHandler<PassThroughErrorHandler>();
+
                 configuration.Invoke(configurator);
             }
         }

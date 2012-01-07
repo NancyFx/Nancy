@@ -109,6 +109,24 @@
             }
         }
 
+        [Fact]
+        public void Should_throw_exceptions_if_any_occur_in_route()
+        {
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+                {
+                    with.Module<BlowUpModule>();
+                });
+            bootstrapper.Initialise();
+            var engine = bootstrapper.GetEngine();
+            var request = new Request("GET", "/", "http");
+
+            var result = Record.Exception(() => engine.HandleRequest(request));
+
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<Exception>();
+            result.ToString().ShouldContain("Oh noes!");
+        }
+
         public IEnumerable<string> GetConfigurableBootstrapperMembers()
         {
             var ignoreList = new[]
@@ -144,6 +162,14 @@
             public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
             {
                 throw new NotImplementedException();
+            }
+        }
+
+        private class BlowUpModule : NancyModule
+        {
+            public BlowUpModule()
+            {
+                Get["/"] = _ => { throw new InvalidOperationException("Oh noes!"); };
             }
         }
     }
