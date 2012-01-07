@@ -44,13 +44,6 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_enclose_ipv6_hostname_in_square_brackets_when_converted_to_string()
         {
-            // Horrible hack to hopefully stop the test failing
-            // on machines without ipv6 enabled
-            if (!this.IPv6Enabled())
-            {
-                return;
-            }
-
             // Given
             this.url.Scheme = "https";
             this.url.HostName = "::1";
@@ -59,7 +52,8 @@ namespace Nancy.Tests.Unit
             var result = this.url.ToString();
 
             // Then
-            result.ShouldEndWith("https://[::1]");
+            result.ShouldStartWith("https://[");
+            result.ShouldEndWith("]");
         }
 
         [Fact]
@@ -176,13 +170,6 @@ namespace Nancy.Tests.Unit
 
             // Then
             result.ShouldEndWith("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
-        }
-
-        private bool IPv6Enabled()
-        {
-            IPAddress address;
-
-            return IPAddress.TryParse("::1", out address);
         }
     }
 }
