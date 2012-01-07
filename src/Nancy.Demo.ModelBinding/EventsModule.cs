@@ -13,10 +13,14 @@ namespace Nancy.Demo.ModelBinding
             Get["/"] = x =>
                 { 
                     var model = DB.Events.OrderBy(e => e.Time).ToArray();
-
                     return View["Events", model];
                 };
 
+            Get[@"/(?<eventID>[\d]+)"] = x =>
+            {
+                var model = DB.Events.OrderBy(e => e.Id == x.eventID).ToArray();
+                return View["Events", model];
+            };
             Post["/"] = x =>
                 {
                     Event model = this.Bind();
