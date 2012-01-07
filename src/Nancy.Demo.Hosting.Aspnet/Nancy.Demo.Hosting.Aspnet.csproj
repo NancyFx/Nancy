@@ -167,6 +167,7 @@
   <ItemGroup>
     <Content Include="Views\someview.cshtml" />
     <Content Include="Views\razor-layout.cshtml" />
+    <None Include="ClassDiagram1.cd" />
     <None Include="Views\anon.spark" />
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
