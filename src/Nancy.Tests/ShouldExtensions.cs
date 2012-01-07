@@ -9,6 +9,16 @@
 
     public static class ShouldAssertExtensions
     {
+        public static void ShouldStartWith(this string actual, string expected)
+        {
+            Assert.True(actual.StartsWith(expected));
+        }
+
+        public static void ShouldEndWith(this string actual, string expected)
+        {
+            Assert.True(actual.EndsWith(expected));
+        }
+
         public static void ShouldMatch<T>(this T actual, Func<T, bool> condition)
         {
             Assert.True(condition.Invoke(actual));
