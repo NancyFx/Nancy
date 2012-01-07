@@ -86,5 +86,17 @@
             cookieValue.ShouldNotBeEmpty();
             cookieValue.ShouldEqual(contextValue);
         }
+
+        [Fact]
+        public void Should_be_able_to_disable_csrf()
+        {
+            var context = new NancyContext { Request = this.request, Response = this.response };
+            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "TestingToken";
+
+            Csrf.Disable(this.pipelines);
+            this.pipelines.AfterRequest.Invoke(context);
+
+            this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
+        }
     }
 }
