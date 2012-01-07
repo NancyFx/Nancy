@@ -1,15 +1,9 @@
 ﻿namespace Nancy.Security
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
-
     using Bootstrapper;
 
     using Cryptography;
-
-    using Nancy.Cookies;
-    using Nancy.Helpers;
 
     public class CsrfStartup : IStartup
     {
@@ -74,37 +68,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            pipelines.AfterRequest.AddItemToEndOfPipeline(
-                context =>
-                    {
-                        if (context.Response == null || context.Response.Cookies == null)
-                        {
-                            return;
-                        }
-
-                        if (context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
-                        {
-                            context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY], true));
-                            return;
-                        }
-
-                        if (context.Request.Cookies.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
-                        {
-                            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
-                            return;
-                        }
-
-                        var token = new CsrfToken
-                        {
-                            CreatedDate = DateTime.Now,
-                        };
-                        token.CreateRandomBytes();
-                        token.CreateHmac(CryptographyConfiguration.HmacProvider);
-                        var tokenString = ObjectSerializer.Serialize(token);
-
-                        context.Items[CsrfToken.DEFAULT_CSRF_KEY] = tokenString;
-                        context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY, tokenString, true));
-                    });
+            Csrf.Enable(pipelines);
         }
     }
 }
