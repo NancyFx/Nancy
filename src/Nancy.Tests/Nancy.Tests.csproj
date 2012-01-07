@@ -193,6 +193,7 @@
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\UrlFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
     <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
