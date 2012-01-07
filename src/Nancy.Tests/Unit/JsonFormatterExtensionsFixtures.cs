@@ -55,5 +55,23 @@ namespace Nancy.Tests.Unit
                 Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("null");
             }
         }
+
+		[Fact]
+		public void Json_formatter_can_deserialize_objects_of_type_Type()
+		{
+			var response = formatter.AsJson(new {type = typeof (string)});
+			using (var stream = new MemoryStream())
+			{
+				response.Contents(stream);
+				Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
+			}
+		}
+
+		[Fact]
+		public void Can_set_status_on_json_response()
+		{
+			var response = formatter.AsJson(new {foo = "bar"}, HttpStatusCode.InternalServerError);
+			Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
+		}
     }
 }
