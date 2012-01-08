@@ -105,6 +105,11 @@ namespace Nancy.Json
 				return;
 			}
 
+			if (obj.GetType().Name == "RuntimeType")
+			{
+				obj = obj.ToString();
+			}
+
 			Type valueType = obj.GetType ();
 			JavaScriptConverter jsc = serializer.GetConverter (valueType);
 			if (jsc != null) {
