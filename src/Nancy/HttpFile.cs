@@ -7,11 +7,12 @@
     /// </summary>
     public class HttpFile
     {
-        public HttpFile(string contentType, string name, Stream value)
+        public HttpFile(string contentType, string name, Stream value, string key)
         {
             this.ContentType = contentType;
             this.Name = name;
             this.Value = value;
+            this.Key = key;
         }
 
         /// <summary>
@@ -26,6 +27,11 @@
         /// <value>A <see cref="string"/> containing the name of the file.</value>
         public string Name { get; private set; }
 
+        /// <summary>
+        /// Gets or sets the form element name of this file
+        /// </summary>
+        /// <value>A <see cref="string"/> containg the key</value>
+        public string Key { get; private set; }
 
         /// <summary>
         /// Gets or sets the value stream.

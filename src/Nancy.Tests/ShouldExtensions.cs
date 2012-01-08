@@ -11,12 +11,12 @@
     {
         public static void ShouldStartWith(this string actual, string expected)
         {
-            Assert.True(actual.StartsWith(expected));
+            Assert.True(actual.StartsWith(expected), String.Format("Expected to start with {0} but ended with {1}", expected, actual));
         }
 
         public static void ShouldEndWith(this string actual, string expected)
         {
-            Assert.True(actual.EndsWith(expected));
+            Assert.True(actual.EndsWith(expected), String.Format("Expected to end with {0} but ended with {1}", expected, actual));
         }
 
         public static void ShouldMatch<T>(this T actual, Func<T, bool> condition)

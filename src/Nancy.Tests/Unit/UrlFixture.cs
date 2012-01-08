@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Unit
+﻿using System.Net;
+
+namespace Nancy.Tests.Unit
 {
     using Xunit;
     using Xunit.Extensions;
@@ -50,8 +52,8 @@
             var result = this.url.ToString();
 
             // Then
-            result.ShouldEndWith("https://[::1]");
-            
+            result.ShouldStartWith("https://[");
+            result.ShouldEndWith("]");
         }
 
         [Fact]
