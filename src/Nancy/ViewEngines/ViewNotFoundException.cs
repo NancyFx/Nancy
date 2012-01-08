@@ -20,7 +20,7 @@
             get
             {
                 return String.Format(
-                    "Unable to location view {0}. Currently available view engine extensions: {1}", 
+                    "Unable to locate view '{0}'. Currently available view engine extensions: {1}", 
                     this.ViewName,
                     this.AvailableViewEngineExtensions.Aggregate((s1,s2) => s1 + "," + s2));
             }
