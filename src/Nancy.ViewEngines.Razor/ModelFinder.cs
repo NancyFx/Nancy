@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.Razor.Parser;
-
-namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines.Razor
 {
+    using System.Web.Razor.Parser;
+
     public class ModelFinder : ParserVisitor
     {
         public string ModelTypeName { get; set; }
