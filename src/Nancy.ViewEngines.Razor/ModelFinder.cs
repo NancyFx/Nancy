@@ -27,7 +27,7 @@
         /// <summary>
         /// Gets the name of the model type.
         /// </summary>
-        /// <value>A <see cref="string"/> containing the name of the model.</value>
+        /// <value>A <see cref="string"/> containing the name of the model if it was found, otherwise <see langword="null"/>.</value>
         public string ModelTypeName { get; private set; }
     }
 }
