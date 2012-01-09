@@ -217,7 +217,7 @@
             return () => (NancyRazorViewBase)Activator.CreateInstance(type);
         }
 
-        private Type FindModelType(Block block, Type passedModelType)
+        private static Type FindModelType(Block block, Type passedModelType)
         {
             var modelFinder = new ModelFinder();
             block.Accept(modelFinder);

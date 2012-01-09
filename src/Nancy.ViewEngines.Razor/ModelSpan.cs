@@ -11,14 +11,6 @@
     public class ModelSpan : CodeSpan
     {
         /// <summary>
-        /// Gets the name of the model type.
-        /// </summary>
-        /// <value>
-        /// The name of the model type.
-        /// </value>
-        public string ModelTypeName { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ModelSpan"/> class.
         /// </summary>
         /// <param name="start">The start.</param>
@@ -37,7 +29,16 @@
         /// <param name="modelTypeName">Name of the model type.</param>
         internal ModelSpan(ParserContext context, string modelTypeName)
             : this(context.CurrentSpanStart, context.ContentBuffer.ToString(), modelTypeName)
-        { }
+        {
+        }
+
+        /// <summary>
+        /// Gets the name of the model type.
+        /// </summary>
+        /// <value>
+        /// The name of the model type.
+        /// </value>
+        public string ModelTypeName { get; private set; }
 
         /// <summary>
         /// Returns a hash code for this instance.
@@ -59,7 +60,8 @@
         /// </returns>
         public override bool Equals(object obj)
         {
-            ModelSpan modelSpan = obj as ModelSpan;
+            var modelSpan = obj as ModelSpan;
+
             return modelSpan != null && this.Equals(modelSpan);
         }
 
@@ -70,7 +72,7 @@
         /// <returns></returns>
         private bool Equals(ModelSpan span)
         {
-            return base.Equals(span) && string.Equals(this.ModelTypeName, span.ModelTypeName, StringComparison.Ordinal);
+            return base.Equals(span) && string.Equals(this.ModelTypeName, span.ModelTypeName, StringComparison.OrdinalIgnoreCase);
         }
     }
 
