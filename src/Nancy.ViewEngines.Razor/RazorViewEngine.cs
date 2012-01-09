@@ -34,14 +34,16 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class with a default configuration.
         /// </summary>
+        /// <remarks>Well create an instance of the engine using the <see cref="DefaultRazorConfiguration"/>.</remarks>
         public RazorViewEngine()
             : this(new DefaultRazorConfiguration())
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
-        /// <param name="configuration"></param>
+        /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
         public RazorViewEngine(IRazorConfiguration configuration)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
@@ -58,14 +60,15 @@
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        { }
+        {
+        }
 
         /// <summary>
         /// Renders the view.
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
-        /// <param name="renderContext"></param>
+        /// <param name="renderContext">The render context.</param>
         /// <returns>A response.</returns>
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
