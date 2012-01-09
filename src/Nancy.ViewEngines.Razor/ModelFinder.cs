@@ -25,9 +25,9 @@
         }
 
         /// <summary>
-        /// Gets or sets the name of the model type.
+        /// Gets the name of the model type.
         /// </summary>
         /// <value>A <see cref="string"/> containing the name of the model.</value>
-        public string ModelTypeName { get; set; }
+        public string ModelTypeName { get; private set; }
     }
 }
