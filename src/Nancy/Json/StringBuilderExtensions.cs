@@ -36,7 +36,7 @@ namespace Nancy.Json
 		static void CheckCount (StringBuilder sb, int maxCount)
 		{
 			if (sb.Length > maxCount)
-				throw new InvalidOperationException ("Maximum length exceeded.");
+				throw new InvalidOperationException ("Nancy.Json.JsonSettings.MaxJsonLength exceeded");
 		}
 		
 		public static StringBuilder AppendCount (StringBuilder sb, int maxCount, char[] value) 
