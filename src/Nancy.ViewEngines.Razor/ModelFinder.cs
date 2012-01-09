@@ -12,7 +12,7 @@
         /// Visits the current Razor parser span and looks for the model.
         /// </summary>
         /// <param name="span">The <see cref="Span"/> to visit.</param>
-        public override void VisitSpan(System.Web.Razor.Parser.SyntaxTree.Span span)
+        public override void VisitSpan(Span span)
         {
             var modelSpan = span as ModelSpan;
 
