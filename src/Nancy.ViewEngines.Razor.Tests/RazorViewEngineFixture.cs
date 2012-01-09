@@ -153,11 +153,11 @@
         [Fact]
         public void RenderView_csharp_should_be_able_to_use_a_model_from_another_assembly()
         {
+            // Given
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
                 .Append("<h1>Hello Mr. @Model.Name</h1>");
 
-            // Given
             var location = new ViewLocationResult(
                 string.Empty,
                 string.Empty,
@@ -180,13 +180,13 @@
         [Fact]
         public void RenderView_csharp_should_be_able_to_use_a_using_statement()
         {
+            // Given
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
                 .AppendLine("@using Nancy.ViewEngines.Razor.Tests.Models")
                 .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
                 .Append("<h1>Mr. @Model.Name likes @hobby.Name!</h1>");
 
-            // Given
             var location = new ViewLocationResult(
                 string.Empty,
                 string.Empty,
