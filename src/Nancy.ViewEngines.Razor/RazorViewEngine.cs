@@ -304,9 +304,13 @@
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = model == null ? null : model.GetType();
-            var view = this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
+            var modelType = (model == null) ? null :  model.GetType();
+
+            var view = 
+                this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
+
             view.Initialize(this, renderContext, model);
+
             return view;
         }
     }
