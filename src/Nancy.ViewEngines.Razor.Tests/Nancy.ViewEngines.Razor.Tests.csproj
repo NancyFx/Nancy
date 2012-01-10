@@ -99,6 +99,10 @@
     <Compile Include="RazorViewEngineFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj">
+      <Project>{3F18F5DA-93E0-4513-8BF4-BC8EE5C4117C}</Project>
+      <Name>Nancy.ViewEngines.Razor.Tests.Models</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
