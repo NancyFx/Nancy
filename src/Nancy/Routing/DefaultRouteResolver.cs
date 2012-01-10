@@ -54,7 +54,14 @@
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
                 var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
-                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
+                if (context.Request.Method.Equals("OPTIONS"))
+                {
+                    return new ResolveResult(new OptionsRoute(context.Request.Path), DynamicDictionary.Empty, null, null);
+                }
+                else
+                {
+                    return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
+                }
             }
 
             var exactMatch = GetRouteMatchesWithExactPathMatch(routesWithCorrectRequestMethod).FirstOrDefault();
