@@ -456,7 +456,7 @@
         {
             // Given
             var request = new FakeRequest("OPTIONS", "/foo/bar");
-            var context = new NancyContext { Request = request };
+          var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
 
             // When 
@@ -508,7 +508,6 @@
             route.ShouldNotBeNull();
             route.ShouldNotBeOfType<OptionsRoute>();
         }
-
 
         [Fact]
         public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
