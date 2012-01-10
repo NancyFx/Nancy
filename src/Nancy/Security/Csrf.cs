@@ -40,9 +40,14 @@ namespace Nancy.Security
 
                     if (context.Request.Cookies.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
                     {
-                        context.Items[CsrfToken.DEFAULT_CSRF_KEY] =
-                            HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
-                        return;
+                        var decodedValue = HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
+                        var cookieToken = CsrfStartup.ObjectSerializer.Deserialize(decodedValue) as CsrfToken;
+
+                        if (CsrfStartup.TokenValidator.CookieTokenStillValid(cookieToken))
+                        {
+                            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = decodedValue;
+                            return;
+                        }
                     }
 
                     var token = new CsrfToken
