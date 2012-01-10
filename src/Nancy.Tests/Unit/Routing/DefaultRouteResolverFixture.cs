@@ -436,6 +436,22 @@
         }
 
         [Fact]
+        public void Should_allow_options_request_when_route_is_defined()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext {Request = request};
+            var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
+
+            // When 
+            var resolvedRoute = resolver.Resolve(context);
+
+            // Then
+            resolvedRoute.ShouldNotBeNull();
+            resolvedRoute.Item1.ShouldBeOfType<OptionsRoute>();
+        }
+
+        [Fact]
         public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
         {
             // Given

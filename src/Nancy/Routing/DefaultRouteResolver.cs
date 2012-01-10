@@ -42,7 +42,6 @@
         {
             var result =
                 this.Resolve(context.Request.Path, context, this.cache);
-
             return result.Selected;
         }
 
@@ -176,13 +175,24 @@
 
             if (!routes.Item1.Any())
             {
-                var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
-                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
-                return new ResolveResults
+                if (context.Request.Method.Equals("OPTIONS"))
                 {
-                    Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
-                    Rejected = routes.Item2
-                };
+                    return new ResolveResults
+                    {
+                        Selected = new ResolveResult(new OptionsRoute(context.Request.Path), DynamicDictionary.Empty, null, null),
+                        Rejected = routes.Item2
+                    };
+                }
+                else
+                {
+                    var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
+                    context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
+                    return new ResolveResults
+                    {
+                        Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Rejected = routes.Item2
+                    };
+                }
             }
 
             // Exact match
