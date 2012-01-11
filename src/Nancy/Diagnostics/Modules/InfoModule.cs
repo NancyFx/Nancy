@@ -1,15 +1,17 @@
 ﻿namespace Nancy.Diagnostics.Modules
 {
     using System;
+    using System.Collections;
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-
+    using System.Reflection;
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
 
     public class InfoModule : DiagnosticModule
     {
-        public InfoModule(IRootPathProvider rootPathProvider)
+        public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
             : base("/info")
         {
             Get["/"] = _ => View["Info"];
@@ -28,6 +30,18 @@
                 data.Nancy.BootstrapperContainer = this.GetBootstrapperContainer();
                 data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.Bootstrapper.GetType().ToString();
                 data.Nancy.LoadedViewEngines = GetViewEngines();
+
+                data.Configuration = new Dictionary<string, string>();
+                foreach (var propertyInfo in configuration.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                {
+                    var value =
+                        propertyInfo.GetValue(configuration, null);
+
+                    if (!typeof(IEnumerable).IsAssignableFrom(value.GetType()))
+                    {
+                        data.Configuration[propertyInfo.Name] = value.ToString();
+                    }
+                }
 
                 return Response.AsJson((object)data);
             };
