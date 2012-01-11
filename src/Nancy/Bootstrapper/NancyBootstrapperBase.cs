@@ -472,7 +472,10 @@
         /// <returns>Collection of InstanceRegistation types</returns>
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
-            return new[] { new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration) };
+            return new[] {
+                new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
+                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration), 
+            };
         }
 
         /// <summary>
