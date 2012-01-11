@@ -386,9 +386,6 @@
     <EmbeddedResource Include="Diagnostics\Resources\text.css" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Diagnostics\Resources\bg-texture.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Resources\info.png" />
     <EmbeddedResource Include="Diagnostics\Resources\interactive.png" />
     <EmbeddedResource Include="Diagnostics\Resources\logs.png" />
