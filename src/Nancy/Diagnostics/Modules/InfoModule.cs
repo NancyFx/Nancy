@@ -31,16 +31,15 @@
                 data.Nancy.LocatedBootstrapper = NancyBootstrapperLocator.Bootstrapper.GetType().ToString();
                 data.Nancy.LoadedViewEngines = GetViewEngines();
 
-                data.Configuration = new Dictionary<string, string>();
+                data.Configuration = new Dictionary<string, object>();
                 foreach (var propertyInfo in configuration.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     var value =
                         propertyInfo.GetValue(configuration, null);
 
-                    if (!typeof(IEnumerable).IsAssignableFrom(value.GetType()))
-                    {
-                        data.Configuration[propertyInfo.Name] = value.ToString();
-                    }
+                    data.Configuration[propertyInfo.Name] = (!typeof(IEnumerable).IsAssignableFrom(value.GetType())) ?
+                        new[] { value.ToString() } :
+                        ((IEnumerable<object>) value).Select(x => x.ToString());
                 }
 
                 return Response.AsJson((object)data);
