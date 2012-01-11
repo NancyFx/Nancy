@@ -509,7 +509,29 @@
             route.ShouldBeOfType<OptionsRoute>();
             route.Invoke(new DynamicDictionary()).Headers["Allow"].ShouldEqual("GET, PUT");
         }
-        
+
+        [Fact]
+        public void Should_return_user_defined_route_for_route_with_custom_options_defined()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext();
+            context.Request = request;
+            var routeCache = new FakeRouteCache(x =>
+            {
+                x.AddGetRoute("/foo/bar");
+                x.AddOptionsRoute("/foo/bar");
+            });
+
+            // When
+            var route = this.resolver.Resolve(context, routeCache).Item1;
+
+            // Then
+            route.ShouldNotBeNull();
+            route.ShouldNotBeOfType<OptionsRoute>();
+        }
+
+
         [Fact]
         public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
         {

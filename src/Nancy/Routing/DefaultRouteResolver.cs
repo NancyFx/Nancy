@@ -53,15 +53,7 @@
 
             if (NoRoutesWereForTheRequestedMethod(routesWithCorrectRequestMethod))
             {
-                var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
-                if (context.Request.Method.Equals("OPTIONS"))
-                {
-                    return new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null);
-                }
-                else
-                {
-                    return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
-                }
+                return this.CreateResolveResultForNoRoutesForRequest(context, routesThatMatchRequestedPath);
             }
 
             var exactMatch = GetRouteMatchesWithExactPathMatch(routesWithCorrectRequestMethod).FirstOrDefault();
@@ -77,6 +69,19 @@
                 GetSingleRouteToReturn(routeMatchesWithMostParameterCaptures);
 
             return this.CreateRouteAndParametersFromMatch(context, routeMatchToReturn);
+        }
+
+        private ResolveResult CreateResolveResultForNoRoutesForRequest(NancyContext context, List<RouteCandidate> routesThatMatchRequestedPath)
+        {
+            var allowedMethods = routesThatMatchRequestedPath.Select(x => x.Item3.Method);
+            if (context.Request.Method.Equals("OPTIONS"))
+            {
+                return new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null);
+            }
+            else
+            {
+                return new ResolveResult(new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null);
+            }
         }
 
         private ResolveResult CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
