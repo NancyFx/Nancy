@@ -86,6 +86,13 @@
 
                 return this;
             }
+
+            public FakeRouteCacheConfigurator AddOptionsRoute(string path)
+            {
+                this.AddRoutesToCache(new[] { new RouteDescription("OPTIONS", path, null) }, string.Empty);
+
+                return this;
+            }
         }
     }
 }
