@@ -1,12 +1,14 @@
+
+
 namespace Nancy.Hosting.Aspnet
 {
+    using Responses;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Web;
-    using Bootstrapper;
     using IO;
-    using Nancy.Extensions;
+    using Extensions;
 
     public class NancyHandler
     {        
@@ -83,6 +85,14 @@ namespace Nancy.Hosting.Aspnet
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             SetHttpResponseHeaders(context, response);
+
+            if(response is ETaggedResponse)
+            {
+                if((response as ETaggedResponse).ProcessResponse(context))
+                {
+                    return;
+                }
+            }
 
             context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;

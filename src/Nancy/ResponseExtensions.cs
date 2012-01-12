@@ -3,11 +3,32 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-    using Nancy.Responses;
+    using Responses;
 
     public static class ResponseExtensions
     {
+
+        /// <summary>
+        /// Get an ETagged response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <returns></returns>
+        public static Response ETagged(this Response response)
+        {
+            return new ETaggedResponse(response);
+        }
+        /// <summary>
+        /// Get an ETagged response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="value">The ETag Value.</param>
+        /// <returns></returns>
+        public static Response ETagged(this Response response, string value)
+        {
+            return new ETaggedResponse(response, value);
+        }
+
+
         /// <summary>
         /// Force the response to be downloaded as an attachment
         /// </summary>

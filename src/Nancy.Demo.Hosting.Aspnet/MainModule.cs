@@ -1,8 +1,8 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
-    using Nancy.Demo.Hosting.Aspnet.Models;
-    using Nancy.Routing;
+    using Models;
+    using Routing;
     using Security;
 
     public class MainModule : NancyModule
@@ -19,6 +19,17 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/filtered", r => false] = x => {
                 return "This is also a route, but filtered out so should never be hit.";
+            };
+
+            //ETagged Feature as ResponseExtension with "if-none-match" handling
+            Get["/etagged"] = x =>
+            {
+                return View["dot", new { name = "dot" }].ETagged();
+            };
+
+            Get["/etagged555"] = x =>
+            {
+                return View["dot", new { name = "dot" }].ETagged("555");
             };
 
             Get[@"/(?<foo>\d{2,4})/{bar}"] = x => {

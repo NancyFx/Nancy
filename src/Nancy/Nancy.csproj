@@ -81,6 +81,7 @@
     </Reference>
     <Reference Include="System.Drawing">
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml">
     </Reference>
   </ItemGroup>
@@ -100,7 +101,9 @@
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Cryptography\CRC32Helper.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="Responses\ETaggedResponse.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
