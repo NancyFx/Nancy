@@ -167,7 +167,9 @@
   <ItemGroup>
     <Content Include="Views\someview.cshtml" />
     <Content Include="Views\razor-layout.cshtml" />
-    <None Include="Views\anon.spark" />
+    <None Include="Views\anon.spark">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
     <None Include="Views\razor-strong.vbhtml" />

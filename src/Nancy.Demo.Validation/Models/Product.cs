@@ -13,10 +13,11 @@
     {
         public ProductValidator()
         {
-            RuleFor(product => product.Name).NotEmpty();
-            RuleFor(product => product.Name).Length(1, 10);
-            RuleFor(product => product.Name).Matches("[A-Z]*");
-            RuleFor(product => product.Name).EmailAddress();
+            RuleFor(product => product.Name)
+            .NotEmpty()
+            .Length(1, 10)
+            .Matches("[A-Z]*")
+            .EmailAddress();
 
             RuleFor(product => product.Price).ExclusiveBetween(10, 15);
             RuleFor(product => product.Price).InclusiveBetween(10, 15);

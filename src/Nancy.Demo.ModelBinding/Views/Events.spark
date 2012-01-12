@@ -10,7 +10,7 @@
     <p>Current events:</p>
     <ul>
       <li each="var v in Model">
-        <a href="event/${v.Id}"> ${v.Title} - ${v.Location} </a> ${v.Time}
+        <a href="events/${v.Id}"> ${v.Title} - ${v.Location} </a> ${v.Time}
       </li>
     </ul>
 
