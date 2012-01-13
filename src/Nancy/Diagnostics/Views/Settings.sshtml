@@ -10,7 +10,30 @@
 @EndSection
 
 @Section['Body']
+
+	<form>
+		<ul>
+			@Each
+				<li><input type="checkbox" value="@Current.Name" @Current.Checked />@Current.Name</li>
+			@EndEach
+		</ul>
+	</form>
+
+	<script language="javascript" type="text/javascript">
+
+		$("input[type='checkbox']").click(function() {
+
+			$.ajax({
+			  url: "/_Nancy/settings/",
+			  type: "POST",
+			  data: {Name: $(this).val(), Value:$(this).is(':checked') },
+			  dataType: "json",
+			  success: function(){
+				console.log("yay");
+			  }
+			});
+
+		});
+
+	</script>
 @EndSection
-
-
-

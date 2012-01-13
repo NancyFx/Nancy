@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using Cryptography;
+    using ModelBinding;
     using Nancy.Bootstrapper;
 
     public class DiagnosticsStartup : IStartup
@@ -11,14 +12,16 @@
         private readonly IEnumerable<ISerializer> serializers;
         private readonly IRequestTracing requestTracing;
         private readonly NancyInternalConfiguration configuration;
+        private readonly IModelBinderLocator modelBinderLocator;
 
-        public DiagnosticsStartup(IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration)
+        public DiagnosticsStartup(IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
             this.diagnosticProviders = diagnosticProviders;
             this.rootPathProvider = rootPathProvider;
             this.serializers = serializers;
             this.requestTracing = requestTracing;
             this.configuration = configuration;
+            this.modelBinderLocator = modelBinderLocator;
         }
 
         /// <summary>
@@ -51,7 +54,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration);
+            DiagnosticsHook.Enable(pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration, this.modelBinderLocator);
         }
     }
 }

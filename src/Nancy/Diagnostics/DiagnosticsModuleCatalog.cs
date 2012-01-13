@@ -2,8 +2,9 @@ namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
     using System.Linq;
-
+    using ModelBinding;
     using Nancy.Bootstrapper;
+    using Responses;
     using TinyIoC;
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
@@ -45,6 +46,11 @@ namespace Nancy.Diagnostics
             diagContainer.Register<IRequestTracing>(requestTracing);
             diagContainer.Register<IRootPathProvider>(rootPathProvider);
             diagContainer.Register<NancyInternalConfiguration>(configuration);
+            diagContainer.Register<IModelBinderLocator, DefaultModelBinderLocator>();
+            diagContainer.Register<IBinder, DefaultBinder>();
+            diagContainer.Register<IFieldNameConverter, DefaultFieldNameConverter>();
+            diagContainer.Register<BindingDefaults, BindingDefaults>();
+            diagContainer.Register<ISerializer, DefaultJsonSerializer>();
 
             foreach (var diagnosticsProvider in providers)
             {

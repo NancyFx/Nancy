@@ -5,6 +5,7 @@ namespace Nancy.Diagnostics
     using System.IO;
 
     using Bootstrapper;
+    using ModelBinding;
     using Routing;
 
     public static class DiagnosticsHook
@@ -13,7 +14,7 @@ namespace Nancy.Diagnostics
 
         internal const string ResourcePrefix = ControlPanelPrefix + "/Resources/";
 
-        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration)
+        public static void Enable(IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers, rootPathProvider, requestTracing, configuration);
@@ -23,7 +24,7 @@ namespace Nancy.Diagnostics
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
                 new DefaultRoutePatternMatcher(),
-                new DiagnosticsModuleBuilder(rootPathProvider, serializers),
+                new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache);
             
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>

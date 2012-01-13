@@ -1,6 +1,7 @@
 namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
+    using ModelBinding;
     using Nancy.Routing;
 
     internal class DiagnosticsModuleBuilder : INancyModuleBuilder
@@ -8,11 +9,13 @@ namespace Nancy.Diagnostics
         private readonly IRootPathProvider rootPathProvider;
 
         private readonly IEnumerable<ISerializer> serializers;
+        private readonly IModelBinderLocator modelBinderLocator;
 
-        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers)
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IModelBinderLocator modelBinderLocator)
         {
             this.rootPathProvider = rootPathProvider;
             this.serializers = serializers;
+            this.modelBinderLocator = modelBinderLocator;
         }
 
         /// <summary>
@@ -26,6 +29,7 @@ namespace Nancy.Diagnostics
             // Currently we don't connect view location, binders etc.
             module.Context = context;
             module.Response = new DefaultResponseFormatter(rootPathProvider, context, serializers);
+            module.ModelBinderLocator = this.modelBinderLocator;
 
             return module;
         }

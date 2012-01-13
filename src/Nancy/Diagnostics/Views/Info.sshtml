@@ -19,6 +19,7 @@
 	 .success(function (data) {
             $("#data").html(_.modelreport(data));
 	 });
+
 </script>
 @EndSection
 
