@@ -1,3 +1,4 @@
+using System.Dynamic;
 using Nancy.Security;
 
 namespace Nancy
@@ -11,13 +12,21 @@ namespace Nancy
     /// </summary>
     public sealed class NancyContext : IDisposable
     {
+        private ExpandoObject _viewBag;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
         /// </summary>
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
+            _viewBag = new ExpandoObject();
         }
+
+        /// <summary>
+        /// Stores dynamic page data that exists outside of the model
+        /// </summary>
+        public dynamic ViewBag { get { return _viewBag; } }
 
         /// <summary>
         /// Gets the dictionary for storage of per-request items. Disposable items will be disposed when the context is.
@@ -56,5 +65,7 @@ namespace Nancy
 
             this.Items.Clear();
         }
+
+
     }
 }

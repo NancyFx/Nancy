@@ -76,11 +76,14 @@
                 throw new ViewNotFoundException(viewName, this.viewEngineExtensions);
             }
 
+        	var renderContext = this.renderContextFactory.GetRenderContext(viewLocationContext);
+        	renderContext.ViewBag = viewLocationContext.Context.ViewBag;
+
             return SafeInvokeViewEngine(
                 resolvedViewEngine,
                 viewLocationResult,
                 GetSafeModel(model),
-                this.renderContextFactory.GetRenderContext(viewLocationContext)
+                renderContext
             );
         }
 

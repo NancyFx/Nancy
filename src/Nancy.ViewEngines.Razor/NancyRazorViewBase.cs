@@ -22,6 +22,11 @@
         public String Body { get; private set; }
 
         /// <summary>
+        /// Stores dynamic page data that exists outside of the model
+        /// </summary>
+        public dynamic ViewBag { get; set; }
+
+        /// <summary>
         /// Gets or sets the section contents.
         /// </summary>
         /// <value>
@@ -87,7 +92,9 @@
         /// <param name="renderContext">The render context.</param>
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
-        { }
+        {
+        	ViewBag = renderContext.ViewBag;
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
@@ -248,6 +255,7 @@
             Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
             Model = (TModel)model;
             Url = new UrlHelpers<TModel>(engine, renderContext);
+        	ViewBag = renderContext.ViewBag;
         }
     }
 }

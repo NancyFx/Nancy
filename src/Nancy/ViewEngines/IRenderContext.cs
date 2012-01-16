@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 namespace Nancy.ViewEngines
 {
     using System.Collections.Generic;
@@ -43,5 +45,10 @@ namespace Nancy.ViewEngines
         /// </summary>
         /// <returns>A tuple containing the name (cookie name and form/querystring name) and value</returns>
         KeyValuePair<string, string> GetCsrfToken();
+
+        /// <summary>
+        /// Stores dynamic page data that exists outside of the model
+        /// </summary>
+        ExpandoObject ViewBag { get; set; }
     }
 }
