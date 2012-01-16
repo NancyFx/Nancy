@@ -156,7 +156,7 @@ namespace Nancy
             }
 
             var cookies = this.Headers["cookie"].First().TrimEnd(';').Split(';');
-			foreach (var parts in cookies.Select (c => c.Split (new[] { '=' }, 2)))
+            foreach (var parts in cookies.Select (c => c.Split (new[] { '=' }, 2)))
             {
                 cookieDictionary[parts[0].Trim()] = parts[1];
             }
@@ -227,7 +227,7 @@ namespace Nancy
                                        httpMultipartBoundary.ContentType,
                                        httpMultipartBoundary.Filename,
                                        httpMultipartBoundary.Value,
-									   httpMultipartBoundary.Name //include the form field that posted this file
+                                       httpMultipartBoundary.Name //include the form field that posted this file
                                        ));
                 }
             }

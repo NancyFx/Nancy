@@ -39,6 +39,8 @@ namespace Nancy
             this.routes = new List<Route>();
         }
 
+        protected dynamic ViewBag { get { return Context.ViewBag; } }
+
         /// <summary>
         /// <para>
         /// The post-request hook

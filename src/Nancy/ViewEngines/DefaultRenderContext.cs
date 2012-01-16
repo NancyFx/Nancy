@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines
+﻿using System.Dynamic;
+
+namespace Nancy.ViewEngines
 {
     using System;
     using System.Collections.Generic;
@@ -37,6 +39,11 @@
         {
             get { return this.viewCache; }
         }
+
+        /// <summary>
+        /// Stores dynamic page data that exists outside of the model
+        /// </summary>
+        public ExpandoObject ViewBag { get; set; }
 
         /// <summary>
         /// Parses a path and returns an absolute url path, taking into account
