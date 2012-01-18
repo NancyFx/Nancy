@@ -169,6 +169,23 @@ namespace Nancy.Tests.Unit.Conventions
         }
 
         [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulepath_subfolder_of_views_folder_when_modulepath_contains_leading_slash()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[2];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModulePath = "/modulepath" });
+
+            // Then
+            result.ShouldEqual("views/modulepath/viewname");
+        }
+
+        [Fact]
         public void Should_define_convention_that_returns_viewname_in_modulepath_folder()
         {
             // Given
@@ -180,6 +197,23 @@ namespace Nancy.Tests.Unit.Conventions
                 "viewname",
                 null,
                 new ViewLocationContext { ModulePath = "modulepath" });
+
+            // Then
+            result.ShouldEqual("modulepath/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulepath_folder_when_modulepath_contains_leading_slash()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[3];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModulePath = "/modulepath" });
 
             // Then
             result.ShouldEqual("modulepath/viewname");

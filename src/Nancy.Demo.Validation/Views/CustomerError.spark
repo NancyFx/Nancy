@@ -1,0 +1,16 @@
+﻿<viewdata model="Nancy.Validation.ValidationResult"/>
+<html>
+  <head>
+    <title>Customers</title>
+  </head>
+  <body>
+    <h1>Error submitting customer</h1>
+    <ul>
+      <for each="var e in Model.Errors">
+        <li each="var memberName in e.MemberNames">
+          ${e.GetMessage(memberName)}
+        </li>
+      </for>
+    </ul>
+  </body>
+</html>

@@ -13,7 +13,8 @@
     /// </summary>
     public class NancyEngine : INancyEngine
     {
-        internal const string ERROR_KEY = "ERROR_TRACE";
+        public const string ERROR_KEY = "ERROR_TRACE";
+        public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
@@ -178,14 +179,14 @@
             {
                 if (pipeline == null)
                 { 
-                    throw ex;
+                    throw new RequestExecutionException(ex);
                 }
 
                 var onErrorResponse = pipeline.Invoke(context, ex);
 
                 if (onErrorResponse == null)
                 {
-                    throw ex;
+                    throw new RequestExecutionException(ex);
                 }
 
                 context.Response = onErrorResponse;
@@ -194,6 +195,7 @@
             {
                 context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
                 context.Items[ERROR_KEY] = e.ToString();
+                context.Items[ERROR_EXCEPTION] = e;
             }
         }
 

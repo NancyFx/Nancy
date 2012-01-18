@@ -39,7 +39,7 @@ namespace Nancy.Demo.Hosting.Owin
 
                 if (file != null)
                 {
-                    fileDetails = string.Format("{0} ({1}) {2}bytes", file.Name, file.ContentType, file.Value.Length);
+                    fileDetails = string.Format("{3} - {0} ({1}) {2}bytes", file.Name, file.ContentType, file.Value.Length, file.Key);
                 }
 
                 model.Posted = fileDetails;

@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
@@ -10,7 +11,7 @@ namespace Nancy
     /// <summary>
     /// Provides strongly-typed access to HTTP request headers.
     /// </summary>
-    public class RequestHeaders
+    public class RequestHeaders : IEnumerable<KeyValuePair<string, IEnumerable<string>>>
     {
         private readonly IDictionary<string, IEnumerable<string>> headers;
 
@@ -177,6 +178,15 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Gets the names of the available request headers.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> containing the names of the headers.</value>
+        public IEnumerable<string> Keys
+        {
+            get { return this.headers.Keys; }
+        }
+
+        /// <summary>
         /// Limit the number of times the message can be forwarded through proxies or gateways.
         /// </summary>
         /// <value>The number of the maximum allowed number of forwards if it is available; otherwise 0.</value>
@@ -204,10 +214,37 @@ namespace Nancy
         }
 
         /// <summary>
-        /// 
+        /// Gets all the header values.
         /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
+        /// <value>An <see cref="IEnumerable{T}"/> that contains all the header values.</value>
+        public IEnumerable<IEnumerable<string>> Values
+        {
+            get { return this.headers.Values; }
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>A <see cref="IEnumerator{T}"/> that can be used to iterate through the collection.</returns>
+        public IEnumerator<KeyValuePair<string, IEnumerable<string>>> GetEnumerator()
+        {
+            return this.headers.GetEnumerator();
+        }
+
+        /// <summary>
+        /// Returns an enumerator that iterates through a collection.
+        /// </summary>
+        /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            return GetEnumerator();
+        }
+        
+        /// <summary>
+        /// Gets the values for the header identified by the <paramref name="name"/> parameter.
+        /// </summary>
+        /// <param name="name">The name of the header to return the values for.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains the values for the header. If the header is not defined then <see cref="Enumerable.Empty{TResult}"/> is returned.</returns>
         public IEnumerable<string> this[string name]
         {
             get
@@ -280,7 +317,5 @@ namespace Nancy
             }
             return null;
         }
-
-
     }
 }

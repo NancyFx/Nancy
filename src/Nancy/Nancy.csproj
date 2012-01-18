@@ -74,6 +74,7 @@
     </Reference>
     <Reference Include="System.ComponentModel.Composition">
     </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration">
     </Reference>
     <Reference Include="System.Core">
@@ -104,6 +105,7 @@
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpStartup.cs" />
+    <Compile Include="RequestExecutionException.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
     <Compile Include="ISerializer.cs" />
@@ -159,6 +161,23 @@
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
+    <Compile Include="Validation\CompositeValidator.cs" />
+    <Compile Include="Validation\DefaultValidatorLocator.cs" />
+    <Compile Include="Validation\IModelValidator.cs" />
+    <Compile Include="Validation\IModelValidatorFactory.cs" />
+    <Compile Include="Validation\IModelValidatorLocator.cs" />
+    <Compile Include="Validation\ModelValidationException.cs" />
+    <Compile Include="Validation\ModuleExtensions.cs" />
+    <Compile Include="Validation\Rules\ComparisonOperator.cs" />
+    <Compile Include="Validation\Rules\NotEmptyValidationRule.cs" />
+    <Compile Include="Validation\Rules\NotNullValidationRule.cs" />
+    <Compile Include="Validation\Rules\ComparisonValidationRule.cs" />
+    <Compile Include="Validation\Rules\RegexValidationRule.cs" />
+    <Compile Include="Validation\Rules\StringLengthValidationRule.cs" />
+    <Compile Include="Validation\ModelValidationDescriptor.cs" />
+    <Compile Include="Validation\ModelValidationError.cs" />
+    <Compile Include="Validation\ModelValidationResult.cs" />
+    <Compile Include="Validation\ModelValidationRule.cs" />
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
@@ -281,6 +300,7 @@
     <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
+    <Compile Include="ViewEngines\ViewNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="favicon.ico" />

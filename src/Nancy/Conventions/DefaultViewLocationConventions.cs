@@ -48,11 +48,11 @@
                 },
 
                 (viewName, model, viewLocationContext) => {
-                    return string.Concat("views/", viewLocationContext.ModulePath, "/", viewName);
+                    return string.Concat("views/", viewLocationContext.ModulePath.TrimStart(new[] {'/'}), "/", viewName);
                 },
 
                 (viewName, model, viewLocationContext) => {
-                    return string.Concat(viewLocationContext.ModulePath, "/", viewName);
+                    return string.Concat(viewLocationContext.ModulePath.TrimStart(new[] { '/' }), "/", viewName);
                 },
 
                 (viewName, model, viewLocationContext) => {

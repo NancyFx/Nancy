@@ -234,9 +234,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var memory =
-                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "test", new Tuple<string, string>("content/type", "some test content")}
+                    { "test", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
@@ -257,9 +257,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var memory =
-                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
@@ -280,9 +280,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var memory =
-                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
@@ -303,9 +303,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var memory =
-                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
@@ -319,6 +319,29 @@ namespace Nancy.Tests.Unit
 
             // Then
             GetStringValue(request.Files.First().Value).ShouldEqual("some test content");
+        }
+
+        [Fact]
+        public void Should_set_key_on_file_extracted_from_multipart_data_body()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
+                {
+                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "fieldname")}
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            request.Files.First().Key.ShouldEqual("fieldname");
         }
 
         private static string GetStringValue(Stream stream)
@@ -434,9 +457,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var memory =
-                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string>>
+                new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string>("content/type", "some test content")}
+                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
@@ -492,7 +515,7 @@ namespace Nancy.Tests.Unit
             return bytes;
         }
 
-        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string>> formValues)
+        private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string, string>> formValues)
         {
             var boundaryBuilder = new StringBuilder();
 
@@ -504,7 +527,7 @@ namespace Nancy.Tests.Unit
                 boundaryBuilder.Append("----NancyFormBoundary");
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"whatever\"; filename=\"{0}\"", key);
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{1}\"; filename=\"{0}\"", key, formValues[key].Item3);
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
                 boundaryBuilder.AppendFormat("Content-Type: {0}", formValues[key].Item1);
