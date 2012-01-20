@@ -18,22 +18,22 @@
 
 	<div class="grid_3 description-text">
 		<h2>Information</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+		<p>Information about Nancy's current runtime configuration. A useful starting point for diagnosing a misbehaving site.</p>
 	</div>
 
 	<div class="grid_3 description-text">
 		<h2>Interactive Diagnostics</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+		<p>Interactive diagnostics allow you to poke and prod at the guts of your Nancy site, from querying configuration, to clearing caches, through to executing parts of the pipeline and visualising the results.</p>
 	</div>
 
 	<div class="grid_3 description-text">
 		<h2>Request Tracing</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+		<p>Provides tracing information about requests including request/response headers and a tracelog of each request.</p>
 	</div>
 
 	<div class="grid_3 description-text">
 		<h2>Settings</h2>
-		<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In et neque ut tortor consectetur egestas at vel nulla. Ut malesuada sollicitudin tempor. Proin iaculis, urna at vehicula vehicula, arcu purus fringilla quam, quis ornare arcu orci sed augue. Suspendisse faucibus vestibulum felis vitae bibendum. Cum sociis natoque penatibus et magnis.</p>
+		<p>Configure some of Nancy's runtime static configuration.</p>
 	</div>
 @EndSection
 
