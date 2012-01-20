@@ -38,6 +38,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether or not to disable traces in error messages
         /// </summary>
+        [Description("Disables trace output in the default 500 error pages.")]
         public static bool DisableErrorTraces
         {
             get
@@ -53,6 +54,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
         /// </summary>
+        [Description("Enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.")]
         public static bool CaseSensitive { get; set; }
 
         /// <summary>
@@ -92,18 +94,10 @@ namespace Nancy
             }
         }
 
-#if DEBUG
-        private static bool enableRequestTracing = true;
-#else
-        private static bool enableDiagnostics = false;
-#endif
         /// <summary>
-        /// Gets or sets a value indicating whether or not to enable diagnostics
+        /// Gets or sets a value indicating whether or not to enable request tracing
         /// </summary>
-        public static bool EnableRequestTracing
-        {
-            get { return enableRequestTracing; }
-            set { enableRequestTracing = value; }
-        }
+        [Description("Enable request tracing.")]
+        public static bool EnableRequestTracing { get; set; }
     }
 }
