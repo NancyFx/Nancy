@@ -169,11 +169,12 @@ div.item-list h2
 /*    margin: 10px 0 5px 0;*/
     font-weight: bold;
     font-size: 13px;
-    width: 160px;
+    width: 260px;
     clear: left;
     float: left;
     display: block;
     white-space: nowrap;
+    overflow: hidden;
 }
 
 .modelreport DD

@@ -11,9 +11,9 @@ namespace Nancy.Diagnostics
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration)
+        public DiagnosticsModuleCatalog(IModuleKeyGenerator keyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
         {
-            this.container = ConfigureContainer(keyGenerator, providers, rootPathProvider, requestTracing, configuration);
+            this.container = ConfigureContainer(keyGenerator, providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<NancyModule>(moduleKey);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration)
+        private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -51,6 +51,7 @@ namespace Nancy.Diagnostics
             diagContainer.Register<IFieldNameConverter, DefaultFieldNameConverter>();
             diagContainer.Register<BindingDefaults, BindingDefaults>();
             diagContainer.Register<ISerializer, DefaultJsonSerializer>();
+            diagContainer.Register<DiagnosticsConfiguration>(diagnosticsConfiguration);
 
             foreach (var diagnosticsProvider in providers)
             {
