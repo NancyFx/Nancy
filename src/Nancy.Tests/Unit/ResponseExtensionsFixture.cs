@@ -147,5 +147,15 @@
             result.Headers["test"].ShouldEqual("testvalue");
             result.Headers["test2"].ShouldEqual("test2value");
         }
+
+        [Fact]
+        public void Should_set_the_content_type()
+        {
+            var response = new Response();
+
+            var result = response.WithContentType("text/cache-manifest");
+
+            result.ContentType.ShouldEqual("text/cache-manifest");
+        }
     }
 }
