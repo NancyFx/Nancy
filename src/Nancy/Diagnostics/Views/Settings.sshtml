@@ -11,26 +11,32 @@
 
 @Section['Body']
 
-	<form>
+	<div id="settings">
 		<ul>
 			@Each
-				<li><input type="checkbox" value="@Current.Name" @Current.Checked />@Current.Name</li>
+				<li>
+					<label for="@Current.Name">
+						@Current.DisplayName
+					</label>
+					<input type="checkbox" value="@Current.Name" @Current.Checked /><br>
+					@Current.Description
+				</li>
 			@EndEach
 		</ul>
-	</form>
+	</div>
 
 	<script language="javascript" type="text/javascript">
 
 		$("input[type='checkbox']").click(function() {
-
+		
 			$.ajax({
-			  url: "/_Nancy/settings/",
-			  type: "POST",
-			  data: {Name: $(this).val(), Value:$(this).is(':checked') },
-			  dataType: "json",
-			  success: function(){
-				console.log("yay");
-			  }
+				  url: "/_Nancy/settings/",
+				  type: "POST",
+				  data: {Name: $(this).val(), Value:$(this).is(':checked') },
+				  dataType: "json",
+				  success: function(){
+					console.log("yay");
+				  }
 			});
 
 		});

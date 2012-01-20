@@ -280,3 +280,13 @@ div.item-list h2
     font-size: 13px;
     margin: 0 0 10px 0;
 }
+
+/* Settings */
+
+#settings {
+    float: left;
+}
+
+#settings li {
+    margin-bottom: 10px;
+}

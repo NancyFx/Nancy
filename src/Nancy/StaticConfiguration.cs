@@ -3,7 +3,7 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
-
+    using Diagnostics;
     using Nancy.Bootstrapper;
 
     public static class StaticConfiguration
@@ -22,6 +22,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether Nancy should disable caching
         /// </summary>
+        [Description("Determins if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
         public static bool DisableCaches
         {
             get

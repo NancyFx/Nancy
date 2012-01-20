@@ -9,8 +9,6 @@
 			}
 		</style>
 
-		<link href="@Path['~/_Nancy/Resources/main.css']" rel="Stylesheet" />
-
 		<script language="javascript" type="text/javascript">
 			Nancy = { };
 
@@ -28,6 +26,7 @@
 		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/reset.css']" />
 		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/text.css']" />
 		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/960.css']" />
+		<link rel="Stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/main.css']"  />
 
 		@Section['Header'];
 	</head>
