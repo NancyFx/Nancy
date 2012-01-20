@@ -291,3 +291,7 @@ div.item-list h2
 #settings li {
     margin-bottom: 10px;
 }
+
+.help p {
+    font-size: 14px;
+}

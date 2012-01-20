@@ -181,7 +181,7 @@
         /// <summary>
         /// Gets the cryptography configuration
         /// </summary>
-        protected CryptographyConfiguration CryptographyConfiguration
+        protected virtual CryptographyConfiguration CryptographyConfiguration
         {
             get { return CryptographyConfiguration.Default; }
         }
@@ -189,7 +189,7 @@
         /// <summary>
         /// Gets the diagnostics / dashboard configuration (password etc)
         /// </summary>
-        protected DiagnosticsConfiguration DiagnosticsConfiguration
+        protected virtual DiagnosticsConfiguration DiagnosticsConfiguration
         {
             get { return new DiagnosticsConfiguration(); }
         }

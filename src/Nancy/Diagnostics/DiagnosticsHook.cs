@@ -13,6 +13,8 @@ namespace Nancy.Diagnostics
         internal const string ControlPanelPrefix = "/_Nancy";
 
         internal const string ResourcePrefix = ControlPanelPrefix + "/Resources/";
+        
+        private const string PipelineKey = "__Diagnostics";
 
         public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
@@ -27,36 +29,53 @@ namespace Nancy.Diagnostics
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache);
             
-            pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
-                {
-                    if (!ctx.ControlPanelEnabled)
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(
+                new PipelineItem<Func<NancyContext, Response>>(
+                    PipelineKey,
+                    ctx =>
                     {
-                        return null;
-                    }
-
-                    if (!ctx.Request.Path.StartsWith(ControlPanelPrefix, StringComparison.OrdinalIgnoreCase))
-                    {
-                        return null;
-                    }
-
-                    if (ctx.Request.Path.StartsWith(ResourcePrefix, StringComparison.OrdinalIgnoreCase))
-                    {
-                        var resourceNamespace = "Nancy.Diagnostics.Resources";
-
-                        var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(ResourcePrefix, string.Empty)) ?? string.Empty;
-                        if (!string.IsNullOrEmpty(path))
+                        if (!ctx.ControlPanelEnabled)
                         {
-                            resourceNamespace += string.Format(".{0}", path.Replace('\\', '.'));
+                            return null;
                         }
 
-                        return new EmbeddedFileResponse(
-                            typeof(DiagnosticsHook).Assembly,
-                            resourceNamespace,
-                            Path.GetFileName(ctx.Request.Url.Path));
-                    }
+                        if (!ctx.Request.Path.StartsWith(ControlPanelPrefix, StringComparison.OrdinalIgnoreCase))
+                        {
+                            return null;
+                        }
 
-                    return ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver);
-                });
+                        if (ctx.Request.Path.StartsWith(ResourcePrefix, StringComparison.OrdinalIgnoreCase))
+                        {
+                            var resourceNamespace = "Nancy.Diagnostics.Resources";
+
+                            var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(ResourcePrefix, string.Empty)) ?? string.Empty;
+                            if (!string.IsNullOrEmpty(path))
+                            {
+                                resourceNamespace += string.Format(".{0}", path.Replace('\\', '.'));
+                            }
+
+                            return new EmbeddedFileResponse(
+                                typeof(DiagnosticsHook).Assembly,
+                                resourceNamespace,
+                                Path.GetFileName(ctx.Request.Url.Path));
+                        }
+
+                        return diagnosticsConfiguration.Valid
+                                   ? ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver)
+                                   : GetDiagnosticsHelpView();
+                    }));
+        }
+
+        public static void Disable(IPipelines pipelines)
+        {
+            pipelines.BeforeRequest.RemoveByName(PipelineKey);
+        }
+
+        private static Response GetDiagnosticsHelpView()
+        {
+            var renderer = new DiagnosticsViewRenderer();
+
+            return renderer["help"];
         }
 
         private static Response ExecuteDiagnosticsModule(NancyContext ctx, IRouteResolver routeResolver)

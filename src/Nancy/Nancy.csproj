@@ -410,6 +410,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Resources\Modules\tracing\traces.js" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\help.sshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
