@@ -53,6 +53,10 @@
             this.diagnosticObject = new RouteCacheDiagnostics(this);
         }
 
+        /// <summary>
+        /// Gets an instance of the route cache.
+        /// </summary>
+        /// <returns>An <see cref="IRouteCache"/> instance.</returns>
         public IRouteCache GetCache()
         {
             return this.RouteCacheFactory();
