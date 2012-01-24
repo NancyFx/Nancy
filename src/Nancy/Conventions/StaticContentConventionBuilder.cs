@@ -39,38 +39,53 @@ namespace Nancy.Conventions
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
 
                 return responseFactory.Invoke();
             };
         }
 
-        private static Func<string, Func<Response>> BuildContentDelegate(string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
+        private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
             return requestPath =>
             {
+                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", requestPath, "'")));
                 var extension = Path.GetExtension(requestPath);
 
                 if (string.IsNullOrEmpty(extension))
                 {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine("[StaticContentConventionBuilder] The requested file did not contain a file extension."));
                     return () => null;
                 }
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
                     return () => null;
                 }
 
-                requestPath = Regex.Replace(requestPath, Regex.Escape(requestedPath), contentPath, RegexOptions.IgnoreCase);
+                requestPath = 
+                    Regex.Replace(requestPath, Regex.Escape(requestedPath), contentPath, RegexOptions.IgnoreCase);
 
-                var fileName = Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
+                var fileName = 
+                    Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
 
-                var contentRootPath = Path.Combine(applicationRootPath, contentPath);
-                if (!IsWithinContentFolder(contentRootPath, fileName) || !File.Exists(fileName))
+                var contentRootPath = 
+                    Path.Combine(applicationRootPath, contentPath);
+
+                if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path ourside the content folder '", contentPath, "'")));
                     return () => null;
                 }
 
+                if (!File.Exists(fileName))
+                {
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested file '", fileName, "' does not exist")));
+                    return () => null;
+                }
+
+                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Returning file '", fileName, "'")));
                 return () => new GenericFileResponse(fileName);
             };
         }

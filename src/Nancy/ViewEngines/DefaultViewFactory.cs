@@ -58,7 +58,9 @@
             }
 
             var actualViewName = 
-                viewName ?? GetViewNameFromModel(model);
+                viewName ?? GetViewNameFromModel(model, viewLocationContext.Context);
+
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with name ", actualViewName)));
 
             return this.GetRenderedView(actualViewName, model, viewLocationContext);
         }
@@ -69,12 +71,15 @@
                 this.viewResolver.GetViewLocation(viewName, model, viewLocationContext);
 
             var resolvedViewEngine = 
-                GetViewEngine(viewLocationResult);
+                GetViewEngine(viewLocationResult, viewLocationContext.Context);
 
             if (resolvedViewEngine == null)
             {
+                viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewFactory] Unable to find view engine that could render the view."));
                 throw new ViewNotFoundException(viewName, this.viewEngineExtensions);
             }
+
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with view engine ", resolvedViewEngine.GetType().FullName)));
 
             return SafeInvokeViewEngine(
                 resolvedViewEngine,
@@ -102,12 +107,14 @@
             return expandoObject;
         }
 
-        private IViewEngine GetViewEngine(ViewLocationResult viewLocationResult)
+        private IViewEngine GetViewEngine(ViewLocationResult viewLocationResult, NancyContext context)
         {
             if (viewLocationResult == null)
             {
                 return null;
             }
+
+            context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Attempting to resolve view engine for view extension ", viewLocationResult.Extension)));
 
             var matchingViewEngines = 
                 from viewEngine in this.viewEngines
@@ -117,8 +124,10 @@
             return matchingViewEngines.FirstOrDefault();
         }
 
-        private static string GetViewNameFromModel(dynamic model)
+        private static string GetViewNameFromModel(dynamic model, NancyContext context)
         {
+            context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Extracting view name from model of type ", model.GetType().FullName)));
+
             return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }
 
