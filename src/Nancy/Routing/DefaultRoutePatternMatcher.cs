@@ -15,6 +15,12 @@
     {
         private readonly ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
 
+        /// <summary>
+        /// Attempts to match a requested path with a route pattern.
+        /// </summary>
+        /// <param name="requestedPath">The path that was requested.</param>
+        /// <param name="routePath">The route pattern that the requested path should be attempted to be matched with.</param>
+        /// <returns>An <see cref="IRoutePatternMatchResult"/> instance, containing the outcome of the match.</returns>
         public IRoutePatternMatchResult Match(string requestedPath, string routePath)
         {
             var routePathPattern = 
