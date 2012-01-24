@@ -2,6 +2,7 @@
 {
     using System;
 
+    using Nancy.Diagnostics;
     using Nancy.Testing;
 
     using Xunit;
@@ -11,7 +12,8 @@
         [Fact]
         public void Should_return_info_page_if_password_null()
         {
-            var bootstrapper = new ConfigurableBootstrapper();
+            var diagsConfig = new DiagnosticsConfiguration { Password = null };
+            var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
             var result = browser.Get("/_Nancy");
@@ -22,7 +24,13 @@
         [Fact]
         public void Should_return_info_page_if_password_empty()
         {
-            throw new NotImplementedException();
+            var diagsConfig = new DiagnosticsConfiguration { Password = string.Empty };
+            var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
+            var browser = new Browser(bootstrapper);
+
+            var result = browser.Get("/_Nancy");
+
+            result.Body.AsString().ShouldContain("Diagnostics Disabled");
         }
 
         [Fact]

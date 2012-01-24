@@ -5,6 +5,7 @@ namespace Nancy.Testing
     using System.Linq;
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
+    using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
@@ -23,6 +24,7 @@ namespace Nancy.Testing
         private readonly NancyInternalConfiguration configuration;
         private readonly ConfigurableModuleCatalog catalog;
         private bool disableAutoRegistration;
+        private DiagnosticsConfiguration diagnosticConfiguration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -180,6 +182,14 @@ namespace Nancy.Testing
         protected override IEnumerable<Type> StartupTasks
         {
             get { return this.Resolve<IStartup>() ?? base.StartupTasks; }
+        }
+
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get
+            {
+                return this.diagnosticConfiguration ?? base.DiagnosticsConfiguration;
+            }
         }
 
         /// <summary>
@@ -1127,11 +1137,22 @@ namespace Nancy.Testing
             /// <summary>
             /// Configures the bootstrapper to use specific serializers
             /// </summary>
-            /// <param name="serializers">Sollection of serializer types</param>
+            /// <param name="serializers">Collection of serializer types</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Serializers(params Type[] serializers)
             {
                 this.bootstrapper.configuration.Serializers = new List<Type>(serializers);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use a specific diagnostics configuration
+            /// </summary>
+            /// <param name="diagnosticsConfiguration">Diagnostics configuration to use</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator DiagnosticsConfiguration(DiagnosticsConfiguration diagnosticsConfiguration)
+            {
+                this.bootstrapper.diagnosticConfiguration = diagnosticsConfiguration;
                 return this;
             }
         }
