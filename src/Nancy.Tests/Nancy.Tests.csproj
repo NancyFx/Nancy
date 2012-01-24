@@ -113,6 +113,7 @@
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
+    <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />

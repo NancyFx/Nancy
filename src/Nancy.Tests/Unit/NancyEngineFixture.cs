@@ -6,6 +6,7 @@ namespace Nancy.Tests.Unit
     using Diagnostics;
     using FakeItEasy;
     using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
     using Nancy.Routing;
