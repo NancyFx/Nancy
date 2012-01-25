@@ -16,6 +16,8 @@ namespace Nancy.Diagnostics
         
         private const string PipelineKey = "__Diagnostics";
 
+        private const string DiagsCookieName = "__ncd";
+
         public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
