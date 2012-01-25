@@ -46,6 +46,12 @@
         }
 
         [Fact]
+        public void Should_return_login_page_with_auth_cookie_with_incorrect_password()
+        {
+            throw new NotImplementedException();
+        }
+
+        [Fact]
         public void Should_not_accept_invalid_password()
         {
             throw new NotImplementedException();
