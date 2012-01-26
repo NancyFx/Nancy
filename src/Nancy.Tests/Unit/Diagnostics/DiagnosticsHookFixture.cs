@@ -169,6 +169,10 @@
                 };
 
             var serializedSession = this.objectSerializer.Serialize(session);
+
+            // TODO - encrypt, hmac, etc etc :)
+
+            throw new NotImplementedException();
         }
 
         private DiagnosticsSession DecodeCookie(INancyCookie nancyCookie)
