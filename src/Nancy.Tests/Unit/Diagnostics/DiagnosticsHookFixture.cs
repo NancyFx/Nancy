@@ -116,8 +116,8 @@
                 with.FormValue("Password", "wrongpassword");
             });
 
-            result.Body["#error"].ShouldExistOnce();
-            result.Cookies.Any(c => c.Name == DiagsCookieName).ShouldBeFalse();
+            result.Body["#login"].ShouldExistOnce();
+            result.Cookies.Any(c => c.Name == DiagsCookieName && !string.IsNullOrEmpty(c.Value)).ShouldBeFalse();
         }
 
         [Fact]

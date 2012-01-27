@@ -4,7 +4,9 @@
     {
         public MainModule()
         {
-            Get["/"] = _ => View["Dashboard", new { Test = "Foobar" }];
+            Get["/"] = _ => View["Dashboard"];
+
+            Post["/"] = _ => Response.AsRedirect("~" + DiagnosticsHook.ControlPanelPrefix);
         }
     }
 }

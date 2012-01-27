@@ -3,8 +3,9 @@ namespace Nancy.Diagnostics
     using System;
     using System.Collections.Generic;
     using System.IO;
-
+    using System.Linq;
     using Bootstrapper;
+    using Cookies;
     using Cryptography;
     using Helpers;
     using ModelBinding;
@@ -19,6 +20,7 @@ namespace Nancy.Diagnostics
         private const string PipelineKey = "__Diagnostics";
 
         private const string DiagsCookieName = "__ncd";
+        private const int DiagnosticsSessionTimeoutMinutes = 15;
 
         public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
@@ -93,13 +95,14 @@ namespace Nancy.Diagnostics
 
         private static Response ExecuteDiagnostics(NancyContext ctx, IRouteResolver routeResolver, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
         {
-            var authCookie = GetSession(ctx, diagnosticsConfiguration, serializer);
+            var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
-            if (authCookie == null)
+            if (session == null)
             {
                 var view = GetDiagnosticsLoginView();
 
-                view.AddCookie(DiagsCookieName, string.Empty);
+                view.AddCookie(
+                    new NancyCookie(DiagsCookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) });
 
                 return view;
             }
@@ -127,8 +130,29 @@ namespace Nancy.Diagnostics
                 resolveResultPostReq.Invoke(ctx);
             }
 
+            AddUpdateSessionCookie(session, ctx, diagnosticsConfiguration, serializer);
+
             // If we duplicate the context this makes more sense :)
             return ctx.Response;
+        }
+
+        private static void AddUpdateSessionCookie(DiagnosticsSession session, NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
+        {
+            if (context.Response == null)
+            {
+                return;
+            }
+
+            session.Expiry = DateTime.Now.AddMinutes(DiagnosticsSessionTimeoutMinutes);
+            var serializedSession = serializer.Serialize(session);
+
+            var encryptedSession = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Encrypt(serializedSession);
+            var hmacBytes = diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedSession);
+            var hmacString = Convert.ToBase64String(hmacBytes);
+
+            var cookie = new NancyCookie(DiagsCookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
+            
+            context.Response.AddCookie(cookie);
         }
 
         private static DiagnosticsSession GetSession(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
@@ -136,6 +160,11 @@ namespace Nancy.Diagnostics
             if (context.Request == null)
             {
                 return null;
+            }
+
+            if (IsLoginRequest(context))
+            {
+                return ProcessLogin(context, diagnosticsConfiguration, serializer);
             }
 
             if (!context.Request.Cookies.ContainsKey(DiagsCookieName))
@@ -160,12 +189,46 @@ namespace Nancy.Diagnostics
             var decryptedValue = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Decrypt(encryptedSession);
             var session = serializer.Deserialize(decryptedValue) as DiagnosticsSession;
             
-            if (session == null || session.Expiry < DateTime.Now)
+            if (session == null || session.Expiry < DateTime.Now || !SessionPasswordValid(session, diagnosticsConfiguration.Password))
             {
                 return null;
             }
 
             return session;
+        }
+
+        private static bool SessionPasswordValid(DiagnosticsSession session, string realPassword)
+        {
+            var newHash = DiagnosticsSession.GenerateSaltedHash(realPassword, session.Salt);
+
+            return (newHash.Length == session.Hash.Length && newHash.SequenceEqual(session.Hash));
+        }
+
+        private static DiagnosticsSession ProcessLogin(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
+        {
+            string password = context.Request.Form.Password;
+
+            if (!string.Equals(password, diagnosticsConfiguration.Password, StringComparison.Ordinal))
+            {
+                return null;
+            }
+
+            var salt = DiagnosticsSession.GenerateRandomSalt();
+            var hash = DiagnosticsSession.GenerateSaltedHash(password, salt);
+            var session = new DiagnosticsSession
+            {
+                Hash = hash,
+                Salt = salt,
+                Expiry = DateTime.Now.AddMinutes(DiagnosticsSessionTimeoutMinutes),
+            };
+
+            return session;
+        }
+
+        private static bool IsLoginRequest(NancyContext context)
+        {
+            // This feels dirty :)
+            return context.Request.Method == "POST" && context.Request.Path == "/_Nancy/";
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
