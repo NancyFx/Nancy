@@ -20,7 +20,7 @@ namespace Nancy
             this.Items = new Dictionary<string, object>();
             this.Trace = new RequestTrace();
             
-            // TODO - some logic needs to go here
+            // TODO - potentially additional logic to lock to ip etc?
             this.ControlPanelEnabled = true;
         }
 

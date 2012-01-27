@@ -5,6 +5,8 @@ namespace Nancy.Diagnostics
     using System.IO;
 
     using Bootstrapper;
+    using Cryptography;
+    using Helpers;
     using ModelBinding;
     using Routing;
 
@@ -30,7 +32,9 @@ namespace Nancy.Diagnostics
                 new DefaultRoutePatternMatcher(),
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache);
-            
+
+            var serializer = new DefaultObjectSerializer();
+
             pipelines.BeforeRequest.AddItemToStartOfPipeline(
                 new PipelineItem<Func<NancyContext, Response>>(
                     PipelineKey,
@@ -63,7 +67,7 @@ namespace Nancy.Diagnostics
                         }
 
                         return diagnosticsConfiguration.Valid
-                                   ? ExecuteDiagnosticsModule(ctx, diagnosticsRouteResolver)
+                                   ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer)
                                    : GetDiagnosticsHelpView();
                     }));
         }
@@ -80,8 +84,26 @@ namespace Nancy.Diagnostics
             return renderer["help"];
         }
 
-        private static Response ExecuteDiagnosticsModule(NancyContext ctx, IRouteResolver routeResolver)
+        private static Response GetDiagnosticsLoginView()
         {
+            var renderer = new DiagnosticsViewRenderer();
+
+            return renderer["login"];
+        }
+
+        private static Response ExecuteDiagnostics(NancyContext ctx, IRouteResolver routeResolver, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
+        {
+            var authCookie = GetSession(ctx, diagnosticsConfiguration, serializer);
+
+            if (authCookie == null)
+            {
+                var view = GetDiagnosticsLoginView();
+
+                view.AddCookie(DiagsCookieName, string.Empty);
+
+                return view;
+            }
+
             // TODO - duplicate the context and strip out the "_/Nancy" bit so we don't need to use it in the module
             var resolveResult = routeResolver.Resolve(ctx);
 
@@ -107,6 +129,43 @@ namespace Nancy.Diagnostics
 
             // If we duplicate the context this makes more sense :)
             return ctx.Response;
+        }
+
+        private static DiagnosticsSession GetSession(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration, DefaultObjectSerializer serializer)
+        {
+            if (context.Request == null)
+            {
+                return null;
+            }
+
+            if (!context.Request.Cookies.ContainsKey(DiagsCookieName))
+            {
+                return null;
+            }
+
+            var encryptedValue = HttpUtility.UrlDecode(context.Request.Cookies[DiagsCookieName]);
+            var hmacStringLength = Base64Helpers.GetBase64Length(diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.HmacLength);
+            var encryptedSession = encryptedValue.Substring(hmacStringLength);
+            var hmacString = encryptedValue.Substring(0, hmacStringLength);
+
+            var hmacBytes = Convert.FromBase64String(hmacString);
+            var newHmac = diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedSession);
+            var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.HmacLength);
+
+            if (!hmacValid)
+            {
+                return null;
+            }
+
+            var decryptedValue = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Decrypt(encryptedSession);
+            var session = serializer.Deserialize(decryptedValue) as DiagnosticsSession;
+            
+            if (session == null || session.Expiry < DateTime.Now)
+            {
+                return null;
+            }
+
+            return session;
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)

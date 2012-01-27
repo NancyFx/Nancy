@@ -1,11 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Diagnostics
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Cryptography;
-    using System.Text;
-
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
@@ -30,7 +26,7 @@
         [Fact]
         public void Should_return_info_page_if_password_null()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = null };
+            var diagsConfig = new DiagnosticsConfiguration { Password = null, CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -42,7 +38,7 @@
         [Fact]
         public void Should_return_info_page_if_password_empty()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = string.Empty };
+            var diagsConfig = new DiagnosticsConfiguration { Password = string.Empty, CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -54,7 +50,7 @@
         [Fact]
         public void Should_return_login_page_with_no_auth_cookie()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -66,7 +62,7 @@
         [Fact]
         public void Should_return_main_page_with_valid_auth_cookie()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -75,13 +71,13 @@
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
 
-            result.Body["#notSureWhatToPutHereYet"].ShouldExistOnce();
+            result.Body["#infoBox"].ShouldExistOnce();
         }
 
         [Fact]
         public void Should_return_login_page_with_expired_auth_cookie()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -96,7 +92,7 @@
         [Fact]
         public void Should_return_login_page_with_auth_cookie_with_incorrect_password()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -111,7 +107,7 @@
         [Fact]
         public void Should_not_accept_invalid_password()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -127,7 +123,7 @@
         [Fact]
         public void Should_set_login_cookie_when_password_correct()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -137,12 +133,13 @@
             });
 
             result.Cookies.Any(c => c.Name == DiagsCookieName).ShouldBeTrue();
+            string.IsNullOrEmpty(result.Cookies.First(c => c.Name == DiagsCookieName).Value).ShouldBeFalse();
         }
 
         [Fact]
         public void Should_use_rolling_expiry_for_auth_cookie()
         {
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password" };
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
@@ -182,50 +179,6 @@
             var decrypted = this.cryptoConfig.EncryptionProvider.Decrypt(encryptedSession);
             
             return this.objectSerializer.Deserialize(decrypted) as DiagnosticsSession;
-        }
-    }
-
-    [Serializable]
-    internal class DiagnosticsSession
-    {
-        public byte[] Hash { get; set; }
-
-        public byte[] Salt { get; set; }
-
-        public DateTime Expiry { get; set; }
-
-        public static byte[] GenerateRandomSalt()
-        {
-            var provider = new RNGCryptoServiceProvider();
-
-            var buffer = new byte[32];
-            provider.GetBytes(buffer);
-
-            return buffer;
-        }
-
-        public static byte[] GenerateSaltedHash(byte[] plainText, byte[] salt)
-        {
-            var algorithm = new SHA256Managed();
-
-            var plainTextWithSaltBytes = new byte[plainText.Length + salt.Length];
-
-            for (var i = 0; i < plainText.Length; i++)
-            {
-                plainTextWithSaltBytes[i] = plainText[i];
-            }
-
-            for (var i = 0; i < salt.Length; i++)
-            {
-                plainTextWithSaltBytes[plainText.Length + i] = salt[i];
-            }
-
-            return algorithm.ComputeHash(plainTextWithSaltBytes);
-        }
-
-        public static byte[] GenerateSaltedHash(string plainText, byte[] salt)
-        {
-            return GenerateSaltedHash(Encoding.UTF8.GetBytes(plainText), salt);
         }
     }
 }

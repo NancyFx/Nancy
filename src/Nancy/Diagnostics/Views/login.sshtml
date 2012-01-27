@@ -1,0 +1,24 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Diagnostics Disabled@EndSection
+
+@Section['Header']
+@EndSection
+
+@Section['Page_Title']
+	<h1>Diagnostics Disabled</h1>
+@EndSection
+
+@Section['Body']
+	<div class="grid_3">&nbsp;</div>
+	<div class="grid_2" id="login">Password:</div>
+	<div class="grid_4">
+		<form method="post">
+			<input type="password" id="password" />
+		</form>
+	</div>
+	<div class="grid_3">&nbsp;</div>
+@EndSection
+
+
+
