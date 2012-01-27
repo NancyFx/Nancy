@@ -147,10 +147,7 @@
             var browser = new Browser(bootstrapper);
 
             var expiryDate = DateTime.Now.AddMinutes(5);
-            var result = browser.Get("/_Nancy", with =>
-                {
-                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate));
-                });
+            var result = browser.Get("/_Nancy", with => with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate)));
 
             result.Cookies.Any(c => c.Name == DiagsCookieName).ShouldBeTrue();
             this.DecodeCookie(result.Cookies.First(c => c.Name == DiagsCookieName))
@@ -170,17 +167,25 @@
 
             var serializedSession = this.objectSerializer.Serialize(session);
 
-            // TODO - encrypt, hmac, etc etc :)
+            var encryptedSession = this.cryptoConfig.EncryptionProvider.Encrypt(serializedSession);
+            var hmacBytes = this.cryptoConfig.HmacProvider.GenerateHmac(encryptedSession);
+            var hmacString = Convert.ToBase64String(hmacBytes);
 
-            throw new NotImplementedException();
+            return String.Format("{1}{0}", encryptedSession, hmacString);
         }
 
         private DiagnosticsSession DecodeCookie(INancyCookie nancyCookie)
         {
-            throw new NotImplementedException();
+            var cookieValue = nancyCookie.Value;
+            var hmacStringLength = Base64Helpers.GetBase64Length(this.cryptoConfig.HmacProvider.HmacLength);
+            var encryptedSession = cookieValue.Substring(hmacStringLength);
+            var decrypted = this.cryptoConfig.EncryptionProvider.Decrypt(encryptedSession);
+            
+            return this.objectSerializer.Deserialize(decrypted) as DiagnosticsSession;
         }
     }
 
+    [Serializable]
     internal class DiagnosticsSession
     {
         public byte[] Hash { get; set; }
