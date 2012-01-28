@@ -83,10 +83,14 @@
                 var current = segment;
                 if (current.IsParameterized())
                 {
-                    var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>(.+?))", segment.GetParameterName());
+                    var parameterName = segment.GetParameterName();
 
-                    current = segment.Replace(segment, replacement);
+                    var replacement =
+                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>(.+?))", parameterName);
+
+                    current = segment.Replace(
+                        string.Concat("{", parameterName, "}"),
+                        replacement);
                 }
 
                 yield return current;

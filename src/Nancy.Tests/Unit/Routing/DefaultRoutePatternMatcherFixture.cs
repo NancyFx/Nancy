@@ -155,5 +155,31 @@ namespace Nancy.Tests.Unit.Routing
             // Then
             ((string)results.Parameters["b_ar"]).ShouldEqual(parameter);
         }
+
+		[Fact]
+        public void Should_expectation()
+        {
+            // Given
+            const string parameter = "filename";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter + ".cshtml", "/foo/{name}.cshtml");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_expectation3()
+        {
+            // Given
+            const string parameter = "filename";
+
+            // When
+            var results = this.matcher.Match("/foo/bar" + parameter + ".cshtml", "/foo/bar{name}.cshtml");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual(parameter);
+        }
     }
 }
