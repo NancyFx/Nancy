@@ -157,7 +157,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
 		[Fact]
-        public void Should_expectation()
+        public void Should_capture_parameters_when_the_segment_contains_more_characters_after_parameter_declaration()
         {
             // Given
             const string parameter = "filename";
@@ -170,7 +170,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_expectation3()
+        public void Should_capture_parameters_even_when_it_is_surrounded_by_additional_characters()
         {
             // Given
             const string parameter = "filename";
