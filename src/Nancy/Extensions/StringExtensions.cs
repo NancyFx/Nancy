@@ -1,6 +1,7 @@
 namespace Nancy.Extensions
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -22,14 +23,20 @@ namespace Nancy.Extensions
         /// <param name="segment">The segment to extract the name from.</param>
         /// <returns>A string containing the name of the parameter.</returns>
         /// <exception cref="FormatException"></exception>
-        public static string GetParameterName(this string segment)
+        public static IEnumerable<string> GetParameterNames(this string segment)
         {
-            var nameMatch =
-                ParameterExpression.Match(segment);
+            var nameMatch = ParameterExpression
+                .Matches(segment)
+                .Cast<Match>()
+                .Where(x => x.Success);
 
-            if (nameMatch.Success)
+            if (nameMatch.Any())
             {
-                return nameMatch.Groups["name"].Value;
+                //foreach (var capture in nameMatch.Captures)
+                //{
+                //    yield return 
+                //}
+                return nameMatch.Select(x => x.Groups["name"].Value);
             }
 
             throw new FormatException("");

@@ -181,5 +181,27 @@ namespace Nancy.Tests.Unit.Routing
             // Then
             ((string)results.Parameters["name"]).ShouldEqual(parameter);
         }
+
+        [Fact]
+        public void Should_capture_multiple_parameters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name}.{format}");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_capture_multiple_parameters_that_are_surrounded_by_characters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/barfilename.cshtmlbaz", "/foo/bar{name}.{format}baz");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
     }
 }
