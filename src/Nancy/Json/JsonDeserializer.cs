@@ -64,7 +64,7 @@ namespace Nancy.Json
     using System.IO;
     using System.Text;
 
-	internal sealed class JsonDeserializer
+    internal sealed partial class JsonDeserializer
 	{
 		/* Universal error constant */
 		const int __ = -1;
@@ -600,8 +600,9 @@ namespace Nancy.Json
 					default:
 						return false;
 				}
-			} else if (jsonType != JsonType.NONE || !(next_class == C_SPACE || next_class == C_WHITE))
-				buffer.Append (ch);
+            }
+            else if ((jsonType != JsonType.NONE && jsonType != JsonType.FALSE && jsonType != JsonType.TRUE && jsonType != JsonType.NULL) || !(next_class == C_SPACE || next_class == C_WHITE))
+                buffer.Append(ch);
 
 			next_state = state_transition_table [state, next_class];
 			if (next_state >= 0) {
