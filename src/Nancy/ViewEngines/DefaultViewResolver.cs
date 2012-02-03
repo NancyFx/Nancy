@@ -46,6 +46,11 @@
                 return null;
             }
 
+            if (viewLocationContext == null)
+            {
+                return null;
+            }
+
             viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewResolver] Resolving view for '", viewName , "', using view location conventions.")));
 
             foreach (var convention in conventions)
@@ -71,6 +76,7 @@
             }
 
             viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewResolver] No view could be resolved using the available view location conventions."));
+
             return null;
         }
 

@@ -12,11 +12,18 @@ namespace Nancy.Tests.Unit.ViewEngines
     {
         private readonly IViewResolver resolver;
         private readonly IRenderContextFactory renderContextFactory;
+        private readonly ViewLocationContext viewLocationContext;
 
         public DefaultViewFactoryFixture()
         {
             this.resolver = A.Fake<IViewResolver>();
             this.renderContextFactory = A.Fake<IRenderContextFactory>();
+
+            this.viewLocationContext =
+                new ViewLocationContext
+                {
+                    Context = new NancyContext()
+                };
         }
 
         private DefaultViewFactory CreateFactory(params IViewEngine[] viewEngines)
@@ -45,7 +52,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("view.html", new object(), new ViewLocationContext());
+            factory.RenderView("view.html", new object(), this.viewLocationContext);
 
             // Then
             A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -70,7 +77,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("view.html", new object(), new ViewLocationContext());
+            factory.RenderView("view.html", new object(), this.viewLocationContext);
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.Ignored, context)).MustHaveHappened();
@@ -92,7 +99,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("view.html", new object(), new ViewLocationContext());
+            factory.RenderView("view.html", new object(), this.viewLocationContext);
 
             // Then
             A.CallTo(() => this.renderContextFactory.GetRenderContext(A<ViewLocationContext>.Ignored)).MustHaveHappened(Repeated.NoMoreThan.Once);
@@ -118,7 +125,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(null);
 
             // When
-            var exception = Record.Exception(() => factory.RenderView(string.Empty, null, new ViewLocationContext()));
+            var exception = Record.Exception(() => factory.RenderView(string.Empty, null, this.viewLocationContext));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -131,7 +138,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(null);
 
             // When
-            var exception = Record.Exception(() => factory.RenderView(null, null, new ViewLocationContext()));
+            var exception = Record.Exception(() => factory.RenderView(null, null, this.viewLocationContext));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -144,9 +151,9 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            Record.Exception(() => factory.RenderView("viewname.html", null, new ViewLocationContext()));
+            Record.Exception(() => factory.RenderView("viewname.html", null, this.viewLocationContext));
 
-            // Then)
+            // Then
             A.CallTo(() => this.resolver.GetViewLocation("viewname.html", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
         }
 
@@ -158,9 +165,9 @@ namespace Nancy.Tests.Unit.ViewEngines
             var model = new object();
 
             // When
-            Record.Exception(() => factory.RenderView(null, model, new ViewLocationContext()));
+            Record.Exception(() => factory.RenderView(null, model, this.viewLocationContext));
 
-            // Then)
+            // Then
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, model, A<ViewLocationContext>.Ignored)).MustHaveHappened();
         }
 
@@ -170,12 +177,18 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Given
             var factory = this.CreateFactory();
             var model = new object();
-            var viewLocationContext = new ViewLocationContext { ModulePath = "/bar" };
+
+            var viewContext = 
+                new ViewLocationContext
+                {
+                    Context = new NancyContext(),
+                    ModulePath = "/bar"
+                };
 
             // When
-            Record.Exception(() => factory.RenderView(null, model, viewLocationContext));
+            Record.Exception(() => factory.RenderView(null, model, viewContext));
 
-            // Then)
+            // Then
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.That.Matches(x => x.ModulePath.Equals("/bar")))).MustHaveHappened();
         }
 
@@ -197,7 +210,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("foo", null, new ViewLocationContext());
+            factory.RenderView("foo", null, this.viewLocationContext);
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored)).MustHaveHappened();
@@ -219,7 +232,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("foo", null, new ViewLocationContext());
+            factory.RenderView("foo", null, this.viewLocationContext);
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored)).MustHaveHappened();
@@ -244,7 +257,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            var response = factory.RenderView("foo", null, new ViewLocationContext());
+            var response = factory.RenderView("foo", null, this.viewLocationContext);
 
             // Then
             response.Contents.ShouldBeSameAs(actionReturnedFromEngine);
@@ -267,7 +280,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            var response = factory.RenderView("foo", null, new ViewLocationContext());
+            var response = factory.RenderView("foo", null, this.viewLocationContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -292,7 +305,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("foo", model, new ViewLocationContext());
+            factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, model, A<IRenderContext>.Ignored)).MustHaveHappened();
@@ -315,7 +328,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("foo", model, new ViewLocationContext());
+            factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof(ExpandoObject))), A<IRenderContext>.Ignored)).MustHaveHappened();
@@ -336,7 +349,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
 
             // When
-            factory.RenderView("foo", model, new ViewLocationContext());
+            factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
             ((string)viewEngines[0].Model.Name).ShouldEqual("Nancy");
@@ -349,7 +362,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            Record.Exception(() => factory.RenderView(null, new object(), new ViewLocationContext()));
+            Record.Exception(() => factory.RenderView(null, new object(), this.viewLocationContext));
 
             // Then
             A.CallTo(() => this.resolver.GetViewLocation("Object", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -362,7 +375,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
 
             // When
-            Record.Exception(() => factory.RenderView(null, new ViewModel(), new ViewLocationContext()));
+            Record.Exception(() => factory.RenderView(null, new ViewModel(), this.viewLocationContext));
 
             // Then
             A.CallTo(() => this.resolver.GetViewLocation("View", A<object>.Ignored, A<ViewLocationContext>.Ignored)).MustHaveHappened();
@@ -375,7 +388,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
-            var result = Record.Exception(() => factory.RenderView("foo", null, new ViewLocationContext()));
+            var result = Record.Exception(() => factory.RenderView("foo", null, this.viewLocationContext));
 
             result.ShouldBeOfType<ViewNotFoundException>();
         }
@@ -392,7 +405,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory(viewEngines);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
-            var result = Record.Exception(() => factory.RenderView("foo", null, new ViewLocationContext())) as ViewNotFoundException;
+            var result = Record.Exception(() => factory.RenderView("foo", null, this.viewLocationContext)) as ViewNotFoundException;
 
             result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
             result.ViewName.ShouldEqual("foo");
