@@ -54,6 +54,10 @@ namespace Nancy
                     return formatter.Deserialize(inputStream);
                 }
             }
+            catch (FormatException)
+            {
+                return null;
+            }
             catch (SerializationException)
             {
                 return null;
