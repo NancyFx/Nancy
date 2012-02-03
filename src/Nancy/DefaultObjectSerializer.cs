@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
     public class DefaultObjectSerializer : IObjectSerializer
@@ -46,9 +47,16 @@ namespace Nancy
 
             var formatter = new BinaryFormatter();
 
-            using (var inputStream = new MemoryStream(inputBytes, false))
+            try
             {
-                return formatter.Deserialize(inputStream);
+                using (var inputStream = new MemoryStream(inputBytes, false))
+                {
+                    return formatter.Deserialize(inputStream);
+                }
+            }
+            catch (SerializationException)
+            {
+                return null;
             }
         }
     }

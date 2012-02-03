@@ -68,7 +68,7 @@ namespace Nancy.Security
         /// <returns>True if valid, false otherwise</returns>
         public bool CookieTokenStillValid(CsrfToken cookieToken)
         {
-            if (cookieToken.RandomBytes == null || cookieToken.RandomBytes.Length == 0)
+            if (cookieToken == null || cookieToken.RandomBytes == null || cookieToken.RandomBytes.Length == 0)
             {
                 return false;
             }
