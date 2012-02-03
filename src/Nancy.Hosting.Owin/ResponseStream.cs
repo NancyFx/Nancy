@@ -8,29 +8,37 @@ namespace Nancy.Hosting.Owin
     /// </summary>
     public class ResponseStream : Stream
     {
-        private Func<ArraySegment<byte>, Action, bool> onNext;
-        private readonly Action onComplete;
+        private readonly Func<ArraySegment<byte>, bool> onWrite;
+        private readonly Func<Action, bool> onFlush;
+        private readonly Action<Exception> onEnd;
         private bool isCompleted;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResponseStream"/> class.
         /// </summary>
-        /// <param name="onNext">Delegate to call when writing data to the OWIN host.</param>
-        /// <param name="onComplete">Delegate to call to signal to the OWIN host that all data have been written.</param>
-        public ResponseStream(Func<ArraySegment<byte>, Action, bool> onNext, Action onComplete)
+        /// <param name="onWrite">Delegate to call when writing data to the OWIN host.</param>
+        /// <param name="onFlush">Delegate to call to flush data or request callback from OWIN host.</param>
+        /// <param name="onEnd">Delegate to call to signal to the OWIN host that all data have been written or error has occured.</param>
+        public ResponseStream(Func<ArraySegment<byte>, bool> onWrite, Func<Action, bool> onFlush, Action<Exception> onEnd)
         {
-            if (onNext == null)
+            if (onWrite == null)
             {
-                throw new ArgumentNullException("onNext");
+                throw new ArgumentNullException("onWrite");
             }
 
-            if (onComplete == null)
+            if (onFlush == null)
             {
-                throw new ArgumentNullException("onComplete");
+                throw new ArgumentNullException("onFlush");
             }
 
-            this.onNext = onNext;
-            this.onComplete = onComplete;
+            if (onEnd == null)
+            {
+                throw new ArgumentNullException("onEnd");
+            }
+
+            this.onWrite = onWrite;
+            this.onFlush = onFlush;
+            this.onEnd= onEnd;
         }
 
         /// <summary>
@@ -44,10 +52,7 @@ namespace Nancy.Hosting.Owin
                 throw new InvalidOperationException("Stream is already closed");
             }
 
-            if (this.onNext.Invoke(new ArraySegment<byte>(buffer, offset, count), null))
-            {
-                throw new InvalidOperationException("OWIN host returned 'will invoke continuation' during sync. write");
-            }
+            this.onWrite.Invoke(new ArraySegment<byte>(buffer, offset, count));
         }
 
         /// <summary>
@@ -62,7 +67,7 @@ namespace Nancy.Hosting.Owin
 
             this.isCompleted = true;
 
-            this.onComplete.Invoke();
+            this.onEnd.Invoke(null);
         }
 
         /// <summary>
@@ -71,6 +76,10 @@ namespace Nancy.Hosting.Owin
         /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception><filterpriority>2</filterpriority>
         public override void Flush()
         {
+            if (this.onFlush(null) != false)
+            {
+                throw new InvalidOperationException("OWIN host returned 'will invoke continuation' during sync. flush");
+            }
         }
 
         /// <summary>

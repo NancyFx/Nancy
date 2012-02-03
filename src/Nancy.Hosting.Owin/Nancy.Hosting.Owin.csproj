@@ -63,6 +63,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Owin">
+      <HintPath>..\..\dependencies\owin\Owin.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -82,8 +85,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Extensions\AppBuilderExtensions.cs" />
     <Compile Include="Extensions\EnvironmentExtensions.cs" />
-    <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="NancyOwinHost.cs" />
     <Compile Include="NancyRequestParameters.cs" />
     <Compile Include="ResponseStream.cs" />

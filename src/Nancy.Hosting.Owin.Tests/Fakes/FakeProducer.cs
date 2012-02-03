@@ -1,19 +1,16 @@
+using Owin;
+
 namespace Nancy.Hosting.Owin.Tests.Fakes
 {
     using System;
     using System.Threading;
-    using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                             System.Action,                         // continuation
-                             bool>,                                 // continuation will be invoked
-                             System.Action<System.Exception>,       // onError
-                             System.Action,                         // on Complete
-                             System.Action>;                        // cancel
 
     public class FakeProducer
     {
-        private Func<ArraySegment<byte>, Action, bool> onNext;
-        private Action<Exception> onError;
-        private Action onComplete;
+        private Func<ArraySegment<byte>, bool> onWrite;
+        private Func<Action, bool> onFlush;
+        private Action<Exception> onEnd;
+        private CancellationToken cancellationToken;
 
         private bool sendContinuation;
         private int currentIndex;
@@ -61,11 +58,12 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
         /// <param name="onError">On error delegate</param>
         /// <param name="onComplete">On complete delegate</param>
         /// <returns>Cancellation delegate</returns>
-        public Action BodyDelegate(Func<ArraySegment<byte>, Action, bool> onNext, Action<Exception> onError, Action onComplete)
+        public void BodyDelegate(Func<ArraySegment<byte>, bool> onWrite, Func<Action,bool> onFlush, Action<Exception> onEnd, CancellationToken cancellationToken)
         {
-            this.onNext = onNext;
-            this.onError = onError;
-            this.onComplete = onComplete;
+            this.onWrite = onWrite;
+            this.onFlush = onFlush;
+            this.onEnd = onEnd;
+            this.cancellationToken = cancellationToken;
 
             this.BodyDelegateInvoked = true;
 
@@ -74,7 +72,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
                 ThreadPool.QueueUserWorkItem((s) => this.SendAll());
             }
 
-            return this.OnCancel;
+            cancellationToken.Register(OnCancel);
         }
 
         /// <summary>
@@ -88,7 +86,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
                 throw new InvalidOperationException("Body delegate not yet invoked");
             }
 
-            this.onError.Invoke(e);
+            this.onEnd.Invoke(e);
         }
 
         /// <summary>
@@ -106,7 +104,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
                 this.SendChunk();
             }
 
-            this.onComplete.Invoke();
+            this.onEnd.Invoke(null);
         }
 
         /// <summary>
@@ -137,7 +135,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
                 // returns false, signifying it won't call the continuation,
                 // we set it straight away.
                 var sync = new ManualResetEventSlim();
-                if (!this.onNext(currentChunk, sync.Set))
+                if (!this.onWrite(currentChunk) || !this.onFlush(sync.Set))
                 {
                     sync.Set();
                 }
@@ -147,7 +145,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             }
             else
             {
-                if (this.onNext(currentChunk, null))
+                if (this.onWrite(currentChunk) && this.onFlush(null))
                 {
                     throw new InvalidOperationException("Consumer returned true for 'will invoke continuation' when continuation was null");
                 }
@@ -164,7 +162,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
                 throw new InvalidOperationException("Body delegate not yet invoked");
             }
 
-            this.onComplete.Invoke();
+            this.onEnd.Invoke(null);
         }
 
         private void OnCancel()

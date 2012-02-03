@@ -11,11 +11,11 @@ namespace Nancy.Tests.Extensions
 
         public EnvironmentExtensionsFixture()
         {
-            IDictionary<string, string> requestHeaders = new Dictionary<string, string>()
+            IDictionary<string, IEnumerable<string>> requestHeaders = new Dictionary<string, IEnumerable<string>>()
                                                              {
-                                                                 { "Content-Length", "500" },
-                                                                 { "Header", "Value1,Value2" },
-                                                                 { "Host", "testserver" },
+                                                                 { "Content-Length", new[]{"500"} },
+                                                                 { "Header", new[]{"Value1","Value2"} },
+                                                                 { "Host", new[]{"testserver"} },
                                                              };
 
             this.environment = new Dictionary<string, object>()

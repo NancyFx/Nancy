@@ -1,3 +1,5 @@
+using System.Linq;
+
 namespace Nancy.Hosting.Owin.Extensions
 {
     using System;
@@ -25,21 +27,23 @@ namespace Nancy.Hosting.Owin.Extensions
 
         private static int GetExpectedRequestLength(IDictionary<string, object> environment)
         {
-            var incomingHeaders = (IDictionary<string, string>)environment["owin.RequestHeaders"];
+            var incomingHeaders = (IDictionary<string, IEnumerable<string>>)environment["owin.RequestHeaders"];
 
             if (incomingHeaders == null)
             {
                 return 0;
             }
 
-            string contentLengthString;
-            if (!incomingHeaders.TryGetValue("Content-Length", out contentLengthString))
+            IEnumerable<string> contentLengthValues;
+            if (!incomingHeaders.TryGetValue("Content-Length", out contentLengthValues) || 
+                contentLengthValues == null || 
+                contentLengthValues.Count() != 1)
             {
                 return 0;
             }
 
             int contentLength;
-            if (!int.TryParse(contentLengthString, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
+            if (!int.TryParse(contentLengthValues.Single(), NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
             {
                 return 0;
             }
@@ -54,15 +58,7 @@ namespace Nancy.Hosting.Owin.Extensions
 
         private static IDictionary<string, IEnumerable<string>> GetHeaders(IDictionary<string, object> environment)
         {
-            var incomingHeaders = (IDictionary<string, string>)environment["owin.RequestHeaders"];
-            var headers = new Dictionary<string, IEnumerable<string>>(incomingHeaders.Count);
-
-            foreach (var incomingHeader in incomingHeaders)
-            {
-                headers.Add(incomingHeader.Key, incomingHeader.Value.Split(','));
-            }
-
-            return headers;
+            return (IDictionary<string, IEnumerable<string>>)environment["owin.RequestHeaders"];
         }
 
         private static Url GetUrl(IDictionary<string, object> environment)
@@ -70,7 +66,7 @@ namespace Nancy.Hosting.Owin.Extensions
             return new Url
             {
                 Scheme = (string)environment["owin.RequestScheme"],
-                HostName = ((IDictionary<string, string>)environment["owin.RequestHeaders"])["Host"],
+                HostName = ((IDictionary<string, IEnumerable<string>>)environment["owin.RequestHeaders"])["Host"].SingleOrDefault(),
                 Port = null,
                 BasePath = (string)environment["owin.RequestPathBase"],
                 Path = (string)environment["owin.RequestPath"],

@@ -1,3 +1,5 @@
+using System;
+
 namespace Nancy.Demo.Hosting.Owin
 {
     using System.Web.Hosting;
@@ -6,7 +8,9 @@ namespace Nancy.Demo.Hosting.Owin
     {
         public string GetRootPath()
         {
-            return HostingEnvironment.MapPath("~/");
+            return HostingEnvironment.IsHosted 
+                ? HostingEnvironment.MapPath("~/") 
+                : Environment.CurrentDirectory;
         }
     }
 }

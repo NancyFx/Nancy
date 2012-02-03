@@ -1,0 +1,6 @@
+﻿<div id="nav">
+  <ul>
+    <li><a href="~/">Form Post</a></li>
+    <li><a href="~/fileupload">File Upload</a></li>
+  </ul>
+</div>

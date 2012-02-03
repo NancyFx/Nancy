@@ -1,14 +1,10 @@
+using Owin;
+
 namespace Nancy.Hosting.Owin.Tests.Fakes
 {
     using System;
     using System.IO;
     using System.Threading;
-    using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                                 System.Action,                         // continuation
-                                 bool>,                                 // continuation will be invoked
-                                 System.Action<System.Exception>,       // onError
-                                 System.Action,                         // on Complete
-                                 System.Action>;                        // cancel
 
     /// <summary>
     /// Consumes a body delegate
@@ -67,7 +63,11 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             this.sync.Reset();
 
             this.dataStream = new MemoryStream();
-            this.cancelDelegate = bodyDelegate.Invoke(this.DataConsumer, this.OnError, this.OnComplete);
+            
+            var cts = new CancellationTokenSource();
+            bodyDelegate.Invoke(this.OnWrite, this.OnFlush, this.OnEnd, cts.Token);
+            this.cancelDelegate = cts.Cancel;
+
             this.bodyDelegateInvoked = true;
 
             if (waitForComplete)
@@ -91,6 +91,18 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             this.sync.Set();
         }
 
+        private void OnEnd(Exception ex)
+        {
+            if (ex == null)
+            {
+                OnComplete();
+            }
+            else
+            {
+                OnError(ex);
+            }
+        }
+        
         private void OnComplete()
         {
             this.CompleteCalled = true;
@@ -106,42 +118,49 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             this.sync.Set();
         }
 
-        private bool DataConsumer(ArraySegment<byte> data, Action continuation)
+        private bool OnWrite(ArraySegment<byte> data)
         {
-            this.ContinuationSent = continuation != null;
+            this.ConsumeDataSync(data);
 
+            if (this.useContinuation)
+            {
+                // return true is continuation will be used, to indicate calling
+                // flush for backpressure would be appropriate
+                return true;
+            }
+
+            // return false to indicate data is not buffering
+            return false;
+        }
+
+        private bool OnFlush(Action continuation)
+        {
             if (continuation == null || !this.useContinuation)
             {
-                // No continuation - consume sync.
-                // and return false to indicate we won't be calling the continuation
-                this.ConsumeDataSync(data);
-
+                // No continuation return false to indicate we won't be calling the continuation
                 return false;
             }
 
-            // Continuation is to be used, execute the data read
+            // Continuation is to be used, execute the callback
             // on a background thread and return true to indicate
             // that we will be calling the continuation.
-            this.ConsumeDataAsync(data, continuation);
+            ContinuationAsync(continuation);
 
             return true;
         }
+        
 
         private void ConsumeDataSync(ArraySegment<byte> data)
         {
             this.dataStream.Write(data.Array, data.Offset, data.Count);
         }
 
-        private void ConsumeDataAsync(ArraySegment<byte> data, Action continuation)
+        private static void ContinuationAsync(Action continuation)
         {
             // We don't us the thread pool to try and stop it being clever
             // and running us sync.
             var worker = new Thread(
-                ts =>
-                    {
-                        this.ConsumeDataSync(data);
-                        continuation.Invoke();
-                    });
+                ts => continuation.Invoke());
 
             worker.Start();
         }

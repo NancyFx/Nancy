@@ -1,0 +1,13 @@
+﻿<html>
+  <head>
+    <title>Nancy OWIN Host Demo | ${title}</title>
+    <style type="text/css">
+      <include href="css.spark" parse="text"/>
+    </style>
+  </head>
+  <body>
+    <nav/>
+    <h1 style="clear:both;">${title}</h1>
+    <render/>
+  </body>
+</html>

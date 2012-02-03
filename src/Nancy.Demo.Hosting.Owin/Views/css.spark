@@ -1,0 +1,38 @@
+﻿/* css courtesy http://www.webcredible.co.uk/user-friendly-resources/css/css-navigation-menu.shtml */
+#nav ul
+{
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#nav li
+{
+    float: left;
+    margin: 0 0.15em;
+}
+
+#nav li a
+{
+    height: 2em;
+    line-height: 2em;
+    float: left;
+    width: 9em;
+    display: block;
+    border: 0.1em solid #dcdce9;
+    color: #0d2474;
+    text-decoration: none;
+    text-align: center;
+}
+
+/* Hide from IE5-Mac \*/
+#nav li a
+{
+    float: none;
+}
+/* End hide */
+
+#nav
+{
+    width: 30em;
+}
