@@ -75,7 +75,7 @@ namespace Nancy.Conventions
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path ourside the content folder '", contentPath, "'")));
+                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path outside the content folder '", contentPath, "'")));
                     return () => null;
                 }
 
