@@ -32,10 +32,7 @@ namespace Nancy.Extensions
 
             if (nameMatch.Any())
             {
-                //foreach (var capture in nameMatch.Captures)
-                //{
-                //    yield return 
-                //}
+
                 return nameMatch.Select(x => x.Groups["name"].Value);
             }
 
@@ -66,8 +63,12 @@ namespace Nancy.Extensions
         {
             var coll = HttpUtility.ParseQueryString(queryString);
             var ret = new DynamicDictionary();
-            foreach (var key in coll.AllKeys.Where(key => key != null)) 
+            
+            foreach (var key in coll.AllKeys.Where(key => key != null))
+            {
                 ret[key] = coll[key];
+            }
+            
             return ret;
         }
     }
