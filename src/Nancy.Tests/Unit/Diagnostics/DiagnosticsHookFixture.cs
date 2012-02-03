@@ -127,7 +127,7 @@
             var bootstrapper = new ConfigurableBootstrapper(b => b.DiagnosticsConfiguration(diagsConfig));
             var browser = new Browser(bootstrapper);
 
-            var result = browser.Post("/_Nancy", with =>
+            var result = browser.Post("/_Nancy/", with =>
             {
                 with.FormValue("Password", "password");
             });
