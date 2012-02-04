@@ -43,12 +43,12 @@ namespace Nancy
                 return null;
             }
 
-            var inputBytes = Convert.FromBase64String(sourceString);
-
-            var formatter = new BinaryFormatter();
-
             try
             {
+                var inputBytes = Convert.FromBase64String(sourceString);
+
+                var formatter = new BinaryFormatter();
+
                 using (var inputStream = new MemoryStream(inputBytes, false))
                 {
                     return formatter.Deserialize(inputStream);
