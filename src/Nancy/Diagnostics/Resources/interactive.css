@@ -1,6 +1,12 @@
-﻿.execute-button
+﻿.method-arguments 
+{
+    margin-bottom: 0px;    
+}
+
+.execute-button
 {
     margin-top: 4px;
+    width: 100%;
 }
 
 .method-argument
@@ -8,36 +14,45 @@
     margin-left: 0px;
 }
 
+.method-argument input 
+{
+    width: 252px;    
+}
+
 .tooltip
 {
-    border-bottom: 1px dotted #000000;
-    color: #000000;
-    outline: none;
-    cursor: help;
-    text-decoration: none;
     position: relative;
 }
+
 .tooltip span
 {
     margin-left: -999em;
     position: absolute;
 }
+
 .tooltip-showing span
 {
     border-radius: 5px 5px;
     -moz-border-radius: 5px;
     -webkit-border-radius: 5px;
-    box-shadow: 5px 5px 5px rgba(0, 0, 0, 0.1);
-    -webkit-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-    -moz-box-shadow: 5px 5px rgba(0, 0, 0, 0.1);
-    font-family: Calibri, Tahoma, Geneva, sans-serif;
     position: absolute;
-    left: 500px;
+    left: 280px;
+    margin-left: 0px;
     top: 0;
-    z-index: 99;
-    margin-left: 0;
     width: 250px;
     padding: 0.8em 1em;
     background: #ffffff; 
-    border: 1px solid #dddddd; 
+}
+
+.tooltip-showing span:after
+{
+  content: "\25C2";
+  display: block;
+  font-size: 28px;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  color: #ffffff;
+  left: -12px;
+  top: 10px;
 }

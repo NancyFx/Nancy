@@ -46,28 +46,28 @@
 	</script>
 
 	<script id="method" type="text/x-handlebars-template">
-		Name: {{model.MethodName}}<br/>
-		Description: {{model.Description}}<br/>
-		Arguments: 
-			{{#if model.Arguments.length}}
-				<ul>
-					{{#each model.Arguments}}
-						<li class="method-argument">
-							<div class="tooltip">
-								<input type="text" id="{{this.ArgumentName}}"/>
-								<span class="method-argument-tooltip">
-									<strong>{{this.ArgumentName}}</strong><br/>
-									<em>{{this.ArgumentType}}</em>
-								</span>
-							</div>
-						</li>
-					{{/each}}
-				</ul>
-			{{else}}
-				None.
-			{{/if}}
-		<br/>
-		<input type="button" value="Execute" class="g-button execute-button"/>
+		<div class="item-list">
+			<strong>{{model.MethodName}}</strong><br/>
+			<em>{{model.Description}}</em><br/>
+				{{#if model.Arguments.length}}
+					<ul class="method-arguments">
+						{{#each model.Arguments}}
+							<li class="method-argument">
+								<div class="tooltip">
+									<input type="text" id="{{this.ArgumentName}}"/>
+									<span class="method-argument-tooltip">
+										<strong>{{this.ArgumentName}}</strong><br/>
+										<em>{{this.ArgumentType}}</em>
+									</span>
+								</div>
+							</li>
+						{{/each}}
+					</ul>
+				{{else}}
+					None.
+				{{/if}}
+			<input type="button" value="Execute" class="g-button execute-button"/>
+		</div>
 	</script>
 @EndSection
 

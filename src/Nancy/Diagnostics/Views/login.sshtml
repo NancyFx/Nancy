@@ -19,6 +19,9 @@
 		</form>
 	</div>
 	<div class="grid_3">&nbsp;</div>
+	<script language="javascript" type="text/javascript">
+		Password.focus();
+	</script>
 @EndSection
 
 
