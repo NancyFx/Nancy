@@ -52,8 +52,12 @@
 			{{#if model.Arguments.length}}
 				<ul>
 					{{#each model.Arguments}}
-						<li>
-							{{this.ArgumentName}} : <input type="text" id="{{this.ArgumentName}}"/> ({{this.ArgumentType}})
+						<li class="method-argument">
+							<input type="text" id="{{this.ArgumentName}}"/>
+							<span class="method-argument-tooltip">
+								<strong>{{this.ArgumentName}}</strong>
+								<em>{{this.ArgumentType}}</em>
+							</span>
 						</li>
 					{{/each}}
 				</ul>

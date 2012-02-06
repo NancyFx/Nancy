@@ -43,7 +43,7 @@
 
             this.$('#root').append(itemView.el);
         },
-            
+
         back: function () {
             this.router.navigate("", true);
         }
@@ -53,6 +53,8 @@
         tagName: 'li',
 
         events: {
+            'focus .method-argument input': 'showTooltip',
+            'blur .method-argument input': 'hideTooltip',
             'click input[type=button]': 'executeMethod'
         },
 
@@ -67,6 +69,14 @@
         render: function () {
             var html = Handlebars.compile(this.template)({ model: this.model });
             $(this.el).append(html);
+        },
+
+        showTooltip: function (e) {
+            $(e.currentTarget).parent('.method-argument').addClass("tooltip-showing");
+        },
+
+        hideTooltip: function (e) {
+            $(e.currentTarget).parent('.method-argument').removeClass("tooltip-showing");
         },
 
         executeMethod: function () {

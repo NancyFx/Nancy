@@ -1,3 +1,15 @@
 ﻿.execute-button {
     margin-top: 4px;
 }
+
+.method-argument {
+    margin-left: 0px;    
+}
+
+.method-argument span {
+    visibility: collapse;
+}
+
+.tooltip-showing span {
+    visibility: visible;
+}
