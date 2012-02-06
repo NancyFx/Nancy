@@ -46,7 +46,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="NancySelfGenericServiceFixture.cs" />
+    <Compile Include="IsCaseInstensitiveBaseOfFixture.cs" />
+    <Compile Include="MakeAppLocalPathFixture.cs" />
+    <Compile Include="NancySelfHostFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestModule.cs" />
   </ItemGroup>

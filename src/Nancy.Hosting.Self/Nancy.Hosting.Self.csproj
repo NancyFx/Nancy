@@ -85,6 +85,9 @@
     </Compile>
     <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="NancyHost.cs" />
+    <Compile Include="UriExtensions.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
