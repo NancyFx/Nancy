@@ -126,6 +126,14 @@ div.item-list h2
     margin-bottom: 0px;
 }
 
+#back 
+{
+    cursor: pointer;
+    font-size: 120%;
+    margin-bottom: 10px;
+    display: block;    
+}
+
 /* JSON Report CSS */
 
 .modelreport TABLE
