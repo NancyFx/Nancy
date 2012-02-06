@@ -99,6 +99,21 @@ namespace Nancy.Hosting.Self.Tests
 				responseBody.ShouldEqual(testBody);
 			}
 		}
+		
+		[SkippableFact]
+		public void Should_be_able_to_get_from_selfhost_with_slashless_uri()
+		{
+			using (CreateAndOpenSelfHost())
+			{
+				var reader =
+					new StreamReader(WebRequest.Create(BaseUri.ToString().TrimEnd('/')).GetResponse().GetResponseStream());
+
+				var response = reader.ReadToEnd();
+
+				response.ShouldEqual("This is the site home");
+			}
+		}
+	
 
 		private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null)
 		{

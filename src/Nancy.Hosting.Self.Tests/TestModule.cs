@@ -6,6 +6,8 @@ namespace Nancy.Hosting.Self.Tests
     {
         public TestModule()
         {
+        	Get["/"] = parameters => "This is the site home";
+
             Get["/rel"] = parameters => "This is the site route";
 
             Get["/rel/header"] = parameters =>

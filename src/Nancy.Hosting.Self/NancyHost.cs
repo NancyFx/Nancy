@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Net;
-    using System.Threading;
     using System.Linq;
     using IO;
     using Nancy.Bootstrapper;
@@ -90,17 +89,10 @@
             listener.Stop();
         }
 
-    
-        private static Uri GetUrlAndPathComponents(Uri uri) 
-        {
-            // ensures that for a given url only the
-            //  scheme://host:port/paths/somepath
-            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
-        }
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsBaseOf(request.Url));
+            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
             {
@@ -110,8 +102,7 @@
             var expectedRequestLength =
                 GetExpectedRequestLength(request.Headers.ToDictionary());
 
-            var relativeUrl =
-                GetUrlAndPathComponents(baseUri).MakeRelativeUri(GetUrlAndPathComponents(request.Url));
+            var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
             var nancyUrl = new Url
             {
@@ -119,7 +110,7 @@
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
-                Path = string.Concat("/", HttpUtility.UrlDecode(relativeUrl.ToString())),
+                Path = HttpUtility.UrlDecode(relativeUrl),
                 Query = request.Url.Query,
                 Fragment = request.Url.Fragment,
             };
