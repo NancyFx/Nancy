@@ -76,7 +76,11 @@
 
         private IEnumerable<InteractiveDiagnosticMethod> GetDiagnosticMethods(IDiagnosticsProvider diagnosticsProvider)
         {
-            var methods = diagnosticsProvider.DiagnosticObject.GetType().GetMethods(Flags);
+            var methods = diagnosticsProvider.DiagnosticObject
+                                             .GetType()
+                                             .GetMethods(Flags)
+                                             .Where(mi => ! mi.IsSpecialName).ToArray();
+
             var diagnosticMethods = new List<InteractiveDiagnosticMethod>(methods.Length);
 
             foreach (var methodInfo in methods)
