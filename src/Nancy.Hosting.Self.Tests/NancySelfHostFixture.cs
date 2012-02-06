@@ -39,7 +39,7 @@ namespace Nancy.Hosting.Self.Tests
 			var fakeEngine = A.Fake<INancyEngine>();
 			A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
 				.Invokes(f => nancyRequest = (Request) f.Arguments[0])
-				.Returns(new NancyContext(){Request = nancyRequest, Response = new Response()});
+				.ReturnsLazily(c => new NancyContext(){Request = (Request)c.Arguments[0], Response = new Response()});
 				
 			var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 			A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
