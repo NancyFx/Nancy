@@ -72,11 +72,11 @@
         },
 
         showTooltip: function (e) {
-            $(e.currentTarget).parent('.method-argument').addClass("tooltip-showing");
+            $(e.currentTarget).parent('.tooltip').addClass("tooltip-showing");
         },
 
         hideTooltip: function (e) {
-            $(e.currentTarget).parent('.method-argument').removeClass("tooltip-showing");
+            $(e.currentTarget).parent('.tooltip').removeClass("tooltip-showing");
         },
 
         executeMethod: function () {

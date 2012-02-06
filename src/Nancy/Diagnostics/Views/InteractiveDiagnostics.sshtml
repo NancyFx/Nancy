@@ -53,11 +53,13 @@
 				<ul>
 					{{#each model.Arguments}}
 						<li class="method-argument">
-							<input type="text" id="{{this.ArgumentName}}"/>
-							<span class="method-argument-tooltip">
-								<strong>{{this.ArgumentName}}</strong>
-								<em>{{this.ArgumentType}}</em>
-							</span>
+							<div class="tooltip">
+								<input type="text" id="{{this.ArgumentName}}"/>
+								<span class="method-argument-tooltip">
+									<strong>{{this.ArgumentName}}</strong><br/>
+									<em>{{this.ArgumentType}}</em>
+								</span>
+							</div>
 						</li>
 					{{/each}}
 				</ul>
