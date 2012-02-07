@@ -103,6 +103,7 @@
                     body = view.Body;
                     sectionContents = view.SectionContents;
                     root = !view.HasLayout;
+                    layout = view.Layout;
                 }
 
                 writer.Write(body);
