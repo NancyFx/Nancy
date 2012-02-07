@@ -70,7 +70,7 @@ namespace Nancy.Diagnostics
 
                         return diagnosticsConfiguration.Valid
                                    ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer)
-                                   : GetDiagnosticsHelpView();
+                                   : GetDiagnosticsHelpView(ctx);
                     }));
         }
 
@@ -79,16 +79,16 @@ namespace Nancy.Diagnostics
             pipelines.BeforeRequest.RemoveByName(PipelineKey);
         }
 
-        private static Response GetDiagnosticsHelpView()
+        private static Response GetDiagnosticsHelpView(NancyContext ctx)
         {
-            var renderer = new DiagnosticsViewRenderer();
+            var renderer = new DiagnosticsViewRenderer(ctx);
 
             return renderer["help"];
         }
 
-        private static Response GetDiagnosticsLoginView()
+        private static Response GetDiagnosticsLoginView(NancyContext ctx)
         {
-            var renderer = new DiagnosticsViewRenderer();
+            var renderer = new DiagnosticsViewRenderer(ctx);
 
             return renderer["login"];
         }
@@ -99,7 +99,7 @@ namespace Nancy.Diagnostics
 
             if (session == null)
             {
-                var view = GetDiagnosticsLoginView();
+                var view = GetDiagnosticsLoginView(ctx);
 
                 view.AddCookie(
                     new NancyCookie(DiagsCookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) });
