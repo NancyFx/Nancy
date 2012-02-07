@@ -15,7 +15,7 @@
 
         public new DiagnosticsViewRenderer View
         {
-            get { return new DiagnosticsViewRenderer(); }
+            get { return new DiagnosticsViewRenderer(this.Context); }
         }
     }
 }

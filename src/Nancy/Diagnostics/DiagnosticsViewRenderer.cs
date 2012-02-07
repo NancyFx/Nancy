@@ -7,21 +7,27 @@ namespace Nancy.Diagnostics
 
     public class DiagnosticsViewRenderer
     {
+        private readonly NancyContext context;
         private static readonly IViewResolver ViewResolver = new DiagnosticsViewResolver();
 
         private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper();
 
+        public DiagnosticsViewRenderer(NancyContext context)
+        {
+            this.context = context;
+        }
+
         public Response this[string name]
         {
-            get { return RenderView(name, null); }
+            get { return RenderView(name, null, this.context); }
         }
 
         public Response this[string name, dynamic model]
         {
-            get { return RenderView(name, model); }
+            get { return RenderView(name, model, this.context); }
         }
 
-        private static Response RenderView(string name, dynamic model)
+        private static Response RenderView(string name, dynamic model, NancyContext context)
         {
             var fullName = string.Concat(name, ".sshtml");
 
@@ -30,9 +36,6 @@ namespace Nancy.Diagnostics
             var location = GetViewLocationResult(fullName, stream);
 
             var cache = new DefaultViewCache();
-
-            var context = 
-                new NancyContext();
 
             context.Items.Add(CsrfToken.DEFAULT_CSRF_KEY, "DIAGNOSTICSTOKEN");
 
