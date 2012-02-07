@@ -29,7 +29,7 @@
         /// Gets or sets the headers that should be sent with the HTTP request.
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains the headers that should be sent with the HTTP request.</value>
-        IDictionary<string, IEnumerable<string>> Headers { get; set; }
+        IDictionary<string, string> Headers { get; set; }
 
         /// <summary>
         /// Gets or sets the protocol that should be sent with the HTTP request.

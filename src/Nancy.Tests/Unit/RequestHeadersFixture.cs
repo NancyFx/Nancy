@@ -12,6 +12,11 @@
 
     public class RequestHeadersFixture
     {
+        string Join(params string[] values)
+        {
+            return values.Aggregate("", (acc, v) => acc == "" ? v : acc + "," + v);
+        }
+        
         [Fact]
         public void Should_return_all_header_values_when_values_are_retrieved()
         {
@@ -62,7 +67,7 @@
         public void Should_return_empty_enumerable_when_accept_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -76,7 +81,7 @@
         {
             // Given
             var expectedValues = new[] { "text/plain", "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Accept", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -92,7 +97,7 @@
         {
             // Given
             var expectedValues = new[] { "text/plain", "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -105,7 +110,7 @@
         public void Should_return_empty_enumerable_when_accept_charset_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -119,7 +124,7 @@
         {
             // Given
             var expectedValues = new[] { "utf-8", "iso-8859-5" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Accept-Charset", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -135,7 +140,7 @@
         {
             // Given
             var expectedValues = new[] { "utf-8", "iso-8859-5" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -148,7 +153,7 @@
         public void Should_return_empty_enumerable_when_accept_encoding_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -162,7 +167,7 @@
         {
             // Given
             var expectedValues = new[] { "compress", "sdch" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Accept-Encoding", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -178,7 +183,7 @@
         {
             // Given
             var expectedValues = new[] { "compress", "sdch" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -191,7 +196,7 @@
         public void Should_return_empty_enumerable_when_accept_language_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -205,7 +210,7 @@
         {
             // Given
             var expectedValues = new[] { "en-US", "sv-SE" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Accept-Language", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -221,7 +226,7 @@
         {
             // Given
             var expectedValues = new[] { "en-US", "sv-SE" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -234,7 +239,7 @@
         public void Should_return_empty_string_when_authorization_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -248,7 +253,7 @@
         {
             // Given
             var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Authorization", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Authorization", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -264,7 +269,7 @@
         {
             // Given
             var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -277,7 +282,7 @@
         public void Should_return_empty_enumerable_when_cache_control_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -291,7 +296,7 @@
         {
             // Given
             var expectedValues = new[] { "public", "max-age=123445" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cache-Control", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Cache-Control", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -307,7 +312,7 @@
         {
             // Given
             var expectedValues = new[] { "public", "max-age=123445" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -320,7 +325,7 @@
         public void Should_return_empty_string_when_connection_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -334,7 +339,7 @@
         {
             // Given
             var expectedValues = new[] { "closed" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Connection", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Connection", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -350,7 +355,7 @@
         {
             // Given
             var expectedValues = new[] { "closed" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -363,7 +368,7 @@
         public void Should_return_zero_when_content_length_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -377,7 +382,7 @@
         {
             // Given
             var expectedValues = new[] { "12345" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Length", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Content-Length", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -393,7 +398,7 @@
         {
             // Given
             var expectedValues = new[] { "12345" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -406,7 +411,7 @@
         public void Should_return_empty_string_when_content_type_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -420,7 +425,7 @@
         {
             // Given
             var expectedValues = new[] { "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Type", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Content-Type", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -436,7 +441,7 @@
         {
             // Given
             var expectedValues = new[] { "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -449,7 +454,7 @@
         public void Should_return_null_date_when_date_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -465,7 +470,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Date", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Date", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -492,7 +497,7 @@
         public void Should_return_empty_enumerable_when_cookie_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -506,7 +511,7 @@
         {
             // Given
             var rawValues = new[] { "foo=bar", "name=value" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Cookie", Join(rawValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -523,7 +528,7 @@
         {
             // Given
             var expectedValues = new[] { "foo=bar", "name=value" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -541,7 +546,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -554,7 +559,7 @@
         public void Should_return_empty_string_when_host_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -568,7 +573,7 @@
         {
             // Given
             var expectedValues = new[] { "en.wikipedia.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Host", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Host", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -584,7 +589,7 @@
         {
             // Given
             var expectedValues = new[] { "en.wikipedia.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -597,7 +602,7 @@
         public void Should_return_empty_enumerable_when_ifmatch_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -611,7 +616,7 @@
         {
             // Given
             var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Match", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "If-Match", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -627,7 +632,7 @@
         {
             // Given
             var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -640,7 +645,7 @@
         public void Should_return_null_when_ifmodifiedsince_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -655,7 +660,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "If-Modified-Since", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -686,7 +691,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -699,7 +704,7 @@
         public void Should_return_empty_enumerable_when_ifnonematch_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -713,7 +718,7 @@
         {
             // Given
             var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "If-None-Match", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -729,7 +734,7 @@
         {
             // Given
             var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -742,7 +747,7 @@
         public void Should_return_empty_string_when_ifrange_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -756,7 +761,7 @@
         {
             // Given
             var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Range", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "If-Range", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -772,7 +777,7 @@
         {
             // Given
             var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -785,7 +790,7 @@
         public void Should_return_null_when_ifunmodifiedsince_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -800,7 +805,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "If-Unmodified-Since", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -831,7 +836,7 @@
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
             var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -844,7 +849,7 @@
         public void Should_return_zero_when_maxforwards_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -858,7 +863,7 @@
         {
             // Given
             var expectedValues = new[] { "12" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Max-Forwards", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -874,7 +879,7 @@
         {
             // Given
             var expectedValues = new[] { "12" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -887,7 +892,7 @@
         public void Should_return_empty_string_when_referer_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -901,7 +906,7 @@
         {
             // Given
             var expectedValues = new[] { "http://nancyfx.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Referer", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "Referer", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -917,7 +922,7 @@
         {
             // Given
             var expectedValues = new[] { "http://nancyfx.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -930,7 +935,7 @@
         public void Should_return_empty_string_when_useragent_headers_are_not_available()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -944,7 +949,7 @@
         {
             // Given
             var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "User-Agent", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "User-Agent", Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -960,7 +965,7 @@
         {
             // Given
             var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { headerName, Join(expectedValues) } };
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -973,7 +978,7 @@
         public void Should_return_empty_enumerable_when_header_not_available_using_indexer()
         {
             // Given
-            var rawHeaders = new Dictionary<string, IEnumerable<string>>();
+            var rawHeaders = new Dictionary<string, string>();
             var headers = new RequestHeaders(rawHeaders);
 
             // When
@@ -988,7 +993,7 @@
         {
             // Given
             var expectedValues = new[] { "fakeValue1", "fakeValue2" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "some-header", Join(expectedValues) } };
             var headers = new RequestHeaders(rawHeaders);
 
             // When
@@ -1003,7 +1008,7 @@
         {
             // Given
             var expectedValues = new[] { "fakeValue1", "fakeValue2" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var rawHeaders = new Dictionary<string, string> { { "some-header", Join(expectedValues) } };
             var headers = new RequestHeaders(rawHeaders);
 
             // When

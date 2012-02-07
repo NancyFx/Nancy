@@ -72,7 +72,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             binder.Bind(context, this.GetType());
@@ -90,7 +90,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(false);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             binder.Bind(context, this.GetType());
@@ -107,7 +107,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var deserializer = A.Fake<IBodyDeserializer>();
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             binder.Bind(context, this.GetType());
@@ -127,7 +127,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
             var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             var result = binder.Bind(context, this.GetType());
@@ -236,7 +236,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { deserializer });
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             binder.Bind(context, this.GetType());
@@ -279,7 +279,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { defaultDeserializer });
             var binder = this.GetBinder(bodyDeserializers: new[] { userDeserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             // When
             binder.Bind(context, this.GetType());
@@ -322,7 +322,7 @@ namespace Nancy.Tests.Unit.ModelBinding
            
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
             context.Request.Query["StringProperty"] = "Test";
             context.Request.Query["IntProperty"] = "0";
 
@@ -340,7 +340,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
             context.Parameters["StringProperty"] = "Test";
             context.Parameters["IntProperty"] = "0";
 
@@ -357,7 +357,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "0";
             context.Request.Query["StringProperty"] = "Test2";
@@ -376,7 +376,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type","application/xml");
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["IntProperty"] = "0";
             context.Request.Query["StringProperty"] = "Test2";
@@ -397,7 +397,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
 
             context.Request.Query["StringProperty"] = "Test";
             context.Request.Query["IntProperty"] = "0";
@@ -417,7 +417,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
             context.Request.Form["StringProperty"] = "Test";
             context.Request.Query["IntProperty"] = "0";
 
@@ -435,7 +435,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var binder = this.GetBinder();
 
-            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            var context = CreateContextWithHeader("Content-Type", "application/xml");
             context.Request.Query["StringProperty"] = "Test";
             context.Parameters["IntProperty"] = "0";
 
@@ -457,11 +457,11 @@ namespace Nancy.Tests.Unit.ModelBinding
             return new DefaultBinder(converters, deserializers, converter, defaults);
         }
 
-        private static NancyContext CreateContextWithHeader(string name, IEnumerable<string> values)
+        private static NancyContext CreateContextWithHeader(string name, string value)
         {
-            var header = new Dictionary<string, IEnumerable<string>>
+            var header = new Dictionary<string, string>
             {
-                { name, values }
+                { name, value }
             };
 
             return new NancyContext()

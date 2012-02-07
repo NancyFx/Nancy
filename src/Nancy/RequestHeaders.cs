@@ -13,15 +13,15 @@ namespace Nancy
     /// </summary>
     public class RequestHeaders : IEnumerable<KeyValuePair<string, IEnumerable<string>>>
     {
-        private readonly IDictionary<string, IEnumerable<string>> headers;
+        private readonly IDictionary<string, string> headers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestHeaders"/> class.
         /// </summary>
         /// <param name="headers">The headers.</param>
-        public RequestHeaders(IDictionary<string, IEnumerable<string>> headers)
+        public RequestHeaders(IDictionary<string, string> headers)
         {
-            this.headers = new Dictionary<string, IEnumerable<string>>(headers, StringComparer.OrdinalIgnoreCase);
+            this.headers = new Dictionary<string, string>(headers, StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> Accept
         {
-            get { return this.GetValue("Accept"); }
+            get { return this.GetListValue("Accept"); }
         }
 
         /// <summary>
@@ -39,7 +39,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptCharset
         {
-            get { return this.GetValue("Accept-Charset"); }
+            get { return this.GetListValue("Accept-Charset"); }
         }
 
         /// <summary>
@@ -48,7 +48,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptEncoding
         {
-            get { return this.GetValue("Accept-Encoding"); }
+            get { return this.GetListValue("Accept-Encoding"); }
         }
 
         /// <summary>
@@ -57,7 +57,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptLanguage
         {
-            get { return this.GetValue("Accept-Language"); }
+            get { return this.GetListValue("Accept-Language"); }
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Authorization
         {
-            get { return this.GetValue("Authorization", x => x.First()); }
+            get { return this.GetValue("Authorization"); }
         }
 
         /// <summary>
@@ -75,7 +75,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> CacheControl
         {
-            get { return this.GetValue("Cache-Control"); }
+            get { return this.GetListValue("Cache-Control"); }
         }
         
         /// <summary>
@@ -84,7 +84,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains <see cref="INancyCookie"/> instances if they are available; otherwise it will be empty.</value>
         public IEnumerable<INancyCookie> Cookie
         {
-            get { return this.GetValue("Cookie", GetNancyCookies); }
+            get { return GetNancyCookies(this.GetListValue("Cookie")); }
         }
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Connection
         {
-            get { return this.GetValue("Connection", x => x.First()); }
+            get { return this.GetValue("Connection"); }
         }
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace Nancy
         /// <value>The lenght of the contents if it is available; otherwise 0.</value>
         public long ContentLength
         {
-            get { return this.GetValue("Content-Length", x => Convert.ToInt64(x.First())); }
+            get { return Convert.ToInt64(this.GetValue("Content-Length")); }
         }
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string ContentType
         {
-            get { return this.GetValue("Content-Type", x => x.First()); }
+            get { return this.GetValue("Content-Type"); }
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Nancy
         /// <value>A <see cref="DateTime"/> instance that specifies when the message was sent. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime? Date
         {
-            get { return this.GetValue("Date", x => ParseDateTime(x.First())); }
+            get { return ParseDateTime(this.GetValue("Date")); }
         }
 
         /// <summary>
@@ -129,7 +129,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Host
         {
-            get { return this.GetValue("Host", x => x.First()); }
+            get { return this.GetValue("Host"); }
         }
 
         /// <summary>
@@ -138,7 +138,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> IfMatch
         {
-            get { return this.GetValue("If-Match"); }
+            get { return this.GetListValue("If-Match"); }
         }
 
         /// <summary>
@@ -147,7 +147,7 @@ namespace Nancy
         /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource must have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime? IfModifiedSince
         {
-            get { return this.GetValue("If-Modified-Since", x => ParseDateTime(x.First())); }
+            get { return ParseDateTime(this.GetValue("If-Modified-Since")); }
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> IfNoneMatch
         {
-            get { return this.GetValue("If-None-Match"); }
+            get { return this.GetListValue("If-None-Match"); }
         }
 
         /// <summary>
@@ -165,7 +165,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string IfRange
         {
-            get { return this.GetValue("If-Range", x => x.First()); }
+            get { return this.GetValue("If-Range"); }
         }
 
         /// <summary>
@@ -174,7 +174,7 @@ namespace Nancy
         /// <value>A <see cref="DateTime"/> instance that specifies when the requested resource may not have been changed since. If not available then <see cref="DateTime.MinValue"/> will be returned.</value>
         public DateTime? IfUnmodifiedSince
         {
-            get { return this.GetValue("If-Unmodified-Since", x => ParseDateTime(x.First())); }
+            get { return ParseDateTime(this.GetValue("If-Unmodified-Since")); }
         }
 
         /// <summary>
@@ -201,7 +201,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string Referrer
         {
-            get { return this.GetValue("Referer", x => x.First()); }
+            get { return this.GetValue("Referer", x => x); }
         }
 
         /// <summary>
@@ -210,7 +210,7 @@ namespace Nancy
         /// <value>A <see cref="string"/> containing the header value if it is available; otherwise <see cref="string.Empty"/>.</value>
         public string UserAgent
         {
-            get { return this.GetValue("User-Agent", x => x.First()); }
+            get { return this.GetValue("User-Agent"); }
         }
 
         /// <summary>
@@ -250,7 +250,7 @@ namespace Nancy
             get
             {
                 return (this.headers.ContainsKey(name)) ?
-                    this.headers[name] :
+                    new[] { this.headers[name] } :
                     Enumerable.Empty<string>();
             }
         }
@@ -286,12 +286,20 @@ namespace Nancy
                    select new NancyCookie(pair[0], pair[1]);
         }
 
-        private IEnumerable<string> GetValue(string name)
+        private IEnumerable<string> GetListValue(string name)
         {
-            return this.GetValue(name, x => x);
+            return this.GetValue(name, s => s.Split(',').Select(v => v.Trim()));
         }
-
-        private T GetValue<T>(string name, Func<IEnumerable<string>, T> converter)
+  
+        private string GetValue(string name)
+        {
+            if (!this.headers.ContainsKey(name))
+                return string.Empty;
+            
+            return this.headers[name];
+        }
+        
+        private T GetValue<T>(string name, Func<string, T> converter)
         {
             if (!this.headers.ContainsKey(name))
             {

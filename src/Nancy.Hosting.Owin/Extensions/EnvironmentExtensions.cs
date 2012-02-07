@@ -52,17 +52,9 @@ namespace Nancy.Hosting.Owin.Extensions
             return (string)environment["owin.RequestMethod"];
         }
 
-        private static IDictionary<string, IEnumerable<string>> GetHeaders(IDictionary<string, object> environment)
+        private static IDictionary<string, string> GetHeaders(IDictionary<string, object> environment)
         {
-            var incomingHeaders = (IDictionary<string, string>)environment["owin.RequestHeaders"];
-            var headers = new Dictionary<string, IEnumerable<string>>(incomingHeaders.Count);
-
-            foreach (var incomingHeader in incomingHeaders)
-            {
-                headers.Add(incomingHeader.Key, incomingHeader.Value.Split(','));
-            }
-
-            return headers;
+            return (IDictionary<string, string>)environment["owin.RequestHeaders"];
         }
 
         private static Url GetUrl(IDictionary<string, object> environment)

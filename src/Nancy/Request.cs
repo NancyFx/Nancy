@@ -39,12 +39,12 @@ namespace Nancy
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
         /// <param name="scheme">The HTTP scheme that was used by the client.</param>
         /// <param name="query">The querystring data that was sent by the client.</param>
-        public Request(string method, string path, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string scheme, string query = null, string ip = null)
+        public Request(string method, string path, IDictionary<string, string> headers, RequestStream body, string scheme, string query = null, string ip = null)
             : this(method, new Url { Path=path, Scheme = scheme, Query = query ?? String.Empty}, body, headers, ip)
         {
         }
 
-        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null)
+        public Request(string method, Url url, RequestStream body = null, IDictionary<string, string> headers = null, string ip = null)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -81,7 +81,7 @@ namespace Nancy
 
             this.Body = body ?? RequestStream.FromStream(new MemoryStream());
 
-            this.Headers = new RequestHeaders(headers ?? new Dictionary<string, IEnumerable<string>>());
+            this.Headers = new RequestHeaders(headers ?? new Dictionary<string, string>());
 
             this.Session = new NullSessionProvider();
 

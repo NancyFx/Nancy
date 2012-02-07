@@ -170,7 +170,7 @@ namespace Nancy.Testing
 
             if (useFormValues && !contextValues.Headers.ContainsKey("Content-Type"))
             {
-                contextValues.Headers["Content-Type"] = new[] { "application/x-www-form-urlencoded" };
+                contextValues.Headers["Content-Type"] = "application/x-www-form-urlencoded";
             }
 
             contextValues.Body = new MemoryStream(bodyBytes);

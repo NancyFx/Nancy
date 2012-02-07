@@ -381,11 +381,11 @@ namespace Nancy.Tests.Unit.Sessions
 
         private Request CreateRequest(string sessionValue, bool load = true)
         {
-            var headers = new Dictionary<string, IEnumerable<string>>(1);
+            var headers = new Dictionary<string, string>(1);
 
             if (!string.IsNullOrEmpty(sessionValue))
             {
-                headers.Add("cookie", new[] { CookieBasedSessions.GetCookieName()+ "=" + HttpUtility.UrlEncode(sessionValue) });
+                headers.Add("cookie", CookieBasedSessions.GetCookieName()+ "=" + HttpUtility.UrlEncode(sessionValue));
             }
 
             var request = new Request("GET", "http://goku.power:9001/", headers, CreateRequestStream(), "http");

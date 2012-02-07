@@ -132,7 +132,7 @@
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null);
         }
 
-        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
+        private static long GetExpectedRequestLength(IDictionary<string, string> incomingHeaders)
         {
             if (incomingHeaders == null)
             {
@@ -145,12 +145,7 @@
             }
 
             var headerValue =
-                incomingHeaders["Content-Length"].SingleOrDefault();
-
-            if (headerValue == null)
-            {
-                return 0;
-            }
+                incomingHeaders["Content-Length"];
 
             long contentLength;
             if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
