@@ -85,6 +85,16 @@ namespace Nancy
                 GetFragment(this.Fragment);
         }
 
+        /// <summary>
+        /// Casts the current <see cref="Url"/> instance to a <see cref="Uri"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>An <see cref="Uri"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator Uri(Url url)
+        {
+            return new Uri(url.ToString(), UriKind.Absolute);
+        }
+
         private static string GetFragment(string fragment)
         {
             return (string.IsNullOrEmpty(fragment)) ? string.Empty : string.Concat("#", fragment);
@@ -94,16 +104,6 @@ namespace Nancy
         {
             return (string.IsNullOrEmpty(path) || path.Equals("/")) ? string.Empty : path;
         }
-
-        //private static string GetBasePath(string path)
-        //{
-        //    if (path.Equals("/") || string.IsNullOrEmpty(path))
-        //    {
-        //        return string.Empty;
-        //    }
-
-        //    return string.Concat(path.TrimStart(new[] { '/' }), "/");
-        //}
 
         private static string GetPort(int? port)
         {
