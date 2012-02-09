@@ -3,10 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
     using Nancy;
     using Nancy.Cookies;
-
     using Xunit;
     using Xunit.Extensions;
 
@@ -26,7 +24,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // When
-            var values = headers.Values;
+            var values = headers.Values.ToList();
 
             // Then
             values.Count().ShouldEqual(2);
@@ -50,7 +48,7 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // When
-            var keys = headers.Keys;
+            var keys = headers.Keys.ToList();
 
             // Then
             keys.Count().ShouldEqual(2);
@@ -72,17 +70,102 @@
         }
 
         [Fact]
-        public void Should_return_accept_headers_when_available()
+        public void Should_return_all_accept_headers_when_multiple_are_available()
         {
             // Given
-            var expectedValues = new[] { "text/plain", "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", expectedValues } };
+            var rawHeaders = 
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "Accept", new[] { "text/plain", "text/ninja" } }
+                };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Accept.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("text/plain");
+            headers[1].Item1.ShouldEqual("text/ninja");
+        }
+
+        [Fact]
+        public void Should_parse_accept_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "text/plain, text/ninja" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("text/plain");
+            headers[1].Item1.ShouldEqual("text/ninja");
+        }
+
+        [Fact]
+        public void Should_parse_accept_header_value_quality_when_available()
+        {
+            // Given
+            var values = new[] { "text/plain;q=0.3" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("text/plain");
+            headers[0].Item2.ShouldEqual(0.3m);
+        }
+
+        [Fact]
+        public void Should_default_accept_header_values_to_quality_one_if_not_explicitly_defined()
+        {
+            // Given
+            var values = new[] { "text/plain" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("text/plain");
+            headers[0].Item2.ShouldEqual(1m);
+        }
+
+        [Fact]
+        public void Should_ignore_accept_header_values_with_invalid_quality()
+        {
+            // Given
+            var values = new[] { "text/plain, text/ninja;q=a" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("text/plain");
+        }
+
+        [Fact]
+        public void Should_sort_accept_header_values_decending_based_on_quality()
+        {
+            // Given
+            var values = new[] { "text/plain;q=0.3, text/ninja, text/html;q=0.7" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(3);
+            headers[0].Item1.ShouldEqual("text/ninja");
+            headers[1].Item1.ShouldEqual("text/html");
+            headers[2].Item1.ShouldEqual("text/plain");
         }
 
         [Theory]
@@ -95,10 +178,11 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Accept.ShouldBeSameAs(expectedValues);
+            headers[0].Item1.ShouldEqual("text/plain");
+            headers[1].Item1.ShouldEqual("text/ninja");
         }
 
         [Fact]
@@ -122,10 +206,92 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.AcceptCharset.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("utf-8");
+            headers[1].Item1.ShouldEqual("iso-8859-5");
+        }
+
+        [Fact]
+        public void Should_parse_accept_charset_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "utf-8, iso-8859-5" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("utf-8");
+            headers[1].Item1.ShouldEqual("iso-8859-5");
+        }
+
+        [Fact]
+        public void Should_parse_accept_charset_header_value_quality_when_available()
+        {
+            // Given
+            var values = new[] { "utf-8;q=0.3" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("utf-8");
+            headers[0].Item2.ShouldEqual(0.3m);
+        }
+
+        [Fact]
+        public void Should_default_accept_charset_header_values_to_quality_one_if_not_explicitly_defined()
+        {
+            // Given
+            var values = new[] { "utf-8" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("utf-8");
+            headers[0].Item2.ShouldEqual(1m);
+        }
+
+        [Fact]
+        public void Should_ignore_accept_charset_header_values_with_invalid_quality()
+        {
+            // Given
+            var values = new[] { "utf-8, iso-8859-5;q=a" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("utf-8");
+        }
+
+        [Fact]
+        public void Should_sort_accept_charset_header_values_decending_based_on_quality()
+        {
+            // Given
+            var values = new[] { "utf-8;q=0.3, iso-8859-5, iso-8859-15;q=0.7" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(3);
+            headers[0].Item1.ShouldEqual("iso-8859-5");
+            headers[1].Item1.ShouldEqual("iso-8859-15");
+            headers[2].Item1.ShouldEqual("utf-8");
         }
 
         [Theory]
@@ -138,10 +304,11 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.AcceptCharset.ShouldBeSameAs(expectedValues);
+            headers[0].Item1.ShouldEqual("utf-8");
+            headers[1].Item1.ShouldEqual("iso-8859-5");
         }
 
         [Fact]
@@ -165,10 +332,28 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
 
             // Then
-            headers.AcceptEncoding.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
+            headers[0].ShouldEqual("compress");
+            headers[1].ShouldEqual("sdch");
+        }
+
+        [Fact]
+        public void Should_parse_accept_encoding_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "compress, sdch" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].ShouldEqual("compress");
+            headers[1].ShouldEqual("sdch");
         }
 
         [Theory]
@@ -181,10 +366,12 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
 
             // Then
-            headers.AcceptEncoding.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
+            headers[0].ShouldEqual("compress");
+            headers[1].ShouldEqual("sdch");
         }
 
         [Fact]
@@ -194,10 +381,10 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>>();
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.AcceptLanguage.ShouldHaveCount(0);
+            headers.Count.ShouldEqual(0);
         }
 
         [Fact]
@@ -208,10 +395,92 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.AcceptLanguage.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("en-US");
+            headers[1].Item1.ShouldEqual("sv-SE");
+        }
+
+        [Fact]
+        public void Should_parse_accept_language_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "en-US, sv-SE" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].Item1.ShouldEqual("en-US");
+            headers[1].Item1.ShouldEqual("sv-SE");
+        }
+
+        [Fact]
+        public void Should_parse_accept_language_header_value_quality_when_available()
+        {
+            // Given
+            var values = new[] { "en-US;q=0.3" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("en-US");
+            headers[0].Item2.ShouldEqual(0.3m);
+        }
+
+        [Fact]
+        public void Should_default_accept_language_header_values_to_quality_one_if_not_explicitly_defined()
+        {
+            // Given
+            var values = new[] { "en-US" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("en-US");
+            headers[0].Item2.ShouldEqual(1m);
+        }
+
+        [Fact]
+        public void Should_ignore_accept_language_header_values_with_invalid_quality()
+        {
+            // Given
+            var values = new[] { "en-US, sv-SE;q=a" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(1);
+            headers[0].Item1.ShouldEqual("en-US");
+        }
+
+        [Fact]
+        public void Should_sort_accept_language_header_values_decending_based_on_quality()
+        {
+            // Given
+            var values = new[] { "en-US;q=0.3, da, sv-SE;q=0.7" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(3);
+            headers[0].Item1.ShouldEqual("da");
+            headers[1].Item1.ShouldEqual("sv-SE");
+            headers[2].Item1.ShouldEqual("en-US");
         }
 
         [Theory]
@@ -224,12 +493,12 @@
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
 
             // When
-            var headers = new RequestHeaders(rawHeaders);
+            var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.AcceptLanguage.ShouldBeSameAs(expectedValues);
+            headers.Count.ShouldEqual(2);
         }
-
+        
         [Fact]
         public void Should_return_empty_string_when_authorization_headers_are_not_available()
         {
@@ -620,6 +889,22 @@
             headers.IfMatch.ShouldBeSameAs(expectedValues);
         }
 
+        [Fact]
+        public void Should_parse_ifmatch_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Match", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).IfMatch.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].ShouldEqual("xyzzy");
+            headers[1].ShouldEqual("c3piozzzz");
+        }
+
         [Theory]
         [InlineData("if-match")]
         [InlineData("If-MaTCH")]
@@ -720,6 +1005,22 @@
 
             // Then
             headers.IfNoneMatch.ShouldBeSameAs(expectedValues);
+        }
+
+        [Fact]
+        public void Should_parse_ifnonematch_header_values_when_containing_multiple_values()
+        {
+            // Given
+            var values = new[] { "xyzzy", "c3piozzzz" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).IfNoneMatch.ToList();
+
+            // Then
+            headers.Count.ShouldEqual(2);
+            headers[0].ShouldEqual("xyzzy");
+            headers[1].ShouldEqual("c3piozzzz");
         }
 
         [Theory]
