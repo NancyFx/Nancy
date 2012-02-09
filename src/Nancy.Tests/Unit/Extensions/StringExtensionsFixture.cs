@@ -1,6 +1,7 @@
 namespace Nancy.Tests.Unit.Extensions
 {
     using System;
+    using System.Linq;
     using Nancy.Extensions;
     using Xunit;
 
@@ -25,16 +26,16 @@ namespace Nancy.Tests.Unit.Extensions
         }
 
         [Fact]
-        public void GetParameterName_should_throw_format_exception_when_there_are_no_parameters()
+        public void GetParameterNames_should_throw_format_exception_when_there_are_no_parameters()
         {
-            var exception = Record.Exception(() => "route".GetParameterName());
+            var exception = Record.Exception(() => "route".GetParameterNames());
             exception.ShouldBeOfType<FormatException>();
         }
 
         [Fact]
-        public void GetParameterName_should_return_parameter_name()
+        public void GetParameterNames_should_return_parameter_name()
         {
-            "{param}".GetParameterName().ShouldEqual("param");
+            "{param}".GetParameterNames().First().ShouldEqual("param");
         }
     }
 }

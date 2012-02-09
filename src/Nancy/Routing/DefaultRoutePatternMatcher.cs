@@ -29,12 +29,15 @@
             requestedPath = 
                 TrimTrailingSlashFromRequestedPath(requestedPath);
 
-            var match = 
-                routePathPattern.Match(requestedPath);
+            var matches = routePathPattern
+                .Match(requestedPath)
+                .Groups.Cast<Group>()
+                .Where(x => x.Success)
+                .ToList();
 
             return new RoutePatternMatchResult(
-                match.Success,
-                GetParameters(routePathPattern, match.Groups));
+                matches.Any(),
+                GetParameters(routePathPattern, matches));
         }
 
         private static string TrimTrailingSlashFromRequestedPath(string requestedPath)
@@ -61,16 +64,13 @@
             return new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
         }
 
-        private static DynamicDictionary GetParameters(Regex regex, GroupCollection groups)
+        private static DynamicDictionary GetParameters(Regex regex, IList<Group> matches)
         {
             dynamic data = new DynamicDictionary();
 
-            for (var i = 1; i <= groups.Count; i++)
+            for (var i = 1; i <= matches.Count() - 1; i++)
             {
-                if (groups[i].Success)
-                {
-                    data[regex.GroupNameFromNumber(i)] = groups[i].Value;
-                }
+                data[regex.GroupNameFromNumber(i)] = matches[i].Value;
             }
 
             return data;
@@ -81,12 +81,20 @@
             foreach (var segment in segments)
             {
                 var current = segment;
+
                 if (current.IsParameterized())
                 {
-                    var replacement =
-                        string.Format(CultureInfo.InvariantCulture, @"(?<{0}>(.+?))", segment.GetParameterName());
+                    current = segment.Replace(".", @"\.");
 
-                    current = segment.Replace(segment, replacement);
+                    foreach (var name in segment.GetParameterNames())
+                    {
+                        var replacement =
+                            string.Format(CultureInfo.InvariantCulture, @"(?<{0}>.+?)", name);
+
+                        current = current.Replace(
+                            string.Concat("{", name, "}"),
+                            replacement);
+                    }
                 }
 
                 yield return current;
