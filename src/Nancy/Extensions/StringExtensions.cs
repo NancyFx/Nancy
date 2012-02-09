@@ -1,6 +1,7 @@
 namespace Nancy.Extensions
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -14,7 +15,7 @@ namespace Nancy.Extensions
         /// <value>A <see cref="Regex"/> object.</value>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Regex ParameterExpression =
-            new Regex(@"^\{(?<name>[A-Za-z0-9_]*)\}", RegexOptions.Compiled);
+            new Regex(@"{(?<name>[A-Za-z0-9_]*)\}", RegexOptions.Compiled);
 
         /// <summary>   
         /// Extracts the name of a parameter from a segment.
@@ -22,14 +23,17 @@ namespace Nancy.Extensions
         /// <param name="segment">The segment to extract the name from.</param>
         /// <returns>A string containing the name of the parameter.</returns>
         /// <exception cref="FormatException"></exception>
-        public static string GetParameterName(this string segment)
+        public static IEnumerable<string> GetParameterNames(this string segment)
         {
-            var nameMatch =
-                ParameterExpression.Match(segment);
+            var nameMatch = ParameterExpression
+                .Matches(segment)
+                .Cast<Match>()
+                .Where(x => x.Success);
 
-            if (nameMatch.Success)
+            if (nameMatch.Any())
             {
-                return nameMatch.Groups["name"].Value;
+
+                return nameMatch.Select(x => x.Groups["name"].Value);
             }
 
             throw new FormatException("");
@@ -59,8 +63,12 @@ namespace Nancy.Extensions
         {
             var coll = HttpUtility.ParseQueryString(queryString);
             var ret = new DynamicDictionary();
-            foreach (var key in coll.AllKeys.Where(key => key != null)) 
+            
+            foreach (var key in coll.AllKeys.Where(key => key != null))
+            {
                 ret[key] = coll[key];
+            }
+            
             return ret;
         }
     }
