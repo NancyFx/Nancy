@@ -122,7 +122,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var parameter = Uri.EscapeUriString("baa ram ewe{}");
-            
+
             // When
             var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
 
@@ -141,6 +141,19 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_allow_underscore_in_parameter_key()
+        {
+            // Given
+            const string parameter = "lol";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/{b_ar}");
+
+            // Then
+            ((string)results.Parameters["b_ar"]).ShouldEqual(parameter);
         }
     }
 }
