@@ -32,7 +32,7 @@
 
             var result = browser.Get("/_Nancy");
 
-            result.Body.AsString().ShouldContain("Diagnostics Disabled");
+            Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
         }
 
         [Fact]
@@ -44,7 +44,7 @@
 
             var result = browser.Get("/_Nancy");
 
-            result.Body.AsString().ShouldContain("Diagnostics Disabled");
+	    Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
         }
 
         [Fact]
