@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.Razor
+﻿using System.Dynamic;
+
+namespace Nancy.ViewEngines.Razor
 {
     using System;
     using System.CodeDom;
@@ -68,9 +70,10 @@
         /// </summary>
         /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
         /// <param name="model">The model that should be passed into the view</param>
-        /// <param name="renderContext">The render context.</param>
+        /// <param name="renderContext"></param>
+        /// <param name="viewBag">A dynamic object accessible by the view</param>
         /// <returns>A response.</returns>
-        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+		public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, ExpandoObject viewBag = null)
         {
             Assembly referencingAssembly = null;
 
@@ -88,7 +91,7 @@
             response.Contents = stream =>
             {
                 var writer = new StreamWriter(stream);
-                var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model, viewBag);
                 view.ExecuteView(null, null);
                 var body = view.Body;
                 var sectionContents = view.SectionContents;
@@ -97,7 +100,7 @@
 
                 while (!root)
                 {
-                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model, viewBag);
                     view.ExecuteView(body, sectionContents);
 
                     body = view.Body;
@@ -116,7 +119,6 @@
         {
             engineHost.NamespaceImports.Add("System");
             engineHost.NamespaceImports.Add("System.IO");
-
             if (this.razorConfiguration != null)
             {
                 var namespaces = this.razorConfiguration.GetDefaultNamespaces();
@@ -292,7 +294,7 @@
             return new Uri(assembly.EscapedCodeBase).LocalPath;
         }
 
-        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
+        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType, ExpandoObject viewBag)
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
@@ -301,16 +303,17 @@
             var view = viewFactory.Invoke();
 
             view.Code = string.Empty;
-
+            view.ViewBag = viewBag;
             return view;
         }
 
-        private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
+		private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model, ExpandoObject viewBag)
         {
             var modelType = (model == null) ? null :  model.GetType();
 
+
             var view = 
-                this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
+                this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType, viewBag);
 
             view.Initialize(this, renderContext, model);
 

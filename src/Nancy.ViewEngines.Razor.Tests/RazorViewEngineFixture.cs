@@ -1,4 +1,7 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+﻿using System.Collections.Generic;
+using Nancy.Conventions;
+
+namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
     using System.Dynamic;
@@ -411,6 +414,38 @@
                                         "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
         }
 
+        [Fact]
+        public void Should_be_able_to_render_ViewBag_data()
+        {
+            var location = FindView("ViewThatUsesViewBag");
+            using (var stream = new MemoryStream())
+            {
+                dynamic viewBag = new ExpandoObject();
+                viewBag.Message = "ViewBag!";
+
+                var response = this.engine.RenderView(location, null, this.renderContext, viewBag);
+                response.Contents.Invoke(stream);
+
+                var output = ReadAll(stream);
+                output.ShouldContain("ViewBag!");
+            }
+        }
+
+        [Fact]
+        public void Viewbag_set_by_module_is_rendered_by_view()
+        {
+            var module = new RazorModule("Razor Module", engine);
+            var r = module.ViewBagTest();
+
+            using (var ms = new MemoryStream())
+            {
+                r.Contents.Invoke(ms);
+                var output = ReadAll(ms);
+                output.ShouldContain("Razor Module");
+            }
+            
+        }
+
         private string ReadAll(Stream stream)
         {
             stream.Position = 0;
@@ -426,4 +461,42 @@
             return location;
         }
     }
+
+    public class RazorModule : NancyModule
+    {
+        public RazorModule(string message, IViewEngine viewEngine)
+        {
+
+            var cache = A.Fake<IViewCache>();
+            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<NancyRazorViewBase>>>.Ignored))
+                .ReturnsLazily(x =>
+                {
+                    var result = x.GetArgument<ViewLocationResult>(0);
+                    return x.GetArgument<Func<ViewLocationResult, Func<NancyRazorViewBase>>>(1).Invoke(result);
+                });
+
+            var rootPathProvider = A.Fake<IRootPathProvider>();
+            A.CallTo(() => rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "TestViews"));
+
+            var fileSystemViewLocationProvider = new FileSystemViewLocationProvider(rootPathProvider, new DefaultFileSystemReader());
+
+            var locator = new DefaultViewLocator(new DefaultViewLocationCache(fileSystemViewLocationProvider, new List<IViewEngine> { viewEngine }));
+            var conventions = new NancyConventions();
+            var resolver = new DefaultViewResolver(locator,
+                                                   new ViewLocationConventions(conventions.ViewLocationConventions));
+
+            this.ViewFactory = new DefaultViewFactory(
+                resolver,
+                new List<IViewEngine> {viewEngine},
+                new DefaultRenderContextFactory(cache, resolver));
+
+            ViewBag.Message = message;
+        }
+
+        public Response ViewBagTest()
+        {
+            return View["ViewThatUsesViewBag"];
+        }
+    }
+
 }

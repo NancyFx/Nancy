@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Fakes
+﻿using System.Dynamic;
+
+namespace Nancy.Tests.Fakes
 {
     using System.Collections.Generic;
     using Nancy.ViewEngines;
@@ -19,7 +21,7 @@
         {
         }
 
-        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, ExpandoObject viewBag = null)
         {
             this.Model = model;
             return new HtmlResponse();

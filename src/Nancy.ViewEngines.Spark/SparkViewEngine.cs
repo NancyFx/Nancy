@@ -115,7 +115,7 @@
             this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext);
         }
 
-        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+		public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, ExpandoObject viewBag = null)
         {
             return new HtmlResponse(contents: stream =>
             {

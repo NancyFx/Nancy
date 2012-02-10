@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.Razor
+﻿using System.Dynamic;
+
+namespace Nancy.ViewEngines.Razor
 {
     using System;
     using System.Collections.Generic;
@@ -15,6 +17,11 @@
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
+
+        /// <summary>
+        /// Gets or sets the ViewBag associated with this View
+        /// </summary>
+        public dynamic ViewBag { get; set; }
 
         /// <summary>
         /// Gets the body.
@@ -87,7 +94,8 @@
         /// <param name="renderContext">The render context.</param>
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.

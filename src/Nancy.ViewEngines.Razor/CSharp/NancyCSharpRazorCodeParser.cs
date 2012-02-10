@@ -24,7 +24,7 @@
         protected override bool ParseInheritsStatement(CodeBlockInfo block)
         {
             this.endInheritsLocation = this.CurrentLocation;
-            var result = this.ParseInheritsStatement(block);
+            var result = base.ParseInheritsStatement(block);
             this.CheckForInheritsAndModelStatements();
             return result;
         }

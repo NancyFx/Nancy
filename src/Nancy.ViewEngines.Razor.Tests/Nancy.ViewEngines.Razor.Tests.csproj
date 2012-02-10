@@ -65,8 +65,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System">
-    </Reference>
+    <Reference Include="System" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Xml.Linq">
@@ -99,6 +98,10 @@
     <Compile Include="RazorViewEngineFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Tests\Nancy.Tests.csproj">
+      <Project>{776D244D-BC4D-4BBB-A478-CAF2D04520E1}</Project>
+      <Name>Nancy.Tests</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj">
       <Project>{3F18F5DA-93E0-4513-8BF4-BC8EE5C4117C}</Project>
       <Name>Nancy.ViewEngines.Razor.Tests.Models</Name>
@@ -113,6 +116,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="TestViews\ViewThatUsesViewBag.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\ViewThatUsesModelVB.vbhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

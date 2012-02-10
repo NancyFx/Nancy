@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 namespace Nancy
 {
     using System;
@@ -18,6 +20,9 @@ namespace Nancy
     public abstract class NancyModule : IHideObjectMembers
     {
         private readonly List<Route> routes;
+        private readonly ExpandoObject viewBag;
+
+        protected dynamic ViewBag { get { return viewBag; } }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -37,6 +42,7 @@ namespace Nancy
             this.Before = new BeforePipeline();
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
+            this.viewBag = new ExpandoObject();
         }
 
         /// <summary>
@@ -262,7 +268,7 @@ namespace Nancy
             /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
             public Response this[dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(null, model, this.GetViewLocationContext()); }
+                get { return this.module.ViewFactory.RenderView(null, model, this.GetViewLocationContext(), module.ViewBag); }
             }
 
             /// <summary>
@@ -273,7 +279,7 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Response this[string viewName]
             {
-                get { return this.module.ViewFactory.RenderView(viewName, null, this.GetViewLocationContext()); }
+                get { return this.module.ViewFactory.RenderView(viewName, null, this.GetViewLocationContext(), module.ViewBag); }
             }
 
             /// <summary>
@@ -285,7 +291,7 @@ namespace Nancy
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
             public Response this[string viewName, dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(viewName, model, this.GetViewLocationContext()); }
+                get { return this.module.ViewFactory.RenderView(viewName, model, this.GetViewLocationContext(), module.ViewBag); }
             }
 
             private ViewLocationContext GetViewLocationContext()

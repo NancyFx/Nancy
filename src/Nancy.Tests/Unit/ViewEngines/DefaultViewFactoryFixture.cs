@@ -80,7 +80,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("view.html", new object(), this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.Ignored, context)).MustHaveHappened();
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.Ignored, context, null)).MustHaveHappened();
         }
 
         [Fact]
@@ -213,7 +213,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("foo", null, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored, null)).MustHaveHappened();
         }
 
         [Fact]
@@ -235,7 +235,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("foo", null, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => viewEngines[0].RenderView(location, null, A<IRenderContext>.Ignored, null)).MustHaveHappened();
         }
 
         [Fact]
@@ -249,7 +249,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             Action<Stream> actionReturnedFromEngine = x => { };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored)).Returns(actionReturnedFromEngine);
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored, null)).Returns(actionReturnedFromEngine);
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -271,7 +271,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored)).Throws(new Exception());
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored, null)).Throws(new Exception());
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -296,7 +296,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             };
 
             A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, null)).Throws(new Exception());
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, null, null)).Throws(new Exception());
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -308,7 +308,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, model, A<IRenderContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, model, A<IRenderContext>.Ignored, null)).MustHaveHappened();
         }
 
         [Fact]
@@ -331,7 +331,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof(ExpandoObject))), A<IRenderContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof(ExpandoObject))), A<IRenderContext>.Ignored, null)).MustHaveHappened();
         }
 
         [Fact]

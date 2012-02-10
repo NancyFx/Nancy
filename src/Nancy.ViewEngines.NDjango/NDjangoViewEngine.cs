@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.NDjango
+﻿using System.Dynamic;
+
+namespace Nancy.ViewEngines.NDjango
 {
     using System;
     using System.Collections.Generic;
@@ -35,14 +37,15 @@
             return o;
         }
 
-        /// <summary>
-        /// Renders the view.
-        /// </summary>
-        /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
-        /// <param name="model">The model that should be passed into the view</param>
-        /// <param name="renderContext"></param>
-        /// <returns>A response</returns>
-        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+    	/// <summary>
+    	/// Renders the view.
+    	/// </summary>
+    	/// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
+    	/// <param name="model">The model that should be passed into the view</param>
+    	/// <param name="renderContext"></param>
+    	/// <param name="viewBag">Extra data available to a view</param>
+    	/// <returns>A response</returns>
+		public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, ExpandoObject viewBag = null)
         {
             return new HtmlResponse(contents: stream =>
             {
