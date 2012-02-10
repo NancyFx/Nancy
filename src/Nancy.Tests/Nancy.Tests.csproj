@@ -179,7 +179,6 @@
     <Compile Include="Fakes\FakeRouteCache.cs" />
     <Compile Include="Fakes\FakeNancyModule.cs" />
     <Compile Include="Fakes\FakeRequest.cs" />
-    <Compile Include="Unit\Routing\DefaultRouteResolverPerformanceFixture.cs" />
     <Compile Include="Unit\Routing\NotFoundRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteCacheFixture.cs" />
