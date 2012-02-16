@@ -64,13 +64,9 @@ namespace Nancy.Conventions
                     return () => null;
                 }
 
-                var slash = requestPath.LastIndexOf("/", StringComparison.Ordinal);
-                var file = requestPath.Substring(slash, requestPath.Length - slash);
-                var path = requestPath.Substring(0, slash);
-
                 var rgx = new Regex(requestedPath, RegexOptions.IgnoreCase);
-                
-                requestPath = string.Format("{0}{1}", rgx.Replace(path, Regex.Escape(contentPath), 1), file);
+
+                requestPath = rgx.Replace(requestPath, Regex.Escape(contentPath), 1);
 
                 var fileName = 
                     Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
