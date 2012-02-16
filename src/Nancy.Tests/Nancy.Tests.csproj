@@ -225,7 +225,16 @@
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Assets\Styles\css\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\Styles\strange-css-filename.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Assets\Styles\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\Styles\Sub\styles.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\test.txt">

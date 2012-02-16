@@ -17,7 +17,31 @@ namespace Nancy.Tests.Unit
 		[Fact]
 		public void Static_routes_can_have_same_name_as_extension()
 		{
-			var nancyCtx = new NancyContext(){ Request = new Request("GET", "css/styles.css", "http")};
+			getStaticContent("css", "styles.css");
+		}
+
+		[Fact]
+		public void Virtual_directory_name_can_exist_in_static_route()
+		{
+			getStaticContent("css", "strange-css-filename.css");
+		}
+
+		[Fact]
+		public void Static_content_can_be_nested()
+		{
+			getStaticContent("css/sub", "styles.css");
+		}
+
+		[Fact]
+		public void Static_content_can_be_nested_with_duplicate_name()
+		{
+			getStaticContent("css/css", "styles.css");
+		}
+
+		private void getStaticContent(string virtualDirectory, string requestedFilename)
+		{
+			var resource = string.Format("{0}/{1}", virtualDirectory, requestedFilename);
+			var nancyCtx = new NancyContext() { Request = new Request("GET", resource, "http") };
 
 			var resolver = StaticContentConventionBuilder.AddDirectory("css", @"Resources\Assets\Styles");
 
@@ -25,7 +49,7 @@ namespace Nancy.Tests.Unit
 			var response = resolver.Invoke(nancyCtx, Environment.CurrentDirectory) as GenericFileResponse;
 
 			Assert.NotNull(response);
-			Assert.True("styles.css".Equals(response.Filename, StringComparison.CurrentCultureIgnoreCase));
+			Assert.True(requestedFilename.Equals(response.Filename, StringComparison.CurrentCultureIgnoreCase));
 
 			using (var ms = new MemoryStream())
 			{

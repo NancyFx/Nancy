@@ -58,20 +58,25 @@ namespace Nancy.Conventions
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
+                    // jt: i think this should throw an exception - we wouldn't have gotten this far unless we expect content to be here
                     return () => null;
                 }
 
-                var pathWithoutExtension = requestPath.Substring(0, requestPath.Length - extension.Length);
+                var slash = requestPath.LastIndexOf("/", StringComparison.Ordinal);
+                var file = requestPath.Substring(slash, requestPath.Length - slash);
+                var path = requestPath.Substring(0, slash);
 
+				var rgx = new Regex(requestedPath, RegexOptions.IgnoreCase);
                 requestPath = string.Format("{0}{1}",
-                                                Regex.Replace(pathWithoutExtension, requestedPath, Regex.Escape(contentPath), RegexOptions.IgnoreCase),
-                                                extension);
+                                                rgx.Replace(path, Regex.Escape(contentPath), 1),
+                                                file);
 
                 var fileName = Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
 
                 var contentRootPath = Path.Combine(applicationRootPath, contentPath);
                 if (!IsWithinContentFolder(contentRootPath, fileName) || !File.Exists(fileName))
                 {
+                    // jt: i think this should throw an exception - we wouldn't have gotten this far unless we expect content to be here
                     return () => null;
                 }
 
