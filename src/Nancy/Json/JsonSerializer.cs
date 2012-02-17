@@ -105,11 +105,17 @@ namespace Nancy.Json
 				return;
 			}
 
+#if !__MonoCS__			
 			if (obj.GetType().Name == "RuntimeType")
 			{
 				obj = obj.ToString();
 			}
-
+#else
+			if (obj.GetType().Name == "MonoType")
+			{
+				obj = obj.ToString();
+			}
+#endif
 			Type valueType = obj.GetType ();
 			JavaScriptConverter jsc = serializer.GetConverter (valueType);
 			if (jsc != null) {
