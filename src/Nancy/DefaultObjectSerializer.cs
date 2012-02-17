@@ -62,6 +62,10 @@ namespace Nancy
             {
                 return null;
             }
+	    catch (IOException)
+	    {
+		return null;
+	    }
         }
     }
 }
