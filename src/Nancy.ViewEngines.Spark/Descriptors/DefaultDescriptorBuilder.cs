@@ -182,7 +182,7 @@
 
         private static string GetNamespaceEncodedPathViewPath(string viewPath)
         {
-            return viewPath.Replace('\\', '_');
+            return viewPath.Replace('\\', '_').Replace('/', '_');
         }
 
         /// <summary>
