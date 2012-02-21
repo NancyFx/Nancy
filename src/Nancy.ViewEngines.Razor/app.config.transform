@@ -1,0 +1,5 @@
+<configuration>
+	<appSettings>
+		<add key="webPages:Enabled" value="false" />
+	</appSettings>
+</configuration>

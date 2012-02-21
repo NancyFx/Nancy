@@ -20,8 +20,14 @@
   <files>
     <file src="build\binaries\Nancy.Viewengines.Razor.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Viewengines.Razor.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.dll" target="BuildProviders" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.pdb" target="BuildProviders" />
     <file src="build\binaries\System.Web.Razor.dll" target="lib\net40" />
-	<file src="src\Nancy.Viewengines.Razor\web.config.transform" target="content" />
+    <file src="src\Nancy.Viewengines.Razor\web.config.transform" target="content" />
+    <file src="src\Nancy.Viewengines.Razor\app.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\**\*.cs" target="src" />
+    <file src="build\binaries\install.ps1" target="Tools\install.ps1" />
+    <file src="build\binaries\uninstall.ps1" target="Tools\uninstall.ps1" />
+    <file src="build\binaries\GetNancyRazorBuildProviderPostBuildCmd.ps1" target="Tools\GetNancyRazorBuildProviderPostBuildCmd.ps1" />
   </files>
 </package>
