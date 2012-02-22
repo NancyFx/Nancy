@@ -3,7 +3,7 @@
     /// <summary>
     /// Defines the functionality of a html helper
     /// </summary>
-    public interface IHtmlHelpers
+    public interface IHtmlHelpers<TModel>
     {
         /// <summary>
         /// Renders a partial with the given view name.
