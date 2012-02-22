@@ -64,7 +64,7 @@ task :publish => [:compile] do
     Dir.mkdir(OUTPUT)
     Dir.mkdir("#{OUTPUT}/binaries")
 
-    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb"].exclude(/obj\//).exclude(/.Tests/), "#{OUTPUT}/binaries"
+    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), "#{OUTPUT}/binaries"
 end
 
 desc "Executes MSpec tests"
