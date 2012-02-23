@@ -18,7 +18,7 @@ namespace Nancy.ViewEngines.Spark
 
             if (!string.IsNullOrEmpty(locations))
             {
-                throw new CompilerException(string.Format("The view could not be in any of the following locations: {0}", locations));
+                throw new CompilerException(string.Format("The view could not be found in any of the following locations: {0}", locations));
             }
         }
 
