@@ -91,7 +91,7 @@
             {
                 if (!LocatePotentialTemplate(
                     PotentialMasterLocations(trailingUseMaster,
-                                             buildDescriptorParams.Extra),
+                                             buildDescriptorParams.Extra ),
                     descriptor.Templates,
                     searchedLocations))
                 {
@@ -162,12 +162,15 @@
                                     }, extra);
         }
 
-        protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
+        protected virtual IEnumerable<string> PotentialMasterLocations( string masterName, IDictionary<string, object> extra )
         {
             return ApplyFilters(new[]
                                     {
                                         Path.Combine("Layouts", masterName + ".spark"),
-                                        Path.Combine("Shared", masterName + ".spark")
+                                        Path.Combine("Shared", masterName + ".spark"),
+                                        Path.Combine("Views", masterName + ".spark"),
+                                        Path.Combine("Views", "Layouts", masterName + ".spark"),
+                                        Path.Combine("Views", "Shared", masterName + ".spark")
                                     }, extra);
         }
 
@@ -176,7 +179,9 @@
             return ApplyFilters(new[]
                                     {
                                         Path.Combine("Layouts", "Application.spark"),
-                                        Path.Combine("Shared", "Application.spark")
+                                        Path.Combine("Shared", "Application.spark"),
+                                        Path.Combine("Views", "Layouts", "Application.spark"),
+                                        Path.Combine("Views", "Shared", "Application.spark"),
                                     }, extra);
         }
 
