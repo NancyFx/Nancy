@@ -7,7 +7,7 @@
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class HtmlHelpers<TModel> : IHtmlHelpers
+    public class HtmlHelpers<TModel> : IHtmlHelpers<TModel>
     {
         private readonly TModel model;
         public readonly RazorViewEngine engine;

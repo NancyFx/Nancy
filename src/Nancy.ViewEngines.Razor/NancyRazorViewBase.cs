@@ -225,7 +225,7 @@
         /// <summary>
         /// Gets the Html helper.
         /// </summary>
-        public IHtmlHelpers Html { get; private set; }
+        public IHtmlHelpers<TModel> Html { get; private set; }
 
         /// <summary>
         /// Gets the model.
@@ -235,7 +235,7 @@
         /// <summary>
         /// Gets the Url helper.
         /// </summary>
-        public UrlHelpers<TModel> Url { get; private set; }
+        public IUrlHelpers<TModel> Url { get; private set; }
 
         /// <summary>
         /// Initializes the specified engine.
