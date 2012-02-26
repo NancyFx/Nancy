@@ -122,7 +122,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var parameter = Uri.EscapeUriString("baa ram ewe{}");
-            
+
             // When
             var results = this.matcher.Match("/foo/" + parameter, "/foo/{bar}");
 
@@ -141,6 +141,67 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_allow_underscore_in_parameter_key()
+        {
+            // Given
+            const string parameter = "lol";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/{b_ar}");
+
+            // Then
+            ((string)results.Parameters["b_ar"]).ShouldEqual(parameter);
+        }
+
+		[Fact]
+        public void Should_capture_parameters_when_the_segment_contains_more_characters_after_parameter_declaration()
+        {
+            // Given
+            const string parameter = "filename";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter + ".cshtml", "/foo/{name}.cshtml");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_capture_parameters_even_when_it_is_surrounded_by_additional_characters()
+        {
+            // Given
+            const string parameter = "filename";
+
+            // When
+            var results = this.matcher.Match("/foo/bar" + parameter + ".cshtml", "/foo/bar{name}.cshtml");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_capture_multiple_parameters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name}.{format}");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_capture_multiple_parameters_that_are_surrounded_by_characters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/barfilename.cshtmlbaz", "/foo/bar{name}.{format}baz");
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
         }
     }
 }

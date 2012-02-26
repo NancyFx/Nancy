@@ -1,0 +1,22 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Diagnostics Disabled@EndSection
+
+@Section['Header']
+@EndSection
+
+@Section['Page_Title']
+	<h1>Diagnostics Disabled</h1>
+@EndSection
+
+@Section['Body']
+	<div class="grid_2">&nbsp;</div>
+	<div class="grid_8 help">
+		<p>Diagnostics is currently disabled. To enable it you need to supply a valid DiagnosticsConfiguration (with a strong password!) by overriding the relevent property in your bootstrapper.</p>
+		<p>Alternatively you can disable this message by calling DiagnosticsHook.Disable();</p>
+	</div>
+	<div class="grid_2">&nbsp;</div>
+@EndSection
+
+
+

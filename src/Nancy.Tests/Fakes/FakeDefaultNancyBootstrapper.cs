@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Tests.Fakes
 {
+    using System;
     using System.Collections.Generic;
 
     using Bootstrapper;
+
+    using Nancy.ErrorHandling;
 
     using TinyIoC;
 
@@ -18,7 +21,7 @@
             }
         }
         public FakeDefaultNancyBootstrapper()
-            : this(NancyInternalConfiguration.Default)
+            : this(NancyInternalConfiguration.WithOverrides(b => b.ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) })))
         {
             
         }

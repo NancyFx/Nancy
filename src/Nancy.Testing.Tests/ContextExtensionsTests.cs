@@ -97,7 +97,9 @@ namespace Nancy.Testing.Tests
 			var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
 			var context = new NancyContext() { Response = response };
 
-			Assert.Throws<InvalidOperationException>(() => context.XmlBody<Model>());
+			var result = Record.Exception(() => context.XmlBody<Model>());
+
+			result.ShouldNotBeNull();
 		}
 	}
 }

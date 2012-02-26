@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using Bootstrapper;
     using Conventions;
+
+    using Nancy.Diagnostics;
     using Nancy.Session;
     using Nancy.ViewEngines.Razor;
 
@@ -10,6 +12,13 @@
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
+        // Override with a valid password (albeit a really really bad one!)
+        // to enable the diagnostics dashboard
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get { return new DiagnosticsConfiguration { Password = "password"}; }
+        }
+
         // Overriding this just to show how it works, not actually necessary as autoregister
         // takes care of it all.
         protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer existingContainer)
@@ -31,6 +40,7 @@
         {
             base.ApplicationStartup(container, pipelines);
 
+            StaticConfiguration.EnableRequestTracing = true;
             StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 

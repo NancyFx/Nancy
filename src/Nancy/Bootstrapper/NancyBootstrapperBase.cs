@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Diagnostics;
     using Nancy.Cryptography;
     using Nancy.ModelBinding;
     using Nancy.Conventions;
@@ -97,6 +98,7 @@
                     ?? 
                     (this.modules = AppDomainAssemblyTypeScanner
                                         .TypesOf<NancyModule>(true)
+                                        .NotOfType<DiagnosticModule>()
                                         .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
                                         .ToArray());
             }
@@ -179,9 +181,17 @@
         /// <summary>
         /// Gets the cryptography configuration
         /// </summary>
-        protected CryptographyConfiguration CryptographyConfiguration
+        protected virtual CryptographyConfiguration CryptographyConfiguration
         {
             get { return CryptographyConfiguration.Default; }
+        }
+
+        /// <summary>
+        /// Gets the diagnostics / dashboard configuration (password etc)
+        /// </summary>
+        protected virtual DiagnosticsConfiguration DiagnosticsConfiguration
+        {
+            get { return new DiagnosticsConfiguration(); }
         }
 
         /// <summary>
@@ -470,7 +480,11 @@
         /// <returns>Collection of InstanceRegistation types</returns>
         private IEnumerable<InstanceRegistration> GetAdditionalInstances()
         {
-            return new[] { new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration) };
+            return new[] {
+                new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
+                new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration), 
+                new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration), 
+            };
         }
 
         /// <summary>

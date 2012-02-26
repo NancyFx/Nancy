@@ -144,7 +144,8 @@
         /// <returns>Collection of NancyModule instances</returns>
         protected override sealed IEnumerable<NancyModule> GetAllModules(TinyIoCContainer container)
         {
-            return container.ResolveAll<NancyModule>(false);
+            var nancyModules = container.ResolveAll<NancyModule>(false);
+            return nancyModules;
         }
 
         /// <summary>

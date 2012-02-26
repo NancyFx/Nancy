@@ -3,7 +3,7 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
-
+    using Diagnostics;
     using Nancy.Bootstrapper;
 
     public static class StaticConfiguration
@@ -22,6 +22,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether Nancy should disable caching
         /// </summary>
+        [Description("Determins if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
         public static bool DisableCaches
         {
             get
@@ -37,6 +38,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether or not to disable traces in error messages
         /// </summary>
+        [Description("Disables trace output in the default 500 error pages.")]
         public static bool DisableErrorTraces
         {
             get
@@ -52,6 +54,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
         /// </summary>
+        [Description("Enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.")]
         public static bool CaseSensitive { get; set; }
 
         /// <summary>
@@ -90,5 +93,11 @@ namespace Nancy
                 return false;
             }
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable request tracing
+        /// </summary>
+        [Description("Enable request tracing.")]
+        public static bool EnableRequestTracing { get; set; }
     }
 }

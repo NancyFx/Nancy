@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Interactive Diagnostics</title>
+</head>
+<body>
+    @Each.Methods
+		<form method="post" action="@Path['~/diags/interactive/@Model.Name/@Current.MethodName']">
+			@Current.ReturnType : @Current.MethodName<br/>
+			<!-- need recursive each (probably with partials) to get method params in -->
+			<input type="submit" value="Execute">
+			<hr/>
+		</form>
+    @EndEach
+</body>
+</html>

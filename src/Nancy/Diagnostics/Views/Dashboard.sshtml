@@ -1,0 +1,41 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Dashboard@EndSection
+
+@Section['Header']
+	<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
+@EndSection
+
+@Section['Page_Title']
+	<h1>Dashboard</h1>
+@EndSection
+
+@Section['Body']
+	<a id="infoBox" class="grid_3 icon-block" href="@Path['~/_Nancy/info']"></a>
+	<a id="interactiveBox" class="grid_3 icon-block" href="@Path['~/_Nancy/interactive']"></a>
+	<a id="traceBox" class="grid_3 icon-block" href="@Path['~/_Nancy/trace']"></a>
+	<a id="settingsBox" class="grid_3 icon-block" href="@Path['~/_Nancy/settings']"></a>
+
+	<div class="grid_3 description-text">
+		<h2>Information</h2>
+		<p>Information about Nancy's current runtime configuration. A useful starting point for diagnosing a misbehaving site.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Interactive Diagnostics</h2>
+		<p>Interactive diagnostics allow you to poke and prod at the guts of your Nancy site, from querying configuration, to clearing caches, through to executing parts of the pipeline and visualising the results.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Request Tracing</h2>
+		<p>Provides tracing information about requests including request/response headers and a tracelog of each request.</p>
+	</div>
+
+	<div class="grid_3 description-text">
+		<h2>Settings</h2>
+		<p>Configure some of Nancy's runtime static configuration.</p>
+	</div>
+@EndSection
+
+
+

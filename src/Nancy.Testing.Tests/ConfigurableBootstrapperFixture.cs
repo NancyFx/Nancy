@@ -132,7 +132,7 @@
             var ignoreList = new[]
             {
                 "AfterRequest", "BeforeRequest", "IsValid", "ModuleKeyGenerator",
-                "BindingDefaults", "OnError"
+                "BindingDefaults", "OnError", "InteractiveDiagnosticProviders", "RequestTracing"
             };
 
             var typesToReflect =

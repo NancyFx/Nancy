@@ -1,0 +1,28 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Login@EndSection
+
+@Section['Header']
+@EndSection
+
+@Section['Page_Title']
+	<h1>Login</h1>
+@EndSection
+
+@Section['Body']
+	<div class="grid_3">&nbsp;</div>
+	<div class="grid_2" id="login">Password:</div>
+	<div class="grid_4">
+		<form action="@Path['~/_Nancy/']" method="post">
+			<input type="password" id="Password" name="Password" />
+			<input type="submit" value="Go"/>
+		</form>
+	</div>
+	<div class="grid_3">&nbsp;</div>
+	<script language="javascript" type="text/javascript">
+		Password.focus();
+	</script>
+@EndSection
+
+
+

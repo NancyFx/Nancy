@@ -113,6 +113,7 @@
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
+    <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
@@ -216,6 +217,10 @@
     <Compile Include="Unit\Responses\GenericFileResponseFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">
+      <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
+      <Name>Nancy.Testing</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>

@@ -2,6 +2,7 @@
 
 namespace Nancy.Tests.Unit
 {
+    using System;
     using Xunit;
     using Xunit.Extensions;
 
@@ -170,6 +171,44 @@ namespace Nancy.Tests.Unit
 
             // Then
             result.ShouldEndWith("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
+        }
+
+        [Fact]
+        public void Should_implicitliy_cast_to_uri()
+        {
+            // Given
+            this.url.Scheme = "https";
+            this.url.HostName = "www.nancyfx.org";
+            this.url.Port = 1234;
+            this.url.BasePath = "/base";
+            this.url.Path = "/";
+            this.url.Query = "?foo=some%20text";
+            this.url.Fragment = "anchor";
+
+            // When
+            Uri result = this.url;
+
+            // Then
+            result.ToString().ShouldEqual("https://www.nancyfx.org:1234/base?foo=some text#anchor");
+        }
+
+        [Fact]
+        public void Should_implicitly_cast_to_absolute_uri()
+        {
+            // Given
+            this.url.Scheme = "https";
+            this.url.HostName = "www.nancyfx.org";
+            this.url.Port = 1234;
+            this.url.BasePath = "/base";
+            this.url.Path = "/";
+            this.url.Query = "?foo=some%20text";
+            this.url.Fragment = "anchor";
+
+            // When
+            Uri result = this.url;
+
+            // Then
+            result.IsAbsoluteUri.ShouldBeTrue();
         }
     }
 }

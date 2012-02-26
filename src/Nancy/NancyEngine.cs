@@ -5,6 +5,9 @@
     using System.Linq;
     using System.Threading;
     using Bootstrapper;
+
+    using Nancy.Cookies;
+    using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
 
@@ -19,26 +22,26 @@
         private readonly IRouteResolver resolver;
         private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
+        private readonly IRequestTracing requestTracing;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
-        /// <param name="routeCache">Cache of all available routes</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
-        public NancyEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers)
+        public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing)
         {
             if (resolver == null)
             {
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
-            if (routeCache == null)
-            {
-                throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
-            }
+            //if (routeCache == null)
+            //{
+            //    throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
+            //}
 
             if (contextFactory == null)
             {
@@ -51,9 +54,10 @@
             }
 
             this.resolver = resolver;
-            this.routeCache = routeCache;
+            //this.routeCache = routeCache;
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
+            this.requestTracing = requestTracing;
         }
 
         /// <summary>
@@ -85,7 +89,69 @@
 
             CheckErrorHandler(context);
 
+            this.SaveTraceInformation(context);
+
             return context;
+        }
+
+        private void SaveTraceInformation(NancyContext ctx)
+        {
+            if (!this.EnableTracing(ctx))
+            {
+                return;
+            }
+
+            if (ctx.Request == null || ctx.Response == null)
+            {
+                return;
+            }
+
+            var sessionGuid = this.GetDiagnosticsSessionGuid(ctx);
+
+            ctx.Trace.ResponseType = ctx.Response.GetType();
+            ctx.Trace.StatusCode = ctx.Response.StatusCode;
+            ctx.Trace.RequestContentType = ctx.Request.Headers.ContentType;
+            ctx.Trace.ResponseContentType = ctx.Response.ContentType;
+            ctx.Trace.RequestHeaders = ctx.Request.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
+            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
+
+            this.requestTracing.AddRequestDiagnosticToSession(sessionGuid, ctx);
+
+            this.UpdateTraceCookie(ctx, sessionGuid);
+        }
+
+        private bool EnableTracing(NancyContext ctx)
+        {
+            return StaticConfiguration.EnableRequestTracing &&
+                   !ctx.Request.Path.StartsWith(DiagnosticsHook.ControlPanelPrefix);
+        }
+
+        private Guid GetDiagnosticsSessionGuid(NancyContext ctx)
+        {
+            string sessionId;
+            if (!ctx.Request.Cookies.TryGetValue("__NCTRACE", out sessionId))
+            {
+                return this.requestTracing.CreateSession();
+            }
+
+            Guid sessionGuid;
+            if (!Guid.TryParse(sessionId, out sessionGuid))
+            {
+                return this.requestTracing.CreateSession();
+            }
+
+            if (!this.requestTracing.IsValidSessionId(sessionGuid))
+            {
+                return this.requestTracing.CreateSession();
+            }
+
+            return sessionGuid;
+        }
+
+        private void UpdateTraceCookie(NancyContext ctx, Guid sessionGuid)
+        {
+            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true) { Expires = DateTime.Now.AddMinutes(30) };
+            ctx.Response.AddCookie(cookie);
         }
 
         /// <summary>
@@ -201,7 +267,7 @@
 
         private void ResolveAndInvokeRoute(NancyContext context)
         {
-            var resolveResult = this.resolver.Resolve(context, this.routeCache);
+            var resolveResult = this.resolver.Resolve(context);
 
             context.Parameters = resolveResult.Item2; 
             var resolveResultPreReq = resolveResult.Item3;

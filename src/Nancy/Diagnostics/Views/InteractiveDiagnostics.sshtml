@@ -1,0 +1,75 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Interactive Diagnostics@EndSection
+
+@Section['Header']
+	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/interactive-diagnostics.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
+	<script src="@Path['~/_Nancy/Resources/Modules/interactive/results.js']"></script>
+
+	<link href="@Path['~/_Nancy/Resources/interactive.css']" rel="Stylesheet" />
+@EndSection
+
+@Section['Page_Title']
+	<h1>Interactive Diagnostics</h1>
+@EndSection
+
+@Section['Body']
+	<div id="main" class="grid_4">
+	</div>
+
+	<div id="results" class="grid_8">
+	</div>
+
+	<script id="providerList" type="text/x-handlebars-template">
+		{{#if collection.length}}
+		{{else}}
+		  None providers found.
+		{{/if}}
+	</script>
+
+	<script id="methodList" type="text/x-handlebars-template">
+		<a id="back"><< back</a>
+		{{#if collection.length}}
+		  <ul id="root">
+		  </ul>
+		{{else}}
+		  None found.
+		{{/if}}
+	</script>
+
+	<script id="provider" type="text/x-handlebars-template">
+		<h2>{{model.Name}}</h2>
+		<p>{{model.Description}}</p>
+	</script>
+
+	<script id="method" type="text/x-handlebars-template">
+		<div class="item-list">
+			<strong>{{model.MethodName}}</strong><br/>
+			<em>{{model.Description}}</em><br/>
+				{{#if model.Arguments.length}}
+					<ul class="method-arguments">
+						{{#each model.Arguments}}
+							<li class="method-argument">
+								<div class="tooltip">
+									<input type="text" id="{{this.ArgumentName}}"/>
+									<span class="method-argument-tooltip">
+										<strong>{{this.ArgumentName}}</strong><br/>
+										<em>{{this.ArgumentType}}</em>
+									</span>
+								</div>
+							</li>
+						{{/each}}
+					</ul>
+				{{else}}
+					None.
+				{{/if}}
+			<input type="button" value="Execute" class="g-button execute-button"/>
+		</div>
+	</script>
+@EndSection
+
+
+

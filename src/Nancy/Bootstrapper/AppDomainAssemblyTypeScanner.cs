@@ -152,4 +152,12 @@ namespace Nancy.Bootstrapper
             return returnTypes;
         }
     }
+
+    public static class AppDomainAssemblyTypeScannerExcentions
+    {
+        public static IEnumerable<Type> NotOfType<TType>(this IEnumerable<Type> types)
+        {
+            return types.Where(t => !typeof(TType).IsAssignableFrom(t));
+        }
+    }
 }

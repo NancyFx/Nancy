@@ -1,0 +1,58 @@
+﻿.method-arguments 
+{
+    margin-bottom: 0px;    
+}
+
+.execute-button
+{
+    margin-top: 4px;
+    width: 100%;
+}
+
+.method-argument
+{
+    margin-left: 0px;
+}
+
+.method-argument input 
+{
+    width: 252px;    
+}
+
+.tooltip
+{
+    position: relative;
+}
+
+.tooltip span
+{
+    margin-left: -999em;
+    position: absolute;
+}
+
+.tooltip-showing span
+{
+    border-radius: 5px 5px;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    position: absolute;
+    left: 280px;
+    margin-left: 0px;
+    top: 0;
+    width: 250px;
+    padding: 0.8em 1em;
+    background: #ffffff; 
+}
+
+.tooltip-showing span:after
+{
+  content: "\25C2";
+  display: block;
+  font-size: 28px;
+  height: 0;
+  line-height: 0;
+  position: absolute;
+  color: #ffffff;
+  left: -12px;
+  top: 10px;
+}

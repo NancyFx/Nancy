@@ -13,11 +13,18 @@
     {
         private readonly IViewLocator viewLocator;
         private readonly DefaultViewResolver viewResolver;
+        private readonly ViewLocationContext viewLocationContext;
 
         public DefaultViewResolverFixture()
         {
             this.viewLocator = A.Fake<IViewLocator>();
             this.viewResolver = new DefaultViewResolver(this.viewLocator, new ViewLocationConventions(Enumerable.Empty<Func<string, object, ViewLocationContext, string>>()));
+
+            this.viewLocationContext =
+                new ViewLocationContext
+                {
+                    Context = new NancyContext()
+                };
         }
 
         [Fact]
@@ -101,7 +108,7 @@
                 }));
 
             // When
-            resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             viewNamePassedToFirstConvention.ShouldEqual(viewName);
@@ -132,7 +139,7 @@
                 }));
 
             // When
-            resolver.GetViewLocation(viewName, viewModel, new ViewLocationContext());
+            resolver.GetViewLocation(viewName, viewModel, this.viewLocationContext);
 
             // Then
             modelPassedToFirstConvention.ShouldBeSameAs(viewModel);
@@ -144,7 +151,7 @@
         {
             // Given
             const string viewName = "foo.html";
-            var context = new ViewLocationContext();
+            var context = this.viewLocationContext;
 
             ViewLocationContext modulePathPassedToFirstConvention = null;
             ViewLocationContext modulePathPassedToSecondConvention = null;
@@ -183,7 +190,7 @@
                 }));
 
             // When
-            resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             A.CallTo(() => this.viewLocator.LocateView("bar.html")).MustHaveHappened();
@@ -202,7 +209,7 @@
                 }));
 
             // When
-            resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).MustNotHaveHappened();
@@ -221,7 +228,7 @@
                 }));
 
             // When
-            resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).MustNotHaveHappened();
@@ -240,7 +247,7 @@
                 }));
 
             // When
-            var exception = Record.Exception(() => resolver.GetViewLocation(viewName, null, new ViewLocationContext()));
+            var exception = Record.Exception(() => resolver.GetViewLocation(viewName, null, this.viewLocationContext));
 
             // Then
             exception.ShouldBeNull();
@@ -261,7 +268,7 @@
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(null);
 
             // When
-            var result = resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            var result = resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             result.ShouldBeNull();
@@ -285,7 +292,7 @@
             A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(locatedView);
 
             // When
-            var result = resolver.GetViewLocation(viewName, null, new ViewLocationContext());
+            var result = resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
             result.ShouldBeSameAs(locatedView);

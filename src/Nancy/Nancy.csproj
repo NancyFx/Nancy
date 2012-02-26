@@ -101,7 +101,30 @@
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
+    <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
+    <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
+    <Compile Include="Diagnostics\DescriptionAttribute.cs" />
+    <Compile Include="Diagnostics\DiagnosticModule.cs" />
+    <Compile Include="Diagnostics\DiagnosticsHook.cs" />
+    <Compile Include="Diagnostics\DiagnosticsModuleBuilder.cs" />
+    <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
+    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
+    <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="Diagnostics\EmbeddedFileResponse.cs" />
+    <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
+    <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
+    <Compile Include="Diagnostics\InteractiveDiagnostic.cs" />
+    <Compile Include="Diagnostics\InteractiveDiagnosticMethod.cs" />
+    <Compile Include="Diagnostics\InteractiveDiagnostics.cs" />
+    <Compile Include="Diagnostics\Modules\InfoModule.cs" />
+    <Compile Include="Diagnostics\Modules\SettingsModule.cs" />
+    <Compile Include="Diagnostics\Modules\InteractiveModule.cs" />
+    <Compile Include="Diagnostics\Modules\MainModule.cs" />
+    <Compile Include="Diagnostics\Modules\TraceModule.cs" />
+    <Compile Include="Diagnostics\TemplateAttribute.cs" />
+    <Compile Include="Diagnostics\TestingDiagnosticProvider.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpStartup.cs" />
@@ -113,6 +136,7 @@
     <Compile Include="Json\JsonSettings.cs" />
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
+    <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="StaticContentStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
@@ -125,6 +149,10 @@
     <Compile Include="Cryptography\PassphraseKeyGenerator.cs" />
     <Compile Include="Cryptography\RandomKeyGenerator.cs" />
     <Compile Include="DefaultNancyContextFactory.cs" />
+    <Compile Include="Diagnostics\RequestTraceSession.cs" />
+    <Compile Include="Diagnostics\IRequestTracing.cs" />
+    <Compile Include="Diagnostics\RequestTrace.cs" />
+    <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultErrorHandler.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
@@ -303,6 +331,7 @@
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />
     <EmbeddedResource Include="favicon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -311,7 +340,83 @@
   <ItemGroup>
     <EmbeddedResource Include="ErrorHandling\Resources\500.html" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\diagnostics.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\backbone-min.js" />
+    <EmbeddedResource Include="Diagnostics\Resources\jquery-1.7.1.min.js" />
+    <EmbeddedResource Include="Diagnostics\Resources\underscore-min.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\handlebars.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\_DiagnosticsMaster.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\nancy-common.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\interactive-diagnostics.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\jsonreport.js" />
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\providers.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\InteractiveDiagnostics.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\methods.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\interactive\results.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\main.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\interactive.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\960.css" />
+    <EmbeddedResource Include="Diagnostics\Resources\reset.css" />
+    <EmbeddedResource Include="Diagnostics\Resources\text.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\info.png" />
+    <EmbeddedResource Include="Diagnostics\Resources\interactive.png" />
+    <EmbeddedResource Include="Diagnostics\Resources\logs.png" />
+    <EmbeddedResource Include="Diagnostics\Resources\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\RequestTracing.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\Info.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\Settings.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\request-tracing.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\tracing\sessions.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Resources\Modules\tracing\traces.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\help.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Diagnostics\Views\login.sshtml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

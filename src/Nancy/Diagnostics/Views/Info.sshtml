@@ -1,0 +1,27 @@
+﻿@Master['_DiagnosticsMaster']
+
+@Section['Title']Info@EndSection
+
+@Section['Header']
+	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
+@EndSection
+
+@Section['Page_Title']
+	<h1>Info</h1>
+@EndSection
+
+@Section['Body']
+<div id="data" class="modelreport">
+</div>
+
+<script language="javascript" type="text/javascript">
+	$.getJSON("@Path['~/_Nancy/Info/Data']")
+	 .success(function (data) {
+            $("#data").html(_.modelreport(data));
+	 });
+
+</script>
+@EndSection
+
+
+

@@ -295,7 +295,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>", "<div>ViewThatUsesLayout</div>");
         }
 
@@ -315,7 +315,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>", "<div>ViewThatUsesLayoutAndModel: my test</div>");
         }
 
@@ -332,7 +332,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
                                         "<div>First section in ViewThatUsesLayoutAndSection</div>",
                                         "<div>ViewThatUsesLayoutAndSection</div>");
@@ -352,7 +352,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
                                         "<div>First section in ViewThatUsesLayoutAndManySection</div>",
                                         "<div>Second section in ViewThatUsesLayoutAndManySection</div>",
@@ -373,7 +373,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
                                         "<div>ViewThatUsesLayoutAndOptionalSection</div>");
         }
@@ -389,11 +389,12 @@
             response.Contents.Invoke(stream);
 
             //Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionDefault</div>",
                                         "<div>ViewThatUsesLayoutAndOptionalSectionWithDefaults</div>");
         }
+
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream() {
             //Given
@@ -405,13 +406,67 @@
             response.Contents.Invoke(stream);
 
             //Then
-            string output = ReadAll(stream);
+            var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
                                         "<div>OptionalSectionOverride</div>",
                                         "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
         }
+        
+        [Fact]
+        public void Should_use_custom_view_base_with_csharp_views()
+        {
+            // Given
+            var view = new StringBuilder()
+                .AppendLine("@inherits Nancy.ViewEngines.Razor.Tests.GreetingViewBase")
+                .Append("<h1>@Greet()</h1>");
 
-        private string ReadAll(Stream stream)
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hi, Nancy!</h1>");
+        }
+
+        [Fact]
+        public void Should_use_custom_view_base_with_vb_views()
+        {
+            // Given
+            var view = new StringBuilder()
+                .AppendLine("@inherits Nancy.ViewEngines.Razor.Tests.GreetingViewBase")
+                .Append("<h1>@Greet()</h1>");
+
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "vbhtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hi, Nancy!</h1>");
+        }
+
+        private static string ReadAll(Stream stream)
         {
             stream.Position = 0;
             using (var reader = new StreamReader(stream))

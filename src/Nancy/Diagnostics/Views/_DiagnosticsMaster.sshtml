@@ -1,0 +1,49 @@
+﻿<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>@Section['Title'];</title>
+		<style type="text/css">
+			body 
+			{
+				background: black;
+			}
+		</style>
+
+		<script language="javascript" type="text/javascript">
+			Nancy = { };
+
+			Nancy.config = { };
+
+			Nancy.config.basePath = "@Path['~/_Nancy/']";
+		</script>
+		<script src="@Path['~/_Nancy/Resources/jquery-1.7.1.min.js']"></script>
+		<script src="@Path['~/_Nancy/Resources/underscore-min.js']"></script>
+		<script src="@Path['~/_Nancy/Resources/backbone-min.js']"></script>
+		<script src="@Path['~/_Nancy/Resources/handlebars.js']"></script>
+		<script src="@Path['~/_Nancy/Resources/nancy-common.js']"></script>
+		<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
+
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/reset.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/text.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/960.css']" />
+		<link rel="Stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/main.css']"  />
+
+		@Section['Header'];
+	</head>
+	<body>
+		<div class="container_12">
+
+			<div class="grid_6 header">
+				<a href="@Path['~/_Nancy']">
+					<img src="@Path['~/_Nancy/Resources/logo.png']" width="380px" alt="Nancy" />
+				</a>
+			</div>
+
+			<div class="grid_6 header">
+				@Section['Page_Title'];
+			</div>
+
+			@Section['Body'];
+		</div>
+	</body>
+</html>

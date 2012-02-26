@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.IO;
+    using System.Runtime.Serialization;
     using System.Runtime.Serialization.Formatters.Binary;
 
     public class DefaultObjectSerializer : IObjectSerializer
@@ -42,14 +43,29 @@ namespace Nancy
                 return null;
             }
 
-            var inputBytes = Convert.FromBase64String(sourceString);
-
-            var formatter = new BinaryFormatter();
-
-            using (var inputStream = new MemoryStream(inputBytes, false))
+            try
             {
-                return formatter.Deserialize(inputStream);
+                var inputBytes = Convert.FromBase64String(sourceString);
+
+                var formatter = new BinaryFormatter();
+
+                using (var inputStream = new MemoryStream(inputBytes, false))
+                {
+                    return formatter.Deserialize(inputStream);
+                }
             }
+            catch (FormatException)
+            {
+                return null;
+            }
+            catch (SerializationException)
+            {
+                return null;
+            }
+	    catch (IOException)
+	    {
+		return null;
+	    }
         }
     }
 }

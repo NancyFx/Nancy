@@ -28,18 +28,18 @@ namespace Nancy
         /// Content-types that are acceptable.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
-        public IEnumerable<string> Accept
+        public IEnumerable<Tuple<string, decimal>> Accept
         {
-            get { return this.GetValue("Accept"); }
+            get { return GetWeightedValues("Accept").ToList(); }
         }
 
         /// <summary>
         /// Character sets that are acceptable.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
-        public IEnumerable<string> AcceptCharset
+        public IEnumerable<Tuple<string, decimal>> AcceptCharset
         {
-            get { return this.GetValue("Accept-Charset"); }
+            get { return this.GetWeightedValues("Accept-Charset"); }
         }
 
         /// <summary>
@@ -48,16 +48,16 @@ namespace Nancy
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
         public IEnumerable<string> AcceptEncoding
         {
-            get { return this.GetValue("Accept-Encoding"); }
+            get { return this.GetSplitValues("Accept-Encoding"); }
         }
 
         /// <summary>
         /// Acceptable languages for response.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> that contains the header values if they are available; otherwise it will be empty.</value>
-        public IEnumerable<string> AcceptLanguage
+        public IEnumerable<Tuple<string, decimal>> AcceptLanguage
         {
-            get { return this.GetValue("Accept-Language"); }
+            get { return this.GetWeightedValues("Accept-Language"); }
         }
 
         /// <summary>
@@ -255,6 +255,40 @@ namespace Nancy
             }
         }
 
+        private IEnumerable<string> GetSplitValues(string header)
+        {
+            var values = this.GetValue(header);
+
+            return values
+                .SelectMany(x => x.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries))
+                .Select(x => x.Trim())
+                .ToList();
+        }
+
+        private IEnumerable<Tuple<string, decimal>> GetWeightedValues(string headerName)
+        {
+            var values = this.GetSplitValues(headerName);
+
+            var parsed = values.Select(x => {
+                var q = x.Split(new[] {";q="}, StringSplitOptions.RemoveEmptyEntries);
+
+                var quality = 1m;
+                if (q.Length > 1)
+                {
+                    if(!decimal.TryParse(q[1], NumberStyles.Float, CultureInfo.InvariantCulture, out quality))
+                    {
+                        return null;
+                    }
+                }
+
+                return new Tuple<string, decimal>(q[0].Trim(), quality);
+            });
+
+            return parsed
+                .Where(x => x != null)
+                .OrderByDescending(x => x.Item2);
+        }
+
         private static object GetDefaultValue(Type T)
         {
             if (IsGenericEnumerable(T))
@@ -264,12 +298,12 @@ namespace Nancy
                 return Activator.CreateInstance(x);
             }
 
-            if (T.Equals(typeof(DateTime)))
+            if (T == typeof(DateTime))
             {
                 return null;
             }
 
-            return T.Equals(typeof(string)) ?
+            return T == typeof(string) ?
                 string.Empty :
                 null;
         }
@@ -303,7 +337,7 @@ namespace Nancy
 
         private static bool IsGenericEnumerable(Type T)
         {
-            return !(T.Equals(typeof(string))) && T.IsGenericType && T.GetGenericTypeDefinition().Equals(typeof(IEnumerable<>));
+            return !(T == typeof(string)) && T.IsGenericType && T.GetGenericTypeDefinition() == typeof(IEnumerable<>);
         }
 
 

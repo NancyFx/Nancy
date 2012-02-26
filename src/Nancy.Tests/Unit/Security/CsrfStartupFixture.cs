@@ -2,10 +2,11 @@
 {
     using System.Linq;
 
+    using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.Cryptography;
     using Nancy.Helpers;
-    using Nancy.Responses;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
 
@@ -18,15 +19,22 @@
         private readonly Request request;
                  
         private readonly Response response;
-                 
+
+        private readonly CryptographyConfiguration cryptographyConfiguration;
+
+        private readonly DefaultObjectSerializer objectSerializer;
+
         public CsrfStartupFixture()
         {
             this.pipelines = new MockPipelines();
-            
+
+            this.cryptographyConfiguration = CryptographyConfiguration.Default;
+
+            this.objectSerializer = new DefaultObjectSerializer();
             var csrfStartup = new CsrfStartup(
-                CryptographyConfiguration.Default,
-                new DefaultObjectSerializer(),
-                new DefaultCsrfTokenValidator(CryptographyConfiguration.Default));
+                this.cryptographyConfiguration,
+                this.objectSerializer,
+                new DefaultCsrfTokenValidator(this.cryptographyConfiguration));
 
             csrfStartup.Initialize(this.pipelines);
 
@@ -49,19 +57,53 @@
         [Fact]
         public void Should_copy_request_cookie_to_context_but_not_response_if_it_exists_and_context_does_not_contain_token()
         {
-            this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "TestingToken");
+            this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "ValidToken");
+            var fakeValidator = A.Fake<ICsrfTokenValidator>();
+            A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
+            var csrfStartup = new CsrfStartup(
+                this.cryptographyConfiguration,
+                this.objectSerializer,
+                fakeValidator);
+            csrfStartup.Initialize(this.pipelines);
             var context = new NancyContext { Request = this.request, Response = this.response };
 
             this.pipelines.AfterRequest.Invoke(context);
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
-            context.Items[CsrfToken.DEFAULT_CSRF_KEY].ShouldEqual("TestingToken");
+            context.Items[CsrfToken.DEFAULT_CSRF_KEY].ShouldEqual("ValidToken");
+        }
+
+        [Fact]
+        public void Should_regenerage_token_if_invalid()
+        {
+            this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "InvalidToken");
+            var fakeValidator = A.Fake<ICsrfTokenValidator>();
+            A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(false);
+            var csrfStartup = new CsrfStartup(
+                this.cryptographyConfiguration,
+                this.objectSerializer,
+                fakeValidator);
+            csrfStartup.Initialize(this.pipelines);
+            var context = new NancyContext { Request = this.request, Response = this.response };
+
+            this.pipelines.AfterRequest.Invoke(context);
+
+            this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
+            context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
+            context.Items[CsrfToken.DEFAULT_CSRF_KEY].ShouldNotEqual("InvalidToken");
         }
 
         [Fact]
         public void Should_http_decode_cookie_token_when_copied_to_the_context()
         {
+            var fakeValidator = A.Fake<ICsrfTokenValidator>();
+            A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
+            var csrfStartup = new CsrfStartup(
+                this.cryptographyConfiguration,
+                this.objectSerializer,
+                fakeValidator);
+            csrfStartup.Initialize(this.pipelines);
             this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode("Testing Token"));
             var context = new NancyContext { Request = this.request, Response = this.response };
 

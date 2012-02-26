@@ -5,6 +5,7 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Diagnostics;
 
     /// <summary>
     /// Nancy context.
@@ -17,6 +18,10 @@ namespace Nancy
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
+            this.Trace = new RequestTrace();
+            
+            // TODO - potentially additional logic to lock to ip etc?
+            this.ControlPanelEnabled = true;
         }
 
         /// <summary>
@@ -29,10 +34,25 @@ namespace Nancy
         /// </summary>
         public dynamic Parameters { get; set; }
 
+        private Request request;
+
         /// <summary>
         /// Gets or sets the incoming request
         /// </summary>
-        public Request Request { get; set; }
+        public Request Request
+        {
+            get
+            {
+                return this.request;
+            }
+
+            set
+            {
+                this.request = value;
+                this.Trace.Method = request.Method;
+                this.Trace.RequestUrl = request.Url;
+            }
+        }
 
         /// <summary>
         /// Gets or sets the outgoing response
@@ -43,6 +63,16 @@ namespace Nancy
         /// Gets or sets the current user
         /// </summary>
         public IUserIdentity CurrentUser { get; set; }
+
+        /// <summary>
+        /// Diagnostic request tracing
+        /// </summary>
+        public RequestTrace Trace { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether control panel access is enabled for this request
+        /// </summary>
+        public bool ControlPanelEnabled { get; private set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

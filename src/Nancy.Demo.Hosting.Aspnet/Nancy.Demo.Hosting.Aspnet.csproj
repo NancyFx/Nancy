@@ -100,6 +100,9 @@
     <Content Include="Content\face.png" />
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
+    <None Include="Views\interactive-diags-results.sshtml" />
+    <None Include="Views\interactive-diags-methods.sshtml" />
+    <None Include="Views\interactive-diags.sshtml" />
     <Content Include="Views\javascript.html" />
     <Content Include="Views\static.html" />
     <Content Include="Web.config">

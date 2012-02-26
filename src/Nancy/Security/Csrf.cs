@@ -40,9 +40,14 @@ namespace Nancy.Security
 
                     if (context.Request.Cookies.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
                     {
-                        context.Items[CsrfToken.DEFAULT_CSRF_KEY] =
-                            HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
-                        return;
+                        var decodedValue = HttpUtility.UrlDecode(context.Request.Cookies[CsrfToken.DEFAULT_CSRF_KEY]);
+                        var cookieToken = CsrfStartup.ObjectSerializer.Deserialize(decodedValue) as CsrfToken;
+
+                        if (CsrfStartup.TokenValidator.CookieTokenStillValid(cookieToken))
+                        {
+                            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = decodedValue;
+                            return;
+                        }
                     }
 
                     var token = new CsrfToken
@@ -123,7 +128,7 @@ namespace Nancy.Security
             var formTokenString = request.Form[CsrfToken.DEFAULT_CSRF_KEY].Value;
             if (formTokenString != null)
             {
-                formToken = (CsrfToken)CsrfStartup.ObjectSerializer.Deserialize(formTokenString);
+                formToken = CsrfStartup.ObjectSerializer.Deserialize(formTokenString) as CsrfToken;
             }
 
             return formToken;
@@ -136,7 +141,7 @@ namespace Nancy.Security
             string cookieTokenString;
             if (request.Cookies.TryGetValue(CsrfToken.DEFAULT_CSRF_KEY, out cookieTokenString))
             {
-                cookieToken = (CsrfToken)CsrfStartup.ObjectSerializer.Deserialize(HttpUtility.UrlDecode(cookieTokenString));
+                cookieToken = CsrfStartup.ObjectSerializer.Deserialize(HttpUtility.UrlDecode(cookieTokenString)) as CsrfToken;
             }
 
             return cookieToken;

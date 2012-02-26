@@ -98,6 +98,7 @@
     <Compile Include="IHtmlString.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
+    <Compile Include="IUrlHelpers.cs" />
     <Compile Include="ModelFinder.cs" />
     <Compile Include="ModelSpan.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeGenerator.cs" />
