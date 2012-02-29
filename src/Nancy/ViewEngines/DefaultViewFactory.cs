@@ -6,6 +6,8 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using Nancy.Conventions;
+
 
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.
@@ -15,6 +17,7 @@
         private readonly IViewResolver viewResolver;
         private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IRenderContextFactory renderContextFactory;
+        private readonly ViewLocationConventions conventions;
         private static readonly Action<Stream> EmptyView = x => { };
         private readonly string[] viewEngineExtensions;
 
@@ -24,11 +27,13 @@
         /// <param name="viewResolver">An <see cref="IViewResolver"/> instance that should be used to resolve the location of a view.</param>
         /// <param name="viewEngines">An <see cref="IEnumerable{T}"/> instance containing the <see cref="IViewEngine"/> instances that should be able to be used to render a view</param>
         /// <param name="renderContextFactory">A <see cref="IRenderContextFactory"/> instance that should be used to create an <see cref="IRenderContext"/> when a view is rendered.</param>
-        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory)
+        /// <param name="conventions"> </param>
+        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory, ViewLocationConventions conventions)
         {
             this.viewResolver = viewResolver;
             this.viewEngines = viewEngines;
             this.renderContextFactory = renderContextFactory;
+            this.conventions = conventions;
 
             this.viewEngineExtensions = this.viewEngines.SelectMany(ive => ive.Extensions).ToArray();
         }
@@ -76,7 +81,7 @@
             if (resolvedViewEngine == null)
             {
                 viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewFactory] Unable to find view engine that could render the view."));
-                throw new ViewNotFoundException(viewName, this.viewEngineExtensions);
+                throw new ViewNotFoundException(viewName, this.viewEngineExtensions, this.GetInspectedLocations(viewName, model, viewLocationContext));
             }
 
             viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with view engine ", resolvedViewEngine.GetType().FullName)));
@@ -87,6 +92,19 @@
                 GetSafeModel(model),
                 this.renderContextFactory.GetRenderContext(viewLocationContext)
             );
+        }
+
+        private string[] GetInspectedLocations(string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        {
+            var strings = new List<string>();
+            foreach (var convention in conventions)
+            {
+                try
+                {
+                    strings.Add(convention.Invoke(viewName, model, viewLocationContext));
+                } catch{ }                
+            }
+            return strings.ToArray();
         }
 
         private static object GetSafeModel(object model)
