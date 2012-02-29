@@ -27,7 +27,7 @@
         /// <param name="viewResolver">An <see cref="IViewResolver"/> instance that should be used to resolve the location of a view.</param>
         /// <param name="viewEngines">An <see cref="IEnumerable{T}"/> instance containing the <see cref="IViewEngine"/> instances that should be able to be used to render a view</param>
         /// <param name="renderContextFactory">A <see cref="IRenderContextFactory"/> instance that should be used to create an <see cref="IRenderContext"/> when a view is rendered.</param>
-        /// <param name="conventions"> </param>
+        /// <param name="conventions">An <see cref="ViewLocationConventions"/> instance that should be used to resolve all possible view locations </param>
         public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory, ViewLocationConventions conventions)
         {
             this.viewResolver = viewResolver;
