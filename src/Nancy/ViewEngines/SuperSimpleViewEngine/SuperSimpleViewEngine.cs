@@ -105,7 +105,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <para>
         /// Anonymous types, standard types and ExpandoObject are supported.
         /// Arbitrary dynamics (implementing IDynamicMetaObjectProvicer) are not, unless
-        /// they also implmennt IDictionary string, object for accessing properties.
+        /// they also implement IDictionary string, object for accessing properties.
         /// </para>
         /// </summary>
         /// <param name="model">The model.</param>
