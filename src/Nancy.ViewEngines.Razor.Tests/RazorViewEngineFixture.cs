@@ -133,55 +133,6 @@
         }
         
         [Fact]
-        public void RenderView_should_accept_an_anonymous_model_and_read_from_it_into_the_stream()
-        {
-        	// Given
-        	var location = new ViewLocationResult(
-                string.Empty,
-                string.Empty,
-                "cshtml",
-                () => new StringReader(@"<h1>Hello Mr. @Model.Name</h1>")
-            );
-
-            var stream = new MemoryStream();
-
-            var model = new { Name = "test" };
-        	
-        	// When
-            
-        	var response = this.engine.RenderView(location, model, this.renderContext);
-        	response.Contents.Invoke(stream);
-        	
-        	// Then
-        	stream.ShouldEqual("<h1>Hello Mr. test</h1>");
-        }
-        
-        [Fact]
-        public void RenderView_should_accept_a_nested_anonymous_model_and_read_from_it_into_the_stream()
-        {
-        	// Given
-        	var location = new ViewLocationResult(
-                string.Empty,
-                string.Empty,
-                "cshtml",
-                () => new StringReader(@"<h1>Hello Mr. @Model.Name.LastName</h1>")
-            );
-
-            var stream = new MemoryStream();
-
-            dynamic model = new ExpandoObject();
-            model.Name = new { FirstName = "ignore", LastName = "test" };
-            
-        	// When
-            
-        	var response = this.engine.RenderView(location, model, this.renderContext);
-        	response.Contents.Invoke(stream);
-        	
-        	// Then
-        	stream.ShouldEqual("<h1>Hello Mr. test</h1>");
-        }
-
-        [Fact]
         public void RenderView_csharp_should_use_model_directive_for_strongly_typed_view()
         {
             // Given
