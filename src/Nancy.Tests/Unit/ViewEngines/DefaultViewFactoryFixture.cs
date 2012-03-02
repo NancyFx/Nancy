@@ -397,6 +397,45 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
+        public void Should_transfer_foreign_nested_anonymoustype_model_members_in_other_objects_to_expandoobject_members_before_invoking_view_engines()
+        {
+            // Given
+            var viewEngines = new[] {
+              new FakeViewEngine { Extensions = new[] { "html"}}
+            };
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+                        
+            dynamic model = new ExpandoObject();
+            model.Name = CSharpCodeProvider
+				.CreateProvider("CSharp")
+				.CompileAssemblyFromSource(
+					new CompilerParameters
+						{
+							GenerateInMemory = true,
+							GenerateExecutable = false,
+							IncludeDebugInformation = false
+						},
+					new[]
+						{
+							"public static class Test { public static object GetModel() { return new { Last = \"Nancy\" }; } }"
+						})
+				.CompiledAssembly
+				.GetType("Test")
+				.GetMethod("GetModel")
+				.Invoke(null, null);
+            
+            var factory = this.CreateFactory(viewEngines);
+            
+            // When
+            factory.RenderView("foo", model, this.viewLocationContext);
+
+            // Then
+            ((string)viewEngines[0].Model.Name.Last).ShouldEqual("Nancy");
+        }
+
+        [Fact]
         public void Should_use_the_name_of_the_model_type_as_view_name_when_only_model_is_specified()
         {
             // Given
