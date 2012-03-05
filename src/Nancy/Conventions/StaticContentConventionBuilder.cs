@@ -38,6 +38,11 @@ namespace Nancy.Conventions
                     return null;
                 }
 
+                if(contentPath != null){
+                    Regex regex = new Regex("/\\");
+                    contentPath = regex.Replace(contentPath, Path.PathSeparator.ToString());
+                }
+
                 var responseFactory =
                     ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
 
