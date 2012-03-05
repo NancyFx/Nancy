@@ -2826,6 +2826,8 @@ namespace TinyIoC
                 asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
             };
 
             foreach (var check in ignoreChecks)
