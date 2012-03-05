@@ -7,17 +7,22 @@ namespace Nancy.Tests.Unit.ViewEngines
     using Nancy.ViewEngines;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using System.Linq;
+    using Nancy.Conventions;
+
 
     public class DefaultViewFactoryFixture
     {
         private readonly IViewResolver resolver;
         private readonly IRenderContextFactory renderContextFactory;
         private readonly ViewLocationContext viewLocationContext;
+        private readonly ViewLocationConventions conventions;
 
         public DefaultViewFactoryFixture()
         {
             this.resolver = A.Fake<IViewResolver>();
             this.renderContextFactory = A.Fake<IRenderContextFactory>();
+            this.conventions = new ViewLocationConventions(Enumerable.Empty<Func<string, object, ViewLocationContext, string>>());
 
             this.viewLocationContext =
                 new ViewLocationContext
@@ -33,7 +38,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 viewEngines = new IViewEngine[] { };
             }
 
-            return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory);
+            return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, this.conventions);
         }
 
         [Fact]
@@ -410,6 +415,29 @@ namespace Nancy.Tests.Unit.ViewEngines
             result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
             result.ViewName.ShouldEqual("foo");
         }
+
+        [Fact]
+        public void Should_provide_list_of_inspected_view_locations_in_not_found_exception()
+        {
+            var viewEngines = new[] {
+              A.Fake<IViewEngine>(),
+              A.Fake<IViewEngine>(),
+            };
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "sshtml" });            
+             
+            var conventions = new Func<string, dynamic, ViewLocationContext, string>[] {(a,b,c) => "baz"};
+            var factory = new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, new ViewLocationConventions(conventions));
+            
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
+
+            var result = (Record.Exception(() => factory.RenderView("foo", null, this.viewLocationContext))) as ViewNotFoundException;
+
+            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
+            result.ViewName.ShouldEqual("foo");
+            result.InspectedLocations.ShouldEqualSequence(new [] {"baz"});
+        }
+
 
         private static Func<TextReader> GetEmptyContentReader()
         {
