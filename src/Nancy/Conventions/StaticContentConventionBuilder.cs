@@ -13,7 +13,8 @@ namespace Nancy.Conventions
     public class StaticContentConventionBuilder
     {
         private static readonly ConcurrentDictionary<string, Func<Response>> ResponseFactoryCache;
-
+        private static readonly Regex pathReplaceRegex = new Regex("/\\", RegexOptions.Compiled);
+		
         static StaticContentConventionBuilder()
         {
             ResponseFactoryCache = new ConcurrentDictionary<string, Func<Response>>();
@@ -38,9 +39,9 @@ namespace Nancy.Conventions
                     return null;
                 }
 
-                if(contentPath != null){
-                    Regex regex = new Regex("/\\");
-                    contentPath = regex.Replace(contentPath, Path.PathSeparator.ToString());
+                if(contentPath != null)
+                {
+                    contentPath = pathReplaceRegex.Replace(contentPath, Path.PathSeparator.ToString());
                 }
 
                 var responseFactory =
