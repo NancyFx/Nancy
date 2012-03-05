@@ -436,7 +436,8 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hi, Nancy!</h1>");
+            var output = ReadAll(stream).Trim();
+            output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
         [Fact]
@@ -463,7 +464,8 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hi, Nancy!</h1>");
+            var output = ReadAll(stream).Trim();
+            output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
         private static string ReadAll(Stream stream)
