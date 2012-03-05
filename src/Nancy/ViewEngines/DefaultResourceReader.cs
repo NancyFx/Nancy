@@ -32,7 +32,13 @@
 
         private static string GetResourceExtension(string resourceName)
         {
-            return Path.GetExtension(resourceName).Substring(1);
+        	var extension = Path.GetExtension(resourceName);
+			if (string.IsNullOrEmpty(extension))
+			{
+				return "";
+			}
+
+            return extension.Substring(1);
         }
     }
 }
