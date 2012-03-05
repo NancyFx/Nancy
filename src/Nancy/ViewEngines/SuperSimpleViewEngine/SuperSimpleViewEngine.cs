@@ -17,7 +17,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
-        private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?", RegexOptions.Compiled);
+        private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for each blocks
@@ -105,7 +105,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <para>
         /// Anonymous types, standard types and ExpandoObject are supported.
         /// Arbitrary dynamics (implementing IDynamicMetaObjectProvicer) are not, unless
-        /// they also implmennt IDictionary string, object for accessing properties.
+        /// they also implement IDictionary string, object for accessing properties.
         /// </para>
         /// </summary>
         /// <param name="model">The model.</param>

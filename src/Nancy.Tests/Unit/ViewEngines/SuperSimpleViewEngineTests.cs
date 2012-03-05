@@ -23,6 +23,34 @@
         }
 
         [Fact]
+        public void Should_replace_primitive_model_with_value()
+        {
+            // Given
+            const string input = @"<html><head></head><body>Hello there @Model</body></html>";
+            const string model = "Bob";
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hello there Bob</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replace_primitive_model_with_value_when_followed_by_closing_tag()
+        {
+            // Given
+            const string input = @"<html><head></head><body>Hello there @Model;</body></html>";
+            const string model = "Bob";
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hello there Bob</body></html>", output);
+        }
+
+        [Fact]
         public void Should_replaces_valid_property_when_followed_by_closing_tag()
         {
             const string input = @"<html><head></head><body>Hello there @Model.Name;</body></html>";
