@@ -131,7 +131,7 @@
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
-
+        
         [Fact]
         public void RenderView_csharp_should_use_model_directive_for_strongly_typed_view()
         {

@@ -7,7 +7,10 @@ namespace Nancy.Tests.Unit.ViewEngines
     using Nancy.ViewEngines;
     using Nancy.Tests.Fakes;
     using Xunit;
-
+    using System.Reflection;
+    using System.CodeDom.Compiler;
+    using Microsoft.CSharp;
+	
     public class DefaultViewFactoryFixture
     {
         private readonly IViewResolver resolver;
@@ -312,7 +315,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
-        public void Should_covert_anonymoustype_model_to_expandoobject_before_invoking_view_engine()
+        public void Should_convert_anonymoustype_model_to_expandoobject_before_invoking_view_engine()
         {
             // Given
             var viewEngines = new[] {
@@ -333,7 +336,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Then
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof(ExpandoObject))), A<IRenderContext>.Ignored)).MustHaveHappened();
         }
-
+		
         [Fact]
         public void Should_transfer_anonymoustype_model_members_to_expandoobject_members_before_invoking_view_engines()
         {
@@ -353,6 +356,83 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             // Then
             ((string)viewEngines[0].Model.Name).ShouldEqual("Nancy");
+        }
+
+        [Fact]
+        public void Should_transfer_foreign_nested_anonymoustype_model_members_to_expandoobject_members_before_invoking_view_engines()
+        {
+            // Given
+            var viewEngines = new[] {
+              new FakeViewEngine { Extensions = new[] { "html"}}
+            };
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+                        
+            dynamic foreignMember = CSharpCodeProvider
+				.CreateProvider("CSharp")
+				.CompileAssemblyFromSource(
+					new CompilerParameters
+						{
+							GenerateInMemory = true,
+							GenerateExecutable = false,
+							IncludeDebugInformation = false
+						},
+					new[]
+						{
+							"public static class Test { public static object GetModel() { return new { Name = new { Last = \"Nancy\" }}; } }"
+						})
+				.CompiledAssembly
+				.GetType("Test")
+				.GetMethod("GetModel")
+				.Invoke(null, null);
+            
+            var factory = this.CreateFactory(viewEngines);
+            
+            // When
+            factory.RenderView("foo", foreignMember, this.viewLocationContext);
+
+            // Then
+            ((string)viewEngines[0].Model.Name.Last).ShouldEqual("Nancy");
+        }
+
+        [Fact]
+        public void Should_transfer_foreign_nested_anonymoustype_model_members_in_other_objects_to_expandoobject_members_before_invoking_view_engines()
+        {
+            // Given
+            var viewEngines = new[] {
+              new FakeViewEngine { Extensions = new[] { "html"}}
+            };
+
+            var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
+            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
+                        
+            dynamic model = new ExpandoObject();
+            model.Name = CSharpCodeProvider
+				.CreateProvider("CSharp")
+				.CompileAssemblyFromSource(
+					new CompilerParameters
+						{
+							GenerateInMemory = true,
+							GenerateExecutable = false,
+							IncludeDebugInformation = false
+						},
+					new[]
+						{
+							"public static class Test { public static object GetModel() { return new { Last = \"Nancy\" }; } }"
+						})
+				.CompiledAssembly
+				.GetType("Test")
+				.GetMethod("GetModel")
+				.Invoke(null, null);
+            
+            var factory = this.CreateFactory(viewEngines);
+            
+            // When
+            factory.RenderView("foo", model, this.viewLocationContext);
+
+            // Then
+            ((string)viewEngines[0].Model.Name.Last).ShouldEqual("Nancy");
         }
 
         [Fact]

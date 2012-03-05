@@ -101,7 +101,15 @@
 
             foreach (var propertyInfo in source.GetType().GetProperties())
             {
-                results[propertyInfo.Name] = propertyInfo.GetValue(source, null);
+            	var val =  propertyInfo.GetValue(source, null);
+            	if(val.IsAnonymousType())
+            	{
+            		results[propertyInfo.Name] = GetExpandoObject(val);
+            	}
+            	else
+            	{
+            		results[propertyInfo.Name] = val;
+            	}
             }
 
             return expandoObject;
