@@ -43,11 +43,6 @@
         private ModuleRegistration[] modules;
 
         /// <summary>
-        /// Default favicon
-        /// </summary>
-        private byte[] defaultFavIcon;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -175,7 +170,7 @@
         /// </summary>
         protected virtual byte[] DefaultFavIcon
         {
-            get { return this.defaultFavIcon ?? (this.defaultFavIcon = LoadFavIcon()); }
+            get { return FavIconStartup.FavIcon; }
         }
 
         /// <summary>
@@ -503,28 +498,6 @@
                     new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
-        }
-
-        /// <summary>
-        /// Loads the default favicon from the assembly
-        /// </summary>
-        /// <returns>Favicon byte array</returns>
-        private static byte[] LoadFavIcon()
-        {
-            var resourceStream = 
-                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
-
-            if (resourceStream == null)
-            {
-                return null;
-            }
-
-            var result = 
-                new byte[resourceStream.Length];
-
-            resourceStream.Read(result, 0, (int)resourceStream.Length);
-
-            return result;
         }
     }
 }
