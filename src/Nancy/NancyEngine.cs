@@ -20,7 +20,6 @@
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRouteResolver resolver;
-        private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
