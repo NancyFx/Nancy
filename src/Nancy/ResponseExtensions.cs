@@ -87,6 +87,18 @@ namespace Nancy
             return response;
         }
 
+        /// <summary>
+        /// Sets the content type of the response
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="contentType">The type of the content</param>
+        /// <returns>Modified response</returns>
+        public static Response WithContentType(this Response response, string contentType)
+        {
+            response.ContentType = contentType;
+            return response;
+        }
+
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()
