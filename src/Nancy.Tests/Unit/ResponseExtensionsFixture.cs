@@ -7,6 +7,7 @@
     using Nancy.Responses;
 
     using Xunit;
+	using System.Globalization;
 
     public class ResponseExtensionsFixture
     {
@@ -147,5 +148,25 @@
             result.Headers["test"].ShouldEqual("testvalue");
             result.Headers["test2"].ShouldEqual("test2value");
         }
+
+		[Fact]
+		public void Should_add_caching_headers_for_not_caching()
+		{
+			var response = new Response();
+
+			var result = response.DoNotCache();
+
+			result.Headers.ShouldNotBeNull();
+			result.Headers["Cache-Control"].ShouldEqual("no-cache, no-store, must-revalidate");
+			result.Headers["Pragma"].ShouldEqual("no-cache");
+
+			var expires = result.Headers["Expires"];
+			
+			expires.ShouldNotBeNull();
+
+			var expiresDate = DateTime.ParseExact(expires, "R", DateTimeFormatInfo.InvariantInfo);
+
+			(expiresDate <= DateTime.UtcNow.AddDays(-1)).ShouldBeTrue();			
+		}
     }
 }

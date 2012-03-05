@@ -5,6 +5,8 @@ namespace Nancy
     using System.Linq;
 
     using Nancy.Responses;
+	using Nancy.Helpers;
+	using System.Globalization;
 
     public static class ResponseExtensions
     {
@@ -62,6 +64,19 @@ namespace Nancy
         {
             return response.WithHeaders(headers.Select(GetTuple).ToArray());
         }
+
+		/// <summary>
+		/// Disables the browser/proxy cache on this response
+		/// </summary>
+		/// <param name="response">Response object</param>
+		/// <returns>Modified response</returns>
+		public static Response DoNotCache(this Response response)
+		{
+			return response.WithHeaders(
+				Tuple.Create("Cache-Control", "no-cache, no-store, must-revalidate"),
+				Tuple.Create("Expires", DateTime.UtcNow.AddDays(-1).ToString("R", DateTimeFormatInfo.InvariantInfo)),
+				Tuple.Create("Pragma", "no-cache"));
+		}
 
         /// <summary>
         /// Adds headers to the response using anonymous types
