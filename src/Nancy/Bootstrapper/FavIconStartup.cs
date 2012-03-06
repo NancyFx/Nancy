@@ -12,7 +12,8 @@
     /// </summary>
     public class FavIconStartup : IStartup
     {
-        private readonly IRootPathProvider rootPathProvider;
+        private static IRootPathProvider rootPathProvider;
+        private static byte[] favIcon;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FavIconStartup"/> class, with the
@@ -21,8 +22,7 @@
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used to scan for a favicon.</param>
         public FavIconStartup(IRootPathProvider rootPathProvider)
         {
-            this.rootPathProvider = rootPathProvider;
-            FavIcon = this.ScanForFavIcon();
+            FavIconStartup.rootPathProvider = rootPathProvider;
         }
 
         /// <summary>
@@ -44,7 +44,10 @@
         /// Gets the default favicon
         /// </summary>
         /// <value>A byte array, containing a favicon.ico file.</value>
-        public static byte[] FavIcon { get; private set; }
+        public static byte[] FavIcon
+        {
+            get { return favIcon ?? (favIcon = ScanForFavIcon()); }
+        }
 
         /// <summary>
         /// Perform any initialisation tasks
@@ -72,13 +75,13 @@
             return result;
         }
 
-        private byte[] ScanForFavIcon()
+        private static byte[] ScanForFavIcon()
         {
             byte[] icon = null;
             var extensions = new[] {"ico", "png"};
 
             var locatedFavIcons = extensions.SelectMany(extension => Directory
-                .EnumerateFiles(this.rootPathProvider.GetRootPath(), string.Concat("favicon.", extension), SearchOption.AllDirectories))
+                .EnumerateFiles(rootPathProvider.GetRootPath(), string.Concat("favicon.", extension), SearchOption.AllDirectories))
                 .ToArray();
 
             if (locatedFavIcons.Any())
