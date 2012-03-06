@@ -456,7 +456,7 @@
         {
             // Given
             var request = new FakeRequest("OPTIONS", "/foo/bar");
-          var context = new NancyContext { Request = request };
+            var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
 
             // When 

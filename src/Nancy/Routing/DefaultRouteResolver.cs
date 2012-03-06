@@ -45,7 +45,7 @@
             return result.Selected;
         }
 
-      private ResolveResult CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
+        private ResolveResult CreateRouteAndParametersFromMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
             var associatedModule =
                 this.GetInitializedModuleForMatch(context, routeMatchToReturn);
