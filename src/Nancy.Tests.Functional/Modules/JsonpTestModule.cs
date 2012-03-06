@@ -11,6 +11,7 @@ namespace Nancy.Tests.Functional.Modules
         {
             Get["/string"] = x => "Normal Response";
             Get["/json"] = x => Response.AsJson(true);
+            Get["/{name}"] = parameters => Response.AsJson(new { parameters.name });
         }
     }
 }
