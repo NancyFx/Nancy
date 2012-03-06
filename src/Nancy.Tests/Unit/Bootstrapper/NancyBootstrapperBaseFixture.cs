@@ -123,9 +123,9 @@
             this.InstanceRegistrations = instanceRegistrations;
         }
 
-        protected override byte[] DefaultFavIcon
+        protected override byte[] FavIcon
         {
-            get { return this.Favicon ?? base.DefaultFavIcon; }
+            get { return this.Favicon ?? base.FavIcon; }
         }
 
         public BeforePipeline PreRequest
