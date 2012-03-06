@@ -90,6 +90,7 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
+    <Compile Include="Bootstrapper\FavIconStartup.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\IStartup.cs" />
