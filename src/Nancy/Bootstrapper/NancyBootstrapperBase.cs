@@ -43,11 +43,6 @@
         private ModuleRegistration[] modules;
 
         /// <summary>
-        /// Default favicon
-        /// </summary>
-        private byte[] defaultFavIcon;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -173,9 +168,9 @@
         /// <summary>
         /// Gets the default favicon
         /// </summary>
-        protected virtual byte[] DefaultFavIcon
+        protected virtual byte[] FavIcon
         {
-            get { return this.defaultFavIcon ?? (this.defaultFavIcon = LoadFavIcon()); }
+            get { return FavIconStartup.FavIcon; }
         }
 
         /// <summary>
@@ -258,7 +253,7 @@
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
-            if (this.DefaultFavIcon != null)
+            if (this.FavIcon != null)
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
@@ -273,7 +268,7 @@
                                 {
                                     ContentType = "image/vnd.microsoft.icon",
                                     StatusCode = HttpStatusCode.OK,
-                                    Contents = s => s.Write(this.DefaultFavIcon, 0, this.DefaultFavIcon.Length)
+                                    Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
                                 };
 
                             response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
@@ -503,28 +498,6 @@
                     new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
-        }
-
-        /// <summary>
-        /// Loads the default favicon from the assembly
-        /// </summary>
-        /// <returns>Favicon byte array</returns>
-        private static byte[] LoadFavIcon()
-        {
-            var resourceStream = 
-                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
-
-            if (resourceStream == null)
-            {
-                return null;
-            }
-
-            var result = 
-                new byte[resourceStream.Length];
-
-            resourceStream.Read(result, 0, (int)resourceStream.Length);
-
-            return result;
         }
     }
 }
