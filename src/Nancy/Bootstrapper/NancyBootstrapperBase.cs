@@ -168,7 +168,7 @@
         /// <summary>
         /// Gets the default favicon
         /// </summary>
-        protected virtual byte[] DefaultFavIcon
+        protected virtual byte[] FavIcon
         {
             get { return FavIconStartup.FavIcon; }
         }
@@ -253,7 +253,7 @@
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
-            if (this.DefaultFavIcon != null)
+            if (this.FavIcon != null)
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
@@ -268,7 +268,7 @@
                                 {
                                     ContentType = "image/vnd.microsoft.icon",
                                     StatusCode = HttpStatusCode.OK,
-                                    Contents = s => s.Write(this.DefaultFavIcon, 0, this.DefaultFavIcon.Length)
+                                    Contents = s => s.Write(this.FavIcon, 0, this.FavIcon.Length)
                                 };
 
                             response.Headers["Cache-Control"] = "public, max-age=604800, must-revalidate";
