@@ -1,0 +1,9 @@
+﻿<!DOCTYPE html>
+<html>
+   <head>
+       <title>HTML 5 Template</title>
+   </head>
+   <body>
+      <use content="main" />
+   </body>
+</html>

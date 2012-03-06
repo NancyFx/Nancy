@@ -1,0 +1,5 @@
+﻿<use master="html5" />
+
+<content name="main">
+   <p>This is the content!</p>
+</content>

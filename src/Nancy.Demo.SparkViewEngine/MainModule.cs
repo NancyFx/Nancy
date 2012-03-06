@@ -11,6 +11,10 @@ namespace Nancy.Demo.SparkViewEngine
                 {
                     return View["Index.spark"];
                 };
+
+           Get[ "/test" ] = _ => View[ "test" ];
+
+           Get[ "/test2" ] = _ => View[ "test2" ];
         }
     }
 }

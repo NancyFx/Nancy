@@ -1,0 +1,3 @@
+﻿<content name="main">
+   <p>This is the content for the page which doesn't explicitly define it's own master template.</p>
+</content>
