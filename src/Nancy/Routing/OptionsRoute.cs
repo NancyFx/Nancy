@@ -16,7 +16,7 @@
         {
             var response = new Response();
             response.Headers["Allow"] = string.Join(", ", allowedMethods);
-            response.StatusCode = HttpStatusCode.MethodNotAllowed;
+            response.StatusCode = HttpStatusCode.OK;
 
             return response;
         }

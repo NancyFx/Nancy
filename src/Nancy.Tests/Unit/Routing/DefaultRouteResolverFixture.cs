@@ -452,6 +452,22 @@
         }
 
         [Fact]
+        public void Should_have_status_code_200_for_options_when_route_is_defined()
+        {
+          // Given
+          var request = new FakeRequest("OPTIONS", "/foo/bar");
+          var context = new NancyContext { Request = request };
+          var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
+
+          // When 
+          var resolvedRoute = resolver.Resolve(context);
+          var response = resolvedRoute.Item1.Invoke(null);
+
+          // Then
+          response.StatusCode.ShouldEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
         public void Should_return_options_route_with_path_set_to_request_route_for_options()
         {
             // Given
