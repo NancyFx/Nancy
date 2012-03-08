@@ -436,6 +436,80 @@
         }
 
         [Fact]
+        public void Should_allow_options_request_when_route_is_defined()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext {Request = request};
+            var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
+
+            // When 
+            var resolvedRoute = resolver.Resolve(context);
+
+            // Then
+            resolvedRoute.ShouldNotBeNull();
+            resolvedRoute.Item1.ShouldBeOfType<OptionsRoute>();
+        }
+
+        [Fact]
+        public void Should_return_options_route_with_path_set_to_request_route_for_options()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
+
+            // When 
+            var resolvedRoute = resolver.Resolve(context);
+
+            // Then
+            resolvedRoute.ShouldNotBeNull();
+            resolvedRoute.Item1.ShouldBeOfType<OptionsRoute>();
+            resolvedRoute.Item1.Description.Path.ShouldEqual(request.Path);
+        }
+
+        [Fact]
+        public void Should_return_optionsroute_with_allow_header_set_to_allowed_methods_matching_request_route_for_options()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext {Request = request};
+            var resolver = CreateResolver(x =>
+            {
+                x.AddGetRoute("/foo/bar");
+                x.AddPutRoute("/foo/bar");
+            });
+
+            // When
+            var route = resolver.Resolve(context).Item1;
+
+            // Then
+            route.ShouldNotBeNull();
+            route.ShouldBeOfType<OptionsRoute>();
+            route.Invoke(new DynamicDictionary()).Headers["Allow"].ShouldEqual("GET, PUT");
+        }
+
+        [Fact]
+        public void Should_return_user_defined_route_for_route_with_custom_options_defined()
+        {
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext {Request = request};
+            var resolver = CreateResolver(x =>
+            {
+                x.AddGetRoute("/foo/bar");
+                x.AddOptionsRoute("/foo/bar");
+            });
+
+            // When
+            var route = resolver.Resolve(context).Item1;
+
+            // Then
+            route.ShouldNotBeNull();
+            route.ShouldNotBeOfType<OptionsRoute>();
+        }
+
+        [Fact]
         public void Should_not_return_a_route_if_matching_and_the_filter_returns_false()
         {
             // Given
