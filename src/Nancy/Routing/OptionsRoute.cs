@@ -2,6 +2,9 @@
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Route that is returned when the path could be matched but, the method was OPTIONS and there was no user defined handler for OPTIONS.
+    /// </summary>
     public class OptionsRoute : Route
     {
         public OptionsRoute(string path, IEnumerable<string> allowedMethods) 
