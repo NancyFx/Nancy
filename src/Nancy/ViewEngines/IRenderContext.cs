@@ -8,6 +8,12 @@ namespace Nancy.ViewEngines
     public interface IRenderContext
     {
         /// <summary>
+        /// Gets the context of the current request.
+        /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
+        NancyContext Context { get; }
+
+        /// <summary>
         /// Gets the view cache that is used by Nancy.
         /// </summary>
         /// <value>An <see cref="IViewCache"/> instance.</value>

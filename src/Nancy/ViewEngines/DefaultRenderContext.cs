@@ -29,6 +29,11 @@
             this.viewLocationContext = viewLocationContext;
         }
 
+        public NancyContext Context
+        {
+            get { return this.viewLocationContext.Context; }
+        }
+
         /// <summary>
         /// Gets the view cache that is used by Nancy.
         /// </summary>
