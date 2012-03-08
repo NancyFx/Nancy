@@ -75,10 +75,15 @@
             return result;
         }
 
-        private static byte[] ScanForFavIcon()
+        private static byte[] LocateIconOnFileSystem()
         {
+            if (rootPathProvider == null)
+            {
+                return null;
+            }
+
             byte[] icon = null;
-            var extensions = new[] {"ico", "png"};
+            var extensions = new[] { "ico", "png" };
 
             var locatedFavIcons = extensions.SelectMany(extension => Directory
                 .EnumerateFiles(rootPathProvider.GetRootPath(), string.Concat("favicon.", extension), SearchOption.AllDirectories))
@@ -86,7 +91,7 @@
 
             if (locatedFavIcons.Any())
             {
-                var image = 
+                var image =
                     Image.FromFile(locatedFavIcons.First());
 
                 var converter = new ImageConverter();
@@ -94,7 +99,12 @@
                 icon = (byte[])converter.ConvertTo(image, typeof(byte[]));
             }
 
-            return icon ?? ExtractDefaultIcon();
+            return icon;
+        }
+
+        private static byte[] ScanForFavIcon()
+        {
+            return LocateIconOnFileSystem() ?? ExtractDefaultIcon();
         }
     }
 }
