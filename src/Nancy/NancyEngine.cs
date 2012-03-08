@@ -184,6 +184,10 @@
             {
                 return;
             }
+            if (!StaticConfiguration.EnableVersionHeader)
+            {
+                return;
+            }
 
             var version =
                 typeof(INancyEngine).Assembly.GetName().Version;

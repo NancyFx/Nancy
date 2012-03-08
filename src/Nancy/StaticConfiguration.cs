@@ -10,7 +10,7 @@ namespace Nancy
     {
         private static bool? isRunningDebug;
         private static bool? disableCaches;
-
+  
         private static bool? disableErrorTraces;
 
         static StaticConfiguration()
@@ -50,6 +50,11 @@ namespace Nancy
                 disableErrorTraces = value;
             }
         }
+		
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable the Nancy-Version header from being sent with the response headers.
+        /// </summary>
+        public static bool EnableVersionHeader { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.

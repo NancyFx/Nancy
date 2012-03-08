@@ -132,7 +132,7 @@ namespace Nancy.Tests.Unit
             // Then
             result.Response.ShouldBeSameAs(this.response);
         }
-
+		
         [Fact]
         public void Should_add_nancy_version_number_header_on_returned_response()
         {
@@ -145,11 +145,26 @@ namespace Nancy.Tests.Unit
             // Then
             result.Response.Headers.ContainsKey("Nancy-Version").ShouldBeTrue();
         }
+	
+		[Fact]
+        public void Should_not_add_nancy_version_number_header_on_returned_response_when_disabled_in_static_configuration()
+        {
+            // Given
+			StaticConfiguration.EnableVersionHeader = false;
+            var request = new Request("GET", "/", "http");
 
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.Headers.ContainsKey("Nancy-Version").ShouldBeFalse();
+        }
+		
         [Fact]
         public void Should_not_throw_exception_when_setting_nancy_version_header_and_it_already_existed()
         {
             // Given
+            StaticConfiguration.EnableVersionHeader = true;
             var cachedResponse = new Response();
             cachedResponse.Headers.Add("Nancy-Version", "1.2.3.4");
             Func<NancyContext, Response> preRequestHook = (ctx) => cachedResponse;
@@ -178,6 +193,7 @@ namespace Nancy.Tests.Unit
         public void Should_set_nancy_version_number_on_returned_response()
         {
             // Given
+            StaticConfiguration.EnableVersionHeader = true;
             var request = new Request("GET", "/", "http");
             var nancyVersion = typeof(INancyEngine).Assembly.GetName().Version;
 
