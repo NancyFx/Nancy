@@ -1,5 +1,4 @@
-﻿
-namespace Nancy.Bootstrapper
+﻿namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;

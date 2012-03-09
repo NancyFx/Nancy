@@ -1,15 +1,11 @@
-﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections;
-using System.Reflection;
-using Microsoft.CSharp;
-
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit
 {
     using System.Linq;
+    using System.CodeDom.Compiler;
+    using Microsoft.CSharp;
 
     using Nancy.Tests.Fakes;
-
+    
     using Xunit;
 
     public class DefaultNancyBootstrapperFixture
