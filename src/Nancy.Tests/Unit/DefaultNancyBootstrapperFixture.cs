@@ -1,4 +1,10 @@
-﻿namespace Nancy.Tests.Unit
+﻿using System;
+using System.CodeDom.Compiler;
+using System.Collections;
+using System.Reflection;
+using Microsoft.CSharp;
+
+namespace Nancy.Tests.Unit
 {
     using System.Linq;
 
@@ -53,6 +59,32 @@
 
             this.bootstrapper.RequestStartupLastRequest.ShouldNotBeNull();
             this.bootstrapper.RequestStartupLastRequest.ShouldBeSameAs(request);
+        }
+
+        [Fact]
+        public void Container_should_ignore_specified_assemblies()
+        {
+            var ass = CSharpCodeProvider
+                .CreateProvider("CSharp")
+                .CompileAssemblyFromSource(
+                    new CompilerParameters
+                    {
+                        GenerateInMemory = true,
+                        GenerateExecutable = false,
+                        IncludeDebugInformation = false,
+                        OutputAssembly = "TestAssembly"
+                    },
+                    new[]
+                    {
+                        "public interface IWillNotBeResolved { int i { get; set; } }",
+                        "public class WillNotBeResolved : IWillNotBeResolved { public int i { get; set; } }"
+                    })
+                .CompiledAssembly;
+
+            this.bootstrapper.Initialise ();
+            Assert.Throws<TinyIoC.TinyIoCResolutionException>(
+                () => this.bootstrapper.Container.Resolve(ass.GetType("IWillNotBeResolved")));
+            
         }
     }
 }

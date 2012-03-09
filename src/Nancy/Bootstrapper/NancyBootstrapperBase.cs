@@ -1,9 +1,11 @@
-﻿namespace Nancy.Bootstrapper
+﻿
+namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using System.Reflection;
     using Diagnostics;
     using Nancy.Cryptography;
     using Nancy.ModelBinding;
@@ -80,6 +82,25 @@
             }
         }
 
+        /// <summary>
+        /// Gets a set of rules for ignoring assemblies while scanning through them.
+        /// </summary>
+        protected virtual IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
+        {
+            get
+            {
+                yield return asm => asm.FullName.StartsWith ("Microsoft.", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("System.", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("System,", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("CR_ExtUnitTest", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("mscorlib,", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("CR_VSTest", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("DevExpress.CodeRush", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("IronPython", StringComparison.InvariantCulture);
+                yield return asm => asm.FullName.StartsWith ("IronRuby", StringComparison.InvariantCulture);
+            }
+        }
+        
         /// <summary>
         /// Gets all available module types
         /// </summary>
@@ -207,7 +228,11 @@
             this.ApplicationContainer = this.GetApplicationContainer();
 
             this.RegisterBootstrapperTypes(this.ApplicationContainer);
+            
             this.ConfigureApplicationContainer(this.ApplicationContainer);
+
+            //set ignored assemblies in AppDomainAssemblyTypeScanner so it can also ignore the specified assemblies.
+            AppDomainAssemblyTypeScanner.IgnoredAssemblies = this.IgnoredAssemblies;
 
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());

@@ -39,6 +39,27 @@ namespace Nancy.Bootstrapper
         private static bool nancyAssembliesLoaded;
 
         /// <summary>
+        /// 
+        /// </summary>
+        private static IEnumerable<Func<Assembly, bool>> ignoredAssemblies;
+
+        /// <summary>
+        /// Gets or sets a set of rules for ignoring assemblies while scanning through them.
+        /// </summary>
+        public static IEnumerable<Func<Assembly, bool>> IgnoredAssemblies 
+        { 
+            private get 
+            {
+                return ignoredAssemblies;
+            } 
+            set 
+            {
+                ignoredAssemblies = value;
+                UpdateTypes ();
+            }
+        }
+
+        /// <summary>
         /// Gets app domain types.
         /// </summary>
         public static IEnumerable<Type> Types
@@ -114,6 +135,7 @@ namespace Nancy.Bootstrapper
         private static void UpdateAssemblies()
         {
             assemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
+                          where IgnoredAssemblies != null ? !IgnoredAssemblies.Any(asm => asm(assembly)) : true
                           where !assembly.IsDynamic
                           where !assembly.ReflectionOnly
                           select assembly).ToArray();

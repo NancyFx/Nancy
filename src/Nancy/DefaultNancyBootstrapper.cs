@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿using System.Reflection;
+
+namespace Nancy
 {
     using System;
     using System.Collections.Generic;
@@ -19,7 +21,7 @@
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            AutoRegister(container);
+            AutoRegister(container, this.IgnoredAssemblies);
         }
 
         /// <summary>
@@ -163,13 +165,13 @@
         /// Executes auto registation with the given container.
         /// </summary>
         /// <param name="container">Container instance</param>
-        private static void AutoRegister(TinyIoCContainer container)
+        private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
             var assembly = typeof(NancyEngine).Assembly;
 
             var whitelist = new Type[] { };
 
-            container.AutoRegister(t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
+            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
         }
     }
 }
