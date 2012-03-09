@@ -1,12 +1,12 @@
-﻿using System.Collections;
-using System.Reflection;
-
+﻿
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Collections;
+    using System.Reflection;
 
     using FakeItEasy;
 
