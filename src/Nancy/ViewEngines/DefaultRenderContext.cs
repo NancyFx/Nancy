@@ -29,6 +29,10 @@
             this.viewLocationContext = viewLocationContext;
         }
 
+        /// <summary>
+        /// Gets the context of the current request.
+        /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
         public NancyContext Context
         {
             get { return this.viewLocationContext.Context; }

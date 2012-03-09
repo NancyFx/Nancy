@@ -1,10 +1,9 @@
-using Nancy.Diagnostics;
-
 namespace Nancy.ViewEngines
 {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Diagnostics;
 
     public class DefaultViewLocationCache : IViewLocationCache, IDiagnosticsProvider
     {
