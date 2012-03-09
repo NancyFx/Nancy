@@ -184,15 +184,12 @@
                         Rejected = routes.Item2
                     };
                 }
-                else
+                context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
+                return new ResolveResults
                 {
-                    context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
-                    return new ResolveResults
-                    {
-                        Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
-                        Rejected = routes.Item2
-                    };
-                }
+                    Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
+                    Rejected = routes.Item2
+                };
             }
 
             // Exact match
