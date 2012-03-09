@@ -20,8 +20,9 @@
         /// </summary>
         /// <param name="requestedPath">The path that was requested.</param>
         /// <param name="routePath">The route pattern that the requested path should be attempted to be matched with.</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance for the current request.</param>
         /// <returns>An <see cref="IRoutePatternMatchResult"/> instance, containing the outcome of the match.</returns>
-        public IRoutePatternMatchResult Match(string requestedPath, string routePath)
+        public IRoutePatternMatchResult Match(string requestedPath, string routePath, NancyContext context)
         {
             var routePathPattern = 
                 this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(routePath));
