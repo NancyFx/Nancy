@@ -55,6 +55,32 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
+        public void Should_return_match_result_with_context_of_current_request_when_paths_matched()
+        {
+            // Given
+            var context = new NancyContext();
+            
+            // When
+            var results = this.matcher.Match("/foo/bar", "/foo/bar", context);
+
+            // Then
+            results.Context.ShouldBeSameAs(context);
+        }
+
+        [Fact]
+        public void Should_return_match_result_with_context_of_current_request_when_paths_do_not_matched()
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            var results = this.matcher.Match("/foo/bar", "/bar/foo", context);
+
+            // Then
+            results.Context.ShouldBeSameAs(context);
+        }
+
+        [Fact]
         public void Should_return_negative_match_result_when_paths_does_not_match()
         {
             // Given, When

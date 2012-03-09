@@ -38,7 +38,8 @@
 
             return new RoutePatternMatchResult(
                 matches.Any(),
-                GetParameters(routePathPattern, matches));
+                GetParameters(routePathPattern, matches),
+                context);
         }
 
         private static string TrimTrailingSlashFromRequestedPath(string requestedPath)

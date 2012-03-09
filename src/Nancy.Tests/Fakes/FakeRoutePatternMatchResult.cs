@@ -26,6 +26,8 @@
             closure.Invoke(configurator);
         }
 
+        public NancyContext Context { get; private set; }
+
         public bool IsMatch { get; private set; }
 
         public DynamicDictionary Parameters { get; private set; }
