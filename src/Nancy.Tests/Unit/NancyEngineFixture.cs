@@ -32,7 +32,7 @@ namespace Nancy.Tests.Unit
             this.context = new NancyContext();
             this.errorHandler = A.Fake<IErrorHandler>();
 
-            A.CallTo(() => errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).Returns(false);
+            A.CallTo(() => errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
@@ -499,7 +499,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -520,7 +520,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/", "http");
-            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored)).Returns(true);
+            A.CallTo(() => this.errorHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(true);
 
             // When
             this.engine.HandleRequest(request);

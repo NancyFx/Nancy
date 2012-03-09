@@ -6,11 +6,12 @@ namespace Nancy.ErrorHandling
     public interface IErrorHandler
     {
         /// <summary>
-        /// Whether then 
+        /// Check if the error handler can handle errors of the provided status code.
         /// </summary>
         /// <param name="statusCode">Status code</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
         /// <returns>True if handled, false otherwise</returns>
-        bool HandlesStatusCode(HttpStatusCode statusCode);
+        bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context);
 
         /// <summary>
         /// Handle the error code
