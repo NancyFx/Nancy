@@ -2,35 +2,38 @@
 {
     public class TestingDiagnosticProvider : IDiagnosticsProvider
     {
-        private object diagObject;
+        private readonly object diagObject;
 
         public TestingDiagnosticProvider()
         {
             this.diagObject = new DiagObject();
         }
 
+        /// <summary>
+        /// Gets the name of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the name of the provider.</value>
         public string Name
         {
-            get
-            {
-                return "Testing Diagnostic Provider";
-            }
+            get { return "Testing Diagnostic Provider"; }
         }
 
+        /// <summary>
+        /// Gets the description of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the description of the provider.</value>
         public string Description
         {
-            get
-            {
-                return "Some testing methods that can be called to.. erm.. test things.";
-            }
+            get { return "Some testing methods that can be called to.. erm.. test things."; }
         }
 
+        /// <summary>
+        /// Gets the object that contains the interactive diagnostics methods.
+        /// </summary>
+        /// <value>An instance of the interactive diagnostics object.</value>
         public object DiagnosticObject
         {
-            get
-            {
-                return this.diagObject;
-            }
+            get { return this.diagObject; }
         }
 
         public class DiagObject
