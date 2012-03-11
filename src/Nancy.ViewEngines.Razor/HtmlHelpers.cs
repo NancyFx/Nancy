@@ -10,8 +10,8 @@
     public class HtmlHelpers<TModel> : IHtmlHelpers<TModel>
     {
         private readonly TModel model;
-        public readonly RazorViewEngine engine;
-        public readonly IRenderContext renderContext;
+        private readonly RazorViewEngine engine;
+        private readonly IRenderContext renderContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
