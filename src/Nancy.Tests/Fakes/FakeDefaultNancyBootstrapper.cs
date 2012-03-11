@@ -38,6 +38,15 @@
             get { return configuration; }
         }
 
+        protected override IEnumerable<Func<System.Reflection.Assembly, bool>> IgnoredAssemblies
+        {
+            get
+            {
+                foreach (var ignoredAssembly in base.IgnoredAssemblies) yield return ignoredAssembly;
+                yield return asm => asm.FullName.StartsWith("TestAssembly");
+            }
+        }
+
         public IDictionary<NancyContext, int> RequestContainerInitialisations { get; private set; }
 
         public bool ApplicationContainerConfigured { get; set; }
