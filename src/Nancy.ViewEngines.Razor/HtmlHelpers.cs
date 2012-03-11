@@ -30,6 +30,7 @@
         /// Renders a partial with the given view name.
         /// </summary>
         /// <param name="viewName">Name of the view.</param>
+        /// <returns>An <see cref="IHtmlString"/> representation of the partial.</returns>
         public IHtmlString Partial(string viewName)
         {
             return this.Partial(viewName, null);
@@ -40,6 +41,7 @@
         /// </summary>
         /// <param name="viewName">Name of the partial view.</param>
         /// <param name="modelForPartial">The model that is passed to the partial.</param>
+        /// <returns>An <see cref="IHtmlString"/> representation of the partial.</returns>
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
             var view = this.renderContext.LocateView(viewName, modelForPartial);
@@ -60,7 +62,7 @@
         /// Returns an html string composed of raw, non-encoded text.
         /// </summary>
         /// <param name="text">The text.</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="IHtmlString"/> representation of the raw text.</returns>
         public IHtmlString Raw(string text)
         {
             return new NonEncodedHtmlString(text);
@@ -69,7 +71,7 @@
         /// <summary>
         /// Creates an anti-forgery token.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An <see cref="IHtmlString"/> representation of the anti forgery token.</returns>
         public IHtmlString AntiForgeryToken()
         {
             var tokenKeyValue = this.renderContext.GetCsrfToken();
