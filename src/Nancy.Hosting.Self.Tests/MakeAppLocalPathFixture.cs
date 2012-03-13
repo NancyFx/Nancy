@@ -1,59 +1,87 @@
-using System;
-using Nancy.Tests;
-using Xunit;
-
 namespace Nancy.Hosting.Self.Tests
 {
+    using System;
+    using Nancy.Tests;
+    using Xunit;
+
 	public class MakeAppLocalPathFixture
 	{
 		[Fact]
-		public void path_should_represent_local_path()
+		public void Should_return_path_as_local_path()
 		{
-			var result = new Uri("http://host/base/").MakeAppLocalPath(new Uri("http://host/base/rel"));
+            // Given
+		    var uri = new Uri("http://host/base/");
+
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/base/rel"));
 			
+            // Then
 			result.ShouldEqual("/rel");
 		}
 
-
 		[Fact]
-		public void root_path_should_be_only_slash()
+		public void Should_return_root_path_with_trailing_slash_as_slash()
 		{
-			var result = new Uri("http://host/base/").MakeAppLocalPath(new Uri("http://host/base/"));
+            // Given
+            var uri = new Uri("http://host/base/");
+            
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/base/"));
 
-			result.ShouldEqual("/");
+            // Then
+            result.ShouldEqual("/");
 		}
 
 		[Fact]
-		public void slashless_root_path_should_be_only_slash()
+		public void Should_return_root_path_without_trailing_slash_as_slash()
 		{
-			var result = new Uri("http://host/base/").MakeAppLocalPath(new Uri("http://host/base"));
+            // Given
+            var uri = new Uri("http://host/base/");
 
-			result.ShouldEqual("/");
-		}
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/base"));
 
-
-		[Fact]
-		public void path_casing_should_be_full_uri_one()
-		{
-			var result = new Uri("http://host/base/").MakeAppLocalPath(new Uri("http://host/base/ReL"));
-
-			result.ShouldEqual("/ReL");
+            // Then
+            result.ShouldEqual("/");
 		}
 
 		[Fact]
-		public void site_root_is_supported()
+		public void Should_return_path_with_same_casing_as_full_uri()
 		{
-			var result = new Uri("http://host/").MakeAppLocalPath(new Uri("http://host/rel/file"));
+            // Given
+            var uri = new Uri("http://host/base/");
 
-			result.ShouldEqual("/rel/file");
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/base/ReL"));
+
+            // Then
+            result.ShouldEqual("/ReL");
 		}
 
 		[Fact]
-		public void site_root_slashless_path_is_supported()
+		public void Should_support_extended_site_root()
 		{
-			var result = new Uri("http://host/").MakeAppLocalPath(new Uri("http://host"));
+            // Given
+            var uri = new Uri("http://host/");
 
-			result.ShouldEqual("/");
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/rel/file"));
+
+            // Then
+            result.ShouldEqual("/rel/file");
+		}
+
+		[Fact]
+		public void Should_support_site_root_without_trailing_slash()
+		{
+            // Given
+            var uri = new Uri("http://host/");
+
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host"));
+
+            // Then
+            result.ShouldEqual("/");
 		}
 	}
 }

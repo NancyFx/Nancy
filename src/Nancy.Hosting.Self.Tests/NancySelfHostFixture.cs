@@ -1,14 +1,14 @@
-﻿using System;
-using System.IO;
-using System.Net;
-using FakeItEasy;
-using Nancy.Bootstrapper;
-using Nancy.Tests;
-using Nancy.Tests.xUnitExtensions;
-using Xunit;
-
-namespace Nancy.Hosting.Self.Tests
+﻿namespace Nancy.Hosting.Self.Tests
 {
+    using System;
+    using System.IO;
+    using System.Net;
+    using FakeItEasy;
+    using Nancy.Bootstrapper;
+    using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
+    using Xunit;
+
 	/// <remarks>
 	/// These tests attempt to listen on port 1234, and so require either administrative 
 	/// privileges or that a command similar to the following has been run with
@@ -23,11 +23,14 @@ namespace Nancy.Hosting.Self.Tests
 		[SkippableFact]
 		public void Should_be_able_to_get_any_header_from_selfhost()
 		{
+            // Given
 			using (CreateAndOpenSelfHost())
 			{
+                // When
 				var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
 				request.Method = "GET";
 
+                // Then
 				request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
 			}
 		}
@@ -35,6 +38,7 @@ namespace Nancy.Hosting.Self.Tests
 		[SkippableFact]
 		public void Should_set_query_string_and_uri_correctly()
 		{
+            // Given
 			Request nancyRequest = null;
 			var fakeEngine = A.Fake<INancyEngine>();
 			A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
@@ -44,6 +48,7 @@ namespace Nancy.Hosting.Self.Tests
 			var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 			A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
+            // When
 			using (CreateAndOpenSelfHost(fakeBootstrapper))
 			{
 				var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
@@ -59,6 +64,7 @@ namespace Nancy.Hosting.Self.Tests
 				}
 			}
 
+            // Then
 			nancyRequest.Path.ShouldEqual("/test/stuff");
 			Assert.True(nancyRequest.Query.query.HasValue);
 			Assert.True(nancyRequest.Query.query2.HasValue);
@@ -114,7 +120,6 @@ namespace Nancy.Hosting.Self.Tests
 			}
 		}
 	
-
 		private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null)
 		{
 			if (nancyBootstrapper == null)
