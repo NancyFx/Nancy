@@ -12,6 +12,8 @@ namespace Nancy
     /// </summary>
     public sealed class NancyContext : IDisposable
     {
+        private Request request;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
         /// </summary>
@@ -33,8 +35,6 @@ namespace Nancy
         /// Gets or sets the parameters for the resolved route 
         /// </summary>
         public dynamic Parameters { get; set; }
-
-        private Request request;
 
         /// <summary>
         /// Gets or sets the incoming request
@@ -85,6 +85,8 @@ namespace Nancy
             }
 
             this.Items.Clear();
+
+            ((IDisposable)this.request).Dispose();
         }
     }
 }
