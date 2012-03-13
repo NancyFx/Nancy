@@ -43,7 +43,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
         [InlineData(HttpStatusCode.Unauthorized)]
         public void Should_not_handle_non_error_codes(HttpStatusCode code)
         {
-            var result = this.errorHandler.HandlesStatusCode(code);
+            var result = this.errorHandler.HandlesStatusCode(code, null);
 
             result.ShouldBeFalse();
         }

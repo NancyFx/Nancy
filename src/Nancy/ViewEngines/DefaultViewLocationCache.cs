@@ -1,10 +1,9 @@
-using Nancy.Diagnostics;
-
 namespace Nancy.ViewEngines
 {
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Diagnostics;
 
     public class DefaultViewLocationCache : IViewLocationCache, IDiagnosticsProvider
     {
@@ -47,19 +46,28 @@ namespace Nancy.ViewEngines
             return GetEnumerator();
         }
 
+        /// <summary>
+        /// Gets the name of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the name of the provider.</value>
         public string Name
         {
             get { return "View location cache"; }
         }
 
+        /// <summary>
+        /// Gets the description of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the description of the provider.</value>
         public string Description
         {
-            get
-            {
-                return "Provides methods for viewing and manipulating the view cache.";
-            }
+            get { return "Provides methods for viewing and manipulating the view cache."; }
         }
 
+        /// <summary>
+        /// Gets the object that contains the interactive diagnostics methods.
+        /// </summary>
+        /// <value>An instance of the interactive diagnostics object.</value>
         public object DiagnosticObject
         {
             get { return new DefaultViewLocationCacheDiagnostics(this); }

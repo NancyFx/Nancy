@@ -66,7 +66,7 @@
                 viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewResolver] Attempting to locate view using convention '", conventionBasedViewName, "'")));
 
                 var locatedView = 
-                    this.viewLocator.LocateView(conventionBasedViewName);
+                    this.viewLocator.LocateView(conventionBasedViewName, viewLocationContext.Context);
 
                 if (locatedView != null)
                 {

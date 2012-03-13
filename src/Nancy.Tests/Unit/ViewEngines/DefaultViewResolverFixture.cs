@@ -193,7 +193,24 @@
             resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => this.viewLocator.LocateView("bar.html")).MustHaveHappened();
+            A.CallTo(() => this.viewLocator.LocateView("bar.html", A<NancyContext>.Ignored)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_view_locator_with_context()
+        {
+            // Given
+            var resolver = new DefaultViewResolver(
+                this.viewLocator,
+                new ViewLocationConventions(new Func<string, dynamic, ViewLocationContext, string>[] {
+                    (name, model, path) =>  "bar.html" 
+                }));
+
+            // When
+            resolver.GetViewLocation("foo.html", null, this.viewLocationContext);
+
+            // Then
+            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored, this.viewLocationContext.Context)).MustHaveHappened();
         }
 
         [Fact]
@@ -212,7 +229,7 @@
             resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored, A<NancyContext>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -231,7 +248,7 @@
             resolver.GetViewLocation(viewName, null, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored, A<NancyContext>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -265,7 +282,7 @@
                     (name, model, path) => "bar.html"
                 }));
 
-            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(null);
+            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(null);
 
             // When
             var result = resolver.GetViewLocation(viewName, null, this.viewLocationContext);
@@ -289,7 +306,7 @@
             var locatedView =
                 new ViewLocationResult("name", "location", "extension", GetEmptyContentReader());
 
-            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored)).Returns(locatedView);
+            A.CallTo(() => this.viewLocator.LocateView(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(locatedView);
 
             // When
             var result = resolver.GetViewLocation(viewName, null, this.viewLocationContext);

@@ -194,5 +194,19 @@
 
             result.ShouldBeOfType(typeof(InvalidOperationException));
         }
+
+        [Fact]
+        public void Should_expose_context_from_viewlocationcontext()
+        {
+            // Given
+            var nancyContext = new NancyContext();
+            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+
+            // When
+            var context = new DefaultRenderContext(null, null, viewLocationContext);
+
+            // Then
+            context.Context.ShouldBeSameAs(nancyContext);
+        }
     }
 }

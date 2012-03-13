@@ -13,23 +13,26 @@ namespace Nancy.ErrorHandling
     /// </summary>
     public class DefaultErrorHandler : IErrorHandler
     {
-        private IDictionary<HttpStatusCode, string> errorPages;
+        private readonly IDictionary<HttpStatusCode, string> errorPages;
 
-        private IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
+        private readonly IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
 
-        private HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
+        private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultErrorHandler"/> type.
+        /// </summary>
         public DefaultErrorHandler()
         {
             this.errorPages = new Dictionary<HttpStatusCode, string>
                 {
-                    { HttpStatusCode.NotFound, this.LoadResource("404.html") },
-                    { HttpStatusCode.InternalServerError, this.LoadResource("500.html") },
+                    { HttpStatusCode.NotFound, LoadResource("404.html") },
+                    { HttpStatusCode.InternalServerError, LoadResource("500.html") },
                 };
 
             this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
                 {
-                    { HttpStatusCode.InternalServerError, this.PopulateErrorInfo}
+                    { HttpStatusCode.InternalServerError, PopulateErrorInfo}
                 };
         }
 
@@ -37,8 +40,9 @@ namespace Nancy.ErrorHandling
         /// Whether then 
         /// </summary>
         /// <param name="statusCode">Status code</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
         /// <returns>True if handled, false otherwise</returns>
-        public bool HandlesStatusCode(HttpStatusCode statusCode)
+        public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
             return this.supportedStatusCodes.Any(s => s == statusCode);
         }
@@ -47,7 +51,7 @@ namespace Nancy.ErrorHandling
         /// Handle the error code
         /// </summary>
         /// <param name="statusCode">Status code</param>
-        /// <param name="context">Current context</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
         /// <returns>Nancy Response</returns>
         public void Handle(HttpStatusCode statusCode, NancyContext context)
         {
@@ -74,10 +78,10 @@ namespace Nancy.ErrorHandling
                 errorPage = expansionDelegate.Invoke(statusCode, context, errorPage);
             }
 
-            this.ModifyResponse(statusCode, context, errorPage);
+            ModifyResponse(statusCode, context, errorPage);
         }
 
-        private void ModifyResponse(HttpStatusCode statusCode, NancyContext context, string errorPage)
+        private static void ModifyResponse(HttpStatusCode statusCode, NancyContext context, string errorPage)
         {
             if (context.Response == null)
             {
@@ -94,7 +98,7 @@ namespace Nancy.ErrorHandling
                 };
         }
 
-        private string LoadResource(string filename)
+        private static string LoadResource(string filename)
         {
             var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ErrorHandling.Resources.{0}", filename));
 
@@ -109,7 +113,7 @@ namespace Nancy.ErrorHandling
             }
         }
 
-        private string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
+        private static string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
         {
             return templateContents.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : context.GetExceptionDetails());
         }

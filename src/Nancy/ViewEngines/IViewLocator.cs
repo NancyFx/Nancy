@@ -9,7 +9,8 @@
         /// Gets the location of the view defined by the <paramref name="viewName"/> parameter.
         /// </summary>
         /// <param name="viewName">Name of the view to locate.</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance for the current request.</param>
         /// <returns>A <see cref="ViewLocationResult"/> instance if the view could be located; otherwise <see langword="null"/>.</returns>
-        ViewLocationResult LocateView(string viewName);
+        ViewLocationResult LocateView(string viewName, NancyContext context);
     }
 }

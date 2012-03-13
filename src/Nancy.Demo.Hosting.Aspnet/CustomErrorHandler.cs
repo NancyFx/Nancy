@@ -5,11 +5,12 @@
     public class CustomErrorHandler : IErrorHandler
     {
         /// <summary>
-        /// Whether then 
+        /// Check if the error handler can handle errors of the provided status code.
         /// </summary>
         /// <param name="statusCode">Status code</param>
+        /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
         /// <returns>True if handled, false otherwise</returns>
-        public bool HandlesStatusCode(HttpStatusCode statusCode)
+        public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
             return statusCode == HttpStatusCode.ImATeapot;
         }

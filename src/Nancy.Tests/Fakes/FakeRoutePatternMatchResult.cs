@@ -26,6 +26,8 @@
             closure.Invoke(configurator);
         }
 
+        public NancyContext Context { get; private set; }
+
         public bool IsMatch { get; private set; }
 
         public DynamicDictionary Parameters { get; private set; }
@@ -37,6 +39,12 @@
             public FakeRoutePatternMatchResultConfigurator(FakeRoutePatternMatchResult fakeRoutePatternMatchResult)
             {
                 this.fakeRoutePatternMatchResult = fakeRoutePatternMatchResult;
+            }
+
+            public FakeRoutePatternMatchResultConfigurator Context(NancyContext context)
+            {
+                this.fakeRoutePatternMatchResult.Context = context;
+                return this;
             }
 
             public FakeRoutePatternMatchResultConfigurator IsMatch(bool isMatch)
