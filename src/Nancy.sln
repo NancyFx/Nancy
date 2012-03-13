@@ -98,6 +98,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor.Tests.Models", "Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj", "{3F18F5DA-93E0-4513-8BF4-BC8EE5C4117C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.ViewEngines.Razor.BuildProviders", "Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj", "{EDF3E264-2D0F-4440-99FF-45D279A598A9}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Hosting.Self.Tests", "Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.csproj", "{CA24ED85-DD68-4C10-B80A-D81C6745FCB8}"
 EndProject
 Global
