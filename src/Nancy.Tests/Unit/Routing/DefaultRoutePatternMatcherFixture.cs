@@ -68,7 +68,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_return_match_result_with_context_of_current_request_when_paths_do_not_matched()
+        public void Should_return_match_result_with_context_of_current_request_when_paths_do_not_match()
         {
             // Given
             var context = new NancyContext();
