@@ -55,6 +55,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         [Fact]
         public void Should_output_the_responses_cookies()
         {
+            // Given
             var cookie1 = A.Fake<INancyCookie>();
             var cookie2 = A.Fake<INancyCookie>();
             var r = new Response();
@@ -66,8 +67,10 @@ namespace Nancy.Hosting.Aspnet.Tests
 
             SetupRequestProcess(nancyContext);
 
+            // When
             this.handler.ProcessRequest(context);
 
+            // Then
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the second cookie")).MustHaveHappened();
         }
@@ -75,14 +78,17 @@ namespace Nancy.Hosting.Aspnet.Tests
         [Fact]
         public void Should_dispose_the_context()
         {
+            // Given
             var disposable = A.Fake<IDisposable>();
             var nancyContext = new NancyContext() { Response = new Response() };
             nancyContext.Items.Add("Disposable", disposable);
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);
 
+            // When
             this.handler.ProcessRequest(this.context);
 
+            // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
 
