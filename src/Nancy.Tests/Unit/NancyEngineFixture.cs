@@ -134,8 +134,9 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_add_nancy_version_number_header_on_returned_response()
+        public void Should_not_add_nancy_version_number_header_on_returned_response()
         {
+            // NOTE: Regression for removal of nancy-version from response headers
             // Given
             var request = new Request("GET", "/", "http");
 
@@ -143,49 +144,7 @@ namespace Nancy.Tests.Unit
             var result = this.engine.HandleRequest(request);
 
             // Then
-            result.Response.Headers.ContainsKey("Nancy-Version").ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_not_throw_exception_when_setting_nancy_version_header_and_it_already_existed()
-        {
-            // Given
-            var cachedResponse = new Response();
-            cachedResponse.Headers.Add("Nancy-Version", "1.2.3.4");
-            Func<NancyContext, Response> preRequestHook = (ctx) => cachedResponse;
-
-            var prePostResolver = A.Fake<IRouteResolver>();
-            A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preRequestHook, null));
-
-            var pipelines = new Pipelines();
-
-            var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new[] { this.errorHandler }, A.Fake<IRequestTracing>())
-                {
-                    RequestPipelinesFactory = ctx => pipelines
-                };
-
-            var request = new Request("GET", "/", "http");
-
-            // When
-            var exception = Record.Exception(() => localEngine.HandleRequest(request));
-
-            // Then
-            exception.ShouldBeNull();
-        }
-
-        [Fact]
-        public void Should_set_nancy_version_number_on_returned_response()
-        {
-            // Given
-            var request = new Request("GET", "/", "http");
-            var nancyVersion = typeof(INancyEngine).Assembly.GetName().Version;
-
-            // When
-            var result = this.engine.HandleRequest(request);
-
-            // Then
-            result.Response.Headers["Nancy-Version"].ShouldEqual(nancyVersion.ToString());
+            result.Response.Headers.ContainsKey("Nancy-Version").ShouldBeFalse();
         }
 
         [Fact]
