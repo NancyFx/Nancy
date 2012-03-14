@@ -6,6 +6,12 @@
     public interface IRoutePatternMatchResult
     {
         /// <summary>
+        /// Gets the <see cref="NancyContext"/> that was active when the result was produced.
+        /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
+        NancyContext Context { get; }
+
+        /// <summary>
         /// Gets a value idicating wether or not a match was made.
         /// </summary>
         /// <value><see langword="true"/> if a match was made; otherwise <see langword="false"/>.</value>

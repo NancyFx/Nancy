@@ -5,7 +5,7 @@ namespace Nancy.Testing
 {
     public class PassThroughErrorHandler : IErrorHandler
     {
-        public bool HandlesStatusCode(HttpStatusCode statusCode)
+        public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
             return statusCode == HttpStatusCode.InternalServerError;
         }

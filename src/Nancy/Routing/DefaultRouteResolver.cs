@@ -135,7 +135,7 @@
             routes =
                 routes.Filter(context, "Path did not match", (ctx, route) => {
                     var validationResult = 
-                        this.routePatternMatcher.Match(path, route.Item3.Path);
+                        this.routePatternMatcher.Match(path, route.Item3.Path, context);
 
                     var routeToReturn =
                         (validationResult.IsMatch) ? new RouteCandidate(route.Item1, route.Item2, route.Item3, validationResult) : route;
@@ -246,16 +246,28 @@
             public Dictionary<string, List<RouteCandidate>> Rejected { get; set; }
         }
 
+        /// <summary>
+        /// Gets the name of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the name of the provider.</value>
         public string Name
         {
             get { return "Default route resolver"; }
         }
 
+        /// <summary>
+        /// Gets the description of the provider.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the description of the provider.</value>
         public string Description
         {
             get { return "A description"; }
         }
 
+        /// <summary>
+        /// Gets the object that contains the interactive diagnostics methods.
+        /// </summary>
+        /// <value>An instance of the interactive diagnostics object.</value>
         public object DiagnosticObject
         {
             get { return new DefaultRouteResolverDiagnosticsProvider(this); }

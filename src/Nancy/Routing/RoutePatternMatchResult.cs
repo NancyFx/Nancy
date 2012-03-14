@@ -10,11 +10,19 @@
         /// </summary>
         /// <param name="isMatch">A <see cref="bool"/> value indicating if the result was a match or not.</param>
         /// <param name="parameters">A <see cref="DynamicDictionary"/> instance containing the parameters and values that was captured in the match.</param>
-        public RoutePatternMatchResult(bool isMatch, DynamicDictionary parameters)
+        /// <param name="context">The <see cref="NancyContext"/> instance of the current request.</param>
+        public RoutePatternMatchResult(bool isMatch, DynamicDictionary parameters, NancyContext context)
         {
             this.IsMatch = isMatch;
             this.Parameters = parameters;
+            this.Context = context;
         }
+
+        /// <summary>
+        /// Gets the <see cref="NancyContext"/> that was active when the result was produced.
+        /// </summary>
+        /// <value>A <see cref="NancyContext"/> instance.</value>
+        public NancyContext Context { get; private set; }
 
         /// <summary>
         /// Gets a value idicating wether or not a match was made.
