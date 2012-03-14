@@ -85,7 +85,6 @@
                 this.RequestPipelinesFactory.Invoke(context);
 
             this.InvokeRequestLifeCycle(context, pipelines);
-            AddNancyVersionHeaderToResponse(context);
 
             CheckErrorHandler(context);
 
@@ -176,19 +175,6 @@
                         onError.Invoke(e);
                     }
                 });
-        }
-
-        private static void AddNancyVersionHeaderToResponse(NancyContext context)
-        {
-            if (context.Response == null)
-            {
-                return;
-            }
-
-            var version =
-                typeof(INancyEngine).Assembly.GetName().Version;
-
-            context.Response.Headers["Nancy-Version"] = version.ToString();
         }
 
         private void CheckErrorHandler(NancyContext context)
