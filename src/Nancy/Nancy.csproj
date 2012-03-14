@@ -96,6 +96,8 @@
     <Compile Include="Bootstrapper\IStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
+    <Compile Include="Bootstrapper\VersionHeader.cs" />
+    <Compile Include="Bootstrapper\VersionHeaderStartup.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
