@@ -42,7 +42,6 @@
         {
             var result =
                 this.Resolve(context.Request.Path, context, this.cache);
-
             return result.Selected;
         }
 
@@ -177,6 +176,14 @@
             if (!routes.Item1.Any())
             {
                 var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
+                if (context.Request.Method.Equals("OPTIONS"))
+                {
+                    return new ResolveResults
+                    {
+                        Selected = new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Rejected = routes.Item2
+                    };
+                }
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResults
                 {

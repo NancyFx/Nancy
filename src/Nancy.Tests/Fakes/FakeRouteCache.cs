@@ -3,6 +3,7 @@
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Linq;
     using Nancy.Routing;
 
@@ -83,6 +84,13 @@
             public FakeRouteCacheConfigurator AddPutRoute(string path)
             {
                 this.AddRoutesToCache(new[] { new RouteDescription("PUT", path, null) }, String.Empty);
+
+                return this;
+            }
+
+            public FakeRouteCacheConfigurator AddOptionsRoute(string path)
+            {
+                this.AddRoutesToCache(new [] { new RouteDescription("OPTIONS", path, null)  }, String.Empty );
 
                 return this;
             }
