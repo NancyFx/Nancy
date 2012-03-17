@@ -2,12 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
+    using System.Xml;
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
@@ -56,8 +58,13 @@
                 engine.HandleRequest(nancyRequest);
 
             SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyContext.Response);
-            
-            return webContext.CreateStreamResponse(nancyContext.Response.Contents, nancyContext.Response.ContentType);
+
+            return webContext.CreateStreamResponse(
+                stream =>
+                    {
+                        nancyContext.Response.Contents(stream);
+                        nancyContext.Dispose();
+                    }, nancyContext.Response.ContentType);
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
