@@ -14,6 +14,16 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_not_dispose_request_when_not_set()
+        {
+            // Given, When
+            var exception = Record.Exception(() => this.context.Dispose());
+
+            // Then
+            exception.ShouldBeNull();
+        }
+
+        [Fact]
         public void Should_dispose_request_when_being_disposed()
         {
             // Given

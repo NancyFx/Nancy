@@ -86,7 +86,10 @@ namespace Nancy
 
             this.Items.Clear();
 
-            ((IDisposable)this.request).Dispose();
+            if (this.request != null)
+            {
+                ((IDisposable) this.request).Dispose();
+            }
         }
     }
 }
