@@ -83,6 +83,8 @@
 
             this.SaveTraceInformation(context);
 
+            request.Dispose();
+
             return context;
         }
 

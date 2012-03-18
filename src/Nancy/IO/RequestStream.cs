@@ -13,6 +13,7 @@
         private bool disableStreamSwitching;
         private readonly long thresholdLength;
         private Stream stream;
+        private string filePath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
@@ -176,6 +177,12 @@
         public override void Close()
         {
             this.stream.Close();
+
+            if (!string.IsNullOrEmpty(this.filePath) && File.Exists(this.filePath))
+            {
+                File.Delete(this.filePath);
+            }
+
         }
 
         /// <summary>
@@ -301,12 +308,12 @@
             }
         }
 
-        private static FileStream CreateTemporaryFileStream()
+        private FileStream CreateTemporaryFileStream()
         {
             var fileName = Path.GetTempFileName();
-            var filePath = Path.Combine(Path.GetTempPath(), fileName);
+            this.filePath = Path.Combine(Path.GetTempPath(), fileName);
 
-            return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
+            return new FileStream(this.filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
         }
 
         private Stream CreateDefaultMemoryStream(long expectedLength)

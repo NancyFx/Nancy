@@ -349,6 +349,23 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
+        public void Should_delete_temporary_file_when_stream_was_flushed_to_disk_and_closed()
+        {
+            // Given
+            var buffer = new byte[100];
+            var request = RequestStream.FromStream(this.stream, 0, 10, false);
+            A.CallTo(() => this.stream.Length).Returns(100);
+            request.Write(buffer, 0, buffer.Length);
+
+            // When
+            request.Close();
+
+            // Then
+            A.CallTo(() => this.stream.Close()).MustHaveHappened();
+
+        }
+
+        [Fact]
         public void Should_read_from_underlaying_stream_when_read_is_called()
         {
             // Given

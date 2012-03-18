@@ -249,5 +249,11 @@ namespace Nancy
 
             this.Method = this.Form["_method"];
         }
+
+        public void Dispose()
+        {
+            Body.Close();
+        }
     }
+
 }
