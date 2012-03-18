@@ -20,7 +20,6 @@
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
         private readonly IRouteResolver resolver;
-        private readonly IRouteCache routeCache;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
@@ -38,11 +37,6 @@
                 throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
             }
 
-            //if (routeCache == null)
-            //{
-            //    throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
-            //}
-
             if (contextFactory == null)
             {
                 throw new ArgumentNullException("contextFactory");
@@ -54,7 +48,6 @@
             }
 
             this.resolver = resolver;
-            //this.routeCache = routeCache;
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
             this.requestTracing = requestTracing;
