@@ -12,7 +12,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-request information to an Nancy application.
     /// </summary>
-    public class Request
+    public class Request : IDisposable
     {
         private readonly List<HttpFile> files = new List<HttpFile>();
         private dynamic form = new DynamicDictionary();
@@ -155,8 +155,8 @@ namespace Nancy
                 return cookieDictionary;
             }
 
-            var cookies = this.Headers["cookie"].First().TrimEnd(';').Split(';');
-			foreach (var parts in cookies.Select (c => c.Split (new[] { '=' }, 2)))
+            var values = this.Headers["cookie"].First().TrimEnd(';').Split(';');
+			foreach (var parts in values.Select (c => c.Split (new[] { '=' }, 2)))
             {
                 cookieDictionary[parts[0].Trim()] = parts[1];
             }
@@ -189,6 +189,11 @@ namespace Nancy
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the name and values of the headers.</value>
         /// <remarks>The values are stored in an <see cref="IEnumerable{T}"/> of string to be compliant with multi-value headers.</remarks>
         public RequestHeaders Headers { get; private set; }
+
+        public void Dispose()
+        {
+            ((IDisposable)this.Body).Dispose();
+        }
 
         private void ParseFormData()
         {

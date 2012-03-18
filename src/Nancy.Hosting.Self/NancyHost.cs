@@ -7,7 +7,6 @@
     using System.Linq;
     using IO;
     using Nancy.Bootstrapper;
-    using Nancy.Cookies;
     using Nancy.Extensions;
 	using Nancy.Helpers;
 
@@ -25,10 +24,20 @@
         private readonly HttpListener listener;
         private readonly INancyEngine engine;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// </summary>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(params Uri[] baseUris)
             : this(NancyBootstrapperLocator.Bootstrapper, baseUris){}
 
-        public NancyHost(INancyBootstrapper bootStrapper, params Uri[] baseUris)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
+        /// the provided <paramref name="bootstrapper"/>.
+        /// </summary>
+        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
+        public NancyHost(INancyBootstrapper bootstrapper, params Uri[] baseUris)
         {
             baseUriList = baseUris;
             listener = new HttpListener();
@@ -38,13 +47,24 @@
                 listener.Prefixes.Add(baseUri.ToString());
             }
 
-            bootStrapper.Initialise();
-            engine = bootStrapper.GetEngine();
+            bootstrapper.Initialise();
+            engine = bootstrapper.GetEngine();
         }
 
-        public NancyHost(Uri baseUri, INancyBootstrapper bootStrapper) : this (bootStrapper, baseUri) {}
-
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
+        /// the provided <paramref name="bootstrapper"/>.
+        /// </summary>
+        /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
+        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper)
+            : this (bootstrapper, baseUri)
+        {
+        }
+        
+        /// <summary>
+        /// Start listening for incoming requests.
+        /// </summary>
         public void Start()
         {
             listener.Start();
@@ -57,38 +77,15 @@
                 // this will be thrown when listener is closed while waiting for a request
                 return;
             }
-
         }
 
-        private void GotCallback(IAsyncResult ar)
-        {
-            try
-            {
-                HttpListenerContext ctx = listener.EndGetContext(ar);
-                listener.BeginGetContext(GotCallback, null);
-                Process(ctx);
-            }
-            catch (HttpListenerException)
-            {
-                // this will be thrown when listener is closed while waiting for a request
-                return;
-            }
-        }
-
-        private void Process(HttpListenerContext ctx)
-        {
-            var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
-            using (var nancyContext = engine.HandleRequest(nancyRequest))
-            {
-                ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
-            }
-        }
-
+        /// <summary>
+        /// Stop listening for incoming requests.
+        /// </summary>
         public void Stop()
         {
             listener.Stop();
         }
-
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
@@ -104,8 +101,7 @@
 
             var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
-            var nancyUrl = new Url
-            {
+            var nancyUrl = new Url {
                 Scheme = request.Url.Scheme,
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
@@ -121,35 +117,6 @@
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
                 request.Headers.ToDictionary(), 
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null);
-        }
-
-        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
-        {
-            if (incomingHeaders == null)
-            {
-                return 0;
-            }
-
-            if (!incomingHeaders.ContainsKey("Content-Length"))
-            {
-                return 0;
-            }
-
-            var headerValue =
-                incomingHeaders["Content-Length"].SingleOrDefault();
-
-            if (headerValue == null)
-            {
-                return 0;
-            }
-
-            long contentLength;
-            if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
-            {
-                return 0;
-            }
-
-            return contentLength;
         }
 
         private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
@@ -173,17 +140,57 @@
             }
         }
 
-        private static Cookie ConvertCookie(INancyCookie nancyCookie)
+        private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
         {
-            var cookie = 
-                new Cookie(nancyCookie.EncodedName, nancyCookie.EncodedValue, nancyCookie.Path, nancyCookie.Domain);
-
-            if (nancyCookie.Expires.HasValue)
+            if (incomingHeaders == null)
             {
-                cookie.Expires = nancyCookie.Expires.Value;
+                return 0;
             }
 
-            return cookie;
+            if (!incomingHeaders.ContainsKey("Content-Length"))
+            {
+                return 0;
+            }
+
+            var headerValue =
+                incomingHeaders["Content-Length"].SingleOrDefault();
+
+            if (headerValue == null)
+            {
+                return 0;
+            }
+
+            long contentLength;
+
+            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ?
+                0 : 
+                contentLength;
+        }
+
+        private void GotCallback(IAsyncResult ar)
+        {
+            try
+            {
+                var ctx = listener.EndGetContext(ar);
+                listener.BeginGetContext(GotCallback, null);
+                Process(ctx);
+            }
+            catch (HttpListenerException)
+            {
+                // this will be thrown when listener is closed while waiting for a request
+                return;
+            }
+        }
+
+        private void Process(HttpListenerContext ctx)
+        {
+            var nancyRequest = 
+                ConvertRequestToNancyRequest(ctx.Request);
+
+            using (var nancyContext = engine.HandleRequest(nancyRequest))
+            {
+                ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+            }
         }
     }
 }

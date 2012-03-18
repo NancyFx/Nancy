@@ -2,16 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
+    using System.Xml;
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
 
+    /// <summary>
+    /// Host for running Nancy ontop of WCF.
+    /// </summary>
     [ServiceContract]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
     public class NancyWcfGenericService
@@ -26,30 +31,40 @@
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class, with the provided <paramref name="bootstrapper"/>.
+        /// </summary>
+        /// <param name="bootstrapper">An <see cref="INancyBootstrapper"/> instance, that should be used to handle the requests.</param>
         public NancyWcfGenericService(INancyBootstrapper bootstrapper)
         {
             bootstrapper.Initialise();
-            engine = bootstrapper.GetEngine();
+            this.engine = bootstrapper.GetEngine();
         }
         
+        /// <summary>
+        /// Handels an incoming request with Nancy.
+        /// </summary>
+        /// <param name="requestBody">The body of the incoming request.</param>
+        /// <returns>A <see cref="Message"/> instance.</returns>
         [WebInvoke(UriTemplate = "*", Method = "*")]
         public Message HandleRequests(Stream requestBody)
         {
             var webContext = WebOperationContext.Current;
             
-            var nancyRequest = CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
-            var nancyContext = engine.HandleRequest(nancyRequest);
+            var nancyRequest = 
+                CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
+
+            var nancyContext = 
+                engine.HandleRequest(nancyRequest);
 
             SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyContext.Response);
-            
-            return webContext.CreateStreamResponse(nancyContext.Response.Contents, nancyContext.Response.ContentType);
-        }
 
-        private static Uri GetUrlAndPathComponents(Uri uri) 
-        {
-            // ensures that for a given url only the
-            //  scheme://host:port/paths/somepath
-            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
+            return webContext.CreateStreamResponse(
+                stream =>
+                    {
+                        nancyContext.Response.Contents(stream);
+                        nancyContext.Dispose();
+                    }, nancyContext.Response.ContentType);
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
@@ -57,6 +72,7 @@
             var address =
                 ((RemoteEndpointMessageProperty)
                  OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
+
             var relativeUri = GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri).MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
 
             var expectedRequestLength =
@@ -93,12 +109,17 @@
             }
 
             long contentLength;
-            if (!long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength))
-            {
-                return 0;
-            }
 
-            return contentLength;
+            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ?
+                0 :
+                contentLength;
+        }
+
+        private static Uri GetUrlAndPathComponents(Uri uri) 
+        {
+            // ensures that for a given url only the
+            // scheme://host:port/paths/somepath
+            return new Uri(uri.GetComponents(UriComponents.SchemeAndServer | UriComponents.Path, UriFormat.Unescaped));
         }
 
         private static void SetNancyResponseToOutgoingWebResponse(OutgoingWebResponseContext webResponse, Response nancyResponse)

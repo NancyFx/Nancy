@@ -4,19 +4,29 @@ namespace Nancy.Hosting.Aspnet
     using System.Globalization;
     using System.Linq;
     using System.Web;
-    using Bootstrapper;
     using IO;
     using Nancy.Extensions;
 
+    /// <summary>
+    /// Bridges the communication between Nancy and ASP.NET based hosting.
+    /// </summary>
     public class NancyHandler
     {        
         private readonly INancyEngine engine;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHandler"/> type for the specified <paramref name="engine"/>.
+        /// </summary>
+        /// <param name="engine">An <see cref="INancyEngine"/> instance, that should be used by the handler.</param>
         public NancyHandler(INancyEngine engine)
         {
             this.engine = engine;
         }
 
+        /// <summary>
+        /// Processes the ASP.NET request with Nancy.
+        /// </summary>
+        /// <param name="context">The <see cref="HttpContextBase"/> of the request.</param>
         public void ProcessRequest(HttpContextBase context)
         {
             var request = CreateNancyRequest(context);
