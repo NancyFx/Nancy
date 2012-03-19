@@ -184,12 +184,28 @@
 
         private void Process(HttpListenerContext ctx)
         {
-            var nancyRequest = 
-                ConvertRequestToNancyRequest(ctx.Request);
-
-            using (var nancyContext = engine.HandleRequest(nancyRequest))
+            try
             {
-                ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+
+                var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
+                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                {
+
+                    try
+                    {
+                        ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
+                    }
+                    catch (Exception ex)
+                    {
+                        nancyContext.Trace.TraceLog.WriteLog(s => s.AppendLine(string.Concat("[SelfHost] Exception while rendering response: ", ex)));
+                        //TODO - the content of the tracelog is not used in this case
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                //TODO -  this swallows the exception so that it doesn't kill the host
+                // pass it to the host process for handling by the caller ?
             }
         }
     }
