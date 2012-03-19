@@ -5,12 +5,43 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Linq;
     using System.Text;
+    using FakeItEasy;
     using Nancy.IO;
     using Xunit;
     using Xunit.Extensions;
 
     public class RequestFixture
     {
+        [Fact]
+        public void Should_dispose_request_stream_when_being_disposed()
+        {
+            // Given
+            var stream = A.Fake<RequestStream>(x => {
+                x.Implements(typeof (IDisposable));
+                x.WithArgumentsForConstructor(() => new RequestStream(0, false));
+            });
+
+            var url = new Url() {
+                Scheme = "http",
+                Path = "localhost"
+            };
+
+            var request = new Request("GET", url, stream);
+
+            // When
+            request.Dispose();
+
+            // Then
+            A.CallTo(() => ((IDisposable)stream).Dispose()).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_be_disposable()
+        {
+            // Given, When, Then
+            typeof(Request).ShouldImplementInterface<IDisposable>();
+        }
+
         [Fact]
         public void Should_override_request_method_on_post()
         {

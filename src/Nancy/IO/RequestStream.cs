@@ -12,6 +12,7 @@
 
         private bool disableStreamSwitching;
         private readonly long thresholdLength;
+        private bool isSafeToDisposeStream;
         private Stream stream;
 
         /// <summary>
@@ -120,7 +121,7 @@
         /// <remarks>The stream is moved to disk when either the length of the contents or expected content length exceeds the threshold specified in the constructor.</remarks>
         public bool IsInMemory
         {
-            get { return !this.stream.GetType().Equals(typeof(FileStream)); }
+            get { return !(this.stream.GetType() == typeof(FileStream)); }
         }
 
         /// <summary>
@@ -176,6 +177,22 @@
         public override void Close()
         {
             this.stream.Close();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (this.isSafeToDisposeStream)
+            {
+                ((IDisposable)this.stream).Dispose();
+
+                var fileStream = this.stream as FileStream;
+                if (fileStream != null)
+                {
+                    DeleteTemporaryFile(fileStream.Name);
+                }
+            }
+
+            base.Dispose(disposing);
         }
 
         /// <summary>
@@ -311,6 +328,8 @@
 
         private Stream CreateDefaultMemoryStream(long expectedLength)
         {
+            this.isSafeToDisposeStream = true;
+
             if (this.disableStreamSwitching || expectedLength < this.thresholdLength)
             {
                 return new MemoryStream((int)expectedLength);
@@ -319,6 +338,22 @@
             this.disableStreamSwitching = true;
 
             return CreateTemporaryFileStream();
+        }
+
+        private static void DeleteTemporaryFile(string fileName)
+        {
+            if (!string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+            {
+                return;
+            }
+
+            try
+            {
+                File.Delete(fileName);
+            }
+            catch
+            {
+            }
         }
 
         private void EnsureStreamIsSeekable()
@@ -366,6 +401,8 @@
             {
                 return;
             }
+
+            this.isSafeToDisposeStream = true;
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
