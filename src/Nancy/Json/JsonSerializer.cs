@@ -193,7 +193,8 @@ namespace Nancy.Json
 
 			if (typeof (DynamicDictionaryValue).IsAssignableFrom(valueType))
 			{
-				WriteValue(output, (DynamicDictionaryValue)obj);
+				var o = (DynamicDictionaryValue) obj;
+				SerializeValue(o.Value, output);
 				return;
 			}
 			
@@ -500,12 +501,6 @@ namespace Nancy.Json
 			WriteValue (output, value.ToString ());
 		}
 
-		void WriteValue (StringBuilder output, DynamicDictionaryValue value)
-		{
-			var v = value.ToString();
-			WriteValue(output, v);
-		}
-		
 		void WriteValue (StringBuilder output, string value)
 		{
 			if (String.IsNullOrEmpty (value)) {
