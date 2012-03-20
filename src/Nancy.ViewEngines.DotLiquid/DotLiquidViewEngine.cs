@@ -12,14 +12,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
-        public DotLiquidViewEngine()
-            : this(new LiquidNancyFileSystem(string.Empty))
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
-        /// </summary>
         /// <param name="fileSystem"></param>
         public DotLiquidViewEngine(IFileSystem fileSystem)
         {
@@ -42,6 +34,7 @@
 
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
+            Template.FileSystem = new LiquidNancyFileSystem(viewEngineStartupContext);
         }
 
         /// <summary>
