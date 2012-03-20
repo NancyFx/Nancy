@@ -171,14 +171,6 @@
             return this.stream.BeginWrite(buffer, offset, count, callback, state);
         }
 
-        /// <summary>
-        /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
-        /// </summary>
-        public override void Close()
-        {
-            this.stream.Close();
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (this.isSafeToDisposeStream)
@@ -320,8 +312,7 @@
 
         private static FileStream CreateTemporaryFileStream()
         {
-            var fileName = Path.GetTempFileName();
-            var filePath = Path.Combine(Path.GetTempPath(), fileName);
+            var filePath = Path.GetTempFileName();
 
             return new FileStream(filePath, FileMode.Create, FileAccess.ReadWrite, FileShare.None, 8192, true);
         }
@@ -342,7 +333,7 @@
 
         private static void DeleteTemporaryFile(string fileName)
         {
-            if (!string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
+            if (string.IsNullOrEmpty(fileName) || !File.Exists(fileName))
             {
                 return;
             }
@@ -382,12 +373,12 @@
 
         private void MoveStreamContentsToFileStream()
         {            
-            MoveStreamContentsInto(CreateTemporaryFileStream());
+            MoveStreamContentsInto(CreateTemporaryFileStream);
         }        
 
         private void MoveStreamContentsToMemoryStream()
         {
-            MoveStreamContentsInto(new MemoryStream());
+            MoveStreamContentsInto(() => new MemoryStream());
         }
 
         private bool IsStreamSeekableAndSwitchingDisabled()
@@ -395,30 +386,31 @@
             return this.disableStreamSwitching && this.stream.CanSeek;
         }
 
-        private void MoveStreamContentsInto(Stream target)
+        private void MoveStreamContentsInto(Func<Stream> target)
         {
             if (IsStreamSeekableAndSwitchingDisabled())
             {
                 return;
             }
 
+            var targetStream = target.Invoke();
             this.isSafeToDisposeStream = true;
 
             if (this.stream.CanSeek && this.stream.Length == 0)
             {
                 this.stream.Close();
-                this.stream = target;
+                this.stream = targetStream;
                 return;
             }
 
-            this.stream.CopyTo(target, 8196);
+            this.stream.CopyTo(targetStream, 8196);
             if (this.stream.CanSeek) 
             {
                 this.stream.Flush();
             }
             
-            target.Position = 0;
-            this.stream = target;
+            targetStream.Position = 0;
+            this.stream = targetStream;
         }
 
         private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)
