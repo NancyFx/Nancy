@@ -784,5 +784,17 @@ namespace Nancy.Tests.Unit
             // Then
             Assert.True(names.SequenceEqual(new[] { "test", "rest" }));
         }
-	}
+
+        [Fact]
+        public void Integer_dictionary_values_are_Json_serialized_as_strings()
+        {
+            dynamic value = 42;
+            var input = new DynamicDictionaryValue(value);
+
+            var sut = new Json.JavaScriptSerializer();
+            var actual = sut.Serialize(input);
+
+            actual.ShouldEqual(@"""42""");
+        }
+    }
 }
