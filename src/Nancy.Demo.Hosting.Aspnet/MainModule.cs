@@ -1,6 +1,7 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
+    using System.Linq;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
@@ -170,6 +171,26 @@ namespace Nancy.Demo.Hosting.Aspnet
                 };
 
             Get["/viewNotFound"] = _ => View["I-do-not-exist"];
+
+            Get["/fileupload"] = x =>
+            {
+                return View["FileUpload", new { Posted = "Nothing" }];
+            };
+
+            Post["/fileupload"] = x =>
+            {
+                var file = this.Request.Files.FirstOrDefault();
+
+                string fileDetails = "Nothing";
+
+                if (file != null)
+                {
+                    fileDetails = string.Format("{3} - {0} ({1}) {2}bytes", file.Name, file.ContentType, file.Value.Length, file.Key);
+                }
+
+                return View["FileUpload", new { Posted = fileDetails }];
+            };
+
         }
     }
 }

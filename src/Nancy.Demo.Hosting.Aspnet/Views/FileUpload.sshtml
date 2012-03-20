@@ -1,0 +1,14 @@
+﻿<html>
+  <head>
+    <title>Nancy File Posting Demo</title>
+  </head>
+  <body>
+    <p>You uploaded: @Model.Posted</p>
+    <p>
+      <form action="@Path['~/fileupload']" method="POST" enctype="multipart/form-data">
+        <input name="upload" type="file" size="40"/>
+        <input type="submit" value="Post!"/>
+      </form>
+    </p>
+  </body>
+</html>

@@ -100,6 +100,9 @@
     <Content Include="Content\face.png" />
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
+    <None Include="Views\FileUpload.sshtml">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Views\interactive-diags-results.sshtml" />
     <None Include="Views\interactive-diags-methods.sshtml" />
     <None Include="Views\interactive-diags.sshtml" />
@@ -195,7 +198,7 @@
           <UseIIS>False</UseIIS>
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40965</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <DevelopmentServerVPath>/NancyTest/</DevelopmentServerVPath>
           <IISUrl>http://localhost:59015/nancytest</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
