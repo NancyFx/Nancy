@@ -78,6 +78,42 @@
         }
 
         [Fact]
+        public void Include_should_work_with_double_quotes()
+        {
+            // Set up the view startup context
+            string partialPath = Path.Combine(Environment.CurrentDirectory, @"TestViews\_partial.liquid");
+
+            // Set up a ViewLocationResult that the test can use
+            var testLocation = new ViewLocationResult(
+                Environment.CurrentDirectory,
+                "test",
+                "liquid",
+                () => new StringReader(@"<h1>Including a partial</h1>{% include ""partial"" %}")
+            );
+
+            var partialLocation = new ViewLocationResult(
+                partialPath,
+                "partial",
+                "liquid",
+                () => new StringReader(File.ReadAllText(partialPath))
+            );
+
+            var currentStartupContext = CreateContext(new [] {testLocation, partialLocation});
+
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+
+            // Given
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(testLocation, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Including a partial</h1>Some template.");
+        }
+
+        [Fact]
         public void Should_support_files_with_the_liquid_extensions()
         {
             // Provide a fake LiquidNancyFileSystem for the Liquid view engine
