@@ -68,7 +68,7 @@ namespace Nancy.ModelBinding
 
             foreach (var modelProperty in bindingContext.ValidModelProperties)
             {
-                var stringValue = this.GetValue(modelProperty.Name, bindingContext);
+                var stringValue = GetValue(modelProperty.Name, bindingContext);
 
                 if (!String.IsNullOrEmpty(stringValue))
                 {
@@ -79,17 +79,17 @@ namespace Nancy.ModelBinding
             return bindingContext.Model;
         }
 
-        private BindingContext CreateBindingContext(NancyContext context, Type modelType, string[] blackList)
+        private BindingContext CreateBindingContext(NancyContext context, Type modelType, IEnumerable<string> blackList)
         {
-            return new BindingContext()
-                {
-                    Context = context,
-                    DestinationType = modelType,
-                    Model = this.CreateModel(modelType),
-                    ValidModelProperties = this.GetProperties(modelType, blackList),
-                    RequestData = this.GetDataFields(context),
-                    TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
-                };
+            return new BindingContext
+            {
+                Context = context,
+                DestinationType = modelType,
+                Model = CreateModel(modelType),
+                ValidModelProperties = GetProperties(modelType, blackList),
+                RequestData = this.GetDataFields(context),
+                TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
+            };
         }
 
         private IDictionary<string, string> GetDataFields(NancyContext context)
@@ -98,7 +98,7 @@ namespace Nancy.ModelBinding
                 {
                     ConvertDynamicDictionary(context.Request.Form), 
                     ConvertDynamicDictionary(context.Request.Query), 
-                    ConvertDynamicDictionary(context.Parameters),
+                    ConvertDynamicDictionary(context.Parameters)
                 };
 
             return dictionaries.Merge();
@@ -121,37 +121,39 @@ namespace Nancy.ModelBinding
             var destinationType = modelProperty.PropertyType;
 
             var typeConverter =
-                context.TypeConverters.Where(c => c.CanConvertTo(destinationType, context)).FirstOrDefault();
+                context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(destinationType, context));
 
             if (typeConverter != null)
             {
-                this.SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
+                SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
                 return;
             }
 
             if (destinationType == typeof(string))
             {
-                this.SetPropertyValue(modelProperty, context.Model, stringValue);
+                SetPropertyValue(modelProperty, context.Model, stringValue);
             }
         }
 
-        private void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
+        private static void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
         {
             // TODO - catch reflection exceptions?
             modelProperty.SetValue(model, value, null);
         }
 
-        private IEnumerable<PropertyInfo> GetProperties(Type modelType, string[] blackList)
+        private static IEnumerable<PropertyInfo> GetProperties(Type modelType, IEnumerable<string> blackList)
         {
-            return modelType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && !blackList.Contains(p.Name, StringComparer.InvariantCulture));
+            return modelType
+                .GetProperties(BindingFlags.Public | BindingFlags.Instance).Where(p => p.CanWrite && !blackList.Contains(p.Name, StringComparer.InvariantCulture))
+                .Where(property => !property.GetIndexParameters().Any());
         }
 
-        private object CreateModel(Type modelType)
+        private static object CreateModel(Type modelType)
         {
             return Activator.CreateInstance(modelType);
         }
 
-        private string GetValue(string propertyName, BindingContext context)
+        private static string GetValue(string propertyName, BindingContext context)
         {
             return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
         }
@@ -164,20 +166,18 @@ namespace Nancy.ModelBinding
             }
 
             var contentType = GetRequestContentType(context.Context);
-            var bodyDeserializer = this.bodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
+            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType));
 
             if (bodyDeserializer != null)
             {
                 return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
 
-            bodyDeserializer = this.defaults.DefaultBodyDeserializers.Where(b => b.CanDeserialize(contentType)).FirstOrDefault();
-            if (bodyDeserializer != null)
-            {
-                return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
-            }
-
-            return null;
+            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType));
+            
+            return bodyDeserializer != null ? 
+                bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context) : 
+                null;
         }
 
         private static string GetRequestContentType(NancyContext context)
