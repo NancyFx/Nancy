@@ -36,7 +36,10 @@
                 new [] {"liquid"});
         }
 
-        private ViewLocationResult CreateViewLocationResult(string testDirectory, 
+        private ViewLocationResult CreateViewLocationResult(string testDirectory)
+        {
+            return null;
+        }
 
         [Fact]
         public void Include_should_look_for_a_partial()
@@ -74,125 +77,141 @@
             stream.ShouldEqual("<h1>Including a partial</h1>Some template.");
         }
 
-        //[Fact]
-        //public void Should_support_files_with_the_liquid_extensions()
-        //{
-        //    // Given, When
-        //    var extensions = this.engine.Extensions;
+        [Fact]
+        public void Should_support_files_with_the_liquid_extensions()
+        {
+            // Provide a fake LiquidNancyFileSystem for the Liquid view engine
+            LiquidNancyFileSystem fakeFileSystem = A.Fake<LiquidNancyFileSystem>();
 
-        //    // Then
-        //    extensions.ShouldHaveCount(1);
-        //    extensions.ShouldEqualSequence(new[] { "liquid" });
-        //}
+            // Given, When
+            this.engine = new DotLiquidViewEngine(fakeFileSystem);
+            var extensions = this.engine.Extensions;
 
-        //[Fact]
-        //public void RenderView_should_render_to_stream()
-        //{
-        //    // Given
-        //    var location = new ViewLocationResult(
-        //        string.Empty,
-        //        string.Empty,
-        //        "liquid",
-        //        () => new StringReader(@"{% assign name = 'test' %}<h1>Hello Mr. {{ name }}</h1>")
-        //    );
+            // Then
+            extensions.ShouldHaveCount(1);
+            extensions.ShouldEqualSequence(new[] { "liquid" });
+        }
 
-        //    var stream = new MemoryStream();
+        [Fact]
+        public void RenderView_should_render_to_stream()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'test' %}<h1>Hello Mr. {{ name }}</h1>")
+            );
 
-        //    // When
-        //    var response = this.engine.RenderView(location, null, this.renderContext);
-        //    response.Contents.Invoke(stream);
+            var currentStartupContext = CreateContext(new [] {location});
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
 
-        //    // Then
-        //    stream.ShouldEqual("<h1>Hello Mr. test</h1>");
-        //}
+            var stream = new MemoryStream();
 
-        //[Fact]
-        //public void When_passing_a_null_model_should_return_a_null_model_message_if_called()
-        //{
-        //    // Given
-        //    var location = new ViewLocationResult(
-        //        string.Empty,
-        //        string.Empty,
-        //        "liquid",
-        //        () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
-        //    );
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
-        //    var stream = new MemoryStream();
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
 
-        //    // When
-        //    var response = this.engine.RenderView(location, null, this.renderContext);
-        //    response.Contents.Invoke(stream);
+        [Fact]
+        public void When_passing_a_null_model_should_return_a_null_model_message_if_called()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+            );
 
-        //    // Then
-        //    stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
-        //}
+            var currentStartupContext = CreateContext(new [] {location});
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
 
-        //[Fact]
-        //public void RenderView_should_accept_a_model_and_read_from_it_into_the_stream()
-        //{
-        //    // Given
-        //    var location = new ViewLocationResult(
-        //        string.Empty,
-        //        string.Empty,
-        //        "liquid",
-        //        () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
-        //    );
+            var stream = new MemoryStream();
 
-        //    var stream = new MemoryStream();
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
 
-        //    // When
-        //    var response = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
-        //    response.Contents.Invoke(stream);
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
+        }
 
-        //    // Then
-        //    stream.ShouldEqual("<h1>Hello Mr. test</h1>");
-        //}
+        [Fact]
+        public void RenderView_should_accept_a_model_and_read_from_it_into_the_stream()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+            );
 
-        //[Fact]
-        //public void when_calling_a_missing_member_should_return_a_missing_member_message()
-        //{
-        //    // Given
-        //    var location = new ViewLocationResult(
-        //        string.Empty,
-        //        string.Empty,
-        //        "liquid",
-        //        () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
-        //    );
+            var currentStartupContext = CreateContext(new [] {location});
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var stream = new MemoryStream();
 
-        //    var stream = new MemoryStream();
+            // When
+            var response = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
+            response.Contents.Invoke(stream);
 
-        //    // When
-        //    var response = this.engine.RenderView(location, new { lastname = "test" }, this.renderContext);
-        //    response.Contents.Invoke(stream);
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
 
-        //    // Then
-        //    stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
-        //}
+        [Fact]
+        public void when_calling_a_missing_member_should_return_a_missing_member_message()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+            );
 
-//#if !__MonoCS__
-//        [Fact]
-//        public void RenderView_should_accept_a_model_with_a_list_and_iterate_over_it()
-//        {
-//            // TODO - Fixup on Mono
-//            // Given
-//            var location = new ViewLocationResult(
-//                string.Empty,
-//                string.Empty,
-//                "liquid",
-//                () => new StringReader(@"<ul>{% for item in model.Widgets %}<li>{{ item.name }}</li>{% endfor %}</ul>")
-//            );
+            var currentStartupContext = CreateContext(new [] {location});
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var stream = new MemoryStream();
 
-//            var stream = new MemoryStream();
+            // When
+            var response = this.engine.RenderView(location, new { lastname = "test" }, this.renderContext);
+            response.Contents.Invoke(stream);
 
-//            // When
-//            var widgets = new List<object> { new { name = "Widget 1" }, new { name = "Widget 2" }, new { name = "Widget 3" }, new { name = "Widget 4" } };
-//            var response = this.engine.RenderView(location, new { Widgets = widgets }, this.renderContext);
-//            response.Contents.Invoke(stream);
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
+        }
 
-//            // Then
-//            stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
-//        }
-//#endif
+#if !__MonoCS__
+        [Fact]
+        public void RenderView_should_accept_a_model_with_a_list_and_iterate_over_it()
+        {
+            // TODO - Fixup on Mono
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"<ul>{% for item in model.Widgets %}<li>{{ item.name }}</li>{% endfor %}</ul>")
+            );
+
+            var currentStartupContext = CreateContext(new [] {location});
+            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var stream = new MemoryStream();
+
+            // When
+            var widgets = new List<object> { new { name = "Widget 1" }, new { name = "Widget 2" }, new { name = "Widget 3" }, new { name = "Widget 4" } };
+            var response = this.engine.RenderView(location, new { Widgets = widgets }, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
+        }
+#endif
     }
 	
     public class Menu
