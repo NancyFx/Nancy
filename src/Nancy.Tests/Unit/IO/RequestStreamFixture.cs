@@ -364,19 +364,6 @@ namespace Nancy.Tests.Unit.IO
         }
 
         [Fact]
-        public void Should_close_the_underlaying_stream_when_being_closed()
-        {
-            // Given
-            var request = RequestStream.FromStream(this.stream, 0, 1, false);
-
-            // When
-            request.Close();
-
-            // Then
-            A.CallTo(() => this.stream.Close()).MustHaveHappened();
-        }
-
-        [Fact]
         public void Should_read_from_underlaying_stream_when_read_is_called()
         {
             // Given
