@@ -190,6 +190,13 @@ namespace Nancy.Json
 				WriteValue (output, (Guid)obj);
 				return;
 			}
+
+			if (typeof (DynamicDictionaryValue).IsAssignableFrom(valueType))
+			{
+				var o = (DynamicDictionaryValue) obj;
+				SerializeValue(o.Value, output);
+				return;
+			}
 			
 			IConvertible convertible = obj as IConvertible;
 			if (convertible != null) {
@@ -493,7 +500,7 @@ namespace Nancy.Json
 			
 			WriteValue (output, value.ToString ());
 		}
-		
+
 		void WriteValue (StringBuilder output, string value)
 		{
 			if (String.IsNullOrEmpty (value)) {
