@@ -1,6 +1,5 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
-    using Conventions;
     using global::DotLiquid.FileSystems;
 
     /// <summary>
@@ -9,8 +8,6 @@
     /// <remarks>This implementation always returns instances of the <see cref="LiquidNancyFileSystem"/> type.</remarks>
     public class DefaultFileSystemFactory : IFileSystemFactory
     {
-        private readonly ViewLocationConventions conventions;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultFileSystemFactory"/> class
         /// </summary>
