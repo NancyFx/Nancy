@@ -39,6 +39,15 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Ensure_that_dynamic_string_parameters_are_serialized_as_strings()
+        {
+            var result = browser.Get("/test/something", c => c.HttpRequest());
+            var actual = result.Body.AsString();
+
+            Assert.Equal(@"{""name"":""something""}", actual);
+        }
+
+        [Fact]
         public void Ensure_that_Jsonp_hook_does_not_affect_a_normal_json_response()
         {
             var result = browser.Get("/test/json", c =>
