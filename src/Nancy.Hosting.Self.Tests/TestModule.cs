@@ -1,4 +1,6 @@
-﻿namespace Nancy.Hosting.Self.Tests
+﻿using System;
+
+namespace Nancy.Hosting.Self.Tests
 {
     using System.IO;
 
@@ -19,6 +21,14 @@
                 };
 
             Post["/rel"] = parameters => new StreamReader(Request.Body).ReadToEnd();
+
+        	Get["/exception"] = parameters => new Response() {Contents = s =>
+        	                                                             	{
+        	                                                             		var writer = new StreamWriter(s);
+																				writer.Write("Content");
+																				writer.Flush();
+																				throw new Exception("An error occured during content rendering");
+        	                                                             	}};
         }
     }
 }

@@ -131,6 +131,7 @@
 				nancyBootstrapper,
 				BaseUri);
 
+
 			try
 			{
 				host.Start();
@@ -142,6 +143,23 @@
 
 			return new NancyHostWrapper(host);
 		}
+
+
+		[SkippableFact]
+		public void Should_be_able_to_recover_from_rendering_exception()
+		{
+			using (CreateAndOpenSelfHost())
+			{
+				
+				var reader =
+					new StreamReader(WebRequest.Create(new Uri(BaseUri,"exception")).GetResponse().GetResponseStream());
+
+				var response = reader.ReadToEnd();
+
+				response.ShouldEqual("Content");
+			}
+		}
+
 
 		private class NancyHostWrapper : IDisposable
 		{
