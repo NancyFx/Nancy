@@ -89,6 +89,9 @@
     <Reference Include="xunit, Version=1.7.0.1540, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c">
       <HintPath>..\..\dependencies\xunit\xunit.dll</HintPath>
     </Reference>
+    <Reference Include="xunit.extensions">
+      <HintPath>..\..\dependencies\xunit\xunit.extensions.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
@@ -100,6 +103,7 @@
     <Compile Include="DotLiquidViewEngineFixture.cs" />
     <Compile Include="DynamicDropFixture.cs" />
     <Compile Include="FakeModel.cs" />
+    <Compile Include="LiquidNancyFileSystemFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj">
