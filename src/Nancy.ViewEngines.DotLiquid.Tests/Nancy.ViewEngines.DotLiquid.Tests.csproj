@@ -66,6 +66,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\packages\DotLiquid.1.6.1.0\lib\NET40\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -79,9 +82,6 @@
     <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
-    </Reference>
-    <Reference Include="DotLiquid, Version=1.5.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c">
-      <HintPath>..\..\dependencies\dotliquid\DotLiquid.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy, Version=1.7.4109.1, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c">
       <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
@@ -122,6 +122,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Views\singlequotedpartial.liquid">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

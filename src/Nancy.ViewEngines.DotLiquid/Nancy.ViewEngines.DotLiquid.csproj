@@ -66,6 +66,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="DotLiquid">
+      <HintPath>..\packages\DotLiquid.1.6.1.0\lib\NET40\DotLiquid.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -79,9 +82,6 @@
     <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
-    </Reference>
-    <Reference Include="DotLiquid, Version=1.5.0.0, Culture=neutral, PublicKeyToken=82e46016ecf9f07c">
-      <HintPath>..\..\dependencies\dotliquid\DotLiquid.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -100,6 +100,9 @@
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
