@@ -17,9 +17,13 @@ namespace Nancy.Tests.Unit.ViewEngines
         private readonly IRenderContextFactory renderContextFactory;
         private readonly ViewLocationContext viewLocationContext;
         private readonly ViewLocationConventions conventions;
+        private readonly IRootPathProvider rootPathProvider;
 
         public DefaultViewFactoryFixture()
         {
+            this.rootPathProvider = A.Fake<IRootPathProvider>();
+            A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns("The root path");
+
             this.resolver = A.Fake<IViewResolver>();
             this.renderContextFactory = A.Fake<IRenderContextFactory>();
             this.conventions = new ViewLocationConventions(Enumerable.Empty<Func<string, object, ViewLocationContext, string>>());
@@ -38,7 +42,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 viewEngines = new IViewEngine[] { };
             }
 
-            return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, this.conventions);
+            return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, this.conventions, this.rootPathProvider);
         }
 
         [Fact]
@@ -427,7 +431,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "sshtml" });            
              
             var conventions = new Func<string, dynamic, ViewLocationContext, string>[] {(a,b,c) => "baz"};
-            var factory = new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, new ViewLocationConventions(conventions));
+            var factory = new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, new ViewLocationConventions(conventions), this.rootPathProvider);
             
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
