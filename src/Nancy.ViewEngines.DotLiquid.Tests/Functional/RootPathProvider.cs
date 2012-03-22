@@ -10,7 +10,10 @@
         /// <returns>A <see cref="string"/> containing the path of the root folder.</returns>
         public string GetRootPath()
         {
-            return PathHelper.GetParent(typeof (RootPathProvider).Assembly.Location, 3);
+            var path =
+                System.IO.Path.GetDirectoryName(typeof (RootPathProvider).Assembly.Location);
+
+            return PathHelper.GetParent(path, 2);
         }
     }
 }
