@@ -1,25 +1,34 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
+    using global::DotLiquid.FileSystems;
     using Responses;
     using global::DotLiquid;
-    using global::DotLiquid.FileSystems;
 
+    /// <summary>
+    /// View engine for rendering dotLiquid views.
+    /// </summary>
     public class DotLiquidViewEngine : IViewEngine
     {
+        private readonly IFileSystemFactory fileSystemFactory;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
-        /// <param name="fileSystem"></param>
-        public DotLiquidViewEngine(IFileSystem fileSystem)
+        /// <remarks>The instance will use the <see cref="DefaultFileSystemFactory"/> internally.</remarks>
+        public DotLiquidViewEngine()
+            : this(new DefaultFileSystemFactory())
         {
-            if (fileSystem != null)
-            {
-                // TODO - Wrap around Nancy view locator / cache??
-                Template.FileSystem = fileSystem;
-            }
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
+        /// </summary>
+        /// <param name="fileSystemFactory">Factory used to retrieve the <see cref="IFileSystem"/> instance that should be used by the engine.</param>
+        public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory)
+        {
+            this.fileSystemFactory = fileSystemFactory;
         }
 
         /// <summary>
@@ -32,9 +41,13 @@
             get { yield return "liquid"; }
         }
 
+        /// <summary>
+        /// Initialise the view engine (if necessary)
+        /// </summary>
+        /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
-            Template.FileSystem = new LiquidNancyFileSystem(viewEngineStartupContext);
+            Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext);
         }
 
         /// <summary>
