@@ -90,7 +90,6 @@
     </Compile>
     <Compile Include="DefaultFileSystemFactory.cs" />
     <Compile Include="DotLiquidViewEngine.cs" />
-    <Compile Include="DotLiquidViewEngineStartup.cs" />
     <Compile Include="DynamicDrop.cs" />
     <Compile Include="IFileSystemFactory.cs" />
     <Compile Include="LiquidNancyFileSystem.cs" />

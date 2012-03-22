@@ -16,6 +16,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
+        /// <remarks>The instance will use the <see cref="DefaultFileSystemFactory"/> internally.</remarks>
+        public DotLiquidViewEngine()
+            : this(new DefaultFileSystemFactory())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
+        /// </summary>
         /// <param name="fileSystemFactory">Factory used to retrieve the <see cref="IFileSystem"/> instance that should be used by the engine.</param>
         public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory)
         {
