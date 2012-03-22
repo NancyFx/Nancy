@@ -10,11 +10,15 @@
 
     public class DotLiquidViewEngineFixture
     {
-        private DotLiquidViewEngine engine;
         private readonly IRenderContext renderContext;
+        private readonly IFileSystemFactory factory;
+        private readonly DotLiquidViewEngine engine;
 
         public DotLiquidViewEngineFixture()
         {
+            this.factory = A.Fake<IFileSystemFactory>();
+            this.engine = new DotLiquidViewEngine(this.factory);
+
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Template>>.Ignored))
                 .ReturnsLazily(x =>
@@ -28,100 +32,25 @@
 
         }
 
-        private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
-        {
-            return new ViewEngineStartupContext(
-                this.renderContext.ViewCache,
-                results,
-                new [] {"liquid"});
-        }
-
-        private ViewLocationResult CreateViewLocationResult(string testDirectory)
-        {
-            return null;
-        }
-
         [Fact]
-        public void Include_should_look_for_a_partial()
+        public void Should_retrieve_filesystem_from_factory_when_engine_is_initialized()
         {
-            // Set up the view startup context
-            string partialPath = Path.Combine(Environment.CurrentDirectory, @"TestViews\_partial.liquid");
-
-            // Set up a ViewLocationResult that the test can use
-            var testLocation = new ViewLocationResult(
-                Environment.CurrentDirectory,
-                "test",
-                "liquid",
-                () => new StringReader(@"<h1>Including a partial</h1>{% include 'partial' %}")
-            );
-
-            var partialLocation = new ViewLocationResult(
-                partialPath,
-                "partial",
-                "liquid",
-                () => new StringReader(File.ReadAllText(partialPath))
-            );
-
-            var currentStartupContext = CreateContext(new [] {testLocation, partialLocation});
-
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
-
             // Given
-            var stream = new MemoryStream();
-
+            var context = CreateContext();
+            
             // When
-            var response = this.engine.RenderView(testLocation, null, this.renderContext);
-            response.Contents.Invoke(stream);
+            this.engine.Initialize(context);
 
             // Then
-            stream.ShouldEqual("<h1>Including a partial</h1>Some template.");
-        }
-
-        [Fact]
-        public void Include_should_work_with_double_quotes()
-        {
-            // Set up the view startup context
-            string partialPath = Path.Combine(Environment.CurrentDirectory, @"TestViews\_partial.liquid");
-
-            // Set up a ViewLocationResult that the test can use
-            var testLocation = new ViewLocationResult(
-                Environment.CurrentDirectory,
-                "test",
-                "liquid",
-                () => new StringReader(@"<h1>Including a partial</h1>{% include ""partial"" %}")
-            );
-
-            var partialLocation = new ViewLocationResult(
-                partialPath,
-                "partial",
-                "liquid",
-                () => new StringReader(File.ReadAllText(partialPath))
-            );
-
-            var currentStartupContext = CreateContext(new [] {testLocation, partialLocation});
-
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
-
-            // Given
-            var stream = new MemoryStream();
-
-            // When
-            var response = this.engine.RenderView(testLocation, null, this.renderContext);
-            response.Contents.Invoke(stream);
-
-            // Then
-            stream.ShouldEqual("<h1>Including a partial</h1>Some template.");
+            A.CallTo(() => factory.GetFileSystem(context)).MustHaveHappened();
         }
 
         [Fact]
         public void Should_support_files_with_the_liquid_extensions()
         {
-            // Provide a fake LiquidNancyFileSystem for the Liquid view engine
-            LiquidNancyFileSystem fakeFileSystem = A.Fake<LiquidNancyFileSystem>();
-
-            // Given, When
-            this.engine = new DotLiquidViewEngine(fakeFileSystem);
-            var extensions = this.engine.Extensions;
+            // Given
+            // When
+            var extensions = engine.Extensions;
 
             // Then
             extensions.ShouldHaveCount(1);
@@ -139,8 +68,10 @@
                 () => new StringReader(@"{% assign name = 'test' %}<h1>Hello Mr. {{ name }}</h1>")
             );
 
-            var currentStartupContext = CreateContext(new [] {location});
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var currentStartupContext = 
+                CreateContext(new [] {location});
+
+            this.engine.Initialize(currentStartupContext);
 
             var stream = new MemoryStream();
 
@@ -163,13 +94,15 @@
                 () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
             );
 
-            var currentStartupContext = CreateContext(new [] {location});
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var currentStartupContext = 
+                CreateContext(new [] {location});
+
+            this.engine.Initialize(currentStartupContext);
 
             var stream = new MemoryStream();
 
             // When
-            var response = this.engine.RenderView(location, null, this.renderContext);
+            var response = engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -187,8 +120,10 @@
                 () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
             );
 
-            var currentStartupContext = CreateContext(new [] {location});
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var currentStartupContext = 
+                CreateContext(new [] {location});
+
+            this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
@@ -210,8 +145,10 @@
                 () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
             );
 
-            var currentStartupContext = CreateContext(new [] {location});
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var currentStartupContext = 
+                CreateContext(new [] {location});
+            
+            this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
@@ -235,8 +172,10 @@
                 () => new StringReader(@"<ul>{% for item in model.Widgets %}<li>{{ item.name }}</li>{% endfor %}</ul>")
             );
 
-            var currentStartupContext = CreateContext(new [] {location});
-            this.engine = new DotLiquidViewEngine(new LiquidNancyFileSystem(currentStartupContext));
+            var currentStartupContext = 
+                CreateContext(new [] {location});
+            
+            this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
@@ -248,6 +187,14 @@
             stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
         }
 #endif
+
+        private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
+        {
+            return new ViewEngineStartupContext(
+                this.renderContext.ViewCache,
+                results,
+                new [] {"liquid"});
+        }
     }
 	
     public class Menu
