@@ -18,6 +18,7 @@
         private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IRenderContextFactory renderContextFactory;
         private readonly ViewLocationConventions conventions;
+        private readonly IRootPathProvider rootPathProvider;
         private static readonly Action<Stream> EmptyView = x => { };
         private readonly string[] viewEngineExtensions;
 
@@ -28,12 +29,14 @@
         /// <param name="viewEngines">An <see cref="IEnumerable{T}"/> instance containing the <see cref="IViewEngine"/> instances that should be able to be used to render a view</param>
         /// <param name="renderContextFactory">A <see cref="IRenderContextFactory"/> instance that should be used to create an <see cref="IRenderContext"/> when a view is rendered.</param>
         /// <param name="conventions">An <see cref="ViewLocationConventions"/> instance that should be used to resolve all possible view locations </param>
-        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory, ViewLocationConventions conventions)
+        /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
+        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory, ViewLocationConventions conventions, IRootPathProvider rootPathProvider)
         {
             this.viewResolver = viewResolver;
             this.viewEngines = viewEngines;
             this.renderContextFactory = renderContextFactory;
             this.conventions = conventions;
+            this.rootPathProvider = rootPathProvider;
 
             this.viewEngineExtensions = this.viewEngines.SelectMany(ive => ive.Extensions).ToArray();
         }
@@ -81,7 +84,7 @@
             if (resolvedViewEngine == null)
             {
                 viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewFactory] Unable to find view engine that could render the view."));
-                throw new ViewNotFoundException(viewName, this.viewEngineExtensions, this.GetInspectedLocations(viewName, model, viewLocationContext));
+                throw new ViewNotFoundException(viewName, this.viewEngineExtensions, this.GetInspectedLocations(viewName, model, viewLocationContext), this.rootPathProvider);
             }
 
             viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with view engine ", resolvedViewEngine.GetType().FullName)));
