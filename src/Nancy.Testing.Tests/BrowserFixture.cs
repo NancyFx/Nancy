@@ -1,5 +1,3 @@
-using FakeItEasy;
-using Nancy.Authentication.Forms;
 
 namespace Nancy.Testing.Tests
 {
@@ -14,6 +12,8 @@ namespace Nancy.Testing.Tests
     using Nancy.Helpers;
     using Nancy.Session;
     using Xunit;
+    using FakeItEasy;
+    using Nancy.Authentication.Forms;
 
     public class BrowserFixture
     {
