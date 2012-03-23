@@ -177,7 +177,7 @@
                 return;
             }
 
-            foreach (var errorHandler in this.errorHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode, null)))
+            foreach (var errorHandler in this.errorHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode, context)))
             {
                 errorHandler.Handle(context.Response.StatusCode, context);
             }
