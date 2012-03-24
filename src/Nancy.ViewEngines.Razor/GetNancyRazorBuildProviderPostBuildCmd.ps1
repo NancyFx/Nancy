@@ -5,5 +5,5 @@ $BuildProvidersDir = Join-Path $path "BuildProviders"
 $ViewEngineDir = Join-Path $path "lib\Net40"
 
 $NancyRazorBuildProviderPostBuildCmd = "
-xcopy /s /y `"$BuildProvidersDir\Nancy.ViewEngines.Razor.BuildProviders.dll`" `"`$(ProjectDir)bin`"
-xcopy /s /y `"$ViewEngineDir\Nancy.ViewEngines.Razor.dll`" `"`$(ProjectDir)bin`""
+start /MIN xcopy /s /y /R `"$BuildProvidersDir\Nancy.ViewEngines.Razor.BuildProviders.dll`" `"`$(ProjectDir)bin`"
+start /MIN xcopy /s /y /R `"$ViewEngineDir\Nancy.ViewEngines.Razor.dll`" `"`$(ProjectDir)bin`""
