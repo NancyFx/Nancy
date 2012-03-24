@@ -7,6 +7,16 @@
     /// </summary>
     public class DiagnosticsConfiguration
     {
+ 
+        public DiagnosticsConfiguration() : this(CryptographyConfiguration.Default)
+        {
+        }
+
+        public DiagnosticsConfiguration(CryptographyConfiguration cryptographyConfiguration)
+        {
+            CryptographyConfiguration = cryptographyConfiguration;
+        }
+
         /// <summary>
         /// Gets or sets password for accessing the diagnostics screen.
         /// This shoudl be secure :-)
@@ -24,11 +34,6 @@
         public bool Valid
         {
             get { return !string.IsNullOrWhiteSpace(this.Password); }
-        }
-
-        public DiagnosticsConfiguration()
-        {
-            this.CryptographyConfiguration = CryptographyConfiguration.Default;
         }
     }
 }
