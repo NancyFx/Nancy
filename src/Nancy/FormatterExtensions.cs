@@ -23,6 +23,7 @@ namespace Nancy
             return new GenericFileResponse(applicationRelativeFilePath);
         }
 
+        [Obsolete("Consider serving static content using the static content conventions instead.")]
         public static Response AsCss(this IResponseFormatter formatter, string applicationRelativeFilePath)
         {
             return AsFile(formatter, applicationRelativeFilePath);
@@ -33,6 +34,7 @@ namespace Nancy
             return AsFile(formatter, applicationRelativeFilePath);
         }
 
+        [Obsolete("Consider serving static content using the static content conventions instead.")]
         public static Response AsJs(this IResponseFormatter formatter, string applicationRelativeFilePath)
         {
             return AsFile(formatter, applicationRelativeFilePath);
