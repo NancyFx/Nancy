@@ -1,4 +1,4 @@
-﻿namespace Nancy.Diagnostics
+﻿namespace Nancy.Responses
 {
     using System;
     using System.IO;
