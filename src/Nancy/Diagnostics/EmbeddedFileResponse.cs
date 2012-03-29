@@ -47,7 +47,7 @@
             resourceName =
                 string.Concat(resourcePath, ".", resourceName);
 
-            return this.GetType().Assembly.GetManifestResourceStream(resourceName);
+            return assembly.GetManifestResourceStream(resourceName);
         }
 
         private static string GetFileNameFromResourceName(string resourcePath, string resourceName)
