@@ -18,3 +18,5 @@ build/
 _[Rr]e[Ss]harper.*/
 *.docstates
 *.tss
+*.ncrunchproject
+*.ncrunchsolution
