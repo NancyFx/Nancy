@@ -35,15 +35,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
             }
         }
 
-        protected override IEnumerable<Func<Assembly, bool>> IgnoredAssemblies 
-        { 
-            get 
-            {
-                foreach (var ignoredAssembly in base.IgnoredAssemblies) yield return ignoredAssembly;
-                yield return asm => asm.FullName.StartsWith("xunit");
-            }
-        }
-
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
@@ -153,9 +144,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         public byte[] Favicon { get; set; }
-
-        public IEnumerable<Func<Assembly, bool>> TestIgnoredAssemblies { get { return this.IgnoredAssemblies; } }
-        
     }
 
     internal class FakeBootstrapperBaseGetModulesOverride : NancyBootstrapperBase<object>
@@ -396,13 +384,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
             AppDomainAssemblyTypeScanner.IgnoredAssemblies = new Func<Assembly, bool>[]
                                                              {asm => asm.FullName.StartsWith("mscorlib")};
             AppDomainAssemblyTypeScanner.TypesOf<IEnumerable>().Where(t => t.Assembly.FullName.StartsWith("mscorlib")).Count().ShouldEqual(0);
-        }
-
-        [Fact]
-        public void Should_have_a_list_of_assemblies_to_ignore_should_include_xunit()
-        {
-            bootstrapper.TestIgnoredAssemblies.Count().ShouldNotEqual(0);
-            bootstrapper.TestIgnoredAssemblies.Contains(asm => asm.FullName.StartsWith("xunit"));
         }
 
         [Fact]

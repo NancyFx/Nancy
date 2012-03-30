@@ -32,6 +32,11 @@
         private readonly NancyConventions conventions;
 
         /// <summary>
+        /// Internal configuration
+        /// </summary>
+        private NancyInternalConfiguration internalConfiguration;
+
+        /// <summary>
         /// Application pipelines.
         /// Pipelines are "cloned" per request so they can be modified
         /// at the request level.
@@ -66,7 +71,7 @@
         {
             get
             {
-                return NancyInternalConfiguration.Default;
+                return this.internalConfiguration ?? (this.internalConfiguration = NancyInternalConfiguration.Default);
             }
         }
 
@@ -81,25 +86,6 @@
             }
         }
 
-        /// <summary>
-        /// Gets a set of rules for ignoring assemblies while scanning through them.
-        /// </summary>
-        protected virtual IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
-        {
-            get
-            {
-                yield return asm => asm.FullName.StartsWith ("Microsoft.", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("System.", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("System,", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("CR_ExtUnitTest", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("mscorlib,", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("CR_VSTest", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("DevExpress.CodeRush", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("IronPython", StringComparison.InvariantCulture);
-                yield return asm => asm.FullName.StartsWith ("IronRuby", StringComparison.InvariantCulture);
-            }
-        }
-        
         /// <summary>
         /// Gets all available module types
         /// </summary>
@@ -229,9 +215,6 @@
             this.RegisterBootstrapperTypes(this.ApplicationContainer);
             
             this.ConfigureApplicationContainer(this.ApplicationContainer);
-
-            //set ignored assemblies in AppDomainAssemblyTypeScanner so it can also ignore the specified assemblies.
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = this.IgnoredAssemblies;
 
             var typeRegistrations = this.InternalConfiguration.GetTypeRegistations()
                                         .Concat(this.GetAdditionalTypes());

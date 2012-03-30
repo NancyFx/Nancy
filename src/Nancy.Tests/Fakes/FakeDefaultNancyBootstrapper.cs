@@ -2,6 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
+    using System.Reflection;
 
     using Bootstrapper;
 
@@ -28,6 +30,10 @@
 
         public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
         {
+            configuration.IgnoredAssemblies = NancyInternalConfiguration.DefaultIgnoredAssemblies.Union(
+                new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") }
+            );
+
             this.configuration = configuration;
 
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
@@ -36,15 +42,6 @@
         protected override NancyInternalConfiguration InternalConfiguration
         {
             get { return configuration; }
-        }
-
-        protected override IEnumerable<Func<System.Reflection.Assembly, bool>> IgnoredAssemblies
-        {
-            get
-            {
-                foreach (var ignoredAssembly in base.IgnoredAssemblies) yield return ignoredAssembly;
-                yield return asm => asm.FullName.StartsWith("TestAssembly");
-            }
         }
 
         public IDictionary<NancyContext, int> RequestContainerInitialisations { get; private set; }

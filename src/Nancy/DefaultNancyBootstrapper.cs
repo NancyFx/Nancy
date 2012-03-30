@@ -22,7 +22,7 @@
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            AutoRegister(container, this.IgnoredAssemblies);
+            AutoRegister(container, this.InternalConfiguration.IgnoredAssemblies);
         }
 
         /// <summary>
