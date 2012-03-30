@@ -30,11 +30,7 @@
 
         public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
         {
-            configuration.IgnoredAssemblies = NancyInternalConfiguration.DefaultIgnoredAssemblies.Union(
-                new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") }
-            );
-
-            this.configuration = configuration;
+            this.configuration = configuration.WithIgnoredAssembly(asm => asm.FullName.StartsWith("TestAssembly"));
 
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
         }

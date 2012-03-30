@@ -3,6 +3,8 @@ namespace Nancy.Testing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Reflection;
+
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
@@ -1153,6 +1155,17 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator DiagnosticsConfiguration(DiagnosticsConfiguration diagnosticsConfiguration)
             {
                 this.bootstrapper.diagnosticConfiguration = diagnosticsConfiguration;
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to add an assembly ignore predicate to the list
+            /// </summary>
+            /// <param name="ignoredPredicate">Ignore predicate</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator IgnoredAssembly(Func<Assembly, bool> ignoredPredicate)
+            {
+                this.bootstrapper.configuration.WithIgnoredAssembly(ignoredPredicate);
                 return this;
             }
         }
