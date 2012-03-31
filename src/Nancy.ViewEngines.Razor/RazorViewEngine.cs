@@ -140,7 +140,7 @@
                 .First();
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
-
+            
             var razorResult = engine.GenerateCode(reader);
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType);
