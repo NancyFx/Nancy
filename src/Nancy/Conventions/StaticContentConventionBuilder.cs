@@ -70,8 +70,9 @@ namespace Nancy.Conventions
                     return () => null;
                 }
 
-                requestPath = 
-                    Regex.Replace(requestPath, Regex.Escape(requestedPath), contentPath, RegexOptions.IgnoreCase);
+                var rgx = new Regex(requestedPath, RegexOptions.IgnoreCase);
+
+                requestPath = rgx.Replace(requestPath, Regex.Escape(contentPath), 1);
 
                 var fileName = 
                     Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));

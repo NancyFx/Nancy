@@ -194,6 +194,7 @@
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\StaticConventBuilderFixture.cs" />
     <Compile Include="Unit\UrlFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
@@ -230,6 +231,18 @@
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Assets\Styles\css\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\Styles\strange-css-filename.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\Styles\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Assets\Styles\Sub\styles.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\test.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
