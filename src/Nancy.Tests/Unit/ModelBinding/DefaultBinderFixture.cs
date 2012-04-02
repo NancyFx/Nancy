@@ -2,6 +2,8 @@ namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
     using FakeItEasy;
     using Nancy.ModelBinding;
     using Fakes;
@@ -191,6 +193,25 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(12);
             result.DateProperty.ShouldEqual(default(DateTime));
+        }
+
+        [Fact]
+        public void Should_ignore_indexer_properties()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            var deserializer = A.Fake<IBodyDeserializer>();
+            A.CallTo(() => deserializer.CanDeserialize(A<string>.Ignored)).Returns(true);
+
+            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new [] { deserializer });
+
+            // When
+            binder.Bind(context, typeof(TestModel));
+
+            // Then
+            A.CallTo(() => deserializer.Deserialize(A<string>.Ignored, A<Stream>.Ignored, A<BindingContext>.That.Matches(ctx => ctx.ValidModelProperties.Count() == 3))).MustHaveHappened(); ;
         }
 
         [Fact]
@@ -478,6 +499,12 @@ namespace Nancy.Tests.Unit.ModelBinding
             public int IntProperty { get; set; }
 
             public DateTime DateProperty { get; set; }
+
+            public int this[int index]
+            {
+                get { return 0; }
+                set {}
+            }
         }
     }
 }

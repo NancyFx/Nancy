@@ -4,6 +4,7 @@ namespace Nancy.ModelBinding.DefaultConverters
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using Extensions;
 
     /// <summary>
     /// Converter for handling enumerable types
@@ -22,7 +23,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         /// <returns>True if conversion supported, false otherwise</returns>
         public bool CanConvertTo(Type destinationType, BindingContext context)
         {
-            return IsCollection(destinationType) || IsEnumerable(destinationType) || IsArray(destinationType);
+            return destinationType.IsCollection() || destinationType.IsEnumerable() || destinationType.IsArray();
         }
 
         /// <summary>
@@ -43,42 +44,22 @@ namespace Nancy.ModelBinding.DefaultConverters
             var items = input.Split(',');
 
             // Strategy, schmategy ;-)
-            if (this.IsCollection(destinationType))
+            if (destinationType.IsCollection())
             {
                 return this.ConvertCollection(items, destinationType, context);
             }
 
-            if (this.IsArray(destinationType))
+            if (destinationType.IsArray())
             {
                 return this.ConvertArray(items, destinationType, context);
             }
 
-            if (this.IsEnumerable(destinationType))
+            if (destinationType.IsEnumerable())
             {
                 return this.ConvertEnumerable(items, destinationType, context);
             }
 
             return null;
-        }
-
-        private bool IsCollection(Type destinationType)
-        {
-            var collectionType = typeof(ICollection<>);
-
-            return destinationType.IsGenericType && destinationType.GetInterfaces().
-                Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == collectionType).Any();
-        }
-
-        private bool IsArray(Type destinationType)
-        {
-            return destinationType.BaseType == typeof(Array);
-        }
-
-        private bool IsEnumerable(Type destinationType)
-        {
-            var enumerableType = typeof(IEnumerable<>);
-
-            return destinationType.IsGenericType && destinationType.GetGenericTypeDefinition() == enumerableType;
         }
 
         private object ConvertCollection(string[] items, Type destinationType, BindingContext context)

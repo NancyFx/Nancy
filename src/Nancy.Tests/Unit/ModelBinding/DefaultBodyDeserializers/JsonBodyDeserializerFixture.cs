@@ -1,12 +1,12 @@
-using System.Globalization;
-using System.Threading;
-
 namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Globalization;
     using System.Text;
+    using System.Threading;
 
     using Nancy.Json;
     using Nancy.ModelBinding;
@@ -17,11 +17,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     public class JsonBodyDeserializerFixture
     {
         private readonly JavaScriptSerializer serializer;
-
         private readonly JsonBodyDeserializer deserialize;
-
         private readonly TestModel testModel;
-
         private readonly string testModelJson;
 
         public JsonBodyDeserializerFixture()
@@ -37,63 +34,79 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 };
 
             this.serializer = new JavaScriptSerializer();
-            serializer.RegisterConverters(JsonSettings.Converters);
+            this.serializer.RegisterConverters(JsonSettings.Converters);
             this.testModelJson = this.serializer.Serialize(this.testModel);
         }
 
         [Fact]
         public void Should_report_false_for_can_deserialize_for_non_json_format()
         {
+            // Given
             const string contentType = "application/xml";
 
+            // When
             var result = this.deserialize.CanDeserialize(contentType);
 
+            // Then
             result.ShouldBeFalse();
         }
 
         [Fact]
         public void Should_report_true_for_can_deserialize_for_application_json()
         {
+            // Given
             const string contentType = "application/json";
 
+            // When
             var result = this.deserialize.CanDeserialize(contentType);
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_report_true_for_can_deserialize_for_text_json()
         {
+            // Given
             const string contentType = "text/json";
 
+            // When
             var result = this.deserialize.CanDeserialize(contentType);
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_report_true_for_can_deserialize_for_custom_json_format()
         {
+            // Given
             const string contentType = "application/vnd.org.nancyfx.mything+json";
 
+            // When
             var result = this.deserialize.CanDeserialize(contentType);
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_be_case_insensitive_in_can_deserialize()
         {
+            // Given
             const string contentType = "appLicaTion/jsOn";
 
+            // When
             var result = this.deserialize.CanDeserialize(contentType);
 
+            // Then
             result.ShouldBeTrue();
         }
 
         [Fact]
         public void Should_only_set_allowed_properties()
         {
+            // Given
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
             var context = new BindingContext()
             {
@@ -101,11 +114,13 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 ValidModelProperties = typeof(TestModel).GetProperties().Where(p => !(p.Name == "ArrayProperty" || p.Name == "DateProperty")),
             };
 
+            // When
             var result = (TestModel)this.deserialize.Deserialize(
                             "application/json",
                             bodyStream,
                             context);
 
+            // Then
             result.StringProperty.ShouldEqual(this.testModel.StringProperty);
             result.IntProperty.ShouldEqual(this.testModel.IntProperty);
             result.ArrayProperty.ShouldBeNull();
@@ -115,6 +130,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         [Fact]
         public void Should_deserialize_timespan()
         {
+            // Given
             var json = this.serializer.Serialize(TimeSpan.FromDays(14));
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
             var context = new BindingContext()
@@ -123,12 +139,85 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 ValidModelProperties = typeof(TimeSpan).GetProperties(),
             };
 
+            // When
             var result = (TimeSpan)this.deserialize.Deserialize(
                             "application/json",
                             bodyStream,
                             context);
 
+            // Then
             result.Days.ShouldEqual(14);
+        }
+
+        [Fact]
+        public void Should_deserialize_list_of_primitives()
+        {
+            // Given
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties(),
+            };
+
+            var model =
+                new TestModel
+                {
+                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 }
+                };
+
+            var s = new JavaScriptSerializer();
+            var serialized = s.Serialize(model);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(serialized));
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/json",
+                            bodyStream,
+                            context);
+
+            // Then
+            result.ListOfPrimitivesProperty.ShouldHaveCount(3);
+            result.ListOfPrimitivesProperty[0].ShouldEqual(1);
+            result.ListOfPrimitivesProperty[1].ShouldEqual(3);
+            result.ListOfPrimitivesProperty[2].ShouldEqual(5);
+        }
+
+        [Fact]
+        public void Should_deserialize_list_of_complex_objects()
+        {
+            // Given
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties(),
+            };
+
+            var model =
+                new TestModel
+                {
+                    ListOfComplexObjectsProperty = new List<ModelWithStringValues>
+                    {
+                        new ModelWithStringValues() { Value1 = "one", Value2 = "two"},
+                        new ModelWithStringValues() { Value1 = "three", Value2 = "four"}
+                    }
+                };
+
+            var s = new JavaScriptSerializer();
+            var serialized = s.Serialize(model);
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(serialized));
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/json",
+                            bodyStream,
+                            context);
+
+            // Then
+            result.ListOfComplexObjectsProperty.ShouldHaveCount(2);
+            result.ListOfComplexObjectsProperty[0].Value1.ShouldEqual("one");
+            result.ListOfComplexObjectsProperty[0].Value2.ShouldEqual("two");
+            result.ListOfComplexObjectsProperty[1].Value1.ShouldEqual("three");
+            result.ListOfComplexObjectsProperty[1].Value2.ShouldEqual("four");
         }
 
 #if !__MonoCS__
@@ -136,15 +225,23 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         public void Should_Serialize_Doubles_In_Different_Cultures()
         {
 			// TODO - fixup on mono, seems to throw inside double.parse
+            // Given
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
-            var modelWithDoubleValues = new ModelWithDoubleValues();
-            modelWithDoubleValues.Latitude = 50.933984;
-            modelWithDoubleValues.Longitude = 7.330627;
+
+            var modelWithDoubleValues = 
+                new ModelWithDoubleValues
+                    {
+                        Latitude = 50.933984, 
+                        Longitude = 7.330627
+                    };
+
             var s = new JavaScriptSerializer();
             var serialized = s.Serialize(modelWithDoubleValues);
 
+            // When
             var deserializedModelWithDoubleValues = s.Deserialize<ModelWithDoubleValues>(serialized);
 
+            // Then
             Assert.Equal(modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
             Assert.Equal(modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
         }
@@ -158,6 +255,10 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             public DateTime DateProperty { get; set; }
 
             public string[] ArrayProperty { get; set; }
+
+            public List<int> ListOfPrimitivesProperty { get; set; }
+
+            public List<ModelWithStringValues> ListOfComplexObjectsProperty { get; set; }
 
             public bool Equals(TestModel other)
             {
@@ -219,6 +320,13 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 return !Equals(left, right);
             }
         }
+    }
+
+    public class ModelWithStringValues
+    {
+        public string Value1 { get; set; }
+
+        public string Value2 { get; set; }
     }
 
     public class ModelWithDoubleValues

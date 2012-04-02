@@ -1,9 +1,11 @@
 namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
     using System;
+    using System.Collections;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using Extensions;
     using Json;
 
     /// <summary>
@@ -48,25 +50,45 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             if (context.DestinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Except(context.ValidModelProperties).Any())
             {
-                return this.CreateObjectWithBlacklistExcluded(context, deserializedObject);
+                return CreateObjectWithBlacklistExcluded(context, deserializedObject);
             }
 
             return deserializedObject;
         }
 
-        private object CreateObjectWithBlacklistExcluded(BindingContext context, object deserializedObject)
+        private static object ConvertCollection(object items, Type destinationType, BindingContext context)
+        {
+            var returnCollection = Activator.CreateInstance(destinationType);
+
+            var collectionAddMethod = 
+                destinationType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
+
+            foreach (var item in (IEnumerable)items)
+            {
+                collectionAddMethod.Invoke(returnCollection, new[] { item });
+            }
+
+            return returnCollection;
+        }
+
+        private static object CreateObjectWithBlacklistExcluded(BindingContext context, object deserializedObject)
         {
             var returnObject = Activator.CreateInstance(context.DestinationType);
 
+            if (context.DestinationType.IsCollection())
+            {
+                return ConvertCollection(deserializedObject, context.DestinationType, context);
+            }
+
             foreach (var property in context.ValidModelProperties)
             {
-                this.CopyPropertyValue(property, deserializedObject, returnObject);
+                CopyPropertyValue(property, deserializedObject, returnObject);
             }
 
             return returnObject;
         }
 
-        private void CopyPropertyValue(PropertyInfo property, object sourceObject, object destinationObject)
+        private static void CopyPropertyValue(PropertyInfo property, object sourceObject, object destinationObject)
         {
             property.SetValue(destinationObject, property.GetValue(sourceObject, null), null);
         }
