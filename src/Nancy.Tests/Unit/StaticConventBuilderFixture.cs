@@ -38,6 +38,13 @@ namespace Nancy.Tests.Unit
 			getStaticContent("css/css", "styles.css");
 		}
 
+        [Fact]
+        public void Path_with_dot_in_it_doesnt_cause_problems()
+        {
+            getStaticContent("css", "dotted.filename.css");
+            getStaticContent("css/Sub.folder", "styles.css");
+        }
+
 		private void getStaticContent(string virtualDirectory, string requestedFilename)
 		{
 			var resource = string.Format("{0}/{1}", virtualDirectory, requestedFilename);
