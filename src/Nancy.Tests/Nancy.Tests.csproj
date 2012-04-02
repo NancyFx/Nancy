@@ -114,6 +114,7 @@
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
+    <Compile Include="Unit\EmbeddedStaticContentBuilderFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
@@ -230,6 +231,15 @@
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Embeded\Assets\Image\zip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Embeded\Assets\Image\image\sub\zip.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Embeded\Assets\Image\zip-image.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
     <Content Include="Resources\test.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
