@@ -136,7 +136,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void If_it_ends_with_carriage_return_it_should_not_matter()
+        public void If_the_stream_ends_with_carriage_return_characters_it_should_not_affect_the_multipart()
         {
             // Given
             var expected = "#!/usr/bin/env rake\n# Add your own tasks in files placed in lib/tasks ending in .rake,\n# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.\n\nrequire File.expand_path('../config/application', __FILE__)\n\nOnlinebackupWebclient::Application.load_tasks";
