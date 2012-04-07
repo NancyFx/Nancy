@@ -238,6 +238,11 @@
         public IUrlHelpers<TModel> Url { get; private set; }
 
         /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag { get; private set; }
+
+        /// <summary>
         /// Initializes the specified engine.
         /// </summary>
         /// <param name="engine">The engine.</param>
@@ -245,9 +250,10 @@
         /// <param name="model">The model.</param>
         public override void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
-            Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
-            Model = (TModel)model;
-            Url = new UrlHelpers<TModel>(engine, renderContext);
+            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
+            this.Model = (TModel)model;
+            this.Url = new UrlHelpers<TModel>(engine, renderContext);
+            this.ViewBag = renderContext.Context.ViewBag;
         }
     }
 }

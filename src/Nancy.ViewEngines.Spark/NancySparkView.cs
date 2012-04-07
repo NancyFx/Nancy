@@ -27,6 +27,22 @@
             return value;
         }
 
+        /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag
+        {
+            get
+            {
+                if (this.RenderContext == null)
+                {
+                    return null;
+                }
+
+                return this.RenderContext.Context == null ? null : this.RenderContext.Context.ViewBag;
+            }
+        }
+
         public string AntiForgeryToken()
         {
             var tokenKeyValue = this.RenderContext.GetCsrfToken();

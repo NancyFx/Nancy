@@ -69,6 +69,17 @@ namespace Nancy
         public NancyContext Context { get; set; }
 
         /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag
+        {
+            get
+            {
+                return this.Context == null ? null : this.Context.ViewBag;
+            }
+        }
+
+        /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>
         /// <value>A <see cref="RouteBuilder"/> instance.</value>
