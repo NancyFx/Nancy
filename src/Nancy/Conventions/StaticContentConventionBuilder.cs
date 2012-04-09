@@ -13,7 +13,7 @@ namespace Nancy.Conventions
     public class StaticContentConventionBuilder
     {
         private static readonly ConcurrentDictionary<string, Func<Response>> ResponseFactoryCache;
-        private static readonly Regex pathReplaceRegex = new Regex(@"/\\", RegexOptions.Compiled);
+        private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
         static StaticContentConventionBuilder()
         {
@@ -29,26 +29,76 @@ namespace Nancy.Conventions
         /// <returns>A <see cref="GenericFileResponse"/> instance for the requested static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, string contentPath = null, params string[] allowedExtensions)
         {
-            return (ctx, root) =>
-            {
+            // !!! BREAKING CHANGE. ALL CONTENTPATH SEPARATORS HAS TO BE FORWARD SLASHES
+            // THAT WAY BOTH REQUESTED AND CONTENT PATHS ARE DECLARED THE SAME WAY
+            // DESPITE WHAT PLATFORM NANCY IS RUNNING ON. PROPER SEPERATOR REPLACEMENT
+            // AUTOMATICALLY TAKES PLACE ONCE THE PATH HAS BEEN TRANSFORMED !!!
+
+            return (ctx, root) =>{
+
                 var path =
                     ctx.Request.Path.TrimStart(new[] { '/' });
 
-                if (!path.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
+                var fileName = 
+                    Path.GetFileName(ctx.Request.Path);
+
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return null;
+                }
+
+                var encodedRequestedPath = 
+                    GetEncodedRequestedPath(requestedPath);
+
+                // CAN I CLEAN UP THIS METHOD
+                var pathWithoutFilename = 
+                    GetPathWithoutFilename(fileName, path);
+
+                if (!pathWithoutFilename.StartsWith(encodedRequestedPath, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
 
                 if(contentPath != null)
                 {
-                    contentPath = pathReplaceRegex.Replace(contentPath, Path.PathSeparator.ToString());
+                    contentPath = GetSafeContentPath(contentPath);
+                    //contentPath = GetSafeContentPath(PathReplaceRegex.Replace(contentPath, Path.DirectorySeparatorChar.ToString()));
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, encodedRequestedPath.TrimStart(new[] {'/'}), contentPath ?? requestedPath, allowedExtensions));
 
                 return responseFactory.Invoke();
             };
+        }
+
+        private static string GetSafeContentPath(string contentPath)
+        {
+            if (contentPath == null)
+            {
+                return null;
+            }
+
+            return contentPath.Equals("/") ? string.Empty : contentPath;
+            //return contentPath.Equals(Path.DirectorySeparatorChar.ToString()) ? string.Empty : contentPath;
+        }
+
+        private static string GetEncodedRequestedPath(string requestedPath)
+        {
+            return (!requestedPath.EndsWith("/")) ?
+                string.Concat(requestedPath, "/") :
+                requestedPath;
+        }
+
+        private static string GetPathWithoutFilename(string fileName, string path)
+        {
+            var pathWithoutFilename = path
+                .Replace(fileName, string.Empty);
+                //.TrimStart(new[] {'/'});
+
+            return (!pathWithoutFilename.EndsWith("/")) ?
+                string.Concat(pathWithoutFilename, "/") :
+                pathWithoutFilename;
         }
 
         private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
@@ -70,15 +120,16 @@ namespace Nancy.Conventions
                     return () => null;
                 }
 
-                var rgx = new Regex(requestedPath, RegexOptions.IgnoreCase);
-
-                requestPath = rgx.Replace(requestPath, Regex.Escape(contentPath), 1);
+                requestPath = PathReplaceRegex
+                    .Replace(GetSafeRequestPath(requestPath, requestedPath, contentPath), Path.DirectorySeparatorChar.ToString())
+                    .TrimStart(Path.DirectorySeparatorChar);
 
                 var fileName = 
                     Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
 
-                var contentRootPath = 
-                    Path.Combine(applicationRootPath, contentPath);
+                var contentRootPath = Path.Combine(
+                    applicationRootPath,
+                    PathReplaceRegex.Replace(contentPath, Path.DirectorySeparatorChar.ToString()));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
@@ -95,6 +146,21 @@ namespace Nancy.Conventions
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Returning file '", fileName, "'")));
                 return () => new GenericFileResponse(fileName);
             };
+        }
+
+        private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
+        {
+            if (requestedPath.Equals("/"))
+            {
+                return string
+                    .Concat(contentPath, Path.DirectorySeparatorChar, requestPath)
+                    .TrimStart(Path.DirectorySeparatorChar);
+            }
+
+            var expression = 
+                new Regex(requestedPath.TrimEnd(new[] {'/'}), RegexOptions.IgnoreCase);
+
+            return expression.Replace(requestPath, Regex.Escape(contentPath), 1);
         }
 
         /// <summary>

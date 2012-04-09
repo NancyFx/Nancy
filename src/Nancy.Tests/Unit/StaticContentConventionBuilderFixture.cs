@@ -6,8 +6,9 @@
     using Nancy.Conventions;
     using Nancy.Responses;
     using Xunit;
+    using Xunit.Extensions;
 
-	public class StaticContentConventionBuilderFixture
+    public class StaticContentConventionBuilderFixture
 	{
 		private const string StylesheetContents = @"body {
 	background-color: white;
@@ -77,6 +78,29 @@
 
 	        // Then
             result.ShouldEqual(StylesheetContents);
+	    }
+
+	    [Theory]
+        //[InlineData("/", "/face.png")]
+        [InlineData("content", "/content/face.png")]
+        //[InlineData("moo", "/moo/face.png")]
+        //[InlineData("moo/moo", "/moo/moo/face.png")]
+	    public void Should_FactMethodName(string conventionPath, string requestPath)
+	    {
+	        // Given
+	        var convention = 
+                StaticContentConventionBuilder.AddDirectory(conventionPath, @"foo/bar");
+
+	        var request = 
+                new Request("GET", requestPath, "http");
+
+            var context =
+                new NancyContext { Request = request };
+
+	        // When
+            convention.Invoke(context, Environment.CurrentDirectory);
+
+	        // Then
 	    }
 
 		private static string GetStaticContent(string virtualDirectory, string requestedFilename)
