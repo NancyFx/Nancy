@@ -19,7 +19,7 @@
                 new MemoryStream(streamContent);
             
             var response = 
-                new StreamResponse(() => inputStream, "test");
+                new StreamResponse(() => inputStream, "test", DateTime.MinValue, string.Empty);
             
             var outputStream = new MemoryStream();
 
@@ -41,7 +41,7 @@
                 new MemoryStream(streamContent) { Position = 2 };
 
             var response =
-                new StreamResponse(() => inputStream, "test");
+                new StreamResponse(() => inputStream, "test", DateTime.MinValue, string.Empty);
 
             var outputStream = new MemoryStream();
 
@@ -65,7 +65,7 @@
             A.CallTo(() => inputStream.CanRead).Returns(false);
 
             var response =
-                new StreamResponse(() => inputStream, "test");
+                new StreamResponse(() => inputStream, "test", DateTime.MinValue, string.Empty);
 
             var outputStream = new MemoryStream();
 

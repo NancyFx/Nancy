@@ -61,15 +61,25 @@ namespace Nancy
 
             return new XmlResponse<TModel>(model, "application/xml", serializer);
         }
-        
+
         public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)
         {
-            return new StreamResponse(() => stream, contentType);
+            return new StreamResponse(() => stream, contentType, DateTime.MinValue, string.Empty);
+        }
+
+        public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType, DateTime lastModified, string eTag)
+        {
+            return new StreamResponse(() => stream, contentType, lastModified, eTag);
         }
 
         public static Response FromStream(this IResponseFormatter formatter, Func<Stream> streamDelegate, string contentType)
         {
-            return new StreamResponse(streamDelegate, contentType);
+            return new StreamResponse(streamDelegate, contentType, DateTime.MinValue, string.Empty);
+        }
+
+        public static Response FromStream(this IResponseFormatter formatter, Func<Stream> streamDelegate, string contentType, DateTime lastModified, string eTag)
+        {
+            return new StreamResponse(streamDelegate, contentType, lastModified, eTag);
         }
     }
 }
