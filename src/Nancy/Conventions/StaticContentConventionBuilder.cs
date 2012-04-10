@@ -66,16 +66,6 @@ namespace Nancy.Conventions
             };
         }
 
-        private static string GetPathWithoutFilename(string fileName, string path)
-        {
-            var pathWithoutFileName = 
-                path.Replace(fileName, string.Empty);
-
-            return (pathWithoutFileName.Equals("/")) ? 
-                pathWithoutFileName : 
-                pathWithoutFileName.TrimEnd(new[] {'/'});
-        }
-
         private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
             return requestPath =>
@@ -127,6 +117,16 @@ namespace Nancy.Conventions
         private static string GetEncodedPath(string path)
         {
             return PathReplaceRegex.Replace(path.TrimStart(new[] { '/' }), Path.DirectorySeparatorChar.ToString());
+        }
+
+        private static string GetPathWithoutFilename(string fileName, string path)
+        {
+            var pathWithoutFileName = 
+                path.Replace(fileName, string.Empty);
+
+            return (pathWithoutFileName.Equals("/")) ? 
+                pathWithoutFileName : 
+                pathWithoutFileName.TrimEnd(new[] {'/'});
         }
 
         private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
