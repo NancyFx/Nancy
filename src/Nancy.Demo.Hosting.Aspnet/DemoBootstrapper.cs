@@ -44,9 +44,6 @@
             StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 
-            
-            this.Conventions.StaticContentsConventions.Clear();
-            this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("/", "Content"));
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
             CookieBasedSessions.Enable(pipelines);
