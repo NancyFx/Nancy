@@ -21,6 +21,7 @@ namespace Nancy
         {
             this.Items = new Dictionary<string, object>();
             this.Trace = new RequestTrace();
+            this.ViewBag = new DynamicDictionary();
             
             // TODO - potentially additional logic to lock to ip etc?
             this.ControlPanelEnabled = true;
@@ -73,6 +74,11 @@ namespace Nancy
         /// Gets a value indicating whether control panel access is enabled for this request
         /// </summary>
         public bool ControlPanelEnabled { get; private set; }
+
+        /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag { get; private set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.
