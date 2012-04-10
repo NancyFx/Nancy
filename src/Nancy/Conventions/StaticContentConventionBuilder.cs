@@ -47,6 +47,7 @@ namespace Nancy.Conventions
 
                 if (!pathWithoutFilename.Equals(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
                     return null;
                 }
 
