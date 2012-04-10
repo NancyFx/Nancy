@@ -3,16 +3,21 @@
     using System;
     using System.IO;
 
+    public static class HtmlHelpersExtensions
+    {
+        public static IHtmlString GetUrl<T>(this IHtmlHelpers<T> helpers)
+        {
+            //return new NonEncodedHtmlString(helpers.RenderContext.Context.Request.Url.ToString());
+            return new NonEncodedHtmlString("Hello");
+        }
+    }
+
     /// <summary>
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
     public class HtmlHelpers<TModel> : IHtmlHelpers<TModel>
     {
-        private readonly TModel model;
-        private readonly RazorViewEngine engine;
-        private readonly IRenderContext renderContext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
         /// </summary>
@@ -21,10 +26,28 @@
         /// <param name="model">The model that is used by the page where the helpers are invoked.</param>
         public HtmlHelpers(RazorViewEngine engine, IRenderContext renderContext, TModel model)
         {
-            this.engine = engine;
-            this.renderContext = renderContext;
-            this.model = model;
+            this.Engine = engine;
+            this.RenderContext = renderContext;
+            this.Model = model;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public TModel Model { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public RazorViewEngine Engine { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public IRenderContext RenderContext { get; set; }
 
         /// <summary>
         /// Renders a partial with the given view name.
@@ -44,9 +67,9 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the partial.</returns>
         public IHtmlString Partial(string viewName, dynamic modelForPartial)
         {
-            var view = this.renderContext.LocateView(viewName, modelForPartial);
+            var view = this.RenderContext.LocateView(viewName, modelForPartial);
 
-            var response = this.engine.RenderView(view, modelForPartial, this.renderContext);
+            var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext);
             Action<Stream> action = response.Contents;
             var mem = new MemoryStream();
 
@@ -74,7 +97,8 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the anti forgery token.</returns>
         public IHtmlString AntiForgeryToken()
         {
-            var tokenKeyValue = this.renderContext.GetCsrfToken();
+            var tokenKeyValue = 
+                this.RenderContext.GetCsrfToken();
 
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
         }

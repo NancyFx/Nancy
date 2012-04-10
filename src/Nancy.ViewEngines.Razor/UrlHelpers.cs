@@ -6,9 +6,6 @@ namespace Nancy.ViewEngines.Razor
     /// <typeparam name="TModel">The type of the model.</typeparam>
     public class UrlHelpers<TModel> : IUrlHelpers<TModel>
     {
-        private readonly RazorViewEngine razorViewEngine;
-        private readonly IRenderContext renderContext;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlHelpers&lt;TModel&gt;"/> class.
         /// </summary>
@@ -16,9 +13,21 @@ namespace Nancy.ViewEngines.Razor
         /// <param name="renderContext">The render context.</param>
         public UrlHelpers(RazorViewEngine razorViewEngine, IRenderContext renderContext)
         {
-            this.razorViewEngine = razorViewEngine;
-            this.renderContext = renderContext;
+            this.RazorViewEngine = razorViewEngine;
+            this.RenderContext = renderContext;
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public RazorViewEngine RazorViewEngine { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <value></value>
+        public IRenderContext RenderContext { get; set; }
 
         /// <summary>
         /// Retrieves the absolute url of the specified path.
@@ -26,7 +35,7 @@ namespace Nancy.ViewEngines.Razor
         /// <param name="path">The path.</param>
         public string Content(string path)
         {
-            return renderContext.ParsePath(path);
+            return this.RenderContext.ParsePath(path);
         }
     }
 }
