@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
-
     using Nancy.Helpers;
 
     /// <summary>
@@ -225,7 +224,7 @@
         /// <summary>
         /// Gets the Html helper.
         /// </summary>
-        public IHtmlHelpers<TModel> Html { get; private set; }
+        public HtmlHelpers<TModel> Html { get; private set; }
 
         /// <summary>
         /// Gets the model.
@@ -235,7 +234,7 @@
         /// <summary>
         /// Gets the Url helper.
         /// </summary>
-        public IUrlHelpers<TModel> Url { get; private set; }
+        public UrlHelpers<TModel> Url { get; private set; }
 
         /// <summary>
         /// Non-model specific data for rendering in the response

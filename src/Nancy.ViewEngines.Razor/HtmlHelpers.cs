@@ -2,24 +2,16 @@
 {
     using System;
     using System.IO;
-
-    public static class HtmlHelpersExtensions
-    {
-        public static IHtmlString GetUrl<T>(this IHtmlHelpers<T> helpers)
-        {
-            //return new NonEncodedHtmlString(helpers.RenderContext.Context.Request.Url.ToString());
-            return new NonEncodedHtmlString("Hello");
-        }
-    }
+    using System.Linq.Expressions;
 
     /// <summary>
     /// Helpers to generate html content.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class HtmlHelpers<TModel> : IHtmlHelpers<TModel>
+    public class HtmlHelpers<TModel>
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="HtmlHelpers{t}"/> class.
+        /// Initializes a new instance of the <see cref="HtmlHelpers{T}"/> class.
         /// </summary>
         /// <param name="engine">The razor view engine instance that the helpers are being used by.</param>
         /// <param name="renderContext">The <see cref="IRenderContext"/> that the helper are being used by.</param>

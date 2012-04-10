@@ -4,7 +4,7 @@ namespace Nancy.ViewEngines.Razor
     /// Helpers for url related functions.
     /// </summary>
     /// <typeparam name="TModel">The type of the model.</typeparam>
-    public class UrlHelpers<TModel> : IUrlHelpers<TModel>
+    public class UrlHelpers<TModel>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UrlHelpers&lt;TModel&gt;"/> class.
