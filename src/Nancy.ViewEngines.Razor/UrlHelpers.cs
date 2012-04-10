@@ -18,15 +18,15 @@ namespace Nancy.ViewEngines.Razor
         }
 
         /// <summary>
-        /// 
+        /// The engine that is currently rendering the view.
         /// </summary>
-        /// <value></value>
+        /// <value>A <see cref="RazorViewEngine"/> instance.</value>
         public RazorViewEngine RazorViewEngine { get; set; }
 
         /// <summary>
-        /// 
+        /// The context of the current render operation.
         /// </summary>
-        /// <value></value>
+        /// <value>An <see cref="IRenderContext"/> intance.</value>
         public IRenderContext RenderContext { get; set; }
 
         /// <summary>
