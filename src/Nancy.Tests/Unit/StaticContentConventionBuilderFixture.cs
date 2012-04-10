@@ -80,39 +80,16 @@
             result.ShouldEqual(StylesheetContents);
 	    }
 
-	    [Theory]
-        //[InlineData("/", "/face.png")]
-        [InlineData("content", "/content/face.png")]
-        //[InlineData("moo", "/moo/face.png")]
-        //[InlineData("moo/moo", "/moo/moo/face.png")]
-	    public void Should_FactMethodName(string conventionPath, string requestPath)
-	    {
-	        // Given
-	        var convention = 
-                StaticContentConventionBuilder.AddDirectory(conventionPath, @"foo/bar");
-
-	        var request = 
-                new Request("GET", requestPath, "http");
-
-            var context =
-                new NancyContext { Request = request };
-
-	        // When
-            convention.Invoke(context, Environment.CurrentDirectory);
-
-	        // Then
-	    }
-
 		private static string GetStaticContent(string virtualDirectory, string requestedFilename)
 		{
 			var resource = 
-                string.Format("{0}/{1}", virtualDirectory, requestedFilename);
+                string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
 
 			var context = 
                 new NancyContext { Request = new Request("GET", resource, "http") };
 
-			var resolver = 
-                StaticContentConventionBuilder.AddDirectory("css", @"Resources\Assets\Styles");
+			var resolver =
+                StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
 
 			GenericFileResponse.SafePaths.Add(Environment.CurrentDirectory);
 

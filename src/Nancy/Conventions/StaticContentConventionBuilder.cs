@@ -29,76 +29,50 @@ namespace Nancy.Conventions
         /// <returns>A <see cref="GenericFileResponse"/> instance for the requested static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, string contentPath = null, params string[] allowedExtensions)
         {
-            // !!! BREAKING CHANGE. ALL CONTENTPATH SEPARATORS HAS TO BE FORWARD SLASHES
-            // THAT WAY BOTH REQUESTED AND CONTENT PATHS ARE DECLARED THE SAME WAY
-            // DESPITE WHAT PLATFORM NANCY IS RUNNING ON. PROPER SEPERATOR REPLACEMENT
-            // AUTOMATICALLY TAKES PLACE ONCE THE PATH HAS BEEN TRANSFORMED !!!
-
             return (ctx, root) =>{
 
                 var path =
-                    ctx.Request.Path.TrimStart(new[] { '/' });
+                    ctx.Request.Path;
 
                 var fileName = 
                     Path.GetFileName(ctx.Request.Path);
 
-                if (string.IsNullOrEmpty(fileName))
-                {
-                    return null;
-                }
-
-                var encodedRequestedPath = 
-                    GetEncodedRequestedPath(requestedPath);
-
-                // CAN I CLEAN UP THIS METHOD
                 var pathWithoutFilename = 
                     GetPathWithoutFilename(fileName, path);
 
-                if (!pathWithoutFilename.StartsWith(encodedRequestedPath, StringComparison.OrdinalIgnoreCase))
+                if (!requestedPath.StartsWith("/"))
+                {
+                    requestedPath = string.Concat("/", requestedPath);
+                }
+
+                if (!pathWithoutFilename.Equals(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
                     return null;
                 }
 
                 if(contentPath != null)
                 {
-                    contentPath = GetSafeContentPath(contentPath);
-                    //contentPath = GetSafeContentPath(PathReplaceRegex.Replace(contentPath, Path.DirectorySeparatorChar.ToString()));
+                    if (!contentPath.StartsWith("/"))
+                    {
+                        contentPath = string.Concat("/", contentPath);
+                    }
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, encodedRequestedPath.TrimStart(new[] {'/'}), contentPath ?? requestedPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
 
                 return responseFactory.Invoke();
             };
         }
 
-        private static string GetSafeContentPath(string contentPath)
-        {
-            if (contentPath == null)
-            {
-                return null;
-            }
-
-            return contentPath.Equals("/") ? string.Empty : contentPath;
-            //return contentPath.Equals(Path.DirectorySeparatorChar.ToString()) ? string.Empty : contentPath;
-        }
-
-        private static string GetEncodedRequestedPath(string requestedPath)
-        {
-            return (!requestedPath.EndsWith("/")) ?
-                string.Concat(requestedPath, "/") :
-                requestedPath;
-        }
-
         private static string GetPathWithoutFilename(string fileName, string path)
         {
-            var pathWithoutFilename = path
-                .Replace(fileName, string.Empty);
-                //.TrimStart(new[] {'/'});
+            var pathWithoutFileName = 
+                path.Replace(fileName, string.Empty);
 
-            return (!pathWithoutFilename.EndsWith("/")) ?
-                string.Concat(pathWithoutFilename, "/") :
-                pathWithoutFilename;
+            return (pathWithoutFileName.Equals("/")) ? 
+                pathWithoutFileName : 
+                pathWithoutFileName.TrimEnd(new[] {'/'});
         }
 
         private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
@@ -120,16 +94,17 @@ namespace Nancy.Conventions
                     return () => null;
                 }
 
-                requestPath = PathReplaceRegex
-                    .Replace(GetSafeRequestPath(requestPath, requestedPath, contentPath), Path.DirectorySeparatorChar.ToString())
-                    .TrimStart(Path.DirectorySeparatorChar);
+                var transformedRequestPath = 
+                    GetSafeRequestPath(requestPath, requestedPath, contentPath);
 
-                var fileName = 
-                    Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
+                transformedRequestPath = 
+                    GetEncodedPath(transformedRequestPath);
 
-                var contentRootPath = Path.Combine(
-                    applicationRootPath,
-                    PathReplaceRegex.Replace(contentPath, Path.DirectorySeparatorChar.ToString()));
+                var fileName =
+                    Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
+
+                var contentRootPath = 
+                    Path.Combine(applicationRootPath, GetEncodedPath(contentPath));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
@@ -148,19 +123,25 @@ namespace Nancy.Conventions
             };
         }
 
+        private static string GetEncodedPath(string path)
+        {
+            return PathReplaceRegex.Replace(path.TrimStart(new[] { '/' }), Path.DirectorySeparatorChar.ToString());
+        }
+
         private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
         {
+            var actualContentPath =
+                (contentPath.Equals("/") ? string.Empty : contentPath);
+
             if (requestedPath.Equals("/"))
             {
-                return string
-                    .Concat(contentPath, Path.DirectorySeparatorChar, requestPath)
-                    .TrimStart(Path.DirectorySeparatorChar);
+                return string.Concat(actualContentPath, requestPath);
             }
 
             var expression = 
-                new Regex(requestedPath.TrimEnd(new[] {'/'}), RegexOptions.IgnoreCase);
+                new Regex(requestedPath, RegexOptions.IgnoreCase);
 
-            return expression.Replace(requestPath, Regex.Escape(contentPath), 1);
+            return expression.Replace(requestPath, Regex.Escape(actualContentPath), 1);
         }
 
         /// <summary>
