@@ -37,6 +37,11 @@ namespace Nancy.Conventions
                 var fileName = 
                     Path.GetFileName(ctx.Request.Path);
 
+                if (string.IsNullOrEmpty(fileName))
+                {
+                    return null;
+                }
+
                 var pathWithoutFilename = 
                     GetPathWithoutFilename(fileName, path);
 
