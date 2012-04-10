@@ -44,10 +44,7 @@
         /// </value>
         public bool HasLayout
         {
-            get
-            {
-                return !String.IsNullOrEmpty(this.Layout);
-            }
+            get { return !String.IsNullOrEmpty(this.Layout); }
         }
 
         /// <summary>
