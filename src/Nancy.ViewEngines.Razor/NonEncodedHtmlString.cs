@@ -24,5 +24,10 @@
         {
             return value;
         }
+
+        public static implicit operator NonEncodedHtmlString(string value)
+        {
+            return new NonEncodedHtmlString(value);
+        }
     }
 }
