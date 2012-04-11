@@ -27,15 +27,7 @@
             {
                 using (var source = sourceDelegate.Invoke())
                 {
-                    if (source.CanSeek)
-                    {
-                        source.Position = 0;
-                    }
-
-                    if (source.CanRead)
-                    {
-                        source.CopyTo(stream);
-                    }
+                    source.CopyTo(stream);
                 }
             };
         }
