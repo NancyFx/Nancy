@@ -26,30 +26,15 @@
             SetBaseType(DEFAULT_MODEL_TYPE_NAME);
         }
 
-        protected override CodeWriter CreateCodeWriter()
-        {
-            return new CSharpCodeWriter();
-        }
+        //protected override CodeWriter CreateCodeWriter()
+        //{
+        //    return new CSharpCodeWriter();
+        //}
 
-        protected override void WriteHelperVariable(string type, string name)
+        protected override bool TryVisitSpecialSpan(Span span)
         {
-            this.HelperVariablesMethod.Statements.Add((CodeStatement)new CodeSnippetStatement("#pragma warning disable 219"));
-            this.CurrentBlock.MarkStartGeneratedCode();
-            this.CurrentBlock.Writer.WriteSnippet(type);
-            this.CurrentBlock.MarkEndGeneratedCode();
-            this.CurrentBlock.Writer.WriteSnippet(" ");
-            this.CurrentBlock.Writer.WriteSnippet(name);
-            this.CurrentBlock.Writer.WriteSnippet(" = null");
-            this.CurrentBlock.Writer.WriteEndStatement();
-            this.HelperVariablesMethod.Statements.Add((CodeStatement)this.CreateStatement(this.CurrentBlock));
-            this.CurrentBlock.ResetBuffer();
-            this.HelperVariablesMethod.Statements.Add((CodeStatement)new CodeSnippetStatement("#pragma warning restore 219"));
+            return TryVisit(span, new Action<ModelSpan>(this.VisitModelSpan));
         }
-
-		protected override bool TryVisitSpecialSpan(Span span)
-		{
-			return RazorCodeGenerator.TryVisit<ModelSpan>(span, new Action<ModelSpan>(this.VisitModelSpan));
-		}
 
 		private void VisitModelSpan(ModelSpan span)
 		{
