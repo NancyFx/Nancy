@@ -115,6 +115,10 @@
     <Compile Include="BrowserFixture.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj">
+      <Project>{E8B18958-7C8A-4FBA-AF00-3041C34A20CE}</Project>
+      <Name>Nancy.Authentication.Forms</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">
       <Project>{D79203C0-B672-4751-9C95-C3AB7D3FEFBE}</Project>
       <Name>Nancy.Testing</Name>
