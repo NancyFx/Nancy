@@ -50,7 +50,7 @@ namespace Nancy.Conventions
                     requestedPath = string.Concat("/", requestedPath);
                 }
 
-                if (!pathWithoutFilename.Equals(requestedPath, StringComparison.OrdinalIgnoreCase))
+                if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
                     ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
                     return null;
@@ -71,18 +71,32 @@ namespace Nancy.Conventions
             };
         }
 
+        public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)
+        {
+            return (ctx, root) => {
+
+                var path =
+                    ctx.Request.Path;
+
+                if (!path.Equals(requestedFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedFile, "'")));
+                    return null;
+                }
+
+                var responseFactory =
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
+
+                return responseFactory.Invoke();
+            };
+        }
+
         private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
             return requestPath =>
             {
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", requestPath, "'")));
                 var extension = Path.GetExtension(requestPath);
-
-                if (string.IsNullOrEmpty(extension))
-                {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine("[StaticContentConventionBuilder] The requested file did not contain a file extension."));
-                    return () => null;
-                }
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -144,10 +158,10 @@ namespace Nancy.Conventions
                 return string.Concat(actualContentPath, requestPath);
             }
 
-            var expression = 
-                new Regex(requestedPath, RegexOptions.IgnoreCase);
+            var expression =
+                new Regex(Regex.Escape(requestedPath), RegexOptions.IgnoreCase);
 
-            return expression.Replace(requestPath, Regex.Escape(actualContentPath), 1);
+            return expression.Replace(requestPath, actualContentPath, 1);
         }
 
         /// <summary>
