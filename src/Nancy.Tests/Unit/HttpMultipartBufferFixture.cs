@@ -12,7 +12,7 @@
         public HttpMultipartBufferFixture()
         {
             this.boundary = GetBoundaryAsBytes();
-            this.buffer = new HttpMultipartBuffer(this.boundary);
+            this.buffer = new HttpMultipartBuffer(this.boundary, new byte[1]);
         }
 
         [Fact]
