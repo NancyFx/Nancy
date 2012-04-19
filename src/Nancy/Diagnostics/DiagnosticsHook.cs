@@ -9,6 +9,7 @@ namespace Nancy.Diagnostics
     using Cryptography;
     using Helpers;
     using ModelBinding;
+    using Responses;
     using Routing;
 
     public static class DiagnosticsHook
