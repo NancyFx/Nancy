@@ -37,8 +37,6 @@
             configuration.Invoke(configurator);
             this.TerminateBoundary();
             this.Body.Position = 0;
-
-            this.Body.Position = 0;
         }
 
         /// <summary>
@@ -49,7 +47,7 @@
 
         private void TerminateBoundary()
         {
-            var endBoundary = String.Format("--{0}--\r\n", this.boundaryName);
+            var endBoundary = String.Format("\r\n--{0}--\r\n", this.boundaryName);
 
             var encodedHeaders =
                 Encoding.ASCII.GetBytes(endBoundary);

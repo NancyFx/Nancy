@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿using System;
+
+namespace Nancy
 {
     using System.Collections.Generic;
     using System.IO;
@@ -14,6 +16,7 @@
         private readonly byte[] boundaryAsBytes;
         private readonly HttpMultipartBuffer readBuffer;
         private readonly Stream requestStream;
+        private readonly byte[] closingBoundaryAsBytes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpMultipart"/> class.
@@ -23,8 +26,9 @@
         public HttpMultipart(Stream requestStream, string boundary)
         {
             this.requestStream = requestStream;
-            this.boundaryAsBytes = GetBoundaryAsBytes(boundary);
-            this.readBuffer = new HttpMultipartBuffer(this.boundaryAsBytes);
+            this.boundaryAsBytes = GetBoundaryAsBytes(boundary, false);
+            this.closingBoundaryAsBytes = GetBoundaryAsBytes(boundary, true);
+            this.readBuffer = new HttpMultipartBuffer(this.boundaryAsBytes, this.closingBoundaryAsBytes);
         }
 
         /// <summary>
@@ -43,10 +47,9 @@
             var boundarySubStreams = new List<HttpMultipartSubStream>();
             var boundaryStart = this.GetNextBoundaryPosition();
 
-            while (boundaryStart > -1)
+            while (MultipartIsNotCompleted(boundaryStart))
             {
                 var boundaryEnd = this.GetNextBoundaryPosition();
-
                 boundarySubStreams.Add(new HttpMultipartSubStream(
                     this.requestStream,
                     boundaryStart,
@@ -57,14 +60,18 @@
 
             return boundarySubStreams;
         }
+        private bool MultipartIsNotCompleted(long boundaryPosition)
+        {
+            return boundaryPosition > -1 && !this.readBuffer.IsClosingBoundary;
+        }
 
+        //we add two because or the \r\n before the boundary
         private long GetActualEndOfBoundary(long boundaryEnd)
         {
             if (this.CheckIfFoundEndOfStream())
             {
                 return this.requestStream.Position - (this.readBuffer.Length + 2);
             }
-
             return boundaryEnd - (this.readBuffer.Length + 2);
         }
 
@@ -73,15 +80,23 @@
             return this.requestStream.Position.Equals(this.requestStream.Length);
         }
 
-        private static byte[] GetBoundaryAsBytes(string boundary)
+        private static byte[] GetBoundaryAsBytes(string boundary, bool closing)
         {
             var boundaryBuilder = new StringBuilder();
 
             boundaryBuilder.Append("--");
             boundaryBuilder.Append(boundary);
-            boundaryBuilder.Append('\r');
-            boundaryBuilder.Append('\n');
-
+            
+            if(closing)
+            {
+                boundaryBuilder.Append("--");
+            }
+            else
+            {
+                boundaryBuilder.Append('\r');
+                boundaryBuilder.Append('\n');
+            }
+            
             var bytes =
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
 
@@ -102,7 +117,7 @@
 
                 this.readBuffer.Insert((byte)byteReadFromStream);
 
-                if (this.readBuffer.IsFull && this.readBuffer.IsBoundary)
+                if (this.readBuffer.IsFull && (this.readBuffer.IsBoundary || this.readBuffer.IsClosingBoundary))
                 {
                     return this.requestStream.Position;
                 }
