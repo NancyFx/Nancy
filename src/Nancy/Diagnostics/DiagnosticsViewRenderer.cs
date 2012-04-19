@@ -1,6 +1,7 @@
 namespace Nancy.Diagnostics
 {
     using System.IO;
+    using Responses;
     using Security;
     using ViewEngines;
     using ViewEngines.SuperSimpleViewEngine;
