@@ -4,6 +4,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Security.Cryptography;
     using System.Text;
 
     public class EmbeddedFileResponse : Response
@@ -20,11 +21,17 @@
             this.ContentType = MimeTypes.GetMimeType(name);
             this.StatusCode = HttpStatusCode.OK;
 
-            this.Contents = stream =>
-            {
-                var content = 
+            var content =
                     GetResourceContent(assembly, resourcePath, name);
 
+            if (content != null)
+            {
+                this.WithHeader("ETag", GenerateETag(content));
+                content.Seek(0, SeekOrigin.Begin);     
+            }
+
+            this.Contents = stream =>
+            {
                 if (content != null)
                 {
                     content.CopyTo(stream);
@@ -53,6 +60,26 @@
         private static string GetFileNameFromResourceName(string resourcePath, string resourceName)
         {
             return resourceName.Replace(resourcePath, string.Empty).Substring(1);
+        }
+
+        private static string GenerateETag(Stream stream)
+        {
+            using (var md5 = MD5.Create())
+            {
+                var hash = md5.ComputeHash(stream);
+                return ByteArrayToString(hash);
+            }
+        }
+
+        private static string ByteArrayToString(byte[] data)
+        {
+            var output = new StringBuilder(data.Length);
+            for (int i = 0; i < data.Length; i++)
+            {
+                output.Append(data[i].ToString("X2"));
+            }
+
+            return output.ToString();
         }
     }
 }
