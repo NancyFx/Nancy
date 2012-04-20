@@ -21,16 +21,20 @@
             this.ContentType = MimeTypes.GetMimeType(name);
             this.StatusCode = HttpStatusCode.OK;
 
-            this.Contents = stream =>
-            {
-                var content = 
+            var content =
                     GetResourceContent(assembly, resourcePath, name);
 
+            if (content != null)
+            {
+                this.WithHeader("ETag", GenerateETag(content));
+                content.Seek(0, SeekOrigin.Begin);     
+            }
+
+            this.Contents = stream =>
+            {
                 if (content != null)
                 {
                     content.CopyTo(stream);
-                    content.Seek(0, SeekOrigin.Begin);
-                    this.WithHeader("ETag", GenerateETag(content));
                 }
                 else
                 {
