@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Tests.Unit.Responses
 {
-    using System;
     using System.IO;
     using FakeItEasy;
     using Nancy.Responses;
