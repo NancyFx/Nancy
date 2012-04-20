@@ -26,11 +26,6 @@
             SetBaseType(DEFAULT_MODEL_TYPE_NAME);
         }
 
-        //protected override CodeWriter CreateCodeWriter()
-        //{
-        //    return new CSharpCodeWriter();
-        //}
-
         protected override bool TryVisitSpecialSpan(Span span)
         {
             return TryVisit(span, new Action<ModelSpan>(this.VisitModelSpan));
