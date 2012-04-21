@@ -26,10 +26,10 @@
             SetBaseType(DEFAULT_MODEL_TYPE_NAME);
         }
 
-		protected override bool TryVisitSpecialSpan(Span span)
-		{
-			return RazorCodeGenerator.TryVisit<ModelSpan>(span, new Action<ModelSpan>(this.VisitModelSpan));
-		}
+        protected override bool TryVisitSpecialSpan(Span span)
+        {
+            return TryVisit(span, new Action<ModelSpan>(this.VisitModelSpan));
+        }
 
 		private void VisitModelSpan(ModelSpan span)
 		{

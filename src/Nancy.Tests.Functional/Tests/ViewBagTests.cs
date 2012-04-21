@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Functional.Tests
+﻿namespace Nancy.Tests.Functional.Tests
 {
+    using System;
     using Bootstrapper;
     using Modules;
     using Testing;
@@ -27,6 +23,8 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Should_render_content_from_viewbag()
         {
+            // Given
+            // When
             var response = browser.Get(
                 @"/razor-viewbag",
                 with =>
@@ -34,6 +32,7 @@ namespace Nancy.Tests.Functional.Tests
                     with.HttpRequest();
                 });
 
+            // Then
             Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
         }
     }

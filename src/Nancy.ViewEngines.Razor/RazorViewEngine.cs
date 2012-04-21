@@ -7,6 +7,7 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
 
@@ -140,7 +141,7 @@
                 .First();
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
-
+            
             var razorResult = engine.GenerateCode(reader);
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType);
@@ -163,7 +164,9 @@
             };
 
             if (referencingAssembly != null)
+            {
                 assemblies.Add(GetAssemblyPath(referencingAssembly));
+            }
 
             assemblies = assemblies
                 .Union(rendererSpecificAssemblies)
@@ -186,7 +189,7 @@
             var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
 
             var results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
-
+            
             if (results.Errors.HasErrors)
             {
                 var err = results.Errors
