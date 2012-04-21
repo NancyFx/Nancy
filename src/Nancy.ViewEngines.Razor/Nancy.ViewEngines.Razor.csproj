@@ -93,6 +93,7 @@
     </Compile>
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
+    <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlString.cs" />
     <Compile Include="IRazorConfiguration.cs" />

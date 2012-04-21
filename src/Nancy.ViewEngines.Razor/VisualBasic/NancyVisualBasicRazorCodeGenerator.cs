@@ -26,7 +26,7 @@
 
 		protected override bool TryVisitSpecialSpan(Span span)
 		{
-			return RazorCodeGenerator.TryVisit<ModelSpan>(span, new Action<ModelSpan>(this.VisitModelSpan));
+			return TryVisit(span, new Action<ModelSpan>(this.VisitModelSpan));
 		}
 
 		private void VisitModelSpan(ModelSpan span)

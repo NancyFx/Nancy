@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Text;
     using Nancy.Helpers;
 
@@ -110,6 +111,52 @@
         public virtual void WriteLiteral(object value)
         {
             contents.Append(value);
+        }
+
+        /// <summary>
+        /// Writes the provided <paramref name="value"/> to the provided <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="TextWriter"/> that should be written to.</param>
+        /// <param name="value">The value that should be written.</param>
+        public virtual void WriteTo(TextWriter writer, object value)
+        {
+            writer.Write(HtmlEncode(value));
+        }
+
+        /// <summary>
+        /// Writes the provided <paramref name="value"/>, as a literal, to the provided <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="TextWriter"/> that should be written to.</param>
+        /// <param name="value">The value that should be written as a literal.</param>
+        public virtual void WriteLiteralTo(TextWriter writer, object value)
+        {
+            writer.Write(value);
+        }
+
+        /// <summary>
+        /// Writes the provided <paramref name="value"/> to the provided <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="TextWriter"/> that should be written to.</param>
+        /// <param name="value">The <see cref="HelperResult"/> that should be written.</param>
+        public virtual void WriteTo(TextWriter writer, HelperResult value)
+        {
+            if (value != null)
+            {
+                value.WriteTo(writer);
+            }
+        }
+
+        /// <summary>
+        /// Writes the provided <paramref name="value"/>, as a literal, to the provided <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer">The <see cref="TextWriter"/> that should be written to.</param>
+        /// <param name="value">The <see cref="HelperResult"/> that should be written as a literal.</param>
+        public virtual void WriteLiteralTo(TextWriter writer, HelperResult value)
+        {
+            if (value != null)
+            {
+                value.WriteTo(writer);
+            }
         }
 
         /// <summary>
