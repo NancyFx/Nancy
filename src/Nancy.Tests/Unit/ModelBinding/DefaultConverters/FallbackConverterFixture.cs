@@ -54,5 +54,15 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
 
             result.ShouldEqual(now);
         }
+
+        [Fact]
+        public void Should_convert_on_to_true_for_bool()
+        {
+            string input = "on";
+
+            var result = (bool)converter.Convert(input, typeof(bool), null);
+
+            result.ShouldBeTrue();
+        }
     }
 }

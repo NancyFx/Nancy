@@ -42,6 +42,10 @@ namespace Nancy.ModelBinding.DefaultConverters
             }
             catch (FormatException)
             {
+                if (destinationType == typeof(bool) && converter.GetType() == typeof(BooleanConverter) && input == "on")
+                {
+                    return true;
+                }
                 return null;
             }
         }
