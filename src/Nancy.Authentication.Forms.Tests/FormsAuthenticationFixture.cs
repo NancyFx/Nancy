@@ -348,7 +348,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             fakePipelines.BeforeRequest.Invoke(this.context);
 
-            A.CallTo(() => mockMapper.GetUserFromIdentifier(this.userGuid))
+            A.CallTo(() => mockMapper.GetUserFromIdentifier(this.context, this.userGuid))
                 .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -359,7 +359,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
-            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.context, this.userGuid)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
@@ -376,7 +376,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
-            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.context, this.userGuid)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithInvalidHmac);
@@ -393,7 +393,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
-            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.context, this.userGuid)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithEmptyHmac);
@@ -410,7 +410,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
-            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.context, this.userGuid)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithNoHmac);
@@ -427,7 +427,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeMapper = A.Fake<IUserMapper>();
             var fakeUser = A.Fake<IUserIdentity>();
             fakeUser.UserName = "Bob";
-            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid)).Returns(fakeUser);
+            A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.context, this.userGuid)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithBrokenEncryptedData);

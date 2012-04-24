@@ -13,8 +13,9 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Get the real username from an indentifier
         /// </summary>
+        /// <param name="context">The current NancyFx context</param>
         /// <param name="identifier">User identifier</param>
-        /// <returns>Matching username, or empty</returns>
-        IUserIdentity GetUserFromIdentifier(Guid identifier);
+        /// <returns>Matching populated IUserIdentity object, or empty</returns>
+        IUserIdentity GetUserFromIdentifier(NancyContext context, Guid identifier);
     }
 }
