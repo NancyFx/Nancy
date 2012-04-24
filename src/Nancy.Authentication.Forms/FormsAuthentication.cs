@@ -164,8 +164,8 @@ namespace Nancy.Authentication.Forms
 
                     if (userGuid != Guid.Empty)
                     {
-                        context.CurrentUser =
-                            configuration.UserMapper.GetUserFromIdentifier(userGuid);
+
+                      context.CurrentUser = configuration.UserMapper.GetUserFromIdentifier(userGuid, context);
                     }
 
                     return null;
