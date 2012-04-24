@@ -197,6 +197,7 @@
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\StaticConventBuilderFixture.cs" />
+    <Compile Include="Unit\TextFormatterFixture.cs" />
     <Compile Include="Unit\UrlFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
