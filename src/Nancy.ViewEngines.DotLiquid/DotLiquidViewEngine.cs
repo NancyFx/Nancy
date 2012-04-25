@@ -68,7 +68,11 @@
                     viewLocationResult,
                     x => Template.Parse(viewLocationResult.Contents.Invoke().ReadToEnd()));
 
-                parsed.Render(stream, new RenderParameters { LocalVariables = hashedModel });
+                parsed.Render(stream, new RenderParameters
+                    {
+                        LocalVariables = hashedModel,
+                        Registers = Hash.FromAnonymousObject(new { nancy = renderContext })
+                    });
             });
         }
     }
