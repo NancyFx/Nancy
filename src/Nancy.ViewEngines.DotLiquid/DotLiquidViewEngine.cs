@@ -68,12 +68,7 @@
                     viewLocationResult,
                     x => Template.Parse(viewLocationResult.Contents.Invoke().ReadToEnd()));
 
-                var rendered = parsed.Render(hashedModel);
-
-                var writer = new StreamWriter(stream);
-
-                writer.Write(rendered);
-                writer.Flush();
+                parsed.Render(stream, new RenderParameters { LocalVariables = hashedModel });
             });
         }
     }
