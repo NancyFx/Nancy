@@ -173,6 +173,7 @@
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
+    <Compile Include="Unit\Responses\TextResponseFixture.cs" />
     <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRoutePatternMatcherFixture.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
     <Compile Include="Unit\Sessions\SessionFixture.cs" />
     <Compile Include="Unit\StaticConventBuilderFixture.cs" />
+    <Compile Include="Unit\TextFormatterFixture.cs" />
     <Compile Include="Unit\UrlFixture.cs" />
     <Compile Include="Unit\Validation\CompositeValidatorFixture.cs" />
     <Compile Include="Unit\Validation\ModuleExtensionsFixture.cs" />
