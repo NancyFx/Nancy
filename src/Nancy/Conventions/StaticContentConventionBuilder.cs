@@ -4,6 +4,7 @@ namespace Nancy.Conventions
     using System.Collections.Concurrent;
     using System.IO;
     using System.Linq;
+    using System.Security;
     using System.Text.RegularExpressions;
     using Responses;
 
@@ -35,7 +36,7 @@ namespace Nancy.Conventions
                     ctx.Request.Path;
 
                 var fileName = 
-                    Path.GetFileName(ctx.Request.Path);
+                    Path.GetFileName(path);
 
                 if (string.IsNullOrEmpty(fileName))
                 {
@@ -56,19 +57,32 @@ namespace Nancy.Conventions
                     return null;
                 }
 
-                if(contentPath != null)
+                contentPath = 
+                    GetContentPath(requestedPath, contentPath);
+
+                if (contentPath.Equals("/"))
                 {
-                    if (!contentPath.StartsWith("/"))
-                    {
-                        contentPath = string.Concat("/", contentPath);
-                    }
+                    throw new ArgumentException("This is not the security vulnerability you are looking for. Mapping static content to the root of your application is not a good idea.");
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
 
                 return responseFactory.Invoke();
             };
+        }
+
+        private static string GetContentPath(string requestedPath, string contentPath)
+        {
+            contentPath =
+                contentPath ?? requestedPath;
+
+            if (!contentPath.StartsWith("/"))
+            {
+                contentPath = string.Concat("/", contentPath);
+            }
+
+            return contentPath;
         }
 
         public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)

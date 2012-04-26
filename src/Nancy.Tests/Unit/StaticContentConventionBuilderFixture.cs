@@ -2,6 +2,7 @@
 {
     using System;
     using System.IO;
+    using System.Security;
     using System.Text;
     using Nancy.Conventions;
     using Nancy.Responses;
@@ -79,6 +80,36 @@
 	        // Then
             result.ShouldEqual(StylesheetContents);
 	    }
+
+        [Fact]
+        public void Should_throw_security_exception_when_content_path_points_to_root()
+        {
+            // Given
+            var convention = StaticContentConventionBuilder.AddDirectory("/", "/");
+            var request = new Request("GET", "/face.png", "http");
+            var context = new NancyContext { Request = request };
+
+            // When
+            var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
+
+            // Then
+            exception.ShouldBeOfType<SecurityException>();
+        }
+
+        [Fact]
+        public void Should_throw_security_exception_when_content_path_is_null_and_requested_path_points_to_root()
+        {
+            // Given
+            var convention = StaticContentConventionBuilder.AddDirectory("/");
+            var request = new Request("GET", "/face.png", "http");
+            var context = new NancyContext { Request = request };
+
+            // When
+            var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
+
+            // Then
+            exception.ShouldBeOfType<SecurityException>();
+        }
 
 		private static string GetStaticContent(string virtualDirectory, string requestedFilename)
 		{
