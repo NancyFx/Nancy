@@ -19,10 +19,13 @@
         /// Gets a <see cref="IFileSystem"/> instance for the provided <paramref name="context"/>.
         /// </summary>
         /// <param name="context">The context that the filesystem should be created for.</param>
-        /// <returns>An <see cref="IFileSystem"/> instance.</returns>
-        public IFileSystem GetFileSystem(ViewEngineStartupContext context)
+        /// <param name="viewEngine">The containing view engine.</param>
+        /// <returns>
+        /// An <see cref="IFileSystem"/> instance.
+        /// </returns>
+        public IFileSystem GetFileSystem(ViewEngineStartupContext context, DotLiquidViewEngine viewEngine)
         {
-            return new LiquidNancyFileSystem(context);
+            return new LiquidNancyFileSystem(context, viewEngine);
         }
     }
 }

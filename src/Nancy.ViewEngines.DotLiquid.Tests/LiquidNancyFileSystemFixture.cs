@@ -1,3 +1,5 @@
+using FakeItEasy;
+
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System.IO;
@@ -204,12 +206,14 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
 
         private static LiquidNancyFileSystem CreateFileSystem(params ViewLocationResult[] viewLocationResults)
         {
+            var factory = A.Fake<IFileSystemFactory>();
+            var engine = new DotLiquidViewEngine(factory);
             var context = new ViewEngineStartupContext(
                 null,
                 viewLocationResults,
                 new[] { "liquid" });
 
-            return new LiquidNancyFileSystem(context);
+            return new LiquidNancyFileSystem(context, engine);
         }
     }
 }

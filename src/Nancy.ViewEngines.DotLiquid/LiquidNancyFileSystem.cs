@@ -12,18 +12,19 @@
     /// </summary>
     public class LiquidNancyFileSystem : IFileSystem
     {
-        private readonly Regex extensionExpression;
-        private readonly ViewEngineStartupContext nancyContext;
+        private readonly ViewEngineStartupContext viewEngineStartupContext;
+        private readonly IViewEngine dotLiquidViewEngine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LiquidNancyFileSystem"/> class,
         /// with the provided <paramref name="context"/>.
         /// </summary>
         /// <param name="context">The context that the engine can operate in.</param>
-        public LiquidNancyFileSystem(ViewEngineStartupContext context)
+        /// <param name="viewEngine">The containing view engine.</param>
+        public LiquidNancyFileSystem(ViewEngineStartupContext context, DotLiquidViewEngine viewEngine)
         {
-            this.nancyContext = context;
-            this.extensionExpression = new Regex(".liquid", RegexOptions.IgnoreCase | RegexOptions.IgnoreCase);
+            viewEngineStartupContext = context;
+            dotLiquidViewEngine = viewEngine;
         }
 
         /// <summary>
@@ -35,10 +36,9 @@
         /// <returns>The content of the template.</returns>
         public string ReadTemplateFile(Context context, string templateName)
         {
-            var neutralTemplateName =
-                this.GetNeutralTemplateName(templateName);
+            var neutralTemplateName = GetNeutralTemplateName(templateName);
 
-            var viewLocation = nancyContext.ViewLocationResults
+            var viewLocation = viewEngineStartupContext.ViewLocationResults
                 .FirstOrDefault(v => GetLocationQualifiedName(v).Equals(neutralTemplateName, StringComparison.OrdinalIgnoreCase));
 
             if (viewLocation != null)
@@ -49,9 +49,11 @@
             throw new liquid.Exceptions.FileSystemException("Template file {0} not found", new[] { templateName });
         }
 
-        private string GetLocationQualifiedName(ViewLocationResult viewLocationResult)
+        private string GetLocationQualifiedName(ViewLocationResult result)
         {
-            return string.Concat(viewLocationResult.Location, "/", this.GetNeutralTemplateName(viewLocationResult.Name));
+            return string.IsNullOrEmpty(result.Location) ?
+                GetNeutralTemplateName(result.Name) :
+                string.Concat(result.Location, "/", GetNeutralTemplateName(result.Name));
         }
 
         private string GetNeutralTemplateName(string templateName)
@@ -61,8 +63,15 @@
                 .Replace("'", "")
                 .Replace(@"\", "/");
 
-            templateName =
-                this.extensionExpression.Replace(templateName, string.Empty);
+            // Remove all view engine extensions, but only if they appear at the end
+            foreach(string extension in dotLiquidViewEngine.Extensions)
+            {
+                if(templateName.EndsWith(extension, StringComparison.OrdinalIgnoreCase))
+                {
+                    templateName = templateName.Substring(0, templateName.Length - extension.Length - 1);
+                    break;  // Only need to remove one extension, the rest is legitimate
+                }
+            }
 
             return templateName;
         }

@@ -47,7 +47,7 @@
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
-            Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext);
+            Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext, this);
         }
 
         /// <summary>
