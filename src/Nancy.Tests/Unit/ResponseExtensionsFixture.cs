@@ -149,7 +149,7 @@
         }
 
         [Fact]
-        public void Should_set_the_content_type()
+        public void Should_set_the_content_type_enum()
         {
             var response = new Response();
 
@@ -164,6 +164,16 @@
             var respone = new Response();
 
             var result = respone.WithStatusCode(HttpStatusCode.NotFound);
+
+            respone.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        [Fact]
+        public void Should_set_status_code_int()
+        {
+            var respone = new Response();
+
+            var result = respone.WithStatusCode(404);
 
             respone.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }

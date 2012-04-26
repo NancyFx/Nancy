@@ -102,12 +102,24 @@ namespace Nancy
         /// <summary>
         /// Sets the status code of the response
         /// </summary>
-        /// <param name="response">Resposne object</param>
+        /// <param name="response">Response object</param>
         /// <param name="statusCode">The http status code</param>
         /// <returns>Modified response</returns>
         public static Response WithStatusCode(this Response response, HttpStatusCode statusCode)
         {
             response.StatusCode = statusCode;
+            return response;
+        }
+
+        /// <summary>
+        /// Sets the status code of the response
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="statusCode">The http status code</param>
+        /// <returns>Modified response</returns>
+        public static Response WithStatusCode(this Response response, int statusCode)
+        {
+            response.StatusCode = (HttpStatusCode) statusCode;
             return response;
         }
 
