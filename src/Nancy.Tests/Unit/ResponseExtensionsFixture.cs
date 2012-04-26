@@ -157,5 +157,15 @@
 
             result.ContentType.ShouldEqual("text/cache-manifest");
         }
+
+        [Fact]
+        public void Should_set_status_code()
+        {
+            var respone = new Response();
+
+            var result = respone.WithStatusCode(HttpStatusCode.NotFound);
+
+            respone.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
     }
 }
