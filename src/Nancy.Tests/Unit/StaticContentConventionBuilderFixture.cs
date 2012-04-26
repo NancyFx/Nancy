@@ -93,7 +93,7 @@
             var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
 
             // Then
-            exception.ShouldBeOfType<SecurityException>();
+            exception.ShouldBeOfType<ArgumentException>();
         }
 
         [Fact]
@@ -108,7 +108,7 @@
             var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
 
             // Then
-            exception.ShouldBeOfType<SecurityException>();
+            exception.ShouldBeOfType<ArgumentException>();
         }
 
 		private static string GetStaticContent(string virtualDirectory, string requestedFilename)
