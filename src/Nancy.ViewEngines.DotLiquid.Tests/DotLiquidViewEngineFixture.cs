@@ -42,7 +42,7 @@
             this.engine.Initialize(context);
 
             // Then
-            A.CallTo(() => factory.GetFileSystem(context, engine)).MustHaveHappened();
+            A.CallTo(() => factory.GetFileSystem(context)).MustHaveHappened();
         }
 
         [Fact]

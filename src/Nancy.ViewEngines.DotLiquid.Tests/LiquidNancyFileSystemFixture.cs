@@ -1,13 +1,15 @@
-using FakeItEasy;
-
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
+    using System;
     using System.IO;
+    using System.Collections.Generic;
+    using FakeItEasy;
+    using global::DotLiquid;
+    using global::DotLiquid.Exceptions;
     using Nancy.Tests;
-    using Nancy.ViewEngines.DotLiquid;
+    using Nancy.Tests.Fakes;
     using Xunit;
     using Xunit.Extensions;
-    using global::DotLiquid.Exceptions;
 
     public class LiquidNancyFileSystemFixture
     {
@@ -15,11 +17,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_locate_template_with_single_quoted_name()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, "'views/partial'");
+            var result = fileSystem.ReadTemplateFile(context, "'views/partial'");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -29,11 +32,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_locate_template_with_double_quoted_name()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, @"""views/partial""");
+            var result = fileSystem.ReadTemplateFile(context, @"""views/partial""");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -43,11 +47,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_locate_template_with_unquoted_name()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, "views/partial");
+            var result = fileSystem.ReadTemplateFile(context, "views/partial");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -57,11 +62,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_not_locate_templates_that_does_not_have_liquid_extension()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "cshtml", () => null));
 
             // When
-            var exception = Record.Exception(() => fileSystem.ReadTemplateFile(null, "views/partial"));
+            var exception = Record.Exception(() => fileSystem.ReadTemplateFile(context, "views/partial"));
 
             // Then
             exception.ShouldBeOfType<FileSystemException>();
@@ -74,11 +80,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_ignore_casing_of_template_name(string templateName)
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, string.Concat("views/", templateName));
+            var result = fileSystem.ReadTemplateFile(context, string.Concat("views/", templateName));
 
             // Then
             result.ShouldEqual("The correct view");
@@ -88,11 +95,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_support_locating_template_when_template_name_contains_liquid_extension()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, "views/partial.liquid");
+            var result = fileSystem.ReadTemplateFile(context, "views/partial.liquid");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -102,11 +110,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_support_locating_template_when_template_name_does_not_contains_liquid_extension()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, "views/partial");
+            var result = fileSystem.ReadTemplateFile(context, "views/partial");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -119,11 +128,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_ignore_extension_casing_when_template_name_contains_liquid_extension(string extension)
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, string.Concat("views/partial.", extension));
+            var result = fileSystem.ReadTemplateFile(context, string.Concat("views/partial.", extension));
 
             // Then
             result.ShouldEqual("The correct view");
@@ -133,11 +143,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_not_locate_view_when_template_location_not_specified()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult("views", "partial", "liquid", () => null));
 
             // When
-            var exception = Record.Exception(() =>fileSystem.ReadTemplateFile(null, "partial"));
+            var exception = Record.Exception(() => fileSystem.ReadTemplateFile(context, "partial"));
 
             // Then
             exception.ShouldBeOfType<FileSystemException>();
@@ -149,11 +160,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_locate_templates_with_correct_location_specified(string location, string expectedResult)
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult(location, "partial", "liquid", () => new StringReader(expectedResult)));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, string.Concat(location, "/partial"));
+            var result = fileSystem.ReadTemplateFile(context, string.Concat(location, "/partial"));
 
             // Then
             result.ShouldEqual(expectedResult);
@@ -166,11 +178,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_ignore_case_of_location_when_locating_template(string location)
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult(location, "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, string.Concat(location, "/partial"));
+            var result = fileSystem.ReadTemplateFile(context, string.Concat(location, "/partial"));
 
             // Then
             result.ShouldEqual("The correct view");
@@ -180,11 +193,12 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_support_backslashes_as_location_seperator()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult(@"views/shared", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, @"views\shared\partial");
+            var result = fileSystem.ReadTemplateFile(context, @"views\shared\partial");
 
             // Then
             result.ShouldEqual("The correct view");
@@ -194,26 +208,40 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_support_forward_slashes_as_location_seperator()
         {
             // Given
-            var fileSystem = CreateFileSystem(
+            Context context;
+            var fileSystem = CreateFileSystem(out context,
                 new ViewLocationResult(@"views/shared", "partial", "liquid", () => new StringReader("The correct view")));
 
             // When
-            var result = fileSystem.ReadTemplateFile(null, @"views/shared/partial");
+            var result = fileSystem.ReadTemplateFile(context, @"views/shared/partial");
 
             // Then
             result.ShouldEqual("The correct view");
         }
 
-        private static LiquidNancyFileSystem CreateFileSystem(params ViewLocationResult[] viewLocationResults)
+        private LiquidNancyFileSystem CreateFileSystem(out Context context, params ViewLocationResult[] viewLocationResults)
         {
-            var factory = A.Fake<IFileSystemFactory>();
-            var engine = new DotLiquidViewEngine(factory);
-            var context = new ViewEngineStartupContext(
+            var startupContext = new ViewEngineStartupContext(
                 null,
                 viewLocationResults,
                 new[] { "liquid" });
 
-            return new LiquidNancyFileSystem(context, engine);
+            var cache = new FakeViewLocationCache(viewLocationResults);
+            var locator = CreateViewLocator(cache);
+            
+            var renderContext = A.Fake<IRenderContext>();
+            A.CallTo(() => renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
+                .ReturnsLazily(x => locator.LocateView(x.Arguments.Get<string>(0), null));
+
+            context = new Context(new List<Hash>(), new Hash(),
+                Hash.FromAnonymousObject(new { nancy = renderContext }), false);
+
+            return new LiquidNancyFileSystem(startupContext);
+        }
+
+        private static DefaultViewLocator CreateViewLocator(IViewLocationCache viewLocationCache)
+        {
+            return new DefaultViewLocator(viewLocationCache);
         }
     }
 }
