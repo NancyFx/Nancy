@@ -60,7 +60,8 @@ namespace Nancy.ViewEngines.DotLiquid
 
         private object GetDynamicDictionaryObjectValue(string propertyName)
         {
-            return this.model[propertyName];
+            DynamicDictionaryValue dictionaryValue = this.model[propertyName] as DynamicDictionaryValue;
+            return dictionaryValue == null || !dictionaryValue.HasValue ? null : dictionaryValue.Value;
         }
 
         private object GetPropertyValue(string propertyName)
