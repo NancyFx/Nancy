@@ -1,4 +1,8 @@
-﻿namespace Nancy.ViewEngines.DotLiquid
+﻿using System;
+using System.Runtime.CompilerServices;
+using Microsoft.CSharp.RuntimeBinder;
+
+namespace Nancy.ViewEngines.DotLiquid
 {
     using System.Collections.Generic;
     using System.Dynamic;
@@ -30,10 +34,20 @@
                 return "[Invalid model property name]";
             }
 
-            var value = (this.model.GetType().Equals(typeof(Dictionary<string, object>))) ?
-                GetExpandoObjectValue(propertyName) :
-                GetPropertyValue(propertyName);
-
+            Type modelType = this.model.GetType();
+            object value = null;
+            if(modelType.Equals(typeof(Dictionary<string, object>)))
+            {
+                value = GetExpandoObjectValue(propertyName);
+            }
+            else if (modelType.Equals(typeof(DynamicDictionary)))
+            {
+                value = GetDynamicDictionaryObjectValue(propertyName);
+            }
+            else
+            {
+                value = GetPropertyValue(propertyName);
+            }
             return value ?? string.Format("[Can't find :{0} in the model]", propertyName);
         }
 
@@ -42,6 +56,11 @@
             return (!this.model.ContainsKey(propertyName)) ?
                 null :
                 this.model[propertyName];
+        }
+
+        private object GetDynamicDictionaryObjectValue(string propertyName)
+        {
+            return this.model[propertyName];
         }
 
         private object GetPropertyValue(string propertyName)
