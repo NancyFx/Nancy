@@ -62,7 +62,11 @@
             return new HtmlResponse(contents: stream =>
             {
                 var hashedModel =
-                    Hash.FromAnonymousObject(new { model = new DynamicDrop(model) });
+                    Hash.FromAnonymousObject(new
+                        {
+                            Model = new DynamicDrop(model),
+                            ViewBag = new DynamicDrop(renderContext.Context.ViewBag)
+                        });
 
                 var parsed = renderContext.ViewCache.GetOrAdd(
                     viewLocationResult,
