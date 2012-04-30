@@ -1,3 +1,5 @@
+using System;
+using System.ComponentModel;
 namespace Nancy.ModelBinding
 {
     public static class ModuleExtensions
@@ -23,6 +25,22 @@ namespace Nancy.ModelBinding
         public static TModel Bind<TModel>(this NancyModule module, params string[] blacklistedProperties)
         {
             return module.Bind(blacklistedProperties);
+        }
+
+        public static void BindTo<TModel>(this NancyModule module, TModel instance, params string[] blacklistedProperties)
+        {
+            if (instance == null)
+                throw new ArgumentNullException("Bind instance is null");
+
+            TModel boundModel = module.Bind(blacklistedProperties);
+
+            foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(boundModel))
+            {
+                object value = item.GetValue(boundModel);
+                if (value != null)
+                    item.SetValue(instance, value);
+            }
+
         }
     }
 }
