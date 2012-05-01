@@ -81,7 +81,7 @@ namespace Nancy.ViewEngines.DotLiquid
             }
 
             return model.GetType().Equals(typeof(ExpandoObject))
-                ? new Dictionary<string, object>(model)
+                ? new Dictionary<string, object>(model, StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
                 : model;
         }
     }

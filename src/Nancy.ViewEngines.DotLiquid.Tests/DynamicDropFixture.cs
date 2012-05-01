@@ -78,6 +78,22 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         }
 
         [Fact]
+        public void Should_return_model_value_when_property_name_is_wrong_case_and_model_is_expandoobject()
+        {
+            // Given
+            dynamic model = new ExpandoObject();
+            model.Name = "Nancy";
+
+            var drop = new DynamicDrop(model);
+
+            // When
+            var result = drop.BeforeMethod("name");
+
+            // Then
+            result.ShouldEqual("Nancy");
+        }
+
+        [Fact]
         public void Should_return_null_when_called_with_invalid_property_name_and_model_is_dynamicdictionary()
         {
             // Given
