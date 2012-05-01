@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public void When_passing_a_null_model_should_return_a_null_model_message_if_called()
+        public void When_passing_a_null_model_should_return_an_empty_string()
         {
             // Given
             var location = new ViewLocationResult(
@@ -107,7 +107,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. </h1>");
         }
 
         [Fact]
@@ -162,7 +162,7 @@
         }
 
         [Fact]
-        public void when_calling_a_missing_member_should_return_a_missing_member_message()
+        public void when_calling_a_missing_member_should_return_an_empty_string()
         {
             // Given
             var location = new ViewLocationResult(
@@ -183,7 +183,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. </h1>");
         }
 
 #if !__MonoCS__

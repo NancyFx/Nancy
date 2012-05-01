@@ -26,12 +26,12 @@ namespace Nancy.ViewEngines.DotLiquid
         {
             if (model == null)
             {
-                return "[Model is null]";
+                return null;
             }
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                return "[Invalid model property name]";
+                return null;
             }
 
             Type modelType = this.model.GetType();
@@ -48,7 +48,7 @@ namespace Nancy.ViewEngines.DotLiquid
             {
                 value = GetPropertyValue(propertyName);
             }
-            return value ?? string.Format("[Can't find :{0} in the model]", propertyName);
+            return value;
         }
 
         private object GetExpandoObjectValue(string propertyName)
