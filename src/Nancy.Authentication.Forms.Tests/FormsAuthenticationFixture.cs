@@ -459,6 +459,31 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_change_the_forms_authentication_redirect_uri_querystring_key()
+        {
+            // Given
+            var fakePipelines = new Pipelines();
+            
+            var oldKey = FormsAuthentication.FormsAuthenticationRedirectQuerystringKey;
+            FormsAuthentication.FormsAuthenticationRedirectQuerystringKey = "next";
+            FormsAuthentication.Enable(fakePipelines, this.config);
+
+            var queryContext = new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/secure", "?foo=bar"),
+                Response = HttpStatusCode.Unauthorized
+            };
+
+            // When
+            fakePipelines.AfterRequest.Invoke(queryContext);
+
+            // Then
+            queryContext.Response.Headers["Location"].ShouldEqual("/login?next=/secure%3ffoo%3dbar");
+
+            FormsAuthentication.FormsAuthenticationRedirectQuerystringKey = oldKey;
+        }
+
+        [Fact]
         public void Should_retain_querystring_when_redirecting_after_successfull_login()
         {
             // Given

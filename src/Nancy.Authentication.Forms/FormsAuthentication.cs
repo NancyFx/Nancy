@@ -18,7 +18,7 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// The query string key for storing the return url
         /// </summary>
-        private const string REDIRECT_QUERYSTRING_KEY = "returnUrl";
+        private static string formsAuthenticationRedirectQuerystringKey = "returnUrl";
 
         private static string formsAuthenticationCookieName = "_ncfa";
 
@@ -38,6 +38,21 @@ namespace Nancy.Authentication.Forms
             set
             {
                 formsAuthenticationCookieName = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the forms authentication query string key for storing the return url
+        /// </summary>
+        public static string FormsAuthenticationRedirectQuerystringKey
+        {
+            get
+            {
+                return formsAuthenticationRedirectQuerystringKey;
+            }
+            set
+            {
+                formsAuthenticationRedirectQuerystringKey = value;
             }
         }
 
@@ -82,9 +97,9 @@ namespace Nancy.Authentication.Forms
         {
             var redirectUrl = fallbackRedirectUrl;
 
-            if (context.Request.Query[REDIRECT_QUERYSTRING_KEY].HasValue)
+            if (context.Request.Query[FormsAuthenticationRedirectQuerystringKey].HasValue)
             {
-                redirectUrl = context.Request.Query[REDIRECT_QUERYSTRING_KEY];
+                redirectUrl = context.Request.Query[FormsAuthenticationRedirectQuerystringKey];
             }
 
             var response = context.GetRedirect(redirectUrl);
@@ -185,8 +200,8 @@ namespace Nancy.Authentication.Forms
                     {
                         context.Response = context.GetRedirect(
                             string.Format("{0}?{1}={2}", 
-                            configuration.RedirectUrl, 
-                            REDIRECT_QUERYSTRING_KEY,
+                            configuration.RedirectUrl,
+                            FormsAuthenticationRedirectQuerystringKey,
                             context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
                     }
                 };
