@@ -9,7 +9,8 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
 
         public PartialRenderingFixture()
         {
-            var bootstrapper = new ConfigurableBootstrapper(with =>{
+            var bootstrapper = new ConfigurableBootstrapper(with => {
+                with.DisableAutoRegistration();
                 with.Module<PartialRenderingModule>();
                 with.RootPathProvider<RootPathProvider>();
             });

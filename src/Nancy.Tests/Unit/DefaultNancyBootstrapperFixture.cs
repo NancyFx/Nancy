@@ -68,7 +68,7 @@
                         GenerateInMemory = true,
                         GenerateExecutable = false,
                         IncludeDebugInformation = false,
-                        OutputAssembly = "TestAssembly"
+                        OutputAssembly = "TestAssembly.dll"
                     },
                     new[]
                     {

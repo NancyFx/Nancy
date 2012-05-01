@@ -4,6 +4,7 @@ namespace Nancy.Conventions
     using System.Collections.Concurrent;
     using System.IO;
     using System.Linq;
+    using System.Security;
     using System.Text.RegularExpressions;
     using Responses;
 
@@ -13,7 +14,7 @@ namespace Nancy.Conventions
     public class StaticContentConventionBuilder
     {
         private static readonly ConcurrentDictionary<string, Func<Response>> ResponseFactoryCache;
-        private static readonly Regex pathReplaceRegex = new Regex(@"/\\", RegexOptions.Compiled);
+        private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
         static StaticContentConventionBuilder()
         {
@@ -29,23 +30,76 @@ namespace Nancy.Conventions
         /// <returns>A <see cref="GenericFileResponse"/> instance for the requested static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, string contentPath = null, params string[] allowedExtensions)
         {
-            return (ctx, root) =>
-            {
-                var path =
-                    ctx.Request.Path.TrimStart(new[] { '/' });
+            return (ctx, root) =>{
 
-                if (!path.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
+                var path =
+                    ctx.Request.Path;
+
+                var fileName = 
+                    Path.GetFileName(path);
+
+                if (string.IsNullOrEmpty(fileName))
                 {
                     return null;
                 }
 
-                if(contentPath != null)
+                var pathWithoutFilename = 
+                    GetPathWithoutFilename(fileName, path);
+
+                if (!requestedPath.StartsWith("/"))
                 {
-                    contentPath = pathReplaceRegex.Replace(contentPath, Path.PathSeparator.ToString());
+                    requestedPath = string.Concat("/", requestedPath);
+                }
+
+                if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
+                    return null;
+                }
+
+                contentPath = 
+                    GetContentPath(requestedPath, contentPath);
+
+                if (contentPath.Equals("/"))
+                {
+                    throw new ArgumentException("This is not the security vulnerability you are looking for. Mapping static content to the root of your application is not a good idea.");
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath ?? requestedPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
+
+                return responseFactory.Invoke();
+            };
+        }
+
+        private static string GetContentPath(string requestedPath, string contentPath)
+        {
+            contentPath =
+                contentPath ?? requestedPath;
+
+            if (!contentPath.StartsWith("/"))
+            {
+                contentPath = string.Concat("/", contentPath);
+            }
+
+            return contentPath;
+        }
+
+        public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)
+        {
+            return (ctx, root) => {
+
+                var path =
+                    ctx.Request.Path;
+
+                if (!path.Equals(requestedFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedFile, "'")));
+                    return null;
+                }
+
+                var responseFactory =
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
 
                 return responseFactory.Invoke();
             };
@@ -58,27 +112,23 @@ namespace Nancy.Conventions
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", requestPath, "'")));
                 var extension = Path.GetExtension(requestPath);
 
-                if (string.IsNullOrEmpty(extension))
-                {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine("[StaticContentConventionBuilder] The requested file did not contain a file extension."));
-                    return () => null;
-                }
-
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
                     return () => null;
                 }
 
-                var rgx = new Regex(requestedPath, RegexOptions.IgnoreCase);
+                var transformedRequestPath = 
+                    GetSafeRequestPath(requestPath, requestedPath, contentPath);
 
-                requestPath = rgx.Replace(requestPath, Regex.Escape(contentPath), 1);
+                transformedRequestPath = 
+                    GetEncodedPath(transformedRequestPath);
 
-                var fileName = 
-                    Path.GetFullPath(Path.Combine(applicationRootPath, requestPath));
+                var fileName =
+                    Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
 
                 var contentRootPath = 
-                    Path.Combine(applicationRootPath, contentPath);
+                    Path.Combine(applicationRootPath, GetEncodedPath(contentPath));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
@@ -95,6 +145,37 @@ namespace Nancy.Conventions
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Returning file '", fileName, "'")));
                 return () => new GenericFileResponse(fileName);
             };
+        }
+
+        private static string GetEncodedPath(string path)
+        {
+            return PathReplaceRegex.Replace(path.TrimStart(new[] { '/' }), Path.DirectorySeparatorChar.ToString());
+        }
+
+        private static string GetPathWithoutFilename(string fileName, string path)
+        {
+            var pathWithoutFileName = 
+                path.Replace(fileName, string.Empty);
+
+            return (pathWithoutFileName.Equals("/")) ? 
+                pathWithoutFileName : 
+                pathWithoutFileName.TrimEnd(new[] {'/'});
+        }
+
+        private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
+        {
+            var actualContentPath =
+                (contentPath.Equals("/") ? string.Empty : contentPath);
+
+            if (requestedPath.Equals("/"))
+            {
+                return string.Concat(actualContentPath, requestPath);
+            }
+
+            var expression =
+                new Regex(Regex.Escape(requestedPath), RegexOptions.IgnoreCase);
+
+            return expression.Replace(requestPath, actualContentPath, 1);
         }
 
         /// <summary>
