@@ -82,16 +82,6 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View[new SomeViewModel()];
             };
 
-            Get["/ndjango"] = x => {
-                var model = new RatPack { FirstName = "Michael" };
-                return View["ndjango.django", model];
-            };
-
-            Get["/ndjango-extends"] = x => {
-                var model = new RatPack { FirstName = "Michael" };
-                return View["with-master.django", model];
-            };
-
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
                 return View["spark.spark", model];

@@ -178,15 +178,12 @@
     <Content Include="Views\razor-strong.cshtml" />
     <None Include="Views\razor-strong.vbhtml" />
     <None Include="Views\dot.liquid" />
-    <None Include="Views\ndjango-base.django" />
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\nustache.nustache" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
-    <None Include="Views\ndjango.django" />
     <None Include="Views\ssve.sshtml" />
-    <None Include="Views\with-master.django" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

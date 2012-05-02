@@ -5,6 +5,7 @@
 </head>
 
 <body>
+	This text is in the master page
     <div id="content">
         {% block content %}{% endblock %}
     </div>
