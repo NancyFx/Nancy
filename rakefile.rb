@@ -61,8 +61,12 @@ end
 
 desc "Gathers output files and copies them to the output folder"
 task :publish => [:compile] do
-    Dir.mkdir(OUTPUT)
-    Dir.mkdir("#{OUTPUT}/binaries")
+    if not File.directory? OUTPUT
+        Dir.mkdir(OUTPUT)
+    end
+    if not File.directory? "#{OUTPUT}/binaries"
+        Dir.mkdir("#{OUTPUT}/binaries")
+    end
 
     FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), "#{OUTPUT}/binaries"
 end
@@ -93,7 +97,9 @@ end
 
 desc "Zips up the built binaries for easy distribution"
 zip :package => [:publish] do |zip|
-    Dir.mkdir("#{OUTPUT}/packages")
+    if not File.directory? "#{OUTPUT}/packages"
+        Dir.mkdir("#{OUTPUT}/packages")
+    end
 
     zip.directories_to_zip "#{OUTPUT}/binaries"
     zip.output_file = "Nancy-Latest.zip"
@@ -102,7 +108,9 @@ end
 
 desc "Generates NuGet packages for each project that contains a nuspec"
 task :nuget_package => [:publish] do
-    Dir.mkdir("#{OUTPUT}/nuget")
+    if not File.directory? "#{OUTPUT}/nuget"
+        Dir.mkdir("#{OUTPUT}/nuget")
+    end
     nuspecs = FileList["src/**/*.nuspec"]
     root = File.dirname(__FILE__)
 
