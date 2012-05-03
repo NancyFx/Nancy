@@ -149,10 +149,6 @@
       <Project>{B795886D-9D70-45B1-BFB5-AD54CBC9A447}</Project>
       <Name>Nancy.ViewEngines.DotLiquid</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj">
-      <Project>{D403684D-D1E1-43B4-B6D5-F67A85F85830}</Project>
-      <Name>Nancy.ViewEngines.NDjango</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj">
       <Project>{A1A9E636-A37C-4170-B2E4-99D4F69B415D}</Project>
       <Name>Nancy.ViewEngines.Nustache</Name>
