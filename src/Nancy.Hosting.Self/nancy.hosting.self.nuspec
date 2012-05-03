@@ -21,6 +21,5 @@
     <file src="build\binaries\Nancy.Hosting.Self.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Hosting.Self.pdb" target="lib\net40" />
     <file src="src\Nancy.Hosting.Self\**\*.cs" target="src" />
-    <file src="src\Nancy.Hosting.Wcf\FileSystemRootPathProvider.cs" target="src" />
   </files>
 </package>
