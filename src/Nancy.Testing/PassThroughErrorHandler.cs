@@ -7,7 +7,9 @@ namespace Nancy.Testing
     {
         public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {
-            return statusCode == HttpStatusCode.InternalServerError;
+            var exception = context.Items[NancyEngine.ERROR_EXCEPTION] as Exception;
+
+            return statusCode == HttpStatusCode.InternalServerError && exception != null;
         }
 
         public void Handle(HttpStatusCode statusCode, NancyContext context)
