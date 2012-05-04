@@ -6,18 +6,15 @@ namespace Nancy.Diagnostics
 
     public class DefaultRequestTracing : IRequestTracing
     {
-        private readonly object diagsLock = new object();
+        private const int MaxSize = 50;
 
-        private IList<RequestTraceSession> sessions = new List<RequestTraceSession>();
+        private readonly ConcurrentLimitedCollection<RequestTraceSession> sessions = new ConcurrentLimitedCollection<RequestTraceSession>(MaxSize);
 
         public Guid CreateSession()
         {
             var id = Guid.NewGuid();
 
-            lock (this.diagsLock)
-            {
-                this.sessions.Add(new RequestTraceSession(id));
-            }
+            this.sessions.Add(new RequestTraceSession(id));
 
             return id;
         }
@@ -25,11 +22,7 @@ namespace Nancy.Diagnostics
         // TODO - remove above method and return guid from here?
         public void AddRequestDiagnosticToSession(Guid sessionId, NancyContext context)
         {
-            RequestTraceSession session;
-            lock (this.diagsLock)
-            {
-                session = this.sessions.FirstOrDefault(s => s.Id == sessionId);
-            }
+            var session = this.sessions.FirstOrDefault(s => s.Id == sessionId);
 
             if (session == null)
             {
@@ -41,26 +34,17 @@ namespace Nancy.Diagnostics
 
         public IEnumerable<RequestTraceSession> GetSessions()
         {
-            lock (this.diagsLock)
-            {
-                return this.sessions;
-            }
+            return this.sessions;
         }
 
         public void Clear()
         {
-            lock (this.diagsLock)
-            {
-                this.sessions.Clear();
-            }
+            this.sessions.Clear();
         }
 
         public bool IsValidSessionId(Guid sessionId)
         {
-            lock (this.diagsLock)
-            {
-                return this.sessions.Any(s => s.Id == sessionId);
-            }
+            return this.sessions.Any(s => s.Id == sessionId);
         }
     }
 }

@@ -9,22 +9,23 @@ namespace Nancy.Diagnostics
 
         public TraceLog()
         {
-            this.log = new StringBuilder();
+            if (StaticConfiguration.EnableRequestTracing)
+            {
+                this.log = new StringBuilder();
+            }
         }
 
         public void WriteLog(Action<StringBuilder> logDelegate)
         {
-            if (!StaticConfiguration.EnableRequestTracing)
+            if (this.log != null)
             {
-                return;
+                logDelegate.Invoke(this.log);
             }
-
-            logDelegate.Invoke(this.log);
         }
 
         public override string ToString()
         {
-            return this.log.ToString();
+            return this.log != null ? this.log.ToString() : string.Empty;
         }
     }
 }
