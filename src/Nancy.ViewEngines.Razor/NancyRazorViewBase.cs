@@ -236,7 +236,14 @@
             foreach (var section in this.Sections)
             {
                 this.contents.Clear();
-                section.Value.Invoke();
+                try
+                {
+                    section.Value.Invoke();
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new ViewRenderException(string.Format("Unable to render the section {0}.  Does the section require a model (it may be null)?" + section.Key));
+                }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
         }
