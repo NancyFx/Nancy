@@ -242,7 +242,7 @@
                 }
                 catch (NullReferenceException e)
                 {
-                    throw new ViewRenderException(string.Format("Unable to render the section {0}.  Does the section require a model (it may be null)?" + section.Key));
+                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key));
                 }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
