@@ -921,6 +921,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteInvoker"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteInvoker"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RouteInvoker<T>() where T : IRouteInvoker
+            {
+                this.bootstrapper.configuration.RouteInvoker = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRouteInvoker"/>.
+            /// </summary>
+            /// <param name="routeInvoker">The <see cref="IRouteInvoker"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RouteInvoker(IRouteInvoker routeInvoker)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRouteInvoker), routeInvoker));
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRoutePatternMatcher"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRoutePatternMatcher"/> that the bootstrapper should use.</typeparam>
