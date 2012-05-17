@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Responses
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Xml.Serialization;
 
@@ -13,7 +14,16 @@
         /// <returns>True if supported, false otherwise</returns>
         public bool CanSerialize(string contentType)
         {
-            return this.IsXmlType(contentType);
+            return IsXmlType(contentType);
+        }
+
+        /// <summary>
+        /// Gets the list of extensions that the serializer can handle.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> of extensions if any are available, otherwise an empty enumerable.</value>
+        public IEnumerable<string> Extensions
+        {
+            get { yield return "xml"; }
         }
 
         /// <summary>
@@ -29,7 +39,7 @@
             serializer.Serialize(outputStream, model);
         }
 
-        private bool IsXmlType(string contentType)
+        private static bool IsXmlType(string contentType)
         {
             if (string.IsNullOrEmpty(contentType))
             {
