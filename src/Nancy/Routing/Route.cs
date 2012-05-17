@@ -39,7 +39,7 @@
         /// Gets or sets the action that should take place when the route is invoked.
         /// </summary>
         /// <value>A <see cref="Func{T,K}"/> that represents the action of the route.</value>
-        public Func<dynamic, object> Action { get; set; }
+        public Func<dynamic, dynamic> Action { get; set; }
 
         /// <summary>
         /// Gets the description of the route.
