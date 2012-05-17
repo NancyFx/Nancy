@@ -1,10 +1,19 @@
 namespace Nancy.Routing
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Default route invoker implementation-
     /// </summary>
     public class DefaultRouteInvoker : IRouteInvoker
     {
+        private readonly IEnumerable<ISerializer> serializers;
+
+        public DefaultRouteInvoker(IEnumerable<ISerializer> serializers)
+        {
+            this.serializers = serializers;
+        }
+
         /// <summary>
         /// Invokes the specified <paramref name="route"/> with the provided <paramref name="parameters"/>.
         /// </summary>
