@@ -23,6 +23,7 @@ namespace Nancy.Tests.Unit
         private readonly INancyContextFactory contextFactory;
         private readonly Response response;
         private readonly IErrorHandler errorHandler;
+        private readonly IRouteInvoker routeInvoker;
 
         public NancyEngineFixture()
         {
@@ -41,8 +42,15 @@ namespace Nancy.Tests.Unit
 
             var applicationPipelines = new Pipelines();
 
+            this.routeInvoker = A.Fake<IRouteInvoker>();
+
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._)).ReturnsLazily(arg =>
+            {
+                return (Response)((Route)arg.Arguments[0]).Action.Invoke((DynamicDictionary)arg.Arguments[1]);
+            });
+
             this.engine =
-                new NancyEngine(resolver, contextFactory, new[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(resolver, contextFactory, new[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -53,7 +61,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.errorHandler }, A.Fake<IRequestTracing>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -64,7 +72,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, new[] { this.errorHandler }, A.Fake<IRequestTracing>()));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), null, new[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -75,7 +83,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>()));
+                Record.Exception(() => new NancyEngine(A.Fake<IRouteResolver>(), A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.routeInvoker));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -125,7 +133,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/", "http");
-
+            
             // When
             var result = this.engine.HandleRequest(request);
 
@@ -270,12 +278,13 @@ namespace Nancy.Tests.Unit
 
             this.route.Action = (d) => { executionOrder.Add("RouteInvoke"); return null; };
             var prePostResolver = A.Fake<IRouteResolver>();
+
             A.CallTo(() => prePostResolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, preHook, postHook));
 
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -304,7 +313,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -330,7 +339,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -356,7 +365,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -381,7 +390,7 @@ namespace Nancy.Tests.Unit
             var pipelines = new Pipelines();
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -433,7 +442,7 @@ namespace Nancy.Tests.Unit
             pipelines.AfterRequest.AddItemToStartOfPipeline(postHook);
 
             var localEngine =
-                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(prePostResolver, contextFactory, new IErrorHandler[] { this.errorHandler }, A.Fake<IRequestTracing>(), this.routeInvoker)
                 {
                     RequestPipelinesFactory = ctx => pipelines
                 };
@@ -453,6 +462,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/", "http");
+
 
             // When
             this.engine.HandleRequest(request);
@@ -583,6 +593,11 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolved);
 
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._)).Invokes((x) =>
+            {
+                routeUnderTest.Action.Invoke(DynamicDictionary.Empty);
+            });
+
             var pipelines = new Pipelines();
             pipelines.OnError.AddItemToStartOfPipeline((ctx, exception) => null);
             engine.RequestPipelinesFactory = (ctx) => pipelines;
@@ -637,7 +652,7 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolved);
 
-            var pipelines = new Pipelines {OnError = null};
+            var pipelines = new Pipelines { OnError = null };
             engine.RequestPipelinesFactory = (ctx) => pipelines;
 
             var request = new Request("GET", "/", "http");

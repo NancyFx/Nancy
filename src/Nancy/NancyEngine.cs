@@ -22,6 +22,7 @@
         private readonly IRouteResolver resolver;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
+        private readonly IRouteInvoker routeInvoker;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
 
         /// <summary>
@@ -30,7 +31,8 @@
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
-        public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing)
+        /// <param name="routeInvoker"> </param>
+        public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing, IRouteInvoker routeInvoker)
         {
             if (resolver == null)
             {
@@ -51,6 +53,7 @@
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
             this.requestTracing = requestTracing;
+            this.routeInvoker = routeInvoker;
         }
 
         /// <summary>
@@ -255,7 +258,7 @@
 
             if (context.Response == null)
             {
-                context.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2);
             }
 
             if (context.Request.Method.ToUpperInvariant() == "HEAD")

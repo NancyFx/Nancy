@@ -81,6 +81,7 @@ namespace Nancy.Bootstrapper
                         Serializers = new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) }),
                         InteractiveDiagnosticProviders = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IDiagnosticsProvider>()),
                         RequestTracing = typeof(DefaultRequestTracing),
+                        RouteInvoker = typeof(DefaultRouteInvoker),
                     };
             }
         }
@@ -138,6 +139,8 @@ namespace Nancy.Bootstrapper
         public IList<Type> InteractiveDiagnosticProviders { get; set; }
 
         public Type RequestTracing { get; set; }
+
+        public Type RouteInvoker { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -226,7 +229,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
                 new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
-                new TypeRegistration(typeof(IRequestTracing), this.RequestTracing), 
+                new TypeRegistration(typeof(IRequestTracing), this.RequestTracing),
+                new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker), 
             };
         }
 
