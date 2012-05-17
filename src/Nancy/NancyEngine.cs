@@ -31,7 +31,8 @@
         /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
-        /// <param name="routeInvoker"> </param>
+        /// <param name="requestTracing">The request tracing instance.</param>
+        /// <param name="routeInvoker">The <see cref="IRouteInvoker"/> instance that will be responsible for invoking the resolved routes.</param>
         public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing, IRouteInvoker routeInvoker)
         {
             if (resolver == null)
