@@ -227,7 +227,7 @@ namespace Nancy
             /// Defines a Nancy route for the specified <paramref name="path"/>.
             /// </summary>
             /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, Response> this[string path]
+            public Func<dynamic, dynamic> this[string path]
             {
                 set { this.AddRoute(path, null, value); }
             }
@@ -241,7 +241,7 @@ namespace Nancy
                 set { this.AddRoute(path, condition, value); }
             }
 
-            private void AddRoute(string path, Func<NancyContext, bool> condition, Func<object, Response> value)
+            private void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
                 var fullPath = string.Concat(this.parentModule.ModulePath, path);
 

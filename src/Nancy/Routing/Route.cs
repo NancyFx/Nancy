@@ -12,7 +12,7 @@
         /// </summary>
         /// <param name="description"></param>
         /// <param name="action">The action that should take place when the route is invoked.</param>
-        public Route(RouteDescription description, Func<dynamic, Response> action)
+        public Route(RouteDescription description, Func<dynamic, dynamic> action)
         {
             if (action == null)
             {
@@ -30,7 +30,7 @@
         /// <param name="path">The path that the route is declared for.</param>
         /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligiable for invocation.</param>
         /// <param name="action">The action that should take place when the route is invoked.</param>
-        public Route (string method, string path, Func<NancyContext, bool> condition, Func<dynamic, Response> action)
+        public Route(string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> action)
             : this(new RouteDescription(method, path, condition), action)
         {
         }
@@ -39,7 +39,7 @@
         /// Gets or sets the action that should take place when the route is invoked.
         /// </summary>
         /// <value>A <see cref="Func{T,K}"/> that represents the action of the route.</value>
-        public Func<dynamic, Response> Action { get; set; }
+        public Func<dynamic, object> Action { get; set; }
 
         /// <summary>
         /// Gets the description of the route.
@@ -52,7 +52,7 @@
         /// </summary>
         /// <param name="parameters">A <see cref="DynamicDictionary"/> that contains the parameters that should be passed to the route.</param>
         /// <returns>A <see cref="Response"/> instance.</returns>
-        public Response Invoke(DynamicDictionary parameters)
+        public dynamic Invoke(DynamicDictionary parameters)
         {
             return this.Action.Invoke(parameters);
         }
