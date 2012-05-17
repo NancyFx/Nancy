@@ -259,7 +259,7 @@
 
             if (context.Response == null)
             {
-                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2);
+                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
             }
 
             if (context.Request.Method.ToUpperInvariant() == "HEAD")

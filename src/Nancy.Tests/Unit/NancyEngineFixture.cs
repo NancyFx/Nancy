@@ -44,7 +44,7 @@ namespace Nancy.Tests.Unit
 
             this.routeInvoker = A.Fake<IRouteInvoker>();
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._)).ReturnsLazily(arg =>
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
             {
                 return (Response)((Route)arg.Arguments[0]).Action.Invoke((DynamicDictionary)arg.Arguments[1]);
             });
@@ -593,7 +593,7 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolved);
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._)).Invokes((x) =>
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, A<NancyContext>._)).Invokes((x) =>
             {
                 routeUnderTest.Action.Invoke(DynamicDictionary.Empty);
             });
