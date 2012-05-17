@@ -27,7 +27,7 @@
                 Get["/animal"] = _ =>
                 {
                     Animal animal = this.Bind<Animal>();
-                    return animal.Type;
+                    return (animal.Type == null) ? HttpStatusCode.NoContent : HttpStatusCode.Accepted;
                 };
             }
         }
@@ -107,7 +107,7 @@
                 with.Query("TYPE", animal);
             });
 
-            response.Body.AsString().ShouldEqual(animal);
+            response.StatusCode.ShouldEqual(HttpStatusCode.Accepted);
         }
 
         [Fact]
@@ -120,7 +120,7 @@
                 with.Query("TYPE", animal);
             });
 
-            response.Body.AsString().ShouldEqual("");
+            response.StatusCode.ShouldEqual(HttpStatusCode.NoContent);
         }
 
 

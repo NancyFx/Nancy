@@ -346,7 +346,7 @@
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<MethodNotAllowedRoute>();
-            route.Invoke(new DynamicDictionary()).Headers["Allow"].ShouldEqual("GET, PUT");
+            ((Response)route.Invoke(new DynamicDictionary())).Headers["Allow"].ShouldEqual("GET, PUT");
         }
 
         [Fact]
@@ -477,7 +477,7 @@
 
           // When 
           var resolvedRoute = resolver.Resolve(context);
-          var response = resolvedRoute.Item1.Invoke(null);
+          var response = (Response)resolvedRoute.Item1.Invoke(null);
 
           // Then
           response.StatusCode.ShouldEqual(HttpStatusCode.OK);
@@ -518,7 +518,7 @@
             // Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<OptionsRoute>();
-            route.Invoke(new DynamicDictionary()).Headers["Allow"].ShouldEqual("GET, PUT");
+            ((Response)route.Invoke(new DynamicDictionary())).Headers["Allow"].ShouldEqual("GET, PUT");
         }
 
         [Fact]

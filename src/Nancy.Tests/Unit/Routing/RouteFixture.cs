@@ -96,7 +96,7 @@
             var route = new Route("GET", "/", null, action);
 
             // When
-            var response = route.Invoke(new DynamicDictionary());
+            var response = (Response)route.Invoke(new DynamicDictionary());
 
             // Then
             response.ShouldBeSameAs(expectedResponse);
