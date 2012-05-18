@@ -13,7 +13,7 @@ namespace Nancy.Tests.Fakes
 
         }
 
-        public FakeRoute(Response response)
+        public FakeRoute(dynamic response)
             : base("GET", "/", null, x => response)
         {
             this.Action = x => {

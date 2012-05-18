@@ -14,6 +14,10 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["routes", routeCacheProvider.GetCache()];
             };
 
+            Get["/negotiated"] = parameters => {
+                return new RatPack { FirstName = "Nancy " };
+            };
+
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };

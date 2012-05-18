@@ -1,6 +1,8 @@
 namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Default route invoker implementation-
@@ -26,7 +28,43 @@ namespace Nancy.Routing
             var result =
                 route.Invoke(parameters);
 
-            return result;
+            var response =
+                CastResultToResponse(result) ?? GetNegotiatedResponse((object) result, context);
+
+            return response;
+        }
+
+        private static Response CastResultToResponse(dynamic result)
+        {
+            return result as Response;
+        }
+
+        private Response GetNegotiatedResponse(object result, NancyContext context)
+        {
+            var headers =
+                context.Request.Headers;
+
+            var valid =
+                from accept in headers.Accept
+                let s = this.serializers.FirstOrDefault(s => s.CanSerialize(accept.Item1))
+                where s != null
+                select Tuple.Create(accept.Item1, s);
+
+            var serializer =
+                valid.FirstOrDefault();
+
+            var response = new Response {
+                ContentType = serializer.Item1,
+                StatusCode = HttpStatusCode.OK,
+                Contents = s => serializer.Item2.Serialize(serializer.Item1, result, s)
+            };
+
+            if (valid.Count() > 0)
+            {
+                response.WithHeader("Vary", "Accept");
+            }
+
+            return response;
         }
     }
 }
