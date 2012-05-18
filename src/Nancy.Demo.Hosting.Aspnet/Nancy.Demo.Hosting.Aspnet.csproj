@@ -145,6 +145,7 @@
     <Compile Include="Models\RatPackWithDependencyText.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="Piratizer4000.cs" />
+    <Compile Include="PngSerializer.cs" />
     <Compile Include="RequestDependencyClass.cs" />
   </ItemGroup>
   <ItemGroup>
