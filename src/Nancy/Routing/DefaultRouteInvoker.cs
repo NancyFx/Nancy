@@ -29,7 +29,7 @@ namespace Nancy.Routing
                 route.Invoke(parameters);
 
             var response =
-                CastResultToResponse(result) ?? GetNegotiatedResponse((object) result, context);
+                CastResultToResponse(result) ?? GetNegotiatedResponse(result, context);
 
             return response;
         }
@@ -39,7 +39,7 @@ namespace Nancy.Routing
             return result as Response;
         }
 
-        private Response GetNegotiatedResponse(object result, NancyContext context)
+        private Response GetNegotiatedResponse(dynamic result, NancyContext context)
         {
             var headers =
                 context.Request.Headers;
