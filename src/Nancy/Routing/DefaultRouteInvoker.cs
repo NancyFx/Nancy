@@ -59,7 +59,7 @@ namespace Nancy.Routing
                 Contents = s => serializer.Item2.Serialize(serializer.Item1, result, s)
             };
 
-            if (valid.Count() > 0)
+            if (valid.Count() > 1)
             {
                 response.WithHeader("Vary", "Accept");
             }
