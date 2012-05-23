@@ -106,6 +106,25 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_return_redirect_response_when_using_custom_domain_and_path()
+        {
+            var authConfig = new FormsAuthenticationConfiguration()
+            {
+                CryptographyConfiguration = this.cryptographyConfiguration,
+                RedirectUrl = "/login",
+                UserMapper = A.Fake<IUserMapper>(),
+                CookieDomain = "test.domain",
+                CookiePath = "/the/cookie/test"
+            };
+
+            FormsAuthentication.FormsAuthenticationCookieName = "test-cookie";
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+            result.ShouldBeOfType(typeof(Response));
+            result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
+        }
+
+        [Fact]
         public void Should_return_ok_response_when_user_logs_in_without_redirect()
         {
             // Given

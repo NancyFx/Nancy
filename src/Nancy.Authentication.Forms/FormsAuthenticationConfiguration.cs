@@ -74,5 +74,15 @@ namespace Nancy.Authentication.Forms
                 return true;
             }
         }
+
+        /// <summary>
+        /// Gets or sets the domain of the cookie
+        /// </summary>
+        public string CookieDomain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the cookie's path
+        /// </summary>
+        public string CookiePath { get; set; }
     }
 }
