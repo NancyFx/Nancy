@@ -464,8 +464,7 @@ namespace Nancy.Authentication.Forms.Tests
             // Given
             var fakePipelines = new Pipelines();
             
-            var oldKey = FormsAuthentication.FormsAuthenticationRedirectQuerystringKey;
-            FormsAuthentication.FormsAuthenticationRedirectQuerystringKey = "next";
+            this.config.RedirectQuerystringKey = "next";
             FormsAuthentication.Enable(fakePipelines, this.config);
 
             var queryContext = new NancyContext()
@@ -479,8 +478,6 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             queryContext.Response.Headers["Location"].ShouldEqual("/login?next=/secure%3ffoo%3dbar");
-
-            FormsAuthentication.FormsAuthenticationRedirectQuerystringKey = oldKey;
         }
 
         [Fact]
