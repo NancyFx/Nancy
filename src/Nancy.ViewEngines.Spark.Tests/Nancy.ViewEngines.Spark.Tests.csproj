@@ -66,6 +66,7 @@
   <ItemGroup>
     <Reference Include="Spark, Version=1.7.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Spark.1.7.0.0\lib\NET40\Spark.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
