@@ -1,0 +1,12 @@
+﻿
+use namespace="System.Collections.Generic"
+var words="'Welcome to the Machine'.Split((char)' ')"
+
+|!{Show(words)}
+p
+  SimpleValue foo="words.Length"
+
+macro name="Show" data="IEnumerable<string>"
+  ul.nav
+    li each="var x in data" =x
+

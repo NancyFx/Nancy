@@ -158,7 +158,9 @@
             return ApplyFilters(new[]
                                     {
                                         Path.Combine(viewPath, viewName + ".spark"),
-                                        Path.Combine("Shared", viewName + ".spark")
+                                        Path.Combine(viewPath, viewName + ".shade"),
+                                        Path.Combine("Shared", viewName + ".spark"),
+                                        Path.Combine("Shared", viewName + ".shade")
                                     }, extra);
         }
 
@@ -167,10 +169,15 @@
             return ApplyFilters(new[]
                                     {
                                         Path.Combine("Layouts", masterName + ".spark"),
+                                        Path.Combine("Layouts", masterName + ".shade"),
                                         Path.Combine("Shared", masterName + ".spark"),
+                                        Path.Combine("Shared", masterName + ".shade"),
                                         Path.Combine("Views", masterName + ".spark"),
+                                        Path.Combine("Views", masterName + ".shade"),
                                         Path.Combine("Views", "Layouts", masterName + ".spark"),
-                                        Path.Combine("Views", "Shared", masterName + ".spark")
+                                        Path.Combine("Views", "Layouts", masterName + ".shade"),
+                                        Path.Combine("Views", "Shared", masterName + ".spark"),
+                                        Path.Combine("Views", "Shared", masterName + ".shade")
                                     }, extra);
         }
 
@@ -179,9 +186,13 @@
             return ApplyFilters(new[]
                                     {
                                         Path.Combine("Layouts", "Application.spark"),
+                                        Path.Combine("Layouts", "Application.shade"),
                                         Path.Combine("Shared", "Application.spark"),
+                                        Path.Combine("Shared", "Application.shade"),
                                         Path.Combine("Views", "Layouts", "Application.spark"),
+                                        Path.Combine("Views", "Layouts", "Application.shade"),
                                         Path.Combine("Views", "Shared", "Application.spark"),
+                                        Path.Combine("Views", "Shared", "Application.shade"),
                                     }, extra);
         }
 

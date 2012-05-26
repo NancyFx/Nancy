@@ -18,6 +18,7 @@
         private readonly IDescriptorBuilder descriptorBuilder;
         private readonly ISparkViewEngine engine;
         private readonly ISparkSettings settings;
+        private readonly string[] extensions = new[] { "spark", "shade" };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
@@ -41,7 +42,7 @@
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get { yield return "spark"; }
+            get { return this.extensions; }
         }
 
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)

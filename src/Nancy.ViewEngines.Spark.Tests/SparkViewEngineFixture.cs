@@ -15,7 +15,7 @@
     {
         private readonly IRenderContext renderContext;
         private string output;
-        private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
+        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRootPathProvider rootPathProvider;
 
         public SparkViewEngineFixture()
@@ -274,6 +274,185 @@
             this.output.ShouldContain(@"<script type=""text/javascript"" src=""/mysensationalrootfolder/scripts/test.js""/>");
         }
 
+        [Fact]
+        public void Should_support_files_with_the_spark_extensions()
+        {
+            // Given
+            var engine = new SparkViewEngine();
+
+            //When
+            var extensions = engine.Extensions;
+
+            // Then
+            extensions.ShouldHaveCount(2);
+            extensions.ShouldEqualSequence(new[] { "spark", "shade" });
+        }
+
+        [Fact]
+        public void Should_use_application_dot_shade_as_the_master_layout_if_present()
+        {
+            //Given,
+            const string viewName = "ShadeThatUsesApplicationLayout";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<title>Child View That Expects Application Layout by default</title>",
+                "<div>main application header by default</div>",
+                "<h1>Child View That Expects Application Layout by default</h1>",
+                "<div>Hello Spark</div>",
+                "<h3>15</h3>",
+                "<div>main application footer by default</div>");
+        }
+
+        [Fact]
+        public void Should_render_a_shade_file()
+        {
+            //Given
+            const string viewName = "ShadeFileRenders";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<html>",
+                "<head>",
+                "<title>",
+                "offset test",
+                "</title>",
+                "<body>",
+                "<div class=\"container\">",
+                "<h1 id=\"top\">",
+                "offset test",
+                "</h1>",
+                "</div>",
+                "</body>",
+                "</html>");
+        }
+
+        [Fact]
+        public void Should_evaluate_expressions_in_shade()
+        {
+            //Given
+            const string viewName = "ShadeEvaluatesExpressions";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<p>",
+                "<span>",
+                "8",
+                "</span>",
+                "<span>",
+                "2", " and ", "7",
+                "</span>",
+                "</p>");
+        }
+
+        [Fact]
+        public void Should_allow_dash_or_braced_code_recognition_in_shade()
+        {
+            //Given
+            const string viewName = "ShadeCodeMayBeDashOrAtBraced";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<ul>",
+                "<li>emocleW</li>",
+                "<li>ot</li>",
+                "<li>eht</li>",
+                "<li>enihcaM</li>",
+                "</ul>");
+        }
+
+        [Fact]
+        public void Should_allow_text_to_contain_expressions_in_shade()
+        {
+            //Given
+            const string viewName = "ShadeTextMayContainExpressions";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<p>",
+                "<span>8</span>",
+                "<span>2 and 7</span>",
+                "</p>");
+        }
+
+        [Fact]
+        public void Should_support_attributes_and_treat_some_as_special_nodes_like_partials_in_shade()
+        {
+            //Given
+            const string viewName = "ShadeSupportsAttributesAndMayTreatSomeElementsAsSpecialNodes";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<ul class=\"nav\">",
+                "<li>Welcome</li>",
+                "<li>to</li>",
+                "<li>the</li>",
+                "<li>Machine</li>",
+                "</ul>",
+                "<p>",
+                "<span>4</span>",
+                "</p>");
+        }
+
+        [Fact]
+        public void Should_allow_elements_to_stack_on_one_line_in_shade()
+        {
+            //Given
+            const string viewName = "ShadeElementsMayStackOnOneLine";
+            var viewLocationResult = GetShadeViewLocation(viewName);
+
+            //When
+            this.FindViewAndRender(viewName, viewLocationResult);
+
+            //Then
+            this.output.ShouldContainInOrder(
+                "<html>",
+                "<head>",
+                "<title>",
+                "offset test",
+                "</title>",
+                "<body>",
+                "<div class=\"container\">",
+                "<h1 id=\"top\">",
+                "offset test",
+                "</h1>",
+                "</div>",
+                "</body>",
+                "</html>");
+        }
+
+        private ViewLocationResult GetShadeViewLocation(string viewName)
+        {
+            A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "ShadeViews"));
+            this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider, new DefaultFileSystemReader());
+            var viewLocationResult = new ViewLocationResult("Features", viewName, "shade", GetEmptyContentReader());
+            return viewLocationResult;
+        }
+
         private void FindViewAndRender<T>(string viewName, T viewModel, ViewLocationResult viewLocationResult = null) where T : class
         {
             if (viewLocationResult == null)
@@ -286,8 +465,7 @@
 
             var context = new ViewEngineStartupContext(
                 A.Fake<IViewCache>(),
-                this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"spark"}),
-                new[] {"spark"});
+                this.fileSystemViewLocationProvider.GetLocatedViews(engine.Extensions), engine.Extensions);
 
             engine.Initialize(context);
 
@@ -304,6 +482,11 @@
         private void FindViewAndRender(string viewName)
         {
             this.FindViewAndRender<dynamic>(viewName, null);
+        }
+
+        private void FindViewAndRender(string viewName, ViewLocationResult viewLocationResult)
+        {
+            this.FindViewAndRender<dynamic>(viewName, null, viewLocationResult);
         }
 
         private static Func<TextReader> GetEmptyContentReader()
