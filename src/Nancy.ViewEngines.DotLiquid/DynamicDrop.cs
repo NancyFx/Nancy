@@ -1,4 +1,8 @@
-﻿namespace Nancy.ViewEngines.DotLiquid
+﻿using System;
+using System.Runtime.CompilerServices;
+using Microsoft.CSharp.RuntimeBinder;
+
+namespace Nancy.ViewEngines.DotLiquid
 {
     using System.Collections.Generic;
     using System.Dynamic;
@@ -22,19 +26,29 @@
         {
             if (model == null)
             {
-                return "[Model is null]";
+                return null;
             }
 
             if (string.IsNullOrEmpty(propertyName))
             {
-                return "[Invalid model property name]";
+                return null;
             }
 
-            var value = (this.model.GetType().Equals(typeof(Dictionary<string, object>))) ?
-                GetExpandoObjectValue(propertyName) :
-                GetPropertyValue(propertyName);
-
-            return value ?? string.Format("[Can't find :{0} in the model]", propertyName);
+            Type modelType = this.model.GetType();
+            object value = null;
+            if(modelType.Equals(typeof(Dictionary<string, object>)))
+            {
+                value = GetExpandoObjectValue(propertyName);
+            }
+            else if (modelType.Equals(typeof(DynamicDictionary)))
+            {
+                value = GetDynamicDictionaryObjectValue(propertyName);
+            }
+            else
+            {
+                value = GetPropertyValue(propertyName);
+            }
+            return value;
         }
 
         private object GetExpandoObjectValue(string propertyName)
@@ -42,6 +56,12 @@
             return (!this.model.ContainsKey(propertyName)) ?
                 null :
                 this.model[propertyName];
+        }
+
+        private object GetDynamicDictionaryObjectValue(string propertyName)
+        {
+            DynamicDictionaryValue dictionaryValue = this.model[propertyName] as DynamicDictionaryValue;
+            return dictionaryValue == null || !dictionaryValue.HasValue ? null : dictionaryValue.Value;
         }
 
         private object GetPropertyValue(string propertyName)
@@ -61,7 +81,7 @@
             }
 
             return model.GetType().Equals(typeof(ExpandoObject))
-                ? new Dictionary<string, object>(model)
+                ? new Dictionary<string, object>(model, StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
                 : model;
         }
     }

@@ -62,18 +62,21 @@
             return new HtmlResponse(contents: stream =>
             {
                 var hashedModel =
-                    Hash.FromAnonymousObject(new { model = new DynamicDrop(model) });
+                    Hash.FromAnonymousObject(new
+                        {
+                            Model = new DynamicDrop(model),
+                            ViewBag = new DynamicDrop(renderContext.Context.ViewBag)
+                        });
 
                 var parsed = renderContext.ViewCache.GetOrAdd(
                     viewLocationResult,
                     x => Template.Parse(viewLocationResult.Contents.Invoke().ReadToEnd()));
 
-                var rendered = parsed.Render(hashedModel);
-
-                var writer = new StreamWriter(stream);
-
-                writer.Write(rendered);
-                writer.Flush();
+                parsed.Render(stream, new RenderParameters
+                    {
+                        LocalVariables = hashedModel,
+                        Registers = Hash.FromAnonymousObject(new { nancy = renderContext })
+                    });
             });
         }
     }

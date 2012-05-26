@@ -26,10 +26,11 @@
                     var result = x.GetArgument<ViewLocationResult>(0);
                     return x.GetArgument<Func<ViewLocationResult, Template>>(1).Invoke(result);
                 });
+            var context = new NancyContext();
 
             this.renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => this.renderContext.ViewCache).Returns(cache);
-
+            A.CallTo(() => this.renderContext.Context).Returns(context);
         }
 
         [Fact]
@@ -84,7 +85,7 @@
         }
 
         [Fact]
-        public void When_passing_a_null_model_should_return_a_null_model_message_if_called()
+        public void When_passing_a_null_model_should_return_an_empty_string()
         {
             // Given
             var location = new ViewLocationResult(
@@ -106,7 +107,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Model is null]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. </h1>");
         }
 
         [Fact]
@@ -135,7 +136,33 @@
         }
 
         [Fact]
-        public void when_calling_a_missing_member_should_return_a_missing_member_message()
+        public void RenderView_should_expose_ViewBag_to_the_template()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"<h1>Hello Mr. {{ viewbag.name }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+            var stream = new MemoryStream();
+            this.renderContext.Context.ViewBag.Name = "test";
+
+            // When
+            var response = this.engine.RenderView(location, new { name = "incorrect" }, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
+
+        [Fact]
+        public void when_calling_a_missing_member_should_return_an_empty_string()
         {
             // Given
             var location = new ViewLocationResult(
@@ -156,7 +183,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Hello Mr. [Can't find :name in the model]</h1>");
+            stream.ShouldEqual("<h1>Hello Mr. </h1>");
         }
 
 #if !__MonoCS__

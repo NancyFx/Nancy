@@ -134,7 +134,7 @@
         {
             this.Values.QueryString += String.Format(
                 "{0}{1}={2}",
-                this.Values.QueryString.Length == 0 ? String.Empty : "&", 
+                this.Values.QueryString.Length == 0 ? "?" : "&", 
                 key,
                 value);
         }

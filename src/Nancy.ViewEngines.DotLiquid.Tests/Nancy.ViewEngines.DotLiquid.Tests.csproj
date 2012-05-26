@@ -96,6 +96,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\Fakes\FakeViewLocationCache.cs">
+      <Link>FakeViewLocationCache.cs</Link>
+    </Compile>
     <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
       <Link>ShouldExtensions.cs</Link>
     </Compile>
