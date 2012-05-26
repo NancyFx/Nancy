@@ -150,7 +150,7 @@ namespace Nancy.ModelBinding
 
         private static object CreateModel(Type modelType)
         {
-            return Activator.CreateInstance(modelType);
+            return TinyIoC.TinyIoCContainer.Current.Resolve(modelType);
         }
 
         private static string GetValue(string propertyName, BindingContext context)
