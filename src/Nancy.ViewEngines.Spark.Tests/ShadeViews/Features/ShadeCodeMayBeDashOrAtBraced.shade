@@ -1,0 +1,29 @@
+﻿
+use namespace="System.Linq"
+
+@{ 
+  var words = "Welcome to the Machine"
+    .Split((char)' ')
+    .Select(word => new string(word.Reverse().ToArray()))
+    .ToArray();
+}
+
+div
+  ul
+    - foreach(var word in words) {
+      li =word
+    - }
+    li =Clean(Directory.GetCurrentDirectory())
+
+div.copyright
+  p.small |Copyright (c) ${DateTime.Now.Year} SparkViewEngine
+
+
+use namespace="System"
+use namespace="System.Diagnostics"
+use namespace="System.IO"
+
+macro name="Clean" folder="string"
+  for each="var file in Directory.GetFiles(folder)"
+    - Console.WriteLine(file);
+    SimpleValue foo="file"
