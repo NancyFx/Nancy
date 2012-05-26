@@ -46,6 +46,7 @@ namespace Nancy.Routing
 
             var valid =
                 from accept in headers.Accept
+                where accept.Item2 > 0m
                 let s = this.serializers.FirstOrDefault(s => s.CanSerialize(accept.Item1))
                 where s != null
                 select Tuple.Create(accept.Item1, s);
