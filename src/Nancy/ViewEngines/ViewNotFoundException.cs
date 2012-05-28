@@ -29,7 +29,7 @@
             this.AvailableViewEngineExtensions = availableViewEngineExtensions;
             this.InspectedLocations = inspectedLocations;
 
-            message = String.Format(
+            this.message = String.Format(
                     "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
                     this.ViewName,
                     string.Join(",", this.AvailableViewEngineExtensions),
@@ -38,9 +38,13 @@
                     Environment.NewLine);
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewNotFoundExcepton"/>
+        /// </summary>
+        /// <param name="msg">A message describing the problem</param>
         public ViewNotFoundException(string msg)
         {
-            message = msg;
+            this.message = msg;
         }
 
         /// <summary>
