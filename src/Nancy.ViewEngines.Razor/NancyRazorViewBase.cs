@@ -234,7 +234,7 @@
             }
             catch (NullReferenceException)
             {
-                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model is null");
+                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null");
             }
 
             this.Body = this.contents.ToString();
