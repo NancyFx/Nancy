@@ -228,7 +228,14 @@
             this.childBody = body ?? string.Empty;
             this.childSections = sectionContents ?? new Dictionary<string, string>();
 
-            this.Execute();
+            try
+            {
+                this.Execute();
+            }
+            catch (NullReferenceException)
+            {
+                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null");
+            }
 
             this.Body = this.contents.ToString();
 
@@ -236,7 +243,14 @@
             foreach (var section in this.Sections)
             {
                 this.contents.Clear();
-                section.Value.Invoke();
+                try
+                {
+                    section.Value.Invoke();
+                }
+                catch (NullReferenceException e)
+                {
+                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key));
+                }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
         }

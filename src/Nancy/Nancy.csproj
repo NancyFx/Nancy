@@ -334,6 +334,7 @@
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
+    <Compile Include="ViewEngines\ViewRenderException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />
