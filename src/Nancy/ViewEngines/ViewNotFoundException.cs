@@ -31,6 +31,7 @@
 
             this.message = String.Format(
                     "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
+                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
                     this.ViewName,
                     string.Join(",", this.AvailableViewEngineExtensions),
                     string.Join(",", this.InspectedLocations),
