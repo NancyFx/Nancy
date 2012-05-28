@@ -60,7 +60,7 @@ namespace Nancy
                 context.Response.Contents = stream =>
                 {
                     // disposing of stream is handled elsewhere
-                    StreamWriter writer = new StreamWriter(stream)
+                    StreamWriter writer = new StreamWriter(stream, Encoding.UTF8)
                     {
                         AutoFlush = true
                     };

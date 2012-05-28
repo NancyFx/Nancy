@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.SuperSimpleViewEngine
+﻿using System.Text;
+
+namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System;
     using System.Collections.Generic;
@@ -45,7 +47,7 @@
         {
             return new HtmlResponse(contents: s =>
                 {
-                    var writer = new StreamWriter(s);
+                    var writer = new StreamWriter(s, Encoding.UTF8);
                     var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
 
                     writer.Write(this.viewEngine.Render(templateContents, model, new NancyViewEngineHost(renderContext)));

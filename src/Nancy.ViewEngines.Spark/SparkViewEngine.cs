@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.Spark
+﻿using System.Text;
+
+namespace Nancy.ViewEngines.Spark
 {
     using System;
     using System.Collections.Generic;
@@ -119,7 +121,7 @@
                     this.CreateView(viewLocationResult, model ?? new ExpandoObject(), renderContext);
 
                 var writer =
-                    new StreamWriter(stream);
+                    new StreamWriter(stream, Encoding.UTF8);
 
                 sparkViewEngineResult.View.Writer = writer;
                 sparkViewEngineResult.View.Model = model;

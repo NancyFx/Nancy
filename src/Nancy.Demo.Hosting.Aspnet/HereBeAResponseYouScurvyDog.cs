@@ -29,7 +29,7 @@
         {
             return stream =>
             {
-                var writer = new StreamWriter(stream) { AutoFlush = true };
+                var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
                 writer.Write(contents.Piratize());
             };
         }

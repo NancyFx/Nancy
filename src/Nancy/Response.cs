@@ -1,3 +1,5 @@
+using System.Text;
+
 namespace Nancy
 {
     using System;
@@ -100,7 +102,7 @@ namespace Nancy
         {
             return stream =>
             {
-                var writer = new StreamWriter(stream) { AutoFlush = true };
+                var writer = new StreamWriter(stream, Encoding.UTF8) { AutoFlush = true };
                 writer.Write(contents);
             };
         }

@@ -88,7 +88,7 @@
 
             response.Contents = stream =>
             {
-                var writer = new StreamWriter(stream);
+                var writer = new StreamWriter(stream, Encoding.UTF8);
                 var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
                 view.ExecuteView(null, null);
                 var body = view.Body;

@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.NDjango
+﻿using System.Text;
+
+namespace Nancy.ViewEngines.NDjango
 {
     using System;
     using System.Collections.Generic;
@@ -54,7 +56,7 @@
                 
                 var reader = templateManager.GetTemplate(viewLocationResult.Location).Walk(templateManager, context);
 
-                var writer = new StreamWriter(stream);
+                var writer = new StreamWriter(stream, Encoding.UTF8);
 
                 writer.Write(reader.ReadToEnd());           
                 writer.Flush();

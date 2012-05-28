@@ -1,4 +1,6 @@
-﻿namespace Nancy.Responses
+﻿using System.Text;
+
+namespace Nancy.Responses
 {
     using System;
     using System.IO;
@@ -27,7 +29,7 @@
         /// <returns>Serialised object</returns>
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
-            using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
+            using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream), Encoding.UTF8))
             {
                 var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
             
