@@ -68,6 +68,16 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
+        public void Should_set_ignored_assemblies_on_appdomainassemblytypescanner_when_creating_default_config ()
+        {
+            AppDomainAssemblyTypeScanner.IgnoredAssemblies = null;
+
+            var config = NancyInternalConfiguration.Default;
+
+            AppDomainAssemblyTypeScanner.Types.Count (t => config.IgnoredAssemblies.Select (p => p (t.Assembly)).Any ()).ShouldEqual (0);
+        }
+        
+        [Fact]
         public void Should_allow_additional_ignored_assemblies()
         {
             Func<Assembly, bool> predicate = asm => asm.FullName.StartsWith("moo");
