@@ -2,6 +2,7 @@ namespace Nancy.Tests.Unit.Conventions
 {
     using System;
     using System.Collections.Generic;
+    using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Xunit;
@@ -13,6 +14,7 @@ namespace Nancy.Tests.Unit.Conventions
 
         public DefaultViewLocationConventionsFixture()
         {
+            AppDomainAssemblyTypeScanner.LoadNancyAssemblies ();
             this.conventions = new NancyConventions();
             this.viewLocationConventions = new DefaultViewLocationConventions();
         }
