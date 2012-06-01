@@ -13,11 +13,6 @@ namespace Nancy.Bootstrapper
     /// </summary>
     public static class AppDomainAssemblyTypeScanner
     {
-        //static AppDomainAssemblyTypeScanner()
-        //{
-        //    LoadNancyAssemblies();
-        //}
-
         /// <summary>
         /// Nancy core assembly
         /// </summary>
