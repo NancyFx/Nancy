@@ -53,8 +53,6 @@
         /// </summary>
         protected NancyBootstrapperBase()
         {
-            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
-
             this.ApplicationPipelines = new Pipelines();
             this.conventions = new NancyConventions();
         }
@@ -209,7 +207,7 @@
             {
                 throw new InvalidOperationException("Configuration is invalid");
             }
-
+            
             this.ApplicationContainer = this.GetApplicationContainer();
 
             this.RegisterBootstrapperTypes(this.ApplicationContainer);

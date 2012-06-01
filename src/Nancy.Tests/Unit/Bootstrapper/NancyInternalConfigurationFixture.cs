@@ -70,10 +70,13 @@ namespace Nancy.Tests.Unit.Bootstrapper
         [Fact]
         public void Should_set_ignored_assemblies_on_appdomainassemblytypescanner_when_creating_default_config()
         {
+            //Given
             AppDomainAssemblyTypeScanner.IgnoredAssemblies = null;
 
+            //When
             var config = NancyInternalConfiguration.Default;
 
+            //Then
             AppDomainAssemblyTypeScanner.Types.Where(t => config.IgnoredAssemblies.Any(f => f(t.Assembly))).Count().
                 ShouldEqual(0);
         }
@@ -81,8 +84,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         [Fact]
         public void Should_update_ignored_assemblies_on_appdomianassemblystypescanner_when_adding_one_to_the_config()
         {
+            //Given & When
             var config = NancyInternalConfiguration.Default.WithIgnoredAssembly(f => f.FullName.StartsWith("Machine."));
 
+            //Then
             AppDomainAssemblyTypeScanner.Types.Where (t => config.IgnoredAssemblies.Any (f => f (t.Assembly))).Count ().
                 ShouldEqual (0);
         }
