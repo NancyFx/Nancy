@@ -74,7 +74,8 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
             var config = NancyInternalConfiguration.Default;
 
-            AppDomainAssemblyTypeScanner.Types.Count (t => config.IgnoredAssemblies.Select (p => p (t.Assembly)).Any ()).ShouldEqual (0);
+            AppDomainAssemblyTypeScanner.Types.Where(t => config.IgnoredAssemblies.Any(f => f(t.Assembly))).Count().
+                ShouldEqual(0);
         }
         
         [Fact]

@@ -51,6 +51,7 @@ namespace Nancy.Bootstrapper
         {
             get
             {
+                UpdateIgnoredAssemblies(DefaultIgnoredAssemblies);
                 return new NancyInternalConfiguration
                     {
                         RouteResolver = typeof(DefaultRouteResolver),
