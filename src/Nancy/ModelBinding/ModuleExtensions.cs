@@ -29,7 +29,7 @@ namespace Nancy.ModelBinding
         }
 
         /// <summary>
-        /// 
+        /// Bind the incoming request to an existing instance
         /// </summary>
         /// <typeparam name="TModel">Model type</typeparam>
         /// <param name="module">Current module</param>
@@ -39,7 +39,7 @@ namespace Nancy.ModelBinding
         {
             if (instance == null)
             {
-                throw new ArgumentNullException("instance", "Bind instance is null");
+                throw new ArgumentNullException("instance", "The instance parameter cannot be null");
             }
 
             var boundModel = module.Bind(blacklistedProperties);
