@@ -180,7 +180,7 @@
                 {
                     return new ResolveResults
                     {
-                        Selected = new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Selected = new ResolveResult(new OptionsRoute(context, allowedMethods), DynamicDictionary.Empty, null, null),
                         Rejected = routes.Item2
                     };
                 }
