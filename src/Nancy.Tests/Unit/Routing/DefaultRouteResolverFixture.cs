@@ -1,6 +1,4 @@
-﻿
-
-namespace Nancy.Tests.Unit.Routing
+﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
     using System.Collections.Generic;
@@ -50,12 +48,6 @@ namespace Nancy.Tests.Unit.Routing
             this.contextFactory = A.Fake<INancyContextFactory>();
             this.moduleKeyGenerator = A.Fake<IModuleKeyGenerator>();
             A.CallTo(() => moduleKeyGenerator.GetKeyForModuleType(A<Type>._)).ReturnsLazily(x => (string) x.Arguments[0]);
-
-            OptionsRoute.AllowCredentials = false;
-            OptionsRoute.AllowedOrigins = null;
-            OptionsRoute.DisalllowedHeaders = null;
-            OptionsRoute.DisableCORS = false;
-
         }
 
         private DefaultRouteResolver CreateResolver(Action<FakeRouteCache.FakeRouteCacheConfigurator> closure)
@@ -557,8 +549,8 @@ namespace Nancy.Tests.Unit.Routing
         [Fact]
         public void Should_return_default_CORS_headers_when_requested()
         {
-            var headers = new Dictionary<string, IEnumerable<string>>();
-            headers.Add("Access-Control-Request-Method", new[] { "POST" });
+            var headers = new Dictionary<string, IEnumerable<string>>
+            { { "Access-Control-Request-Method", new[] { "POST" } } };
 
             //Given
             var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
@@ -576,17 +568,14 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_not_return_default_CORS_headers_when_disabled ()
+        public void Should_not_return_default_CORS_headers_when_not_enabled ()
         {
-
             //Given
             var headers = new Dictionary<string, IEnumerable<string>>
             { { "Access-Control-Request-Method", new[] { "POST" } } };
             var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
             var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar"));
-
-            OptionsRoute.DisableCORS = true;
 
             //When 
             var route = resolver.Resolve (context).Item1;
@@ -602,26 +591,33 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_throw_exception_when_CORS_isnt_configured_correctly()
         {
             //Given
+
+            this.expectedModule = new FakeNancyModule (x => x.AddGetRoute ("/foo/bar", this.expectedAction).CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowCredentials(true);
+            }));
+
             var headers = new Dictionary<string, IEnumerable<string>>
             {
                 { "Access-Control-Request-Method", new[] { "POST" } },
                 { "Access-Control-Request-Headers", new[] { "origin", "content-type", "accept" } }
             };
 
-            OptionsRoute.AllowCredentials = true;
-            
             var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddPostRoute ("/foo/bar"));
 
             //When 
-            var route = resolver.Resolve(context).Item1;
+            var resolveresult = resolver.Resolve(context);
+            var route = resolveresult.Item1;
 
             //Then
             route.ShouldNotBeNull();
             route.ShouldBeOfType<OptionsRoute>();
-            Assert.Throws(typeof(CORSRequestException), () => route.Invoke (new DynamicDictionary()).Headers["Access-Control-Allow-Methods"].Split(',').Select(
-                h => h.Trim()).ShouldEqualSequence (new [] { "POST", "OPTIONS" }));
+
+            Assert.Throws (typeof (CORSRequestException), () => expectedModule.Before.Invoke (context).Headers["Access-Control-Allow-Methods"].Split (',').Select (
+                h => h.Trim()).ShouldEqualSequence (new [] { "OPTIONS", "GET" }));
         }
 
         [Fact]
@@ -631,9 +627,6 @@ namespace Nancy.Tests.Unit.Routing
             var headers = new Dictionary<string, IEnumerable<string>> ();
             headers.Add ("Access-Control-Request-Method", new[] { "POST" });
             headers.Add ("Access-Control-Request-Headers", new[] { "origin", "content-type", "accept" });
-
-            OptionsRoute.AllowCredentials = true;
-            OptionsRoute.AllowedOrigins = new[] { "http://foo.bar" };
 
             var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
@@ -661,10 +654,6 @@ namespace Nancy.Tests.Unit.Routing
             var headers = new Dictionary<string, IEnumerable<string>> ();
             headers.Add ("Access-Control-Request-Method", new[] { "POST" });
             headers.Add ("Access-Control-Request-Headers", new[] { "origin", "content-type", "accept" });
-
-            OptionsRoute.AllowCredentials = true;
-            OptionsRoute.AllowedOrigins = new[] { "http://foo.bar" };
-            OptionsRoute.DisalllowedHeaders = new[] { "accept" };
 
             var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };

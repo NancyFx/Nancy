@@ -25,6 +25,13 @@
                 this.module = module;
             }
 
+            public FakeNancyModuleConfigurator CallExtensionMethodOnModule(Action<NancyModule> action)
+            {
+                action(module);
+
+                return this;
+            }
+
             public FakeNancyModuleConfigurator AddDeleteRoute(string path)
             {
                 this.module.Delete[path] = parameters => {

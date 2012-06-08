@@ -176,11 +176,11 @@
             if (!routes.Item1.Any())
             {
                 var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
-                if (context.Request.Method.Equals("OPTIONS"))
+                if (context.Request.Method.Equals ("OPTIONS"))
                 {
                     return new ResolveResults
                     {
-                        Selected = new ResolveResult(new OptionsRoute(context, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Selected = new ResolveResult (new OptionsRoute (context, allowedMethods), DynamicDictionary.Empty, null, null),
                         Rejected = routes.Item2
                     };
                 }

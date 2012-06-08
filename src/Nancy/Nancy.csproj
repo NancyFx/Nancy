@@ -142,7 +142,7 @@
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\CORS\CORSRequestException.cs" />
-    <Compile Include="Routing\CORS\ModuleExtensions.cs" />
+    <Compile Include="Routing\CORS\CORSModuleExtensions.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
     <Compile Include="StaticContentApplicationStartup.cs" />
