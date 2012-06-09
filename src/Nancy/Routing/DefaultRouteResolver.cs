@@ -165,7 +165,7 @@
                         ctx.Request.Method.ToUpperInvariant();
                     
                     var methodIsValid =
-                        routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"));
+                        routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD")) || requestMethod.Equals("OPTIONS");
 
                     return new Tuple<bool, RouteCandidate>(
                         methodIsValid,
@@ -176,14 +176,14 @@
             if (!routes.Item1.Any())
             {
                 var allowedMethods = routes.Item2.Values.SelectMany(x => x.Select(y => y.Item3.Method)).Distinct();
-                if (context.Request.Method.Equals ("OPTIONS"))
-                {
-                    return new ResolveResults
-                    {
-                        Selected = new ResolveResult (new OptionsRoute (context, allowedMethods), DynamicDictionary.Empty, null, null),
-                        Rejected = routes.Item2
-                    };
-                }
+                //if (context.Request.Method.Equals ("OPTIONS"))
+                //{
+                //    return new ResolveResults
+                //    {
+                //        Selected = new ResolveResult (new OptionsRoute (context, allowedMethods), DynamicDictionary.Empty, null, null),
+                //        Rejected = routes.Item2
+                //    };
+                //}
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResults
                 {

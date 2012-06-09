@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Nancy.Extensions;
-
-namespace Nancy.Routing.CORS
+﻿namespace Nancy.Routing.CORS
 {
+    using System.Collections.Generic;
+    using System.Linq;
+
+    using Nancy.Extensions;
+
     /// <summary>
     /// Adds extensions to a module to give the use the ability to configure the automatic OPTIONS route for use with CORS.
     /// </summary>
