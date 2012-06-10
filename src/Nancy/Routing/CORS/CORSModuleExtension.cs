@@ -15,10 +15,11 @@ namespace Nancy.Routing.CORS
     {
         private static readonly Dictionary<string, CORSOptions> Options = new Dictionary<string, CORSOptions>();
 
-        private static Response ModifyOptionsResponse (NancyContext ctx, IEnumerable<string> allowedMethods, Request request, CORSOptions options)
+        private static Response ModifyOptionsResponse (NancyContext ctx, IEnumerable<string> allowedMethods, CORSOptions options)
         {
             var response = ctx.Response;
-            
+            var request = ctx.Request;
+
             if (request.Headers.AccessControlRequestMethod.Count () > 0)
             {
                 response.Headers["Access-Control-Allow-Headers"] =
@@ -38,12 +39,6 @@ namespace Nancy.Routing.CORS
 
                 response.Headers["Access-Control-Allow-Origin"] = string.Join (", ", options.AllowedOrigins);
             }
-            response.StatusCode = HttpStatusCode.OK;
-            response.Contents = stream =>
-            {
-                var writer = new StreamWriter (stream) { AutoFlush = true };
-                writer.Write (string.Empty);
-            };
 
             return response;
         }
@@ -59,15 +54,8 @@ namespace Nancy.Routing.CORS
                 Options.Add(module.GetModuleName(), new CORSOptions());
             }
 
-            module.After.AddItemToStartOfPipeline(c =>
-            {
-                if (c.Request.Method == "OPTIONS")
-                {
-                    ModifyOptionsResponse(c,
-                        module.Routes.Where(r => r.Description.Path == c.Request.Path).Select(r => r.Description.Method),
-                        c.Request, Options[module.GetModuleName ()]);
-                }
-            });
+            module.After.AddItemToStartOfPipeline( c => ModifyOptionsResponse(c, module.Routes.Where(r => r.Description.Path == c.Request.Path).Select(
+                                          r => r.Description.Method), Options[module.GetModuleName()]));
         }
 
         /// <summary>
