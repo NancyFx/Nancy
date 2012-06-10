@@ -81,6 +81,13 @@
                 return this;
             }
 
+            public FakeRouteCacheConfigurator AddPostRoute (string path, string moduleKey)
+            {
+                this.AddRoutesToCache (new[] { new RouteDescription ("POST", path, null) }, moduleKey);
+
+                return this;
+            }
+
             public FakeRouteCacheConfigurator AddPutRoute(string path)
             {
                 this.AddRoutesToCache(new[] { new RouteDescription("PUT", path, null) }, String.Empty);

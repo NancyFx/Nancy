@@ -4,6 +4,9 @@
     using System.Collections.Generic;
     using System.Linq;
     using Diagnostics;
+
+    using Nancy.Routing.CORS;
+
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
@@ -165,8 +168,10 @@
                         ctx.Request.Method.ToUpperInvariant();
                     
                     var methodIsValid =
-                        routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"));
-
+                        routeMethod.Equals(requestMethod) || 
+                        (routeMethod.Equals("GET") && requestMethod.Equals("HEAD")) || 
+                        (route.ModuleHasCORSEnabled() && requestMethod.Equals("OPTIONS"));
+                    
                     return new Tuple<bool, RouteCandidate>(
                         methodIsValid,
                         route
@@ -176,9 +181,9 @@
             if (!routes.Item1.Any())
             {
                 //only select the methods from the routes that were rejected because of the wrong route.
-                var allowedMethods = routes.Item2.Where (k => k.Key == "Request method did not match")
+                var allowedMethods = routes.Item2.Where(k => k.Key == "Request method did not match")
                                                  .Select(v => v.Value).SelectMany (x => x.Select (y => y.Item3.Method))
-                                                 .Distinct ().ToList ();
+                                                 .Distinct().ToList ();
 
                 if (context.Request.Method.Equals ("OPTIONS"))
                 {

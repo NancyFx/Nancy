@@ -1,5 +1,8 @@
-﻿namespace Nancy.Routing.CORS
+﻿using System.IO;
+
+namespace Nancy.Routing.CORS
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -12,9 +15,9 @@
     {
         private static readonly Dictionary<string, CORSOptions> Options = new Dictionary<string, CORSOptions>();
 
-        private static Response CreateMethodOptionsResponse (IEnumerable<string> allowedMethods, Request request, CORSOptions options)
+        private static Response ModifyOptionsResponse (NancyContext ctx, IEnumerable<string> allowedMethods, Request request, CORSOptions options)
         {
-            var response = new Response ();
+            var response = ctx.Response;
             
             if (request.Headers.AccessControlRequestMethod.Count () > 0)
             {
@@ -36,6 +39,11 @@
                 response.Headers["Access-Control-Allow-Origin"] = string.Join (", ", options.AllowedOrigins);
             }
             response.StatusCode = HttpStatusCode.OK;
+            response.Contents = stream =>
+            {
+                var writer = new StreamWriter (stream) { AutoFlush = true };
+                writer.Write (string.Empty);
+            };
 
             return response;
         }
@@ -44,7 +52,6 @@
         /// Gives the user the ability to disable CORS.
         /// </summary>
         /// <param name="module"></param>
-        /// <param name="withCredentials"></param>
         public static void EnableCORS(this NancyModule module)
         {
             if (!Options.ContainsKey(module.GetModuleName()))
@@ -52,16 +59,14 @@
                 Options.Add(module.GetModuleName(), new CORSOptions());
             }
 
-            module.Before.AddItemToStartOfPipeline(c =>
+            module.After.AddItemToStartOfPipeline(c =>
             {
                 if (c.Request.Method == "OPTIONS")
                 {
-                    return CreateMethodOptionsResponse(
+                    ModifyOptionsResponse(c,
                         module.Routes.Where(r => r.Description.Path == c.Request.Path).Select(r => r.Description.Method),
                         c.Request, Options[module.GetModuleName ()]);
                 }
-                
-                return new Response ();
             });
         }
 
@@ -117,5 +122,11 @@
                 new CORSRequestException ("CORS not enabled. Enable by calling this.EnableCORS() in the module");
             }
         }
+
+        public static bool ModuleHasCORSEnabled(this Tuple<string, int, RouteDescription, IRoutePatternMatchResult> route)
+        {
+            return Options.ContainsKey (route.Item1);
+        }
+
     }
 }
