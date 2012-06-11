@@ -25,7 +25,8 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; set; }
         public IEnumerable<InstanceRegistration> InstanceRegistrations { get; set; }
         public List<ModuleRegistration> PassedModules { get; set; }
-        public IStartup[] OverriddenStartupTasks { get; set; }
+        public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
+        public IApplicationRegistrations[] OverriddenApplicationRegistrationTasks { get; set; }
 
         protected override NancyInternalConfiguration InternalConfiguration
         {
@@ -56,10 +57,19 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
-        protected override IEnumerable<IStartup> GetStartupTasks()
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
+        protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
-            return this.OverriddenStartupTasks ?? new IStartup[] { };
+            return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+        }
+
+        /// <summary>
+        /// Gets all registered application registration tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
+        protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+        {
+            return this.OverriddenApplicationRegistrationTasks ?? new IApplicationRegistrations[] { };
         }
 
         /// <summary>
@@ -167,10 +177,19 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
-        protected override IEnumerable<IStartup> GetStartupTasks()
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
+        protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
-            return new IStartup[] { };
+            return new IApplicationStartup[] { };
+        }
+
+        /// <summary>
+        /// Gets all registered application registration tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
+        protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+        {
+            return new IApplicationRegistrations[] { };
         }
 
         /// <summary>
@@ -327,9 +346,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public void Should_invoke_startup_tasks()
         {
             // Given
-            var startupMock = A.Fake<IStartup>();
-            var startupMock2 = A.Fake<IStartup>();
-            bootstrapper.OverriddenStartupTasks = new[] { startupMock, startupMock2 };
+            var startupMock = A.Fake<IApplicationStartup>();
+            var startupMock2 = A.Fake<IApplicationStartup>();
+            bootstrapper.OverriddenApplicationStartupTasks = new[] { startupMock, startupMock2 };
 
             // When
             bootstrapper.Initialise();
@@ -340,12 +359,12 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_register_startup_task_type_registrations_into_container()
+        public void Should_register_application_registration_type_registrations_into_container()
         {
             var typeRegistrations = new TypeRegistration[] { };
-            var startupStub = A.Fake<IStartup>();
+            var startupStub = A.Fake<IApplicationRegistrations>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
-            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
 
             bootstrapper.Initialise();
 
@@ -353,12 +372,12 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_register_startup_task_collection_registrations_into_container()
+        public void Should_register_application_registration_task_collection_registrations_into_container()
         {
             var collectionTypeRegistrations = new CollectionTypeRegistration[] { };
-            var startupStub = A.Fake<IStartup>();
+            var startupStub = A.Fake<IApplicationRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionTypeRegistrations);
-            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
 
             bootstrapper.Initialise();
 
@@ -366,12 +385,12 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_register_startup_task_instance_registrations_into_container()
+        public void Should_register_application_registration_instance_registrations_into_container()
         {
             var instanceRegistrations = new InstanceRegistration[] { };
-            var startupStub = A.Fake<IStartup>();
+            var startupStub = A.Fake<IApplicationRegistrations>();
             A.CallTo(() => startupStub.InstanceRegistrations).Returns(instanceRegistrations);
-            bootstrapper.OverriddenStartupTasks = new[] { startupStub };
+            bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
 
             bootstrapper.Initialise();
 

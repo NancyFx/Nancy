@@ -31,7 +31,7 @@
             this.cryptographyConfiguration = CryptographyConfiguration.Default;
 
             this.objectSerializer = new DefaultObjectSerializer();
-            var csrfStartup = new CsrfStartup(
+            var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,
                 new DefaultCsrfTokenValidator(this.cryptographyConfiguration));
@@ -60,7 +60,7 @@
             this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "ValidToken");
             var fakeValidator = A.Fake<ICsrfTokenValidator>();
             A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
-            var csrfStartup = new CsrfStartup(
+            var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,
                 fakeValidator);
@@ -80,7 +80,7 @@
             this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "InvalidToken");
             var fakeValidator = A.Fake<ICsrfTokenValidator>();
             A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(false);
-            var csrfStartup = new CsrfStartup(
+            var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,
                 fakeValidator);
@@ -99,7 +99,7 @@
         {
             var fakeValidator = A.Fake<ICsrfTokenValidator>();
             A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
-            var csrfStartup = new CsrfStartup(
+            var csrfStartup = new CsrfApplicationStartup(
                 this.cryptographyConfiguration,
                 this.objectSerializer,
                 fakeValidator);
