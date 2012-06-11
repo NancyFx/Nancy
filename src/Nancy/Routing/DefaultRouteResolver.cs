@@ -167,10 +167,7 @@
                     var requestMethod = 
                         ctx.Request.Method.ToUpperInvariant();
                     
-                    var methodIsValid =
-                        routeMethod.Equals(requestMethod) || 
-                        (routeMethod.Equals("GET") && requestMethod.Equals("HEAD")) || 
-                        (route.ModuleHasCORSEnabled() && requestMethod.Equals("OPTIONS"));
+                    var methodIsValid = routeMethod.Equals(requestMethod) || (routeMethod.Equals("GET") && requestMethod.Equals("HEAD"));
                     
                     return new Tuple<bool, RouteCandidate>(
                         methodIsValid,
@@ -181,15 +178,25 @@
             if (!routes.Item1.Any())
             {
                 //only select the methods from the routes that were rejected because of the wrong route.
-                var allowedMethods = routes.Item2.Where(k => k.Key == "Request method did not match")
-                                                 .Select(v => v.Value).SelectMany (x => x.Select (y => y.Item3.Method))
-                                                 .Distinct().ToList ();
+                var routesWithWrongMethod = routes.Item2.Where (k => k.Key == "Request method did not match").SelectMany (v => v.Value).ToList ();
 
+                //from those select the ones from a module with CORS enabled
+                var routesWithCORSEnabled = routesWithWrongMethod.Where(r => r.ModuleHasCORSEnabled()).ToList();
+
+                //get the options for the CORS OPTIONS request
+                var corsOptions = routesWithCORSEnabled.Select(r => r.GetCORSOptions()).Distinct().ToList();
+
+                //get the allowedMethods for CORS.
+                var corsAllowedMethods = routesWithCORSEnabled.Select(r => r.Item3.Method).ToList();
+
+                //otherwise allowed methods.
+                var allowedMethods = routesWithWrongMethod.Select(y => y.Item3.Method).Distinct().ToList ();
+                
                 if (context.Request.Method.Equals ("OPTIONS"))
                 {
                     return new ResolveResults
                     {
-                        Selected = new ResolveResult (new OptionsRoute (context, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Selected = new ResolveResult (new OptionsRoute (context, allowedMethods, corsAllowedMethods, corsOptions), DynamicDictionary.Empty, null, null),
                         Rejected = routes.Item2
                     };
                 }

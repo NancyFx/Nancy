@@ -557,13 +557,12 @@
             //Given
             var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
-            var resolver = CreateResolver(x => x.AddPostRoute("/foo/bar", "FakeNancy"));
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
 
             //When 
             var resolvedResult = resolver.Resolve (context);
             var route = resolvedResult.Item1;
             context.Response = route.Invoke (new DynamicDictionary ());
-            resolvedResult.Item4 (context);
 
             //Then
             route.ShouldNotBeNull();
@@ -595,7 +594,6 @@
         public void Should_throw_exception_when_CORS_isnt_configured_correctly()
         {
             //Given
-
             this.expectedModule = new FakeNancyModule (x => x.AddGetRoute ("/foo/bar", this.expectedAction).CallExtensionMethodOnModule (m =>
             {
                 m.EnableCORS ();
@@ -610,16 +608,14 @@
 
             var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
-            var resolver = CreateResolver(x => x.AddPostRoute ("/foo/bar", "FakeNancy"));
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
 
             //When 
-            var resolveresult = resolver.Resolve(context);
-            var route = resolveresult.Item1;
-            context.Response = route.Invoke(new DynamicDictionary());
+            var route = resolver.Resolve (context).Item1;
            
             //Then
             route.ShouldNotBeNull();
-            Assert.Throws (typeof (CORSRequestException), () =>  resolveresult.Item4 (context));
+            Assert.Throws (typeof (CORSRequestException), () => route.Invoke (new DynamicDictionary ()));
         }
 
         [Fact]
@@ -638,13 +634,12 @@
 
             var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
-            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "FakeNancy"));
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
 
             //When 
             var resolvedResult = resolver.Resolve(context);
             var route = resolvedResult.Item1;
             context.Response = route.Invoke(new DynamicDictionary());
-            resolvedResult.Item4(context);
 
             //Then
             route.ShouldNotBeNull ();
@@ -676,13 +671,12 @@
 
             var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
             var context = new NancyContext { Request = request };
-            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "FakeNancy"));
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
 
             //When 
             var resolvedResult = resolver.Resolve (context);
             var route = resolvedResult.Item1;
             context.Response = route.Invoke (new DynamicDictionary ());
-            resolvedResult.Item4 (context);
 
             //Then
             route.ShouldNotBeNull ();
@@ -692,6 +686,39 @@
                 h => h.Trim ()).ShouldEqualSequence (new[] { "POST", "OPTIONS" });
             response.Headers["Access-Control-Allow-Headers"].Split (',').Select (
                 h => h.Trim ()).ShouldEqualSequence (new[] { "origin", "content-type" });
+            response.Headers["Access-Control-Allow-Origin"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "http://foo.bar" });
+        }
+
+        [Fact]
+        public void Should_reply_to_request_on_CORS_enabled_module_with_correct_headers ()
+        {
+            //Given
+            this.expectedModule = new FakeNancyModule (x => x.AddPostRoute ("/foo/bar").CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowOrigins ("http://foo.bar");
+                m.DisallowHeaders ("accept");
+            }));
+
+            CORSModuleExtension.RoutePatternMatcher = new DefaultRoutePatternMatcher();
+
+            var request = new FakeRequest ("POST", "/foo/bar");
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var resolvedResult = resolver.Resolve (context);
+            var route = resolvedResult.Item1;
+            context.Response = route.Invoke (new DynamicDictionary ());
+            resolvedResult.Item4(context);
+
+            //Then
+            route.ShouldNotBeNull ();
+
+            var response = context.Response;
+            response.Headers["Access-Control-Allow-Methods"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "POST", "OPTIONS" });
             response.Headers["Access-Control-Allow-Origin"].Split (',').Select (
                 h => h.Trim ()).ShouldEqualSequence (new[] { "http://foo.bar" });
         }

@@ -1,10 +1,9 @@
-﻿using System.IO;
-
-namespace Nancy.Routing.CORS
+﻿namespace Nancy.Routing.CORS
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.IO;
 
     using Nancy.Extensions;
 
@@ -15,32 +14,31 @@ namespace Nancy.Routing.CORS
     {
         private static readonly Dictionary<string, CORSOptions> Options = new Dictionary<string, CORSOptions>();
 
-        private static Response ModifyOptionsResponse (NancyContext ctx, IEnumerable<string> allowedMethods, CORSOptions options)
+        public static IRoutePatternMatcher RoutePatternMatcher { get; set; }
+
+        public static void ModifyResponseForCORS (this NancyContext ctx, IEnumerable<string> allowedMethods, CORSOptions options, Response resp = null)
         {
-            var response = ctx.Response;
+            var response = resp ?? ctx.Response;
             var request = ctx.Request;
 
-            if (request.Headers.AccessControlRequestMethod.Count () > 0)
+            if (request.Headers.AccessControlRequestMethod.Count() == 0 && request.Method == "OPTIONS") return;
+
+            if (request.Method == "OPTIONS") response.Headers["Access-Control-Allow-Headers"] = 
+                string.Join (", ", request.Headers.AccessControlRequestHeaders.Where (h => !options.DisalllowedHeaders.Contains (h)));
+
+            if (options.AllowCredentials && options.AllowedOrigins.Contains ("*"))
             {
-                response.Headers["Access-Control-Allow-Headers"] =
-                    string.Join (", ", request.Headers.AccessControlRequestHeaders.Where (h => !options.DisalllowedHeaders.Contains (h)));
-
-                if (options.AllowCredentials && options.AllowedOrigins.Contains ("*"))
-                {
-                    throw new CORSRequestException ("When allowing credentials the AllowedOrigins can't contain \"*\"");
-                }
-
-                if (options.AllowCredentials)
-                {
-                    response.Headers["Access-Control-Allow-Credentials"] = options.AllowCredentials.ToString ();
-                }
-
-                response.Headers["Access-Control-Allow-Methods"] = string.Join (", ", allowedMethods) + ", OPTIONS";
-
-                response.Headers["Access-Control-Allow-Origin"] = string.Join (", ", options.AllowedOrigins);
+                throw new CORSRequestException ("When allowing credentials the AllowedOrigins can't contain \"*\"");
             }
 
-            return response;
+            if (options.AllowCredentials)
+            {
+                response.Headers["Access-Control-Allow-Credentials"] = options.AllowCredentials.ToString ();
+            }
+
+            response.Headers["Access-Control-Allow-Methods"] = string.Join (", ", allowedMethods) + ", OPTIONS";
+
+            response.Headers["Access-Control-Allow-Origin"] = string.Join (", ", options.AllowedOrigins);
         }
 
         /// <summary>
@@ -49,13 +47,13 @@ namespace Nancy.Routing.CORS
         /// <param name="module"></param>
         public static void EnableCORS(this NancyModule module)
         {
-            if (!Options.ContainsKey(module.GetModuleName()))
+            if (!Options.ContainsKey (module.GetType ().FullName))
             {
-                Options.Add(module.GetModuleName(), new CORSOptions());
+                Options.Add (module.GetType ().FullName, new CORSOptions ());
             }
-
-            module.After.AddItemToStartOfPipeline( c => ModifyOptionsResponse(c, module.Routes.Where(r => r.Description.Path == c.Request.Path).Select(
-                                          r => r.Description.Method), Options[module.GetModuleName()]));
+            
+            module.After.AddItemToStartOfPipeline (c => c.ModifyResponseForCORS (module.Routes.Where (r => RoutePatternMatcher.Match(c.Request.Path, r.Description.Path, c).IsMatch).Select (
+                r => r.Description.Method), Options[module.GetType ().FullName]));
         }
 
         /// <summary>
@@ -66,9 +64,9 @@ namespace Nancy.Routing.CORS
         /// Default as specified in https://developer.mozilla.org/en/http_access_control is false</param>
         public static void AllowCredentials(this NancyModule module, bool allow)
         {
-            if (Options.ContainsKey (module.GetModuleName ()))
+            if (Options.ContainsKey (module.GetType ().FullName))
             {
-                Options[module.GetModuleName ()].AllowCredentials = allow;
+                Options[module.GetType ().FullName].AllowCredentials = allow;
             }
             else
             {
@@ -84,9 +82,9 @@ namespace Nancy.Routing.CORS
         /// <param name="allowedOrigins">A list of allowed origins</param>
         public static void AllowOrigins (this NancyModule module, params string [] allowedOrigins)
         {
-            if (Options.ContainsKey (module.GetModuleName ()))
+            if (Options.ContainsKey (module.GetType().FullName))
             {
-                Options[module.GetModuleName ()].AllowedOrigins = allowedOrigins;
+                Options[module.GetType ().FullName].AllowedOrigins = allowedOrigins;
             }
             else
             {
@@ -101,19 +99,34 @@ namespace Nancy.Routing.CORS
         /// <param name="disallowedHeaders">A list of headers disallowed</param>
         public static void DisallowHeaders(this NancyModule module, params string [] disallowedHeaders)
         {
-            if (Options.ContainsKey (module.GetModuleName ()))
+            if (Options.ContainsKey (module.GetType ().FullName))
             {
-                Options[module.GetModuleName ()].DisalllowedHeaders = disallowedHeaders;
+                Options[module.GetType ().FullName].DisalllowedHeaders = disallowedHeaders;
             }
             else
             {
                 new CORSRequestException ("CORS not enabled. Enable by calling this.EnableCORS() in the module");
             }
         }
-
+        
+        /// <summary>
+        /// Check wether a module has CORSEnabled.
+        /// </summary>
+        /// <param name="route">RouteCandidate Tuple</param>
+        /// <returns></returns>
         public static bool ModuleHasCORSEnabled(this Tuple<string, int, RouteDescription, IRoutePatternMatchResult> route)
         {
             return Options.ContainsKey (route.Item1);
+        }
+
+        /// <summary>
+        /// Gets the CORSOptions by modulekey from a RouteCandidate
+        /// </summary>
+        /// <param name="route">RouteCandidate Tuple</param>
+        /// <returns></returns>
+        public static CORSOptions GetCORSOptions (this Tuple<string, int, RouteDescription, IRoutePatternMatchResult> route)
+        {
+            return Options[route.Item1];
         }
 
     }
