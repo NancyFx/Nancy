@@ -181,9 +181,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Gets all startup tasks
         /// </summary>
-        protected override IEnumerable<Type> StartupTasks
+        protected override IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return this.Resolve<IApplicationStartup>() ?? base.StartupTasks; }
+            get { return this.Resolve<IApplicationStartup>() ?? base.ApplicationStartupTasks; }
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration

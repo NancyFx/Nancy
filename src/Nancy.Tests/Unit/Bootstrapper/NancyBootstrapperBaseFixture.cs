@@ -359,6 +359,30 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
+        public void Should_invoke_startup_tasks_after_registration_tasks()
+        {
+            // Given
+            var startup = A.Fake<IApplicationStartup>();
+            bootstrapper.OverriddenApplicationStartupTasks = new[] { startup };
+            
+            var registrations = A.Fake<IApplicationRegistrations>();
+            bootstrapper.OverriddenApplicationRegistrationTasks = new[] { registrations };
+
+            // When
+            // Then
+            using(var scope = Fake.CreateScope())
+            {
+                bootstrapper.Initialise();
+
+                using (scope.OrderedAssertions())
+                {
+                    A.CallTo(() => registrations.CollectionTypeRegistrations).MustHaveHappened();
+                    A.CallTo(() => startup.Initialize(A<IPipelines>._)).MustHaveHappened();
+                }
+            }
+        }
+
+        [Fact]
         public void Should_register_application_registration_type_registrations_into_container()
         {
             var typeRegistrations = new TypeRegistration[] { };

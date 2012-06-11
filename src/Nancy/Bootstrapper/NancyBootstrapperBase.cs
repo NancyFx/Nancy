@@ -147,11 +147,19 @@
         }
 
         /// <summary>
-        /// Gets all startup tasks
+        /// Gets all application startup tasks
         /// </summary>
-        protected virtual IEnumerable<Type> StartupTasks
+        protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
             get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationStartup>(); }
+        }
+
+        /// <summary>
+        /// Gets all application registration tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> ApplicationRegistrationTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationRegistrations>(); }
         }
 
         /// <summary>
@@ -511,7 +519,8 @@
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.StartupTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationRegistrations), this.ApplicationRegistrationTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }
