@@ -170,6 +170,19 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
+        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_non_capture_segments()
+        {
+            // Given
+            const string parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/" + parameter, null);
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_allow_underscore_in_parameter_key()
         {
             // Given
