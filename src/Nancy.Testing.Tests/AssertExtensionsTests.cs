@@ -2,7 +2,7 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Linq;
-    using HtmlAgilityPlus;
+    using CsQuery;
     using Nancy.Testing;
     using Xunit;
 
@@ -15,8 +15,11 @@ namespace Nancy.Testing.Tests
         /// </summary>
         public AssertExtensionsTests()
         {
+            var document =
+                CQ.Create(@"<html><head></head><body><div id='testId' class='myClass'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+
             this.query =
-                new SharpQuery(@"<html><head></head><body><div id='testId' class='myClass'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+                new QueryWrapper(document);
         }
 
         [Fact]

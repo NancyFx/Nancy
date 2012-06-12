@@ -1,6 +1,5 @@
 namespace Nancy.Testing.Tests
 {
-    using System.IO;
     using System.Text;
     using Nancy.Testing;
     using Xunit;
@@ -8,34 +7,31 @@ namespace Nancy.Testing.Tests
     public class DocumentWrapperTests
     {
         [Fact]
-        public void Should_allow_text_input()
+        public void Should_allow_byte_array_input()
         {
-            var input = @"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>";
+            // Given
+            const string input = @"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>";
+            var buffer = Encoding.UTF8.GetBytes(input);
 
-            var document = new DocumentWrapper(input);
+            // When
+            var document = new DocumentWrapper(buffer);
 
+            // Then
             Assert.NotNull(document["#testId"]);
-        }
-
-        [Fact]
-        public void Should_allow_stream_input()
-        {
-            using (var input = new MemoryStream(Encoding.ASCII.GetBytes(@"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>")))
-            {
-                var document = new DocumentWrapper(input);
-
-                Assert.NotNull(document["#testId"]);
-            }
         }
 
         [Fact]
         public void Should_return_querywrapper_when_indexer_accessed()
         {
-            var input = @"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>";
-            var document = new DocumentWrapper(input);
+            // Given
+            const string input = @"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>";
+            var buffer = Encoding.UTF8.GetBytes(input);
+            var document = new DocumentWrapper(buffer);
 
+            // When
             var result = document["#testId"];
 
+            // Then
             Assert.IsType<QueryWrapper>(result);
         }
     }
