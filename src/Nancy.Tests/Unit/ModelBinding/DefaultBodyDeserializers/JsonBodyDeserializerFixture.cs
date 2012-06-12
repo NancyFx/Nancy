@@ -36,6 +36,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             this.serializer = new JavaScriptSerializer();
             this.serializer.RegisterConverters(JsonSettings.Converters);
             this.testModelJson = this.serializer.Serialize(this.testModel);
+
+            JsonSettings.CaseSensitive = false;
         }
 
         [Fact]
@@ -218,6 +220,50 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfComplexObjectsProperty[0].Value2.ShouldEqual("two");
             result.ListOfComplexObjectsProperty[1].Value1.ShouldEqual("three");
             result.ListOfComplexObjectsProperty[1].Value2.ShouldEqual("four");
+        }
+
+        [Fact]
+        public void Shoud_Follow_StaticConfiguration_CaseSensitivity_default_is_false ()
+        {
+            var modelWithDoubleValues =
+                new ModelWithDoubleValues
+                {
+                    Latitude = 50.933984,
+                    Longitude = 7.330627
+                };
+
+            var s = new JavaScriptSerializer ();
+            var serialized = s.Serialize (modelWithDoubleValues).ToLower();
+
+            // When
+            var deserializedModelWithDoubleValues = s.Deserialize<ModelWithDoubleValues> (serialized);
+
+            // Then
+            Assert.Equal (modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
+            Assert.Equal (modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
+        }
+
+        [Fact]
+        public void Shoud_Follow_StaticConfiguration_CaseSensitivity ()
+        {
+            JsonSettings.CaseSensitive = true;
+
+            var modelWithDoubleValues =
+                new ModelWithDoubleValues
+                {
+                    Latitude = 50.933984,
+                    Longitude = 7.330627
+                };
+
+            var s = new JavaScriptSerializer ();
+            var serialized = s.Serialize (modelWithDoubleValues).ToLower ();
+
+            // When
+            var deserializedModelWithDoubleValues = s.Deserialize<ModelWithDoubleValues> (serialized);
+
+            // Then
+            Assert.NotEqual (modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
+            Assert.NotEqual (modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
         }
 
 #if !__MonoCS__

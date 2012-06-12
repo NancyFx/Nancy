@@ -327,7 +327,12 @@ namespace Nancy.Json
                     }
                     continue;
                 }
-                MemberInfo[] memberCollection = type.GetMember(entry.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+
+                var flags = JsonSettings.CaseSensitive
+                                ? BindingFlags.Public | BindingFlags.Instance
+                                : BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase;
+                MemberInfo[] memberCollection = type.GetMember(entry.Key, flags);
+
                 if (memberCollection == null || memberCollection.Length == 0)
                 {
                     //must evaluate value
