@@ -21,8 +21,6 @@
   <files>
     <file src="build\binaries\Nancy.Testing.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Testing.pdb" target="lib\net40" />
-    <file src="build\binaries\HtmlAgilityPack.dll" target="lib\net40" />
-    <file src="build\binaries\HtmlAgilityPlus.dll" target="lib\net40" />
     <file src="src\Nancy.Testing\**\*.cs" target="src" />
   </files>
 </package>
