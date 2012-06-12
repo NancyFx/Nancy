@@ -14,6 +14,7 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
+	  <dependency id="csquery" />
     </dependencies> 
     <tags>Nancy Testing</tags>
   </metadata>
