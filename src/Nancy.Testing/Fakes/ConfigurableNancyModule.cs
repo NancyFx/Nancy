@@ -5,33 +5,30 @@
     /// <summary>
     /// Provides a way to define a Nancy module though an API.
     /// </summary>
-    public class FakeNancyModule : NancyModule
+    public class ConfigurableNancyModule : NancyModule
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FakeNancyModule"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
         /// </summary>
-        public FakeNancyModule()
+        public ConfigurableNancyModule()
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FakeNancyModule"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
         /// </summary>
         /// <param name="closure">The configuration of the module.</param>
-        public FakeNancyModule(Action<FakeNancyModuleConfigurator> closure)
+        public ConfigurableNancyModule(Action<FakeNancyModuleConfigurator> closure)
+            : this(string.Empty, closure)
         {
-            var configurator =
-                new FakeNancyModuleConfigurator(this);
-
-            closure.Invoke(configurator);
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FakeNancyModule"/> class.
+        /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
         /// </summary>
         /// <param name="modulePath">The path that all routes in the module should be relative too.</param>
         /// <param name="closure">The configuration of the module.</param>
-        public FakeNancyModule(string modulePath, Action<FakeNancyModuleConfigurator> closure)
+        public ConfigurableNancyModule(string modulePath, Action<FakeNancyModuleConfigurator> closure)
             : base(modulePath)
         {
             var configurator =
@@ -41,17 +38,17 @@
         }
 
         /// <summary>
-        /// Provides an API for configuring a <see cref="FakeNancyModule"/> instance.
+        /// Provides an API for configuring a <see cref="ConfigurableNancyModule"/> instance.
         /// </summary>
         public class FakeNancyModuleConfigurator : IHideObjectMembers
         {
-            private readonly FakeNancyModule module;
+            private readonly ConfigurableNancyModule module;
 
             /// <summary>
             /// Initializes a new instance of the <see cref="FakeNancyModuleConfigurator"/> class.
             /// </summary>
-            /// <param name="module">The <see cref="FakeNancyModule"/> that should be configured.</param>
-            public FakeNancyModuleConfigurator(FakeNancyModule module)
+            /// <param name="module">The <see cref="ConfigurableNancyModule"/> that should be configured.</param>
+            public FakeNancyModuleConfigurator(ConfigurableNancyModule module)
             {
                 this.module = module;
             }
