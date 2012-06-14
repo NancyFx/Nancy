@@ -39,16 +39,16 @@
         {
             conventions.ViewLocationConventions = new List<Func<string, object, ViewLocationContext, string>>
             {
-                (viewName, model, viewLocationContext) => {
-                    return string.Concat("views/", viewLocationContext.ModulePath.TrimStart(new[] {'/'}), "/", viewName);
+                (viewName, model, viewLocationContext) =>{
+                    return string.IsNullOrEmpty(viewLocationContext.ModulePath) ? string.Empty : string.Concat("views/", viewLocationContext.ModulePath.TrimStart(new[] {'/'}), "/", viewName);
                 },
 
                 (viewName, model, viewLocationContext) => {
                     return string.Concat("views/", viewLocationContext.ModuleName, "/", viewName);
                 },
 
-                (viewName, model, viewLocationContext) => {
-                    return string.Concat(viewLocationContext.ModulePath.TrimStart(new[] { '/' }), "/", viewName);
+                (viewName, model, viewLocationContext) =>{
+                    return string.IsNullOrEmpty(viewLocationContext.ModulePath) ? string.Empty : string.Concat(viewLocationContext.ModulePath.TrimStart(new[] { '/' }), "/", viewName);
                 },
 
                 (viewName, model, viewLocationContext) => {
