@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Responses.Negotiation
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Content negotiation response processor
@@ -8,21 +9,27 @@
     public interface IResponseProcessor
     {
         /// <summary>
+        /// Gets a set of mappings that map a given extension (such as .json)
+        /// to a media range that can be sent to the client in a vary header.
+        /// </summary>
+        IEnumerable<Tuple<string, MediaRange>> ExtensionMappings { get; }
+
+        /// <summary>
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
-        /// <param name="requestedContentType">Content type requested by the client</param>
+        /// <param name="requestedMediaRange">Content type requested by the client</param>
         /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
-        ProcessorMatch CanProcess(Tuple<string, string> requestedContentType, dynamic model, NancyContext context);
+        ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context);
 
         /// <summary>
         /// Process the response
         /// </summary>
-        /// <param name="requestedContentType">Content type requested by the client</param>
+        /// <param name="requestedMediaRange">Content type requested by the client</param>
         /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A response</returns>
-        Response Process(Tuple<string, string> requestedContentType, dynamic model, NancyContext context);
+        Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context);
     }
 }

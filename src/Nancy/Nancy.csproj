@@ -152,7 +152,10 @@
     <Compile Include="RequestExecutionException.cs" />
     <Compile Include="Responses\NegotiatedResponse.cs" />
     <Compile Include="Responses\Negotiation\IResponseProcessor.cs" />
+    <Compile Include="Responses\Negotiation\JsonProcessor.cs" />
     <Compile Include="Responses\Negotiation\MatchResult.cs" />
+    <Compile Include="Responses\Negotiation\MediaRange.cs" />
+    <Compile Include="Responses\Negotiation\MediaType.cs" />
     <Compile Include="Responses\Negotiation\ProcessorMatch.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
