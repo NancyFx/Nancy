@@ -1,0 +1,64 @@
+﻿using System;
+using Nancy.Bootstrapper;
+using Nancy.Security;
+
+namespace Nancy.Authentication.Stateless
+{
+    /// <summary>
+    /// Nancy forms authentication implementation
+    /// </summary>
+    public static class StatelessAuthentication
+    {
+        /// <summary>
+        /// Enables forms authentication for the application
+        /// </summary>
+        /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
+        /// <param name="configuration">Forms authentication configuration</param>
+        public static void Enable(IPipelines pipelines, StatelessAuthenticationConfiguration configuration)
+        {
+            if (pipelines == null)
+            {
+                throw new ArgumentNullException("pipelines");
+            }
+
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            if (!configuration.IsValid)
+            {
+                throw new ArgumentException("Configuration is invalid", "configuration");
+            }
+
+            pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
+        }
+
+        /// <summary>
+        /// Gets the pre request hook for loading the authenticated user's details
+        /// from the cookie.
+        /// </summary>
+        /// <param name="configuration">Forms authentication configuration to use</param>
+        /// <returns>Pre request hook delegate</returns>
+        static Func<NancyContext, Response> GetLoadAuthenticationHook(StatelessAuthenticationConfiguration configuration)
+        {
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
+            return context =>
+            {
+                try
+                {
+                    context.CurrentUser = configuration.GetUserIdentity(context);
+                    return context.Response;
+                }
+                catch (Exception)
+                {
+                    return context.Response;
+                }
+            };
+        }
+    }
+}
