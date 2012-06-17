@@ -26,7 +26,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["#notThere"].ShouldExist());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -66,7 +66,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["#notHere"].ShouldExistOnce());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -76,7 +76,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["div"].ShouldExistOnce());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -89,7 +89,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNode.ShouldBeOfClass("nope"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -115,7 +115,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNodes.ShouldBeOfClass("myClass"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -167,7 +167,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNode.ShouldContain("nope"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -193,7 +193,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNodes.ShouldContain("Test"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
     }
 }
