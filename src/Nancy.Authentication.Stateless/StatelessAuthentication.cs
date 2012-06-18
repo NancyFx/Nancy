@@ -8,7 +8,6 @@ namespace Nancy.Authentication.Stateless
     /// </summary>
     public static class StatelessAuthentication
     {
-        /// <summary>
         /// Enables stateless authentication for the application
         /// </summary>
         /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
