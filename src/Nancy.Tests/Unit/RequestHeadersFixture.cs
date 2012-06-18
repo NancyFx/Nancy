@@ -1314,6 +1314,715 @@
             result.ShouldBeSameAs(expectedValues);
         }
 
+        [Fact]
+        public void Should_allow_accept_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                new Tuple<string, decimal>("text/plain", 0.8m), 
+                new Tuple<string, decimal>("text/ninja", 0.5m), 
+            };
+
+            var rawHeaders = 
+                new Dictionary<string, IEnumerable<string>> { { "Accept", new [] { "initial value" } } };
+
+            var headers = 
+                new RequestHeaders(rawHeaders) {Accept = expectedValues};
+
+            // When
+            var values = headers.Accept.ToList();
+
+            // Then
+            values[0].Item1.ShouldEqual("text/plain");
+            values[0].Item2.ShouldEqual(0.8m);
+            values[1].Item1.ShouldEqual("text/ninja");
+            values[1].Item2.ShouldEqual(0.5m);
+        }
+
+        [Fact]
+        public void Should_remove_accept_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { "text/plain" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Accept = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Accept").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_accept_charset_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                new Tuple<string, decimal>("utf-8", 0.7m), 
+                new Tuple<string, decimal>("iso-8859-5", 0.3m), 
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", new[] { "utf-7" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptCharset = expectedValues };
+
+            // When
+            var values = headers.AcceptCharset.ToList();
+
+            // Then
+            values[0].Item1.ShouldEqual("utf-8");
+            values[0].Item2.ShouldEqual(0.7m);
+            values[1].Item1.ShouldEqual("iso-8859-5");
+            values[1].Item2.ShouldEqual(0.3m);
+        }
+
+        [Fact]
+        public void Should_remove_accept_charset_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", new[] { "iso-8859-5" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptCharset = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Accept-Charset").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_accept_encoding_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                "compress", 
+                "gzip", 
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", new[] { "sdch" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptEncoding = expectedValues };
+
+            // When
+            var values = headers.AcceptEncoding.ToList();
+
+            // Then
+            values[0].ShouldEqual("compress");
+            values[1].ShouldEqual("gzip");
+        }
+
+        [Fact]
+        public void Should_remove_accept_encoding_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", new[] { "compress" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptEncoding = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Accept-Encoding").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_accept_language_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                new Tuple<string, decimal>("en-US", 0.7m), 
+                new Tuple<string, decimal>("sv-SE", 0.3m)
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Language", new[] { "da" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptLanguage = expectedValues };
+
+            // When
+            var values = headers.AcceptLanguage.ToList();
+
+            // Then
+            values[0].Item1.ShouldEqual("en-US");
+            values[0].Item2.ShouldEqual(0.7m);
+            values[1].Item1.ShouldEqual("sv-SE");
+            values[1].Item2.ShouldEqual(0.3m);
+        }
+
+        [Fact]
+        public void Should_remove_accept_language_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Accept-Language", new[] { "en-US" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { AcceptLanguage = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Accept-Language").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_accept_authorization_to_be_overwritten()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Authorization", new[] { "Basic 12345LDKJDFJDDSFDFvfdf==" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Authorization = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
+
+            // When
+            var values = headers.Authorization;
+
+            // Then
+            values.ShouldEqual("Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==");
+        }
+
+        [Fact]
+        public void Should_remove_authorization_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Authorization", new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Authorization = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Authorization").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_cache_control_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                "public", 
+                "max-age=123445", 
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Cache-Control", new[] { "no-transform" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { CacheControl = expectedValues };
+
+            // When
+            var values = headers.CacheControl.ToList();
+
+            // Then
+            values[0].ShouldEqual("public");
+            values[1].ShouldEqual("max-age=123445");
+        }
+
+        [Fact]
+        public void Should_remove_cache_control_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Cache-Control", new[] { "public" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { CacheControl = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Cache-Control").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_connection_to_be_overwritten()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Connection", new[] { "closed" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Connection = "keep-alive" };
+
+            // When
+            var values = headers.Connection;
+
+            // Then
+            values.ShouldEqual("keep-alive");
+        }
+
+        [Fact]
+        public void Should_remove_connection_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Connection", new[] { "text/plain" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Connection = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Connection").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_content_length_to_be_overwritten()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Content-Length", new[] { "12345" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { ContentLength = 54321 };
+
+            // When
+            var values = headers.ContentLength;
+
+            // Then
+            values.ShouldEqual(54321L);
+        }
+
+        [Fact]
+        public void Should_remove_content_length_if_assigned_zero()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Content-Length", new[] { "12345" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { ContentLength = 0 };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Content-Length").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_content_type_to_be_overwritten()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "application/json" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { ContentType = "text/html" };
+
+            // When
+            var values = headers.ContentType;
+
+            // Then
+            values.ShouldEqual("text/html");
+        }
+
+        [Fact]
+        public void Should_remove_content_type_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "text/plain" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { ContentType = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Content-Type").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_date_to_be_overwritten()
+        {
+            // Given
+            var expectedValue =
+                new DateTime(2012, 12, 15, 8, 12, 31);
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Date", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Date = expectedValue };
+
+            // When
+            var values = headers.Date;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_date_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Date", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Date = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Date").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_host_to_be_overwritten()
+        {
+            // Given
+            const string expectedValue = "www.nancyfx.org";
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Host", new[] { "en.wikipedia.org" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Host = expectedValue };
+
+            // When
+            var values = headers.Host;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_host_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Host", new[] { "www.nancyfx.org" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Host = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Host").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_if_match_headers_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                "fsdfsd", "c3pdfgdfgjiozzzz" 
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Match", new[] { "xyzzy", "c3piozzzz" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfMatch = expectedValues };
+
+            // When
+            var values = headers.IfMatch.ToArray();
+
+            // Then
+            values.ShouldEqualSequence(expectedValues);
+        }
+
+        [Fact]
+        public void Should_remove_if_match_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Match", new[] { "fsdfsd" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfMatch = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("If-Match").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_if_modified_since_to_be_overwritten()
+        {
+            // Given
+            var expectedValue =
+                new DateTime(2012, 12, 15, 8, 12, 31);
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfModifiedSince = expectedValue };
+
+            // When
+            var values = headers.IfModifiedSince;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_if_modified_since_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfModifiedSince = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("If-Modified-Since").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_if_none_match_to_be_overwritten()
+        {
+            // Given
+            var expectedValues = new[] {
+                "fsdfsd", "c3pdfgdfgjiozzzz" 
+            };
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { "xyzzy", "c3piozzzz" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfNoneMatch = expectedValues };
+
+            // When
+            var values = headers.IfNoneMatch.ToArray();
+
+            // Then
+            values.ShouldEqualSequence(expectedValues);
+        }
+
+        [Fact]
+        public void Should_remove_if_none_match_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { "fsdfsd" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfNoneMatch = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("If-None-Match").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_if_range_to_be_overwritten()
+        {
+            // Given
+            const string expectedValue = "737060cd8c284d8af7ad3082f209582d";
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Range", new[] { "737060ed712v4d8af7ad3082f209582d" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfRange = expectedValue };
+
+            // When
+            var values = headers.IfRange;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_if_range_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Range", new[] { "737060cd8c284d8af7ad3082f209582d" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfRange = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("If-Range").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_if_unmodified_since_to_be_overwritten()
+        {
+            // Given
+            var expectedValue =
+                new DateTime(2012, 12, 15, 8, 12, 31);
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfUnmodifiedSince = expectedValue };
+
+            // When
+            var values = headers.IfUnmodifiedSince;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_if_unmodified_since_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { IfUnmodifiedSince = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("If-Unmodified-Since").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_max_forwards_to_be_overwritten()
+        {
+            // Given
+            const int expectedValue = 10;
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", new[] { "3" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { MaxForwards = expectedValue };
+
+            // When
+            var values = headers.MaxForwards;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_max_forwards_if_assigned_zero()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", new[] { "2" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { MaxForwards = 0 };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Max-Forwards").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_referrer_to_be_overwritten()
+        {
+            // Given
+            const string expectedValue = "www.nancyfx.org";
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Referer", new[] { "en.wikipedia.com" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Referrer = expectedValue };
+
+            // When
+            var values = headers.Referrer;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_referrer_header_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "Referer", new[] { "en.wikipedia.com" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { Referrer = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("Referer").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_allow_user_agent_to_be_overwritten()
+        {
+            // Given
+            const string expectedValue = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1";
+
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "User-Agent", new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { UserAgent = expectedValue };
+
+            // When
+            var values = headers.UserAgent;
+
+            // Then
+            values.ShouldEqual(expectedValue);
+        }
+
+        [Fact]
+        public void Should_remove_user_agent_header_if_assigned_null()
+        {
+            // Given
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> { { "User-Agent", new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" } } };
+
+            var headers =
+                new RequestHeaders(rawHeaders) { UserAgent = null };
+
+            // When
+            var values = headers.Keys;
+
+            // Then
+            values.Contains("User-Agent").ShouldBeFalse();
+        }
+
         private static void ValidateCookie(INancyCookie cookie, string name, string value)
         {
             cookie.Name.ShouldEqual(name);
