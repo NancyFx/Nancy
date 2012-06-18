@@ -1,16 +1,15 @@
-﻿using System;
-using Nancy.Bootstrapper;
-using Nancy.Security;
-
 namespace Nancy.Authentication.Stateless
 {
+    using System;
+    using Nancy.Bootstrapper;
+
     /// <summary>
     /// Nancy forms authentication implementation
     /// </summary>
     public static class StatelessAuthentication
     {
         /// <summary>
-        /// Enables forms authentication for the application
+        /// Enables stateless authentication for the application
         /// </summary>
         /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
         /// <param name="configuration">Forms authentication configuration</param>
@@ -36,7 +35,7 @@ namespace Nancy.Authentication.Stateless
 
         /// <summary>
         /// Gets the pre request hook for loading the authenticated user's details
-        /// from the cookie.
+        /// from apikey given in request.
         /// </summary>
         /// <param name="configuration">Forms authentication configuration to use</param>
         /// <returns>Pre request hook delegate</returns>
@@ -48,17 +47,17 @@ namespace Nancy.Authentication.Stateless
             }
 
             return context =>
-            {
-                try
                 {
-                    context.CurrentUser = configuration.GetUserIdentity(context);
-                    return context.Response;
-                }
-                catch (Exception)
-                {
-                    return context.Response;
-                }
-            };
+                    try
+                    {
+                        context.CurrentUser = configuration.GetUserIdentity(context);
+                        return context.Response;
+                    }
+                    catch (Exception)
+                    {
+                        return context.Response;
+                    }
+                };
         }
     }
 }

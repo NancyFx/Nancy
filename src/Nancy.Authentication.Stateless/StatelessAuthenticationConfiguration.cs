@@ -1,8 +1,8 @@
-using System;
-using Nancy.Security;
-
 namespace Nancy.Authentication.Stateless
 {
+    using System;
+    using Nancy.Security;
+
     /// <summary>
     /// Configuration options for stateless authentication
     /// </summary>
