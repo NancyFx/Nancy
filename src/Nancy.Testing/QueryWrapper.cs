@@ -3,57 +3,59 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
-    using HtmlAgilityPlus;
+    using CsQuery;
+    using CsQuery.Implementation;
 
     public class QueryWrapper : IEnumerable<NodeWrapper>
     {
-        private SharpQuery query;
+        private readonly CQ document;
 
-        private QueryWrapper(SharpQuery query)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="QueryWrapper"/> class, using
+        /// the provided <paramref name="document"/>.
+        /// </summary>
+        /// <param name="document">The document that should be wrapped.</param>
+        public QueryWrapper(CQ document)
         {
-            this.query = query;
+            this.document = document;
         }
 
         /// <summary>
         /// Gets elements from CSS3 selectors
         /// </summary>
         /// <param name="selector">CSS3 selector</param>
-        /// <returns>QueryWrapper instance</returns>
+        /// <returns>A <see cref="QueryWrapper"/> instance</returns>
         public QueryWrapper this[string selector]
         {
-            get
-            {
-                return this.query.Find(selector);
-            }
-        }
-
-        public static implicit operator QueryWrapper(SharpQuery sourceQuery)
-        {
-            return new QueryWrapper(sourceQuery);
+            get { return new QueryWrapper(this.document[selector]); }
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through the collection.
         /// </summary>
-        /// <returns>
-        /// A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.
-        /// </returns>
-        /// <filterpriority>1</filterpriority>
+        /// <returns>A <see cref="IEnumerator{T}"/> that can be used to iterate through the collection.</returns>
         public IEnumerator<NodeWrapper> GetEnumerator()
         {
-            return this.query.All().Select(n => (NodeWrapper)n).GetEnumerator();
+            return this.document.Select(x => new NodeWrapper(x as DomElement)).GetEnumerator();
         }
 
         /// <summary>
         /// Returns an enumerator that iterates through a collection.
         /// </summary>
-        /// <returns>
-        /// An <see cref="T:System.Collections.IEnumerator"/> object that can be used to iterate through the collection.
-        /// </returns>
-        /// <filterpriority>2</filterpriority>
+        /// <returns>An <see cref="IEnumerator"/> object that can be used to iterate through the collection.</returns>
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return this.GetEnumerator();
+            return GetEnumerator();
+        }
+
+        /// <summary>
+        /// Performs an implicit conversion from <see cref="CQ"/> to <see cref="QueryWrapper"/>.
+        /// </summary>
+        /// <param name="document">The <see cref="CQ"/> that should be cast.</param>
+        /// <returns>An <see cref="QueryWrapper"/> instance, that contains the results of the cast.</returns>
+        public static implicit operator QueryWrapper(CQ document)
+        {
+            return new QueryWrapper(document);
         }
     }
 }

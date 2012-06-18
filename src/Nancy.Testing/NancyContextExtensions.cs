@@ -43,7 +43,7 @@ namespace Nancy.Testing
 				{
 					context.Response.Contents.Invoke(contentsStream);
 					contentsStream.Position = 0;
-					return new DocumentWrapper(contentsStream);
+					return new DocumentWrapper(contentsStream.GetBuffer());
 				}
 			});
 		}
