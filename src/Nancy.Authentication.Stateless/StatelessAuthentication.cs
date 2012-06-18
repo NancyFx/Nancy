@@ -47,17 +47,17 @@ namespace Nancy.Authentication.Stateless
             }
 
             return context =>
+            {
+                try
                 {
-                    try
-                    {
-                        context.CurrentUser = configuration.GetUserIdentity(context);
-                        return context.Response;
-                    }
-                    catch (Exception)
-                    {
-                        return context.Response;
-                    }
-                };
+                    context.CurrentUser = configuration.GetUserIdentity(context);
+                    return context.Response;
+                }
+                catch (Exception)
+                {
+                    return context.Response;
+                }
+            };
         }
     }
 }
