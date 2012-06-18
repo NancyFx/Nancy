@@ -9,39 +9,21 @@ namespace Nancy
     /// <summary>
     /// Registers the static contents hook in the application pipeline at startup.
     /// </summary>
-    public class StaticContentStartup : IStartup
+    public class StaticContentApplicationStartup : IApplicationStartup
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly StaticContentsConventions conventions;
 
-        public StaticContentStartup(IRootPathProvider rootPathProvider, StaticContentsConventions conventions)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StaticContentApplicationStartup"/> class, using the
+        /// provided <paramref name="rootPathProvider"/> and <paramref name="conventions"/>.
+        /// </summary>
+        /// <param name="rootPathProvider">The current root path provider.</param>
+        /// <param name="conventions">The static content conventions.</param>
+        public StaticContentApplicationStartup(IRootPathProvider rootPathProvider, StaticContentsConventions conventions)
         {
             this.rootPathProvider = rootPathProvider;
             this.conventions = conventions;
-        }
-
-        /// <summary>
-        /// Gets the type registrations to register for this startup task`
-        /// </summary>
-        public IEnumerable<TypeRegistration> TypeRegistrations
-        {
-            get { return null; }
-        }
-
-        /// <summary>
-        /// Gets the collection registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
-        {
-            get { return null; }
-        }
-
-        /// <summary>
-        /// Gets the instance registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<InstanceRegistration> InstanceRegistrations
-        {
-            get { return null; }
         }
 
         /// <summary>
