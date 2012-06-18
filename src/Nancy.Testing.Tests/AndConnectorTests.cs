@@ -27,7 +27,7 @@ namespace Nancy.Testing.Tests
                         document["#testId"].ShouldExist().And.ShouldBeOfClass("myClass");
                     });
 
-            Assert.IsType<EqualException>(result);
+            Assert.IsType<Nancy.Testing.AssertException>(result);
         }
     }
 }
