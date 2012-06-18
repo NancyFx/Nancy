@@ -25,7 +25,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var engines = new[] { A.Fake<IViewEngine>(), A.Fake<IViewEngine>() };
-            var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
+            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
             startup.Initialize(null);
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var engines = new[] { A.Fake<IViewEngine>() };
-            var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
+            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
             startup.Initialize(null);
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 new ViewLocationResult("", "", "spark", null),
             };
 
-            var startup = new ViewEngineStartup(engines, this.viewLocationCache, this.viewCache);
+            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
 
             // When
             startup.Initialize(null);

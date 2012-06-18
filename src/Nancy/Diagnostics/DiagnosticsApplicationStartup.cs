@@ -1,11 +1,13 @@
 ﻿namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
-    using Cryptography;
     using ModelBinding;
     using Nancy.Bootstrapper;
 
-    public class DiagnosticsStartup : IStartup
+    /// <summary>
+    /// Wires up the diagnostics support at application startup.
+    /// </summary>
+    public class DiagnosticsApplicationStartup : IApplicationStartup
     {
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IDiagnosticsProvider> diagnosticProviders;
@@ -15,7 +17,7 @@
         private readonly NancyInternalConfiguration configuration;
         private readonly IModelBinderLocator modelBinderLocator;
 
-        public DiagnosticsStartup(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
+        public DiagnosticsApplicationStartup(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -24,30 +26,6 @@
             this.requestTracing = requestTracing;
             this.configuration = configuration;
             this.modelBinderLocator = modelBinderLocator;
-        }
-
-        /// <summary>
-        /// Gets the type registrations to register for this startup task`
-        /// </summary>
-        public IEnumerable<TypeRegistration> TypeRegistrations
-        {
-            get { return null; }
-        }
-
-        /// <summary>
-        /// Gets the collection registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
-        {
-            get { return null; }
-        }
-
-        /// <summary>
-        /// Gets the instance registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<InstanceRegistration> InstanceRegistrations
-        {
-            get { return null; }
         }
 
         /// <summary>

@@ -91,10 +91,11 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
-    <Compile Include="Bootstrapper\FavIconStartup.cs" />
+    <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
+    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
-    <Compile Include="Bootstrapper\IStartup.cs" />
+    <Compile Include="Bootstrapper\IApplicationStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
@@ -113,7 +114,7 @@
     <Compile Include="Diagnostics\DiagnosticsHook.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleBuilder.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
-    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
+    <Compile Include="Diagnostics\DiagnosticsApplicationStartup.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
@@ -130,7 +131,7 @@
     <Compile Include="Diagnostics\TestingDiagnosticProvider.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
-    <Compile Include="JsonpStartup.cs" />
+    <Compile Include="JsonpApplicationStartup.cs" />
     <Compile Include="RequestExecutionException.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
@@ -142,7 +143,7 @@
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
-    <Compile Include="StaticContentStartup.cs" />
+    <Compile Include="StaticContentApplicationStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />
@@ -182,7 +183,7 @@
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="Responses\HtmlResponse.cs" />
     <Compile Include="Security\Csrf.cs" />
-    <Compile Include="Security\CsrfStartup.cs" />
+    <Compile Include="Security\CsrfApplicationStartup.cs" />
     <Compile Include="Security\CsrfToken.cs" />
     <Compile Include="Security\CsrfTokenExtensions.cs" />
     <Compile Include="Security\CsrfValidationException.cs" />
@@ -190,7 +191,7 @@
     <Compile Include="Security\ICsrfTokenValidator.cs" />
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />
-    <Compile Include="RootPathStartup.cs" />
+    <Compile Include="RootPathApplicationStartup.cs" />
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
@@ -329,7 +330,7 @@
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineWrapper.cs" />
-    <Compile Include="ViewEngines\ViewEngineStartup.cs" />
+    <Compile Include="ViewEngines\ViewEngineApplicationStartup.cs" />
     <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />

@@ -10,35 +10,20 @@
     /// folders in the path defined by the provided <see cref="IRootPathProvider"/> and if it cannot
     /// fine one, it will fall back and use the default favicon that is embedded in the Nancy.dll file.
     /// </summary>
-    public class FavIconStartup : IStartup
+    public class FavIconApplicationStartup : IApplicationStartup
     {
         private static IRootPathProvider rootPathProvider;
         private static byte[] favIcon;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="FavIconStartup"/> class, with the
+        /// Initializes a new instance of the <see cref="FavIconApplicationStartup"/> class, with the
         /// provided <see cref="IRootPathProvider"/> instance.
         /// </summary>
         /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> that should be used to scan for a favicon.</param>
-        public FavIconStartup(IRootPathProvider rootPathProvider)
+        public FavIconApplicationStartup(IRootPathProvider rootPathProvider)
         {
-            FavIconStartup.rootPathProvider = rootPathProvider;
+            FavIconApplicationStartup.rootPathProvider = rootPathProvider;
         }
-
-        /// <summary>
-        /// Gets the type registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<TypeRegistration> TypeRegistrations { get; private set; }
-
-        /// <summary>
-        /// Gets the collection registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
-
-        /// <summary>
-        /// Gets the instance registrations to register for this startup task
-        /// </summary>
-        public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
 
         /// <summary>
         /// Gets the default favicon
