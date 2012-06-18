@@ -6,9 +6,8 @@ namespace Nancy.Testing
     using System.Linq;
     using System.Text;
     using Nancy.Bootstrapper;
-    using IO;
-
     using Nancy.Helpers;
+    using IO;
 
     /// <summary>
     /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.
@@ -18,7 +17,7 @@ namespace Nancy.Testing
         private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
 
-        private IDictionary<string, string> cookies = new Dictionary<string, string>();
+        private readonly IDictionary<string, string> cookies = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.

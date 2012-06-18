@@ -107,7 +107,7 @@
     <Compile Include="NancyContextExtensions.cs" />
     <Compile Include="DocumentWrapper.cs" />
     <Compile Include="Fakes\FakeRootPathProvider.cs" />
-    <Compile Include="Fakes\FakeNancyModule.cs" />
+    <Compile Include="ConfigurableNancyModule.cs" />
     <Compile Include="IBrowserContextValues.cs" />
     <Compile Include="IndexHelper.cs" />
     <Compile Include="NodeWrapper.cs" />
