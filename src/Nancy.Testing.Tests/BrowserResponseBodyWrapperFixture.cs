@@ -15,7 +15,8 @@
             // Given
             var body = new BrowserResponseBodyWrapper(new Response
             {
-                Contents = stream => {
+                Contents = stream =>
+                {
                     var writer = new StreamWriter(stream);
                     writer.Write("This is the content");
                     writer.Flush();
@@ -50,10 +51,10 @@
 
             // Then
 #if __MonoCS__
-			AssertExtensions.ShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
+            AssertExtensions.ShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
 #else
-			result.ShouldContain("inner");
-#endif			
+            result.ShouldContain("inner");
+#endif
         }
     }
 }
