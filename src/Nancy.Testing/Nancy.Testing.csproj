@@ -92,7 +92,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AndConnector.cs" />
+    <Compile Include="AssertEqualityComparer.cs" />
     <Compile Include="AssertException.cs" />
+    <Compile Include="Asserts.cs" />
     <Compile Include="Browser.cs" />
     <Compile Include="BrowserContext.cs" />
     <Compile Include="BrowserContextExtensions.cs" />

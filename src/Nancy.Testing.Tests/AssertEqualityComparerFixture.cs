@@ -1,8 +1,6 @@
 namespace Nancy.Testing.Tests
 {
     using System;
-    using System.Diagnostics;
-    using FakeItEasy;
     using Nancy.Tests;
     using Xunit;
     using Xunit.Extensions;
@@ -71,6 +69,39 @@ namespace Nancy.Testing.Tests
         public void Should_invoke_compareto_with_expected_value_when_actual_is_generic_comparable()
         {
             // Given
+            var comparer = new AssertEqualityComparer<GenericCompareableModel>();
+            var actual = new GenericCompareableModel();
+            var expected = new GenericCompareableModel();
+
+            // When
+            comparer.Equals(expected, actual);
+
+            // Then
+            actual.ExpectedValueThatWasPassedIn.ShouldBeSameAs(expected);
+        }
+
+        [Theory]
+        [InlineData(-1, false)]
+        [InlineData(0, true)]
+        [InlineData(1, false)]
+        public void Should_return_result_from_comparing_generic_comparables(int compareResult, bool expectedResult)
+        {
+            // Given
+            var comparer = new AssertEqualityComparer<GenericCompareableModel>();
+            var actual = new GenericCompareableModel(compareResult);
+            var expected = new GenericCompareableModel();
+
+            // When
+            var result = comparer.Equals(expected, actual);
+
+            // Then
+            result.ShouldEqual(expectedResult);
+        }
+
+        [Fact]
+        public void Should_invoke_compareto_with_expected_value_when_actual_is_comparable()
+        {
+            // Given
             var comparer = new AssertEqualityComparer<CompareableModel>();
             var actual = new CompareableModel();
             var expected = new CompareableModel();
@@ -86,7 +117,7 @@ namespace Nancy.Testing.Tests
         [InlineData(-1, false)]
         [InlineData(0, true)]
         [InlineData(1, false)]
-        public void Should_return_result_from_comparing_generic_comparables(int compareResult, bool expectedResult)
+        public void Should_return_result_from_comparing_comparables(int compareResult, bool expectedResult)
         {
             // Given
             var comparer = new AssertEqualityComparer<CompareableModel>();
@@ -123,7 +154,30 @@ namespace Nancy.Testing.Tests
             }
         }
 
-        public class CompareableModel : IComparable<CompareableModel>
+        public class GenericCompareableModel : IComparable<GenericCompareableModel>
+        {
+            private readonly int returnValue;
+
+            public GenericCompareableModel()
+                : this(0)
+            {
+            }
+
+            public GenericCompareableModel(int returnValue)
+            {
+                this.returnValue = returnValue;
+            }
+
+            public GenericCompareableModel ExpectedValueThatWasPassedIn { get; private set; }
+
+            public int CompareTo(GenericCompareableModel comparable)
+            {
+                this.ExpectedValueThatWasPassedIn = comparable;
+                return this.returnValue;
+            }
+        }
+
+        public class CompareableModel : IComparable
         {
             private readonly int returnValue;
 
@@ -137,9 +191,9 @@ namespace Nancy.Testing.Tests
                 this.returnValue = returnValue;
             }
 
-            public CompareableModel ExpectedValueThatWasPassedIn { get; private set; }
+            public object ExpectedValueThatWasPassedIn { get; private set; }
 
-            public int CompareTo(CompareableModel comparable)
+            public int CompareTo(object comparable)
             {
                 this.ExpectedValueThatWasPassedIn = comparable;
                 return this.returnValue;
