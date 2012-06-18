@@ -25,7 +25,7 @@ namespace Nancy.Testing
         private readonly List<InstanceRegistration> registeredInstances;
         private readonly NancyInternalConfiguration configuration;
         private readonly ConfigurableModuleCatalog catalog;
-        private bool disableAutoRegistration;
+        private bool enableAutoRegistration;
         private DiagnosticsConfiguration diagnosticConfiguration;
 
         /// <summary>
@@ -215,7 +215,7 @@ namespace Nancy.Testing
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            if (!this.disableAutoRegistration)
+            if (this.enableAutoRegistration)
             {
                 container.AutoRegister();
                 this.RegisterBootstrapperTypes(container);
@@ -534,9 +534,9 @@ namespace Nancy.Testing
             /// Disables the auto registration behavior of the bootstrapper
             /// </summary>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator DisableAutoRegistration()
+            public ConfigurableBoostrapperConfigurator EnableAutoRegistration()
             {
-                this.bootstrapper.disableAutoRegistration = true;
+                this.bootstrapper.enableAutoRegistration = true;
                 return this;
             }
 
