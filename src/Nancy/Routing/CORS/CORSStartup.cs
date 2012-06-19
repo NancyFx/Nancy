@@ -5,31 +5,16 @@ namespace Nancy.Routing.CORS
     
     using Nancy.Bootstrapper;
     
-    public class CORSStartup : IStartup
+    public class CORSStartup : IApplicationStartup
     {
         private readonly IRoutePatternMatcher _routePatternMatcher;
 
-        public CORSStartup(IRoutePatternMatcher routePatternMatcher)
+        public CORSStartup (IRoutePatternMatcher routePatternMatcher)
         {
             _routePatternMatcher = routePatternMatcher;
         }
 
-        #region Implementation of IStartup
-
-        public IEnumerable<TypeRegistration> TypeRegistrations
-        {
-            get { return null; }
-        }
-
-        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations
-        {
-            get { return null;  }
-        }
-
-        public IEnumerable<InstanceRegistration> InstanceRegistrations
-        {
-            get { return null; }
-        }
+        #region Implementation of IApplicationStartup
 
         public void Initialize(IPipelines pipelines)
         {
