@@ -1,4 +1,4 @@
-﻿namespace Nancy.Demo.Authentication.Stateless
+namespace Nancy.Demo.Authentication.Stateless
 {
     using System.Collections.Generic;
     using Nancy.Security;
