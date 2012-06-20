@@ -380,7 +380,6 @@ namespace Nancy.Testing
             }
         }
 
-
         /// <summary>
         /// <para>
         /// The pre-request hook
@@ -487,14 +486,31 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance as a dependency.
+            /// Configures the bootstrapper to use the provided type as a dependency.
             /// </summary>
             /// <param name="type">The type of the dependency that should be used registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            /// <remarks>This method will register the instance for all the interfaces it implements and the type itself.</remarks>
             public ConfigurableBoostrapperConfigurator Dependency<T>(Type type)
             {
                 this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), type));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to register the specified type as a dependency.
+            /// </summary>
+            /// <typeparam name="T">The type of the dependency that should be registered with the bootstrapper.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            /// <remarks>This method will register the type for all the interfaces it implements and the type itself.</remarks>
+            public ConfigurableBoostrapperConfigurator Dependency<T>()
+            {
+                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), typeof(T)));
+
+                foreach (var interfaceType in typeof(T).GetInterfaces())
+                {
+                    this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof(T)));
+                }
 
                 return this;
             }
@@ -520,26 +536,11 @@ namespace Nancy.Testing
             /// <summary>
             /// Configures the bootstrapper to register the specified type as a dependency.
             /// </summary>
-            /// <typeparam name="T">The type of the dependency that should be registered with the bootstrapper.</typeparam>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Dependency<T>(object instance)
             {
                 this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to register the specified type as a dependency.
-            /// </summary>
-            /// <typeparam name="T">The type of the dependency that should be registered with the bootstrapper.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator Dependency<T>()
-            {
-                foreach (var interfaceType in typeof(T).GetInterfaces())
-                {
-                    this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof(T)));
-                }
-
                 return this;
             }
 
@@ -559,14 +560,49 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance as a dependency.
+            /// Configures the bootstrapper to register the specified instances as a dependencies.
             /// </summary>
-            /// <param name="dependencies">The type of the dependency that should be used registered with the bootstrapper.</param>
+            /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            /// <remarks>This method will register the instance for all the interfaces it implements and the type itself.</remarks>
+            public ConfigurableBoostrapperConfigurator Dependencies<T>(params object[] dependencies)
+            {
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency<T>(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided types as a dependency.
+            /// </summary>
+            /// <param name="dependencies">The types that should be used registered as dependencies with the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            /// <remarks>This method will register the types for all the interfaces they implement and the types themselves.</remarks>
+            public ConfigurableBoostrapperConfigurator Dependencies(params Type[] dependencies)
+            {
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided types as a dependency.
+            /// </summary>
+            /// <param name="dependencies">The types that should be used registered as dependencies with the bootstrapper.</param>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Dependencies<T>(params Type[] dependencies)
             {
-                this.bootstrapper.registeredTypes.Add(new CollectionTypeRegistration(typeof(T), dependencies));
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency<T>(dependency);
+                }
 
                 return this;
             }

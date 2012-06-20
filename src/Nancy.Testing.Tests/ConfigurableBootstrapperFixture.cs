@@ -11,51 +11,6 @@
     using Xunit;
     using Xunit.Sdk;
 
-    public class MyModuleFixture
-    {
-        [Fact]
-        public void Should_expectation()
-        {
-            // Given
-            var bootstrapper = new ConfigurableBootstrapper(with =>{
-                with.DisableAutoRegistration();
-                with.Module<MyModule>();
-                with.Dependency<DefaultFoo>();
-            });
-
-            var browser = new Browser(bootstrapper);
-
-            // When
-            var results = browser.Get("/");
-
-            // Then
-            results.Body.AsString().ShouldEqual("Hello world");
-        }
-    }
-
-    public class MyModule : NancyModule
-    {
-        public MyModule(IFoo foo)
-        {
-            Get["/"] = parameters => {
-                return foo.Execute();
-            };
-        }
-    }
-
-    public interface IFoo
-    {
-        string Execute();
-    }
-
-    public class DefaultFoo : IFoo
-    {
-        public string Execute()
-        {
-            return "Hello world";
-        }
-    }
-
     public class ConfigurableBootstrapperFixture
     {
         [Fact]
