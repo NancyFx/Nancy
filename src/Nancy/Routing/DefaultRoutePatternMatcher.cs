@@ -86,21 +86,37 @@
 
                 if (current.IsParameterized())
                 {
-                    current = segment.Replace(".", @"\.");
-
-                    foreach (var name in segment.GetParameterNames())
-                    {
-                        var replacement =
-                            string.Format(CultureInfo.InvariantCulture, @"(?<{0}>.+?)", name);
-
-                        current = current.Replace(
-                            string.Concat("{", name, "}"),
-                            replacement);
-                    }
+                    current = ParameterizeSegment(segment);
+                }
+                else
+                {
+                    current = (!IsRegexSegment(current)) ? Regex.Escape(current) : current;
                 }
 
                 yield return current;
             }
+        }
+
+        private static bool IsRegexSegment(string segment)
+        {
+            return (segment.StartsWith("(") && segment.EndsWith(")"));
+        }
+
+        private static string ParameterizeSegment(string segment)
+        {
+            segment = segment.Replace(".", @"\.");
+
+            foreach (var name in segment.GetParameterNames())
+            {
+                var replacement =
+                    string.Format(CultureInfo.InvariantCulture, @"(?<{0}>.+?)", name);
+
+                segment = segment.Replace(
+                    string.Concat("{", name, "}"),
+                    replacement);
+            }
+
+            return segment;
         }
     }
 }

@@ -157,7 +157,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_uri()
+        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_capture_segments()
         {
             // Given
             const string parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
@@ -167,6 +167,19 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             ((string)results.Parameters["bar"]).ShouldEqual(parameter);
+        }
+
+        [Fact]
+        public void Should_allow_all_of_the_unreserved_rfc_1738_characters_in_the_non_capture_segments()
+        {
+            // Given
+            const string parameter = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_.!*'()";
+
+            // When
+            var results = this.matcher.Match("/foo/" + parameter, "/foo/" + parameter, null);
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
         }
 
         [Fact]
