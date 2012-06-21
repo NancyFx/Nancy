@@ -64,6 +64,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CsQuery">
+      <HintPath>..\packages\CsQuery.1.0.1.30111\lib\net40\CsQuery.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Core">
@@ -77,14 +80,6 @@
     <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.4.0.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPack.dll</HintPath>
-    </Reference>
-    <Reference Include="HtmlAgilityPlus, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\htmlagilitypack\HtmlAgilityPlus.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -104,8 +99,8 @@
     <Compile Include="BrowserResponseBodyWrapperExtensions.cs" />
     <Compile Include="BrowserResponseExtensions.cs" />
     <Compile Include="ConfigurableBootstrapper.cs" />
-    <Compile Include="NancyContextExtensions.cs" />
     <Compile Include="DocumentWrapper.cs" />
+    <Compile Include="NancyContextExtensions.cs" />
     <Compile Include="Fakes\FakeRootPathProvider.cs" />
     <Compile Include="ConfigurableNancyModule.cs" />
     <Compile Include="IBrowserContextValues.cs" />
