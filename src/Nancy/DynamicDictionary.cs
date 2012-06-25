@@ -5,6 +5,9 @@
     using System.Collections.Generic;
     using System.Dynamic;
     
+    /// <summary>
+    /// A dictionary that supports dynamic access.
+    /// </summary>
     public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
         private readonly IDictionary<string, dynamic> dictionary =
