@@ -175,7 +175,7 @@ namespace Nancy.Bootstrapper
         }
     }
 
-    public static class AppDomainAssemblyTypeScannerExcentions
+    public static class AppDomainAssemblyTypeScannerExtensions
     {
         public static IEnumerable<Type> NotOfType<TType>(this IEnumerable<Type> types)
         {
