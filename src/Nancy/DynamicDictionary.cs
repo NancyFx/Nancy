@@ -78,7 +78,8 @@
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
-        public IEnumerator<string> GetEnumerator() {
+        public IEnumerator<string> GetEnumerator()
+        {
             return dictionary.Keys.GetEnumerator();
         }
 
@@ -86,7 +87,8 @@
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
         /// <returns>A <see cref="IEnumerator"/> that contains dynamic member names.</returns>
-        IEnumerator IEnumerable.GetEnumerator() {
+        IEnumerator IEnumerable.GetEnumerator()
+        {
             return dictionary.Keys.GetEnumerator();
         }
 
