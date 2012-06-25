@@ -5,10 +5,13 @@
     using System.Collections.Generic;
     using System.Dynamic;
     
-    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>
+    /// <summary>
+    /// A dictionary that supports dynamic access.
+    /// </summary>
+    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
-        private readonly Dictionary<string, object> dictionary =
-            new Dictionary<string, object>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+        private readonly IDictionary<string, dynamic> dictionary =
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Returns an empty dynamic dictionary.
@@ -78,7 +81,8 @@
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
-        public IEnumerator<string> GetEnumerator() {
+        public IEnumerator<string> GetEnumerator()
+        {
             return dictionary.Keys.GetEnumerator();
         }
 
@@ -86,7 +90,8 @@
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
         /// <returns>A <see cref="IEnumerator"/> that contains dynamic member names.</returns>
-        IEnumerator IEnumerable.GetEnumerator() {
+        IEnumerator IEnumerable.GetEnumerator()
+        {
             return dictionary.Keys.GetEnumerator();
         }
 
@@ -152,12 +157,160 @@
         }
 
         /// <summary>
+        /// Returns an enumerator that iterates through the collection.
+        /// </summary>
+        /// <returns>A <see cref="T:System.Collections.Generic.IEnumerator`1"/> that can be used to iterate through the collection.</returns>
+        IEnumerator<KeyValuePair<string, dynamic>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
+        {
+            return this.dictionary.GetEnumerator();
+        }
+
+        /// <summary>
         /// Returns a hash code for this <see cref="DynamicDictionary"/>.
         /// </summary>
         /// <returns> A hash code for this <see cref="DynamicDictionary"/>, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
             return (dictionary != null ? dictionary.GetHashCode() : 0);
+        }
+
+        /// <summary>
+        /// Adds an element with the provided key and value to the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <param name="key">The object to use as the key of the element to add.</param>
+        /// <param name="value">The object to use as the value of the element to add.</param>
+        public void Add(string key, dynamic value)
+        {
+            this[key] = value;
+        }
+
+        /// <summary>
+        /// Adds an item to the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <param name="item">The object to add to the <see cref="DynamicDictionary"/>.</param>
+        public void Add(KeyValuePair<string, dynamic> item)
+        {
+            this[item.Key] = item.Value;
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="DynamicDictionary"/> contains an element with the specified key.
+        /// </summary>
+        /// <returns><see langword="true" /> if the <see cref="DynamicDictionary"/> contains an element with the key; otherwise, <see langword="false" />.
+        /// </returns>
+        /// <param name="key">The key to locate in the <see cref="DynamicDictionary"/>.</param>
+        public bool ContainsKey(string key)
+        {
+            return this.dictionary.ContainsKey(key);
+        }
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the keys of the <see cref="DynamicDictionary"/>.</returns>
+        public ICollection<string> Keys
+        {
+            get { return this.dictionary.Keys; }
+        }
+
+        /// <summary>
+        /// Gets the value associated with the specified key.
+        /// </summary>
+        /// <returns><see langword="true" /> if the <see cref="DynamicDictionary"/> contains an element with the specified key; otherwise, <see langword="false" />.</returns>
+        /// <param name="key">The key whose value to get.</param>
+        /// <param name="value">When this method returns, the value associated with the specified key, if the key is found; otherwise, the default value for the type of the <paramref name="value"/> parameter. This parameter is passed uninitialized.</param>
+        public bool TryGetValue(string key, out dynamic value)
+        {
+            return this.dictionary.TryGetValue(key, out value);
+        }
+
+        /// <summary>
+        /// Removes all items from the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        public void Clear()
+        {
+            this.dictionary.Clear();
+        }
+
+        /// <summary>
+        /// Gets the number of elements contained in the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns>The number of elements contained in the <see cref="DynamicDictionary"/>.</returns>
+        public int Count
+        {
+            get { return this.dictionary.Count; }
+        }
+
+        /// <summary>
+        /// Determines whether the <see cref="DynamicDictionary"/> contains a specific value.
+        /// </summary>
+        /// <returns><see langword="true" /> if <paramref name="item"/> is found in the <see cref="DynamicDictionary"/>; otherwise, <see langword="false" />.
+        /// </returns>
+        /// <param name="item">The object to locate in the <see cref="DynamicDictionary"/>.</param>
+        public bool Contains(KeyValuePair<string, dynamic> item)
+        {
+            var dynamicValueKeyValuePair =
+                GetDynamicKeyValuePair(item);
+
+            return this.dictionary.Contains(dynamicValueKeyValuePair);
+        }
+
+        /// <summary>
+        /// Copies the elements of the <see cref="DynamicDictionary"/> to an <see cref="T:System.Array"/>, starting at a particular <see cref="T:System.Array"/> index.
+        /// </summary>
+        /// <param name="array">The one-dimensional <see cref="T:System.Array"/> that is the destination of the elements copied from the <see cref="DynamicDictionary"/>. The <see cref="T:System.Array"/> must have zero-based indexing.</param>
+        /// <param name="arrayIndex">The zero-based index in <paramref name="array"/> at which copying begins.</param>
+        public void CopyTo(KeyValuePair<string, dynamic>[] array, int arrayIndex)
+        {
+            this.dictionary.CopyTo(array, arrayIndex);
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the <see cref="DynamicDictionary"/> is read-only.
+        /// </summary>
+        /// <returns>Always returns <see langword="false" />.</returns>
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        /// <summary>
+        /// Removes the element with the specified key from the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns><see langword="true" /> if the element is successfully removed; otherwise, <see langword="false" />.</returns>
+        /// <param name="key">The key of the element to remove.</param>
+        public bool Remove(string key)
+        {
+            return this.dictionary.Remove(key);
+        }
+
+        /// <summary>
+        /// Removes the first occurrence of a specific object from the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns><see langword="true" /> if <paramref name="item"/> was successfully removed from the <see cref="DynamicDictionary"/>; otherwise, <see langword="false" />.</returns>
+        /// <param name="item">The object to remove from the <see cref="DynamicDictionary"/>.</param>
+        public bool Remove(KeyValuePair<string, dynamic> item)
+        {
+            var dynamicValueKeyValuePair = 
+                GetDynamicKeyValuePair(item);
+
+            return this.dictionary.Remove(dynamicValueKeyValuePair);
+        }
+
+        /// <summary>
+        /// Gets an <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="DynamicDictionary"/>.
+        /// </summary>
+        /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="DynamicDictionary"/>.</returns>
+        public ICollection<dynamic> Values
+        {
+            get { return this.dictionary.Values; }
+        }
+
+        private static KeyValuePair<string, dynamic> GetDynamicKeyValuePair(KeyValuePair<string, dynamic> item)
+        {
+            var dynamicValueKeyValuePair =
+                new KeyValuePair<string, dynamic>(item.Key, new DynamicDictionaryValue(item.Value));
+            return dynamicValueKeyValuePair;
         }
 
         private static string GetNeutralKey(string key)

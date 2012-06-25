@@ -2,8 +2,10 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Xunit;
+    using Xunit.Extensions;
 
     public class DynamicDictionaryFixture
     {
@@ -807,6 +809,300 @@ namespace Nancy.Tests.Unit
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"42");
+        }
+
+        [Theory]
+        [InlineData(2)]
+        [InlineData(5)]
+        public void Should_return_correct_count(int expectedNumberOfEntries)
+        {
+            // Given
+            var input = new DynamicDictionary();
+
+            // When
+            for (var i = 0; i < expectedNumberOfEntries; i++)
+            {
+                input[i.ToString(CultureInfo.InvariantCulture)] = i;
+            }
+
+            // Then
+            input.Count.ShouldEqual(expectedNumberOfEntries);
+        }
+
+        [Fact]
+        public void Should_add_value_when_invoking_string_dynamic_overload_of_add_method()
+        {
+            // Given
+            var input = new DynamicDictionary();
+
+            // When
+            input.Add("test", 10);
+            var value = (int)input["test"];
+
+            // Then
+            value.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_add_value_when_invoking_keyvaluepair_overload_of_add_method()
+        {
+            // Given
+            var input = new DynamicDictionary();
+
+            // When
+            input.Add(new KeyValuePair<string, dynamic>("test", 10));
+            var value = (int)input["test"];
+
+            // Then
+            value.ShouldEqual(10);
+        }
+
+        [Theory]
+        [InlineData("test1", true)]
+        [InlineData("test2", false)]
+        public void Should_return_correct_value_for_containskey(string key, bool expectedResult)
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+
+            // When
+            var result = input.ContainsKey(key);
+
+            // Then
+            result.ShouldEqual(expectedResult);
+        }
+
+        [Fact]
+        public void Should_return_all_keys()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+            input["test2"] = 10;
+
+            // When
+            var result = input.Keys;
+
+            // Then
+            result.ShouldHave(x => x.Equals("test1"));
+            result.ShouldHave(x => x.Equals("test2"));
+        }
+
+        [Fact]
+        public void Should_return_false_when_trygetvalue_could_not_find_key()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            object output;
+
+            // When
+            var result = input.TryGetValue("test", out output);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_when_trygetvalue_could_find_key()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+            object output;
+
+            // When
+            var result = input.TryGetValue("test", out output);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_value_when_trygetvalue_could_find_key()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+            dynamic output;
+
+            // When
+            input.TryGetValue("test", out output);
+
+            // Then
+            ((int)output).ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_return_all_values()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+            input["test2"] = "test2";
+
+            // When
+            var result = input.Values;
+
+            // Then
+            result.ShouldHave(x => ((int)x).Equals(10));
+            result.ShouldHave(x => ((string)x).Equals("test2"));
+        }
+
+        [Fact]
+        public void Should_remove_all_values_when_clear_is_invoked()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+            input["test2"] = "test2";
+
+            // When
+            input.Clear();
+
+            // Then
+            input.Count.ShouldEqual(0);
+        }
+
+        [Fact]
+        public void Should_return_false_when_contains_does_not_find_match()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+
+            // When
+            var result = input.Contains(new KeyValuePair<string, dynamic>("test1", 11));
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_when_contains_does_find_match()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test1"] = 10;
+
+            // When
+            var result = input.Contains(new KeyValuePair<string, dynamic>("test1", 10));
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(2)]
+        public void Should_copy_to_destination_array_from_given_index_when_copyto_is_invoked(int arrayIndex)
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test"] = 1;
+
+            var output =
+                new KeyValuePair<string, dynamic>[4];
+
+            // When
+            input.CopyTo(output, arrayIndex);
+
+            // Then
+            output[arrayIndex].Key.ShouldEqual(input.Keys.First());
+            ((int)output[arrayIndex].Value).ShouldEqual((int)input.Values.First());
+        }
+
+        [Fact]
+        public void Should_return_false_for_isreadonly()
+        {
+            // Given
+            var input = new DynamicDictionary();
+
+            // When
+            var result = input.IsReadOnly;
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_remove_item_when_string_overload_of_remove_method_is_invoked()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            input.Remove("test");
+
+            // Then
+            input.ContainsKey("test").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_when_string_overload_of_remove_method_can_match_key()
+        {
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            var result = input.Remove("test");
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_false_when_string_overload_of_remove_method_cannot_match_key()
+        {
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            var result = input.Remove("test1");
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_remove_item_when_keyvaluepair_overload_of_remove_method_is_invoked()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            input.Remove(new KeyValuePair<string, dynamic>("test", 10));
+
+            // Then
+            input.ContainsKey("test").ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_return_true_when_keyvaluepair_overload_of_remove_method_can_match_key()
+        {
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            var result = input.Remove(new KeyValuePair<string, dynamic>("test", 10));
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_return_false_when_keyvaluepair_overload_of_remove_method_cannot_match_key()
+        {
+            var input = new DynamicDictionary();
+            input["test"] = 10;
+
+            // When
+            var result = input.Remove(new KeyValuePair<string, dynamic>("test1", 10));
+
+            // Then
+            result.ShouldBeFalse();
         }
     }
 }
