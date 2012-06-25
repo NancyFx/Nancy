@@ -69,6 +69,7 @@
         /// Returns the enumeration of all dynamic member names.
         /// </summary>
         /// <returns>A <see cref="IEnumerable{T}"/> that contains dynamic member names.</returns>
+        [Obsolete("Use IDictionary<T,K>.Keys instead.")]
         public override IEnumerable<string> GetDynamicMemberNames()
         {
             return dictionary.Keys;
