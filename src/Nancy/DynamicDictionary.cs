@@ -5,10 +5,10 @@
     using System.Collections.Generic;
     using System.Dynamic;
     
-    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>
+    public class DynamicDictionary : DynamicObject, IEquatable<DynamicDictionary>, IHideObjectMembers, IEnumerable<string>, IDictionary<string, object>
     {
-        private readonly Dictionary<string, object> dictionary =
-            new Dictionary<string, object>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+        private readonly IDictionary<string, dynamic> dictionary =
+            new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
         /// <summary>
         /// Returns an empty dynamic dictionary.
@@ -163,6 +163,76 @@
         private static string GetNeutralKey(string key)
         {
             return key.Replace("-", string.Empty);
+        }
+
+        public void Add(string key, dynamic value)
+        {
+            this[key] = value;
+        }
+
+        public bool ContainsKey(string key)
+        {
+            return this.dictionary.ContainsKey(key);
+        }
+
+        public ICollection<string> Keys
+        {
+            get { return this.dictionary.Keys; }
+        }
+
+        public bool Remove(string key)
+        {
+            return this.dictionary.Remove(key);
+        }
+
+        public bool TryGetValue(string key, out dynamic value)
+        {
+            return this.dictionary.TryGetValue(key, out value);
+        }
+
+        public ICollection<dynamic> Values
+        {
+            get { return this.dictionary.Values; }
+        }
+
+        public void Add(KeyValuePair<string, dynamic> item)
+        {
+            this[item.Key] = item.Value;
+        }
+
+        public void Clear()
+        {
+            this.dictionary.Clear();
+        }
+
+        public bool Contains(KeyValuePair<string, dynamic> item)
+        {
+            return this.dictionary.Contains(item);
+        }
+
+        public void CopyTo(KeyValuePair<string, dynamic>[] array, int arrayIndex)
+        {
+            this.dictionary.CopyTo(array, arrayIndex);
+        }
+
+        public int Count
+        {
+            get { return this.dictionary.Count; }
+        }
+
+        public bool IsReadOnly
+        {
+            get { return false; }
+        }
+
+        public bool Remove(KeyValuePair<string, dynamic> item)
+        {
+            return this.dictionary.Remove(item);
+        }
+
+        IEnumerator<KeyValuePair<string, dynamic>> IEnumerable<KeyValuePair<string, object>>.GetEnumerator()
+        {
+            return this.dictionary.GetEnumerator();
         }
     }
 }
