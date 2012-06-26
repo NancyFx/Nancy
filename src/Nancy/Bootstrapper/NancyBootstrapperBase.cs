@@ -245,7 +245,7 @@
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 
-            foreach (var applicationRegistrationTask in this.GetApplicationRegistrationTasks())
+            foreach (var applicationRegistrationTask in this.GetApplicationRegistrationTasks().ToList())
             {
                 if (applicationRegistrationTask.TypeRegistrations != null)
                 {
