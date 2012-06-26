@@ -21,7 +21,7 @@ namespace Nancy.Tests.Unit
 
         public class FakeBootstrapper : DefaultNancyBootstrapper
         {
-            private NancyInternalConfiguration configuration;
+            private readonly NancyInternalConfiguration configuration;
 
             protected override NancyInternalConfiguration InternalConfiguration
             {
