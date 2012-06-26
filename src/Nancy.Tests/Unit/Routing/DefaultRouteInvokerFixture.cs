@@ -5,6 +5,7 @@
     using System.Linq;
     using FakeItEasy;
     using Fakes;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Xunit;
 
@@ -14,7 +15,7 @@
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<ISerializer>());
+            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>());
         }
 
         [Fact]

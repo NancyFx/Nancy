@@ -3,17 +3,18 @@ namespace Nancy.Routing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Default route invoker implementation-
     /// </summary>
     public class DefaultRouteInvoker : IRouteInvoker
     {
-        private readonly IEnumerable<ISerializer> serializers;
+        private readonly IEnumerable<IResponseProcessor> processors;
 
-        public DefaultRouteInvoker(IEnumerable<ISerializer> serializers)
+        public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors)
         {
-            this.serializers = serializers;
+            this.processors = processors;
         }
 
         /// <summary>
@@ -39,33 +40,63 @@ namespace Nancy.Routing
             return result as Response;
         }
 
-        private Response GetNegotiatedResponse(dynamic result, NancyContext context)
+        private Response GetNegotiatedResponse(dynamic model, NancyContext context)
         {
-            var headers =
-                context.Request.Headers;
+            var acceptHeaders =
+                context.Request.Headers.Accept.ToList();
 
-            var valid =
-                from accept in headers.Accept
-                where accept.Item2 > 0m
-                let s = this.serializers.FirstOrDefault(s => s.CanSerialize(accept.Item1))
-                where s != null
-                select Tuple.Create(accept.Item1, s);
-
-            var serializer =
-                valid.FirstOrDefault();
-
-            var response = new Response {
-                ContentType = serializer.Item1,
-                StatusCode = HttpStatusCode.OK,
-                Contents = s => serializer.Item2.Serialize(serializer.Item1, result, s)
-            };
-
-            if (valid.Count() > 1)
+            foreach (var header in acceptHeaders)
             {
-                response.WithHeader("Vary", "Accept");
+                var match = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context);
+
+                if (match == null)
+                {
+                    continue;
+                }
+
+                var prioritized = match
+                    .OrderByDescending(x => x.Item2.ModelResult)
+                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
+                    .First();
+
+                return prioritized.Item1.Process(header.Item1, model, context);
             }
 
-            return response;
+            // What do we return if nothing could process it?
+            return new Response();
+        }
+
+        private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessors(string acceptHeader, dynamic model, NancyContext context)
+        {
+            var compatibleProcessors = this.processors
+                .Select(processor => Tuple.Create(processor, (ProcessorMatch)processor.CanProcess(acceptHeader, model, context)))
+                .Where(x => x.Item2.ModelResult != MatchResult.NoMatch)
+                .Where(x => x.Item2.RequestedContentTypeResult != MatchResult.NoMatch)
+                .ToList();
+
+            return compatibleProcessors.Any() ?
+                compatibleProcessors :
+                null;
+        }
+    }
+
+    public class FakeResponseProcessor : IResponseProcessor
+    {
+        public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+        {
+            get { throw new NotImplementedException(); }
+        }
+
+        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        {
+            return requestedMediaRange.Subtype.Equals("xml") ?
+                new ProcessorMatch { ModelResult = MatchResult.NoMatch, RequestedContentTypeResult = MatchResult.NoMatch } :
+                new ProcessorMatch{ ModelResult = MatchResult.ExactMatch, RequestedContentTypeResult = MatchResult.ExactMatch };
+        }
+
+        public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        {
+            throw new NotImplementedException();
         }
     }
 }

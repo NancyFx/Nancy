@@ -12,6 +12,7 @@ namespace Nancy.Bootstrapper
     using Nancy.Routing;
     using Nancy.ViewEngines;
     using Responses;
+    using Responses.Negotiation;
     using Security;
     using Nancy.Validation;
 
@@ -82,6 +83,7 @@ namespace Nancy.Bootstrapper
                         InteractiveDiagnosticProviders = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IDiagnosticsProvider>()),
                         RequestTracing = typeof(DefaultRequestTracing),
                         RouteInvoker = typeof(DefaultRouteInvoker),
+                        ResponseProcessors = AppDomainAssemblyTypeScanner.TypesOf<IResponseProcessor>().ToList(),
                     };
             }
         }
@@ -141,6 +143,8 @@ namespace Nancy.Bootstrapper
         public Type RequestTracing { get; set; }
 
         public Type RouteInvoker { get; set; }
+
+        public IList<Type> ResponseProcessors { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -242,6 +246,7 @@ namespace Nancy.Bootstrapper
         {
             return new[]
             {
+                new CollectionTypeRegistration(typeof(IResponseProcessor), this.ResponseProcessors), 
                 new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
                 new CollectionTypeRegistration(typeof(IErrorHandler), this.ErrorHandlers), 
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders), 
