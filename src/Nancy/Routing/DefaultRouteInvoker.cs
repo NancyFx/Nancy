@@ -42,8 +42,8 @@ namespace Nancy.Routing
 
         private Response GetNegotiatedResponse(dynamic model, NancyContext context)
         {
-            var acceptHeaders =
-                context.Request.Headers.Accept.ToList();
+            var acceptHeaders = 
+                context.Request.Headers.Accept.Where(header => header.Item2 > 0m).ToList();
 
             foreach (var header in acceptHeaders)
             {
