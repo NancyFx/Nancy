@@ -3,9 +3,23 @@
     using System;
     using System.IO;
 
+    /// <summary>
+    /// Razor view used when compilation of the view fails.
+    /// </summary>
     public class NancyRazorErrorView : NancyRazorViewBase
     {
-        private static string template = LoadResource(@"CompilationError.html");
+        private static string template;
+
+        /// <summary>
+        /// Gets or sets the template for rendinger errors.
+        /// The token "[DETAILS]" will be replaced by the HTML for
+        /// the actual error.
+        /// </summary>
+        public static string Template
+        {
+            get { return template ?? (template = LoadResource(@"CompilationError.html")); }
+            set { template = value; }
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorErrorView"/> class.
