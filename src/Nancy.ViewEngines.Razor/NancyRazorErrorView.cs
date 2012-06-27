@@ -39,7 +39,7 @@
         /// </summary>
         public override void Execute()
         {
-            base.WriteLiteral(template.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : this.Message));
+            base.WriteLiteral(Template.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : this.Message));
         }
 
         private static string LoadResource(string filename)

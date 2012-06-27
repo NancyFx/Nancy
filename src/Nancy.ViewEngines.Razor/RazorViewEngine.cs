@@ -184,28 +184,17 @@
             
             if (results.Errors.HasErrors)
             {
-                var templateLines = new List<string>();
-                using (var templateReader = viewLocationResult.Contents.Invoke())
-                {
-                    var currentLine = templateReader.ReadLine();
-                    while (currentLine != null)
-                    {
-                        templateLines.Add(Helpers.HttpUtility.HtmlEncode(currentLine));
+                var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
+                var templateLines = GetViewBodyLines(viewLocationResult);
+                var errors = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
+                var errorMessages = BuildErrorMessages(errors);
 
-                        currentLine = templateReader.ReadLine();
-                    }
-                }
-
-                var err = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
-                foreach (var compilerError in err)
-                {
-                    templateLines[compilerError.Line - 1] = string.Format("<font color='red'>{0}</font>", templateLines[compilerError.Line - 1]);
-                }
+                MarkErrorLines(errors, templateLines);
 
                 var errorDetails = string.Format(
-                                        "Error compiling template: {0}<br/><br/>Errors:<br/>{1}, <br/><br/>Template:<br/>{2}",
-                                        viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension,
-                                        err.Select(error => String.Format("[{0}] Line: {1} Column: {2} - {3}", error.ErrorNumber, error.Line, error.Column, error.ErrorText)).Aggregate((s1, s2) => s1 + "<br/>" + s2),
+                                        "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}",
+                                        fullTemplateName,
+                                        errorMessages,
                                         templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2));
 
                 return () => new NancyRazorErrorView(errorDetails);
@@ -232,6 +221,44 @@
             }
 
             return () => (NancyRazorViewBase)Activator.CreateInstance(type);
+        }
+
+        private static string BuildErrorMessages(IEnumerable<CompilerError> errors)
+        {
+            return errors.Select(error => String.Format(
+                "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)", 
+                error.ErrorNumber, 
+                error.Line, 
+                error.Column, 
+                error.ErrorText)).Aggregate((s1, s2) => s1 + "<br/>" + s2);
+        }
+
+        private static void MarkErrorLines(IEnumerable<CompilerError> errors, IList<string> templateLines)
+        {
+            foreach (var compilerError in errors)
+            {
+                var lineIndex = compilerError.Line - 1;
+                if (lineIndex <= templateLines.Count - 1)
+                {
+                    templateLines[lineIndex] = string.Format("<span class='error'><a name='{0}' />{1}</span>", compilerError.Line, templateLines[lineIndex]);
+                }
+            }
+        }
+
+        private static string[] GetViewBodyLines(ViewLocationResult viewLocationResult)
+        {
+            var templateLines = new List<string>();
+            using (var templateReader = viewLocationResult.Contents.Invoke())
+            {
+                var currentLine = templateReader.ReadLine();
+                while (currentLine != null)
+                {
+                    templateLines.Add(Helpers.HttpUtility.HtmlEncode(currentLine));
+
+                    currentLine = templateReader.ReadLine();
+                }
+            }
+            return templateLines.ToArray();
         }
 
         private static Type FindModelType(Block block, Type passedModelType)
