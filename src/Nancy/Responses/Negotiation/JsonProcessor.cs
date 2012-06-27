@@ -63,7 +63,7 @@
         /// <returns>A response</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            throw new NotImplementedException();
+            return new Response();
         }
 
         private bool IsExactJsonContentType(MediaRange requestedContentType)

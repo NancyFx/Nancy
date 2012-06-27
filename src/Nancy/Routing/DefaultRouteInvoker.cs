@@ -42,24 +42,36 @@ namespace Nancy.Routing
 
         private Response GetNegotiatedResponse(dynamic model, NancyContext context)
         {
-            var acceptHeaders = 
+            var acceptHeaders =
                 context.Request.Headers.Accept.Where(header => header.Item2 > 0m).ToList();
 
-            foreach (var header in acceptHeaders)
+            var matches =
+                from header in acceptHeaders
+                let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
+                where result != null
+                select new {
+                    header,
+                    result
+                };
+
+            if (matches.Any())
             {
-                var match = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context);
+                var selected = matches.First();
 
-                if (match == null)
-                {
-                    continue;
-                }
-
-                var prioritized = match
+                var processor = selected.result
                     .OrderByDescending(x => x.Item2.ModelResult)
                     .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
                     .First();
 
-                return prioritized.Item1.Process(header.Item1, model, context);
+                var response = 
+                    processor.Item1.Process(selected.header.Item1, model, context);
+
+                if (matches.Count() > 1)
+                {
+                    ((Response)response).WithHeader("Vary", "Accept");
+                }
+
+                return response;
             }
 
             // What do we return if nothing could process it?
@@ -96,7 +108,7 @@ namespace Nancy.Routing
 
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            throw new NotImplementedException();
+            return new Response();
         }
     }
 }
