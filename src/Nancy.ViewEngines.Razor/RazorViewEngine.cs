@@ -10,6 +10,7 @@
     using System.Text;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
+    using System.Web.Razor.Text;
 
     using Nancy.Bootstrapper;
     using Nancy.Responses;
@@ -125,22 +126,22 @@
             return new RazorTemplateEngine(engineHost);
         }
 
-        private Func<NancyRazorViewBase> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType)
+        private Func<NancyRazorViewBase> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers
                 .Where(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase))
                 .First();
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
-            
-            var razorResult = engine.GenerateCode(reader);
 
-            var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType);
+            var razorResult = engine.GenerateCode(reader, sourceFileName:"Erm");
+
+            var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
             return viewFactory;
         }
 
-        private Func<NancyRazorViewBase> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType)
+        private Func<NancyRazorViewBase> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var outputAssemblyName = Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
@@ -183,13 +184,31 @@
             
             if (results.Errors.HasErrors)
             {
-                var err = results.Errors
-                    .OfType<CompilerError>()
-                    .Where(ce => !ce.IsWarning)
-                    .Select(error => String.Format("Error Compiling Template: ({0}, {1}) {2})", error.Line, error.Column, error.ErrorText))
-                    .Aggregate((s1, s2) => s1 + "<br/>" + s2);
+                var templateLines = new List<string>();
+                using (var templateReader = viewLocationResult.Contents.Invoke())
+                {
+                    var currentLine = templateReader.ReadLine();
+                    while (currentLine != null)
+                    {
+                        templateLines.Add(Helpers.HttpUtility.HtmlEncode(currentLine));
 
-                return () => new NancyRazorErrorView(err);
+                        currentLine = templateReader.ReadLine();
+                    }
+                }
+
+                var err = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
+                foreach (var compilerError in err)
+                {
+                    templateLines[compilerError.Line - 1] = string.Format("<font color='red'>{0}</font>", templateLines[compilerError.Line - 1]);
+                }
+
+                var errorDetails = string.Format(
+                                        "Error compiling template: {0}<br/><br/>Errors:<br/>{1}, <br/><br/>Template:<br/>{2}",
+                                        viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension,
+                                        err.Select(error => String.Format("[{0}] Line: {1} Column: {2} - {3}", error.ErrorNumber, error.Line, error.Column, error.ErrorText)).Aggregate((s1, s2) => s1 + "<br/>" + s2),
+                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2));
+
+                return () => new NancyRazorErrorView(errorDetails);
             }
 
             var assembly = Assembly.LoadFrom(outputAssemblyName);
@@ -291,7 +310,7 @@
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
-                x => this.GetCompiledViewFactory(x.Extension, x.Contents.Invoke(), referencingAssembly, passedModelType));
+                x => this.GetCompiledViewFactory(x.Extension, x.Contents.Invoke(), referencingAssembly, passedModelType, viewLocationResult));
 
             var view = viewFactory.Invoke();
 
