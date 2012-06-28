@@ -51,6 +51,12 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["razor.cshtml", model];
             };
 
+            Get["/razorError"] = x =>
+            {
+                var model = new RatPack { FirstName = "Frank" };
+                return View["razor-error.cshtml", model];
+            };
+
             Get["/razor-simple"] = x =>
             {
                 var model = new RatPack { FirstName = "Frank" };
