@@ -128,13 +128,11 @@
 
         private Func<NancyRazorViewBase> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
-            var renderer = this.viewRenderers
-                .Where(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                .First();
+            var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
 
-            var razorResult = engine.GenerateCode(reader, sourceFileName:"Erm");
+            var razorResult = engine.GenerateCode(reader, sourceFileName:"placeholder");
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
