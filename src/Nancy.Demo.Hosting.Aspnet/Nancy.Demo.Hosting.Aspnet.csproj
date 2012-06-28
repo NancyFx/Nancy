@@ -106,6 +106,8 @@
     <Content Include="Content\face.png" />
     <Content Include="Content\main.css" />
     <Content Include="Content\scripts.js" />
+    <Content Include="Views\razor-error.cshtml" />
+    <Content Include="Views\razor-layout-error.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
