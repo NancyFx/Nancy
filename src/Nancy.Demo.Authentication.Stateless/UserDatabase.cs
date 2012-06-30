@@ -1,10 +1,10 @@
-using Nancy.Security;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Nancy.Demo.Authentication.Stateless
 {
+    using Nancy.Security;
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public class UserDatabase
     {
         private static List<Tuple<string, string, string>> users = new List<Tuple<string, string, string>>();

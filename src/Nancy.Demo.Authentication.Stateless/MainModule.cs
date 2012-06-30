@@ -1,5 +1,3 @@
-using System;
-
 namespace Nancy.Demo.Authentication.Stateless
 {
     public class MainModule : NancyModule

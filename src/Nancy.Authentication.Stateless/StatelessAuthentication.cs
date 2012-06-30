@@ -4,7 +4,7 @@ namespace Nancy.Authentication.Stateless
     using Nancy.Bootstrapper;
 
     /// <summary>
-    /// Nancy forms authentication implementation
+    /// Nancy stateless authentication implementation
     /// </summary>
     public static class StatelessAuthentication
     {
@@ -12,7 +12,7 @@ namespace Nancy.Authentication.Stateless
         /// Enables stateless authentication for the application
         /// </summary>
         /// <param name="pipelines">Pipelines to add handlers to (usually "this")</param>
-        /// <param name="configuration">Forms authentication configuration</param>
+        /// <param name="configuration">Stateless authentication configuration</param>
         public static void Enable(IPipelines pipelines, StatelessAuthenticationConfiguration configuration)
         {
             if (pipelines == null)
@@ -37,7 +37,7 @@ namespace Nancy.Authentication.Stateless
         /// Gets the pre request hook for loading the authenticated user's details
         /// from apikey given in request.
         /// </summary>
-        /// <param name="configuration">Forms authentication configuration to use</param>
+        /// <param name="configuration">Stateless authentication configuration to use</param>
         /// <returns>Pre request hook delegate</returns>
         static Func<NancyContext, Response> GetLoadAuthenticationHook(StatelessAuthenticationConfiguration configuration)
         {

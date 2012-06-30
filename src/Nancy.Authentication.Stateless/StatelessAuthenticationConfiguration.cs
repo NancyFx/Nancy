@@ -10,6 +10,9 @@ namespace Nancy.Authentication.Stateless
     {
         internal Func<NancyContext, IUserIdentity> GetUserIdentity;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="StatelessAuthenticationConfiguration"/> class.
+        /// </summary>
         public StatelessAuthenticationConfiguration(Func<NancyContext, IUserIdentity> getUserIdentity)
         {
             GetUserIdentity = getUserIdentity;
