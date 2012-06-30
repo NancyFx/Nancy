@@ -22,7 +22,7 @@ Compile, run and enjoy the simple, elegant design!
 ## Features
 
 * Built from the bottom up, not simply a DSL on top of an existing framework. Removing limitations and feature hacks of an underlying framework, as well as the need to reference more assemblies than you need. _keep it light_
-* Run anywhere. Nancy is not built on any specific hosting technology can can be run anywhere. Out of the box, Nancy supports running on ASP.NET/IIS, WCF, Self-hosting and any [OWIN](http://owin.org)
+* Run anywhere. Nancy is not built on any specific hosting technology can be run anywhere. Out of the box, Nancy supports running on ASP.NET/IIS, WCF, Self-hosting and any [OWIN](http://owin.org)
 * Ultra lightweight action declarations for GET, HEAD, PUT, POST, DELETE, OPTIONS and PATCH requests
 * View engine integration (Razor, Spark, NDjango, dotLiquid and our own SuperSimpleViewEngine)
 * Powerful request path matching that includes advanced parameter capabilities. The path matching strategy can be replaced with custom implementations to fit your exact needs
@@ -64,7 +64,7 @@ Nancy are:
 
 ## Contributors
 
-Nancy is not a one man project and many of the features that are availble would not have been possible without the awesome contributions from the community!
+Nancy is not a one man project and many of the features that are available would not have been possible without the awesome contributions from the community!
 
 For a full list of contributors, please see [the website](http://www.nancyfx.org/contribs.html).
 
