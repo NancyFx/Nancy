@@ -141,6 +141,10 @@
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
+    <Compile Include="Routing\CORS\CORSModuleExtension.cs" />
+    <Compile Include="Routing\CORS\CORSRequestException.cs" />
+    <Compile Include="Routing\CORS\CORSOptions.cs" />
+    <Compile Include="Routing\CORS\CORSStartup.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
     <Compile Include="StaticContentApplicationStartup.cs" />

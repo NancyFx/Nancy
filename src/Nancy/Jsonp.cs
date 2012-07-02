@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using System.IO;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+    
+    using Nancy.Bootstrapper;
+
     public static class Jsonp
     {
         static PipelineItem<Action<NancyContext>> JsonpItem;

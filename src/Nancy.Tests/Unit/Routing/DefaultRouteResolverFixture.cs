@@ -1,12 +1,17 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    
     using FakeItEasy;
+    using Nancy.Routing.CORS;
     using Nancy.Bootstrapper;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
 
     using Xunit;
+    
 
     public class DefaultRouteResolverFixture
     {
@@ -539,6 +544,183 @@
             // Then
             route.ShouldNotBeNull();
             route.ShouldNotBeOfType<OptionsRoute>();
+        }
+
+        [Fact]
+        public void Should_return_default_CORS_headers_when_requested()
+        {
+            this.expectedModule = new FakeNancyModule (x => x.AddPostRoute ("/foo/bar").CallExtensionMethodOnModule (m => m.EnableCORS ()));
+
+            var headers = new Dictionary<string, IEnumerable<string>>
+            { { "Access-Control-Request-Method", new[] { "POST" } } };
+
+            //Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var resolvedResult = resolver.Resolve (context);
+            var route = resolvedResult.Item1;
+            context.Response = route.Invoke (new DynamicDictionary ());
+
+            //Then
+            route.ShouldNotBeNull();
+            context.Response.Headers["Access-Control-Allow-Methods"].Split(',').Select(
+                h => h.Trim()).ShouldEqualSequence(new[] { "POST", "OPTIONS" });
+        }
+
+        [Fact]
+        public void Should_not_return_default_CORS_headers_when_not_enabled ()
+        {
+            //Given
+            var headers = new Dictionary<string, IEnumerable<string>>
+            { { "Access-Control-Request-Method", new[] { "POST" } } };
+            var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar"));
+
+            //When 
+            var route = resolver.Resolve (context).Item1;
+
+            //Then
+            route.ShouldNotBeNull ();
+            route.ShouldBeOfType<OptionsRoute> ();
+            Assert.Throws(typeof (KeyNotFoundException), () =>
+            { var header = route.Invoke(new DynamicDictionary()).Headers["Access-Control-Allow-Methods"]; });
+        }
+
+        [Fact]
+        public void Should_throw_exception_when_CORS_isnt_configured_correctly()
+        {
+            //Given
+            this.expectedModule = new FakeNancyModule (x => x.AddGetRoute ("/foo/bar", this.expectedAction).CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowCredentials(true);
+            }));
+
+            var headers = new Dictionary<string, IEnumerable<string>>
+            {
+                { "Access-Control-Request-Method", new[] { "POST" } },
+                { "Access-Control-Request-Headers", new[] { "origin", "content-type", "accept" } }
+            };
+
+            var request = new FakeRequest("OPTIONS", "/foo/bar", headers);
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var route = resolver.Resolve (context).Item1;
+           
+            //Then
+            route.ShouldNotBeNull();
+            Assert.Throws (typeof (CORSRequestException), () => route.Invoke (new DynamicDictionary ()));
+        }
+
+        [Fact]
+        public void Should_reply_to_CORS_options_request_with_all_requested_headers_and_origins ()
+        {
+            //Given
+            this.expectedModule = new FakeNancyModule (x => x.AddPostRoute ("/foo/bar").CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowOrigins("http://foo.bar");
+            }));
+
+            var headers = new Dictionary<string, IEnumerable<string>> ();
+            headers.Add ("Access-Control-Request-Method", new[] { "POST" });
+            headers.Add ("Access-Control-Request-Headers", new[] { "origin", "content-type", "accept" });
+
+            var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var resolvedResult = resolver.Resolve(context);
+            var route = resolvedResult.Item1;
+            context.Response = route.Invoke(new DynamicDictionary());
+
+            //Then
+            route.ShouldNotBeNull ();
+
+            context.Response.Headers["Access-Control-Allow-Methods"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "POST", "OPTIONS" });
+            context.Response.Headers["Access-Control-Allow-Headers"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "origin", "content-type", "accept" });
+            context.Response.Headers["Access-Control-Allow-Origin"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "http://foo.bar" });
+        }
+
+        [Fact]
+        public void Should_reply_to_CORS_options_request_removing_disallowed_requested_headers ()
+        {
+            //Given
+            this.expectedModule = new FakeNancyModule (x => x.AddPostRoute ("/foo/bar").CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowOrigins ("http://foo.bar");
+                m.DisallowHeaders ("accept");
+            }));
+
+            var headers = new Dictionary<string, IEnumerable<string>>
+                              {
+                                  {"Access-Control-Request-Method", new[] {"POST"}},
+                                  {"Access-Control-Request-Headers", new[] {"origin", "content-type", "accept"}}
+                              };
+
+            var request = new FakeRequest ("OPTIONS", "/foo/bar", headers);
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var resolvedResult = resolver.Resolve (context);
+            var route = resolvedResult.Item1;
+            context.Response = route.Invoke (new DynamicDictionary ());
+
+            //Then
+            route.ShouldNotBeNull ();
+
+            var response = context.Response;
+            response.Headers["Access-Control-Allow-Methods"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "POST", "OPTIONS" });
+            response.Headers["Access-Control-Allow-Headers"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "origin", "content-type" });
+            response.Headers["Access-Control-Allow-Origin"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "http://foo.bar" });
+        }
+
+        [Fact]
+        public void Should_reply_to_request_on_CORS_enabled_module_with_correct_headers ()
+        {
+            //Given
+            this.expectedModule = new FakeNancyModule (x => x.AddPostRoute ("/foo/bar").CallExtensionMethodOnModule (m =>
+            {
+                m.EnableCORS ();
+                m.AllowOrigins ("http://foo.bar");
+                m.DisallowHeaders ("accept");
+            }));
+
+            CORSModuleExtension.RoutePatternMatcher = new DefaultRoutePatternMatcher();
+
+            var request = new FakeRequest ("POST", "/foo/bar");
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver (x => x.AddPostRoute ("/foo/bar", "Nancy.Tests.Fakes.FakeNancyModule"));
+
+            //When 
+            var resolvedResult = resolver.Resolve (context);
+            var route = resolvedResult.Item1;
+            context.Response = route.Invoke (new DynamicDictionary ());
+            resolvedResult.Item4(context);
+
+            //Then
+            route.ShouldNotBeNull ();
+
+            var response = context.Response;
+            response.Headers["Access-Control-Allow-Methods"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "POST", "OPTIONS" });
+            response.Headers["Access-Control-Allow-Origin"].Split (',').Select (
+                h => h.Trim ()).ShouldEqualSequence (new[] { "http://foo.bar" });
         }
 
         [Fact]

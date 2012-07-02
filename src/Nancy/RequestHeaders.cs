@@ -234,6 +234,22 @@ namespace Nancy
         }
 
         /// <summary>
+        /// CORS Header requesting access for specific method
+        /// </summary>
+        public IEnumerable<string> AccessControlRequestMethod
+        {
+            get { return this.GetValue("Access-Control-Request-Method"); }
+        }
+
+        /// <summary>
+        /// CORS Header requesting access for specific headers
+        /// </summary>
+        public IEnumerable<string> AccessControlRequestHeaders
+        {
+            get { return this.GetValue ("Access-Control-Request-Headers"); }
+        }
+
+        /// <summary>
         /// Gets all the header values.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> that contains all the header values.</value>
