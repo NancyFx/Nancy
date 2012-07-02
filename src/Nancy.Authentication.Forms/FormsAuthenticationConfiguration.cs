@@ -1,6 +1,5 @@
 namespace Nancy.Authentication.Forms
 {
-    using System.Text;
     using Cryptography;
 
     /// <summary>
@@ -8,6 +7,8 @@ namespace Nancy.Authentication.Forms
     /// </summary>
     public class FormsAuthenticationConfiguration
     {
+        internal const string DefaultRedirectQuerystringKey = "returnUrl";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="FormsAuthenticationConfiguration"/> class.
         /// </summary>
@@ -22,7 +23,13 @@ namespace Nancy.Authentication.Forms
         public FormsAuthenticationConfiguration(CryptographyConfiguration cryptographyConfiguration)
         {
             CryptographyConfiguration = cryptographyConfiguration;
+            RedirectQuerystringKey = DefaultRedirectQuerystringKey;
         }
+
+        /// <summary>
+        /// Gets or sets the forms authentication query string key for storing the return url
+        /// </summary>
+        public string RedirectQuerystringKey { get; set; }
 
         /// <summary>
         /// Gets or sets the redirect url for pages that require authentication
