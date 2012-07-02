@@ -7,19 +7,11 @@ namespace Nancy.Authentication.Forms
     using Helpers;
     using Nancy.Extensions;
 
-    using Responses;
-    using Security;
-
     /// <summary>
     /// Nancy forms authentication implementation
     /// </summary>
     public static class FormsAuthentication
     {
-        /// <summary>
-        /// The query string key for storing the return url
-        /// </summary>
-        private const string REDIRECT_QUERYSTRING_KEY = "returnUrl";
-
         private static string formsAuthenticationCookieName = "_ncfa";
 
         // TODO - would prefer not to hold this here, but the redirect response needs it
@@ -81,10 +73,11 @@ namespace Nancy.Authentication.Forms
         public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
         {
             var redirectUrl = fallbackRedirectUrl;
+            string redirectQuerystringKey = GetRedirectQuerystringKey(currentConfiguration);
 
-            if (context.Request.Query[REDIRECT_QUERYSTRING_KEY].HasValue)
+            if (context.Request.Query[redirectQuerystringKey].HasValue)
             {
-                redirectUrl = context.Request.Query[REDIRECT_QUERYSTRING_KEY];
+                redirectUrl = context.Request.Query[redirectQuerystringKey];
             }
 
             var response = context.GetRedirect(redirectUrl);
@@ -183,10 +176,12 @@ namespace Nancy.Authentication.Forms
                 {
                     if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                     {
+                        string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
+
                         context.Response = context.GetRedirect(
                             string.Format("{0}?{1}={2}", 
-                            configuration.RedirectUrl, 
-                            REDIRECT_QUERYSTRING_KEY,
+                            configuration.RedirectUrl,
+                            redirectQuerystringKey,
                             context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
                     }
                 };
@@ -296,6 +291,28 @@ namespace Nancy.Authentication.Forms
 
             // Only return the decrypted result if the hmac was ok
             return hmacValid ? decrypted : String.Empty;
+        }
+
+        /// <summary>
+        /// Gets the redirect query string key from <see cref="FormsAuthenticationConfiguration"/>
+        /// </summary>
+        /// <param name="configuration">The forms authentication configuration.</param>
+        /// <returns>Redirect Querystring key</returns>
+        private static string GetRedirectQuerystringKey(FormsAuthenticationConfiguration configuration)
+        {
+            string redirectQuerystringKey = null;
+
+            if (configuration != null)
+            {
+                redirectQuerystringKey = configuration.RedirectQuerystringKey;
+            }
+            
+            if(string.IsNullOrWhiteSpace(redirectQuerystringKey))
+            {
+                redirectQuerystringKey = FormsAuthenticationConfiguration.DefaultRedirectQuerystringKey;
+            }
+
+            return redirectQuerystringKey;
         }
 
      }
