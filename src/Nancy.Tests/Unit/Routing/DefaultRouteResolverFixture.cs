@@ -55,7 +55,7 @@
 
         private DefaultRouteResolver CreateResolver(IRouteCache cache)
         {
-            return new DefaultRouteResolver(this.catalog, this.matcher, this.moduleBuilder, cache);
+            return new DefaultRouteResolver(this.catalog, this.matcher, this.moduleBuilder, cache, null);
         }
 
         [Fact]
@@ -547,7 +547,7 @@
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filtered");
             var context = new NancyContext { Request = request };
 
@@ -564,7 +564,7 @@
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/notfiltered");
             var context = new NancyContext { Request = request };
 
@@ -581,7 +581,7 @@
             // Given
             var moduleCatalog = new FakeModuleCatalog();
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filt");
             var context = new NancyContext { Request = request };
 
@@ -602,7 +602,7 @@
                 new FakeNancyModuleWithPreAndPostHooks());
 
             var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
-            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache);
+            var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/PrePost");
             var context = new NancyContext { Request = request };
 

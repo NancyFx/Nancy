@@ -92,23 +92,23 @@ namespace Nancy.Routing
         }
     }
 
-    public class FakeResponseProcessor : IResponseProcessor
-    {
-        public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
-        {
-            get { throw new NotImplementedException(); }
-        }
+    //public class FakeResponseProcessor : IResponseProcessor
+    //{
+    //    public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+    //    {
+    //        get { throw new NotImplementedException(); }
+    //    }
 
-        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
-        {
-            return requestedMediaRange.Subtype.Equals("xml") ?
-                new ProcessorMatch { ModelResult = MatchResult.NoMatch, RequestedContentTypeResult = MatchResult.NoMatch } :
-                new ProcessorMatch{ ModelResult = MatchResult.ExactMatch, RequestedContentTypeResult = MatchResult.ExactMatch };
-        }
+    //    public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+    //    {
+    //        return requestedMediaRange.Subtype.Equals("xml") ?
+    //            new ProcessorMatch { ModelResult = MatchResult.NoMatch, RequestedContentTypeResult = MatchResult.NoMatch } :
+    //            new ProcessorMatch{ ModelResult = MatchResult.ExactMatch, RequestedContentTypeResult = MatchResult.ExactMatch };
+    //    }
 
-        public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
-        {
-            return new Response();
-        }
-    }
+    //    public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+    //    {
+    //        return new Response();
+    //    }
+    //}
 }

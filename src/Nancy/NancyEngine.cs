@@ -19,7 +19,7 @@
         public const string ERROR_KEY = "ERROR_TRACE";
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
-        private readonly IRouteResolver resolver;
+        private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
         private readonly IRouteInvoker routeInvoker;
@@ -28,16 +28,15 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
-        /// <param name="resolver">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
+        /// <param name="dispatcher">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="errorHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        /// <param name="routeInvoker">The <see cref="IRouteInvoker"/> instance that will be responsible for invoking the resolved routes.</param>
-        public NancyEngine(IRouteResolver resolver, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing, IRouteInvoker routeInvoker)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing)
         {
-            if (resolver == null)
+            if (dispatcher == null)
             {
-                throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
+                throw new ArgumentNullException("dispatcher", "The resolver parameter cannot be null.");
             }
 
             if (contextFactory == null)
@@ -50,7 +49,7 @@
                 throw new ArgumentNullException("errorHandlers");
             }
 
-            this.resolver = resolver;
+            this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
             this.requestTracing = requestTracing;
@@ -195,7 +194,7 @@
 
                 if (context.Response == null) 
                 {
-                    this.ResolveAndInvokeRoute(context);
+                    this.dispatcher.Dispatch(context);
                 }
 
                 if (pipelines.AfterRequest != null) 
@@ -245,46 +244,6 @@
                 context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
-            }
-        }
-
-        private void ResolveAndInvokeRoute(NancyContext context)
-        {
-            var resolveResult = this.resolver.Resolve(context);
-
-            context.Parameters = resolveResult.Item2; 
-            var resolveResultPreReq = resolveResult.Item3;
-            var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(context, resolveResultPreReq);
-
-            if (context.Response == null)
-            {
-                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
-            }
-
-            if (context.Request.Method.ToUpperInvariant() == "HEAD")
-            {
-                context.Response = new HeadResponse(context.Response);
-            }
-
-            if (resolveResultPostReq != null)
-            {
-                resolveResultPostReq.Invoke(context);
-            }
-        }
-
-        private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
-        {
-            if (resolveResultPreReq == null)
-            {
-                return;
-            }
-
-            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
-
-            if (resolveResultPreReqResponse != null)
-            {
-                context.Response = resolveResultPreReqResponse;
             }
         }
     }

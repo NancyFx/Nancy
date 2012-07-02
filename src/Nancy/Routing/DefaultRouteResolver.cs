@@ -2,8 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using Diagnostics;
+    using Responses.Negotiation;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
@@ -16,6 +18,7 @@
         private readonly IRoutePatternMatcher routePatternMatcher;
         private readonly INancyModuleBuilder moduleBuilder;
         private readonly IRouteCache cache;
+        private readonly IEnumerable<IResponseProcessor> responseProcessors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class.
@@ -24,12 +27,14 @@
         /// <param name="routePatternMatcher">The route pattern matcher that should be used to verify if the route is a match to any of the registered routes.</param>
         /// <param name="moduleBuilder">The module builder that will make sure that the resolved module is full configured.</param>
         /// <param name="cache">The route cache that should be used to resolve modules from.</param>
-        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, INancyModuleBuilder moduleBuilder, IRouteCache cache)
+        /// <param name="responseProcessors"></param>
+        public DefaultRouteResolver(INancyModuleCatalog nancyModuleCatalog, IRoutePatternMatcher routePatternMatcher, INancyModuleBuilder moduleBuilder, IRouteCache cache, IEnumerable<IResponseProcessor> responseProcessors)
         {
             this.nancyModuleCatalog = nancyModuleCatalog;
             this.routePatternMatcher = routePatternMatcher;
             this.moduleBuilder = moduleBuilder;
             this.cache = cache;
+            this.responseProcessors = responseProcessors;
         }
 
         /// <summary>
@@ -40,6 +45,15 @@
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
         public ResolveResult Resolve(NancyContext context)
         {
+            var extension =
+                Path.GetExtension(context.Request.Path);
+
+            if (!string.IsNullOrEmpty(extension))
+            {
+                var length = context.Request.Path.Length - (extension.Length + 1);
+                context.Request.Url.Path = context.Request.Url.Path.Substring(0, length);
+            }
+
             var result =
                 this.Resolve(context.Request.Path, context, this.cache);
             return result.Selected;

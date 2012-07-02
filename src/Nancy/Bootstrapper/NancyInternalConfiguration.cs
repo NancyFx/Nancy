@@ -84,6 +84,7 @@ namespace Nancy.Bootstrapper
                         RequestTracing = typeof(DefaultRequestTracing),
                         RouteInvoker = typeof(DefaultRouteInvoker),
                         ResponseProcessors = AppDomainAssemblyTypeScanner.TypesOf<IResponseProcessor>().ToList(),
+                        RequestDispatcher = typeof(DefaultRequestDispatcher),
                     };
             }
         }
@@ -145,6 +146,8 @@ namespace Nancy.Bootstrapper
         public Type RouteInvoker { get; set; }
 
         public IList<Type> ResponseProcessors { get; set; }
+
+        public Type RequestDispatcher { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -234,7 +237,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
                 new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
                 new TypeRegistration(typeof(IRequestTracing), this.RequestTracing),
-                new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker), 
+                new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
+                new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
             };
         }
 

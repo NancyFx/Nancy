@@ -10,6 +10,7 @@ namespace Nancy.Diagnostics
     using Helpers;
     using ModelBinding;
     using Responses;
+    using Responses.Negotiation;
     using Routing;
 
     public static class DiagnosticsHook
@@ -23,7 +24,7 @@ namespace Nancy.Diagnostics
         private const string DiagsCookieName = "__ncd";
         private const int DiagnosticsSessionTimeoutMinutes = 15;
 
-        public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
+        public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(keyGenerator, providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
@@ -34,7 +35,8 @@ namespace Nancy.Diagnostics
                 diagnosticsModuleCatalog,
                 new DefaultRoutePatternMatcher(),
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
-                diagnosticsRouteCache);
+                diagnosticsRouteCache,
+                responseProcessors);
 
             var serializer = new DefaultObjectSerializer();
 

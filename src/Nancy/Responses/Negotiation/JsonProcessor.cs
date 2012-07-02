@@ -2,11 +2,19 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     public class JsonProcessor : IResponseProcessor
     {
+        private readonly ISerializer serializer;
+
+        public JsonProcessor(IEnumerable<ISerializer> serializers)
+        {
+            this.serializer = serializers.FirstOrDefault(x => x.CanSerialize("application/json"));
+        }
+
         private static IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
-            new[] { new Tuple<string, MediaRange>(".json", MediaRange.FromString("application/json")) };
+            new[] { new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json")) };
 
         /// <summary>
         /// Gets a set of mappings that map a given extension (such as .json)
@@ -63,7 +71,7 @@
         /// <returns>A response</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return new Response();
+            return new JsonResponse(model, this.serializer);
         }
 
         private bool IsExactJsonContentType(MediaRange requestedContentType)

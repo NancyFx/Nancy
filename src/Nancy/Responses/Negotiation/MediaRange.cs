@@ -44,6 +44,11 @@ namespace Nancy.Responses.Negotiation
             return MediaRange.FromString(contentType);
         }
 
+        public static implicit operator string(MediaRange mediaRange)
+        {
+            return string.Concat(mediaRange.Type, "/", mediaRange.Subtype);
+        }
+
         public bool Equals(string other)
         {
             var range = 

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using ModelBinding;
     using Nancy.Bootstrapper;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Wires up the diagnostics support at application startup.
@@ -16,8 +17,9 @@
         private readonly IRequestTracing requestTracing;
         private readonly NancyInternalConfiguration configuration;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly IEnumerable<IResponseProcessor> responseProcessors;
 
-        public DiagnosticsApplicationStartup(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator)
+        public DiagnosticsApplicationStartup(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -26,6 +28,7 @@
             this.requestTracing = requestTracing;
             this.configuration = configuration;
             this.modelBinderLocator = modelBinderLocator;
+            this.responseProcessors = responseProcessors;
         }
 
         /// <summary>
@@ -34,7 +37,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration, this.modelBinderLocator);
+            DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration, this.modelBinderLocator, this.responseProcessors);
         }
     }
 }
