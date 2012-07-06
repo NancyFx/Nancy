@@ -1,3 +1,4 @@
+using Nancy.Responses.Negotiation;
 using Nancy.Security;
 
 namespace Nancy
@@ -79,6 +80,11 @@ namespace Nancy
         /// Non-model specific data for rendering in the response
         /// </summary>
         public dynamic ViewBag { get; private set; }
+
+        /// <summary>
+        /// Context of content negotiation (if relevent)
+        /// </summary>
+        public NegotiationContext NegotiationContext { get; set; }
 
         /// <summary>
         /// Disposes any disposable items in the <see cref="Items"/> dictionary.

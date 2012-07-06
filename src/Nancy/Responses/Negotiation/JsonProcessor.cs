@@ -29,6 +29,19 @@
         }
 
         /// <summary>
+        /// Returns the full (non-wildcard) content type that this processor will
+        /// return for the given media range, model and context 
+        /// </summary>
+        /// <param name="requestedMediaRange">Media range requested</param>
+        /// <param name="model">Model</param>
+        /// <param name="context">Context</param>
+        /// <returns>Non-wildcard content type in the form A/B</returns>
+        public string GetFullOutputContentType(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        {
+            return "application/json";
+        }
+
+        /// <summary>
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>

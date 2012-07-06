@@ -12,9 +12,18 @@ namespace Nancy.Routing
     {
         private readonly IEnumerable<IResponseProcessor> processors;
 
+        private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies; 
+
         public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors)
         {
             this.processors = processors;
+
+            this.invocationStrategies = new Dictionary<Type, Func<dynamic, NancyContext, Response>>
+                                            {
+                                                { typeof (Response), ProcessAsRealResponse },
+                                                { typeof (NancyModule.Negotiator), ProcessAsNegotiator },
+                                                { typeof (Object), ProcessAsModel}
+                                            };
         }
 
         /// <summary>
@@ -27,55 +36,18 @@ namespace Nancy.Routing
         public Response Invoke(Route route, DynamicDictionary parameters, NancyContext context)
         {
             var result =
-                route.Invoke(parameters);
+                route.Invoke(parameters) ?? new Response();
 
-            var response =
-                CastResultToResponse(result) ?? GetNegotiatedResponse(result, context);
+            var strategy = this.GetInvocationStrategy(result.GetType());
 
-            return response;
+            return strategy.Invoke(result, context);
         }
 
-        private static Response CastResultToResponse(dynamic result)
+        private Func<dynamic, NancyContext, Response> GetInvocationStrategy(Type resultType)
         {
-            return result as Response;
-        }
-
-        private Response GetNegotiatedResponse(dynamic model, NancyContext context)
-        {
-            var acceptHeaders =
-                context.Request.Headers.Accept.Where(header => header.Item2 > 0m).ToList();
-
-            var matches =
-                from header in acceptHeaders
-                let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
-                where result != null
-                select new {
-                    header,
-                    result
-                };
-
-            if (matches.Any())
-            {
-                var selected = matches.First();
-
-                var processor = selected.result
-                    .OrderByDescending(x => x.Item2.ModelResult)
-                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
-                    .First();
-
-                var response = 
-                    processor.Item1.Process(selected.header.Item1, model, context);
-
-                if (matches.Count() > 1)
-                {
-                    ((Response)response).WithHeader("Vary", "Accept");
-                }
-
-                return response;
-            }
-
-            // What do we return if nothing could process it?
-            return new Response();
+            return invocationStrategies.Where(invocationStrategy => invocationStrategy.Key.IsAssignableFrom(resultType))
+                                        .Select(invocationStrategy => invocationStrategy.Value)
+                                        .First();
         }
 
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessors(string acceptHeader, dynamic model, NancyContext context)
@@ -89,6 +61,57 @@ namespace Nancy.Routing
             return compatibleProcessors.Any() ?
                 compatibleProcessors :
                 null;
+        }
+
+        private Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
+        {
+            return (Response)routeResult;
+        }
+
+        private Response ProcessAsNegotiator(dynamic routeResult, NancyContext context)
+        {
+            // TODO - ignore any processors that don't fit the allowed list (using GetFullOutputContentType)
+            // TODO - for the best matching processor, get the return content type and either use a specific model or the default model
+            throw new NotImplementedException();
+        }
+
+        private Response ProcessAsModel(dynamic model, NancyContext context)
+        {
+            var acceptHeaders =
+                context.Request.Headers.Accept.Where(header => header.Item2 > 0m).ToList();
+
+            var matches =
+                (from header in acceptHeaders
+                let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
+                where result != null
+                select new
+                {
+                    header,
+                    result
+                }).ToArray();
+
+            if (matches.Any())
+            {
+                var selected = matches.First();
+
+                var processor = selected.result
+                    .OrderByDescending(x => x.Item2.ModelResult)
+                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
+                    .First();
+
+                var response =
+                    processor.Item1.Process(selected.header.Item1, model, context);
+
+                if (matches.Count() > 1)
+                {
+                    ((Response)response).WithHeader("Vary", "Accept");
+                }
+
+                return response;
+            }
+
+            // What do we return if nothing could process it?
+            return new Response();
         }
     }
 

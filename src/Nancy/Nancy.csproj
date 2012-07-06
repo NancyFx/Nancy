@@ -133,6 +133,7 @@
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DiagnosticsApplicationStartup.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="NegotiatorExtensions.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Responses\Negotiation\MatchResult.cs" />
     <Compile Include="Responses\Negotiation\MediaRange.cs" />
     <Compile Include="Responses\Negotiation\MediaType.cs" />
+    <Compile Include="Responses\Negotiation\NegotiationContext.cs" />
     <Compile Include="Responses\Negotiation\ProcessorMatch.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />

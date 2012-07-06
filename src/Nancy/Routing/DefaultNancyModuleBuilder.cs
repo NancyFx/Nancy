@@ -1,4 +1,7 @@
-﻿namespace Nancy.Routing
+﻿using Nancy.Extensions;
+using Nancy.Responses.Negotiation;
+
+namespace Nancy.Routing
 {
     using ModelBinding;
     using Nancy.ViewEngines;
@@ -37,6 +40,8 @@
         /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
         public NancyModule BuildModule(NancyModule module, NancyContext context)
         {
+            CreateNegotiationContext(module, context);
+
             module.Context = context;
             module.Response = this.responseFormatterFactory.Create(context);
             module.ViewFactory = this.viewFactory;
@@ -44,6 +49,16 @@
             module.ValidatorLocator = this.validatorLocator;
 
             return module;
+        }
+
+        private static void CreateNegotiationContext(NancyModule module, NancyContext context)
+        {
+            // TODO - not sure if this should be here or not, but it'll do for now :)
+            context.NegotiationContext = new NegotiationContext
+                                             {
+                                                 ModuleName = module.GetModuleName(),
+                                                 ModulePath = module.ModulePath,
+                                             };
         }
     }
 }

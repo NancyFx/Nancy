@@ -1,3 +1,5 @@
+using Nancy.Responses.Negotiation;
+
 namespace Nancy
 {
     using System;
@@ -23,7 +25,7 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
         protected NancyModule()
-            : this(string.Empty)
+            : this(String.Empty)
         {
         }
 
@@ -184,6 +186,11 @@ namespace Nancy
             get { return new ViewRenderer(this); }
         }
 
+        public Negotiator Negotiate
+        {
+            get { return new Negotiator(this); }
+        }
+
         /// <summary>
         /// The extension point for accessing the view engines in Nancy.
         /// </summary>
@@ -243,7 +250,7 @@ namespace Nancy
 
             private void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
-                var fullPath = string.Concat(this.parentModule.ModulePath, path);
+                var fullPath = String.Concat(this.parentModule.ModulePath, path);
 
                 this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
             }
@@ -271,9 +278,9 @@ namespace Nancy
             /// <param name="model">The model that should be passed into the view.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The view name is model.GetType().Name with any Model suffix removed.</remarks>
-            public Response this[dynamic model]
+            public Negotiator this[dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(null, model, this.GetViewLocationContext()); }
+                get { return this.GetNegotiator(null, model); }
             }
 
             /// <summary>
@@ -282,9 +289,9 @@ namespace Nancy
             /// <param name="viewName">The name of the view to render.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Response this[string viewName]
+            public Negotiator this[string viewName]
             {
-                get { return this.module.ViewFactory.RenderView(viewName, null, this.GetViewLocationContext()); }
+                get { return this.GetNegotiator(viewName, null); }
             }
 
             /// <summary>
@@ -294,19 +301,37 @@ namespace Nancy
             /// <param name="model">The model that should be passed into the view.</param>
             /// <returns>A delegate that can be invoked with the <see cref="Stream"/> that the view should be rendered to.</returns>
             /// <remarks>The extension in the view name is optional. If it is omitted, then Nancy will try to resolve which of the available engines that should be used to render the view.</remarks>
-            public Response this[string viewName, dynamic model]
+            public Negotiator this[string viewName, dynamic model]
             {
-                get { return this.module.ViewFactory.RenderView(viewName, model, this.GetViewLocationContext()); }
+                get { return this.GetNegotiator(viewName, model); }
             }
 
-            private ViewLocationContext GetViewLocationContext()
+            private Negotiator GetNegotiator(string viewName, object model)
             {
-                return new ViewLocationContext
-                       {
-                           ModulePath = module.ModulePath,
-                           ModuleName = module.GetModuleName(),
-                           Context = module.Context
-                       };
+                var negotiationContext = this.module.Context.NegotiationContext;
+
+                negotiationContext.ViewName = viewName;
+                negotiationContext.DefaultModel = model;
+                negotiationContext.PermissableMediaRanges.Clear();
+                negotiationContext.PermissableMediaRanges.Add("text/html");
+
+                return new Negotiator(this.module);
+            }
+        }
+
+
+        public class Negotiator : IHideObjectMembers
+        {
+            // TODO - this perhaps should be an interface, along with the view thing above
+            // that would then wrap this to give more granular extension point for things like
+            // AsNegotiated
+            private NancyModule module;
+            public NegotiationContext NegotiationContext { get; private set; }
+
+            public Negotiator(NancyModule module)
+            {
+                this.module = module;
+                this.NegotiationContext = module.Context.NegotiationContext;
             }
         }
     }

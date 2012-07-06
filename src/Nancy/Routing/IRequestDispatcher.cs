@@ -75,8 +75,8 @@
 
             if (!string.IsNullOrEmpty(extension))
             {
-                var mappedMediaRanges =
-                    this.GetMediaRangesForExtension(extension.Substring(1));
+                var mappedMediaRanges = this.GetMediaRangesForExtension(extension.Substring(1))
+                                            .ToArray();
 
                 if (mappedMediaRanges.Any())
                 {
