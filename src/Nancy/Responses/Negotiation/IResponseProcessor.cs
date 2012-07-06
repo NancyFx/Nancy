@@ -16,7 +16,9 @@
 
         /// <summary>
         /// Returns the full (non-wildcard) content type that this processor will
-        /// return for the given media range, model and context 
+        /// return for the given media range, model and context.
+        /// A call to this is only valid if the processor has previously reported that
+        /// it can process the given range, model and context.
         /// </summary>
         /// <param name="requestedMediaRange">Media range requested</param>
         /// <param name="model">Model</param>
