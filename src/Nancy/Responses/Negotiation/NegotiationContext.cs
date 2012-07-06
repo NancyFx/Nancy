@@ -37,9 +37,9 @@ namespace Nancy.Responses.Negotiation
         public dynamic DefaultModel { get; set; }
 
         /// <summary>
-        /// Gets or sets the model mapping for specific content types
+        /// Gets or sets the model mappings for media ranges
         /// </summary>
-        public IDictionary<string, Func<object>> ContentTypeModelMappings { get; set; }
+        public IDictionary<MediaRange, Func<dynamic>> MediaRangeModelMappings { get; set; }
 
         /// <summary>
         /// Gets or sets the additional response headers required
@@ -49,6 +49,7 @@ namespace Nancy.Responses.Negotiation
         public NegotiationContext()
         {
             this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
+            this.MediaRangeModelMappings = new Dictionary<MediaRange, Func<dynamic>>();
             this.Headers = new Dictionary<string, string>();
         }
     }

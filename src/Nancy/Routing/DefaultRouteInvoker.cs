@@ -21,7 +21,7 @@ namespace Nancy.Routing
             this.invocationStrategies = new Dictionary<Type, Func<dynamic, NancyContext, Response>>
                                             {
                                                 { typeof (Response), ProcessAsRealResponse },
-                                                { typeof (NancyModule.Negotiator), ProcessAsNegotiator },
+                                                { typeof (Negotiator), ProcessAsNegotiator },
                                                 { typeof (Object), ProcessAsModel}
                                             };
         }
