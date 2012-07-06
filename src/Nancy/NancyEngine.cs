@@ -22,7 +22,6 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
-        private readonly IRouteInvoker routeInvoker;
         private readonly IEnumerable<IErrorHandler> errorHandlers;
 
         /// <summary>
@@ -53,7 +52,6 @@
             this.contextFactory = contextFactory;
             this.errorHandlers = errorHandlers;
             this.requestTracing = requestTracing;
-            this.routeInvoker = routeInvoker;
         }
 
         /// <summary>

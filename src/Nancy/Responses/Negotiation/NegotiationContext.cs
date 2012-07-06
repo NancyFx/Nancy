@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Nancy.Responses.Negotiation
 {
@@ -51,6 +52,22 @@ namespace Nancy.Responses.Negotiation
             this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
             this.MediaRangeModelMappings = new Dictionary<MediaRange, Func<dynamic>>();
             this.Headers = new Dictionary<string, string>();
+        }
+
+        /// <summary>
+        /// Gets the correct model for the given media range
+        /// </summary>
+        /// <param name="range">Media range</param>
+        /// <returns>Model object</returns>
+        public dynamic GetModelForMediaRange(MediaRange range)
+        {
+            var matching =
+                this.MediaRangeModelMappings.Any(
+                    m => range.Type.Equals(m.Key.Type) && range.Subtype.Equals(m.Key.Subtype));
+
+            return matching
+                        ? this.MediaRangeModelMappings.First(m => range.Type.Equals(m.Key.Type) && range.Subtype.Equals(m.Key.Subtype))
+                        : this.DefaultModel;
         }
     }
 }

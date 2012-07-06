@@ -30,13 +30,14 @@
 
         /// <summary>
         /// Returns the full (non-wildcard) content type that this processor will
-        /// return for the given media range, model and context 
+        /// return for the given media range, model and context.
+        /// A call to this is only valid if the processor has previously reported that
+        /// it can process the given range, model and context.
         /// </summary>
         /// <param name="requestedMediaRange">Media range requested</param>
-        /// <param name="model">Model</param>
         /// <param name="context">Context</param>
         /// <returns>Non-wildcard content type in the form A/B</returns>
-        public string GetFullOutputContentType(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public string GetFullOutputContentType(MediaRange requestedMediaRange, NancyContext context)
         {
             return "application/json";
         }
@@ -45,10 +46,9 @@
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
-        /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
-        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, NancyContext context)
         {
             if (this.IsExactJsonContentType(requestedMediaRange))
             {
@@ -79,12 +79,11 @@
         /// Process the response
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
-        /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A response</returns>
-        public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public Response Process(MediaRange requestedMediaRange, NancyContext context)
         {
-            return new JsonResponse(model, this.serializer);
+            return new JsonResponse(context.NegotiationContext.GetModelForMediaRange(requestedMediaRange), this.serializer);
         }
 
         private bool IsExactJsonContentType(MediaRange requestedContentType)

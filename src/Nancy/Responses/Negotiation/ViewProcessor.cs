@@ -18,12 +18,12 @@ namespace Nancy.Responses.Negotiation
             get { yield break; }
         }
 
-        public string GetFullOutputContentType(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public string GetFullOutputContentType(MediaRange requestedMediaRange, NancyContext context)
         {
             return "text/html";
         }
 
-        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, NancyContext context)
         {
             var matchingContentType = requestedMediaRange.Type.Equals("text") && requestedMediaRange.Subtype.Equals("html");
 
@@ -32,9 +32,12 @@ namespace Nancy.Responses.Negotiation
                 : new ProcessorMatch();
         }
 
-        public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+        public Response Process(MediaRange requestedMediaRange, NancyContext context)
         {
-            return this.viewFactory.RenderView(context.NegotiationContext.ViewName, model, GetViewLocationContext(context));
+            return this.viewFactory.RenderView(
+                            context.NegotiationContext.ViewName, 
+                            context.NegotiationContext.GetModelForMediaRange(requestedMediaRange), 
+                            GetViewLocationContext(context));
         }
 
         private static ViewLocationContext GetViewLocationContext(NancyContext context)

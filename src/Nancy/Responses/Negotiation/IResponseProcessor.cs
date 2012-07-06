@@ -21,27 +21,24 @@
         /// it can process the given range, model and context.
         /// </summary>
         /// <param name="requestedMediaRange">Media range requested</param>
-        /// <param name="model">Model</param>
         /// <param name="context">Context</param>
         /// <returns>Non-wildcard content type in the form A/B</returns>
-        string GetFullOutputContentType(MediaRange requestedMediaRange, dynamic model, NancyContext context);
+        string GetFullOutputContentType(MediaRange requestedMediaRange, NancyContext context);
 
         /// <summary>
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
-        /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
-        ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context);
+        ProcessorMatch CanProcess(MediaRange requestedMediaRange, NancyContext context);
 
         /// <summary>
         /// Process the response
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
-        /// <param name="model">The model, if any</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A response</returns>
-        Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context);
+        Response Process(MediaRange requestedMediaRange, NancyContext context);
     }
 }
