@@ -73,6 +73,7 @@
 
             var context = this.contextFactory.Create();
             context.Request = request;
+            context.NancyEngine = this;
 
             var pipelines =
                 this.RequestPipelinesFactory.Invoke(context);

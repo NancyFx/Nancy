@@ -88,6 +88,18 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View[new SomeViewModel()];
             };
 
+            Get["/viewwithchildview"] = x =>
+            {
+                var model = new RatPack { FirstName = "Parent" };
+                return View["viewwithchildview.cshtml", model];
+            };
+            Get["/childview"] = x =>
+            {
+                var firstNameFromQueryString = Request.Query["FirstName"];
+                var model = new RatPack { FirstName = firstNameFromQueryString };
+                return View["childview.cshtml", model];
+            };
+
             Get["/spark"] = x => {
                 var model = new RatPack { FirstName = "Bright" };
                 return View["spark.spark", model];

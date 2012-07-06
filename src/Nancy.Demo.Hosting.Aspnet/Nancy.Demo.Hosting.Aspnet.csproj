@@ -108,6 +108,8 @@
     <Content Include="Content\scripts.js" />
     <Content Include="Views\razor-error.cshtml" />
     <Content Include="Views\razor-layout-error.cshtml" />
+    <Content Include="Views\viewwithchildview.cshtml" />
+    <Content Include="Views\childview.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>

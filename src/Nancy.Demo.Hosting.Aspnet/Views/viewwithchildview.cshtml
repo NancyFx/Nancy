@@ -1,0 +1,11 @@
+﻿<html>
+<head>
+    <title>Razor View Engine Demo</title>
+</head>
+<body>
+    <h1>View: ViewWithChildView</h1>
+    <h1>First Name From Model: @Model.FirstName</h1>
+    <p>This is a sample of using a child view within a parent view!</p>
+	@Html.Get("/childview", new { firstName = "ImmaChild" })
+</body>
+</html>

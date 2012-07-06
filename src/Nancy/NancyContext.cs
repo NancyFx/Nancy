@@ -55,6 +55,8 @@ namespace Nancy
             }
         }
 
+        public INancyEngine NancyEngine { get; set; }
+
         /// <summary>
         /// Gets or sets the outgoing response
         /// </summary>
