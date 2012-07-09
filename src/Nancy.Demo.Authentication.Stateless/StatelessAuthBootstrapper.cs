@@ -1,10 +1,10 @@
-using Nancy.Authentication.Stateless;
-using Nancy.Bootstrapper;
-using Nancy.Conventions;
-using TinyIoC;
-
 namespace Nancy.Demo.Authentication.Stateless
 {
+    using Nancy.Authentication.Stateless;
+    using Nancy.Bootstrapper;
+    using Nancy.Conventions;
+    using TinyIoC;
+
     public class StatelessAuthBootstrapper : DefaultNancyBootstrapper
     {
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context)
