@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Nancy">
+</Property><Property Name="Solution File" Value="C:\Projects\Nancy\src\Nancy.sln">
+</Property><Property Name="Date" Value="Friday, July 06, 2012">
+</Property><Property Name="Time" Value="11:29:21 AM">
+</Property><Property Name="Log Number" Value="2">
+</Property></Properties><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Project file successfully backed up as C:\Projects\Nancy\src\Backup\Nancy.Demo.Authentication.Stateless.csproj">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj.user" Description="Project user file successfully backed up as C:\Projects\Nancy\src\Backup\Nancy.Demo.Authentication.Stateless.csproj.user">
+</Event><Event ErrorLevel="1" Project="Nancy.Demo.Authentication.Stateless" Source="SharedAssemblyInfo.cs" Description="Backed up project may not build.  Project contains linked file: C:\Projects\Nancy\src\Backup\Properties\SharedAssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="SharedAssemblyInfo.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\Properties\SharedAssemblyInfo.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\DemoUserIdentity.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\DemoUserIdentity.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Models\UserModel.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\Models\UserModel.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\StatelessAuthBootstrapper.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\StatelessAuthBootstrapper.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\MainModule.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\MainModule.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\SecureModule.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\SecureModule.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\UserDatabase.cs" Description="File successfully backed up as C:\Projects\Nancy\src\Backup\UserDatabase.cs">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Converted">
+</Event></UpgradeLog>

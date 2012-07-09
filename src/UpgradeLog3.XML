@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Nancy">
+</Property><Property Name="Solution File" Value="C:\Projects\Nancy\src\Nancy.sln">
+</Property><Property Name="Date" Value="Friday, July 06, 2012">
+</Property><Property Name="Time" Value="11:39 AM">
+</Property><Property Name="Log Number" Value="3">
+</Property></Properties><Event ErrorLevel="0" Project="Nancy" Source="Nancy\Nancy.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy" Source="Nancy\Nancy.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Wcf" Source="Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Wcf" Source="Nancy.Hosting.Wcf\Nancy.Hosting.Wcf.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Razor" Source="Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Razor" Source="Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.NDjango" Source="Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.NDjango" Source="Nancy.ViewEngines.NDjango\Nancy.ViewEngines.NDjango.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Spark" Source="Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Spark" Source="Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Aspnet" Source="Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Aspnet" Source="Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Authentication.Forms" Source="Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Authentication.Forms" Source="Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Self" Source="Nancy.Hosting.Self\Nancy.Hosting.Self.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Self" Source="Nancy.Hosting.Self\Nancy.Hosting.Self.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Owin" Source="Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Owin" Source="Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Testing" Source="Nancy.Testing\Nancy.Testing.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Testing" Source="Nancy.Testing\Nancy.Testing.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.DotLiquid" Source="Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.DotLiquid" Source="Nancy.ViewEngines.DotLiquid\Nancy.ViewEngines.DotLiquid.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Authentication.Basic" Source="Nancy.Authentication.Basic\Nancy.Authentication.Basic.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Authentication.Basic" Source="Nancy.Authentication.Basic\Nancy.Authentication.Basic.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Tests" Source="Nancy.Tests\Nancy.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Tests" Source="Nancy.Tests\Nancy.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Wcf.Tests" Source="Nancy.Hosting.Wcf.Tests\Nancy.Hosting.Wcf.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Wcf.Tests" Source="Nancy.Hosting.Wcf.Tests\Nancy.Hosting.Wcf.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Razor.Tests" Source="Nancy.ViewEngines.Razor.Tests\Nancy.ViewEngines.Razor.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Razor.Tests" Source="Nancy.ViewEngines.Razor.Tests\Nancy.ViewEngines.Razor.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Spark.Tests" Source="Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Spark.Tests" Source="Nancy.ViewEngines.Spark.Tests\Nancy.ViewEngines.Spark.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.NDjango.Tests" Source="Nancy.ViewEngines.NDjango.Tests\Nancy.ViewEngines.NDjango.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.NDjango.Tests" Source="Nancy.ViewEngines.NDjango.Tests\Nancy.ViewEngines.NDjango.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Aspnet.Tests" Source="Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Aspnet.Tests" Source="Nancy.Hosting.Aspnet.Tests\Nancy.Hosting.Aspnet.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Authentication.Forms.Tests" Source="Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Authentication.Forms.Tests" Source="Nancy.Authentication.Forms.Tests\Nancy.Authentication.Forms.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Owin.Tests" Source="Nancy.Hosting.Owin.Tests\Nancy.Hosting.Owin.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Owin.Tests" Source="Nancy.Hosting.Owin.Tests\Nancy.Hosting.Owin.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Testing.Tests" Source="Nancy.Testing.Tests\Nancy.Testing.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Testing.Tests" Source="Nancy.Testing.Tests\Nancy.Testing.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.DotLiquid.Tests" Source="Nancy.ViewEngines.DotLiquid.Tests\Nancy.ViewEngines.DotLiquid.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.DotLiquid.Tests" Source="Nancy.ViewEngines.DotLiquid.Tests\Nancy.ViewEngines.DotLiquid.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Authentication.Basic.Tests" Source="Nancy.Authentication.Basic.Tests\Nancy.Authentication.Basic.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Authentication.Basic.Tests" Source="Nancy.Authentication.Basic.Tests\Nancy.Authentication.Basic.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Tests.Functional" Source="Nancy.Tests.Functional\Nancy.Tests.Functional.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Tests.Functional" Source="Nancy.Tests.Functional\Nancy.Tests.Functional.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication" Source="Nancy.Demo.Authentication\Nancy.Demo.Authentication.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication" Source="Nancy.Demo.Authentication\Nancy.Demo.Authentication.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Forms" Source="Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Forms" Source="Nancy.Demo.Authentication.Forms\Nancy.Demo.Authentication.Forms.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Bootstrapping.Aspnet" Source="Nancy.Demo.Bootstrapper.Aspnet\Nancy.Demo.Bootstrapping.Aspnet.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Bootstrapping.Aspnet" Source="Nancy.Demo.Bootstrapper.Aspnet\Nancy.Demo.Bootstrapping.Aspnet.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Caching" Source="Nancy.Demo.Caching\Nancy.Demo.Caching.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Caching" Source="Nancy.Demo.Caching\Nancy.Demo.Caching.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Hosting.Self" Source="Nancy.Demo.Hosting.Self\Nancy.Demo.Hosting.Self.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Hosting.Self" Source="Nancy.Demo.Hosting.Self\Nancy.Demo.Hosting.Self.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Hosting.Wcf" Source="Nancy.Demo.Hosting.Wcf\Nancy.Demo.Hosting.Wcf.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Hosting.Wcf" Source="Nancy.Demo.Hosting.Wcf\Nancy.Demo.Hosting.Wcf.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Hosting.Aspnet" Source="Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Hosting.Aspnet" Source="Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Hosting.Owin" Source="Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Hosting.Owin" Source="Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Forms.TestingDemo" Source="Nancy.Demo.Authentication.Forms.TestingDemo\Nancy.Demo.Authentication.Forms.TestingDemo.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Forms.TestingDemo" Source="Nancy.Demo.Authentication.Forms.TestingDemo\Nancy.Demo.Authentication.Forms.TestingDemo.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.ModelBinding" Source="Nancy.Demo.ModelBinding\Nancy.Demo.ModelBinding.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.ModelBinding" Source="Nancy.Demo.ModelBinding\Nancy.Demo.ModelBinding.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.SuperSimpleViewEngine" Source="Nancy.Demo.SuperSimpleViewEngine\Nancy.Demo.SuperSimpleViewEngine.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.SuperSimpleViewEngine" Source="Nancy.Demo.SuperSimpleViewEngine\Nancy.Demo.SuperSimpleViewEngine.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.SparkViewEngine" Source="Nancy.Demo.SparkViewEngine\Nancy.Demo.SparkViewEngine.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.SparkViewEngine" Source="Nancy.Demo.SparkViewEngine\Nancy.Demo.SparkViewEngine.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Basic" Source="Nancy.Demo.Authentication.Basic\Nancy.Demo.Authentication.Basic.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Basic" Source="Nancy.Demo.Authentication.Basic\Nancy.Demo.Authentication.Basic.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Nustache" Source="Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Nustache" Source="Nancy.ViewEngines.Nustache\Nancy.ViewEngines.Nustache.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Validation" Source="Nancy.Demo.Validation\Nancy.Demo.Validation.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Validation" Source="Nancy.Demo.Validation\Nancy.Demo.Validation.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Validation.DataAnnotations" Source="Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Validation.DataAnnotations" Source="Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Validation.FluentValidation" Source="Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Validation.FluentValidation" Source="Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Validation.DataAnnotatioins.Tests" Source="Nancy.Validation.DataAnnotatioins.Tests\Nancy.Validation.DataAnnotatioins.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Validation.DataAnnotatioins.Tests" Source="Nancy.Validation.DataAnnotatioins.Tests\Nancy.Validation.DataAnnotatioins.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Validation.FluentValidation.Tests" Source="Nancy.Validation.FluentValidation.Tests\Nancy.Validation.FluentValidation.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Validation.FluentValidation.Tests" Source="Nancy.Validation.FluentValidation.Tests\Nancy.Validation.FluentValidation.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Razor.Tests.Models" Source="Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Razor.Tests.Models" Source="Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.ViewEngines.Razor.BuildProviders" Source="Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.ViewEngines.Razor.BuildProviders" Source="Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Hosting.Self.Tests" Source="Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Hosting.Self.Tests" Source="Nancy.Hosting.Self.Tests\Nancy.Hosting.Self.Tests.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.NDjango" Source="Nancy.Demo.NDjango\Nancy.Demo.NDjango.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.NDjango" Source="Nancy.Demo.NDjango\Nancy.Demo.NDjango.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Converted">
+</Event><Event ErrorLevel="0" Project="Nancy.Authentication.Stateless" Source="Nancy.Authentication.Stateless\Nancy.Authentication.Stateless.csproj" Description="The project file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="Nancy.Authentication.Stateless" Source="Nancy.Authentication.Stateless\Nancy.Authentication.Stateless.csproj" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="" Source="Nancy.sln" Description="The solution file does not require conversion.">
+</Event><Event ErrorLevel="3" Project="" Source="Nancy.sln" Description="No Conversion Required">
+</Event><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Scan complete: Upgrade not required for project files.">
+</Event></UpgradeLog>

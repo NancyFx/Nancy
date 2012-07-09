@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?><?xml-stylesheet type='text/xsl' href='_UpgradeReport_Files/UpgradeReport.xslt'?><UpgradeLog>
+<Properties><Property Name="Solution" Value="Nancy">
+</Property><Property Name="Solution File" Value="C:\Projects\Nancy\src\Nancy.sln">
+</Property><Property Name="Date" Value="Friday, July 06, 2012">
+</Property><Property Name="Time" Value="11:27:38 AM">
+</Property></Properties><Event ErrorLevel="0" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Project converted successfully">
+</Event><Event ErrorLevel="3" Project="Nancy.Demo.Authentication.Stateless" Source="Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj" Description="Converted">
+</Event></UpgradeLog>

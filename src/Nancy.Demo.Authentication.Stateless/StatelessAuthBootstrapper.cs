@@ -1,9 +1,10 @@
+using Nancy.Authentication.Stateless;
+using Nancy.Bootstrapper;
+using Nancy.Conventions;
+using TinyIoC;
+
 namespace Nancy.Demo.Authentication.Stateless
 {
-    using Nancy.Authentication.Stateless;
-    using Nancy.Bootstrapper;
-    using TinyIoC;
-
     public class StatelessAuthBootstrapper : DefaultNancyBootstrapper
     {
         protected override void RequestStartup(TinyIoCContainer requestContainer, IPipelines pipelines, NancyContext context)
@@ -22,10 +23,21 @@ namespace Nancy.Demo.Authentication.Stateless
                         var apiKey = (string) nancyContext.Request.Query.ApiKey.Value;
 
                         //get the user identity however you choose to (for now, using a static class/method)
-                        return UserDatabase.GetUserFromApiKey(apiKey);                        
+                        return UserDatabase.GetUserFromApiKey(apiKey);
                     });
 
+            AllowAccessToConsumingSite(pipelines);
+
             StatelessAuthentication.Enable(pipelines, configuration);
+        }
+
+        static void AllowAccessToConsumingSite(IPipelines pipelines)
+        {
+            pipelines.AfterRequest.AddItemToEndOfPipeline(x =>
+                {
+                    x.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                    x.Response.Headers.Add("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT,OPTIONS");
+                });
         }
     }
 }

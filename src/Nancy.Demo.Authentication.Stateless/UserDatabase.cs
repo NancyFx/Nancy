@@ -6,31 +6,49 @@ namespace Nancy.Demo.Authentication.Stateless
     using System.Linq;
 
     public class UserDatabase
-    {
-        private static List<Tuple<string, string, string>> users = new List<Tuple<string, string, string>>();
+    {        
+        static readonly List<Tuple<string, string>> ActiveApiKeys = new List<Tuple<string, string>>();
+        private static readonly List<Tuple<string, string>> Users = new List<Tuple<string, string>>();
 
         static UserDatabase()
         {
-            users.Add(new Tuple<string, string, string>("admin", "password", "55E1E49E-B7E8-4EEA-8459-7A906AC4D4C0"));
-            users.Add(new Tuple<string, string, string>("user", "password", "56E1E49E-B7E8-4EEA-8459-7A906AC4D4C0"));
+            Users.Add(new Tuple<string, string>("admin", "password"));
+            Users.Add(new Tuple<string, string>("user", "password"));
         }
 
         public static IUserIdentity GetUserFromApiKey(string apiKey)
         {
-            var userRecord = users.FirstOrDefault(u => u.Item3 == apiKey);
+            var activeKey = ActiveApiKeys.FirstOrDefault(x => x.Item2 == apiKey);
 
-            return userRecord == null
-                       ? null
-                       : new DemoUserIdentity {UserName = userRecord.Item1};
+            if(activeKey==null)
+            {
+                return null;
+            }
+
+            var userRecord = Users.First(u => u.Item1 == activeKey.Item1);
+            return new DemoUserIdentity {UserName = userRecord.Item1};
         }
 
         public static string ValidateUser(string username, string password)
         {
-            var userRecord = users.FirstOrDefault(u => u.Item1 == username && u.Item2 == password);
+            //try to get a user from the "database" that matches the given username and password
+            var userRecord = Users.FirstOrDefault(u => u.Item1 == username && u.Item2 == password);
 
-            return userRecord == null
-                       ? null
-                       : userRecord.Item3;
+            if(userRecord==null)
+            {
+                return null;
+            }
+
+            //now that the user is validated, create an api key that can be used for subsequent requests
+            var apiKey = Guid.NewGuid().ToString();
+            ActiveApiKeys.Add(new Tuple<string, string>(username, apiKey));
+            return apiKey;            
+        }
+
+        public static void RemoveApiKey(string apiKey)
+        {
+            var apiKeyToRemove = ActiveApiKeys.First(x => x.Item2 == apiKey);
+            ActiveApiKeys.Remove(apiKeyToRemove);
         }
     }
 }

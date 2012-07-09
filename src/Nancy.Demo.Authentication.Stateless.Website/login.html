@@ -1,0 +1,54 @@
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <title>Login</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"> </script>
+        <script src="Scripts/apiToken.js"> </script>
+        <script src="Scripts/api.js"> </script>
+    </head>
+    <body>
+        <div>
+            Username <input type="text" id="Username" />
+            <br />
+            Password <input id="Password" type="password" />
+            <br />
+            Remember Me <input id="RememberMe" type="checkbox" value="True" />
+            <br />
+            <button id="submitButton">Login</button>    
+        </div>
+        <div id="errorBox" style="display: none;">Invalid Username or Password</div>
+    
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#submitButton").click(function () {
+
+                    $("#errorBox").hide();
+
+                    var authRequest = {
+                        username: $("#Username").val(),
+                        password: $("#Password").val(),
+                        rememberMe: $("#RememberMe").val()
+                    };
+
+                    var success = function (response) {
+                        ApiToken.Set(authRequest.username, response.ApiKey, authRequest.rememberMe);
+                        window.location = "index.html";
+                    };
+
+                    var error = function () {
+                        $("#errorBox").show();
+                    };
+
+                    $.ajax({
+                        type: 'POST',
+                        url: api.auth,
+                        data: authRequest,
+                        success: success,
+                        error: error,
+                        dataType: "json"
+                    });
+                });
+            });
+        </script>
+    </body>
+</html>
