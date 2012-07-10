@@ -29,26 +29,13 @@
         }
 
         /// <summary>
-        /// Returns the full (non-wildcard) content type that this processor will
-        /// return for the given media range, model and context.
-        /// A call to this is only valid if the processor has previously reported that
-        /// it can process the given range, model and context.
-        /// </summary>
-        /// <param name="requestedMediaRange">Media range requested</param>
-        /// <param name="context">Context</param>
-        /// <returns>Non-wildcard content type in the form A/B</returns>
-        public string GetFullOutputContentType(MediaRange requestedMediaRange, NancyContext context)
-        {
-            return "application/json";
-        }
-
-        /// <summary>
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
+        /// <param name="model">The model for the given media range</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
-        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, NancyContext context)
+        public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
             if (this.IsExactJsonContentType(requestedMediaRange))
             {
@@ -79,11 +66,12 @@
         /// Process the response
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
+        /// <param name="model">The model for the given media range</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A response</returns>
-        public Response Process(MediaRange requestedMediaRange, NancyContext context)
+        public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return new JsonResponse(context.NegotiationContext.GetModelForMediaRange(requestedMediaRange), this.serializer);
+            return new JsonResponse(model, this.serializer);
         }
 
         private bool IsExactJsonContentType(MediaRange requestedContentType)
@@ -110,7 +98,7 @@
 
             var subtypeString = requestedContentType.Subtype.ToString();
 
-            return (subtypeString.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
+            return (subtypeString.StartsWith("vnd", StringComparison.InvariantCultureIgnoreCase) &&
                     subtypeString.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
         }
     }

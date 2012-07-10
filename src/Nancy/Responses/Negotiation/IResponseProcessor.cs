@@ -15,30 +15,21 @@
         IEnumerable<Tuple<string, MediaRange>> ExtensionMappings { get; }
 
         /// <summary>
-        /// Returns the full (non-wildcard) content type that this processor will
-        /// return for the given media range, model and context.
-        /// A call to this is only valid if the processor has previously reported that
-        /// it can process the given range, model and context.
-        /// </summary>
-        /// <param name="requestedMediaRange">Media range requested</param>
-        /// <param name="context">Context</param>
-        /// <returns>Non-wildcard content type in the form A/B</returns>
-        string GetFullOutputContentType(MediaRange requestedMediaRange, NancyContext context);
-
-        /// <summary>
         /// Determines whether the the processor can handle a given content type and model
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
+        /// <param name="model">The model for the given media range</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
-        ProcessorMatch CanProcess(MediaRange requestedMediaRange, NancyContext context);
+        ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context);
 
         /// <summary>
         /// Process the response
         /// </summary>
         /// <param name="requestedMediaRange">Content type requested by the client</param>
+        /// <param name="model">The model for the given media range</param>
         /// <param name="context">The nancy context</param>
         /// <returns>A response</returns>
-        Response Process(MediaRange requestedMediaRange, NancyContext context);
+        Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context);
     }
 }
