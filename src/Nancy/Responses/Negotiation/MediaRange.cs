@@ -58,5 +58,10 @@ namespace Nancy.Responses.Negotiation
         {
             return string.Concat(mediaRange.Type, "/", mediaRange.Subtype);
         }
+
+        public override string ToString()
+        {
+            return this;
+        }
     }
 }
