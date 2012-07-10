@@ -214,7 +214,9 @@
 
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
-            return dynamicValue.ToString();
+            return dynamicValue.HasValue
+                       ? Convert.ToString(dynamicValue.value)
+                       : null;
         }
 
         public static implicit operator int(DynamicDictionaryValue dynamicValue)
