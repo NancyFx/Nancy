@@ -53,7 +53,7 @@ namespace Nancy.Routing
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessors(string acceptHeader, dynamic model, NancyContext context)
         {
             var compatibleProcessors = this.processors
-                .Select(processor => Tuple.Create(processor, (ProcessorMatch)processor.CanProcess(acceptHeader, context)))
+                .Select(processor => Tuple.Create(processor, (ProcessorMatch)processor.CanProcess(acceptHeader, model, context)))
                 .Where(x => x.Item2.ModelResult != MatchResult.NoMatch)
                 .Where(x => x.Item2.RequestedContentTypeResult != MatchResult.NoMatch)
                 .ToList();
@@ -100,7 +100,7 @@ namespace Nancy.Routing
                     .First();
 
                 var response =
-                    processor.Item1.Process(selected.header.Item1, context);
+                    processor.Item1.Process(selected.header.Item1, model, context);
 
                 if (matches.Count() > 1)
                 {
