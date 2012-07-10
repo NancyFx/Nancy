@@ -81,7 +81,7 @@
                 return true;
             }
 
-            return requestedContentType.Equals("application/json") || requestedContentType.Equals("text/json");
+            return requestedContentType.Matches("application/json") || requestedContentType.Matches("text/json");
         }
 
         private bool IsWildcardJsonContentType(MediaRange requestedContentType)

@@ -25,6 +25,13 @@ namespace Nancy.Responses.Negotiation
             this.typeString = typeString;
         }
 
+        public bool Matches(MediaType other)
+        {
+            return this.IsWildcard ||
+                   other.IsWildcard ||
+                   this.typeString.Equals(other.typeString, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         public static implicit operator MediaType(string inputString)
         {
             return new MediaType(inputString);
@@ -33,45 +40,6 @@ namespace Nancy.Responses.Negotiation
         public static implicit operator string(MediaType inputMediaType)
         {
             return inputMediaType.typeString;
-        }
-
-        public bool Equals(MediaType other)
-        {
-            if (ReferenceEquals(null, other))
-            {
-                return false;
-            }
-
-            if (ReferenceEquals(this, other))
-            {
-                return true;
-            }
-
-            return this.IsWildcard || 
-                   other.IsWildcard || 
-                   this.typeString.Equals(other.typeString, StringComparison.InvariantCultureIgnoreCase);
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (ReferenceEquals(null, obj))
-            {
-                return false;
-            }
-            if (ReferenceEquals(this, obj))
-            {
-                return true;
-            }
-            if (obj.GetType() != typeof(MediaType))
-            {
-                return false;
-            }
-            return Equals((MediaType)obj);
-        }
-
-        public override int GetHashCode()
-        {
-            return (this.typeString != null ? this.typeString.GetHashCode() : 0);
         }
 
         public override string ToString()

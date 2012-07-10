@@ -5,7 +5,7 @@ namespace Nancy.Responses.Negotiation
     /// <summary>
     /// Represents a media range from an accept header
     /// </summary>
-    public class MediaRange : IEquatable<string>
+    public class MediaRange
     {
         /// <summary>
         /// Media range type
@@ -16,6 +16,16 @@ namespace Nancy.Responses.Negotiation
         /// Media range subtype
         /// </summary>
         public MediaType Subtype { get; set; }
+
+        /// <summary>
+        /// Whether or not a media range matches another, taking into account wildcards
+        /// </summary>
+        /// <param name="other">Other media range</param>
+        /// <returns>True if matching, false if not</returns>
+        public bool Matches(MediaRange other)
+        {
+            return this.Type.Matches(other.Type) && this.Subtype.Matches(other.Subtype);
+        }
 
         /// <summary>
         /// Creates a MediaRange from a "Type/SubType" string
@@ -47,14 +57,6 @@ namespace Nancy.Responses.Negotiation
         public static implicit operator string(MediaRange mediaRange)
         {
             return string.Concat(mediaRange.Type, "/", mediaRange.Subtype);
-        }
-
-        public bool Equals(string other)
-        {
-            var range = 
-                (MediaRange)other;
-
-            return (this.Type.Equals(range.Type) && this.Subtype.Equals(range.Subtype));
         }
     }
 }

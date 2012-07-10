@@ -20,7 +20,7 @@ namespace Nancy.Responses.Negotiation
 
         public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            var matchingContentType = requestedMediaRange.Type.Equals("text") && requestedMediaRange.Subtype.Equals("html");
+            var matchingContentType = requestedMediaRange.Matches("text/html");
 
             return matchingContentType 
                 ? new ProcessorMatch { ModelResult = MatchResult.DontCare, RequestedContentTypeResult = MatchResult.ExactMatch } 
