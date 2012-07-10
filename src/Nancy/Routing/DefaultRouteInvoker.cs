@@ -12,7 +12,7 @@ namespace Nancy.Routing
     {
         private readonly IEnumerable<IResponseProcessor> processors;
 
-        private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies; 
+        private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies;
 
         public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors)
         {
@@ -22,7 +22,7 @@ namespace Nancy.Routing
                                             {
                                                 { typeof (Response), ProcessAsRealResponse },
                                                 { typeof (Negotiator), ProcessAsNegotiator },
-                                                { typeof (Object), ProcessAsModel}
+                                                { typeof (Object), ProcessAsModel }
                                             };
         }
 
@@ -70,10 +70,44 @@ namespace Nancy.Routing
 
         private Response ProcessAsNegotiator(dynamic routeResult, NancyContext context)
         {
+            var negotiator = (Negotiator)routeResult;
 
-            // TODO - ignore any processors that don't fit the allowed list (using GetFullOutputContentType)
-            // TODO - for the best matching processor, get the return content type and either use a specific model or the default model
-            throw new NotImplementedException();
+            var acceptHeaders =
+                context.Request.Headers.Accept.Where(header => header.Item2 > 0m)
+                                              .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
+                                              .ToList();
+
+            var matches =
+                        (from header in acceptHeaders
+                         let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context)
+                         where result != null
+                         select new
+                         {
+                             header,
+                             result
+                         }).ToArray();
+
+            if (!matches.Any())
+            {
+                return new Response();
+            }
+
+            var selected = matches.First();
+
+            var processor = selected.result
+                .OrderByDescending(x => x.Item2.ModelResult)
+                .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
+                .First();
+
+            var response =
+                processor.Item1.Process(selected.header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(selected.header.Item1), context);
+
+            if (matches.Count() > 1)
+            {
+                ((Response)response).WithHeader("Vary", "Accept");
+            }
+
+            return response;
         }
 
         private Response ProcessAsModel(dynamic model, NancyContext context)
@@ -83,13 +117,13 @@ namespace Nancy.Routing
 
             var matches =
                 (from header in acceptHeaders
-                let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
-                where result != null
-                select new
-                {
-                    header,
-                    result
-                }).ToArray();
+                 let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
+                 where result != null
+                 select new
+                 {
+                     header,
+                     result
+                 }).ToArray();
 
             if (matches.Any())
             {
