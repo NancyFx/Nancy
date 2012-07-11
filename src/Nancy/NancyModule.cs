@@ -1,5 +1,3 @@
-using Nancy.Responses.Negotiation;
-
 namespace Nancy
 {
     using System;
@@ -7,11 +5,11 @@ namespace Nancy
     using System.ComponentModel;
     using System.IO;
     using ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Session;
-    using Nancy.ViewEngines;
-    using Nancy.Extensions;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
