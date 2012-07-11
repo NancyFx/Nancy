@@ -1,11 +1,10 @@
-using System.IO;
-using System.Text;
-
 namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.IO;
+    using System.Text;
     using Responses.Negotiation;
 
     /// <summary>
@@ -21,11 +20,12 @@ namespace Nancy.Routing
         {
             this.processors = processors;
 
-            this.invocationStrategies = new Dictionary<Type, Func<dynamic, NancyContext, Response>>
-                                            {
-                                                { typeof (Response), ProcessAsRealResponse },
-                                                { typeof (Object), ProcessAsNegotiator },
-                                            };
+            this.invocationStrategies = 
+                new Dictionary<Type, Func<dynamic, NancyContext, Response>>
+                {
+                    { typeof (Response), ProcessAsRealResponse },
+                    { typeof (Object), ProcessAsNegotiator },
+                };
         }
 
         /// <summary>
@@ -80,10 +80,10 @@ namespace Nancy.Routing
                 negotiator.WithModel(routeResult);
             }
 
-            var acceptHeaders =
-                context.Request.Headers.Accept.Where(header => header.Item2 > 0m)
-                                              .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
-                                              .ToList();
+            var acceptHeaders = context.Request.Headers
+                .Accept.Where(header => header.Item2 > 0m)
+                .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
+                .ToList();
 
             var matches =
                         (from header in acceptHeaders
@@ -110,18 +110,16 @@ namespace Nancy.Routing
             Response response =
                 processor.Item1.Process(selected.header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(selected.header.Item1), context);
 
-            if (matches.Count() > 1)
-            {
-                response.WithHeader("Vary", "Accept");
-            }
-
-            var linkProcessors = matches.Skip(1)
-                                        .SelectMany(m => m.result)
-                                        .SelectMany(p => p.Item1.ExtensionMappings)
-                                        .ToArray();
+            var linkProcessors = matches
+                .Skip(1)
+                .SelectMany(m => m.result)
+                .SelectMany(p => p.Item1.ExtensionMappings)
+                .ToArray();
 
             if (linkProcessors.Any())
             {
+                response.WithHeader("Vary", "Accept");
+
                 var linkBuilder = new StringBuilder();
 
                 var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
@@ -137,66 +135,6 @@ namespace Nancy.Routing
             }
 
             return response;
-        }
-
-        private Response ProcessAsModel(dynamic model, NancyContext context)
-        {
-            var acceptHeaders =
-                context.Request.Headers.Accept.Where(header => header.Item2 > 0m).ToList();
-
-            var matches =
-                (from header in acceptHeaders
-                 let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, model, context)
-                 where result != null
-                 select new
-                 {
-                     header,
-                     result
-                 }).ToArray();
-
-            if (matches.Any())
-            {
-                var selected = matches.First();
-
-                var processor = selected.result
-                    .OrderByDescending(x => x.Item2.ModelResult)
-                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
-                    .First();
-
-                var response =
-                    processor.Item1.Process(selected.header.Item1, model, context);
-
-                if (matches.Count() > 1)
-                {
-                    ((Response)response).WithHeader("Vary", "Accept");
-                }
-
-                var linkProcessors = matches.Skip(1)
-                            .SelectMany(m => m.result)
-                            .SelectMany(p => p.Item1.ExtensionMappings)
-                            .ToArray();
-
-                if (linkProcessors.Any())
-                {
-                    var linkBuilder = new StringBuilder();
-
-                    var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
-                    foreach (var linkProcessor in linkProcessors)
-                    {
-                        var url = string.Format("{0}.{1}", baseUrl, linkProcessor.Item1);
-                        var contentType = linkProcessor.Item2.ToString();
-
-                        linkBuilder.AppendFormat("<{0}>; rel=\"{1}\",", url, contentType);
-                    }
-
-                    response.Headers["Link"] = linkBuilder.ToString();
-                }
-
-                return response;
-            }
-
-            // What do we return if nothing could process it?
-            return new Response();
         }
     }
 }
