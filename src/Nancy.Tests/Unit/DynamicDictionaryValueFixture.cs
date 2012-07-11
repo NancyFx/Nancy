@@ -377,5 +377,12 @@
             Assert.Equal(expected, actual);
         }
 
+        [Fact]
+        public void Should_return_null_when_value_is_null_and_casting_to_string()
+        {
+            dynamic value = new DynamicDictionaryValue(null);
+            String actual = value;
+            Assert.Null(actual);
+        }
     }
 }
