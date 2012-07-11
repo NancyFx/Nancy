@@ -5,13 +5,11 @@ namespace Nancy.Responses.Negotiation
         // TODO - this perhaps should be an interface, along with the view thing above
         // that would then wrap this to give more granular extension point for things like
         // AsNegotiated
-        private NancyModule module;
         public NegotiationContext NegotiationContext { get; private set; }
 
-        public Negotiator(NancyModule module)
+        public Negotiator(NancyContext context)
         {
-            this.module = module;
-            this.NegotiationContext = module.Context.NegotiationContext;
+            this.NegotiationContext = context.NegotiationContext;
         }
     }
 }

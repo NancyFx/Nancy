@@ -24,8 +24,7 @@ namespace Nancy.Routing
             this.invocationStrategies = new Dictionary<Type, Func<dynamic, NancyContext, Response>>
                                             {
                                                 { typeof (Response), ProcessAsRealResponse },
-                                                { typeof (Negotiator), ProcessAsNegotiator },
-                                                { typeof (Object), ProcessAsModel }
+                                                { typeof (Object), ProcessAsNegotiator },
                                             };
         }
 
@@ -71,9 +70,15 @@ namespace Nancy.Routing
             return (Response)routeResult;
         }
 
-        private Response ProcessAsNegotiator(dynamic routeResult, NancyContext context)
+        private Response ProcessAsNegotiator(object routeResult, NancyContext context)
         {
-            var negotiator = (Negotiator)routeResult;
+            var negotiator = routeResult as Negotiator;
+
+            if (negotiator == null)
+            {
+                negotiator = new Negotiator(context);
+                negotiator.WithModel(routeResult);
+            }
 
             var acceptHeaders =
                 context.Request.Headers.Accept.Where(header => header.Item2 > 0m)

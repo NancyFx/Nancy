@@ -186,7 +186,7 @@ namespace Nancy
 
         public Negotiator Negotiate
         {
-            get { return new Negotiator(this); }
+            get { return new Negotiator(this.Context); }
         }
 
         /// <summary>
@@ -313,7 +313,7 @@ namespace Nancy
                 negotiationContext.PermissableMediaRanges.Clear();
                 negotiationContext.PermissableMediaRanges.Add("text/html");
 
-                return new Negotiator(this.module);
+                return new Negotiator(this.module.Context);
             }
         }
     }
