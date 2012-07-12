@@ -3,33 +3,43 @@ namespace Nancy.Responses.Negotiation
     using System;
 
     /// <summary>
-    /// Represents a media type or subtype in a <see cref="MediaRange"/>
+    /// Represents a media type or subtype in a <see cref="MediaRange"/>.
     /// </summary>
     public class MediaType
     {
-        private readonly string typeString;
+        private readonly string type;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MediaType"/> class for the media type part.
+        /// </summary>
+        /// <param name="type"></param>
+        public MediaType(string type)
+        {
+            this.type = type;
+        }
 
         /// <summary>
         /// Gets a value indicating whether the media type is a wildcard or not
         /// </summary>
+        /// <value><see langword="true" /> if the media type is a wildcard, otherwise <see langword="false" />.</value>
         public bool IsWildcard
         {
             get
             {
-                return this.typeString != null && string.Equals(this.typeString, "*", StringComparison.Ordinal);
+                return this.type != null && string.Equals(this.type, "*", StringComparison.Ordinal);
             }
         }
 
-        public MediaType(string typeString)
-        {
-            this.typeString = typeString;
-        }
-
+        /// <summary>
+        /// Matched the media type with another media type.
+        /// </summary>
+        /// <param name="other">The media type that should be matched against.</param>
+        /// <returns><see langword="true" /> if the media types match, otherwise <see langword="false" />.</returns>
         public bool Matches(MediaType other)
         {
             return this.IsWildcard ||
                    other.IsWildcard ||
-                   this.typeString.Equals(other.typeString, StringComparison.InvariantCultureIgnoreCase);
+                   this.type.Equals(other.type, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public static implicit operator MediaType(string inputString)
@@ -39,12 +49,12 @@ namespace Nancy.Responses.Negotiation
 
         public static implicit operator string(MediaType inputMediaType)
         {
-            return inputMediaType.typeString;
+            return inputMediaType.type;
         }
 
         public override string ToString()
         {
-            return this.typeString;
+            return this.type;
         }
     }
 }

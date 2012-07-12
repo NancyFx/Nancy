@@ -4,17 +4,25 @@
     using System.Collections.Generic;
     using System.Linq;
 
+    /// <summary>
+    /// Processes the model for json media types and extension.
+    /// </summary>
     public class JsonProcessor : IResponseProcessor
     {
         private readonly ISerializer serializer;
 
+        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
+            new[] { new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json")) };
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="JsonProcessor"/> class,
+        /// with the provided <see cref="serializers"/>.
+        /// </summary>
+        /// <param name="serializers">The serializes that the processor will use to process the request.</param>
         public JsonProcessor(IEnumerable<ISerializer> serializers)
         {
             this.serializer = serializers.FirstOrDefault(x => x.CanSerialize("application/json"));
         }
-
-        private static IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
-            new[] { new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json")) };
 
         /// <summary>
         /// Gets a set of mappings that map a given extension (such as .json)
@@ -22,10 +30,7 @@
         /// </summary>
         public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
         {
-            get
-            {
-                return extensionMappings;
-            }
+            get {  return extensionMappings; }
         }
 
         /// <summary>
@@ -37,7 +42,7 @@
         /// <returns>A ProcessorMatch result that determines the priority of the processor</returns>
         public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            if (this.IsExactJsonContentType(requestedMediaRange))
+            if (IsExactJsonContentType(requestedMediaRange))
             {
                 return new ProcessorMatch
                     {
@@ -46,7 +51,7 @@
                     };
             }
 
-            if (this.IsWildcardJsonContentType(requestedMediaRange))
+            if (IsWildcardJsonContentType(requestedMediaRange))
             {
                 return new ProcessorMatch
                 {
@@ -74,7 +79,7 @@
             return new JsonResponse(model, this.serializer);
         }
 
-        private bool IsExactJsonContentType(MediaRange requestedContentType)
+        private static bool IsExactJsonContentType(MediaRange requestedContentType)
         {
             if (requestedContentType.Type.IsWildcard && requestedContentType.Subtype.IsWildcard)
             {
@@ -84,7 +89,7 @@
             return requestedContentType.Matches("application/json") || requestedContentType.Matches("text/json");
         }
 
-        private bool IsWildcardJsonContentType(MediaRange requestedContentType)
+        private static bool IsWildcardJsonContentType(MediaRange requestedContentType)
         {
             if (!requestedContentType.Type.IsWildcard && !string.Equals("application", requestedContentType.Type, StringComparison.InvariantCultureIgnoreCase))
             {
