@@ -1,52 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace Nancy.Responses.Negotiation
+﻿namespace Nancy.Responses.Negotiation
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     /// <summary>
-    /// Context for content negotiation
+    /// Context for content negotiation.
     /// </summary>
     public class NegotiationContext
     {
         /// <summary>
-        /// Gets or sets the view name if one is required
+        /// Initializes a new instance of the <see cref="NegotiationContext"/> class.
         /// </summary>
-        public string ViewName { get; set; }
-
-        /// <summary>
-        /// The module path of the <see cref="NancyModule"/> that is locating a view.
-        /// </summary>
-        /// <value>A <see cref="string"/> containing the module path.</value>
-        public string ModulePath { get; set; }
-
-        /// <summary>
-        /// The name of the <see cref="NancyModule"/> that is locating a view.
-        /// </summary>
-        /// <value>A <see cref="string"/> containing the name of the module.</value>
-        public string ModuleName { get; set; }
-
-        /// <summary>
-        /// Gets or sets allowed media ranges
-        /// </summary>
-        public IList<MediaRange> PermissableMediaRanges { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default model that will be used if a
-        /// content type specific model is not speficied
-        /// </summary>
-        public dynamic DefaultModel { get; set; }
-
-        /// <summary>
-        /// Gets or sets the model mappings for media ranges
-        /// </summary>
-        public IDictionary<MediaRange, Func<dynamic>> MediaRangeModelMappings { get; set; }
-
-        /// <summary>
-        /// Gets or sets the additional response headers required
-        /// </summary>
-        public IDictionary<string, string> Headers { get; set; }
-
         public NegotiationContext()
         {
             this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
@@ -55,19 +20,61 @@ namespace Nancy.Responses.Negotiation
         }
 
         /// <summary>
+        /// Gets or sets the default model that will be used if a content type specific model is not specified.
+        /// </summary>
+        /// <value>The default model instance.</value>
+        public dynamic DefaultModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the additional response headers required.
+        /// </summary>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the headers.</value>
+        public IDictionary<string, string> Headers { get; set; }
+        
+        /// <summary>
+        /// Gets or sets the model mappings for media ranges.
+        /// </summary>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the media range model mappings.</value>
+        public IDictionary<MediaRange, Func<dynamic>> MediaRangeModelMappings { get; set; }
+
+        /// <summary>
+        /// The name of the <see cref="NancyModule"/> that is locating a view.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the name of the module.</value>
+        public string ModuleName { get; set; }
+
+        /// <summary>
+        /// The module path of the <see cref="NancyModule"/> that is locating a view.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the module path.</value>
+        public string ModulePath { get; set; }
+
+        /// <summary>
+        /// Gets or sets allowed media ranges.
+        /// </summary>
+        /// <value>A list of the allowed media ranges.</value>
+        public IList<MediaRange> PermissableMediaRanges { get; set; }
+
+        /// <summary>
+        /// Gets or sets the view name if one is required.
+        /// </summary>
+        /// <value>The name of the view that should be rendered.</value>
+        public string ViewName { get; set; }
+
+        /// <summary>
         /// Gets the correct model for the given media range
         /// </summary>
-        /// <param name="range">Media range</param>
-        /// <returns>Model object</returns>
-        public dynamic GetModelForMediaRange(MediaRange range)
+        /// <param name="mediaRange">The <see cref="MediaRange"/> to get the model for.</param>
+        /// <returns>The model for the provided <paramref name="mediaRange"/> if it has been mapped, otherwise the <see cref="DefaultModel"/> will be returned.</returns>
+        public dynamic GetModelForMediaRange(MediaRange mediaRange)
         {
             var matching =
                 this.MediaRangeModelMappings.Any(
-                    m => range.Type.Matches(m.Key.Type) && range.Subtype.Matches(m.Key.Subtype));
+                    m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype));
 
-            return matching
-                        ? this.MediaRangeModelMappings.First(m => range.Type.Matches(m.Key.Type) && range.Subtype.Matches(m.Key.Subtype)).Value.Invoke()
-                        : this.DefaultModel;
+            return matching ?
+                this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
+                this.DefaultModel;
         }
     }
 }
