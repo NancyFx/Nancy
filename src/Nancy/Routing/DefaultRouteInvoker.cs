@@ -110,6 +110,11 @@ namespace Nancy.Routing
             Response response =
                 processor.Item1.Process(selected.header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(selected.header.Item1), context);
 
+            if (matches.Count() > 1)
+            {
+                response.WithHeader("Vary", "Accept");
+            }
+
             var linkProcessors = matches
                 .Skip(1)
                 .SelectMany(m => m.result)
@@ -118,8 +123,6 @@ namespace Nancy.Routing
 
             if (linkProcessors.Any())
             {
-                response.WithHeader("Vary", "Accept");
-
                 var linkBuilder = new StringBuilder();
 
                 var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
