@@ -14,8 +14,12 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["routes", routeCacheProvider.GetCache()];
             };
 
-            Get["/negotiated"] = parameters => {
-                return new RatPack { FirstName = "Nancy " };
+            Get["/negotiated"] = parameters =>{
+
+                return Negotiate
+                    .WithModel(new RatPack {FirstName = "Nancy "})
+                    .WithMediaRangeModel("text/html", new RatPack {FirstName = "Nancy fancy pants"})
+                    .WithView("negotiatedview");
             };
 
             Get["/filtered", r => true] = x => {

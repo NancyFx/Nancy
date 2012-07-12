@@ -137,6 +137,11 @@ namespace Nancy.Routing
                 response.Headers["Link"] = linkBuilder.ToString();
             }
 
+            foreach (var header in negotiator.NegotiationContext.Headers)
+            {
+                response.Headers[header.Key] = header.Value;
+            }
+
             return response;
         }
     }

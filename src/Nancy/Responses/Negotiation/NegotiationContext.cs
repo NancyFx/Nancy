@@ -63,10 +63,10 @@ namespace Nancy.Responses.Negotiation
         {
             var matching =
                 this.MediaRangeModelMappings.Any(
-                    m => range.Type.Equals(m.Key.Type) && range.Subtype.Equals(m.Key.Subtype));
+                    m => range.Type.Matches(m.Key.Type) && range.Subtype.Matches(m.Key.Subtype));
 
             return matching
-                        ? this.MediaRangeModelMappings.First(m => range.Type.Equals(m.Key.Type) && range.Subtype.Equals(m.Key.Subtype))
+                        ? this.MediaRangeModelMappings.First(m => range.Type.Matches(m.Key.Type) && range.Subtype.Matches(m.Key.Subtype)).Value.Invoke()
                         : this.DefaultModel;
         }
     }
