@@ -41,7 +41,7 @@
                             t.RequestHeaders,
                             t.ResponseHeaders,
                             t.StatusCode,
-                            Log = t.TraceLog.ToString().Split(new [] { "\r\n" }, StringSplitOptions.None),
+                            Log = t.TraceLog.ToString().Replace("\r", "").Split(new [] { "\n" }, StringSplitOptions.None),
                         }).ToArray());
                 };
         }

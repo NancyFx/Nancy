@@ -123,7 +123,7 @@ namespace Nancy.Routing
                                           var acceptFormants = context.Request.Headers["accept"]
                                                                               .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                                          sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n\n", acceptFormants);
+                                          sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n", acceptFormants);
                                           sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
                                       });
 
@@ -217,8 +217,9 @@ namespace Nancy.Routing
             {
                 return responseProcessor.Process(mediaRange, model, context);
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Processor threw {0} exception: {1}", e.GetType(), e.Message));
             }
 
             return null;
@@ -230,7 +231,7 @@ namespace Nancy.Routing
 
             if (negotiator == null)
             {
-                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Wrapping result of type {0} in negotiator", routeResult.GetType()));
+                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Wrapping result of type {0} in negotiator\n", routeResult.GetType()));
 
                 negotiator = new Negotiator(context);
                 negotiator.WithModel(routeResult);
