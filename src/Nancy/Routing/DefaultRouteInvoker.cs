@@ -173,26 +173,23 @@ namespace Nancy.Routing
         private static void AddLinkHeaders(NancyContext context, IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Response response)
         {
             var linkProcessors = compatibleHeaders
-                .Skip(1)
                 .SelectMany(m => m.Item2)
                 .SelectMany(p => p.Item1.ExtensionMappings)
+                .Where(map => !map.Item2.Matches(response.ContentType))
+                .Distinct()
                 .ToArray();
 
-            if (linkProcessors.Any())
+            if (!linkProcessors.Any())
             {
-                var linkBuilder = new StringBuilder();
-
-                var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
-                foreach (var linkProcessor in linkProcessors)
-                {
-                    var url = string.Format("{0}.{1}", baseUrl, linkProcessor.Item1);
-                    var contentType = linkProcessor.Item2.ToString();
-
-                    linkBuilder.AppendFormat("<{0}>; rel=\"{1}\",", url, contentType);
-                }
-
-                response.Headers["Link"] = linkBuilder.ToString();
+                return;
             }
+
+            var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
+
+            var links = linkProcessors.Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Item1, lp.Item2))
+                                      .Aggregate((lp1, lp2) => lp1 + "," + lp2);
+
+            response.Headers["Link"] = links;
         }
 
         private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
