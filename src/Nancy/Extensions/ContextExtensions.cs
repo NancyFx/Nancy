@@ -1,3 +1,6 @@
+using System;
+using System.Text;
+
 namespace Nancy.Extensions
 {
     using Nancy.Responses;
@@ -71,6 +74,16 @@ namespace Nancy.Extensions
             context.Items.TryGetValue(NancyEngine.ERROR_KEY, out errorObject);
 
             return (errorObject as string) ?? "None";
+        }
+
+        /// <summary>
+        /// Shortcut extension method for writing trace information
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <param name="logDelegate">Log delegate</param>
+        public static void WriteTraceLog(this NancyContext context, Action<StringBuilder> logDelegate)
+        {
+            context.Trace.TraceLog.WriteLog(logDelegate);
         }
     }
 }
