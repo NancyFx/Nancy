@@ -163,7 +163,7 @@ namespace Nancy.Routing
             }
         }
 
-        private IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
+        private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
         {
             var acceptHeaders = context.Request.Headers
                 .Accept.Where(header => header.Item2 > 0m)
