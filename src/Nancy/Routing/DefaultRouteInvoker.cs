@@ -5,10 +5,11 @@ namespace Nancy.Routing
     using System.Linq;
     using System.IO;
     using System.Text;
+    using Responses;
     using Responses.Negotiation;
 
     /// <summary>
-    /// Default route invoker implementation-
+    /// Default route invoker implementation.
     /// </summary>
     public class DefaultRouteInvoker : IRouteInvoker
     {
@@ -52,7 +53,7 @@ namespace Nancy.Routing
                                         .First();
         }
 
-        private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessors(string acceptHeader, dynamic model, NancyContext context)
+        private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessorsByHeader(string acceptHeader, dynamic model, NancyContext context)
         {
             var compatibleProcessors = this.processors
                 .Select(processor => Tuple.Create(processor, (ProcessorMatch)processor.CanProcess(acceptHeader, model, context)))
@@ -65,59 +66,83 @@ namespace Nancy.Routing
                 null;
         }
 
-        private Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
+        private static Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
         {
             return (Response)routeResult;
         }
 
+        private Response NegotiateResponse(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, object model, Negotiator negotiator, NancyContext context)
+        {
+            foreach (var compatibleHeader in compatibleHeaders)
+            {
+                var prioritizedProcessors = compatibleHeader.Item2
+                    .OrderByDescending(x => x.Item2.ModelResult)
+                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult);
+
+                foreach (var prioritizedProcessor in prioritizedProcessors)
+                {
+                    var response =
+                        SafeInvokeResponseProcessor(prioritizedProcessor.Item1, compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1), context);
+
+                    if (response != null)
+                    {
+                        return response;
+                    }
+                }
+            }
+
+            return null;
+        }
+
         private Response ProcessAsNegotiator(object routeResult, NancyContext context)
         {
-            var negotiator = routeResult as Negotiator;
+            var negotiator = 
+                GetNegotiator(routeResult, context);
 
-            if (negotiator == null)
+            var compatibleHeaders = 
+                this.GetCompatibleHeaders(context, negotiator);
+
+            if (!compatibleHeaders.Any())
             {
-                negotiator = new Negotiator(context);
-                negotiator.WithModel(routeResult);
+                return new NotAcceptableResponse();
             }
 
-            var acceptHeaders = context.Request.Headers
-                .Accept.Where(header => header.Item2 > 0m)
-                .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
-                .ToList();
+            var response =
+                NegotiateResponse(compatibleHeaders, routeResult, negotiator, context);
 
-            var matches =
-                        (from header in acceptHeaders
-                         let result = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessors(header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context)
-                         where result != null
-                         select new
-                         {
-                             header,
-                             result
-                         }).ToArray();
-
-            if (!matches.Any())
+            if (response == null)
             {
-                return new Response();
+                response = new NotAcceptableResponse();
             }
 
-            var selected = matches.First();
-
-            var processor = selected.result
-                .OrderByDescending(x => x.Item2.ModelResult)
-                .ThenByDescending(x => x.Item2.RequestedContentTypeResult)
-                .First();
-
-            Response response =
-                processor.Item1.Process(selected.header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(selected.header.Item1), context);
-
-            if (matches.Count() > 1)
+            if (compatibleHeaders.Count() > 1)
             {
                 response.WithHeader("Vary", "Accept");
             }
 
-            var linkProcessors = matches
+            AddLinkHeaders(context, compatibleHeaders, response);
+
+            if (!(response is NotAcceptableResponse))
+            {
+                AddNegotiatedHeaders(negotiator, response);
+            }
+
+            return response;
+        }
+
+        private static void AddNegotiatedHeaders(Negotiator negotiator, Response response)
+        {
+            foreach (var header in negotiator.NegotiationContext.Headers)
+            {
+                response.Headers[header.Key] = header.Value;
+            }
+        }
+
+        private static void AddLinkHeaders(NancyContext context, IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Response response)
+        {
+            var linkProcessors = compatibleHeaders
                 .Skip(1)
-                .SelectMany(m => m.result)
+                .SelectMany(m => m.Item2)
                 .SelectMany(p => p.Item1.ExtensionMappings)
                 .ToArray();
 
@@ -136,13 +161,48 @@ namespace Nancy.Routing
 
                 response.Headers["Link"] = linkBuilder.ToString();
             }
+        }
 
-            foreach (var header in negotiator.NegotiationContext.Headers)
+        private IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
+        {
+            var acceptHeaders = context.Request.Headers
+                .Accept.Where(header => header.Item2 > 0m)
+                .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
+                .ToList();
+
+            return (from header in acceptHeaders
+                    let compatibleProcessors = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessorsByHeader(header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context)
+                    where compatibleProcessors != null
+                    select new Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>(
+                        header.Item1,
+                        compatibleProcessors
+                    )).ToArray();
+        }
+
+        private static Response SafeInvokeResponseProcessor(IResponseProcessor responseProcessor, MediaRange mediaRange, object model, NancyContext context)
+        {
+            try
             {
-                response.Headers[header.Key] = header.Value;
+                return responseProcessor.Process(mediaRange, model, context);
+            }
+            catch (Exception)
+            {
             }
 
-            return response;
+            return null;
+        }
+
+        private static Negotiator GetNegotiator(object routeResult, NancyContext context)
+        {
+            var negotiator = routeResult as Negotiator;
+
+            if (negotiator == null)
+            {
+                negotiator = new Negotiator(context);
+                negotiator.WithModel(routeResult);
+            }
+
+            return negotiator;
         }
     }
 }
