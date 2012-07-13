@@ -1,3 +1,5 @@
+using Nancy.Extensions;
+
 namespace Nancy.Routing
 {
     using System;
@@ -21,7 +23,7 @@ namespace Nancy.Routing
         {
             this.processors = processors;
 
-            this.invocationStrategies = 
+            this.invocationStrategies =
                 new Dictionary<Type, Func<dynamic, NancyContext, Response>>
                 {
                     { typeof (Response), ProcessAsRealResponse },
@@ -38,8 +40,13 @@ namespace Nancy.Routing
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
         public Response Invoke(Route route, DynamicDictionary parameters, NancyContext context)
         {
-            var result =
-                route.Invoke(parameters) ?? new Response();
+            var result = route.Invoke(parameters);
+
+            if (result == null)
+            {
+                context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
+                result = new Response();
+            }
 
             var strategy = this.GetInvocationStrategy(result.GetType());
 
@@ -68,6 +75,8 @@ namespace Nancy.Routing
 
         private static Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
         {
+            context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as real response"));
+
             return (Response)routeResult;
         }
 
@@ -81,6 +90,9 @@ namespace Nancy.Routing
 
                 foreach (var prioritizedProcessor in prioritizedProcessors)
                 {
+                    var processorType = prioritizedProcessor.Item1.GetType();
+                    context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Invoking processor: {0}\n", processorType));
+
                     var response =
                         SafeInvokeResponseProcessor(prioritizedProcessor.Item1, compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1), context);
 
@@ -96,14 +108,32 @@ namespace Nancy.Routing
 
         private Response ProcessAsNegotiator(object routeResult, NancyContext context)
         {
-            var negotiator = 
+            context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as negotiation"));
+
+            var negotiator =
                 GetNegotiator(routeResult, context);
 
-            var compatibleHeaders = 
+            context.WriteTraceLog(sb =>
+                                      {
+                                          var allowableFormats = negotiator.NegotiationContext
+                                              .PermissableMediaRanges
+                                              .Select(mr => mr.ToString())
+                                              .Aggregate((t1, t2) => t1 + ", " + t2);
+
+                                          var acceptFormants = context.Request.Headers["accept"]
+                                                                              .Aggregate((t1, t2) => t1 + ", " + t2);
+
+                                          sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n\n", acceptFormants);
+                                          sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
+                                      });
+
+            var compatibleHeaders =
                 this.GetCompatibleHeaders(context, negotiator);
 
             if (!compatibleHeaders.Any())
             {
+                context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Unable to negotiate response - no headers compatible"));
+
                 return new NotAcceptableResponse();
             }
 
@@ -112,6 +142,8 @@ namespace Nancy.Routing
 
             if (response == null)
             {
+                context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Unable to negotiate response - no processors returned valid response"));
+
                 response = new NotAcceptableResponse();
             }
 
@@ -198,6 +230,8 @@ namespace Nancy.Routing
 
             if (negotiator == null)
             {
+                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Wrapping result of type {0} in negotiator", routeResult.GetType()));
+
                 negotiator = new Negotiator(context);
                 negotiator.WithModel(routeResult);
             }
