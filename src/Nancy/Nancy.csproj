@@ -162,6 +162,7 @@
     <Compile Include="Responses\Negotiation\ProcessorMatch.cs" />
     <Compile Include="Responses\Negotiation\ViewProcessor.cs" />
     <Compile Include="Responses\Negotiation\XmlProcessor.cs" />
+    <Compile Include="Responses\NotAcceptableResponse.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
     <Compile Include="ISerializer.cs" />
