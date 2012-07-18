@@ -171,6 +171,10 @@ namespace Nancy
         /// </summary>
         ImATeapot = 418,
         /// <summary>
+        /// 420 Enhance Your Calm
+        /// </summary>
+        EnhanceYourCalm = 420,
+        /// <summary>
         /// 422 UnprocessableEntity
         /// </summary>
         UnprocessableEntity = 422,
@@ -190,6 +194,10 @@ namespace Nancy
         /// 426 UpgradeRequired
         /// </summary>
         UpgradeRequired = 426,
+        /// <summary>
+        /// 429 Too Many Requests
+        /// </summary>
+        TooManyRequests = 429,
         /// <summary>
         /// 444 NoResponse
         /// </summary>
