@@ -131,6 +131,11 @@
                 response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
+            if (nancyResponse.ContentLength64.HasValue)
+            {
+              response.ContentLength64 = nancyResponse.ContentLength64.Value;
+            }
+
             response.ContentType = nancyResponse.ContentType;
             response.StatusCode = (int)nancyResponse.StatusCode;
 

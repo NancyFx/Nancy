@@ -35,6 +35,11 @@ namespace Nancy
         public string ContentType { get; set; }
 
         /// <summary>
+        /// Gets or sets the number of bytes in the body data included in the response.
+        /// </summary>
+        public long? ContentLength64 { get; set; }
+
+        /// <summary>
         /// Gets the delegate that will render contents to the response stream.
         /// </summary>
         /// <value>An <see cref="Action{T}"/> delegate, containing the code that will render contents to the response stream.</value>

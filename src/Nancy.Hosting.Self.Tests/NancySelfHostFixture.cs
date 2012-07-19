@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Net;
+	using System.Text;
     using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Tests;
@@ -160,6 +161,72 @@
 			}
 		}
 
+		[SkippableFact]
+		public void Should_be_able_to_set_content_length()
+		{
+			  var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello world"));
+			  var nancyResponse = new Response { Contents = x => stream.CopyTo(x), ContentLength64 = stream.Length };
+
+			  Request nancyRequest = null;
+			  var fakeEngine = A.Fake<INancyEngine>();
+			  
+			  A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+				.Invokes(f => nancyRequest = (Request)f.Arguments[0])
+				.ReturnsLazily(c => new NancyContext() { Request = (Request)c.Arguments[0], Response = nancyResponse });
+
+			  var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+			  A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+			  using (CreateAndOpenSelfHost(fakeBootstrapper))
+			  {
+				var webResponse = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+				webResponse.ContentLength.ShouldEqual(stream.Length);
+			  }
+		}
+
+		[SkippableFact]
+		public void Should_setting_content_length_using_headers_property_throws()
+		{
+			  HttpListenerException httpListenerException = null;
+			  var stream = new MemoryStream(Encoding.UTF8.GetBytes("Hello world"));
+			  var nancyResponse = new Response { Contents = x => 
+			  {
+				  try
+				  {
+					stream.CopyTo(x);
+				  }
+				  catch(HttpListenerException ex)
+				  {
+					httpListenerException = ex;
+				  }
+				} 
+			  };
+			  nancyResponse.Headers.Add("Content-Length", stream.Length.ToString());
+
+			  Request nancyRequest = null;
+			  var fakeEngine = A.Fake<INancyEngine>();
+
+			  A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+				.Invokes(f => nancyRequest = (Request)f.Arguments[0])
+				.ReturnsLazily(c => new NancyContext() { Request = (Request)c.Arguments[0], Response = nancyResponse });
+
+			  var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+			  A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+			  using (CreateAndOpenSelfHost(fakeBootstrapper))
+			  {
+				try
+				{
+				  WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+				}
+				catch(WebException webException)
+				{
+				  webException.ShouldNotBeNull();
+				}
+
+				httpListenerException.ShouldNotBeNull();
+			  }
+		}
 
 		private class NancyHostWrapper : IDisposable
 		{
