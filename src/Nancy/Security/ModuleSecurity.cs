@@ -30,6 +30,17 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires authentication and any one of certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresAnyClaim(this NancyModule module, IEnumerable<string> requiredClaims)
+        {
+            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(RequiresAnyClaim(requiredClaims));
+        }
+
+        /// <summary>
         /// This module requires claims to be validated
         /// </summary>
         /// <param name="module">Module to enable</param>
@@ -79,6 +90,27 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// Gets a request hook for checking claims
+        /// </summary>
+        /// <param name="claims">Required claims</param>
+        /// <returns>Before hook delegate</returns>
+        private static Func<NancyContext, Response> RequiresAnyClaim(IEnumerable<string> claims)
+        {
+            return (ctx) =>
+                        {
+                            Response response = null;
+                            if (ctx.CurrentUser == null
+                                || ctx.CurrentUser.Claims == null
+                                || !claims.Any(c => ctx.CurrentUser.Claims.Contains(c)))
+                            {
+                                response = new Response { StatusCode = HttpStatusCode.Forbidden };
+                            }
+
+                            return response;
+                        };
+        }
+
+        /// <summary>
         /// Gets a pipeline item for validating user claims
         /// </summary>
         /// <param name="isValid">Is valid delegate</param>
@@ -88,7 +120,6 @@ namespace Nancy.Security
             return (ctx) =>
                        {
                            Response response = null;
-                           var userClaims = ctx.CurrentUser.Claims;
                            if (ctx.CurrentUser == null
                                || ctx.CurrentUser.Claims == null
                                || !isValid(ctx.CurrentUser.Claims))
