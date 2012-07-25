@@ -1,0 +1,6 @@
+﻿set title='"Child View That Expects Application Layout by default"'
+h1 =title
+var x="5" y="10" rowclass='new[] {"bar", "bar-alt"}'
+div |Hello Spark
+var z="x+y"
+h3 =z

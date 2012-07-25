@@ -13,6 +13,8 @@
         public string[] AvailableViewEngineExtensions { get; private set; }
         public string[] InspectedLocations { get; private set; }
 
+        private string message;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewNotFoundException"/>.
         /// </summary>
@@ -26,6 +28,23 @@
             this.ViewName = viewName;
             this.AvailableViewEngineExtensions = availableViewEngineExtensions;
             this.InspectedLocations = inspectedLocations;
+
+            this.message = String.Format(
+                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
+                    this.ViewName,
+                    string.Join(",", this.AvailableViewEngineExtensions),
+                    string.Join(",", this.InspectedLocations),
+                    this.rootPathProvider.GetRootPath(),
+                    Environment.NewLine);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ViewNotFoundExcepton"/>
+        /// </summary>
+        /// <param name="msg">A message describing the problem</param>
+        public ViewNotFoundException(string msg)
+        {
+            this.message = msg;
         }
 
         /// <summary>
@@ -34,16 +53,7 @@
         /// <returns>The error message that explains the reason for the exception, or an empty string("").</returns>
         public override string Message
         {
-            get
-            {
-                return String.Format(
-                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}", 
-                    this.ViewName,
-                    string.Join(",", this.AvailableViewEngineExtensions),
-                    string.Join(",", this.InspectedLocations),
-                    this.rootPathProvider.GetRootPath(),
-                    Environment.NewLine);
-            }
+            get { return message; }
         }
     }
 }

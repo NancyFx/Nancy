@@ -2,7 +2,8 @@ namespace Nancy.Testing
 {
     using System;
     using System.Linq;
-    using Xunit;
+    using System.Threading;
+    //using Xunit;
 
     /// <summary>
     /// Defines assert extensions for HTML validation.
@@ -14,7 +15,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldExist(this NodeWrapper node)
         {
-            Assert.NotNull(node);
+            Asserts.NotNull(node);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -24,7 +25,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldExist(this QueryWrapper query)
         {
-            Assert.True(query.Any());
+            Asserts.True(query.Any());
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -34,7 +35,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldExistOnce(this QueryWrapper query)
         {
-            return new AndConnector<NodeWrapper>(Assert.Single(query));
+            return new AndConnector<NodeWrapper>(Asserts.Single(query));
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldBeOfClass(this NodeWrapper node, string className)
         {
-            Assert.Equal(node.Attribute["class"], className);
+            Asserts.Equal(node.Attributes["class"], className);
 
             return new AndConnector<NodeWrapper>(node);
         }
@@ -65,7 +66,7 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldContain(this NodeWrapper node, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
-            Assert.Contains(contents, node.InnerText, comparisonType);
+            Asserts.Contains(contents, node.InnerText, comparisonType);
 
             return new AndConnector<NodeWrapper>(node);
         }

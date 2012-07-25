@@ -147,11 +147,19 @@
         }
 
         /// <summary>
-        /// Gets all startup tasks
+        /// Gets all application startup tasks
         /// </summary>
-        protected virtual IEnumerable<Type> StartupTasks
+        protected virtual IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IStartup>(); }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationStartup>(); }
+        }
+
+        /// <summary>
+        /// Gets all application registration tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> ApplicationRegistrationTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IApplicationRegistrations>(); }
         }
 
         /// <summary>
@@ -168,7 +176,6 @@
         protected virtual IEnumerable<Type> ModelValidatorFactories
         {
             get { return AppDomainAssemblyTypeScanner.TypesOf<IModelValidatorFactory>(); }
-            //get { return new[] { typeof(DataAnnotationsValidatorFactory) }; }
         }
 
         /// <summary>
@@ -176,7 +183,7 @@
         /// </summary>
         protected virtual byte[] FavIcon
         {
-            get { return FavIconStartup.FavIcon; }
+            get { return FavIconApplicationStartup.FavIcon; }
         }
 
         /// <summary>
@@ -238,24 +245,27 @@
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
 
-            foreach (var startupTask in this.GetStartupTasks().ToList())
+            foreach (var applicationRegistrationTask in this.GetApplicationRegistrationTasks().ToList())
             {
-                startupTask.Initialize(this.ApplicationPipelines);
-
-                if (startupTask.TypeRegistrations != null)
+                if (applicationRegistrationTask.TypeRegistrations != null)
                 {
-                    this.RegisterTypes(this.ApplicationContainer, startupTask.TypeRegistrations);
+                    this.RegisterTypes(this.ApplicationContainer, applicationRegistrationTask.TypeRegistrations);
                 }
 
-                if (startupTask.CollectionTypeRegistrations != null)
+                if (applicationRegistrationTask.CollectionTypeRegistrations != null)
                 {
-                    this.RegisterCollectionTypes(this.ApplicationContainer, startupTask.CollectionTypeRegistrations);
+                    this.RegisterCollectionTypes(this.ApplicationContainer, applicationRegistrationTask.CollectionTypeRegistrations);
                 }
 
-                if (startupTask.InstanceRegistrations != null)
+                if (applicationRegistrationTask.InstanceRegistrations != null)
                 {
-                    this.RegisterInstances(this.ApplicationContainer, startupTask.InstanceRegistrations);
+                    this.RegisterInstances(this.ApplicationContainer, applicationRegistrationTask.InstanceRegistrations);
                 }
+            }
+
+            foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
+            {
+                applicationStartupTask.Initialize(this.ApplicationPipelines);
             }
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
@@ -291,10 +301,16 @@
         }
 
         /// <summary>
-        /// Gets all registered startup tasks
+        /// Gets all registered application startup tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
-        protected abstract IEnumerable<IStartup> GetStartupTasks();
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances.</returns>
+        protected abstract IEnumerable<IApplicationStartup> GetApplicationStartupTasks();
+
+        /// <summary>
+        /// Gets all registered application registration tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
+        protected abstract IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks();
 
         /// <summary>
         /// Get all NancyModule implementation instances
@@ -502,7 +518,8 @@
                     new CollectionTypeRegistration(typeof(IModelBinder), this.ModelBinders),
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
-                    new CollectionTypeRegistration(typeof(IStartup), this.StartupTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
+                    new CollectionTypeRegistration(typeof(IApplicationRegistrations), this.ApplicationRegistrationTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }

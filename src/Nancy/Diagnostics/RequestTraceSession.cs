@@ -5,9 +5,9 @@ namespace Nancy.Diagnostics
 
     public class RequestTraceSession
     {
-        private readonly object diagsLock = new object();
+        private const int MaxSize = 500;
 
-        private readonly List<RequestTrace> requestTraces;
+        private readonly ConcurrentLimitedCollection<RequestTrace> requestTraces;
 
         public Guid Id { get; private set; }
 
@@ -22,15 +22,12 @@ namespace Nancy.Diagnostics
         public RequestTraceSession(Guid id)
         {
             this.Id = id;
-            this.requestTraces = new List<RequestTrace>();
+            this.requestTraces = new ConcurrentLimitedCollection<RequestTrace>(MaxSize);
         }
 
         public void AddRequestTrace(RequestTrace trace)
         {
-            lock (this.diagsLock)
-            {
-                this.requestTraces.Add(trace);
-            }
+            this.requestTraces.Add(trace);
         }
     }
 }

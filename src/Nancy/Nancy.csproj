@@ -12,6 +12,22 @@
     <AssemblyName>Nancy</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +37,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>
     </DocumentationFile>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
@@ -42,7 +60,7 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
@@ -60,7 +78,7 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
-    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <CodeAnalysisRuleSetDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\\Rule Sets</CodeAnalysisRuleSetDirectories>
     <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
@@ -90,10 +108,11 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
-    <Compile Include="Bootstrapper\FavIconStartup.cs" />
+    <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
+    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
-    <Compile Include="Bootstrapper\IStartup.cs" />
+    <Compile Include="Bootstrapper\IApplicationStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
@@ -104,6 +123,7 @@
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
+    <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
     <Compile Include="Diagnostics\DescriptionAttribute.cs" />
@@ -111,7 +131,7 @@
     <Compile Include="Diagnostics\DiagnosticsHook.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleBuilder.cs" />
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
-    <Compile Include="Diagnostics\DiagnosticsStartup.cs" />
+    <Compile Include="Diagnostics\DiagnosticsApplicationStartup.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
@@ -128,7 +148,7 @@
     <Compile Include="Diagnostics\TestingDiagnosticProvider.cs" />
     <Compile Include="IResponseFormatterFactory.cs" />
     <Compile Include="Jsonp.cs" />
-    <Compile Include="JsonpStartup.cs" />
+    <Compile Include="JsonpApplicationStartup.cs" />
     <Compile Include="RequestExecutionException.cs" />
     <Compile Include="Responses\StreamResponse.cs" />
     <Compile Include="IO\UnclosableStreamWrapper.cs" />
@@ -140,7 +160,7 @@
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
-    <Compile Include="StaticContentStartup.cs" />
+    <Compile Include="StaticContentApplicationStartup.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />
@@ -180,7 +200,7 @@
     <Compile Include="RequestHeaders.cs" />
     <Compile Include="Responses\HtmlResponse.cs" />
     <Compile Include="Security\Csrf.cs" />
-    <Compile Include="Security\CsrfStartup.cs" />
+    <Compile Include="Security\CsrfApplicationStartup.cs" />
     <Compile Include="Security\CsrfToken.cs" />
     <Compile Include="Security\CsrfTokenExtensions.cs" />
     <Compile Include="Security\CsrfValidationException.cs" />
@@ -188,7 +208,7 @@
     <Compile Include="Security\ICsrfTokenValidator.cs" />
     <Compile Include="Security\CsrfTokenValidationResult.cs" />
     <Compile Include="ResponseExtensions.cs" />
-    <Compile Include="RootPathStartup.cs" />
+    <Compile Include="RootPathApplicationStartup.cs" />
     <Compile Include="Security\IUserIdentity.cs" />
     <Compile Include="StaticConfiguration.cs" />
     <Compile Include="Url.cs" />
@@ -327,11 +347,12 @@
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineWrapper.cs" />
-    <Compile Include="ViewEngines\ViewEngineStartup.cs" />
+    <Compile Include="ViewEngines\ViewEngineApplicationStartup.cs" />
     <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
     <Compile Include="ViewEngines\ViewLocationContext.cs" />
     <Compile Include="ViewEngines\ViewLocationResult.cs" />
     <Compile Include="ViewEngines\ViewNotFoundException.cs" />
+    <Compile Include="ViewEngines\ViewRenderException.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\Dashboard.sshtml" />
@@ -419,6 +440,28 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Diagnostics\Views\login.sshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.0,Profile=Client">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4 Client Profile %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

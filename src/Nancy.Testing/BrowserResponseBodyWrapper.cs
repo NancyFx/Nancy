@@ -18,7 +18,7 @@ namespace Nancy.Testing
                 GetContentStream(response);
 
             this.responseBytes = contentStream.ToArray();
-            this.responseDocument = new DocumentWrapper(contentStream);
+            this.responseDocument = new DocumentWrapper(this.responseBytes);
         }
 
         private static MemoryStream GetContentStream(Response response)

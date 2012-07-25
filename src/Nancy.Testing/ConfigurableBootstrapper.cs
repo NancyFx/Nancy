@@ -25,7 +25,7 @@ namespace Nancy.Testing
         private readonly List<InstanceRegistration> registeredInstances;
         private readonly NancyInternalConfiguration configuration;
         private readonly ConfigurableModuleCatalog catalog;
-        private bool disableAutoRegistration;
+        private bool enableAutoRegistration;
         private DiagnosticsConfiguration diagnosticConfiguration;
 
         /// <summary>
@@ -181,9 +181,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Gets all startup tasks
         /// </summary>
-        protected override IEnumerable<Type> StartupTasks
+        protected override IEnumerable<Type> ApplicationStartupTasks
         {
-            get { return this.Resolve<IStartup>() ?? base.StartupTasks; }
+            get { return this.Resolve<IApplicationStartup>() ?? base.ApplicationStartupTasks; }
         }
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
@@ -215,7 +215,7 @@ namespace Nancy.Testing
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            if (!this.disableAutoRegistration)
+            if (this.enableAutoRegistration)
             {
                 container.AutoRegister();
                 this.RegisterBootstrapperTypes(container);
@@ -283,10 +283,19 @@ namespace Nancy.Testing
         /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IStartup"/> instances. </returns>
-        protected override IEnumerable<IStartup> GetStartupTasks()
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
+        protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
-            return this.ApplicationContainer.ResolveAll<IStartup>(false);
+            return this.ApplicationContainer.ResolveAll<IApplicationStartup>(false);
+        }
+
+        /// <summary>
+        /// Gets all registered application registration tasks
+        /// </summary>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
+        protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+        {
+            return this.ApplicationContainer.ResolveAll<IApplicationRegistrations>(false);
         }
 
         /// <summary>
@@ -379,7 +388,6 @@ namespace Nancy.Testing
                     AsSingleton();
             }
         }
-
 
         /// <summary>
         /// <para>
@@ -487,6 +495,36 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided type as a dependency.
+            /// </summary>
+            /// <param name="type">The type of the dependency that should be used registered with the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Dependency<T>(Type type)
+            {
+                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), type));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to register the specified type as a dependency.
+            /// </summary>
+            /// <typeparam name="T">The type of the dependency that should be registered with the bootstrapper.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            /// <remarks>This method will register the type for all the interfaces it implements and the type itself.</remarks>
+            public ConfigurableBoostrapperConfigurator Dependency<T>()
+            {
+                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), typeof(T)));
+
+                foreach (var interfaceType in typeof(T).GetInterfaces())
+                {
+                    this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof(T)));
+                }
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance as a dependency.
             /// </summary>
             /// <param name="instance">The dependency instance that should be used registered with the bootstrapper.</param>
@@ -507,7 +545,7 @@ namespace Nancy.Testing
             /// <summary>
             /// Configures the bootstrapper to register the specified type as a dependency.
             /// </summary>
-            /// <typeparam name="T">The type of the dependency that should be registered with the bootstrapper.</typeparam>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Dependency<T>(object instance)
             {
@@ -531,12 +569,60 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to register the specified instances as a dependencies.
+            /// </summary>
+            /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Dependencies<T>(params object[] dependencies)
+            {
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency<T>(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided types as a dependency.
+            /// </summary>
+            /// <param name="dependencies">The types that should be used registered as dependencies with the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            /// <remarks>This method will register the types for all the interfaces they implement and the types themselves.</remarks>
+            public ConfigurableBoostrapperConfigurator Dependencies(params Type[] dependencies)
+            {
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided types as a dependency.
+            /// </summary>
+            /// <param name="dependencies">The types that should be used registered as dependencies with the bootstrapper.</param>
+            /// <typeparam name="T">The type that the dependencies should be registered as.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Dependencies<T>(params Type[] dependencies)
+            {
+                foreach (var dependency in dependencies)
+                {
+                    this.Dependency<T>(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
             /// Disables the auto registration behavior of the bootstrapper
             /// </summary>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator DisableAutoRegistration()
+            public ConfigurableBoostrapperConfigurator EnableAutoRegistration()
             {
-                this.bootstrapper.disableAutoRegistration = true;
+                this.bootstrapper.enableAutoRegistration = true;
                 return this;
             }
 

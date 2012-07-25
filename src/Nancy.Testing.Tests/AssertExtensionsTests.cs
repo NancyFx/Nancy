@@ -2,7 +2,7 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Linq;
-    using HtmlAgilityPlus;
+    using CsQuery;
     using Nancy.Testing;
     using Xunit;
 
@@ -15,8 +15,11 @@ namespace Nancy.Testing.Tests
         /// </summary>
         public AssertExtensionsTests()
         {
+            var document =
+                CQ.Create(@"<html><head></head><body><div id='testId' class='myClass'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+
             this.query =
-                new SharpQuery(@"<html><head></head><body><div id='testId' class='myClass'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+                new QueryWrapper(document);
         }
 
         [Fact]
@@ -26,7 +29,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["#notThere"].ShouldExist());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -66,7 +69,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["#notHere"].ShouldExistOnce());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -76,7 +79,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => this.query["div"].ShouldExistOnce());
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -89,7 +92,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNode.ShouldBeOfClass("nope"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -115,7 +118,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNodes.ShouldBeOfClass("myClass"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -167,7 +170,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNode.ShouldContain("nope"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
 
         [Fact]
@@ -193,7 +196,7 @@ namespace Nancy.Testing.Tests
             var result = Record.Exception(() => htmlNodes.ShouldContain("Test"));
 
             // Then
-            Assert.IsAssignableFrom<Xunit.Sdk.AssertException>(result);
+            Assert.IsAssignableFrom<AssertException>(result);
         }
     }
 }

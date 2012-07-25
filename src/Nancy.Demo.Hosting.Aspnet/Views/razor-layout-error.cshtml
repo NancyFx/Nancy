@@ -1,0 +1,12 @@
+﻿<html>
+<head>
+    <title>Razor View Engine Demo - @Model.FirstName</title>
+    @RenderSection("Header")
+</head>
+<body>
+    <div id="body">@RenderBody()</div>
+    <div id="Error">@ThisDoesntExist()</div>
+    <div id="footer">@RenderSection("Footer")</div>
+    <div id="optional">@RenderSection("Optional", false)</div>
+</body>
+</html>

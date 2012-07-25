@@ -1,0 +1,14 @@
+﻿html
+  head
+    global title='"Default Title"' type="string"
+    title =title
+    use content="head"
+  body
+    div#header
+      use content="header"
+        div |main application header by default
+    div#main
+      use content="view"
+    div#footer
+      use content="footer"
+        div |main application footer by default
