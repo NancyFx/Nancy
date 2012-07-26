@@ -10,11 +10,13 @@ namespace Nancy
     using Nancy.ViewEngines;
     using Nancy.Extensions;
     using Nancy.Validation;
+    using JetBrains.Annotations;
 
     /// <summary>
     /// Contains the functionality for defining routes and actions in Nancy. 
     /// </summary>
     /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
+    [UsedImplicitly]
     public abstract class NancyModule : IHideObjectMembers
     {
         private readonly List<Route> routes;
