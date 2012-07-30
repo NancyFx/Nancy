@@ -289,6 +289,22 @@ namespace Nancy.Tests.Unit.ViewEngines
             result.ShouldBeSameAs(expectedView);
         }
 
+        [Fact]
+        public void Should_be_able_to_locate_view_by_name_when_the_viewname_occures_in_the_location()
+        {
+           // Given
+           var expectedView = new ViewLocationResult( "views/hello", "hello", "cshtml", () => null );
+           //var additionalView = new ViewLocationResult( "views", "index", "spark", () => null );
+           var cache = new FakeViewLocationCache( expectedView );
+           var locator = CreateViewLocator( cache );
+
+           // When
+           var result = locator.LocateView( "views/hello/hello", null );
+
+           // Then
+           result.ShouldBeSameAs( expectedView );
+        }
+
         private static DefaultViewLocator CreateViewLocator(IViewLocationCache viewLocationCache)
         {
             return new DefaultViewLocator(viewLocationCache);
