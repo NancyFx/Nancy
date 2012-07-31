@@ -443,7 +443,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>Template with anti forgery tokens expanded</returns>
         private string PerformAntiForgeryTokenSubstitutions(string template, object model, IViewEngineHost host)
         {
-            return AntiForgeryTokenRegEx.Replace(template, host.AntiForgeryToken());
+            return AntiForgeryTokenRegEx.Replace(template, x => host.AntiForgeryToken());
         }
 
         /// <summary>
