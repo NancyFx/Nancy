@@ -93,7 +93,8 @@ namespace Nancy.Hosting.Aspnet
         private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             SetHttpResponseHeaders(context, response);
-
+			if (response.Headers.ContainsKey("StatusDescription"))
+				context.Response.StatusDescription = response.Headers["StatusDescription"];
             context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;
             response.Contents.Invoke(context.Response.OutputStream);         
