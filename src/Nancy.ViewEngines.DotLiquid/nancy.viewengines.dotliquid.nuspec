@@ -14,7 +14,7 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
-      <dependency id="DotLiquid" version="[1.6.1.0]" />
+      <dependency id="DotLiquid" version="[1.7,2.0)" />
     </dependencies> 
     <tags>Nancy Viewengine Spark</tags>
   </metadata>
