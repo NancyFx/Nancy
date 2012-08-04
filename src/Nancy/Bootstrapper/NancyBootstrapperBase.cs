@@ -11,12 +11,14 @@
     using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Nancy.Validation;
+    using JetBrains.Annotations;
 
     /// <summary>
     /// Nancy bootstrapper base class
     /// </summary>
     /// <typeparam name="TContainer">IoC container type</typeparam>
     [SuppressMessage("Microsoft.StyleCop.CSharp.DocumentationRules", "SA1623:PropertySummaryDocumentationMustMatchAccessors", Justification = "Abstract base class - properties are described differently for overriding.")]
+    [UsedImplicitly]
     public abstract class NancyBootstrapperBase<TContainer> : INancyBootstrapper, INancyModuleCatalog
         where TContainer : class
     {
