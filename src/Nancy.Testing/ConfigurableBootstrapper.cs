@@ -13,6 +13,7 @@ namespace Nancy.Testing
     using Nancy.Routing;
     using Nancy.Security;
     using Nancy.ViewEngines;
+    using Responses.Negotiation;
     using TinyIoC;
     using Nancy.Validation;
 
@@ -1000,6 +1001,71 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator ModelValidatorLocator<T>() where T : IModelValidatorLocator
             {
                 this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRequestDispatcher"/>.
+            /// </summary>
+            /// <param name="requestDispatcher">The <see cref="IRequestDispatcher"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RequestDispatcher(IRequestDispatcher requestDispatcher)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRequestDispatcher), requestDispatcher));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRequestDispatcher"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRequestDispatcher"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RequestDispatcher<T>() where T : IRequestDispatcher
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new TypeRegistration(typeof(IRequestDispatcher), typeof(T)));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseProcessor"/>.
+            /// </summary>
+            /// <param name="responseProcessor">The <see cref="IResponseProcessor"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ResponseProcessor(IResponseProcessor responseProcessor)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResponseProcessor), responseProcessor));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IResponseProcessor"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IResponseProcessor"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ResponseProcessor<T>() where T : IResponseProcessor
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IResponseProcessor), new[] { typeof(T) }));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="IResponseProcessor"/> types.
+            /// </summary>
+            /// <param name="responseProcessors">The <see cref="IResponseProcessor"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ResponseProcessors(params Type[] responseProcessors)
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IResponseProcessor), responseProcessors));
+
                 return this;
             }
 
