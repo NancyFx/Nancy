@@ -3,8 +3,9 @@
     using System;
     using System.IO;
     using System.Linq;
-    using FakeItEasy;
     using Fakes;
+    using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Xunit;

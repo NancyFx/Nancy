@@ -171,6 +171,7 @@
     <Compile Include="Responses\DefaultJsonSerializer.cs" />
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
+    <Compile Include="Routing\DefaultRequestDispatcher.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
     <Compile Include="Routing\IRequestDispatcher.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />

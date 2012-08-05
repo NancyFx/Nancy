@@ -195,6 +195,7 @@
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
     <Compile Include="Unit\Responses\TextResponseFixture.cs" />
     <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
+    <Compile Include="Unit\Routing\DefaultRequestDispatcherFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteInvokerFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRoutePatternMatcherFixture.cs" />

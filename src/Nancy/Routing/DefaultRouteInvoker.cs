@@ -1,12 +1,10 @@
-using Nancy.Extensions;
-
 namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.IO;
-    using System.Text;
+    using Extensions;
     using Responses;
     using Responses.Negotiation;
 
