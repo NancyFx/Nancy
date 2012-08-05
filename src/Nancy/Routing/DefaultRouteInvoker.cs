@@ -65,10 +65,9 @@ namespace Nancy.Routing
             {
                 return (Response)result;
             }
-            catch (InvalidCastException e)
+            catch (Exception e)
             {
                 return null;
-
             }
         }
 
