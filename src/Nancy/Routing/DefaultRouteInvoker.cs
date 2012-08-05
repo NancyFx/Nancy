@@ -46,16 +46,22 @@ namespace Nancy.Routing
                 result = new Response();
             }
 
-            var strategy = this.GetInvocationStrategy(result.GetType());
-
-            return strategy.Invoke(result, context);
+            return this.InvokeRouteWithStrategy(result, context);
         }
 
-        private Func<dynamic, NancyContext, Response> GetInvocationStrategy(Type resultType)
+        private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
         {
-            return invocationStrategies.Where(invocationStrategy => invocationStrategy.Key.IsAssignableFrom(resultType))
-                                        .Select(invocationStrategy => invocationStrategy.Value)
-                                        .First();
+            var isResponse =
+                (CastResultToResponse(result) == null);
+
+            return (isResponse)
+                ? ProcessAsRealResponse(result, context)
+                : this.ProcessAsNegotiator(result, context);
+        }
+
+        private static Response CastResultToResponse(dynamic result)
+        {
+            return result as Response;
         }
 
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessorsByHeader(string acceptHeader, dynamic model, NancyContext context)
@@ -78,7 +84,7 @@ namespace Nancy.Routing
             return (Response)routeResult;
         }
 
-        private Response NegotiateResponse(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, object model, Negotiator negotiator, NancyContext context)
+        private static Response NegotiateResponse(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, object model, Negotiator negotiator, NancyContext context)
         {
             foreach (var compatibleHeader in compatibleHeaders)
             {

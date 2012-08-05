@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq;
+    using FakeItEasy;
     using Fakes;
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
@@ -24,7 +25,7 @@
         {
             // Given
             var parameters = new DynamicDictionary();
-            var route = new FakeRoute();
+            var route = new FakeRoute(10);
             var context = new NancyContext();
 
             // When
