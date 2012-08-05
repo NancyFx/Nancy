@@ -52,7 +52,7 @@ namespace Nancy.Routing
         private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
         {
             var isResponse =
-                (CastResultToResponse(result) == null);
+                (CastResultToResponse(result) != null);
 
             return (isResponse)
                 ? ProcessAsRealResponse(result, context)
@@ -61,7 +61,15 @@ namespace Nancy.Routing
 
         private static Response CastResultToResponse(dynamic result)
         {
-            return result as Response;
+            try
+            {
+                return (Response)result;
+            }
+            catch (InvalidCastException e)
+            {
+                return null;
+
+            }
         }
 
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessorsByHeader(string acceptHeader, dynamic model, NancyContext context)
