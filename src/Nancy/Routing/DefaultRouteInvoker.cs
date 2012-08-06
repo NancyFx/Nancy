@@ -205,16 +205,16 @@ namespace Nancy.Routing
 
         private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
         {
-            var acceptHeaders = context.Request.Headers
-                .Accept.Where(header => header.Item2 > 0m)
-                .Where(header => negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.Matches(header.Item1)))
-                .ToList();
-
+            var acceptHeaders = negotiator.NegotiationContext
+                                          .PermissableMediaRanges
+                                          .Where(header => context.Request.Headers.Accept.Any(mr => header.Matches(mr.Item1) && mr.Item2 > 0m))
+                                          .ToList();
+                                        
             return (from header in acceptHeaders
-                    let compatibleProcessors = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessorsByHeader(header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context)
+                    let compatibleProcessors = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessorsByHeader(header, negotiator.NegotiationContext.GetModelForMediaRange(header), context)
                     where compatibleProcessors != null
                     select new Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>(
-                        header.Item1,
+                        header,
                         compatibleProcessors
                     )).ToArray();
         }
