@@ -18,6 +18,17 @@ namespace Nancy.Responses.Negotiation
         public MediaType Subtype { get; set; }
 
         /// <summary>
+        /// Gets a value indicating if the media range is the */* wildcard
+        /// </summary>
+        public bool IsWildcard
+        {
+            get
+            {
+                return this.Type.IsWildcard && this.Subtype.IsWildcard;
+            }
+        }
+
+        /// <summary>
         /// Whether or not a media range matches another, taking into account wildcards
         /// </summary>
         /// <param name="other">Other media range</param>
