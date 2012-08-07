@@ -101,10 +101,26 @@
             object version;
             environment.TryGetValue("owin.Version", out version);
 
-            if (version == null || !String.Equals(version.ToString(), "1.0"))
+            if (version != null)
             {
-                throw new InvalidOperationException("An OWIN v1.0 host is required");
+                var split = version.ToString().Split('.');
+                int major = int.Parse(split[0]);
+                int minor = split.Length > 1 ? int.Parse(split[1]) : 0;
+                int patch = split.Length > 2 ? int.Parse(split[2]) : 0;
+
+                if (major >= 1)
+                {
+                    // if owin.Version >= 1.x.x
+                    return;
+                }
+                else if (minor >= 12)
+                {
+                    // if owin.Version >= 0.12.x
+                    return;
+                }
             }
+
+            throw new InvalidOperationException("An OWIN v0.12 or higher host is required");
         }
 
         private static BodyDelegate GetRequestBodyDelegate(IDictionary<string, object> environment)
