@@ -103,14 +103,6 @@
     </Reference>
     <Reference Include="System.EnterpriseServices">
     </Reference>
-    <Reference Include="Gate, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Binaries\Gate.dll</HintPath>
-    </Reference>
-    <Reference Include="Gate.AspNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>Binaries\Gate.AspNet.dll</HintPath>
-    </Reference>
     <Reference Include="Spark, Version=1.5.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\dependencies\spark\Spark.dll</HintPath>
@@ -118,8 +110,6 @@
     <Reference Include="System.Web.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Binaries\Gate.AspNet.dll" />
-    <Content Include="Binaries\Gate.dll" />
     <Content Include="Global.asax" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -141,6 +131,7 @@
     </Compile>
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\Index.cs" />
+    <Compile Include="OwinAspNetHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj">

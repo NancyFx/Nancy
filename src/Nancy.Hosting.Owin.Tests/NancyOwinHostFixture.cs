@@ -58,6 +58,8 @@ namespace Nancy.Tests
                                    };
         }
 
+        /*
+
         [Fact]
         public void Should_throw_if_owin_version_is_incorrect()
         {
@@ -341,6 +343,8 @@ namespace Nancy.Tests
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
             (respHeaders["Set-Cookie"] == "test=testvalue; path=/\r\ntest1=testvalue1; path=/").ShouldBeTrue();
         }
+
+        */
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
         /// </summary>
