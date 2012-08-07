@@ -6,6 +6,31 @@
     using Bootstrapper;
     using Extensions;
 
+    // Holy big-ass delegate signature Batman!
+    using AppAction = System.Func< // Call
+        System.Collections.Generic.IDictionary<string, object>, // Environment
+        System.Collections.Generic.IDictionary<string, string[]>, // Headers
+        System.IO.Stream, // Body
+        System.Threading.Tasks.Task<System.Tuple< // Result
+            System.Collections.Generic.IDictionary<string, object>, // Properties
+            int, // Status
+            System.Collections.Generic.IDictionary<string, string[]>, // Headers
+            System.Func< // CopyTo
+                System.IO.Stream, // Body
+                System.Threading.Tasks.Task>>>>; // Done
+
+    using ResultTuple = System.Tuple< //Result
+        System.Collections.Generic.IDictionary<string, object>, // Properties
+        int, // Status
+        System.Collections.Generic.IDictionary<string, string[]>, // Headers
+        System.Func< // CopyTo
+            System.IO.Stream, // Body
+            System.Threading.Tasks.Task>>; // Done
+
+    using BodyAction = System.Func< // CopyTo
+        System.IO.Stream, // Body
+        System.Threading.Tasks.Task>; // Done
+
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
                                      System.Action,                         // continuation
                                      bool>,                                 // continuation will be invoked
@@ -13,7 +38,7 @@
                                      System.Action,                         // on Complete
                                      System.Action>;                        // cancel
 
-    // Holy big-ass delegate signature Batman!
+   
     using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
 
     /// <summary>
