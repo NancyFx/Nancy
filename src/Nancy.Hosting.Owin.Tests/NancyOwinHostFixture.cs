@@ -5,11 +5,21 @@ namespace Nancy.Tests
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading.Tasks;
     using Bootstrapper;
     using FakeItEasy;
     using Hosting.Owin;
-    using Hosting.Owin.Tests.Fakes;
+    using Nancy.Hosting.Owin.Tests.Fakes;
     using Xunit;
+    using Xunit.Extensions;
+
+    using ResultTuple = System.Tuple< //Result
+        System.Collections.Generic.IDictionary<string, object>, // Properties
+        int, // Status
+        System.Collections.Generic.IDictionary<string, string[]>, // Headers
+        System.Func< // CopyTo
+            System.IO.Stream, // Body
+            System.Threading.Tasks.Task>>; // Done
 
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
                                  System.Action,                         // continuation
@@ -28,6 +38,7 @@ namespace Nancy.Tests
 
         private readonly Action<Exception> fakeErrorCallback;
         private readonly Dictionary<string, object> environment;
+        private readonly Dictionary<string, string[]> requestHeaders; 
         private readonly INancyEngine fakeEngine;
         private readonly INancyBootstrapper fakeBootstrapper;
 
@@ -45,31 +56,38 @@ namespace Nancy.Tests
 
             this.fakeErrorCallback = (ex) => { };
 
+            var tcs = new TaskCompletionSource<object>();
+
             this.environment = new Dictionary<string, object>()
                                    {
                                        { "owin.RequestMethod", "GET" },
                                        { "owin.RequestPath", "/test" },
                                        { "owin.RequestPathBase", "/root" },
                                        { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestHeaders", new Dictionary<string, string> { { "Host", "testserver" } } },
                                        { "owin.RequestBody", null },
                                        { "owin.RequestScheme", "http" },
-                                       { "owin.Version", "1.0" }
+                                       { "owin.Version", "1.0" },
+                                       { "owin.CallCompleted", tcs.Task }
                                    };
+
+            this.requestHeaders = new Dictionary<string, string[]> { { "Host", new[] { "testserver" } } };
+        }
+
+        [Theory]
+        [InlineData("0.1")]
+        [InlineData("0.11")]
+        [InlineData("0.11.9")]
+        public void Should_throw_if_owin_version_is_less_than_0_12(string version)
+        {
+            this.environment["owin.Version"] = version;
+
+            var result = Record.Exception(
+                () => this.host.ProcessRequest(environment, null, null));
+
+            result.ShouldBeOfType<InvalidOperationException>();
         }
 
         /*
-
-        [Fact]
-        public void Should_throw_if_owin_version_is_incorrect()
-        {
-            this.environment["owin.Version"] = "1.2";
-
-            var result = Record.Exception(
-                () => this.host.ProcessRequest(environment, fakeResponseCallback, fakeErrorCallback));
-
-            result.ShouldBeOfType(typeof(InvalidOperationException));
-        }
 
         [Fact]
         public void Should_immediately_invoke_nancy_if_no_request_body_delegate()
@@ -286,7 +304,7 @@ namespace Nancy.Tests
             var fakeConsumer = new FakeConsumer(false);
             ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
 
-            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+            //this.host.ProcessRequest(environment, callback, fakeErrorCallback);
 
             A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -327,6 +345,8 @@ namespace Nancy.Tests
             output.ShouldEqual("This is some request body content");
         }
 
+        */
+
         [Fact]
         public void Should_set_cookie_with_valid_header()
         {
@@ -334,17 +354,18 @@ namespace Nancy.Tests
             fakeResponse.AddCookie("test", "testvalue");
             fakeResponse.AddCookie("test1", "testvalue1");
             var fakeContext = new NancyContext() { Response = fakeResponse };
-            
-            this.SetupFakeNancyCompleteCallback(fakeContext);
-            var respHeaders = new Dictionary<string, string>();
-            ResponseCallBack callback = (status, headers, bodyDelegate) =>respHeaders=(Dictionary<string,string>)headers;
 
-            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            var resultTuple = this.host.ProcessRequest(environment, requestHeaders, null).Result;
+
+            var respHeaders = GetHeaders(resultTuple);
+
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
-            (respHeaders["Set-Cookie"] == "test=testvalue; path=/\r\ntest1=testvalue1; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][0] == "test=testvalue; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();
         }
 
-        */
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
         /// </summary>
@@ -354,5 +375,16 @@ namespace Nancy.Tests
             A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
                 .Invokes((i => ((Action<NancyContext>)i.Arguments[1]).Invoke(context)));
         }
+
+        private static int GetStatusCode(ResultTuple resultTuple)
+        {
+            return resultTuple.Item2;
+        }
+
+        private static IDictionary<string, string[]> GetHeaders(ResultTuple resultTuple)
+        {
+            return resultTuple.Item3;
+        }
+
     }
 }
