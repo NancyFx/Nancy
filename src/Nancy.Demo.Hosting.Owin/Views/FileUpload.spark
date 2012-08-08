@@ -8,7 +8,7 @@
     <p>This is a Spark view rendered via the OWIN hosting.</p>
     <p>You uploaded: ${Model.Posted}</p>
     <p>
-      <form action="/owin/fileupload" method="POST" enctype="multipart/form-data">
+      <form action="~/fileupload" method="POST" enctype="multipart/form-data">
         <input name="upload" type="file" size="40"/>
         <input type="submit" value="Post!"/>
       </form>
