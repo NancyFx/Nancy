@@ -105,6 +105,20 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_add_a_pre_hook_but_not_a_post_hook_when_EnableUnauthorizedLoginRedirect_is_false()
+        {
+            var pipelines = A.Fake<IPipelines>();
+
+            this.config.EnableUnauthorizedLoginRedirect = false;
+            FormsAuthentication.Enable(pipelines, this.config);
+
+            A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
+                .MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
         public void Should_return_redirect_response_when_user_logs_in_with_redirect()
         {
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
