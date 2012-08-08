@@ -121,7 +121,7 @@
                     }
 
                     tcs.SetResult(new ResultTuple(
-                                      null, // Properties
+                                      new Dictionary<string, object>(), // Properties
                                       (int) nancyResponse.StatusCode, // Status
                                       responseHeaders, // Headers
                                       output => // CopyTo
