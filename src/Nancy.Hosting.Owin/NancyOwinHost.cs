@@ -166,7 +166,7 @@
                 var split = version.ToString().Split('.');
                 int major = int.Parse(split[0]);
                 int minor = split.Length > 1 ? int.Parse(split[1]) : 0;
-                int patch = split.Length > 2 ? int.Parse(split[2]) : 0;
+                //int patch = split.Length > 2 ? int.Parse(split[2]) : 0;
 
                 if (major >= 1)
                 {
