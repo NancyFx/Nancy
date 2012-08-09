@@ -76,7 +76,17 @@
         /// <returns>A <see cref="Response"/> instance.</returns>
         public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            return new XmlResponse<object>(model, "application/xml", this.serializer);
+            return CreateResponse(model, serializer);
+        }
+
+        private static Response CreateResponse(dynamic model, ISerializer serializer)
+        {
+            return new Response
+            {
+                Contents = stream => serializer.Serialize("application/xml", model, stream),
+                ContentType = "application/xml",
+                StatusCode = HttpStatusCode.OK
+            };
         }
 
         private static bool IsExactXmlContentType(MediaRange requestedContentType)
