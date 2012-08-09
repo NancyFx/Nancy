@@ -89,7 +89,7 @@ namespace Nancy.Demo.Hosting.Owin
                 .Select(key => new KeyValuePair<string, object>(key, request.ServerVariables.Get(key)));
 
             var env = new Dictionary<string, object>();
-            env[OwinConstants.Version] = "0.12.0";
+            env[OwinConstants.Version] = "1.0.0";
             env[OwinConstants.RequestMethod] = request.HttpMethod;
             env[OwinConstants.RequestScheme] = request.Url.Scheme;
             env[OwinConstants.RequestPathBase] = pathBase;
