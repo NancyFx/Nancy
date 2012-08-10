@@ -161,9 +161,9 @@
             object version;
             environment.TryGetValue("owin.Version", out version);
 
-            if (version == null || !String.Equals(version.ToString(), "1.0.0"))
+            if (version == null || !String.Equals(version.ToString(), "1.0"))
             {
-                throw new InvalidOperationException("An OWIN v1.0.0 host is required");
+                throw new InvalidOperationException("An OWIN v1.0 host is required");
             }
         }
     }
