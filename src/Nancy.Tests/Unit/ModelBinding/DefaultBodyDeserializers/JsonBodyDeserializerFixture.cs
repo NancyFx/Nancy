@@ -245,7 +245,33 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             Assert.Equal(modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
             Assert.Equal(modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
         }
+
 #endif
+
+        [Fact]
+        public void Should_Serialize_Last_Prop_is_Bool_And_Trailing_NewLine()
+        { 
+            // Given
+            var json = "{\"Property\": true\r\n}";
+            // When
+            var s = new JavaScriptSerializer();
+            var deserialized = (dynamic)s.DeserializeObject(json);
+            // Then
+            Assert.True(deserialized["Property"]);
+        }
+
+        [Fact]
+        public void Should_Serialize_Last_Prop_is_Bool()
+        {
+            // Given
+            var json = "{\"Property\": true}";
+            // When
+            var s = new JavaScriptSerializer();
+            var deserialized = (dynamic)s.DeserializeObject(json);
+            // Then
+            Assert.True(deserialized["Property"]);
+        }
+
         public class TestModel : IEquatable<TestModel>
         {
             public string StringProperty { get; set; }
