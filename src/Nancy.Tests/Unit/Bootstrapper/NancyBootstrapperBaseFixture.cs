@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Unit.Bootstrapper
+﻿using Nancy.Diagnostics;
+
+namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
@@ -236,6 +238,17 @@
             GetBodyBytes(result).SequenceEqual(favicon).ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_get_diagnostics_and_initialise()
+        {
+            var fakeDiagnostics = A.Fake<IDiagnostics>();
+            this.bootstrapper.FakeDiagnostics = fakeDiagnostics;
+
+            this.bootstrapper.Initialise();
+
+            A.CallTo(() => fakeDiagnostics.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         private static IEnumerable<byte> GetBodyBytes(Response response)
         {
             using (var contentsStream = new MemoryStream())
@@ -249,6 +262,7 @@
 
     internal class FakeBootstrapperBaseImplementation : NancyBootstrapperBase<object>
     {
+        public IDiagnostics FakeDiagnostics { get; set; }
         public INancyEngine FakeNancyEngine { get; set; }
         public object FakeContainer { get; set; }
         public object AppContainer { get; set; }
@@ -284,6 +298,15 @@
         protected override IModuleKeyGenerator GetModuleKeyGenerator()
         {
             return this.Generator;
+        }
+
+        /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected override IDiagnostics GetDiagnostics()
+        {
+            return this.FakeDiagnostics ?? new DisabledDiagnostics();
         }
 
         /// <summary>
@@ -404,6 +427,15 @@
         public FakeBootstrapperBaseGetModulesOverride()
         {
             ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+        }
+
+        /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected override IDiagnostics GetDiagnostics()
+        {
+            return new DisabledDiagnostics();
         }
 
         /// <summary>

@@ -297,8 +297,16 @@
                     });
             }
 
+            this.GetDiagnostics().Initialize(this.ApplicationPipelines);
+
             this.initialised = true;
         }
+
+        /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected abstract IDiagnostics GetDiagnostics();
 
         /// <summary>
         /// Gets all registered application startup tasks

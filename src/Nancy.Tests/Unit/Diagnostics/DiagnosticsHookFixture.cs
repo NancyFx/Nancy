@@ -31,6 +31,7 @@
             var bootstrapper = new ConfigurableBootstrapper(with =>{
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -52,6 +53,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -73,6 +75,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -94,6 +97,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -118,6 +122,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -142,6 +147,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -166,6 +172,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -191,6 +198,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);
@@ -216,6 +224,7 @@
             {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
             });
 
             var browser = new Browser(bootstrapper);

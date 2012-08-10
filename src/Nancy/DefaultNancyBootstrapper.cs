@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿using Nancy.Diagnostics;
+
+namespace Nancy
 {
     using System;
     using System.Collections.Generic;
@@ -129,6 +131,15 @@
         protected override sealed TinyIoCContainer CreateRequestContainer()
         {
             return this.ApplicationContainer.GetChildContainer();
+        }
+
+        /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected override IDiagnostics GetDiagnostics()
+        {
+            return this.ApplicationContainer.Resolve<IDiagnostics>();
         }
 
         /// <summary>

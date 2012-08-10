@@ -8,7 +8,7 @@
     /// <summary>
     /// Wires up the diagnostics support at application startup.
     /// </summary>
-    public class DiagnosticsApplicationStartup : IApplicationStartup
+    public class DefaultDiagnostics : IDiagnostics
     {
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IDiagnosticsProvider> diagnosticProviders;
@@ -19,7 +19,7 @@
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IEnumerable<IResponseProcessor> responseProcessors;
 
-        public DiagnosticsApplicationStartup(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
+        public DefaultDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -32,7 +32,7 @@
         }
 
         /// <summary>
-        /// Perform any initialisation tasks
+        /// Initialise diagnostics
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)

@@ -282,6 +282,15 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected override IDiagnostics GetDiagnostics()
+        {
+            return this.ApplicationContainer.Resolve<IDiagnostics>();
+        }
+
+        /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
@@ -450,6 +459,8 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator(ConfigurableBootstrapper bootstrapper)
             {
                 this.bootstrapper = bootstrapper;
+
+                this.Diagnostics<DisabledDiagnostics>();
             }
 
             public ConfigurableBoostrapperConfigurator Binder(IBinder binder)
@@ -1331,6 +1342,30 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator DiagnosticsConfiguration(DiagnosticsConfiguration diagnosticsConfiguration)
             {
                 this.bootstrapper.diagnosticConfiguration = diagnosticsConfiguration;
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IDiagnostics"/>.
+            /// </summary>
+            /// <param name="diagnostics">The <see cref="IDiagnostics"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Diagnostics(IDiagnostics diagnostics)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IDiagnostics), diagnostics));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IFieldNameConverter"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IFieldNameConverter"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Diagnostics<T>() where T : IDiagnostics
+            {
+                this.bootstrapper.configuration.Diagnostics = typeof(T);
                 return this;
             }
 

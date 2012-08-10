@@ -1,4 +1,6 @@
-﻿namespace Nancy.Hosting.Aspnet
+﻿using Nancy.Diagnostics;
+
+namespace Nancy.Hosting.Aspnet
 {
     using System.Collections.Generic;
 
@@ -12,6 +14,15 @@
     /// </summary>
     public abstract class DefaultNancyAspNetBootstrapper : NancyBootstrapperBase<TinyIoCContainer>
     {
+        /// <summary>
+        /// Gets the diagnostics for intialisation
+        /// </summary>
+        /// <returns>IDagnostics implementation</returns>
+        protected override IDiagnostics GetDiagnostics()
+        {
+            return this.ApplicationContainer.Resolve<IDiagnostics>();
+        }
+
         /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
