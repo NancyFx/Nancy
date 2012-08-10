@@ -4,7 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using ModelBinding;
+    using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Session;
@@ -77,6 +77,15 @@ namespace Nancy
             {
                 return this.Context == null ? null : this.Context.ViewBag;
             }
+        }
+
+        /// <summary>
+        /// Gets or sets the model validation result
+        /// </summary>
+        public ModelValidationResult ModelValidationResult
+        {
+            get { return this.Context == null ? null : this.Context.ModelValidationResult; }
+            set { this.Context.ModelValidationResult = value; }
         }
 
         /// <summary>
