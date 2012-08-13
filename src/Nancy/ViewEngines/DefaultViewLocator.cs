@@ -65,9 +65,10 @@
 
         private static bool LocationMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var location = viewName
-                .Replace(Path.GetFileName(viewName), string.Empty)
-                .TrimEnd(new [] { '/' });
+            var filename = Path.GetFileName( viewName );
+            var index = viewName.LastIndexOf(filename, System.StringComparison.OrdinalIgnoreCase );
+            var location = index >= 0 ? viewName.Remove( index, filename.Length ) : viewName;
+            location = location.TrimEnd( new[] { '/' } );
 
             return viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
         }
