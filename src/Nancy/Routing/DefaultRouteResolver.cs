@@ -50,7 +50,7 @@
 
             if (!string.IsNullOrEmpty(extension))
             {
-                var length = context.Request.Path.Length - (extension.Length + 1);
+                var length = context.Request.Path.Length - extension.Length;
                 context.Request.Url.Path = context.Request.Url.Path.Substring(0, length);
             }
 
