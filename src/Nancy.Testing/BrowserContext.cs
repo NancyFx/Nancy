@@ -144,7 +144,7 @@
             var defaultHeaders = 
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "accept", new [] { "*/*"} }
+                    { "accept", new [] { "*/*" } }
                 };
 
             return defaultHeaders;

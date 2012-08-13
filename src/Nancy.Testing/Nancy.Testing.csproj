@@ -103,6 +103,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Accept.cs" />
     <Compile Include="AndConnector.cs" />
     <Compile Include="AssertEqualityComparer.cs" />
     <Compile Include="AssertException.cs" />
