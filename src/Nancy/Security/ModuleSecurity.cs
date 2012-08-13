@@ -125,25 +125,14 @@ namespace Nancy.Security
             return (ctx) =>
                    {
                        Response response = null;
-
-                       if (!ctx.Request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                       Request request = ctx.Request;
+                       if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
                        {
-                           if (redirect && ctx.Request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                           if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
                            {
-                               var originalUrl = ctx.Request.Url;
-
-                               var url = new Url
-                                             {
-                                                 BasePath = originalUrl.BasePath,
-                                                 Fragment = originalUrl.Fragment,
-                                                 HostName = originalUrl.HostName,
-                                                 Path = originalUrl.Path,
-                                                 Port = originalUrl.Port,
-                                                 Query = originalUrl.Query,
-                                                 Scheme = "https"
-                                             };
-
-                               response = new RedirectResponse(url.ToString());
+                               var redirectUrl = request.Url.Clone();
+                               redirectUrl.Scheme = "https";
+                               response = new RedirectResponse(redirectUrl.ToString());
                            }
                            else
                            {
