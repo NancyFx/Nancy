@@ -86,6 +86,24 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Clones the url.
+        /// </summary>
+        /// <returns>Returns a new cloned instance of the url.</returns>
+        public Url Clone()
+        {
+            return new Url
+                       {
+                           BasePath = this.BasePath,
+                           Fragment = this.Fragment,
+                           HostName = this.HostName,
+                           Port = this.Port,
+                           Query = this.Query,
+                           Path = this.Path,
+                           Scheme = this.Scheme
+                       };
+        }
+
+        /// <summary>
         /// Casts the current <see cref="Url"/> instance to a <see cref="Uri"/> instance.
         /// </summary>
         /// <param name="url">The instance that should be cast.</param>
