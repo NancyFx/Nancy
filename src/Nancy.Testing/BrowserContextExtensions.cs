@@ -2,6 +2,7 @@
 namespace Nancy.Testing
 {
     using System;
+    using System.Globalization;
     using System.Text;
     using System.IO;
     using System.Collections.Generic;
@@ -11,6 +12,7 @@ namespace Nancy.Testing
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
+    using Responses.Negotiation;
 
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
@@ -144,6 +146,33 @@ namespace Nancy.Testing
             var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
 
             Cookie(browserContext, FormsAuthentication.FormsAuthenticationCookieName, cookieContents);
+        }
+
+        public static void Accept(this BrowserContext browserContext, MediaRange mediaRange)
+        {
+            browserContext.Accept(mediaRange, 1.0m);
+        }
+
+        public static void Accept(this BrowserContext browserContext, MediaRange mediaRange, decimal quality)
+        {
+            var contextValues =
+                (IBrowserContextValues)browserContext;
+
+            if (contextValues.Headers.ContainsKey("accept"))
+            {
+                if (contextValues.Headers["accept"].Count().Equals(1))
+                {
+                    if (contextValues.Headers["accept"].Any(x => x.Equals("*/*")))
+                    {
+                        contextValues.Headers.Remove("accept");
+                    }    
+                }
+            }
+
+            var mediaTypeWithQuality =
+                string.Concat(mediaRange, ";q=", Convert.ToString(quality, CultureInfo.InvariantCulture));
+
+            browserContext.Header("accept", mediaTypeWithQuality);
         }
     }
 }
