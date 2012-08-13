@@ -7,7 +7,7 @@ namespace Nancy
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query#fragment
     /// </summary>
-    public class Url : ICloneable
+    public sealed class Url : ICloneable
     {
         private string basePath;
 
