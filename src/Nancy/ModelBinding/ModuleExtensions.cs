@@ -42,9 +42,9 @@ namespace Nancy.ModelBinding
                 throw new ArgumentNullException("instance", "The instance parameter cannot be null");
             }
 
-            var boundModel = module.Bind(blacklistedProperties);
+            TModel boundModel = module.Bind(blacklistedProperties);
 
-            foreach (var item in TypeDescriptor.GetProperties(boundModel))
+            foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(boundModel))
             {
                 var value = item.GetValue(boundModel);
                 if (value != null)
