@@ -31,6 +31,16 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Asserts that an element does not exist
+        /// </summary>
+        public static AndConnector<QueryWrapper> ShouldNotExist(this QueryWrapper query)
+        {
+            Asserts.False(query.Any());
+
+            return new AndConnector<QueryWrapper>(query);
+        }
+
+        /// <summary>
         /// Asserts that an element or element should exist one, and only once
         /// </summary>
         public static AndConnector<NodeWrapper> ShouldExistOnce(this QueryWrapper query)
