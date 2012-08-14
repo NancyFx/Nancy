@@ -42,7 +42,8 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture)
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
+				asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
             };
 
         /// <summary>
