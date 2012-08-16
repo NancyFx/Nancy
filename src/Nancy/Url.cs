@@ -74,6 +74,19 @@ namespace Nancy
         /// </summary>
         public string Fragment { get; set; }
 
+        /// <summary>
+        /// Gets the domain part of the request
+        /// </summary>
+        public string Domain
+        {
+            get
+            {
+                return this.Scheme + "://" +
+                       GetHostName(this.HostName) +
+                       GetPort(this.Port);
+            }
+        }
+
         public override string ToString()
         {
             return this.Scheme + "://" + 
