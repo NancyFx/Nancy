@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Nancy.Testing
 {
     using System;
@@ -52,13 +54,28 @@ namespace Nancy.Testing
         /// </summary>
         /// <typeparam name="TModel">The type that the JSON response body should be deserialized to.</typeparam>
         /// <param name="bodyWrapper">An instance of the <see cref="BrowserResponseBodyWrapper"/> that the extension should be invoked on.</param>
+        /// <param name="converters">A collection of JSON converters used when deserializing.</param>
         /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
-        public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
+        public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper, IList<JavaScriptConverter> converters )
         {
             var serializer = 
                 new JavaScriptSerializer();
 
+            if(converters != null)
+                serializer.RegisterConverters(converters);
+
             return serializer.Deserialize<TModel>(bodyWrapper.AsString());
+        }
+
+        /// <summary>
+        /// Gets the deserialized representation of the JSON in the response body.
+        /// </summary>
+        /// <typeparam name="TModel">The type that the JSON response body should be deserialized to.</typeparam>
+        /// <param name="bodyWrapper">An instance of the <see cref="BrowserResponseBodyWrapper"/> that the extension should be invoked on.</param>
+        /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
+        public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
+        {
+            return DeserializeJson<TModel>(bodyWrapper, JsonSettings.Converters);
         }
 
         /// <summary>
