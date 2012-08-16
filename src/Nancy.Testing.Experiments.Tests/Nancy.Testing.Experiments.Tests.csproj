@@ -48,13 +48,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="HomeFixture.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Testing.Experiments.Model\Models.csproj">
-      <Project>{A72EABE4-EA73-4EB0-A79F-92711D6875A9}</Project>
-      <Name>Models</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.Testing.Experiments\Nancy.Testing.Experiments.csproj">
       <Project>{EF098CBF-1DCE-4528-8CE7-16A56C8558A3}</Project>
       <Name>Nancy.Testing.Experiments</Name>
@@ -76,6 +71,9 @@
     <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

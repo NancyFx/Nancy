@@ -2,6 +2,7 @@ namespace Nancy.Testing
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
 
@@ -30,6 +31,13 @@ namespace Nancy.Testing
         private DiagnosticsConfiguration diagnosticConfiguration;
 
         /// <summary>
+        /// Test project name suffixes that will be stripped from the test name project
+        /// in order to try and resolve the name of the assembly that is under test so
+        /// that all of its references can be loaded into the application domain.
+        /// </summary>
+        public static IList<string> TestAssemblySuffixes = new[] { "test", "tests", "unittests", "specs", "specifications" };
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
         /// </summary>
         public ConfigurableBootstrapper()
@@ -50,11 +58,18 @@ namespace Nancy.Testing
 
             if (configuration != null)
             {
+                var testAssembly =
+                    Assembly.GetCallingAssembly();
+
+                var testAssemblyName = 
+                    testAssembly.GetName().Name;
+
+                LoadReferencesForAssemblyUnderTest(testAssemblyName);
+
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
                 configurator.ErrorHandler<PassThroughErrorHandler>();
-
                 configuration.Invoke(configurator);
             }
         }
@@ -96,6 +111,34 @@ namespace Nancy.Testing
         private IEnumerable<CollectionTypeRegistration> GetCollectionTypeRegistrations()
         {
             return this.registeredTypes.Where(x => x.GetType().Equals(typeof(CollectionTypeRegistration))).Cast<CollectionTypeRegistration>();
+        }
+
+        private static void LoadReferencesForAssemblyUnderTest(string testAssemblyName)
+        {
+            if (!TestAssemblySuffixes.Any(x => GetSafePathExtension(testAssemblyName).Equals("." + x, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
+            }
+
+            var testAssemblyNameWithoutExtension =
+                Path.GetFileNameWithoutExtension(testAssemblyName);
+
+            var assemblyUnderTest = AppDomain.CurrentDomain
+                .GetAssemblies()
+                .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+
+            if (assemblyUnderTest != null)
+            {
+                foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                {
+                    AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                }
+            }
+        }
+
+        private static string GetSafePathExtension(string name)
+        {
+            return Path.GetExtension(name) ?? String.Empty;
         }
 
         private IEnumerable<Type> Resolve<T>()
@@ -451,6 +494,7 @@ namespace Nancy.Testing
         public class ConfigurableBoostrapperConfigurator
         {
             private readonly ConfigurableBootstrapper bootstrapper;
+            private readonly IEnumerable<string> namingConventions = new[] {"test", "tests"};
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ConfigurableBoostrapperConfigurator"/> class.
@@ -459,7 +503,6 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator(ConfigurableBootstrapper bootstrapper)
             {
                 this.bootstrapper = bootstrapper;
-
                 this.Diagnostics<DisabledDiagnostics>();
             }
 
@@ -468,6 +511,12 @@ namespace Nancy.Testing
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(IBinder), binder));
 
+                return this;
+            }
+
+            public ConfigurableBoostrapperConfigurator Assembly(string pattern)
+            {
+                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, pattern);
                 return this;
             }
 

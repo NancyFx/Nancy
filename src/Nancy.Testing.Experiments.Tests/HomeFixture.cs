@@ -12,10 +12,10 @@ namespace Nancy.Testing.Experiments.Tests
         [Fact]
         public void Should_be_able_to_test_route_that_renders_view()
         {
-            AppDomainAssemblyTypeScanner.LoadAssemblies("Models.dll");
+            //AppDomainAssemblyTypeScanner.LoadAssemblies("Models.dll");
 
-            var x =
-                typeof(HomeFixture).Assembly.GetReferencedAssemblies();
+            //var x =
+            //    typeof(HomeFixture).Assembly.GetReferencedAssemblies();
 
             //AppDomain.CurrentDomain.AssemblyResolve += (sender, args) =>
             //{
@@ -36,6 +36,7 @@ namespace Nancy.Testing.Experiments.Tests
 
             var browser = new Browser(new ConfigurableBootstrapper(with => {
                 with.EnableAutoRegistration();
+                //with.Assembly("Models.dll");
             }));
 
             // When
