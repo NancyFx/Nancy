@@ -1,3 +1,7 @@
+using System.Text;
+using Nancy.IO;
+using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
+
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
@@ -413,6 +417,53 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Body_properties_should_take_precedence_over_request_form_and_context_properties()
+        {
+
+            var binder = this.GetBinder();
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 3, StringProperty = "Test4" });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+            
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "0";
+            context.Request.Query["StringProperty"] = "Test2";
+            context.Request.Query["IntProperty"] = "1";
+            context.Parameters["StringProperty"] = "Test3";
+            context.Parameters["IntProperty"] = "2";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel));
+
+            // Then
+            result.StringProperty.ShouldEqual("Test4");
+            result.IntProperty.ShouldEqual(3);
+        }
+
+        [Fact]
+        public void Should_be_able_to_bind_body_request_form_and_context_properties()
+        {
+
+            var binder = this.GetBinder();
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { StringProperty = "From Body" });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+            
+            context.Request.Form["IntProperty"] = "0";
+            context.Request.Query["DateProperty"] = new DateTime(2012, 8, 16);
+            context.Parameters["AnotherStringProprety"] = "From Context";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel));
+
+            // Then
+            result.StringProperty.ShouldEqual("From Body");
+            result.IntProperty.ShouldEqual(0);
+            result.DateProperty.ShouldEqual(new DateTime(2012, 8, 16));
+            result.AnotherStringProprety.ShouldEqual("From Context");
+        }
+
+        [Fact]
         public void Request_properties_should_take_precendence_over_context_properties()
         {
 
@@ -492,6 +543,23 @@ namespace Nancy.Tests.Unit.ModelBinding
             };
         }
 
+        private static NancyContext CreateContextWithHeaderAndBody(string name, IEnumerable<string> values, string body)
+        {
+            var header = new Dictionary<string, IEnumerable<string>>
+            {
+                { name, values }
+            };
+
+            byte[] byteArray = Encoding.ASCII.GetBytes(body);
+            var bodyStream = RequestStream.FromStream(new MemoryStream(byteArray));
+            
+            return new NancyContext()
+            {
+                Request = new FakeRequest("GET", "/", header, bodyStream),
+                Parameters = DynamicDictionary.Empty
+            };
+        }
+
         public class TestModel
         {
             public string StringProperty { get; set; }
@@ -499,6 +567,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public int IntProperty { get; set; }
 
             public DateTime DateProperty { get; set; }
+
+            public string AnotherStringProprety { get; set; }
 
             public int this[int index]
             {

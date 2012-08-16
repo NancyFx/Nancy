@@ -16,6 +16,11 @@
         {
         }
 
+        public FakeRequest(string method, string path, IDictionary<string, IEnumerable<string>> headers, RequestStream body)
+            : this(method, path, headers, body, "http", string.Empty)
+        {
+        }
+
         public FakeRequest(string method, string path, string query)
             : this(method, path, new Dictionary<string, IEnumerable<string>>(), RequestStream.FromStream(new MemoryStream()), "http", query)
         {

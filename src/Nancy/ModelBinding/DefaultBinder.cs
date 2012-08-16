@@ -60,12 +60,9 @@ namespace Nancy.ModelBinding
             var bindingContext = this.CreateBindingContext(context, modelType, blackList);
 
             var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
-
-            if (bodyDeserializedModel != null)
-            {
-                return bodyDeserializedModel;
-            }
-
+            if(bodyDeserializedModel != null)
+                bindingContext.Model =  bodyDeserializedModel;
+            
             foreach (var modelProperty in bindingContext.ValidModelProperties)
             {
                 var stringValue = GetValue(modelProperty.Name, bindingContext);
