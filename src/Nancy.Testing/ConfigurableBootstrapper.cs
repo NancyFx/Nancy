@@ -100,17 +100,17 @@ namespace Nancy.Testing
 
         private IEnumerable<ModuleRegistration> GetModuleRegistrations()
         {
-            return this.registeredTypes.Where(x => x.GetType().Equals(typeof(ModuleRegistration))).Cast<ModuleRegistration>();
+            return this.registeredTypes.Where(x => x is ModuleRegistration).Cast<ModuleRegistration>();
         }
 
         private IEnumerable<TypeRegistration> GetTypeRegistrations()
         {
-            return this.registeredTypes.Where(x => x.GetType().Equals(typeof(TypeRegistration))).Cast<TypeRegistration>();
+            return this.registeredTypes.Where(x => x is TypeRegistration).Cast<TypeRegistration>();
         }
 
         private IEnumerable<CollectionTypeRegistration> GetCollectionTypeRegistrations()
         {
-            return this.registeredTypes.Where(x => x.GetType().Equals(typeof(CollectionTypeRegistration))).Cast<CollectionTypeRegistration>();
+            return this.registeredTypes.Where(x => x.GetType() == typeof(CollectionTypeRegistration)).Cast<CollectionTypeRegistration>();
         }
 
         private static void LoadReferencesForAssemblyUnderTest(string testAssemblyName)
@@ -144,7 +144,7 @@ namespace Nancy.Testing
         private IEnumerable<Type> Resolve<T>()
         {
             var types = this.GetTypeRegistrations()
-                .Where(x => x.RegistrationType.Equals(typeof(T)))
+                .Where(x => x.RegistrationType == typeof(T))
                 .Select(x => x.ImplementationType)
                 .ToList();
 
@@ -167,7 +167,7 @@ namespace Nancy.Testing
             get
             {
                 var conventions = this.registeredInstances
-                    .Where(x => x.RegistrationType.Equals(typeof(NancyConventions)))
+                    .Where(x => x.RegistrationType == typeof(NancyConventions))
                     .Select(x => x.Implementation)
                     .Cast<NancyConventions>()
                     .FirstOrDefault();
@@ -360,7 +360,7 @@ namespace Nancy.Testing
         protected override void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
             var moduleCatalog = this.registeredInstances
-                .Where(x => x.RegistrationType.Equals(typeof(INancyModuleCatalog)))
+                .Where(x => x.RegistrationType == typeof(INancyModuleCatalog))
                 .Select(x => x.Implementation)
                 .Cast<INancyModuleCatalog>()
                 .FirstOrDefault() ?? this;
@@ -378,8 +378,8 @@ namespace Nancy.Testing
             var configuredTypes = this.GetTypeRegistrations().ToList();
 
             typeRegistrations = configuredTypes
-                .Concat(typeRegistrations.Where(x => !configuredTypes.Any(y => y.RegistrationType.Equals(x.RegistrationType))))
-                .Where(x => !this.registeredInstances.Any(y => y.RegistrationType.Equals(x.RegistrationType)));
+                .Concat(typeRegistrations.Where(x => configuredTypes.All(y => y.RegistrationType != x.RegistrationType)))
+                .Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType));
 
             foreach (var typeRegistration in typeRegistrations)
             {
@@ -398,7 +398,7 @@ namespace Nancy.Testing
             var configuredCollectionTypes = this.GetCollectionTypeRegistrations().ToList();
 
             collectionTypeRegistrations = configuredCollectionTypes
-                .Concat(collectionTypeRegistrations.Where(x => !configuredCollectionTypes.Any(y => y.RegistrationType.Equals(x.RegistrationType))));
+                .Concat(collectionTypeRegistrations.Where(x => configuredCollectionTypes.All(y => y.RegistrationType != x.RegistrationType)));
 
             foreach (var collectionTypeRegistration in collectionTypeRegistrations)
             {
@@ -414,8 +414,8 @@ namespace Nancy.Testing
         protected override void RegisterInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
             instanceRegistrations = this.registeredInstances
-                .Concat(instanceRegistrations.Where(x => !this.registeredInstances.Any(y => y.RegistrationType.Equals(x.RegistrationType))))
-                .Where(x => !this.GetTypeRegistrations().Any(y => y.RegistrationType.Equals(x.RegistrationType)));
+                .Concat(instanceRegistrations.Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType)))
+                .Where(x => this.GetTypeRegistrations().All(y => y.RegistrationType != x.RegistrationType));
 
             foreach (var instanceRegistration in instanceRegistrations)
             {
@@ -494,7 +494,6 @@ namespace Nancy.Testing
         public class ConfigurableBoostrapperConfigurator
         {
             private readonly ConfigurableBootstrapper bootstrapper;
-            private readonly IEnumerable<string> namingConventions = new[] {"test", "tests"};
 
             /// <summary>
             /// Initializes a new instance of the <see cref="ConfigurableBoostrapperConfigurator"/> class.
