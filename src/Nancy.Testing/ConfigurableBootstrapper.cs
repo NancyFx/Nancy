@@ -29,6 +29,8 @@ namespace Nancy.Testing
         private readonly ConfigurableModuleCatalog catalog;
         private bool enableAutoRegistration;
         private DiagnosticsConfiguration diagnosticConfiguration;
+        private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
+        private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
 
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
@@ -55,6 +57,8 @@ namespace Nancy.Testing
             this.configuration = NancyInternalConfiguration.Default;
             this.registeredTypes = new List<object>();
             this.registeredInstances = new List<InstanceRegistration>();
+            this.applicationStartupActions = new List<Action<TinyIoCContainer, IPipelines>>();
+            this.requestStartupActions = new List<Action<TinyIoCContainer, IPipelines, NancyContext>>();
 
             if (configuration != null)
             {
@@ -71,6 +75,22 @@ namespace Nancy.Testing
 
                 configurator.ErrorHandler<PassThroughErrorHandler>();
                 configuration.Invoke(configurator);
+            }
+        }
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+            foreach (var action in this.applicationStartupActions)
+            {
+                action.Invoke(container,pipelines);
+            }
+        }
+        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            base.RequestStartup(container, pipelines, context);
+            foreach (var action in this.requestStartupActions)
+            {
+                action.Invoke(container,pipelines,context);
             }
         }
 
@@ -1425,6 +1445,18 @@ namespace Nancy.Testing
             public ConfigurableBoostrapperConfigurator IgnoredAssembly(Func<Assembly, bool> ignoredPredicate)
             {
                 this.bootstrapper.configuration.WithIgnoredAssembly(ignoredPredicate);
+                return this;
+            }
+
+            public ConfigurableBoostrapperConfigurator ApplicationStartup(Action<TinyIoCContainer, IPipelines> action)
+            {
+                this.bootstrapper.applicationStartupActions.Add(action);
+                return this;
+            }
+
+            public ConfigurableBoostrapperConfigurator RequestStartup(Action<TinyIoCContainer, IPipelines, NancyContext> action)
+            {
+                this.bootstrapper.requestStartupActions.Add(action);
                 return this;
             }
         }

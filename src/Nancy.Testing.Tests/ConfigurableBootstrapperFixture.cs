@@ -127,6 +127,46 @@
             result.ToString().ShouldContain("Oh noes!");
         }
 
+        [Fact]
+        public void Should_run_application_startup_closure()
+        {
+            var date = new DateTime(2112,10,31);
+            var bootstrapper = new ConfigurableBootstrapper(with => with.ApplicationStartup((container, pipelines) =>
+                {
+                    pipelines.BeforeRequest += ctx =>
+                        {
+                            ctx.Items.Add("date", date);
+                            return null;
+                        };
+                }));
+
+            bootstrapper.Initialise();
+
+            var engine = bootstrapper.GetEngine();
+            var request = new Request("GET", "/", "http");
+            var result = engine.HandleRequest(request);
+
+            result.Items["date"].ShouldEqual(date);
+        }
+
+        [Fact]
+        public void Should_run_request_startup_closure()
+        {
+            var date = new DateTime(2112, 10, 31);
+            var bootstrapper =
+                new ConfigurableBootstrapper(
+                    with => with.RequestStartup((container, pipelines, context) => 
+                        context.Items.Add("date", date)));
+
+            bootstrapper.Initialise();
+
+            var engine = bootstrapper.GetEngine();
+            var request = new Request("GET", "/", "http");
+            var result = engine.HandleRequest(request);
+
+            result.Items["date"].ShouldEqual(date);
+        }
+
         public IEnumerable<string> GetConfigurableBootstrapperMembers()
         {
             var ignoreList = new[]
