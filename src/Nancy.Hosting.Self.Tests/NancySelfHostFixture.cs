@@ -1,4 +1,5 @@
-﻿namespace Nancy.Hosting.Self.Tests
+﻿#if !__MonoCS__ 
+namespace Nancy.Hosting.Self.Tests
 {
     using System;
     using System.IO;
@@ -177,3 +178,4 @@
 		}
 	}
 }
+#endif
