@@ -1,5 +1,6 @@
 using System.Text;
 using Nancy.IO;
+using Nancy.ModelBinding.DefaultBodyDeserializers;
 using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
 
 namespace Nancy.Tests.Unit.ModelBinding
@@ -417,47 +418,44 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Body_properties_should_take_precedence_over_request_form_and_context_properties()
+        public void Form_request_and_context_properties_should_take_precedence_over_body_properties()
         {
 
-            var binder = this.GetBinder();
-            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 3, StringProperty = "Test4" });
+            var binder = this.GetBinder(null, new List<IBodyDeserializer>() { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 0, StringProperty = "From body" });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
             
-            context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "0";
-            context.Request.Query["StringProperty"] = "Test2";
+            context.Request.Form["StringProperty"] = "From form";
             context.Request.Query["IntProperty"] = "1";
-            context.Parameters["StringProperty"] = "Test3";
-            context.Parameters["IntProperty"] = "2";
+            context.Parameters["AnotherStringProprety"] = "From context";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
 
             // Then
-            result.StringProperty.ShouldEqual("Test4");
-            result.IntProperty.ShouldEqual(3);
+            result.StringProperty.ShouldEqual("From form");
+            result.AnotherStringProprety.ShouldEqual("From context");
+            result.IntProperty.ShouldEqual(1);
         }
 
         [Fact]
         public void Should_be_able_to_bind_body_request_form_and_context_properties()
         {
-
-            var binder = this.GetBinder();
-            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { StringProperty = "From Body" });
+            var binder = this.GetBinder(null, new List<IBodyDeserializer>() { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { DateProperty = new DateTime(2012, 8, 16) });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
             
             context.Request.Form["IntProperty"] = "0";
-            context.Request.Query["DateProperty"] = new DateTime(2012, 8, 16);
+            context.Request.Query["StringProperty"] = "From Query";
             context.Parameters["AnotherStringProprety"] = "From Context";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
 
             // Then
-            result.StringProperty.ShouldEqual("From Body");
+            result.StringProperty.ShouldEqual("From Query");
             result.IntProperty.ShouldEqual(0);
             result.DateProperty.ShouldEqual(new DateTime(2012, 8, 16));
             result.AnotherStringProprety.ShouldEqual("From Context");
@@ -557,6 +555,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             {
                 Request = new FakeRequest("GET", "/", header, bodyStream),
                 Parameters = DynamicDictionary.Empty
+                
             };
         }
 
