@@ -210,7 +210,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(A<string>.Ignored)).Returns(true);
 
-            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new [] { deserializer });
+            A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { deserializer });
 
             // When
             binder.Bind(context, typeof(TestModel));
@@ -421,7 +421,8 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Form_request_and_context_properties_should_take_precedence_over_body_properties()
         {
 
-            var binder = this.GetBinder(null, new List<IBodyDeserializer>() { new XmlBodyDeserializer() });
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
             var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 0, StringProperty = "From body" });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
@@ -446,7 +447,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { DateProperty = new DateTime(2012, 8, 16) });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
-            
+
             context.Request.Form["IntProperty"] = "0";
             context.Request.Query["StringProperty"] = "From Query";
             context.Parameters["AnotherStringProprety"] = "From Context";
