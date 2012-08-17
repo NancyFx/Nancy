@@ -1,6 +1,8 @@
 ﻿namespace Nancy.ModelBinding
 {
     using System;
+	using System.Collections.Generic;
+	using System.Reflection;
 
     /// <summary>
     /// Binds incoming request data to a model type
@@ -15,5 +17,6 @@
         /// <param name="blackList">Blacklisted property names</param>
         /// <returns>Bound model</returns>
         object Bind(NancyContext context, Type modelType, params string[] blackList);
+		IEnumerable<PropertyInfo> BoundProperties { get; }
     }
 }

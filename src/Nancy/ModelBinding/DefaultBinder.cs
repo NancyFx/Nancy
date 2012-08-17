@@ -20,6 +20,8 @@ namespace Nancy.ModelBinding
 
         private readonly BindingDefaults defaults;
 
+		private IList<PropertyInfo> boundProperties;
+
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
             if (typeConverters == null)
@@ -57,7 +59,9 @@ namespace Nancy.ModelBinding
         /// <returns>Bound model</returns>
         public object Bind(NancyContext context, Type modelType, params string[] blackList)
         {
-            var bindingContext = this.CreateBindingContext(context, modelType, blackList);
+			boundProperties = new List<PropertyInfo>();
+
+			var bindingContext = this.CreateBindingContext(context, modelType, blackList);
 
             var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
 
@@ -79,20 +83,7 @@ namespace Nancy.ModelBinding
             return bindingContext.Model;
         }
 
-        private BindingContext CreateBindingContext(NancyContext context, Type modelType, IEnumerable<string> blackList)
-        {
-            return new BindingContext
-            {
-                Context = context,
-                DestinationType = modelType,
-                Model = CreateModel(modelType),
-                ValidModelProperties = GetProperties(modelType, blackList),
-                RequestData = this.GetDataFields(context),
-                TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
-            };
-        }
-
-        private IDictionary<string, string> GetDataFields(NancyContext context)
+		private IDictionary<string, string> GetDataFields(NancyContext context)
         {
             var dictionaries = new IDictionary<string, string>[]
                 {
@@ -116,6 +107,27 @@ namespace Nancy.ModelBinding
                     memberName => (string)dictionary[memberName]);
         }
 
+		public IEnumerable<PropertyInfo> BoundProperties
+		{ 
+			get
+			{
+				return boundProperties;
+			}
+		}
+
+        private BindingContext CreateBindingContext(NancyContext context, Type modelType, IEnumerable<string> blackList)
+        {
+            return new BindingContext
+            {
+                Context = context,
+                DestinationType = modelType,
+                Model = CreateModel(modelType),
+                ValidModelProperties = GetProperties(modelType, blackList),
+                RequestData = this.GetDataFields(context),
+                TypeConverters = this.typeConverters.Concat(this.defaults.DefaultTypeConverters),
+            };
+        }
+
         private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
         {
             var destinationType = modelProperty.PropertyType;
@@ -135,10 +147,11 @@ namespace Nancy.ModelBinding
             }
         }
 
-        private static void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
+        private void SetPropertyValue(PropertyInfo modelProperty, object model, object value)
         {
             // TODO - catch reflection exceptions?
             modelProperty.SetValue(model, value, null);
+			boundProperties.Add (modelProperty);
         }
 
         private static IEnumerable<PropertyInfo> GetProperties(Type modelType, IEnumerable<string> blackList)

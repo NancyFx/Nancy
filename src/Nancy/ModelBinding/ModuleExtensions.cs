@@ -42,16 +42,20 @@ namespace Nancy.ModelBinding
                 throw new ArgumentNullException("instance", "The instance parameter cannot be null");
             }
 
-            var boundModel = module.Bind(blacklistedProperties);
-
-            foreach (var item in TypeDescriptor.GetProperties(boundModel))
+			var modelBinder = module.ModelBinderLocator.GetBinderForType(typeof(TModel), module.Context);
+            if (modelBinder == null)
             {
-                var value = item.GetValue(boundModel);
-                if (value != null)
-                {
-                    item.SetValue(instance, value);
-                }
+                throw new ModelBindingException(typeof(TModel));
             }
+
+            var boundModel = (TModel)modelBinder.Bind(module.Context, typeof(TModel), blacklistedProperties);
+            
+			foreach(var property in modelBinder.BoundProperties)
+			{
+				var value = property.GetValue(boundModel, null);
+				property.SetValue(instance, value, null);
+			}
+
         }
     }
 }
