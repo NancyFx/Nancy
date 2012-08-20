@@ -83,9 +83,9 @@
     <Reference Include="FakeItEasy">
       <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
     </Reference>
-    <Reference Include="FluentValidation, Version=3.3.1.0, Culture=neutral, PublicKeyToken=a82054b837897c66, processorArchitecture=MSIL">
+    <Reference Include="FluentValidation, Version=3.4.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\FluentValidation.3.3.1.0\lib\Net40\FluentValidation.dll</HintPath>
+      <HintPath>..\packages\FluentValidation.3.4.0.0\lib\Net40\FluentValidation.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -114,16 +114,6 @@
     <Compile Include="FluentValidationValidatorFactoryFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
-      <Project>{01230F2A-D108-480C-B834-8CE0569FD3B3}</Project>
-      <Name>Nancy.Validation.FluentValidation</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
-      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
-      <Name>Nancy</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4 %28x86 and x64%29</ProductName>
@@ -144,6 +134,16 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj">
+      <Project>{01230f2a-d108-480c-b834-8ce0569fd3b3}</Project>
+      <Name>Nancy.Validation.FluentValidation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
