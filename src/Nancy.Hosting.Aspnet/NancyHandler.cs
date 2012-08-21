@@ -99,14 +99,18 @@ namespace Nancy.Hosting.Aspnet
             response.Contents.Invoke(context.Response.OutputStream);         
         }
 
+        /// <remarks>
+        /// Copies are made of each collection (Headers, Cookies) for enumeration to avoid
+        /// InvalidOperationExceptions if ASP.NET modifies the response on a different thread.
+        /// </remarks>
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
-            foreach (var header in response.Headers)
+            foreach (var header in response.Headers.ToDictionary(x => x.Key, x => x.Value))
             {
                 context.Response.AddHeader(header.Key, header.Value);
             }
 
-            foreach(var cookie in response.Cookies)
+            foreach (var cookie in response.Cookies.ToList())
             {
                 context.Response.AddHeader("Set-Cookie", cookie.ToString());
             }
