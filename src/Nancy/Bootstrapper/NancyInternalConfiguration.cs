@@ -79,7 +79,7 @@ namespace Nancy.Bootstrapper
                         ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IErrorHandler>(true))),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                         ObjectSerializer = typeof(DefaultObjectSerializer),
-                        Serializers = AppDomainAssemblyTypeScanner.TypesOf<ISerializer>().ToList(),
+                        Serializers = new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) }),
                         InteractiveDiagnosticProviders = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IDiagnosticsProvider>()),
                         RequestTracing = typeof(DefaultRequestTracing),
                         RouteInvoker = typeof(DefaultRouteInvoker),
