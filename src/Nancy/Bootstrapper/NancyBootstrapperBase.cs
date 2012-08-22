@@ -305,7 +305,7 @@
         /// <summary>
         /// Gets the diagnostics for intialisation
         /// </summary>
-        /// <returns>IDagnostics implementation</returns>
+        /// <returns>IDiagnostics implementation</returns>
         protected abstract IDiagnostics GetDiagnostics();
 
         /// <summary>
