@@ -31,7 +31,16 @@
         /// </summary>
         public IList<Func<string, dynamic, ViewLocationContext, string>> ViewLocationConventions { get; set; }
 
+        /// <summary>
+        /// Gets or sets the conventions for locating and serving static content
+        /// </summary>
         public IList<Func<NancyContext, string, Response>> StaticContentsConventions { get; set; }
+
+        /// <summary>
+        /// Gets or sets the conventions for coercing accept headers from their source
+        /// values to the real values for content negotiation
+        /// </summary>
+        public IList<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>> AcceptHeaderCoercionConventions { get; set; }
 
         /// <summary>
         /// Validates the conventions
@@ -61,6 +70,7 @@
             {
                 new InstanceRegistration(typeof(ViewLocationConventions), new ViewLocationConventions(this.ViewLocationConventions)),
                 new InstanceRegistration(typeof(StaticContentsConventions), new StaticContentsConventions(this.StaticContentsConventions)), 
+                new InstanceRegistration(typeof(AcceptHeaderCoercionConventions), new AcceptHeaderCoercionConventions(this.AcceptHeaderCoercionConventions)), 
             };
         }
 

@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using Nancy.ViewEngines;
+
     /// <summary>
     /// This is a wrapper around the type 
     /// 'IEnumerable<Func<string, object, ViewLocationContext, string>>' and its 
@@ -20,26 +21,6 @@
         }
 
         public IEnumerator<Func<string, object, ViewLocationContext, string>> GetEnumerator()
-        {
-            return conventions.GetEnumerator();
-        }
-
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return GetEnumerator();
-        }
-    }
-
-    public class StaticContentsConventions : IEnumerable<Func<NancyContext, string, Response>>
-    {
-        private readonly IEnumerable<Func<NancyContext, string, Response>> conventions;
-
-        public StaticContentsConventions(IEnumerable<Func<NancyContext, string, Response>> conventions)
-        {
-            this.conventions = conventions;
-        }
-
-        public IEnumerator<Func<NancyContext, string, Response>> GetEnumerator()
         {
             return conventions.GetEnumerator();
         }

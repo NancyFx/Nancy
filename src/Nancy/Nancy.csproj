@@ -115,11 +115,14 @@
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
+    <Compile Include="Conventions\AcceptHeaderCoercionConventions.cs" />
+    <Compile Include="Conventions\DefaultAcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Conventions\StaticContentsConventions.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
