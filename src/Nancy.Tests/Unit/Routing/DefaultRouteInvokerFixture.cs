@@ -1,4 +1,7 @@
-﻿namespace Nancy.Tests.Unit.Routing
+﻿using System.Collections.Generic;
+using Nancy.Conventions;
+
+namespace Nancy.Tests.Unit.Routing
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +21,7 @@
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>());
+            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
         }
 
         [Fact]

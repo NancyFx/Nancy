@@ -6,7 +6,7 @@ namespace Nancy.Conventions
 {
     public class DefaultAcceptHeaderCoercionConventions : IConvention
     {
-        private static readonly IEnumerable<Tuple<string, decimal>> DEFAULT_ACCEPT = new[] { Tuple.Create("text/html", 1.0m) };
+        private static readonly IEnumerable<Tuple<string, decimal>> DEFAULT_ACCEPT = new[] { Tuple.Create("text/html", 1.0m), Tuple.Create("*/*", 0.9m) };
 
         private static readonly string[] BROKEN_BROWSERS = new[] {"MSIE 8", "MSIE 7", "MSIE 6", "AppleWebKit"};
 
@@ -30,10 +30,17 @@ namespace Nancy.Conventions
             conventions.AcceptHeaderCoercionConventions = new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>(2)
                                                               {
                                                                   CoerceStupidBrowsers, 
-                                                                  CoerceBlankAcceptHeader
+                                                                  BoostHtml,
+                                                                  CoerceBlankAcceptHeader,
                                                               };
         }
 
+        /// <summary>
+        /// Adds a default accept header if there isn't one.
+        /// </summary>
+        /// <param name="currentAcceptHeaders">Current headers</param>
+        /// <param name="context">Context</param>
+        /// <returns>Modified headers or original if no modification required</returns>
         private IEnumerable<Tuple<string, decimal>> CoerceBlankAcceptHeader(IEnumerable<Tuple<string, decimal>> currentAcceptHeaders, NancyContext context)
         {
             var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
@@ -41,11 +48,47 @@ namespace Nancy.Conventions
             return !current.Any() ? DEFAULT_ACCEPT : current;
         }
 
+        /// <summary>
+        /// Replaces the accept header of stupid browsers that request XML instead
+        /// of HTML.
+        /// </summary>
+        /// <param name="currentAcceptHeaders">Current headers</param>
+        /// <param name="context">Context</param>
+        /// <returns>Modified headers or original if no modification required</returns>
         private IEnumerable<Tuple<string, decimal>> CoerceStupidBrowsers(IEnumerable<Tuple<string, decimal>> currentAcceptHeaders, NancyContext context)
         {
             var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
 
             return this.IsStupidBrowser(current, context) ? DEFAULT_ACCEPT : current;
+        }
+
+        /// <summary>
+        /// Boosts the priority of HTML for browsers that ask for xml and html with the
+        /// same priority.
+        /// </summary>
+        /// <param name="currentAcceptHeaders">Current headers</param>
+        /// <param name="context">Context</param>
+        /// <returns>Modified headers or original if no modification required</returns>
+        private IEnumerable<Tuple<string, decimal>> BoostHtml(IEnumerable<Tuple<string, decimal>> currentAcceptHeaders, NancyContext context)
+        {
+            var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
+
+            var html = current.FirstOrDefault(h => h.Item1 == "text/html" && h.Item2 < 1.0m);
+
+            if (html == null)
+            {
+                return current;
+            }
+
+            var index = Array.IndexOf(current, html);
+            if (index == -1)
+            {
+                return current;
+            }
+
+            current[index] = Tuple.Create("text/html", html.Item2 + 0.2m);
+
+            return current;
         }
 
         private bool IsStupidBrowser(Tuple<string, decimal>[] current, NancyContext context)

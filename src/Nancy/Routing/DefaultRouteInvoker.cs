@@ -1,3 +1,5 @@
+using Nancy.Conventions;
+
 namespace Nancy.Routing
 {
     using System;
@@ -14,12 +16,14 @@ namespace Nancy.Routing
     public class DefaultRouteInvoker : IRouteInvoker
     {
         private readonly IEnumerable<IResponseProcessor> processors;
+        private readonly AcceptHeaderCoercionConventions coercionConventions;
 
         private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies;
 
-        public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors)
+        public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
             this.processors = processors;
+            this.coercionConventions = coercionConventions; 
 
             this.invocationStrategies =
                 new Dictionary<Type, Func<dynamic, NancyContext, Response>>
