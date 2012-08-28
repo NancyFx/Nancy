@@ -8,8 +8,7 @@
     using Bootstrapper;
 
     using Nancy.ErrorHandling;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class FakeDefaultNancyBootstrapper : DefaultNancyBootstrapper
     {
@@ -44,7 +43,7 @@
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoC.TinyIoCContainer Container { get { return this.ApplicationContainer; } }
+        public TinyIoCContainer Container { get { return this.ApplicationContainer; } }
 
         public Request ConfigureRequestContainerLastRequest { get; set; }
 
@@ -80,7 +79,7 @@
             this.RequestContainerInitialisations[context] = this.RequestContainerInitialisations[context] + 1;
         }
 
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer existingContainer)
+        protected override void ConfigureApplicationContainer(TinyIoCContainer existingContainer)
         {
             ApplicationContainerConfigured = true;
             base.ConfigureApplicationContainer(existingContainer);

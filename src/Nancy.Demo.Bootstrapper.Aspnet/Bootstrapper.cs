@@ -4,8 +4,7 @@ namespace Nancy.AspNetBootstrapperDemo
 
     using Nancy.Demo.Bootstrapping.Aspnet;
     using Nancy.Hosting.Aspnet;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class Bootstrapper : DefaultNancyAspNetBootstrapper
     {

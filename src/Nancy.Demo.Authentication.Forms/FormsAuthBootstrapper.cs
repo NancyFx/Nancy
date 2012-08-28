@@ -3,12 +3,11 @@ namespace Nancy.Demo.Authentication.Forms
     using Nancy;
     using Nancy.Authentication.Forms;
     using Nancy.Bootstrapper;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class FormsAuthBootstrapper : DefaultNancyBootstrapper
     {
-        protected override void ConfigureApplicationContainer(TinyIoC.TinyIoCContainer container)
+        protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
             // We don't call "base" here to prevent auto-discovery of
             // types/dependencies

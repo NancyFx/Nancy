@@ -3,7 +3,7 @@ namespace Nancy.Demo.Authentication.Stateless
     using Nancy.Authentication.Stateless;
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class StatelessAuthBootstrapper : DefaultNancyBootstrapper
     {

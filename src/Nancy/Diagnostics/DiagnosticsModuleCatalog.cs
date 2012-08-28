@@ -4,8 +4,8 @@ namespace Nancy.Diagnostics
     using System.Linq;
     using ModelBinding;
     using Nancy.Bootstrapper;
+    using Nancy.TinyIoc;
     using Responses;
-    using TinyIoC;
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
     {
