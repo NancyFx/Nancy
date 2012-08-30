@@ -86,6 +86,7 @@
     </Compile>
     <Compile Include="Modules\JsonpTestModule.cs" />
     <Compile Include="Modules\RazorTestModule.cs" />
+    <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />
     <Compile Include="Tests\StaticContentTests.cs" />

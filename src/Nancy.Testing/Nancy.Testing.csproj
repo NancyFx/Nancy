@@ -117,6 +117,7 @@
     <Compile Include="BrowserResponseBodyWrapperExtensions.cs" />
     <Compile Include="BrowserResponseExtensions.cs" />
     <Compile Include="ConfigurableBootstrapper.cs" />
+    <Compile Include="ConfigurableResponseProcessor.cs" />
     <Compile Include="DocumentWrapper.cs" />
     <Compile Include="NancyContextExtensions.cs" />
     <Compile Include="Fakes\FakeRootPathProvider.cs" />

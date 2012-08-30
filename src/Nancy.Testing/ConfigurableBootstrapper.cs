@@ -791,6 +791,17 @@ namespace Nancy.Testing
             /// Configures the boostrapper to register the provided <see cref="NancyModule"/> instance.
             /// </summary>
             /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator Module(NancyModule module)
+            {
+                this.bootstrapper.catalog.RegisterModuleInstance(module, module.GetType().FullName);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the boostrapper to register the provided <see cref="NancyModule"/> instance.
+            /// </summary>
+            /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
             /// <param name="moduleKey">The module key of the module that is being registered.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Module(NancyModule module, string moduleKey)

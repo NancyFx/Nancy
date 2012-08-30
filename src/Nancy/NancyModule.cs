@@ -241,7 +241,7 @@ namespace Nancy
             /// Defines a Nancy route for the specified <paramref name="path"/> and <paramref name="condition"/>.
             /// </summary>
             /// <value>A delegate that is used to invoke the route.</value>
-            public Func<dynamic, Response> this[string path, Func<NancyContext, bool> condition]
+            public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(path, condition, value); }
             }

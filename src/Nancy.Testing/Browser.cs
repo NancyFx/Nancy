@@ -20,6 +20,16 @@ namespace Nancy.Testing
         private readonly IDictionary<string, string> cookies = new Dictionary<string, string>();
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Browser"/> class, with the
+        /// provided <see cref="ConfigurableBootstrapper"/> configuration.
+        /// </summary>
+        /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
+        public Browser(Action<ConfigurableBootstrapper.ConfigurableBoostrapperConfigurator> action)
+            : this(new ConfigurableBootstrapper(action))
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.
         /// </summary>
         /// <param name="bootstrapper">A <see cref="INancyBootstrapper"/> instance that determins the Nancy configuration that should be used by the browser.</param>
