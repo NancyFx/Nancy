@@ -3,6 +3,7 @@ namespace Nancy.Tests.Functional.Tests
     using System;
     using System.IO;
     using System.Linq;
+    using Bootstrapper;
     using IO;
     using Responses.Negotiation;
     using Testing;
@@ -117,17 +118,48 @@ namespace Nancy.Tests.Functional.Tests
                 });
             });
 
-            var brow = new Browser(with =>{
+            var brower = new Browser(with =>{
                 with.Module(module);
                 with.ResponseProcessor(processor);
             });
 
             // When
-            var response = brow.Get("/headers");
+            var response = brower.Get("/headers");
 
             // Then
             Assert.True(response.Headers.ContainsKey("foo"));
             Assert.Equal("bar", response.Headers["foo"]);
         }
+
+        [Fact]
+        public void Should_apply_default_accept_when_no_accept_header_sent()
+        {
+            // Given
+            var browser = new Browser(with => {
+                with.Module(new ConfigurableNancyModule(x => {
+                    x.Get("/", parameters => {
+                        var context = 
+                            new NancyContext {NegotiationContext = new NegotiationContext()};
+
+                        var negotiator =
+                            new Negotiator(context);
+
+                        return negotiator;
+                    });
+                }));
+            });
+
+            // When
+            var response = browser.Get("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        // MSIE 7 with "I want xml" accept header
+        // accept header that asks for xml with the same priority as html
+        
+        //Should_ignore_stupid_browsers_that_ask_for_xml
+        //Should_boost_html_priority_if_set_to_the_same_priority_as_others
     }
 }
