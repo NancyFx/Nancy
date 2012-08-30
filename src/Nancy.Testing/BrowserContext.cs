@@ -14,7 +14,7 @@
         /// </summary>
         public BrowserContext()
         {
-            this.Values.Headers = GetDefaultHeaders();
+            this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
             this.Values.Protocol = "http";
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
@@ -137,17 +137,6 @@
                 this.Values.QueryString.Length == 0 ? "?" : "&", 
                 key,
                 value);
-        }
-
-        private static IDictionary<string, IEnumerable<string>> GetDefaultHeaders()
-        {
-            var defaultHeaders = 
-                new Dictionary<string, IEnumerable<string>>
-                {
-                    { "accept", new [] { "*/*" } }
-                };
-
-            return defaultHeaders;
         }
 
         private IBrowserContextValues Values
