@@ -156,10 +156,89 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
-        // MSIE 7 with "I want xml" accept header
-        // accept header that asks for xml with the same priority as html
-        
-        //Should_ignore_stupid_browsers_that_ask_for_xml
-        //Should_boost_html_priority_if_set_to_the_same_priority_as_others
+        [Fact]
+        public void Should_ignore_stupid_browsers_that_ask_for_xml()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", parameters =>
+                    {
+                        var context =
+                            new NancyContext { NegotiationContext = new NegotiationContext() };
+
+                        var negotiator =
+                            new Negotiator(context);
+
+                        negotiator.WithAllowedMediaRange("text/html");
+
+                        return negotiator;
+                    });
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)");
+                with.Accept("application/xml", 1.0m);
+                with.Accept("application/xhtml+xml", 1.0m);
+                with.Accept("*/*", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);            
+        }
+
+        [Fact]
+        public void Should_boost_html_priority_if_set_to_the_same_priority_as_others()
+        {
+            var processor = GetContentTypeProcessor("text/html");
+
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor(processor);
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", parameters =>
+                    {
+                        var context =
+                            new NancyContext { NegotiationContext = new NegotiationContext() };
+
+                        var negotiator =
+                            new Negotiator(context);
+
+                        negotiator.WithAllowedMediaRange("text/html");
+
+                        return negotiator;
+                    });
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
+                with.Accept("application/xml", 0.9m);
+                with.Accept("text/html", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/html", response.Body.AsString());
+        }
+
+        private static ConfigurableResponseProcessor GetContentTypeProcessor(string contentType)
+        {
+            return new ConfigurableResponseProcessor(with =>
+                                                         {
+                                                             with.CanProcess((mr, m, c) => mr.Matches(contentType) ? new ProcessorMatch { RequestedContentTypeResult = MatchResult.ExactMatch } : new ProcessorMatch());
+                                                             with.Process((mr, m, c) => (Response)contentType);
+                                                         });
+        }
     }
 }

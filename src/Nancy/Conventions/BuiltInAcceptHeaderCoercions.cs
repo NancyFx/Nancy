@@ -62,7 +62,7 @@ namespace Nancy.Conventions
 
             current[index] = Tuple.Create("text/html", html.Item2 + 0.2m);
 
-            return current;
+            return current.OrderByDescending(x => x.Item2).ToArray();
         }
 
         private static bool IsStupidBrowser(Tuple<string, decimal>[] current, NancyContext context)

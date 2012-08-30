@@ -209,19 +209,20 @@ namespace Nancy.Routing
 
         private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
         {
+            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context);
+
             List<Tuple<string, decimal>> acceptHeaders;
             
             if (negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.IsWildcard))
             {
-                acceptHeaders = context.Request.Headers
-                    .Accept.Where(header => header.Item2 > 0m)
-                    .ToList();
+                acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
+                                                    .ToList();
             }
             else
             {
                 acceptHeaders = negotiator.NegotiationContext
                                           .PermissableMediaRanges
-                                          .Where(header => context.Request.Headers.Accept.Any(mr => header.Matches(mr.Item1) && mr.Item2 > 0m))
+                                          .Where(header => coercedAcceptHeaders.Any(mr => header.Matches(mr.Item1) && mr.Item2 > 0m))
                                           .Select(header => new Tuple<string, decimal>(header, 1.0m))
                                           .ToList();
             }
@@ -233,6 +234,18 @@ namespace Nancy.Routing
                         header.Item1,
                         compatibleProcessors
                     )).ToArray();
+        }
+
+        private IEnumerable<Tuple<string, decimal>> GetCoercedAcceptHeaders(NancyContext context)
+        {
+            var currentHeaders = context.Request.Headers.Accept;
+
+            foreach (var coercion in coercionConventions)
+            {
+                currentHeaders = coercion.Invoke(currentHeaders, context);
+            }
+
+            return currentHeaders;
         }
 
         private static Response SafeInvokeResponseProcessor(IResponseProcessor responseProcessor, MediaRange mediaRange, object model, NancyContext context)
