@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
@@ -15,11 +17,13 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_int_value_from_get_route_as_response_with_status_code_set_to_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with => {
+            var module = new ConfigurableNancyModule(with =>
+            {
                 with.Get("/int", x => 200);
             });
 
-            var browser = new Browser(with => {
+            var browser = new Browser(with =>
+            {
                 with.Module(module);
             });
 
@@ -34,11 +38,13 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_string_value_from_get_route_as_response_with_content_set_as_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with => {
+            var module = new ConfigurableNancyModule(with =>
+            {
                 with.Get("/string", x => "hello");
             });
 
-            var browser = new Browser(with => {
+            var browser = new Browser(with =>
+            {
                 with.Module(module);
             });
 
@@ -53,11 +59,13 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_httpstatuscode_value_from_get_route_as_response_with_content_set_as_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with => {
+            var module = new ConfigurableNancyModule(with =>
+            {
                 with.Get("/httpstatuscode", x => HttpStatusCode.Accepted);
             });
 
-            var browser = new Browser(with => {
+            var browser = new Browser(with =>
+            {
                 with.Module(module);
             });
 
@@ -72,7 +80,8 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_action_value_as_response_with_content_set_as_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with => {
+            var module = new ConfigurableNancyModule(with =>
+            {
                 with.Get("/action", x =>
                 {
                     Action<Stream> result = stream =>
@@ -88,7 +97,8 @@ namespace Nancy.Tests.Functional.Tests
                 });
             });
 
-            var browser = new Browser(with => {
+            var browser = new Browser(with =>
+            {
                 with.Module(module);
             });
 
@@ -103,12 +113,13 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_add_negotiated_headers_to_response()
         {
             // Given
-            var processor = new ConfigurableResponseProcessor();
 
-            var module = new ConfigurableNancyModule(with =>{
-                with.Get("/headers", x =>{
-                    var context = 
-                        new NancyContext {NegotiationContext = new NegotiationContext()};
+            var module = new ConfigurableNancyModule(with =>
+            {
+                with.Get("/headers", x =>
+                {
+                    var context =
+                        new NancyContext { NegotiationContext = new NegotiationContext() };
 
                     var negotiator =
                         new Negotiator(context);
@@ -118,9 +129,11 @@ namespace Nancy.Tests.Functional.Tests
                 });
             });
 
-            var brower = new Browser(with =>{
+            var brower = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
                 with.Module(module);
-                with.ResponseProcessor(processor);
             });
 
             // When
@@ -135,11 +148,16 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_apply_default_accept_when_no_accept_header_sent()
         {
             // Given
-            var browser = new Browser(with => {
-                with.Module(new ConfigurableNancyModule(x => {
-                    x.Get("/", parameters => {
-                        var context = 
-                            new NancyContext {NegotiationContext = new NegotiationContext()};
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", parameters =>
+                    {
+                        var context =
+                            new NancyContext { NegotiationContext = new NegotiationContext() };
 
                         var negotiator =
                             new Negotiator(context);
@@ -162,6 +180,8 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
+                with.ResponseProcessor<TestProcessor>();
+
                 with.Module(new ConfigurableNancyModule(x =>
                 {
                     x.Get("/", parameters =>
@@ -172,6 +192,7 @@ namespace Nancy.Tests.Functional.Tests
                         var negotiator =
                             new Negotiator(context);
 
+                        negotiator.WithAllowedMediaRange("application/xml");
                         negotiator.WithAllowedMediaRange("text/html");
 
                         return negotiator;
@@ -189,18 +210,17 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // Then
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);            
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.Body.AsString().Contains("text/html"), "Media type mismatch");
         }
 
         [Fact]
         public void Should_boost_html_priority_if_set_to_the_same_priority_as_others()
         {
-            var processor = GetContentTypeProcessor("text/html");
-
             // Given
             var browser = new Browser(with =>
             {
-                with.ResponseProcessor(processor);
+                with.ResponseProcessor<TestProcessor>();
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
@@ -212,6 +232,7 @@ namespace Nancy.Tests.Functional.Tests
                         var negotiator =
                             new Negotiator(context);
 
+                        negotiator.WithAllowedMediaRange("application/xml");
                         negotiator.WithAllowedMediaRange("text/html");
 
                         return negotiator;
@@ -229,16 +250,28 @@ namespace Nancy.Tests.Functional.Tests
 
             // Then
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.Equal("text/html", response.Body.AsString());
+            Assert.True(response.Body.AsString().Contains("text/html"), "Media type mismatch");
         }
 
-        private static ConfigurableResponseProcessor GetContentTypeProcessor(string contentType)
+        public class TestProcessor : IResponseProcessor
         {
-            return new ConfigurableResponseProcessor(with =>
-                                                         {
-                                                             with.CanProcess((mr, m, c) => mr.Matches(contentType) ? new ProcessorMatch { RequestedContentTypeResult = MatchResult.ExactMatch } : new ProcessorMatch());
-                                                             with.Process((mr, m, c) => (Response)contentType);
-                                                         });
+            private const string ResponseTemplate = "{0}\n{1}";
+
+            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings { get { return Enumerable.Empty<Tuple<string, MediaRange>>(); } }
+
+            public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return new ProcessorMatch
+                           {
+                               RequestedContentTypeResult = MatchResult.DontCare,
+                               ModelResult = MatchResult.DontCare
+                           };
+            }
+
+            public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return string.Format(ResponseTemplate, requestedMediaRange, model == null ? "None" : model.GetType());
+            }
         }
     }
 }

@@ -1121,19 +1121,6 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseProcessor"/>.
-            /// </summary>
-            /// <param name="responseProcessor">The <see cref="IResponseProcessor"/> instance that should be used by the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResponseProcessor(IResponseProcessor responseProcessor)
-            {
-                this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IResponseProcessor), responseProcessor));
-
-                return this;
-            }
-
-            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IResponseProcessor"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IResponseProcessor"/> that the bootstrapper should use.</typeparam>
