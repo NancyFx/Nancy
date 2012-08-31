@@ -91,14 +91,11 @@ namespace Nancy.Routing
                     var newMediaRanges =
                         mappedMediaRanges.Where(x => !context.Request.Headers.Accept.Any(header => header.Equals(x)));
 
-                    var modifiedAcceptHeaders =
-                        context.Request.Headers.Accept.Concat(newMediaRanges);
-
                     var modifiedRequestPath = 
                         context.Request.Path.Replace(extension, string.Empty);
 
                     var match =
-                        this.InvokeRouteResolver(context, modifiedRequestPath, modifiedAcceptHeaders);
+                        this.InvokeRouteResolver(context, modifiedRequestPath, newMediaRanges);
 
                     if (!(match.Item1 is NotFoundRoute))
                     {
@@ -116,7 +113,7 @@ namespace Nancy.Routing
                 .SelectMany(processor => processor.ExtensionMappings)
                 .Where(mapping => mapping != null)
                 .Where(mapping => mapping.Item1.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                .Select(mapping => new Tuple<string, decimal>(mapping.Item2, 1.1m))
+                .Select(mapping => new Tuple<string, decimal>(mapping.Item2, Decimal.MaxValue))
                 .Distinct();
         }
 

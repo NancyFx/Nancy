@@ -253,11 +253,53 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(response.Body.AsString().Contains("text/html"), "Media type mismatch");
         }
 
+        [Fact]
+        public void Should_override_with_extension()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/test", parameters =>
+                    {
+                        var context =
+                            new NancyContext { NegotiationContext = new NegotiationContext() };
+
+                        var negotiator =
+                            new Negotiator(context);
+
+                        return negotiator;
+                    });
+                }));
+            });
+
+            // When
+            var response = browser.Get("/test.foo", with =>
+            {
+                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
+                with.Accept("application/xml", 0.9m);
+                with.Accept("text/html", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.True(response.Body.AsString().Contains("foo/bar"), "Media type mismatch");
+        }
+
         public class TestProcessor : IResponseProcessor
         {
             private const string ResponseTemplate = "{0}\n{1}";
 
-            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings { get { return Enumerable.Empty<Tuple<string, MediaRange>>(); } }
+            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+            {
+                get 
+                { 
+                    yield return new Tuple<string, MediaRange>("foo", "foo/bar");
+                }
+            }
 
             public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {

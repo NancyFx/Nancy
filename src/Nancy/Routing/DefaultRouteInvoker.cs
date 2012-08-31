@@ -209,22 +209,23 @@ namespace Nancy.Routing
 
         private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
         {
-            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context);
+            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context).ToArray();
 
             List<Tuple<string, decimal>> acceptHeaders;
-            
-            if (negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.IsWildcard))
+
+            var permissableMediaRanges = negotiator.NegotiationContext.PermissableMediaRanges;
+
+            if (permissableMediaRanges.Any(mr => mr.IsWildcard))
             {
                 acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
                                                     .ToList();
             }
             else
             {
-                acceptHeaders = negotiator.NegotiationContext
-                                          .PermissableMediaRanges
-                                          .Where(header => coercedAcceptHeaders.Any(mr => header.Matches(mr.Item1) && mr.Item2 > 0m))
-                                          .Select(header => new Tuple<string, decimal>(header, 1.0m))
-                                          .ToList();
+                acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
+                                                    .SelectMany(header => permissableMediaRanges.Where(mr => mr.Matches(header.Item1))
+                                                                                                .Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
+                                                    .ToList();
             }
 
             return (from header in acceptHeaders
