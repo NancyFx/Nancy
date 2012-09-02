@@ -76,7 +76,7 @@ namespace Nancy
         {
             var wildcards =
                 negotiator.NegotiationContext.PermissableMediaRanges.Where(
-                    mr => mr.Type.IsWildcard && mr.Subtype.IsWildcard);
+                    mr => mr.Type.IsWildcard && mr.Subtype.IsWildcard).ToArray();
 
             foreach (var wildcard in wildcards)
             {
