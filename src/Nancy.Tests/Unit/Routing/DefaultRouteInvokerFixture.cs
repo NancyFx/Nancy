@@ -1,18 +1,15 @@
-﻿using System.Collections.Generic;
-using Nancy.Conventions;
-
-namespace Nancy.Tests.Unit.Routing
+﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using FakeItEasy;
-    using Fakes;
-    using Nancy.Bootstrapper;
-    using Nancy.Diagnostics;
+
+    using Nancy.Conventions;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultRouteInvokerFixture
