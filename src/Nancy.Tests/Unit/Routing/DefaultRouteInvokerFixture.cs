@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using FakeItEasy;
-    using Fakes;
-    using Nancy.Bootstrapper;
-    using Nancy.Diagnostics;
+
+    using Nancy.Conventions;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultRouteInvokerFixture
@@ -18,7 +18,7 @@
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>());
+            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
         }
 
         [Fact]

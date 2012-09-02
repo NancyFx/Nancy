@@ -2,11 +2,13 @@ namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.IO;
-    using Extensions;
-    using Responses;
-    using Responses.Negotiation;
+    using System.Linq;
+
+    using Nancy.Conventions;
+    using Nancy.Extensions;
+    using Nancy.Responses;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Default route invoker implementation.
@@ -14,19 +16,12 @@ namespace Nancy.Routing
     public class DefaultRouteInvoker : IRouteInvoker
     {
         private readonly IEnumerable<IResponseProcessor> processors;
+        private readonly AcceptHeaderCoercionConventions coercionConventions;
 
-        private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies;
-
-        public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors)
+        public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
             this.processors = processors;
-
-            this.invocationStrategies =
-                new Dictionary<Type, Func<dynamic, NancyContext, Response>>
-                {
-                    { typeof (Response), ProcessAsRealResponse },
-                    { typeof (Object), ProcessAsNegotiator },
-                };
+            this.coercionConventions = coercionConventions; 
         }
 
         /// <summary>
@@ -205,21 +200,23 @@ namespace Nancy.Routing
 
         private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
         {
+            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context).ToArray();
+
             List<Tuple<string, decimal>> acceptHeaders;
-            
-            if (negotiator.NegotiationContext.PermissableMediaRanges.Any(mr => mr.IsWildcard))
+
+            var permissableMediaRanges = negotiator.NegotiationContext.PermissableMediaRanges;
+
+            if (permissableMediaRanges.Any(mr => mr.IsWildcard))
             {
-                acceptHeaders = context.Request.Headers
-                    .Accept.Where(header => header.Item2 > 0m)
-                    .ToList();
+                acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
+                                                    .ToList();
             }
             else
             {
-                acceptHeaders = negotiator.NegotiationContext
-                                          .PermissableMediaRanges
-                                          .Where(header => context.Request.Headers.Accept.Any(mr => header.Matches(mr.Item1) && mr.Item2 > 0m))
-                                          .Select(header => new Tuple<string, decimal>(header, 1.0m))
-                                          .ToList();
+                acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
+                                                    .SelectMany(header => permissableMediaRanges.Where(mr => mr.Matches(header.Item1))
+                                                                                                .Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
+                                                    .ToList();
             }
 
             return (from header in acceptHeaders
@@ -229,6 +226,18 @@ namespace Nancy.Routing
                         header.Item1,
                         compatibleProcessors
                     )).ToArray();
+        }
+
+        private IEnumerable<Tuple<string, decimal>> GetCoercedAcceptHeaders(NancyContext context)
+        {
+            var currentHeaders = context.Request.Headers.Accept;
+
+            foreach (var coercion in coercionConventions)
+            {
+                currentHeaders = coercion.Invoke(currentHeaders, context);
+            }
+
+            return currentHeaders;
         }
 
         private static Response SafeInvokeResponseProcessor(IResponseProcessor responseProcessor, MediaRange mediaRange, object model, NancyContext context)
