@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Nancy.Conventions
+﻿namespace Nancy.Conventions
 {
+    using System;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Wires up the default conventions for the accept header coercion
+    /// </summary>
     public class DefaultAcceptHeaderCoercionConventions : IConvention
     {
         public void Initialise(NancyConventions conventions)

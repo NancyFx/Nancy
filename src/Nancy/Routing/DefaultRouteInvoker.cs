@@ -1,14 +1,14 @@
-using Nancy.Conventions;
-
 namespace Nancy.Routing
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.IO;
-    using Extensions;
-    using Responses;
-    using Responses.Negotiation;
+    using System.Linq;
+
+    using Nancy.Conventions;
+    using Nancy.Extensions;
+    using Nancy.Responses;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Default route invoker implementation.
@@ -18,19 +18,10 @@ namespace Nancy.Routing
         private readonly IEnumerable<IResponseProcessor> processors;
         private readonly AcceptHeaderCoercionConventions coercionConventions;
 
-        private readonly IDictionary<Type, Func<dynamic, NancyContext, Response>> invocationStrategies;
-
         public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
             this.processors = processors;
             this.coercionConventions = coercionConventions; 
-
-            this.invocationStrategies =
-                new Dictionary<Type, Func<dynamic, NancyContext, Response>>
-                {
-                    { typeof (Response), ProcessAsRealResponse },
-                    { typeof (Object), ProcessAsNegotiator },
-                };
         }
 
         /// <summary>

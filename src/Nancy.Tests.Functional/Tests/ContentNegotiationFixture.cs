@@ -288,6 +288,12 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(response.Body.AsString().Contains("foo/bar"), "Media type mismatch");
         }
 
+        /// <summary>
+        /// Test response processor that will accept any type
+        /// and put the content type and model type into the
+        /// response body for asserting against.
+        /// Hacky McHackmeister but it works :-)
+        /// </summary>
         public class TestProcessor : IResponseProcessor
         {
             private const string ResponseTemplate = "{0}\n{1}";

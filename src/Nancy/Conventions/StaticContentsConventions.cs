@@ -1,9 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace Nancy.Conventions
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
+    /// <summary>
+    /// Collection class for static content conventions
+    /// </summary>
     public class StaticContentsConventions : IEnumerable<Func<NancyContext, string, Response>>
     {
         private readonly IEnumerable<Func<NancyContext, string, Response>> conventions;

@@ -39,6 +39,7 @@
         /// <summary>
         /// Gets or sets the conventions for coercing accept headers from their source
         /// values to the real values for content negotiation
+        /// <seealso cref="BuiltInAcceptHeaderCoercions"/>
         /// </summary>
         public IList<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>> AcceptHeaderCoercionConventions { get; set; }
 
