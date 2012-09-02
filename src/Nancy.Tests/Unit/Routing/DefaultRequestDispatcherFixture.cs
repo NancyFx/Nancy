@@ -431,7 +431,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_set_quality_to_one_point_one_for_mapped_media_ranges_before_invoking_route_resolver_when_path_contains_extension_and_mapped_response_processors_exists()
+        public void Should_set_quality_to_high_for_mapped_media_ranges_before_invoking_route_resolver_when_path_contains_extension_and_mapped_response_processors_exists()
         {
             // Given
             var requestedAcceptHeaders =
@@ -468,7 +468,7 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             requestedAcceptHeaders.ShouldHaveCount(1);
-            requestedAcceptHeaders[0].Item2.ShouldEqual(1.1m);
+            Assert.True(requestedAcceptHeaders[0].Item2 > 1.0m);
         }
 
         [Fact]
