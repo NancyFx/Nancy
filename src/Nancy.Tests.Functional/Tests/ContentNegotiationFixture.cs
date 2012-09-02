@@ -1,14 +1,13 @@
-using System.Collections.Generic;
-
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using Bootstrapper;
-    using IO;
-    using Responses.Negotiation;
-    using Testing;
+
+    using Nancy.IO;
+    using Nancy.Responses.Negotiation;
+    using Nancy.Testing;
+
     using Xunit;
 
     public class ContentNegotiationFixture

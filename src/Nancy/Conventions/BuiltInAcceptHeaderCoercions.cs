@@ -1,12 +1,19 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Nancy.Conventions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
+    /// <summary>
+    /// Build in functions for coercing accept headers.
+    /// <seealso cref="DefaultAcceptHeaderCoercionConventions"/>
+    /// </summary>
     public static class BuiltInAcceptHeaderCoercions
     {
-        private static readonly IEnumerable<Tuple<string, decimal>> DefaultAccept = new[] { Tuple.Create("text/html", 1.0m), Tuple.Create("*/*", 0.9m) };
+        private const string HtmlContentType = "text/html";
+
+        private static readonly IEnumerable<Tuple<string, decimal>> DefaultAccept = new[] { Tuple.Create(HtmlContentType, 1.0m), Tuple.Create("*/*", 0.9m) };
+
         private static readonly string[] BrokenBrowsers = new[] {"MSIE 8", "MSIE 7", "MSIE 6", "AppleWebKit"};
 
         /// <summary>
@@ -47,7 +54,7 @@ namespace Nancy.Conventions
         {
             var current = currentAcceptHeaders as Tuple<string, decimal>[] ?? currentAcceptHeaders.ToArray();
 
-            var html = current.FirstOrDefault(h => h.Item1 == "text/html" && h.Item2 < 1.0m);
+            var html = current.FirstOrDefault(h => string.Equals(h.Item1, HtmlContentType, StringComparison.InvariantCultureIgnoreCase) && h.Item2 < 1.0m);
 
             if (html == null)
             {
@@ -60,7 +67,7 @@ namespace Nancy.Conventions
                 return current;
             }
 
-            current[index] = Tuple.Create("text/html", html.Item2 + 0.2m);
+            current[index] = Tuple.Create(HtmlContentType, html.Item2 + 0.2m);
 
             return current.OrderByDescending(x => x.Item2).ToArray();
         }
@@ -77,7 +84,7 @@ namespace Nancy.Conventions
             var maxScore = current.First().Item2;
 
             if (IsPotentiallyBrokenBrowser(context.Request.Headers.UserAgent) 
-                && !current.Any(h => h.Item2 == maxScore && String.Equals("text/html", h.Item1)))
+                && !current.Any(h => h.Item2 == maxScore && string.Equals(HtmlContentType, h.Item1, StringComparison.InvariantCultureIgnoreCase)))
             {
                 return true;
             }
