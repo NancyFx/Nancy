@@ -131,7 +131,7 @@
     </Compile>
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\Index.cs" />
-    <Compile Include="OwinAspNetHost.cs" />
+    <Compile Include="SimpleOwinAspNetHost.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj">

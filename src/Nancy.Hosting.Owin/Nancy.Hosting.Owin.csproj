@@ -93,8 +93,6 @@
     </Compile>
     <Compile Include="NancyOwinHost.cs" />
     <Compile Include="ResponseStream.cs" />
-    <Compile Include="TaskHelpers.cs" />
-    <Compile Include="TaskHelpersExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

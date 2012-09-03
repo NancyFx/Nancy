@@ -3,30 +3,13 @@ namespace Nancy.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
+    using System.Threading;
     using System.Threading.Tasks;
     using Bootstrapper;
     using FakeItEasy;
     using Hosting.Owin;
-    using Nancy.Hosting.Owin.Tests.Fakes;
     using Xunit;
     using Xunit.Extensions;
-
-    using ResultTuple = System.Tuple< //Result
-        System.Collections.Generic.IDictionary<string, object>, // Properties
-        int, // Status
-        System.Collections.Generic.IDictionary<string, string[]>, // Headers
-        System.Func< // CopyTo
-            System.IO.Stream, // Body
-            System.Threading.Tasks.Task>>; // Done
-
-    using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                                 System.Action,                         // continuation
-                                 bool>,                                 // continuation will be invoked
-                     System.Action<System.Exception>,                   // onError
-                     System.Action,                                     // on Complete
-                     System.Action>;                                    // cancel
 
     using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
 
@@ -38,7 +21,7 @@ namespace Nancy.Tests
 
         private readonly Action<Exception> fakeErrorCallback;
         private readonly Dictionary<string, object> environment;
-        private readonly Dictionary<string, string[]> requestHeaders; 
+        private readonly Dictionary<string, string[]> requestHeaders;
         private readonly INancyEngine fakeEngine;
         private readonly INancyBootstrapper fakeBootstrapper;
 
@@ -64,10 +47,13 @@ namespace Nancy.Tests
                                        { "owin.RequestPath", "/test" },
                                        { "owin.RequestPathBase", "/root" },
                                        { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestBody", null },
+                                       { "owin.RequestBody", Stream.Null },
+                                       { "owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
                                        { "owin.RequestScheme", "http" },
+                                       { "owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
+                                       { "owin.ResponseBody", Stream.Null },
                                        { "owin.Version", "1.0" },
-                                       { "owin.CallCompleted", tcs.Task }
+                                       { "owin.CallCancelled", CancellationToken.None }
                                    };
 
             this.requestHeaders = new Dictionary<string, string[]> { { "Host", new[] { "testserver" } } };
@@ -82,7 +68,7 @@ namespace Nancy.Tests
             this.environment["owin.Version"] = version;
 
             var result = Record.Exception(
-                () => this.host.ProcessRequest(environment, null, null));
+                () => this.host.ProcessRequest(environment));
 
             result.ShouldBeOfType<InvalidOperationException>();
         }
@@ -357,9 +343,9 @@ namespace Nancy.Tests
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
-            var resultTuple = this.host.ProcessRequest(environment, requestHeaders, null).Result;
+            this.host.ProcessRequest(environment).Wait();
 
-            var respHeaders = GetHeaders(resultTuple);
+            var respHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
 
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
             (respHeaders["Set-Cookie"][0] == "test=testvalue; path=/").ShouldBeTrue();
@@ -376,14 +362,10 @@ namespace Nancy.Tests
                 .Invokes((i => ((Action<NancyContext>)i.Arguments[1]).Invoke(context)));
         }
 
-        private static int GetStatusCode(ResultTuple resultTuple)
+        private static T Get<T>(IDictionary<string, object> env, string key)
         {
-            return resultTuple.Item2;
-        }
-
-        private static IDictionary<string, string[]> GetHeaders(ResultTuple resultTuple)
-        {
-            return resultTuple.Item3;
+            object value;
+            return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
         }
 
     }

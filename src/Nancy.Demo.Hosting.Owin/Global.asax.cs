@@ -10,7 +10,7 @@
         {
             var application = new Nancy.Hosting.Owin.NancyOwinHost();
 
-            RouteTable.Routes.Add(new Route("{*pathInfo}", new OwinAspNetRouteHandler(application.ProcessRequest)));
+            RouteTable.Routes.Add(new Route("{*pathInfo}", new SimpleOwinAspNetRouteHandler(application.ProcessRequest)));
         }
     }
 }
