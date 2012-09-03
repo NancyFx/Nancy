@@ -81,7 +81,9 @@
                 {
                     if (callCancelled.IsCancellationRequested)
                     {
+                        context.Dispose();
                         tcs.TrySetCanceled();
+                        return;
                     }
 
                     var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
@@ -108,7 +110,9 @@
 
                     if (callCancelled.IsCancellationRequested)
                     {
+                        context.Dispose();
                         tcs.TrySetCanceled();
+                        return;
                     }
 
                     nancyResponse.Contents(owinResponseBody);
