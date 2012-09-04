@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Demo.Hosting.Owin
 {
     using System;
-    using Gate.AspNet;
+    using System.Web.Routing;
 
     public class Global : System.Web.HttpApplication
     {
@@ -10,37 +10,7 @@
         {
             var application = new Nancy.Hosting.Owin.NancyOwinHost();
 
-            Host.Run(application.ProcessRequest);
-        }
-
-        protected void Session_Start(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_BeginRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_AuthenticateRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_Error(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Session_End(object sender, EventArgs e)
-        {
-
-        }
-
-        protected void Application_End(object sender, EventArgs e)
-        {
-
+            RouteTable.Routes.Add(new Route("{*pathInfo}", new OwinAspNetRouteHandler(application.ProcessRequest)));
         }
     }
 }
