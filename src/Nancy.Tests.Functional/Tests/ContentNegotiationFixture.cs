@@ -288,6 +288,146 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(response.Body.AsString().Contains("foo/bar"), "Media type mismatch");
         }
 
+        [Fact]
+        public void Should_response_with_notacceptable_when_route_does_not_allow_any_of_the_accepted_formats()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/test", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithAllowedMediaRange("application/xml");
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/test", with =>
+            {
+                with.Accept("foo/bar", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_return_that_contains_default_model_when_no_media_range_specific_model_was_declared()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<ModelProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithModel("the model");
+                        config.WithAllowedMediaRange("test/test");
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal("the model", response.Body.AsString());
+        }
+
+        [Fact]
+        public void Should_return_media_range_specific_model_when_declared()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<ModelProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithModel("the model");
+                        config.WithAllowedMediaRange("test/test");
+                        config.WithMediaRangeModel("test/test", "media model");
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal("media model", response.Body.AsString());
+        }
+
+        [Fact]
+        public void Should_add_vary_accept_header_when_multiple_accept_headers_can_be_satisfied()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = browser.Get("/");
+
+            // Then
+            Assert.True(response.Headers.ContainsKey("Vary"));
+        }
+
+        [Fact]
+        public void Should_add_link_header_for_matching_response_processors()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = browser.Get("/");
+
+            // Then
+            Assert.True(response.Headers["Link"].Contains(@"</.foo>; rel=""foo/bar"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.json>; rel=""application/json"""));
+            Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""application/xml"""));
+        }
+
+        private static Func<dynamic, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        {
+            var context =
+                new NancyContext { NegotiationContext = new NegotiationContext() };
+
+            var negotiator =
+                new Negotiator(context);
+
+            if (action != null)
+            {
+                action.Invoke(negotiator);
+            }
+
+            return parameters => negotiator;
+        }
+
         /// <summary>
         /// Test response processor that will accept any type
         /// and put the content type and model type into the
@@ -300,8 +440,8 @@ namespace Nancy.Tests.Functional.Tests
 
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
-                get 
-                { 
+                get
+                {
                     yield return new Tuple<string, MediaRange>("foo", "foo/bar");
                 }
             }
@@ -309,15 +449,42 @@ namespace Nancy.Tests.Functional.Tests
             public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
                 return new ProcessorMatch
-                           {
-                               RequestedContentTypeResult = MatchResult.DontCare,
-                               ModelResult = MatchResult.DontCare
-                           };
+                {
+                    RequestedContentTypeResult = MatchResult.DontCare,
+                    ModelResult = MatchResult.DontCare
+                };
             }
 
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
                 return string.Format(ResponseTemplate, requestedMediaRange, model == null ? "None" : model.GetType());
+            }
+        }
+
+        public class ModelProcessor : IResponseProcessor
+        {
+            private const string ResponseTemplate = "{0}\n{1}";
+
+            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+            {
+                get
+                {
+                    yield return new Tuple<string, MediaRange>("foo", "foo/bar");
+                }
+            }
+
+            public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return new ProcessorMatch
+                {
+                    RequestedContentTypeResult = MatchResult.DontCare,
+                    ModelResult = MatchResult.DontCare
+                };
+            }
+
+            public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return (string) model;
             }
         }
     }
