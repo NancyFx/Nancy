@@ -120,18 +120,18 @@ namespace Nancy.Routing
                 GetNegotiator(routeResult, context);
 
             context.WriteTraceLog(sb =>
-                                      {
-                                          var allowableFormats = negotiator.NegotiationContext
-                                              .PermissableMediaRanges
-                                              .Select(mr => mr.ToString())
-                                              .Aggregate((t1, t2) => t1 + ", " + t2);
+            {
+                var allowableFormats = negotiator.NegotiationContext
+                    .PermissableMediaRanges
+                    .Select(mr => mr.ToString())
+                    .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                                          var acceptFormants = context.Request.Headers["accept"]
-                                                                              .Aggregate((t1, t2) => t1 + ", " + t2);
+                var acceptFormants = context.Request.Headers["accept"]
+                                                    .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                                          sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n", acceptFormants);
-                                          sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
-                                      });
+                sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n", acceptFormants);
+                sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
+            });
 
             var compatibleHeaders =
                 this.GetCompatibleHeaders(context, negotiator);
@@ -182,7 +182,7 @@ namespace Nancy.Routing
                 .SelectMany(m => m.Item2)
                 .SelectMany(p => p.Item1.ExtensionMappings)
                 .Where(map => !map.Item2.Matches(response.ContentType))
-                .Distinct()
+                .DistinctBy(x => x.Item1)
                 .ToArray();
 
             if (!linkProcessors.Any())
@@ -190,10 +190,12 @@ namespace Nancy.Routing
                 return;
             }
 
-            var baseUrl = context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
+            var baseUrl = 
+                context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
 
-            var links = linkProcessors.Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Item1, lp.Item2))
-                                      .Aggregate((lp1, lp2) => lp1 + "," + lp2);
+            var links = linkProcessors
+                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Item1, lp.Item2))
+                .Aggregate((lp1, lp2) => lp1 + "," + lp2);
 
             response.Headers["Link"] = links;
         }
@@ -208,15 +210,15 @@ namespace Nancy.Routing
 
             if (permissableMediaRanges.Any(mr => mr.IsWildcard))
             {
-                acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
-                                                    .ToList();
+                acceptHeaders = coercedAcceptHeaders
+                    .Where(header => header.Item2 > 0m)
+                    .ToList();
             }
             else
             {
                 acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
-                                                    .SelectMany(header => permissableMediaRanges.Where(mr => mr.Matches(header.Item1))
-                                                                                                .Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
-                                                    .ToList();
+                    .SelectMany(header => permissableMediaRanges.Where(mr => mr.Matches(header.Item1)).Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
+                    .ToList();
             }
 
             return (from header in acceptHeaders
