@@ -18,6 +18,11 @@ namespace Nancy.Json
         /// </summary>
         public static int MaxRecursions { get; set; }
 
+        /// <summary>
+        /// Determines case sensitivity
+        /// </summary>
+        public static bool CaseSensitive { get; set; }
+
         public static IList<JavaScriptConverter> Converters { get; set; }
 
         static JsonSettings()
