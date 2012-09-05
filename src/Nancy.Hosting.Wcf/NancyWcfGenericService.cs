@@ -78,13 +78,19 @@
             var expectedRequestLength =
                 GetExpectedRequestLength(webRequest.Headers.ToDictionary());
 
+            var nancyUrl = new Url {
+                Scheme = webRequest.UriTemplateMatch.RequestUri.Scheme,
+                HostName = webRequest.UriTemplateMatch.BaseUri.Host,
+                Port = webRequest.UriTemplateMatch.RequestUri.IsDefaultPort ? null : (int?)webRequest.UriTemplateMatch.RequestUri.Port,                    
+                Path = string.Concat("/", relativeUri),
+                Query = webRequest.UriTemplateMatch.RequestUri.Query
+            };
+
             return new Request(
                 webRequest.Method,
-                string.Concat("/", relativeUri),
-                webRequest.Headers.ToDictionary(),
+                nancyUrl,
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
-                webRequest.UriTemplateMatch.RequestUri.Scheme,
-                webRequest.UriTemplateMatch.RequestUri.Query,
+                webRequest.Headers.ToDictionary(),
                 address.Address);
         }
 
