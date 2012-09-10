@@ -99,7 +99,7 @@
 
         private static bool IsRegexSegment(string segment)
         {
-            return (segment.StartsWith("(") && segment.EndsWith(")"));
+            return segment.StartsWith("(");
         }
 
         private static string ParameterizeSegment(string segment)
