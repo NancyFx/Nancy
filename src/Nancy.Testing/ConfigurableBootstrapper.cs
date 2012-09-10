@@ -77,6 +77,7 @@ namespace Nancy.Testing
                 configuration.Invoke(configurator);
             }
         }
+
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
@@ -85,6 +86,7 @@ namespace Nancy.Testing
                 action.Invoke(container,pipelines);
             }
         }
+
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
         {
             base.RequestStartup(container, pipelines, context);
