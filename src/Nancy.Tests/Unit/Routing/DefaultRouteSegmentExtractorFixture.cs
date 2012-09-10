@@ -43,7 +43,7 @@ namespace Nancy.Tests.Unit.Routing
             result.ShouldHaveCount(3);
             result[0].ShouldEqual("normal");
             result[1].ShouldEqual("(?<name>[A-Z]*)");
-            result[3].ShouldEqual("again");
+            result[2].ShouldEqual("again");
         }
 
         [Fact]

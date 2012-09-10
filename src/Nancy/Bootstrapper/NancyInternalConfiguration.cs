@@ -246,7 +246,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
                 new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
                 new TypeRegistration(typeof(IDiagnostics), this.Diagnostics), 
-                new TypeRegistration(typeof(IRouteSegmentExtractor), this.RoutePatternMatcher), 
+                new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor), 
             };
         }
 
