@@ -96,6 +96,7 @@ namespace Nancy.Hosting.Aspnet
 
             context.Response.ContentType = response.ContentType;
             context.Response.StatusCode = (int)response.StatusCode;
+            context.Response.TrySkipIisCustomErrors = true;
             response.Contents.Invoke(context.Response.OutputStream);         
         }
 
