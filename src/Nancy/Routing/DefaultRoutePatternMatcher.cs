@@ -20,12 +20,13 @@
         /// </summary>
         /// <param name="requestedPath">The path that was requested.</param>
         /// <param name="routePath">The route pattern that the requested path should be attempted to be matched with.</param>
+        /// <param name="segments"></param>
         /// <param name="context">The <see cref="NancyContext"/> instance for the current request.</param>
         /// <returns>An <see cref="IRoutePatternMatchResult"/> instance, containing the outcome of the match.</returns>
-        public IRoutePatternMatchResult Match(string requestedPath, string routePath, NancyContext context)
+        public IRoutePatternMatchResult Match(string requestedPath, string routePath, IEnumerable<string> segments, NancyContext context)
         {
-            var routePathPattern = 
-                this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(routePath));
+            var routePathPattern =
+                this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(segments));
 
             requestedPath = 
                 TrimTrailingSlashFromRequestedPath(requestedPath);
@@ -52,11 +53,8 @@
             return requestedPath;
         }
 
-        private static Regex BuildRegexMatcher(string path)
+        private static Regex BuildRegexMatcher(IEnumerable<string> segments)
         {
-            var segments =
-                path.Split(new[] { "/" }, StringSplitOptions.RemoveEmptyEntries);
-
             var parameterizedSegments =
                 GetParameterizedSegments(segments);
 

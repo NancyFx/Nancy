@@ -11,6 +11,7 @@
     public class RouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>, IRouteCache
     {
         private readonly IModuleKeyGenerator moduleKeyGenerator;
+        private readonly IRouteSegmentExtractor routeSegmentExtractor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -18,9 +19,11 @@
         /// <param name="moduleCatalog">The <see cref="INancyModuleCatalog"/> that should be used by the cache.</param>
         /// <param name="moduleKeyGenerator">The <see cref="IModuleKeyGenerator"/> used to generate module keys.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory)
+        /// <param name="routeSegmentExtractor"> </param>
+        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor)
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
+            this.routeSegmentExtractor = routeSegmentExtractor;
 
             using (var context = contextFactory.Create())
             {
@@ -43,6 +46,14 @@
             {
                 var moduleType = module.GetType();
                 var moduleKey = this.moduleKeyGenerator.GetKeyForModuleType(moduleType);
+
+                var routes =
+                    module.Routes.Select(r => r.Description);
+
+                foreach (var routeDescription in routes)
+                {
+                    routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path);
+                }
 
                 this.AddRoutesToCache(module.Routes.Select(r => r.Description), moduleKey);
             }
