@@ -56,6 +56,12 @@
         public IList<MediaRange> PermissableMediaRanges { get; set; }
 
         /// <summary>
+        /// Gets or sets the status code of the response.
+        /// </summary>
+        /// <value>A <see cref="HttpStatusCode"/> value.</value>
+        public HttpStatusCode? StatusCode { get; set; }
+        
+        /// <summary>
         /// Gets or sets the view name if one is required.
         /// </summary>
         /// <value>The name of the view that should be rendered.</value>

@@ -143,6 +143,30 @@ namespace Nancy
             return negotiator;
         }
 
+        /// <summary>
+        /// Sets the status code that should be assigned to the final response.
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithStatusCode(this Negotiator negotiator, int statusCode)
+        {
+            negotiator.NegotiationContext.StatusCode = (HttpStatusCode)statusCode;
+            return negotiator;
+        }
+
+        /// <summary>
+        /// Sets the status code that should be assigned to the final response.
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithStatusCode(this Negotiator negotiator, HttpStatusCode statusCode)
+        {
+            negotiator.NegotiationContext.StatusCode = statusCode;
+            return negotiator;
+        }
+
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()
