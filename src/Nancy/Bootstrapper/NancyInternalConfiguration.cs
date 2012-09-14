@@ -2,7 +2,6 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
     using System.Linq;
     using System.Reflection;
 
@@ -43,7 +42,7 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture)
             };
 
         /// <summary>
@@ -86,6 +85,7 @@ namespace Nancy.Bootstrapper
                         ResponseProcessors = AppDomainAssemblyTypeScanner.TypesOf<IResponseProcessor>().ToList(),
                         RequestDispatcher = typeof(DefaultRequestDispatcher),
                         Diagnostics = typeof(DefaultDiagnostics),
+                        RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                     };
             }
         }
@@ -152,6 +152,8 @@ namespace Nancy.Bootstrapper
 
         public Type Diagnostics { get; set; }
 
+        public Type RouteSegmentExtractor { get; set; }
+
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
             get
@@ -185,7 +187,7 @@ namespace Nancy.Bootstrapper
             {
                 try
                 {
-                    return !this.GetTypeRegistations().Where(tr => tr.RegistrationType == null).Any();
+                    return this.GetTypeRegistations().All(tr => tr.RegistrationType != null);
                 }
                 catch (ArgumentNullException)
                 {
@@ -243,6 +245,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
                 new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
                 new TypeRegistration(typeof(IDiagnostics), this.Diagnostics), 
+                new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor)
             };
         }
 
@@ -257,7 +260,7 @@ namespace Nancy.Bootstrapper
                 new CollectionTypeRegistration(typeof(IResponseProcessor), this.ResponseProcessors), 
                 new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
                 new CollectionTypeRegistration(typeof(IErrorHandler), this.ErrorHandlers), 
-                new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders), 
+                new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders)
             };
         }
 

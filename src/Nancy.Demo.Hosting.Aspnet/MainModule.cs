@@ -22,6 +22,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                     .WithHeader("X-Custom", "SomeValue");
             };
 
+            Get["/user/{name}"] = parameters =>
+            {
+                return (string)parameters.name;
+            };
+
             Get["/filtered", r => true] = x => {
                 return "This is a route with a filter that always returns true.";
             };

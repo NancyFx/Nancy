@@ -41,21 +41,21 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
         public ResolveResult Resolve(NancyContext context)
         {
-            var extension =
-                Path.GetExtension(context.Request.Path);
+            //var extension =
+            //    Path.GetExtension(context.Request.Path);
 
-            if (!string.IsNullOrEmpty(extension))
-            {
-                var length = context.Request.Path.Length - (extension.Length + 1);
-                context.Request.Url.Path = context.Request.Url.Path.Substring(0, length);
-            }
+            //if (!string.IsNullOrEmpty(extension))
+            //{
+            //    var length = context.Request.Path.Length - (extension.Length + 1);
+            //    context.Request.Url.Path = context.Request.Url.Path.Substring(0, length);
+            //}
 
             var result =
                 this.Resolve(context.Request.Path, context, this.cache);
+
             return result.Selected;
         }
 
@@ -148,7 +148,7 @@
             routes =
                 routes.Filter(context, "Path did not match", (ctx, route) => {
                     var validationResult = 
-                        this.routePatternMatcher.Match(path, route.Item3.Path, context);
+                        this.routePatternMatcher.Match(path, route.Item3.Path, route.Item3.Segments, context);
 
                     var routeToReturn =
                         (validationResult.IsMatch) ? new RouteCandidate(route.Item1, route.Item2, route.Item3, validationResult) : route;
