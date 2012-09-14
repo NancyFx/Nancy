@@ -138,7 +138,7 @@
             routes =
                 routes.Filter(context, "Path did not match", (ctx, route) => {
                     var validationResult = 
-                        this.routePatternMatcher.Match(path, route.Item3.Path, context);
+                        this.routePatternMatcher.Match(path, route.Item3.Path, route.Item3.Segments, context);
 
                     var routeToReturn =
                         (validationResult.IsMatch) ? new RouteCandidate(route.Item1, route.Item2, route.Item3, validationResult) : route;
