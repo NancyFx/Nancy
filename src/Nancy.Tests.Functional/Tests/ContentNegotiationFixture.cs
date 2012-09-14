@@ -388,6 +388,60 @@ namespace Nancy.Tests.Functional.Tests
             return parameters => negotiator;
         }
 
+        [Fact]
+        public void Should_set_negotiated_status_code_to_response_when_set_as_integer()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithStatusCode(507);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_to_response_when_set_as_httpstatuscode()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithStatusCode(HttpStatusCode.InsufficientStorage);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
+        }
+
         /// <summary>
         /// Test response processor that will accept any type
         /// and put the content type and model type into the
