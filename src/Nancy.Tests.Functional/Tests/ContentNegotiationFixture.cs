@@ -174,46 +174,6 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_ignore_stupid_browsers_that_ask_for_xml()
-        {
-            // Given
-            var browser = new Browser(with =>
-            {
-                with.ResponseProcessor<TestProcessor>();
-
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", parameters =>
-                    {
-                        var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
-
-                        var negotiator =
-                            new Negotiator(context);
-
-                        negotiator.WithAllowedMediaRange("application/xml");
-                        negotiator.WithAllowedMediaRange("text/html");
-
-                        return negotiator;
-                    });
-                }));
-            });
-
-            // When
-            var response = browser.Get("/", with =>
-            {
-                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)");
-                with.Accept("application/xml", 1.0m);
-                with.Accept("application/xhtml+xml", 1.0m);
-                with.Accept("*/*", 0.9m);
-            });
-
-            // Then
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.True(response.Body.AsString().Contains("text/html"), "Media type mismatch");
-        }
-
-        [Fact]
         public void Should_boost_html_priority_if_set_to_the_same_priority_as_others()
         {
             // Given
