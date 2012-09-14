@@ -165,6 +165,11 @@ namespace Nancy.Routing
                 AddNegotiatedHeaders(negotiator, response);
             }
 
+            if (negotiator.NegotiationContext.StatusCode.HasValue)
+            {
+                response.StatusCode = negotiator.NegotiationContext.StatusCode.Value;
+            }
+
             return response;
         }
 
