@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using System.Linq;
     using Diagnostics;
     using Responses.Negotiation;
@@ -41,21 +40,12 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        
         /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
         public ResolveResult Resolve(NancyContext context)
         {
-            var extension =
-                Path.GetExtension(context.Request.Path);
-
-            if (!string.IsNullOrEmpty(extension))
-            {
-                var length = context.Request.Path.Length - (extension.Length + 1);
-                context.Request.Url.Path = context.Request.Url.Path.Substring(0, length);
-            }
-
             var result =
                 this.Resolve(context.Request.Path, context, this.cache);
+
             return result.Selected;
         }
 
