@@ -105,7 +105,7 @@
     </Reference>
     <Reference Include="Spark, Version=1.5.0.0, Culture=neutral, PublicKeyToken=7f8549eed921a12c">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\spark\Spark.dll</HintPath>
+      <HintPath>..\packages\Spark.1.7.0.0\lib\NET40\Spark.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Entity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   </ItemGroup>
