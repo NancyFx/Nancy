@@ -143,15 +143,23 @@ namespace Nancy.Testing
             var testAssemblyNameWithoutExtension =
                 Path.GetFileNameWithoutExtension(testAssemblyName);
 
-            var assemblyUnderTest = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+            var testAssemblyPath =
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
 
-            if (assemblyUnderTest != null)
+            if (File.Exists(testAssemblyPath))
             {
-                foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
+
+                var assemblyUnderTest = AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+
+                if (assemblyUnderTest != null)
                 {
-                    AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                    foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                    {
+                        AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                    }
                 }
             }
         }
