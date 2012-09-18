@@ -40,4 +40,3 @@ When you're ready to go you should confirm that you are up to date and rebased w
 1. `git push origin myBranch`
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
 1. Wait for TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD ;-)
-1. Wait for TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD ;-)
