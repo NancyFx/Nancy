@@ -60,22 +60,27 @@ namespace Nancy.Testing
             this.applicationStartupActions = new List<Action<TinyIoCContainer, IPipelines>>();
             this.requestStartupActions = new List<Action<TinyIoCContainer, IPipelines, NancyContext>>();
 
+            var testAssembly =
+                Assembly.GetCallingAssembly();
+
+            PerformConventionBasedAssemblyLoading(testAssembly);
+
             if (configuration != null)
             {
-                var testAssembly =
-                    Assembly.GetCallingAssembly();
-
-                var testAssemblyName = 
-                    testAssembly.GetName().Name;
-
-                LoadReferencesForAssemblyUnderTest(testAssemblyName);
-
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
                 configurator.ErrorHandler<PassThroughErrorHandler>();
                 configuration.Invoke(configurator);
             }
+        }
+
+        private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
+        {
+            var testAssemblyName = 
+                testAssembly.GetName().Name;
+
+            LoadReferencesForAssemblyUnderTest(testAssemblyName);
         }
 
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
