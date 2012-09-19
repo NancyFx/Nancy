@@ -35,6 +35,7 @@ namespace Nancy
         {
             this.After = new AfterPipeline();
             this.Before = new BeforePipeline();
+            this.OnError = new ErrorPipeline();
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
         }
@@ -61,6 +62,18 @@ namespace Nancy
         /// </para>
         /// </summary>
         public BeforePipeline Before { get; protected set; }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during executing
+        /// the PreRequest hook, a route and the PostRequest hook. It can be used to set
+        /// the response and/or finish any ongoing tasks (close database session, etc).
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError { get; protected set; }
 
         /// <summary>
         /// Gets or sets the current Nancy context
