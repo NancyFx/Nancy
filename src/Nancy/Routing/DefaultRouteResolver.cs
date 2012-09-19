@@ -6,7 +6,7 @@
     using Diagnostics;
     using Responses.Negotiation;
     using RouteCandidate = System.Tuple<string, int, RouteDescription, IRoutePatternMatchResult>;
-    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
+    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// The default implementation for deciding if any of the available routes is a match for the incoming HTTP request.
@@ -40,7 +40,7 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq</returns>
+        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq, Item5 being the error handler</returns>
         public ResolveResult Resolve(NancyContext context)
         {
             var result =
@@ -56,7 +56,7 @@
 
             var route = associatedModule.Routes.ElementAt(routeMatchToReturn.Item2);
 
-            return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, associatedModule.Before, associatedModule.After);
+            return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, associatedModule.Before, associatedModule.After, associatedModule.OnError);
         }
 
         private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)
@@ -105,7 +105,7 @@
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No routes available"));
                 return new ResolveResults
                 {
-                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null)
+                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null, null)
                 };
             }
             
@@ -129,7 +129,7 @@
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route had a valid condition"));
                 return new ResolveResults
                 {
-                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null),
+                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null, null),
                     Rejected = routes.Item2
                 };
             }
@@ -154,7 +154,7 @@
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] No route matched the requested path"));
                 return new ResolveResults
                 {
-                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null),
+                    Selected = new ResolveResult(new NotFoundRoute(context.Request.Method, path), DynamicDictionary.Empty, null, null, null),
                     Rejected = routes.Item2
                 };
             }
@@ -184,14 +184,14 @@
                 {
                     return new ResolveResults
                     {
-                        Selected = new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null),
+                        Selected = new ResolveResult(new OptionsRoute(context.Request.Path, allowedMethods), DynamicDictionary.Empty, null, null, null),
                         Rejected = routes.Item2
                     };
                 }
                 context.Trace.TraceLog.WriteLog(s => s.AppendLine("[DefaultRouteResolver] Route Matched But Method Not Allowed"));
                 return new ResolveResults
                 {
-                    Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null),
+                    Selected = new ResolveResult(new MethodNotAllowedRoute(path, context.Request.Method, allowedMethods), DynamicDictionary.Empty, null, null, null),
                     Rejected = routes.Item2
                 };
             }

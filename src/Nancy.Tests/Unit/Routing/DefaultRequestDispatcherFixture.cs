@@ -8,7 +8,7 @@ namespace Nancy.Tests.Unit.Routing
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Xunit;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
+    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     public class DefaultRequestDispatcherFixture
     {
@@ -35,6 +35,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>._)).Returns(resolvedRoute);
@@ -55,11 +56,12 @@ namespace Nancy.Tests.Unit.Routing
                 }
             };
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
                 route, 
                 DynamicDictionary.Empty, 
                 ctx => { capturedExecutionOrder.Add("Prehook"); return null; }, 
-                ctx => capturedExecutionOrder.Add("Posthook"));
+                ctx => capturedExecutionOrder.Add("Posthook"),
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
@@ -90,14 +92,15 @@ namespace Nancy.Tests.Unit.Routing
                 }
             };
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
                 route,
                 DynamicDictionary.Empty,
                 ctx => {
                     capturedExecutionOrder.Add("Prehook");
                     return new Response();
                 },
-                ctx => capturedExecutionOrder.Add("Posthook"));
+                ctx => capturedExecutionOrder.Add("Posthook"),
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
@@ -120,11 +123,12 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
                 route,
                 DynamicDictionary.Empty,
                 ctx => moduleBeforeHookResponse,
-                ctx => { });
+                ctx => { },
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
@@ -146,11 +150,12 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
-                ctx => ctx.Response = moduleAfterHookResponse);
+                ctx => ctx.Response = moduleAfterHookResponse,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
@@ -170,11 +175,12 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
-                ctx => ctx.Items.Add("RoutePostReq", new object()));
+                ctx => ctx.Items.Add("RoutePostReq", new object()),
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
@@ -205,6 +211,7 @@ namespace Nancy.Tests.Unit.Routing
             var resolvedRoute = new ResolveResult(
                new FakeRoute(),
                parameters,
+               null,
                null,
                null);
 
@@ -251,6 +258,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
@@ -288,6 +296,7 @@ namespace Nancy.Tests.Unit.Routing
             var resolvedRoute = new ResolveResult(
                new FakeRoute(),
                DynamicDictionary.Empty,
+               null,
                null,
                null);
 
@@ -334,6 +343,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
@@ -362,6 +372,7 @@ namespace Nancy.Tests.Unit.Routing
             var resolvedRoute = new ResolveResult(
                new FakeRoute(),
                DynamicDictionary.Empty,
+               null,
                null,
                null);
 
@@ -416,6 +427,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
@@ -457,6 +469,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
@@ -484,6 +497,7 @@ namespace Nancy.Tests.Unit.Routing
             var resolvedRoute = new ResolveResult(
                new FakeRoute(),
                DynamicDictionary.Empty,
+               null,
                null,
                null);
 
@@ -523,6 +537,7 @@ namespace Nancy.Tests.Unit.Routing
                new NotFoundRoute("GET", "/"), 
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
@@ -552,6 +567,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                parameters,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
@@ -577,6 +593,7 @@ namespace Nancy.Tests.Unit.Routing
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
@@ -586,6 +603,164 @@ namespace Nancy.Tests.Unit.Routing
 
             // Then
             A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, context)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_invoke_module_onerror_hook_when_module_before_hook_throws_exception()
+        {
+            // Given
+            var capturedExecutionOrder = new List<string>();
+            var expectedExecutionOrder = new[] { "Prehook", "OnErrorHook" };
+
+            var route = new FakeRoute
+            {
+                Action = parameters =>
+                {
+                    capturedExecutionOrder.Add("RouteInvoke");
+                    return null;
+                }
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => { capturedExecutionOrder.Add("Prehook"); throw new Exception("Prehook"); },
+                ctx => capturedExecutionOrder.Add("Posthook"),
+                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+            // When
+            this.requestDispatcher.Dispatch(context);
+
+            // Then
+            capturedExecutionOrder.Count().ShouldEqual(2);
+            capturedExecutionOrder.SequenceEqual(expectedExecutionOrder).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_invoke_module_onerror_hook_when_route_invoker_throws_exception()
+        {
+            // Given
+            var capturedExecutionOrder = new List<string>();
+            var expectedExecutionOrder = new[] { "RouteInvoke", "OnErrorHook" };
+
+            var route = new FakeRoute
+            {
+                Action = parameters =>
+                {
+                    capturedExecutionOrder.Add("RouteInvoke");
+                    throw new Exception("RouteInvoke");
+                }
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => null,
+                ctx => capturedExecutionOrder.Add("Posthook"),
+                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+            // When
+            this.requestDispatcher.Dispatch(context);
+
+            // Then
+            capturedExecutionOrder.Count().ShouldEqual(2);
+            capturedExecutionOrder.SequenceEqual(expectedExecutionOrder).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_invoke_module_onerror_hook_when_module_after_hook_throws_exception()
+        {
+            // Given
+            var capturedExecutionOrder = new List<string>();
+            var expectedExecutionOrder = new[] { "Posthook", "OnErrorHook" };
+
+            var route = new FakeRoute
+            {
+                Action = parameters => null
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => null,
+                ctx => { capturedExecutionOrder.Add("Posthook"); throw new Exception("Posthook"); },
+                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+            // When
+            this.requestDispatcher.Dispatch(context);
+
+            // Then
+            capturedExecutionOrder.Count().ShouldEqual(2);
+            capturedExecutionOrder.SequenceEqual(expectedExecutionOrder).ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_rethrow_exception_when_onerror_hook_does_return_response()
+        {
+            // Given
+            var route = new FakeRoute
+            {
+                Action = parameters => { throw new Exception(); }
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => null,
+                ctx => { },
+                (ctx, ex) => { return null; });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+            //When
+
+            // Then
+            Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context));
+        }
+
+        [Fact]
+        public void Should_not_rethrow_exception_when_onerror_hook_returns_response()
+        {
+            // Given
+            var route = new FakeRoute
+            {
+                Action = parameters => { throw new Exception(); }
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => null,
+                ctx => { },
+                (ctx, ex) => { return new Response(); });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+            //When
+
+            // Then
+            Assert.DoesNotThrow(() => this.requestDispatcher.Dispatch(context));
         }
     }
 }

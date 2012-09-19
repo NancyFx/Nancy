@@ -40,21 +40,30 @@ namespace Nancy.Routing
             context.Parameters = resolveResult.Item2;
             var resolveResultPreReq = resolveResult.Item3;
             var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(context, resolveResultPreReq);
+            var resolveResultOnError = resolveResult.Item5;
 
-            if (context.Response == null)
+            try
             {
-                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+                ExecuteRoutePreReq(context, resolveResultPreReq);
+
+                if (context.Response == null)
+                {
+                    context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+                }
+
+                if (context.Request.Method.ToUpperInvariant() == "HEAD")
+                {
+                    context.Response = new HeadResponse(context.Response);
+                }
+
+                if (resolveResultPostReq != null)
+                {
+                    resolveResultPostReq.Invoke(context);
+                }
             }
-
-            if (context.Request.Method.ToUpperInvariant() == "HEAD")
+            catch (Exception exception)
             {
-                context.Response = new HeadResponse(context.Response);
-            }
-
-            if (resolveResultPostReq != null)
-            {
-                resolveResultPostReq.Invoke(context);
+                ExecuteRouteOnError(context, resolveResultOnError, exception);
             }
         }
 
@@ -73,7 +82,26 @@ namespace Nancy.Routing
             }
         }
 
-        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>> Resolve(NancyContext context)
+        private static void ExecuteRouteOnError(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
+        {
+            if (resolveResultOnError == null)
+            {
+                return;
+            }
+
+            var resolveResultOnErrorResponse = resolveResultOnError.Invoke(context, exception);
+
+            if (resolveResultOnErrorResponse != null)
+            {
+                context.Response = resolveResultOnErrorResponse;
+            }
+            else
+            {
+                throw exception;
+            }
+        }
+
+        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>> Resolve(NancyContext context)
         {
             var extension =
                 Path.GetExtension(context.Request.Path);
@@ -117,7 +145,7 @@ namespace Nancy.Routing
                 .Distinct();
         }
 
-        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>> InvokeRouteResolver(NancyContext context, string path, IEnumerable<Tuple<string, decimal>> acceptHeaders)
+        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>> InvokeRouteResolver(NancyContext context, string path, IEnumerable<Tuple<string, decimal>> acceptHeaders)
         {
             context.Request.Headers.Accept = acceptHeaders.ToList();
             context.Request.Url.Path = path;
