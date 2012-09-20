@@ -91,8 +91,8 @@ namespace Nancy.Demo.Hosting.Owin
 
     public class SimpleOwinAspNetHandler : IHttpAsyncHandler
     {
-        private readonly AppFunc _appFunc;
-        private readonly string _root;
+        private readonly AppFunc appFunc;
+        private readonly string root;
 
         private static readonly Task CompletedTask;
 
@@ -113,11 +113,11 @@ namespace Nancy.Demo.Hosting.Owin
             if (app == null)
                 throw new ArgumentNullException("app");
 
-            _appFunc = app;
+            this.appFunc = app;
             if (!string.IsNullOrWhiteSpace(root))
             {
                 if (!root.StartsWith("/"))
-                    _root += "/" + root;
+                    this.root += "/" + root;
             }
         }
 
@@ -174,8 +174,8 @@ namespace Nancy.Demo.Hosting.Owin
             if (pathBase == "/" || pathBase == null)
                 pathBase = "";
 
-            if (_root != null)
-                pathBase += _root;
+            if (root != null)
+                pathBase += root;
 
             var path = request.Path;
             if (path.StartsWith(pathBase))
@@ -243,7 +243,7 @@ namespace Nancy.Demo.Hosting.Owin
 
             try
             {
-                _appFunc(env)
+                appFunc(env)
                     .ContinueWith(t =>
                     {
                         if (t.IsFaulted) tcs.TrySetException(t.Exception.InnerExceptions);
