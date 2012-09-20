@@ -61,7 +61,7 @@ namespace Nancy.Demo.Hosting.Owin
 
     public class SimpleOwinAspNetRouteHandler : IRouteHandler
     {
-        private readonly SimpleOwinAspNetHandler _simpleOwinAspNetHandler;
+        private readonly SimpleOwinAspNetHandler simpleOwinAspNetHandler;
 
         public SimpleOwinAspNetRouteHandler(AppFunc app)
             : this(app, null)
@@ -70,7 +70,7 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetRouteHandler(AppFunc app, string root)
         {
-            _simpleOwinAspNetHandler = new SimpleOwinAspNetHandler(app, root);
+            this.simpleOwinAspNetHandler = new SimpleOwinAspNetHandler(app, root);
         }
 
         public SimpleOwinAspNetRouteHandler(IEnumerable<Func<AppFunc, AppFunc>> apps)
@@ -80,12 +80,12 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetRouteHandler(IEnumerable<Func<AppFunc, AppFunc>> apps, string root)
         {
-            _simpleOwinAspNetHandler = new SimpleOwinAspNetHandler(apps, root);
+            this.simpleOwinAspNetHandler = new SimpleOwinAspNetHandler(apps, root);
         }
 
         public IHttpHandler GetHttpHandler(RequestContext requestContext)
         {
-            return _simpleOwinAspNetHandler;
+            return simpleOwinAspNetHandler;
         }
     }
 
