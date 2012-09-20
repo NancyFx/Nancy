@@ -179,7 +179,7 @@ namespace Nancy.Demo.Hosting.Owin
             var pathBase = request.ApplicationPath;
             if (pathBase == "/" || pathBase == null)
             {
-                pathBase = "";
+                pathBase = string.Empty;
             }
 
             if (root != null)
