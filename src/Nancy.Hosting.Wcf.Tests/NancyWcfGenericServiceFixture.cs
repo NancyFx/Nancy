@@ -101,27 +101,34 @@ namespace Nancy.Hosting.Wcf.Tests
         }
 
         [SkippableFact]
-        public void NancyRequest_should_contain_hostname_port_and_scheme()
+        public void Should_nancyrequest_contain_hostname_port_and_scheme()
         {
+            // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);            
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
-            using (CreateAndOpenWebServiceHost(fakeBootstrapper)) {
+            // When 
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper)) 
+            {
                 var request = WebRequest.Create(BaseUri);
                 request.Method = "GET";
 
-                try {
+                try 
+                {
                     request.GetResponse();
                 }
-                catch (WebException) {
+                catch (WebException) 
+                {
                     // Will throw because it returns 404 - don't care.
                 }
             }
 
+            // Then
             Assert.Equal(1234, nancyRequest.Url.Port);
             Assert.Equal("localhost", nancyRequest.Url.HostName);
             Assert.Equal("http", nancyRequest.Url.Scheme);
