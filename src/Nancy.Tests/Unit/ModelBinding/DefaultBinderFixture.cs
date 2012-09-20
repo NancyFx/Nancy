@@ -196,6 +196,23 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_throw_ModelBindingException_if_convertion_of_a_property_fails()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["IntProperty"] = "BADNUM";
+
+            // Then
+            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel)))
+                .ShouldMatch(e =>
+                             e.PropertyName == "IntProperty"
+                             && e.BoundType == typeof(TestModel)
+                             && e.InnerException.Message == "BADNUM is not a valid value for Int32."
+                );
+        }
+
+        [Fact]
         public void Should_ignore_indexer_properties()
         {
             // Given

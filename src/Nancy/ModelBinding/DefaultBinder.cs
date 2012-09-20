@@ -125,11 +125,16 @@ namespace Nancy.ModelBinding
 
             if (typeConverter != null)
             {
-                SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
-                return;
+                try
+                {
+                    SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
+                }
+                catch(Exception e)
+                {
+                    throw new ModelBindingException(context.DestinationType, modelProperty.Name, e);
+                }
             }
-
-            if (destinationType == typeof(string))
+            else if (destinationType == typeof(string))
             {
                 SetPropertyValue(modelProperty, context.Model, stringValue);
             }
