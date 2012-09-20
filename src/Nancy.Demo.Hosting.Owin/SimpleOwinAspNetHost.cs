@@ -401,9 +401,15 @@ namespace Nancy.Demo.Hosting.Owin
         {
             switch (messageType)
             {
-                case 0x1: return WebSocketMessageType.Text;
-                case 0x2: return WebSocketMessageType.Binary;
-                case 0x8: return WebSocketMessageType.Close;
+                case 0x1:
+                    return WebSocketMessageType.Text;
+                    break;
+                case 0x2:
+                    return WebSocketMessageType.Binary;
+                    break;
+                case 0x8:
+                    return WebSocketMessageType.Close;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("messageType", messageType, string.Empty);
             }
@@ -413,9 +419,15 @@ namespace Nancy.Demo.Hosting.Owin
         {
             switch (webSocketMessageType)
             {
-                case WebSocketMessageType.Text: return 0x1;
-                case WebSocketMessageType.Binary: return 0x2;
-                case WebSocketMessageType.Close: return 0x8;
+                case WebSocketMessageType.Text:
+                    return 0x1;
+                    break;
+                case WebSocketMessageType.Binary:
+                    return 0x2;
+                    break;
+                case WebSocketMessageType.Close:
+                    return 0x8;
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException("webSocketMessageType", webSocketMessageType, string.Empty);
             }
