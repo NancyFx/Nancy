@@ -111,13 +111,17 @@ namespace Nancy.Demo.Hosting.Owin
         public SimpleOwinAspNetHandler(AppFunc app, string root)
         {
             if (app == null)
+            {
                 throw new ArgumentNullException("app");
+            }
 
             this.appFunc = app;
             if (!string.IsNullOrWhiteSpace(root))
             {
                 if (!root.StartsWith("/"))
+                {
                     this.root += "/" + root;
+                }
             }
         }
 
@@ -165,21 +169,29 @@ namespace Nancy.Demo.Hosting.Owin
         {
             var tcs = new TaskCompletionSource<Action>(state);
             if (callback != null)
+            {
                 tcs.Task.ContinueWith(task => callback(task), TaskContinuationOptions.ExecuteSynchronously);
+            }
 
             var request = context.Request;
             var response = context.Response;
 
             var pathBase = request.ApplicationPath;
             if (pathBase == "/" || pathBase == null)
+            {
                 pathBase = "";
+            }
 
             if (root != null)
+            {
                 pathBase += root;
+            }
 
             var path = request.Path;
             if (path.StartsWith(pathBase))
+            {
                 path = path.Substring(pathBase.Length);
+            }
 
             var serverVarsToAddToEnv = request.ServerVariables.AllKeys
                 .Where(key => !key.StartsWith("HTTP_") && !string.Equals(key, "ALL_HTTP") && !string.Equals(key, "ALL_RAW"))
@@ -246,15 +258,23 @@ namespace Nancy.Demo.Hosting.Owin
                 appFunc(env)
                     .ContinueWith(t =>
                     {
-                        if (t.IsFaulted) tcs.TrySetException(t.Exception.InnerExceptions);
-                        else if (t.IsCanceled) tcs.TrySetCanceled();
+                        if (t.IsFaulted)
+                        {
+                            tcs.TrySetException(t.Exception.InnerExceptions);
+                        }
+                        else if (t.IsCanceled)
+                        {
+                            tcs.TrySetCanceled();
+                        }
                         else
                         {
 #if ASPNET_WEBSOCKETS
                                               object tempWsBodyDelegate;
 
                                               if (responseStatusCode == null)
-                                                  responseStatusCode = Get<int>(env, "owin.ResponseStatusCode", 200);
+                                              {
+                                                  responseStatusCode = Get<int>(env, "owin.ResponseStatusCode", 200);                                                  
+                                              }
 
                                               if (responseStatusCode.Value == 101 &&
                                                   env.TryGetValue("websocket.Func", out tempWsBodyDelegate) &&
