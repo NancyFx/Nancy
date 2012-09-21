@@ -468,6 +468,29 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.IntProperty.ShouldEqual(0);
         }
 
+        [Fact]
+        public void Should_be_able_to_record_which_properties_have_been_bound()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] {new CollectionConverter(), new FallbackConverter(),};
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Request.Query["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "0";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel));
+
+            // Then
+            binder.BoundProperties.ShouldEqual(
+                (from prop in result.GetType().GetProperties()
+                 where prop.Name == "StringProperty" || prop.Name == "IntProperty"
+                 select prop).ToList()
+                );
+
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { };

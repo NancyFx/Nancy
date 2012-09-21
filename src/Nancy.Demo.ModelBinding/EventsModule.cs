@@ -1,5 +1,6 @@
 namespace Nancy.Demo.ModelBinding
 {
+    using System;
     using System.Linq;
     using Database;
     using Models;
@@ -26,6 +27,30 @@ namespace Nancy.Demo.ModelBinding
                     DB.Events.Add(model2);
 
                     return Response.AsRedirect("/Events");
+                };
+
+            Get["/bindto"] = x =>
+                {
+                    var model = DB.Events.OrderBy(e => e.Time).ToArray();
+
+                    return View["Events", model];
+                };
+
+            Post["/bindto"] = x =>
+                {
+                    Event model = new Event
+                                    {
+                                        Id = 1,
+                                        Location = "NEC",
+                                        Title = "NEC event",
+                                        Time = DateTime.Now
+                                    };
+
+                    this.BindTo(model);
+
+                    DB.Events.Add(model);
+
+                    return Response.AsRedirect("/events/bindto");
                 };
         }
     }

@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using System.Reflection;
+
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
@@ -117,7 +120,7 @@ namespace Nancy.Tests.Unit.ModelBinding
              
         }
 
-        class InterfaceModelBinder : IModelBinder
+        private class InterfaceModelBinder : IModelBinder
         {
             public object Bind(NancyContext context, Type modelType, params string[] blackList)
             {
@@ -126,7 +129,12 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             public bool CanBind(Type modelType)
             {
-                return typeof(IAmAnInterface).IsAssignableFrom(modelType);
+                return typeof (IAmAnInterface).IsAssignableFrom(modelType);
+            }
+
+            public IEnumerable<PropertyInfo> BoundProperties
+            {
+                get { return new List<PropertyInfo>(); }
             }
         }
     }

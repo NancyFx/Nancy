@@ -15,7 +15,9 @@
     </ul>
 
     <h2>Add another</h2>
-    <form method="POST" action="/events">
+    <form method="POST">
+      <label for="Name">Id</label>
+      <input type="text" name="Id" />
       <label for="Name">Title</label>
       <input type="text" name="Title" />
       <label for="Location">Location</label>

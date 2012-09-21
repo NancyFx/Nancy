@@ -1,5 +1,6 @@
 namespace Nancy.BindingDemo
 {
+    using System;
     using System.Linq;
     using Demo.ModelBinding.Database;
     using Demo.ModelBinding.Models;
@@ -25,8 +26,24 @@ namespace Nancy.BindingDemo
                     DB.Customers.Add(model);
                     DB.Customers.Add(model2);
 
-                    return Response.AsRedirect("/Customers");
+                    return Response.AsRedirect("/customers");
                 };
+
+            Get["/bindto"] = x =>
+            {
+                var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
+
+                return View["Customers", model];
+            };
+
+            Post["/bindto"] = x =>
+                {
+                    var model = new Customer {Id = 23, Name = "John", RenewalDate = DateTime.Now};
+                    this.BindTo(model);
+                    DB.Customers.Add(model);
+
+                    return Response.AsRedirect("/customers/bindto");
+            };
         }
     }
 }

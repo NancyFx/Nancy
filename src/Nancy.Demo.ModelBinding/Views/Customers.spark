@@ -14,7 +14,7 @@
     </ul>
 
     <h2>Add another</h2>
-    <form method="POST" action="/customers">
+    <form method="POST">
       <label for="Name">Name</label>
       <input type="text" name="Name" />
       <label for="Location">Renewal Date</label>
