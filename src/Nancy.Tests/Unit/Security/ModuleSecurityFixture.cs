@@ -279,6 +279,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_redirect_response_when_request_url_is_non_secure_method_is_get_and_requires_https()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(false);
             var context = new NancyContext
@@ -288,8 +289,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps();
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldNotBeNull();
             result.ShouldBeOfType<RedirectResponse>();
 
@@ -300,6 +303,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_forbidden_response_when_request_url_is_non_secure_method_is_post_and_requires_https()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(false);
             var context = new NancyContext
@@ -309,8 +313,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps();
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldNotBeNull();
             result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
@@ -318,6 +324,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_forbidden_response_when_request_url_is_non_secure_method_is_delete_and_requires_https()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(false);
             var context = new NancyContext
@@ -327,8 +334,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps();
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldNotBeNull();
             result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
@@ -336,6 +345,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_forbidden_response_when_request_url_is_non_secure_method_is_get_and_requires_https_and_redirect_is_false()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(false);
             var context = new NancyContext
@@ -345,8 +355,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps(false);
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldNotBeNull();
             result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
@@ -354,6 +366,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_forbidden_response_when_request_url_is_non_secure_method_is_post_and_requires_https_and_redirect_is_false()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(false);
             var context = new NancyContext
@@ -363,8 +376,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps(false);
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldNotBeNull();
             result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
@@ -372,6 +387,7 @@ namespace Nancy.Tests.Unit.Security
         [Fact]
         public void Should_return_null_response_when_request_url_is_secure_method_is_get_and_requires_https()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(true);
             var context = new NancyContext
@@ -381,14 +397,17 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps();
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldBeNull();
         }
 
         [Fact]
         public void Should_return_null_response_when_request_url_is_secure_method_is_post_and_requires_https()
         {
+            // Given
             var module = new FakeHookedModule(new BeforePipeline());
             var url = GetFakeUrl(true);
             var context = new NancyContext
@@ -398,8 +417,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresHttps();
 
+            // When
             var result = module.Before.Invoke(context);
 
+            // Then
             result.ShouldBeNull();
         }
 

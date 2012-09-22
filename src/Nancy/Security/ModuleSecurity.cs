@@ -125,7 +125,7 @@ namespace Nancy.Security
             return (ctx) =>
                    {
                        Response response = null;
-                       Request request = ctx.Request;
+                       var request = ctx.Request;
                        if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
                        {
                            if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
