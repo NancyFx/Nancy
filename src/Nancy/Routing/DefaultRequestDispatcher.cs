@@ -5,6 +5,7 @@ namespace Nancy.Routing
     using System.IO;
     using System.Linq;
     using Responses.Negotiation;
+    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -73,7 +74,7 @@ namespace Nancy.Routing
             }
         }
 
-        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>> Resolve(NancyContext context)
+        private ResolveResult Resolve(NancyContext context)
         {
             var extension =
                 Path.GetExtension(context.Request.Path);
@@ -117,7 +118,7 @@ namespace Nancy.Routing
                 .Distinct();
         }
 
-        private Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>> InvokeRouteResolver(NancyContext context, string path, IEnumerable<Tuple<string, decimal>> acceptHeaders)
+        private ResolveResult InvokeRouteResolver(NancyContext context, string path, IEnumerable<Tuple<string, decimal>> acceptHeaders)
         {
             context.Request.Headers.Accept = acceptHeaders.ToList();
             context.Request.Url.Path = path;
