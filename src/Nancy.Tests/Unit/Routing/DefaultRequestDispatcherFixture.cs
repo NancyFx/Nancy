@@ -55,7 +55,7 @@ namespace Nancy.Tests.Unit.Routing
                 }
             };
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new ResolveResult(
                 route, 
                 DynamicDictionary.Empty, 
                 ctx => { capturedExecutionOrder.Add("Prehook"); return null; }, 
@@ -90,7 +90,7 @@ namespace Nancy.Tests.Unit.Routing
                 }
             };
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new ResolveResult(
                 route,
                 DynamicDictionary.Empty,
                 ctx => {
@@ -120,7 +120,7 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new ResolveResult(
                 route,
                 DynamicDictionary.Empty,
                 ctx => moduleBeforeHookResponse,
@@ -146,7 +146,7 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new ResolveResult(
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
@@ -170,7 +170,7 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute();
 
-            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>>(
+            var resolvedRoute = new ResolveResult(
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
