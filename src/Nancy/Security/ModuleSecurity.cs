@@ -3,6 +3,7 @@ namespace Nancy.Security
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Responses;
 
     /// <summary>
     /// Some simple helpers give some nice authentication syntax in the modules.
@@ -41,6 +42,25 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires https.
+        /// </summary>
+        /// <param name="module"></param>
+        public static void RequiresHttps(this NancyModule module)
+        {
+            module.RequiresHttps(true);
+        }
+
+        /// <summary>
+        /// This module requires https.
+        /// </summary>
+        /// <param name="module"></param>
+        /// <param name="redirect"></param>
+        public static void RequiresHttps(this NancyModule module, bool redirect)
+        {
+            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect));
+        }
+
+        /// <summary>
         /// Ensure that the module requires authentication.
         /// </summary>
         /// <param name="context">Current context</param>
@@ -48,8 +68,8 @@ namespace Nancy.Security
         private static Response RequiresAuthentication(NancyContext context)
         {
             Response response = null;
-            if ( (context.CurrentUser == null) ||
-                String.IsNullOrWhiteSpace(context.CurrentUser.UserName) )
+            if ((context.CurrentUser == null) ||
+                String.IsNullOrWhiteSpace(context.CurrentUser.UserName))
             {
                 response = new Response { StatusCode = HttpStatusCode.Unauthorized };
             }
@@ -71,7 +91,7 @@ namespace Nancy.Security
                                || ctx.CurrentUser.Claims == null
                                || claims.Any(c => !ctx.CurrentUser.Claims.Contains(c)))
                            {
-                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
                            }
 
                            return response;
@@ -93,11 +113,35 @@ namespace Nancy.Security
                                || ctx.CurrentUser.Claims == null
                                || !isValid(ctx.CurrentUser.Claims))
                            {
-                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
                            }
 
                            return response;
                        };
+        }
+
+        private static Func<NancyContext, Response> RequiresHttps(bool redirect)
+        {
+            return (ctx) =>
+                   {
+                       Response response = null;
+                       var request = ctx.Request;
+                       if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                       {
+                           if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                           {
+                               var redirectUrl = request.Url.Clone();
+                               redirectUrl.Scheme = "https";
+                               response = new RedirectResponse(redirectUrl.ToString());
+                           }
+                           else
+                           {
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };                               
+                           }
+                       }
+
+                       return response;
+                   };
         }
     }
 }
