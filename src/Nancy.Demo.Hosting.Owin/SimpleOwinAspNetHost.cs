@@ -198,36 +198,36 @@ namespace Nancy.Demo.Hosting.Owin
                 .Select(key => new KeyValuePair<string, object>(key, request.ServerVariables.Get(key)));
 
             var env = new Dictionary<string, object>();
-            env["owin.Version"] = "1.0";
-            env["owin.RequestMethod"] = request.HttpMethod;
-            env["owin.RequestScheme"] = request.Url.Scheme;
-            env["owin.RequestPathBase"] = pathBase;
-            env["owin.RequestPath"] = path;
-            env["owin.RequestQueryString"] = request.ServerVariables["QUERY_STRING"];
-            env["owin.RequestProtocol"] = request.ServerVariables["SERVER_PROTOCOL"];
-            env["owin.RequestBody"] = request.InputStream;
-            env["owin.RequestHeaders"] = request.Headers.AllKeys
+            env[OwinConstants.Version] = "1.0";
+            env[OwinConstants.RequestMethod] = request.HttpMethod;
+            env[OwinConstants.RequestScheme] = request.Url.Scheme;
+            env[OwinConstants.RequestPathBase] = pathBase;
+            env[OwinConstants.RequestPath] = path;
+            env[OwinConstants.RequestQueryString] = request.ServerVariables["QUERY_STRING"];
+            env[OwinConstants.RequestProtocol] = request.ServerVariables["SERVER_PROTOCOL"];
+            env[OwinConstants.RequestBody] = request.InputStream;
+            env[OwinConstants.RequestHeaders] = request.Headers.AllKeys
                     .ToDictionary(x => x, x => request.Headers.GetValues(x), StringComparer.OrdinalIgnoreCase);
 
-            env["owin.CallCancelled"] = CancellationToken.None;
+            env[OwinConstants.CallCancelled] = CancellationToken.None;
 
-            env["owin.ResponseHeaders"] = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
+            env[OwinConstants.ResponseHeaders] = new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase);
 
             int? responseStatusCode = null;
 
-            env["owin.ResponseBody"] =
+            env[OwinConstants.ResponseBody] =
                 new TriggerStream(response.OutputStream)
                 {
                     OnFirstWrite = () =>
                     {
-                        responseStatusCode = Get<int>(env, "owin.ResponseStatusCode", 200);
+                        responseStatusCode = Get<int>(env, OwinConstants.ResponseStatusCode, 200);
                         response.StatusCode = responseStatusCode.Value;
 
                         object reasonPhrase;
-                        if (env.TryGetValue("owin.ResponseReasonPhrase", out reasonPhrase))
+                        if (env.TryGetValue(OwinConstants.ResponseReasonPhrase, out reasonPhrase))
                             response.StatusDescription = Convert.ToString(reasonPhrase);
 
-                        var responseHeaders = Get<IDictionary<string, string[]>>(env, "owin.ResponseHeaders", null);
+                        var responseHeaders = Get<IDictionary<string, string[]>>(env, OwinConstants.ResponseHeaders, null);
                         if (responseHeaders != null)
                         {
                             foreach (var responseHeader in responseHeaders)
@@ -241,13 +241,13 @@ namespace Nancy.Demo.Hosting.Owin
 
             SetEnvironmentServerVariables(env, serverVarsToAddToEnv);
 
-            env["aspnet.HttpContextBase"] = context;
+            env[OwinConstants.HttpContextBase] = context;
 
 #if ASPNET_WEBSOCKETS
             if (context.IsWebSocketRequest)
             {
-                env["websocket.Version"] = "1.0";
-                env["websocket.Support"] = "WebSocketFunc";
+                env[OwinConstants.WebSocketVersion] = "1.0";
+                env[OwinConstants.WebSocketSupport] = "WebSocketFunc";
             }
 #endif
 
@@ -273,11 +273,11 @@ namespace Nancy.Demo.Hosting.Owin
 
                                               if (responseStatusCode == null)
                                               {
-                                                  responseStatusCode = Get<int>(env, "owin.ResponseStatusCode", 200);                                                  
+                                                  responseStatusCode = Get<int>(env, OwinConstants.ResponseStatusCode, 200);                                                  
                                               }
 
                                               if (responseStatusCode.Value == 101 &&
-                                                  env.TryGetValue("websocket.Func", out tempWsBodyDelegate) &&
+                                                  env.TryGetValue(OwinConstants.WebSocketFunc, out tempWsBodyDelegate) &&
                                                   tempWsBodyDelegate != null)
                                               {
                                                   var wsBodyDelegate = (WebSocketFunc)tempWsBodyDelegate;
@@ -286,12 +286,12 @@ namespace Nancy.Demo.Hosting.Owin
                                                       var webSocket = websocketContext.WebSocket;
 
                                                       var wsEnv = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-                                                      wsEnv["websocket.SendAsyncFunc"] = WebSocketSendAsync(webSocket);
-                                                      wsEnv["websocket.ReceiveAsyncFunc"] = WebSocketReceiveAsync(webSocket);
-                                                      wsEnv["websocket.CloseAsyncFunc"] = WebSocketCloseAsync(webSocket);
-                                                      wsEnv["websocket.Version"] = "1.0";
-                                                      wsEnv["websocket.CallCancelled"] = CancellationToken.None;
-                                                      wsEnv["aspnet.AspNetWebSocketContext"] = websocketContext;
+                                                      wsEnv[OwinConstants.WebSocketSendAsyncFunc] = WebSocketSendAsync(webSocket);
+                                                      wsEnv[OwinConstants.WebSocketReceiveAsyncFunc] = WebSocketReceiveAsync(webSocket);
+                                                      wsEnv[OwinConstants.WebSocketCloseAsyncFunc] = WebSocketCloseAsync(webSocket);
+                                                      wsEnv[OwinConstants.WebSocketVersion] = "1.0";
+                                                      wsEnv[OwinConstants.WebSocketCallCancelled] = CancellationToken.None;
+                                                      wsEnv[OwinConstants.AspNetWebSocketContext] = websocketContext;
 
                                                       await wsBodyDelegate(wsEnv);
 
@@ -358,12 +358,12 @@ namespace Nancy.Demo.Hosting.Owin
         public static IDictionary<string, object> GetStartupProperties()
         {
             var properties = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
-            properties["owin.Version"] = "1.0";
+            properties[OwinConstants.Version] = "1.0";
 #if ASPNET_WEBSOCKETS
             if (Environment.OSVersion.Platform == PlatformID.Win32NT && Environment.OSVersion.Version >= new Version(6, 2) || HttpRuntime.IISVersion != null && HttpRuntime.IISVersion.Major >= 8)
             {
-                properties["websocket.Version"] = "1.0";
-                properties["websocket.Support"] = "WebSocketFunc";
+                properties[OwinConstants.WebSocketVersion] = "1.0";
+                properties[OwinConstants.WebSocketSupport] = "WebSocketFunc";
             }
 #endif
             return properties;
@@ -580,6 +580,36 @@ namespace Nancy.Demo.Hosting.Owin
                     }
                 }
             }
+        }
+
+        private static class OwinConstants
+        {
+            public const string Version = "owin.Version";
+            public const string RequestMethod = "owin.RequestMethod";
+            public const string RequestScheme = "owin.RequestScheme";
+            public const string RequestPathBase = "owin.RequestPathBase";
+            public const string RequestPath = "owin.RequestPath";
+            public const string RequestQueryString = "owin.RequestQueryString";
+            public const string RequestProtocol = "owin.RequestProtocol";
+            public const string RequestBody = "owin.RequestBody";
+            public const string RequestHeaders = "owin.RequestHeaders";
+            public const string CallCancelled = "owin.CallCancelled";
+            public const string ResponseHeaders = "owin.ResponseHeaders";
+            public const string ResponseBody = "owin.ResponseBody";
+            public const string ResponseStatusCode = "owin.ResponseStatusCode";
+            public const string ResponseReasonPhrase = "owin.ResponseReasonPhrase";
+
+            public const string HttpContextBase = "aspnet.HttpContextBase";
+
+            public const string WebSocketVersion = "websocket.Version";
+            public const string WebSocketSupport = "websocket.Support";
+            public const string WebSocketFunc = "websocket.Func";
+            public const string WebSocketSendAsyncFunc = "websocket.SendAsyncFunc";
+            public const string WebSocketReceiveAsyncFunc = "websocket.ReceiveAsyncFunc";
+            public const string WebSocketCloseAsyncFunc = "websocket.CloseAsyncFunc";
+            public const string WebSocketCallCancelled = "websocket.CallCancelled";
+
+            public const string AspNetWebSocketContext = "aspnet.AspNetWebSocketContext";
         }
     }
 }
