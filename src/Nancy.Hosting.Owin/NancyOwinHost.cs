@@ -17,7 +17,7 @@
     {
         private readonly INancyEngine engine;
 
-        public const string RequestEnvironmentKey = "owin_request_environment";
+        public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
@@ -53,7 +53,7 @@
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
             var serverClientIp = Get<string>(environment, "server.CLIENT_IP");
-            var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
+            //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
             var url = new Url
             {
