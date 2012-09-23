@@ -63,7 +63,7 @@ namespace Nancy.Demo.Hosting.Owin
                                };
         }
 
-        public static T GetOwinEnvironmentValue<T>(IDictionary<string, object> env, string name, T defaultValue = default(T))
+        private static T GetOwinEnvironmentValue<T>(IDictionary<string, object> env, string name, T defaultValue = default(T))
         {
             object value;
             return env.TryGetValue(name, out value) && value is T ? (T)value : defaultValue;
