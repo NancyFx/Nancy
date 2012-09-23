@@ -43,8 +43,6 @@
         /// <returns>Returns result</returns>
         public Task ProcessRequest(IDictionary<string, object> environment)
         {
-            CheckVersion(environment);
-
             var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
             var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
             var owinRequestHeaders = Get<IDictionary<string, string[]>>(environment, "owin.RequestHeaders");
@@ -151,17 +149,6 @@
 
             int contentLength;
             return int.TryParse(header, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ? contentLength : 0;
-        }
-
-        private static void CheckVersion(IDictionary<string, object> environment)
-        {
-            object version;
-            environment.TryGetValue("owin.Version", out version);
-
-            if (version == null || !String.Equals(version.ToString(), "1.0"))
-            {
-                throw new InvalidOperationException("An OWIN v1.0 host is required");
-            }
         }
     }
 }
