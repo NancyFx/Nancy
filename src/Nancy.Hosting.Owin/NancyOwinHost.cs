@@ -82,13 +82,6 @@
                 },
                 context =>
                 {
-                    if (callCancelled.IsCancellationRequested)
-                    {
-                        context.Dispose();
-                        tcs.TrySetCanceled();
-                        return;
-                    }
-
                     var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
                     var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
 
@@ -109,13 +102,6 @@
                     {
                         owinResponseHeaders["Set-Cookie"] =
                             nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
-                    }
-
-                    if (callCancelled.IsCancellationRequested)
-                    {
-                        context.Dispose();
-                        tcs.TrySetCanceled();
-                        return;
                     }
 
                     nancyResponse.Contents(owinResponseBody);
