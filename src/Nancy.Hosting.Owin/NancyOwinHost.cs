@@ -79,6 +79,7 @@
                 nancyRequest,
                 context =>
                 {
+                    environment["nancy.NancyContext"] = context;
                     context.Items[RequestEnvironmentKey] = environment;
                     return context;
                 },
