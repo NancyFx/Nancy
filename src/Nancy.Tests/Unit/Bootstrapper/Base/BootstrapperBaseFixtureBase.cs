@@ -145,6 +145,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             {
                 throw new NotImplementedException();
             }
+
+            public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

@@ -67,6 +67,17 @@
         /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
         public NancyContext HandleRequest(Request request)
         {
+            return this.HandleRequest(request, context => context);
+        }
+
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/>.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <param name="preRequest">Delegate to call before the request is processed</param>
+        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
+        private NancyContext HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
+        {
             if (request == null)
             {
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
@@ -74,6 +85,11 @@
 
             var context = this.contextFactory.Create();
             context.Request = request;
+
+            if (preRequest != null)
+            {
+                context = preRequest(context);
+            }
 
             var pipelines =
                 this.RequestPipelinesFactory.Invoke(context);
@@ -155,20 +171,25 @@
         /// <param name="onError">Deletate to call when any errors occur</param>
         public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
         {
+            this.HandleRequest(request, context => context, onComplete, onError);
+        }
+
+        public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+        {
             // TODO - potentially do some things sync like the pre-req hooks?
             // Possibly not worth it as the thread pool is quite clever
             // when it comes to fast running tasks such as ones where the prehook returns a redirect.
             ThreadPool.QueueUserWorkItem(s =>
+            {
+                try
                 {
-                    try
-                    {
-                        onComplete.Invoke(this.HandleRequest(request));
-                    }
-                    catch (Exception e)
-                    {
-                        onError.Invoke(e);
-                    }
-                });
+                    onComplete.Invoke(this.HandleRequest(request, preRequest));
+                }
+                catch (Exception e)
+                {
+                    onError.Invoke(e);
+                }
+            });
         }
 
         private void CheckErrorHandler(NancyContext context)
