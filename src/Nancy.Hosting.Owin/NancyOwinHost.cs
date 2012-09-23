@@ -2,19 +2,13 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
-    using Bootstrapper;
-    using Extensions;
-
-    using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                                     System.Action,                         // continuation
-                                     bool>,                                 // continuation will be invoked
-                                     System.Action<System.Exception>,       // onError
-                                     System.Action,                         // on Complete
-                                     System.Action>;                        // cancel
-
-    // Holy big-ass delegate signature Batman!
-    using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+    using Nancy.Bootstrapper;
+    using Nancy.IO;
 
     /// <summary>
     /// Nancy host for OWIN hosts
@@ -22,6 +16,8 @@
     public class NancyOwinHost
     {
         private readonly INancyEngine engine;
+
+        public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
@@ -43,170 +39,105 @@
         }
 
         /// <summary>
-        /// OWIN Application Delegate
+        /// OWIN App Action
         /// </summary>
         /// <param name="environment">Application environment</param>
-        /// <param name="responseCallBack">Response callback delegate</param>
-        /// <param name="errorCallback">Error callback delegate</param>
-        public void ProcessRequest(IDictionary<string, object> environment, ResponseCallBack responseCallBack, Action<Exception> errorCallback)
+        /// <returns>Returns result</returns>
+        public Task ProcessRequest(IDictionary<string, object> environment)
         {
-            CheckVersion(environment);
+            var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
+            var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
+            var owinRequestHeaders = Get<IDictionary<string, string[]>>(environment, "owin.RequestHeaders");
+            var owinRequestPathBase = Get<string>(environment, "owin.RequestPathBase");
+            var owinRequestPath = Get<string>(environment, "owin.RequestPath");
+            var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
+            var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+            var serverClientIp = Get<string>(environment, "server.CLIENT_IP");
+            //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
-            var parameters = environment.AsNancyRequestParameters();
-
-            var requestBodyDelegate = GetRequestBodyDelegate(environment);
-
-            // If there's no body, just invoke Nancy immediately
-            if (requestBodyDelegate == null)
+            var url = new Url
             {
-                this.InvokeNancy(parameters, responseCallBack, errorCallback);
-                return;
-            }
+                Scheme = owinRequestScheme,
+                HostName = GetHeader(owinRequestHeaders, "Host"),
+                Port = null,
+                BasePath = owinRequestPathBase,
+                Path = owinRequestPath,
+                Query = owinRequestQueryString,
+            };
 
-            // If a body is present, build the RequestStream and 
-            // invoke Nancy when it's ready.
-            requestBodyDelegate.Invoke(
-                GetRequestBodyBuilder(parameters, errorCallback),
-                errorCallback,
-                () => this.InvokeNancy(parameters, responseCallBack, errorCallback));
-        }
+            var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
 
-        private static void CheckVersion(IDictionary<string, object> environment)
-        {
-            object version;
-            environment.TryGetValue("owin.Version", out version);
+            var nancyRequest = new Request(
+                    owinRequestMethod,
+                    url,
+                    nancyRequestStream,
+                    owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
+                    serverClientIp);
 
-            if (version == null || !String.Equals(version.ToString(), "1.0"))
-            {
-                throw new InvalidOperationException("An OWIN v1.0 host is required");
-            }
-        }
-
-        private static BodyDelegate GetRequestBodyDelegate(IDictionary<string, object> environment)
-        {
-            return (BodyDelegate)environment["owin.RequestBody"];
-        }
-
-        private static Func<ArraySegment<byte>, Action, bool> GetRequestBodyBuilder(NancyRequestParameters parameters, Action<Exception> errorCallback)
-        {
-            return (data, continuation) =>
+            var tcs = new TaskCompletionSource<int>();
+            engine.HandleRequest(
+                nancyRequest,
+                context =>
                 {
-                    if (continuation == null)
+                    environment["nancy.NancyContext"] = context;
+                    context.Items[RequestEnvironmentKey] = environment;
+                    return context;
+                },
+                context =>
+                {
+                    var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+                    var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+
+                    var nancyResponse = context.Response;
+                    environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
+
+                    foreach (var responseHeader in nancyResponse.Headers)
                     {
-                        // If continuation is null then we must use sync and return false
-                        parameters.Body.Write(data.Array, data.Offset, data.Count);
-                        return false;
+                        owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
                     }
 
-                    // Otherwise use begin/end (which may be blocking anyway)
-                    // and return true.
-                    // No need to do any locking because the spec states we can't be called again
-                    // until we call the continuation.
-                    var asyncState = new AsyncBuilderState(parameters.Body, continuation, errorCallback);
-                    parameters.Body.BeginWrite(
-                        data.Array,
-                        data.Offset,
-                        data.Count,
-                        (ar) =>
-                        {
-                            var state = (AsyncBuilderState)ar.AsyncState;
-
-                            try
-                            {
-                                state.Stream.EndWrite(ar);
-
-                                state.OnComplete.Invoke();
-                            }
-                            catch (Exception e)
-                            {
-                                state.OnError.Invoke(e);
-                            }
-                        },
-                        asyncState);
-
-                    return true;
-                };
-        }
-
-        private void InvokeNancy(NancyRequestParameters parameters, ResponseCallBack responseCallBack, Action<Exception> errorCallback)
-        {
-            try
-            {
-                parameters.Body.Seek(0, SeekOrigin.Begin);
-
-                var request = new Request(parameters.Method, parameters.Url, parameters.Body, parameters.Headers);
-
-                // Execute the nancy async request handler
-                this.engine.HandleRequest(
-                    request,
-                    (result) =>
+                    if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
                     {
-                        if (result.Response.Cookies.Count > 0)
-                        {
-                            result.Response.Headers["Set-Cookie"] = result.Response.GetAllCookies();
-                        }
-                        result.Response.Headers["Content-Type"] = result.Response.ContentType;
-                        responseCallBack.Invoke(GetReturnCode(result), result.Response.Headers, GetResponseBodyBuilder(result));
-                    },
-                    errorCallback);
-            }
-            catch (Exception e)
-            {
-                errorCallback.Invoke(e);
-            }
-        }
-
-        private static BodyDelegate GetResponseBodyBuilder(NancyContext result)
-        {
-            return (next, error, complete) =>
-                {
-                    // Wrap the completion delegate so the context is disposed on completion.
-                    // Technically we could just do this after the .Invoke below, but doing it
-                    // here gives scope for supporting async response body generation in the future.
-                    Action onComplete = () =>
-                            {
-                                complete.Invoke();
-                                result.Dispose();
-                            };
-
-                    using (var stream = new ResponseStream(next, onComplete))
-                    {
-                        try
-                        {
-                            result.Response.Contents.Invoke(stream);
-                        }
-                        catch (Exception e)
-                        {
-                            error.Invoke(e);
-                            result.Dispose();
-                        }
+                        owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
                     }
 
-                    // Don't currently support cancelling, but if it gets called then dispose the context
-                    return result.Dispose;
-                };
+                    if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
+                    {
+                        owinResponseHeaders["Set-Cookie"] =
+                            nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+                    }
+
+                    nancyResponse.Contents(owinResponseBody);
+
+                    context.Dispose();
+
+                    tcs.TrySetResult(0);
+
+                }, tcs.SetException);
+
+            return tcs.Task;
         }
 
-        private static string GetReturnCode(NancyContext result)
+        private static T Get<T>(IDictionary<string, object> env, string key)
         {
-            return String.Format("{0} {1}", (int)result.Response.StatusCode, result.Response.StatusCode);
+            object value;
+            return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
         }
 
-        /// <summary>
-        /// State object for async request builder stream begin/endwrite
-        /// </summary>
-        private sealed class AsyncBuilderState
+        private static string GetHeader(IDictionary<string, string[]> headers, string key)
         {
-            public Stream Stream { get; private set; }
-            public Action OnComplete { get; private set; }
-            public Action<Exception> OnError { get; private set; }
+            string[] value;
+            return headers.TryGetValue(key, out value) && value != null ? string.Join(",", value.ToArray()) : null;
+        }
 
-            public AsyncBuilderState(Stream stream, Action onComplete, Action<Exception> onError)
-            {
-                this.Stream = stream;
-                this.OnComplete = onComplete;
-                this.OnError = onError;
-            }
+        private static long ExpectedLength(IDictionary<string, string[]> headers)
+        {
+            var header = GetHeader(headers, "Content-Length");
+            if (string.IsNullOrWhiteSpace(header))
+                return 0;
+
+            int contentLength;
+            return int.TryParse(header, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ? contentLength : 0;
         }
     }
 }

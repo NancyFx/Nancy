@@ -3,20 +3,13 @@ namespace Nancy.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
+    using System.Threading;
+    using System.Threading.Tasks;
     using Bootstrapper;
     using FakeItEasy;
     using Hosting.Owin;
-    using Hosting.Owin.Tests.Fakes;
     using Xunit;
-
-    using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                                 System.Action,                         // continuation
-                                 bool>,                                 // continuation will be invoked
-                     System.Action<System.Exception>,                   // onError
-                     System.Action,                                     // on Complete
-                     System.Action>;                                    // cancel
+    using Xunit.Extensions;
 
     using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
 
@@ -28,6 +21,7 @@ namespace Nancy.Tests
 
         private readonly Action<Exception> fakeErrorCallback;
         private readonly Dictionary<string, object> environment;
+        private readonly Dictionary<string, string[]> requestHeaders;
         private readonly INancyEngine fakeEngine;
         private readonly INancyBootstrapper fakeBootstrapper;
 
@@ -45,29 +39,41 @@ namespace Nancy.Tests
 
             this.fakeErrorCallback = (ex) => { };
 
+            var tcs = new TaskCompletionSource<object>();
+
             this.environment = new Dictionary<string, object>()
                                    {
                                        { "owin.RequestMethod", "GET" },
                                        { "owin.RequestPath", "/test" },
                                        { "owin.RequestPathBase", "/root" },
                                        { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestHeaders", new Dictionary<string, string> { { "Host", "testserver" } } },
-                                       { "owin.RequestBody", null },
+                                       { "owin.RequestBody", Stream.Null },
+                                       { "owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
                                        { "owin.RequestScheme", "http" },
-                                       { "owin.Version", "1.0" }
+                                       { "owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
+                                       { "owin.ResponseBody", Stream.Null },
+                                       { "owin.Version", "1.0" },
+                                       { "owin.CallCancelled", CancellationToken.None }
                                    };
+
+            this.requestHeaders = new Dictionary<string, string[]> { { "Host", new[] { "testserver" } } };
         }
 
-        [Fact]
-        public void Should_throw_if_owin_version_is_incorrect()
+        [Theory]
+        [InlineData("0.1")]
+        [InlineData("0.11")]
+        [InlineData("0.11.9")]
+        public void Should_throw_if_owin_version_is_less_than_0_12(string version)
         {
-            this.environment["owin.Version"] = "1.2";
+            this.environment["owin.Version"] = version;
 
             var result = Record.Exception(
-                () => this.host.ProcessRequest(environment, fakeResponseCallback, fakeErrorCallback));
+                () => this.host.ProcessRequest(environment));
 
-            result.ShouldBeOfType(typeof(InvalidOperationException));
+            result.ShouldBeOfType<InvalidOperationException>();
         }
+
+        /*
 
         [Fact]
         public void Should_immediately_invoke_nancy_if_no_request_body_delegate()
@@ -284,7 +290,7 @@ namespace Nancy.Tests
             var fakeConsumer = new FakeConsumer(false);
             ResponseCallBack callback = (r, h, b) => fakeConsumer.InvokeBodyDelegate(b);
 
-            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+            //this.host.ProcessRequest(environment, callback, fakeErrorCallback);
 
             A.CallTo(() => mockDisposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
         }
@@ -325,6 +331,8 @@ namespace Nancy.Tests
             output.ShouldEqual("This is some request body content");
         }
 
+        */
+
         [Fact]
         public void Should_set_cookie_with_valid_header()
         {
@@ -332,15 +340,18 @@ namespace Nancy.Tests
             fakeResponse.AddCookie("test", "testvalue");
             fakeResponse.AddCookie("test1", "testvalue1");
             var fakeContext = new NancyContext() { Response = fakeResponse };
-            
-            this.SetupFakeNancyCompleteCallback(fakeContext);
-            var respHeaders = new Dictionary<string, string>();
-            ResponseCallBack callback = (status, headers, bodyDelegate) =>respHeaders=(Dictionary<string,string>)headers;
 
-            this.host.ProcessRequest(environment, callback, fakeErrorCallback);
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            this.host.ProcessRequest(environment).Wait();
+
+            var respHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+
             respHeaders.ContainsKey("Set-Cookie").ShouldBeTrue();
-            (respHeaders["Set-Cookie"] == "test=testvalue; path=/\r\ntest1=testvalue1; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][0] == "test=testvalue; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();
         }
+
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
         /// </summary>
@@ -350,5 +361,12 @@ namespace Nancy.Tests
             A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
                 .Invokes((i => ((Action<NancyContext>)i.Arguments[1]).Invoke(context)));
         }
+
+        private static T Get<T>(IDictionary<string, object> env, string key)
+        {
+            object value;
+            return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
+        }
+
     }
 }
