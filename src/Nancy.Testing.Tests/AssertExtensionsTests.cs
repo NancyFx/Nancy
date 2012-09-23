@@ -43,6 +43,16 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void Should_detect_nonexistence()
+        {
+            // Given, When
+            var result = Record.Exception(() => this.query["#jamesIsAwesome"].ShouldNotExist());
+
+            // Then
+            Assert.Null(result);
+        }
+
+        [Fact]
         public void Should_not_throw_exception_when_id_that_should_only_exists_once_only_exists_once()
         {
             // Given, When
