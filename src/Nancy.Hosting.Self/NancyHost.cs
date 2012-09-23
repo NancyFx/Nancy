@@ -44,7 +44,7 @@
 
             foreach (var baseUri in baseUriList)
             {
-                listener.Prefixes.Add(baseUri.ToString());
+                listener.Prefixes.Add(baseUri.ToString().Replace("localhost", "+"));
             }
 
             bootstrapper.Initialise();
