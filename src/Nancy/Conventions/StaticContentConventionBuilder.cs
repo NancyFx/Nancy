@@ -128,7 +128,7 @@ namespace Nancy.Conventions
                     Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
 
                 var contentRootPath = 
-                    Path.Combine(applicationRootPath, GetEncodedPath(contentPath));
+                    Path.GetFullPath(Path.Combine(applicationRootPath, GetEncodedPath(contentPath)));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
