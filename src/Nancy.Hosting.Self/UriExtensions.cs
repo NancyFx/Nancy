@@ -11,7 +11,7 @@ namespace Nancy.Hosting.Self
 	{
 		public static bool IsCaseInsensitiveBaseOf(this Uri source, Uri value)
 		{
-			if (Uri.Compare(source, value,UriComponents.Scheme | UriComponents.HostAndPort, UriFormat.Unescaped, StringComparison.InvariantCultureIgnoreCase) != 0)
+            if (Uri.Compare(source, value, UriComponents.Scheme | UriComponents.Port, UriFormat.Unescaped, StringComparison.InvariantCultureIgnoreCase) != 0)
 			{
 			    return false;
 			}
