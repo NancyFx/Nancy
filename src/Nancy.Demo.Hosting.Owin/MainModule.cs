@@ -3,6 +3,7 @@ namespace Nancy.Demo.Hosting.Owin
     using System.Collections.Generic;
     using System.Linq;
     using Models;
+    using Nancy.Hosting.Owin;
 
     public class MainModule : NancyModule
     {
@@ -50,7 +51,7 @@ namespace Nancy.Demo.Hosting.Owin
 
             Get["/owin"] = x =>
                                {
-                                   var env = GetOwinEnvironmentValue<IDictionary<string, object>>(Context.Items, "owin");
+                                   var env = GetOwinEnvironmentValue<IDictionary<string, object>>(Context.Items, NancyOwinHost.RequestEnvironmentKey);
                                    if (env == null)
                                        return "Not running on owin host";
 

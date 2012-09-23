@@ -17,6 +17,8 @@
     {
         private readonly INancyEngine engine;
 
+        public const string RequestEnvironmentKey = "owin_request_environment";
+
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
@@ -77,7 +79,7 @@
                 nancyRequest,
                 context =>
                 {
-                    context.Items["owin"] = environment;
+                    context.Items[RequestEnvironmentKey] = environment;
                     return context;
                 },
                 context =>
