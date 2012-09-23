@@ -79,6 +79,11 @@
                 nancyRequest,
                 context =>
                 {
+                    context.Items["owin"] = environment;
+                    return context;
+                },
+                context =>
+                {
                     if (callCancelled.IsCancellationRequested)
                     {
                         context.Dispose();
