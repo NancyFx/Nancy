@@ -85,7 +85,13 @@ namespace Nancy
         public ModelValidationResult ModelValidationResult
         {
             get { return this.Context == null ? null : this.Context.ModelValidationResult; }
-            set { this.Context.ModelValidationResult = value; }
+            set
+            {
+                if (this.Context != null)
+                {
+                    this.Context.ModelValidationResult = value;                    
+                }
+            }
         }
 
         /// <summary>
