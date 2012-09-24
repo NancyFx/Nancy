@@ -8,6 +8,7 @@ namespace Nancy.Hosting.Self.Tests
 	{
 		private readonly Uri baseUri = new Uri("http://host/path/path/file");
 		private readonly Uri baseSlashUri = new Uri("http://host/path/path/");
+        private readonly Uri baseLocalHostUri = new Uri("http://localhost/path/path/");
 
 		[Fact]
 		public void url_should_be_base_of_sub_directory()
@@ -168,5 +169,15 @@ namespace Nancy.Hosting.Self.Tests
             // Then
 			isBaseOf.ShouldBeTrue();
 		}
+
+        [Fact]
+        public void url_should_be_base_of_same_path_with_different_host_using_localhost_wildcard()
+        {
+            // Given, When
+            var isBaseOf = baseLocalHostUri.IsCaseInsensitiveBaseOf(new Uri("http://OtherHost/path/path/file"));
+
+            // Then
+            isBaseOf.ShouldBeTrue();
+        }
 	}
 }
