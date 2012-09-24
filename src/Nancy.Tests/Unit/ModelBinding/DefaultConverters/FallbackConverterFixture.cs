@@ -6,6 +6,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
     using Nancy.ModelBinding.DefaultConverters;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class FallbackConverterFixture
     {
@@ -55,8 +56,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             result.ShouldEqual(now);
         }
 
-        [Fact]
-        public void Should_convert_on_to_true_for_bool()
+        [Theory]
+        [InlineData("on")]
+        [InlineData("On")]
+        [InlineData("oN")]
+        [InlineData("ON")]
+        public void Should_convert_on_to_true_for_bool(string value)
         {
             string input = "on";
 
