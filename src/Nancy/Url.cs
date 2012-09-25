@@ -77,7 +77,7 @@ namespace Nancy
         /// <summary>
         /// Gets the domain part of the request
         /// </summary>
-        public string Domain
+        public string SiteBase
         {
             get
             {
