@@ -24,7 +24,6 @@ namespace Nancy.Authentication.Forms
         {
             CryptographyConfiguration = cryptographyConfiguration;
             RedirectQuerystringKey = DefaultRedirectQuerystringKey;
-            EnableUnauthorizedLoginRedirect = true;
         }
 
         /// <summary>
@@ -51,7 +50,7 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Gets or sets whether to redirect to login page during unauthorized access.
         /// </summary>
-        public bool EnableUnauthorizedLoginRedirect { get; set; }
+        public bool DisableRedirect { get; set; }
 
         /// <summary>
         /// Gets or sets the cryptography configuration
