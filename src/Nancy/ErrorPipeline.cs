@@ -4,13 +4,13 @@
 
     /// <summary>
     /// <para>
-    /// A simple pipeline for pre-request hooks.
+    /// A simple pipeline for on-error hooks.
     /// Hooks will be executed until either a hook returns a response, or every
     /// hook has been executed.
     /// </para>
     /// <para>
-    /// Can be implictly cast to/from the pre-request hook delegate signature
-    /// (Func NancyContext, Response) for assigning to NancyEngine or for building
+    /// Can be implictly cast to/from the on-error hook delegate signature
+    /// (Func NancyContext, Exception, Response) for assigning to NancyEngine or for building
     /// composite pipelines.
     /// </para>
     /// </summary>

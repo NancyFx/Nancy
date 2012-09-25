@@ -76,7 +76,7 @@ namespace Nancy
         {
             var wildcards =
                 negotiator.NegotiationContext.PermissableMediaRanges.Where(
-                    mr => mr.Type.IsWildcard && mr.Subtype.IsWildcard);
+                    mr => mr.Type.IsWildcard && mr.Subtype.IsWildcard).ToArray();
 
             foreach (var wildcard in wildcards)
             {
@@ -140,6 +140,30 @@ namespace Nancy
             negotiator.NegotiationContext.PermissableMediaRanges.Add(range);
             negotiator.NegotiationContext.MediaRangeModelMappings.Add(range, modelFactory);
 
+            return negotiator;
+        }
+
+        /// <summary>
+        /// Sets the status code that should be assigned to the final response.
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithStatusCode(this Negotiator negotiator, int statusCode)
+        {
+            negotiator.NegotiationContext.StatusCode = (HttpStatusCode)statusCode;
+            return negotiator;
+        }
+
+        /// <summary>
+        /// Sets the status code that should be assigned to the final response.
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithStatusCode(this Negotiator negotiator, HttpStatusCode statusCode)
+        {
+            negotiator.NegotiationContext.StatusCode = statusCode;
             return negotiator;
         }
 

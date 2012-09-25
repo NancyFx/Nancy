@@ -137,6 +137,7 @@
     <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
+    <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
     <Compile Include="Unit\NamedPipelineBaseFixture.cs" />
     <Compile Include="Unit\ModuleNameFixture.cs" />
     <Compile Include="Unit\NancyContextFixture.cs" />
@@ -203,6 +204,7 @@
     <Compile Include="Fakes\FakeRouteCache.cs" />
     <Compile Include="Fakes\FakeNancyModule.cs" />
     <Compile Include="Fakes\FakeRequest.cs" />
+    <Compile Include="Unit\Routing\DefaultRouteSegmentExtractorFixture.cs" />
     <Compile Include="Unit\Routing\NotFoundRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteCacheFixture.cs" />

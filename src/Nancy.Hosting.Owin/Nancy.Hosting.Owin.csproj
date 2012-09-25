@@ -84,25 +84,14 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
     <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\EnvironmentExtensions.cs" />
-    <Compile Include="Extensions\ResponseExtensions.cs" />
     <Compile Include="NancyOwinHost.cs" />
-    <Compile Include="NancyRequestParameters.cs" />
     <Compile Include="ResponseStream.cs" />
   </ItemGroup>
   <ItemGroup>

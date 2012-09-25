@@ -60,16 +60,13 @@ namespace Nancy.Testing
             this.applicationStartupActions = new List<Action<TinyIoCContainer, IPipelines>>();
             this.requestStartupActions = new List<Action<TinyIoCContainer, IPipelines, NancyContext>>();
 
+            var testAssembly =
+                Assembly.GetCallingAssembly();
+
+            PerformConventionBasedAssemblyLoading(testAssembly);
+
             if (configuration != null)
             {
-                var testAssembly =
-                    Assembly.GetCallingAssembly();
-
-                var testAssemblyName = 
-                    testAssembly.GetName().Name;
-
-                LoadReferencesForAssemblyUnderTest(testAssemblyName);
-
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
@@ -77,6 +74,15 @@ namespace Nancy.Testing
                 configuration.Invoke(configurator);
             }
         }
+
+        private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
+        {
+            var testAssemblyName = 
+                testAssembly.GetName().Name;
+
+            LoadReferencesForAssemblyUnderTest(testAssemblyName);
+        }
+
         protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
@@ -85,6 +91,7 @@ namespace Nancy.Testing
                 action.Invoke(container,pipelines);
             }
         }
+
         protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
         {
             base.RequestStartup(container, pipelines, context);
@@ -143,15 +150,23 @@ namespace Nancy.Testing
             var testAssemblyNameWithoutExtension =
                 Path.GetFileNameWithoutExtension(testAssemblyName);
 
-            var assemblyUnderTest = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+            var testAssemblyPath =
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
 
-            if (assemblyUnderTest != null)
+            if (File.Exists(testAssemblyPath))
             {
-                foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
+
+                var assemblyUnderTest = AppDomain.CurrentDomain
+                    .GetAssemblies()
+                    .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+
+                if (assemblyUnderTest != null)
                 {
-                    AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                    foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                    {
+                        AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                    }
                 }
             }
         }
@@ -1108,6 +1123,32 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteSegmentExtractor"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteSegmentExtractor"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RouteSegmentExtractor<T>() where T : IRouteSegmentExtractor
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new TypeRegistration(typeof(IRouteSegmentExtractor), typeof(T)));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRouteSegmentExtractor"/>.
+            /// </summary>
+            /// <param name="routeSegmentExtractor">The <see cref="IRouteSegmentExtractor"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RequestDispatcher(IRouteSegmentExtractor routeSegmentExtractor)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRouteSegmentExtractor), routeSegmentExtractor));
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRequestDispatcher"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRequestDispatcher"/> that the bootstrapper should use.</typeparam>
@@ -1116,19 +1157,6 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.registeredTypes.Add(
                     new TypeRegistration(typeof(IRequestDispatcher), typeof(T)));
-
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseProcessor"/>.
-            /// </summary>
-            /// <param name="responseProcessor">The <see cref="IResponseProcessor"/> instance that should be used by the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResponseProcessor(IResponseProcessor responseProcessor)
-            {
-                this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IResponseProcessor), responseProcessor));
 
                 return this;
             }

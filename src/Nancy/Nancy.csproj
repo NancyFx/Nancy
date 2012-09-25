@@ -115,11 +115,15 @@
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
+    <Compile Include="Conventions\AcceptHeaderCoercionConventions.cs" />
+    <Compile Include="Conventions\BuiltInAcceptHeaderCoercions.cs" />
+    <Compile Include="Conventions\DefaultAcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Conventions\StaticContentsConventions.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
@@ -175,8 +179,10 @@
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\DefaultRequestDispatcher.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
+    <Compile Include="Routing\DefaultRouteSegmentExtractor.cs" />
     <Compile Include="Routing\IRequestDispatcher.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />
+    <Compile Include="Routing\IRouteSegmentExtractor.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
     <Compile Include="StaticContentApplicationStartup.cs" />
