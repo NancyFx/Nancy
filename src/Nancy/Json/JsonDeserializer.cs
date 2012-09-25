@@ -539,7 +539,7 @@ namespace Nancy.Json
 
 				case JsonType.STRING:
                     if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal)) {
-                        int tzCharIndex = s.IndexOfAny(new char[] { '+', '-' });
+                        int tzCharIndex = s.IndexOfAny(new char[] { '+', '-' }, 7);
                         long javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
                         DateTime time = new DateTime((javaScriptTicks * 10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
                         if (tzCharIndex > 0) {
