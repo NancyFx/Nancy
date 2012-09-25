@@ -178,9 +178,11 @@
     <Compile Include="Responses\DefaultXmlSerializer.cs" />
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\DefaultRequestDispatcher.cs" />
+    <Compile Include="Routing\DefaultRouteDescriptionProvider.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
     <Compile Include="Routing\DefaultRouteSegmentExtractor.cs" />
     <Compile Include="Routing\IRequestDispatcher.cs" />
+    <Compile Include="Routing\IRouteDescriptionProvider.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />

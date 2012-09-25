@@ -12,6 +12,7 @@
     {
         private readonly IModuleKeyGenerator moduleKeyGenerator;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
+        private readonly IRouteDescriptionProvider routeDescriptionProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -20,10 +21,11 @@
         /// <param name="moduleKeyGenerator">The <see cref="IModuleKeyGenerator"/> used to generate module keys.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor)
+        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider)
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
             this.routeSegmentExtractor = routeSegmentExtractor;
+            this.routeDescriptionProvider = routeDescriptionProvider;
 
             using (var context = contextFactory.Create())
             {
@@ -52,6 +54,7 @@
 
                 foreach (var routeDescription in routes)
                 {
+                    routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
                     routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path);
                 }
 

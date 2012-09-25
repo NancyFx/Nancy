@@ -38,6 +38,12 @@ namespace Nancy.Routing
         public Func<NancyContext, bool> Condition { get; private set; }
 
         /// <summary>
+        /// The description of what the route is for.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the description of the route.</value>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets the method of the route.
         /// </summary>
         /// <value>A <see cref="string"/> containing the method of the route.</value>
