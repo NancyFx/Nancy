@@ -39,7 +39,7 @@
         /// <returns><see langword="true"/> if the cache is empty, otherwise <see langword="false"/>.</returns>
         public bool IsEmpty()
         {
-            return this.Values.SelectMany(r => r).Count() == 0;
+            return !this.Values.SelectMany(r => r).Any();
         }
 
         private void BuildCache(IEnumerable<NancyModule> modules)
