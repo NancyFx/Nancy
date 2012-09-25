@@ -58,7 +58,7 @@ namespace Nancy.Authentication.Forms
             currentConfiguration = configuration;
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
-            if (configuration.EnableUnauthorizedLoginRedirect)
+            if (!configuration.DisableRedirect)
             {
                 pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
             }
