@@ -493,6 +493,10 @@ namespace Nancy.Json
 			decimal decimalValue;
 			double doubleValue;
 			
+            if (jsonType != JsonType.STRING)
+            {
+                s = s.TrimEnd(Environment.NewLine.ToCharArray());
+            }
 			switch (jsonType) {
 				case JsonType.INTEGER:
 					/* MS AJAX.NET JSON parser promotes big integers to double */
