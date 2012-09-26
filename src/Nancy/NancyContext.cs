@@ -1,12 +1,13 @@
-using Nancy.Responses.Negotiation;
-using Nancy.Security;
 
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Diagnostics;
+    using Nancy.Diagnostics;
+    using Nancy.Responses.Negotiation;
+    using Nancy.Security;
+    using Nancy.Validation;
 
     /// <summary>
     /// Nancy context.
@@ -14,6 +15,8 @@ namespace Nancy
     public sealed class NancyContext : IDisposable
     {
         private Request request;
+
+        private ModelValidationResult modelValidationResult;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
@@ -80,6 +83,15 @@ namespace Nancy
         /// Non-model specific data for rendering in the response
         /// </summary>
         public dynamic ViewBag { get; private set; }
+
+        /// <summary>
+        /// Gets or sets the model validation result.
+        /// </summary>
+        public ModelValidationResult ModelValidationResult
+        {
+            get { return this.modelValidationResult ?? new ModelValidationResult(null); }
+            set { this.modelValidationResult = value; }
+        }
 
         /// <summary>
         /// Context of content negotiation (if relevent)
