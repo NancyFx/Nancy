@@ -253,9 +253,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         { 
             // Given
             var json = "{\"Property\": true\r\n}";
+
             // When
             var s = new JavaScriptSerializer();
             var deserialized = (dynamic)s.DeserializeObject(json);
+            
             // Then
             Assert.True(deserialized["Property"]);
         }
@@ -265,9 +267,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         {
             // Given
             var json = "{\"Property\": true}";
+            
             // When
             var s = new JavaScriptSerializer();
             var deserialized = (dynamic)s.DeserializeObject(json);
+            
             // Then
             Assert.True(deserialized["Property"]);
         }
