@@ -59,20 +59,6 @@ namespace Nancy.Tests
             this.requestHeaders = new Dictionary<string, string[]> { { "Host", new[] { "testserver" } } };
         }
 
-        [Theory]
-        [InlineData("0.1")]
-        [InlineData("0.11")]
-        [InlineData("0.11.9")]
-        public void Should_throw_if_owin_version_is_less_than_0_12(string version)
-        {
-            this.environment["owin.Version"] = version;
-
-            var result = Record.Exception(
-                () => this.host.ProcessRequest(environment));
-
-            result.ShouldBeOfType<InvalidOperationException>();
-        }
-
         /*
 
         [Fact]
