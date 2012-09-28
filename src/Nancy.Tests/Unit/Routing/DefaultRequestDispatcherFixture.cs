@@ -56,7 +56,6 @@ namespace Nancy.Tests.Unit.Routing
                 }
             };
 
-
             var resolvedRoute = new ResolveResult(
                 route, 
                 DynamicDictionary.Empty, 
@@ -176,7 +175,7 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute();
 
-            var resolvedRoute = new ResolveResult(
+            var resolvedRoute = new ResolveResult(            
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
