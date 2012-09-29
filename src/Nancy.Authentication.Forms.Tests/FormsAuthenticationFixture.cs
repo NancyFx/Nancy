@@ -14,6 +14,7 @@ namespace Nancy.Authentication.Forms.Tests
     public class FormsAuthenticationFixture
     {
         private FormsAuthenticationConfiguration config;
+        private FormsAuthenticationConfiguration secureConfig;
         private NancyContext context;
         private Guid userGuid;
 
@@ -45,6 +46,15 @@ namespace Nancy.Authentication.Forms.Tests
                 CryptographyConfiguration = this.cryptographyConfiguration,
                 RedirectUrl = "/login",
                 UserMapper = A.Fake<IUserMapper>(),
+                RequiresSSL = false
+            };
+
+            this.secureConfig = new FormsAuthenticationConfiguration()
+            {
+                CryptographyConfiguration = this.cryptographyConfiguration,
+                RedirectUrl = "/login",
+                UserMapper = A.Fake<IUserMapper>(),
+                RequiresSSL = true
             };
 
             this.context = new NancyContext()
@@ -145,10 +155,13 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_set_authentication_cookie_to_httponly_when_logging_in_with_redirect()
         {
+            //Given
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
 
+            //When
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
+            //Then
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
                 .HttpOnly.ShouldBeTrue();
         }
@@ -540,6 +553,63 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Headers["Location"].ShouldEqual("/secure?foo=bar");
+        }
+
+        [Fact]
+        public void Should_set_authentication_cookie_to_secure_when_config_requires_ssl_and_logging_in_with_redirect()
+        {
+            //Given
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.secureConfig);
+
+            //When
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+
+            //Then
+            result.Cookies
+                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                    .First()
+                    .Secure.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_set_authentication_cookie_to_secure_when_config_requires_ssl_and_logging_in_without_redirect()
+        {
+            // Given
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.secureConfig);
+
+            // When
+            var result = FormsAuthentication.UserLoggedInResponse(userGuid);
+
+            // Then
+            result.Cookies
+                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                    .First()
+                    .Secure.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_set_authentication_cookie_to_secure_when_config_requires_ssl_and_user_logs_out_with_redirect()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.secureConfig);
+
+            var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
+
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            cookie.Secure.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_set_authentication_cookie_to_secure_when_config_requires_ssl_and_user_logs_out_without_redirect()
+        {
+            // Given
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.secureConfig);
+
+            // When
+            var result = FormsAuthentication.LogOutResponse();
+
+            // Then
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            cookie.Secure.ShouldBeTrue();
         }
     }
 }
