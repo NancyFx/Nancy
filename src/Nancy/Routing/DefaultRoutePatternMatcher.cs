@@ -13,7 +13,8 @@
     /// </summary>
     public class DefaultRoutePatternMatcher : IRoutePatternMatcher
     {
-        private readonly ConcurrentDictionary<string, Regex> matcherCache = new ConcurrentDictionary<string, Regex>();
+        private readonly ConcurrentDictionary<string, Tuple<Regex, IEnumerable<ParameterSegmentInformation>>>
+            matcherCache = new ConcurrentDictionary<string, Tuple<Regex, IEnumerable<ParameterSegmentInformation>>>();
 
         /// <summary>
         /// Attempts to match a requested path with a route pattern.
@@ -26,19 +27,20 @@
         public IRoutePatternMatchResult Match(string requestedPath, string routePath, IEnumerable<string> segments, NancyContext context)
         {
             var routePathPattern =
-                this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(segments));
+                this.matcherCache.GetOrAdd(routePath, s => BuildRegexMatcher(segments.ToList()));
 
-            requestedPath = 
+            requestedPath =
                 TrimTrailingSlashFromRequestedPath(requestedPath);
 
-            var matches = routePathPattern
-                .Match(requestedPath)
+            var match =
+                routePathPattern.Item1.Match(requestedPath);
+
+            var matches = match
                 .Groups.Cast<Group>()
-                .Where(x => x.Success)
                 .ToList();
 
             return new RoutePatternMatchResult(
-                matches.Any(),
+                match.Success,
                 GetParameters(routePathPattern, matches),
                 context);
         }
@@ -53,46 +55,69 @@
             return requestedPath;
         }
 
-        private static Regex BuildRegexMatcher(IEnumerable<string> segments)
+        private static Tuple<Regex, IEnumerable<ParameterSegmentInformation>> BuildRegexMatcher(IList<string> segments)
         {
             var parameterizedSegments =
-                GetParameterizedSegments(segments);
+                GetParameterizedSegments2(segments);
+
+            var parsedSegments = (segments.Any()) ?
+                string.Join(string.Empty, parameterizedSegments.Item1) :
+                "/";
 
             var pattern =
-                string.Concat(@"^/", string.Join("/", parameterizedSegments), @"$");
+                string.Concat(@"^", parsedSegments, @"$");
 
-            return new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            return new Tuple<Regex, IEnumerable<ParameterSegmentInformation>>(
+                new Regex(pattern, RegexOptions.Compiled | RegexOptions.IgnoreCase),
+                parameterizedSegments.Item2);
         }
 
-        private static DynamicDictionary GetParameters(Regex regex, IList<Group> matches)
+        private static DynamicDictionary GetParameters(Tuple<Regex, IEnumerable<ParameterSegmentInformation>> result, IList<Group> matches)
         {
             dynamic data = new DynamicDictionary();
 
             for (var i = 1; i <= matches.Count() - 1; i++)
             {
-                data[regex.GroupNameFromNumber(i)] = matches[i].Value;
+                var name =
+                    result.Item1.GroupNameFromNumber(i);
+
+                var value = (matches[i].Success) ?
+                    matches[i].Value :
+                    result.Item2.Where(x => x.Name.Equals(name) && !string.IsNullOrEmpty(x.DefaultValue)).Select(x => x.DefaultValue).Single();
+
+                data[name] = value;
             }
 
             return data;
         }
 
-        private static IEnumerable<string> GetParameterizedSegments(IEnumerable<string> segments)
+        private static Tuple<IEnumerable<string>, IEnumerable<ParameterSegmentInformation>> GetParameterizedSegments2(
+            IEnumerable<string> segments)
         {
+            var parsedSegments = new List<string>();
+            var segmentInformation = new List<ParameterSegmentInformation>();
+
             foreach (var segment in segments)
             {
                 var current = segment;
 
-                if (current.IsParameterized())
+                if (current.IsParameterized() && !IsRegexSegment(current))
                 {
-                    current = ParameterizeSegment(segment);
+                    var result =
+                        ParameterizeSegment(segment);
+
+                    current = result.Item1;
+                    segmentInformation.AddRange(result.Item2);
                 }
                 else
                 {
-                    current = (!IsRegexSegment(current)) ? Regex.Escape(current) : current;
+                    current = string.Concat("/", (!IsRegexSegment(current)) ? Regex.Escape(current) : current);
                 }
 
-                yield return current;
+                parsedSegments.Add(current);
             }
+
+            return new Tuple<IEnumerable<string>, IEnumerable<ParameterSegmentInformation>>(parsedSegments, segmentInformation);
         }
 
         private static bool IsRegexSegment(string segment)
@@ -100,21 +125,39 @@
             return segment.StartsWith("(");
         }
 
-        private static string ParameterizeSegment(string segment)
+        private static Tuple<string, IEnumerable<ParameterSegmentInformation>> ParameterizeSegment(string segment)
         {
             segment = segment.Replace(".", @"\.");
 
-            foreach (var name in segment.GetParameterNames())
+            var details =
+                segment.GetParameterDetails().ToList();
+
+            for (var index = 0; index < details.Count; index++)
             {
+                var information =
+                    details.Skip(index).First();
+
                 var replacement =
-                    string.Format(CultureInfo.InvariantCulture, @"(?<{0}>.+?)", name);
+                    string.Format(CultureInfo.InvariantCulture, @"(?<{0}>.+?)", information.Name);
+
+                if (information.IsOptional)
+                {
+                    replacement = string.Concat(replacement, "?");
+                }
 
                 segment = segment.Replace(
-                    string.Concat("{", name, "}"),
+                    string.Concat("{", information.FullSegmentName, "}"),
                     replacement);
             }
 
-            return segment;
+            segment = string.Concat(@"\/", segment);
+
+            if (details.All(x => x.IsOptional) && segment.StartsWith(@"\/(") && (segment.EndsWith(")") || segment.EndsWith(")?")))
+            {
+                segment = string.Concat(@"(?:", segment, ")?");
+            }
+
+            return new Tuple<string, IEnumerable<ParameterSegmentInformation>>(segment, details);
         }
     }
 }

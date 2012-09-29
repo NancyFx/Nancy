@@ -242,5 +242,79 @@ namespace Nancy.Tests.Unit.Routing
             ((string)results.Parameters["name"]).ShouldEqual("filename");
             ((string)results.Parameters["format"]).ShouldEqual("cshtml");
         }
+
+        [Fact]
+        public void Should_work_with_optional_parameters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo", "/foo/{bar?hiya}", new[] { "foo", "{bar?hiya}" }, null);
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual("hiya");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters5()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/ninjah", "/foo/{bar?hiya}", new[] { "foo", "{bar?hiya}" }, null);
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual("ninjah");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters2()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/andreas", "/foo/{bar?hiya}/{name}", new[] { "foo", "{bar?hiya}", "{name}" }, null);
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual("hiya");
+            ((string)results.Parameters["name"]).ShouldEqual("andreas");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters3()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/bye/andreas", "/foo/{bar?hiya}/{name}", new[] { "foo", "{bar?hiya}", "{name}" }, null);
+
+            // Then
+            ((string)results.Parameters["bar"]).ShouldEqual("bye");
+            ((string)results.Parameters["name"]).ShouldEqual("andreas");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters4()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?}.{format?}", new[] { "foo", "{name?}.{format?}" }, null);
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters6()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?stuff}.{format?}", new[] { "foo", "{name?stuff}.{format?}" }, null);
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_work_with_optional_parameters7()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/cshtmlbaz", "/foo/{format?}baz", new[] { "foo", "{format?}baz" }, null);
+
+            // Then
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
     }
 }
