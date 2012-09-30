@@ -609,7 +609,7 @@ namespace Nancy.Demo.Hosting.Owin
             public const string WebSocketCloseAsyncFunc = "websocket.CloseAsyncFunc";
             public const string WebSocketCallCancelled = "websocket.CallCancelled";
 
-            public const string AspNetWebSocketContext = "aspnet.AspNetWebSocketContext";
+            public const string AspNetWebSocketContext = "System.Web.WebSockets.AspNetWebSocketContext";
         }
     }
 }
