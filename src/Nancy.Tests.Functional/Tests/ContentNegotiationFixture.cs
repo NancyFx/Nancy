@@ -4,6 +4,7 @@ namespace Nancy.Tests.Functional.Tests
     using System.Collections.Generic;
     using System.IO;
 
+    using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -372,22 +373,6 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""application/xml"""));
         }
 
-        private static Func<dynamic, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
-        {
-            var context =
-                new NancyContext { NegotiationContext = new NegotiationContext() };
-
-            var negotiator =
-                new Negotiator(context);
-
-            if (action != null)
-            {
-                action.Invoke(negotiator);
-            }
-
-            return parameters => negotiator;
-        }
-
         [Fact]
         public void Should_set_negotiated_status_code_to_response_when_set_as_integer()
         {
@@ -442,6 +427,77 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
         }
 
+        [Fact]
+        public void Should_throw_exception_if_view_location_fails()
+        {
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<ViewProcessor>();
+
+                with.Module(new FakeModuleInvalidViewName());
+            });
+
+            // When
+            var result = Record.Exception(() =>
+                {
+                    var response = browser.Get(
+                        "/FakeModuleInvalidViewName",
+                        with =>
+                            { with.Accept("text/html", 1.0m); });
+                });
+
+            // Then
+            Assert.NotNull(result);
+            Assert.Contains("Unable to locate view", result.ToString());
+        }
+
+        [Fact]
+        public void Should_use_next_processor_if_processor_returns_null()
+        {
+            // Given
+            var browser = new Browser(with =>
+                {
+                with.ResponseProcessors(typeof(NullProcessor), typeof(TestProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/test", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithAllowedMediaRange("application/xml");
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/test", with =>
+            {
+                with.Accept("application/xml", 0.9m);
+            });
+
+            // Then
+            var bodyResult = response.Body.AsString();
+            Assert.True(bodyResult.StartsWith("application/xml"), string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
+        }
+
+        private static Func<dynamic, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        {
+            var context =
+                new NancyContext { NegotiationContext = new NegotiationContext() };
+
+            var negotiator =
+                new Negotiator(context);
+
+            if (action != null)
+            {
+                action.Invoke(negotiator);
+            }
+
+            return parameters =>
+                {
+                    return negotiator;
+                };
+        }
+
         /// <summary>
         /// Test response processor that will accept any type
         /// and put the content type and model type into the
@@ -475,6 +531,33 @@ namespace Nancy.Tests.Functional.Tests
             }
         }
 
+        public class NullProcessor : IResponseProcessor
+        {
+            private const string ResponseTemplate = "{0}\n{1}";
+
+            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+            {
+                get
+                {
+                    yield break;
+                }
+            }
+
+            public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return new ProcessorMatch
+                {
+                    RequestedContentTypeResult = MatchResult.ExactMatch,
+                    ModelResult = MatchResult.ExactMatch
+                };
+            }
+
+            public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return null;
+            }
+        }
+
         public class ModelProcessor : IResponseProcessor
         {
             private const string ResponseTemplate = "{0}\n{1}";
@@ -499,6 +582,14 @@ namespace Nancy.Tests.Functional.Tests
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
                 return (string) model;
+            }
+        }
+
+        public class FakeModuleInvalidViewName : NancyModule
+        {
+            public FakeModuleInvalidViewName()
+            {
+                Get["/FakeModuleInvalidViewName"] = _ => View["blahblahblah"];
             }
         }
     }
