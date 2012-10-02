@@ -145,11 +145,11 @@
         public void Should_invoke_route_description_provider_with_path_of_route()
         {
             // Given
-            const string expectePath = "/some/path/{capture}";
+            const string expectedPath = "/some/path/{capture}";
 
             var module = new FakeNancyModule(with =>
             {
-                with.AddGetRoute(expectePath);
+                with.AddGetRoute(expectedPath);
             });
 
             var catalog = A.Fake<INancyModuleCatalog>();
@@ -167,7 +167,7 @@
                 descriptionProvider);
 
             // Then
-            A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectePath)).MustHaveHappened();
+            A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
         }
     }
 }
