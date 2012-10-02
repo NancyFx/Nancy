@@ -42,7 +42,9 @@
                 // 0 Handles: views / *modulepath* / *modulename* / *viewname*
                 (viewName, model, viewLocationContext) =>{
                     if (string.IsNullOrEmpty(viewLocationContext.ModulePath))
+                    {
                         return string.Empty;
+                    }
 
                     var path = viewLocationContext.ModulePath.TrimStart(new[] { '/' });
 
@@ -52,7 +54,9 @@
                 // 1 Handles: *modulepath* / *modulename* / *viewname*
                 (viewName, model, viewLocationContext) =>{
                     if (string.IsNullOrEmpty(viewLocationContext.ModulePath))
+                    {
                         return string.Empty;
+                    }
 
                     var path = viewLocationContext.ModulePath.TrimStart(new[] { '/' });
 
