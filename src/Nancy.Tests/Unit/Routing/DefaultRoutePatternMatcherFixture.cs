@@ -244,7 +244,17 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters()
+        public void Should_support_optional_segments()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo", "/foo/{bar?}", new[] { "foo", "{bar?}" }, null);
+
+            // Then
+            results.IsMatch.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_support_default_values_for_optional_parameters()
         {
             // Given, When
             var results = this.matcher.Match("/foo", "/foo/{bar?hiya}", new[] { "foo", "{bar?hiya}" }, null);
@@ -254,7 +264,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters5()
+        public void Should_use_captured_value_for_optional_parameter_when_supplied()
         {
             // Given, When
             var results = this.matcher.Match("/foo/ninjah", "/foo/{bar?hiya}", new[] { "foo", "{bar?hiya}" }, null);
@@ -264,7 +274,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters2()
+        public void Should_support_non_optional_parameters_after_optional_parameter()
         {
             // Given, When
             var results = this.matcher.Match("/foo/andreas", "/foo/{bar?hiya}/{name}", new[] { "foo", "{bar?hiya}", "{name}" }, null);
@@ -275,7 +285,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters3()
+        public void Should_use_captured_value_for_optional_parameter_when_value_was_supplied_and_route_contains_additional_parameters()
         {
             // Given, When
             var results = this.matcher.Match("/foo/bye/andreas", "/foo/{bar?hiya}/{name}", new[] { "foo", "{bar?hiya}", "{name}" }, null);
@@ -286,7 +296,18 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters4()
+        public void Should_support_combination_of_optional_and_required_parameters_in_same_segment()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?}.{format}", new[] { "foo", "{name?}.{format}" }, null);
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_support_multiple_optional_parameters_in_same_segment()
         {
             // Given, When
             var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?}.{format?}", new[] { "foo", "{name?}.{format?}" }, null);
@@ -297,7 +318,7 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters6()
+        public void Should_support_single_default_value_parameter_when_segment_contains_multiple_optional_parameters()
         {
             // Given, When
             var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?stuff}.{format?}", new[] { "foo", "{name?stuff}.{format?}" }, null);
@@ -308,10 +329,51 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_work_with_optional_parameters7()
+        public void Should_support_default_values_for_all_parametes_when_segment_contains_multiple_parameters()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/filename.cshtml", "/foo/{name?stuff}.{format?}", new[] { "foo", "{name?stuff}.{format?}" }, null);
+
+            // Then
+            ((string)results.Parameters["name"]).ShouldEqual("filename");
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_support_literals_after_optional_parameter_when_value_was_supplied()
         {
             // Given, When
             var results = this.matcher.Match("/foo/cshtmlbaz", "/foo/{format?}baz", new[] { "foo", "{format?}baz" }, null);
+
+            // Then
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_support_literals_after_optional_parameter_when_value_was_not_supplied()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/baz", "/foo/{format?cshtml}baz", new[] { "foo", "{format?cshtml}baz" }, null);
+
+            // Then
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_support_literals_before_optional_parameter_when_value_was_supplied()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/barcshtml", "/foo/bar{format}", new[] { "foo", "bar{format?cshtml}" }, null);
+
+            // Then
+            ((string)results.Parameters["format"]).ShouldEqual("cshtml");
+        }
+
+        [Fact]
+        public void Should_support_literals_before_optional_parameter_when_value_was_not_supplied()
+        {
+            // Given, When
+            var results = this.matcher.Match("/foo/bar", "/foo/bar{format?cshtml}", new[] { "foo", "bar{format?cshtml}" }, null);
 
             // Then
             ((string)results.Parameters["format"]).ShouldEqual("cshtml");

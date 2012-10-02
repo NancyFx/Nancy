@@ -83,7 +83,7 @@
 
                 var value = (matches[i].Success) ?
                     matches[i].Value :
-                    result.Item2.Where(x => x.Name.Equals(name) && !string.IsNullOrEmpty(x.DefaultValue)).Select(x => x.DefaultValue).Single();
+                    result.Item2.Where(x => x.Name.Equals(name) && !string.IsNullOrEmpty(x.DefaultValue)).Select(x => x.DefaultValue).SingleOrDefault();
 
                 data[name] = value;
             }
