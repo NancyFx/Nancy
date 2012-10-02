@@ -100,7 +100,7 @@ namespace Nancy.Routing
                     context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Invoking processor: {0}\n", processorType));
 
                     var response =
-                        SafeInvokeResponseProcessor(prioritizedProcessor.Item1, compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1), context);
+                        prioritizedProcessor.Item1.Process(compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1), context);
 
                     if (response != null)
                     {
@@ -245,20 +245,6 @@ namespace Nancy.Routing
             }
 
             return currentHeaders;
-        }
-
-        private static Response SafeInvokeResponseProcessor(IResponseProcessor responseProcessor, MediaRange mediaRange, object model, NancyContext context)
-        {
-            try
-            {
-                return responseProcessor.Process(mediaRange, model, context);
-            }
-            catch (Exception e)
-            {
-                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Processor threw {0} exception: {1}", e.GetType(), e.Message));
-            }
-
-            return null;
         }
 
         private static Negotiator GetNegotiator(object routeResult, NancyContext context)
