@@ -19,7 +19,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/int", x => 200);
+                with.Get("/int", (x,m) => 200);
             });
 
             var browser = new Browser(with =>
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/string", x => "hello");
+                with.Get("/string", (x, m) => "hello");
             });
 
             var browser = new Browser(with =>
@@ -61,7 +61,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/httpstatuscode", x => HttpStatusCode.Accepted);
+                with.Get("/httpstatuscode", (x, m) => HttpStatusCode.Accepted);
             });
 
             var browser = new Browser(with =>
@@ -82,7 +82,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/action", x =>
+                with.Get("/action", (x, m) =>
                 {
                     Action<Stream> result = stream =>
                     {
@@ -116,7 +116,7 @@ namespace Nancy.Tests.Functional.Tests
 
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/headers", x =>
+                with.Get("/headers", (x, m) =>
                 {
                     var context =
                         new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -154,7 +154,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/", parameters =>
+                    x.Get("/", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -184,7 +184,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/", parameters =>
+                    x.Get("/", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -223,7 +223,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/test", parameters =>
+                    x.Get("/test", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -479,21 +479,17 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(bodyResult.StartsWith("application/xml"), string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
         }
 
-        private static Func<dynamic, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
-            var context =
-                new NancyContext { NegotiationContext = new NegotiationContext() };
-
-            var negotiator =
-                new Negotiator(context);
-
-            if (action != null)
-            {
-                action.Invoke(negotiator);
-            }
-
-            return parameters =>
+            return (parameters, module) =>
                 {
+                    var negotiator = new Negotiator(module.Context);
+
+                    if (action != null)
+                    {
+                        action.Invoke(negotiator);
+                    }
+
                     return negotiator;
                 };
         }
