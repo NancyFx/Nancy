@@ -434,7 +434,7 @@ namespace Nancy.Tests.Functional.Tests
             {
                 with.ResponseProcessor<ViewProcessor>();
 
-                with.Module(new FakeModuleInvalidViewName());
+                with.Module(new ConfigurableNancyModule(x => x.Get("/FakeModuleInvalidViewName", CreateNegotiatedResponse(neg => neg.WithView("blahblahblah")))));
             });
 
             // When
@@ -578,14 +578,6 @@ namespace Nancy.Tests.Functional.Tests
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
                 return (string) model;
-            }
-        }
-
-        public class FakeModuleInvalidViewName : NancyModule
-        {
-            public FakeModuleInvalidViewName()
-            {
-                Get["/FakeModuleInvalidViewName"] = _ => View["blahblahblah"];
             }
         }
     }
