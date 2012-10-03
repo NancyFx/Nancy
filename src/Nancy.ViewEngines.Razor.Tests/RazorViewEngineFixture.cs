@@ -470,7 +470,7 @@ namespace Nancy.ViewEngines.Razor.Tests
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
-        [Fact]
+        [Fact(Skip = "Multi-threading regression test")]
         public void should_work_on_multiple_threads()
         {
             // Given
