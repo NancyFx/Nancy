@@ -13,6 +13,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     using Nancy.ModelBinding.DefaultBodyDeserializers;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class JsonBodyDeserializerFixture
     {
@@ -248,11 +249,15 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
 #endif
 
-        [Fact]
-        public void Should_Serialize_Last_Prop_is_Bool_And_Trailing_NewLine()
+        [Theory]
+        [InlineData("\n")]
+        [InlineData("\n\r")]
+        [InlineData("\r\n")]
+        [InlineData("\r")]
+        public void Should_Serialize_Last_Prop_is_Bool_And_Trailing_NewLine(string lineEndings)
         { 
             // Given
-            var json = "{\"Property\": true\r\n}";
+            var json = string.Concat("{\"Property\": true", lineEndings, "}");
 
             // When
             var s = new JavaScriptSerializer();
