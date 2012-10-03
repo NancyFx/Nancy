@@ -32,7 +32,10 @@
         /// <summary>
         /// Gets the provider that is used to generate code.
         /// </summary>
-        public CodeDomProvider Provider { get; private set; }
+        public CodeDomProvider CreateProvider()
+        {
+            return new VBCodeProvider();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VisualBasicRazorViewRenderer"/> class.
@@ -40,8 +43,6 @@
         public VisualBasicRazorViewRenderer()
         {
             this.Assemblies = new List<string>();
-
-            this.Provider = new VBCodeProvider();
 
             this.Host = new NancyRazorEngineHost(new VBRazorCodeLanguage());
         }

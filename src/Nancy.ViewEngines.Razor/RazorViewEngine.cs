@@ -134,7 +134,7 @@
 
             var razorResult = engine.GenerateCode(reader, sourceFileName:"placeholder");
 
-            var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
+            var viewFactory = this.GenerateRazorViewFactory(renderer.CreateProvider(), razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
             return viewFactory;
         }
