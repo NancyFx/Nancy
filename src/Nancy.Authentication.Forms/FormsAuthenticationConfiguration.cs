@@ -42,6 +42,11 @@ namespace Nancy.Authentication.Forms
         public IUserMapper UserMapper { get; set; }
 
         /// <summary>
+        /// Gets or sets whether to disable redirects to login url during unauthorized access.
+        /// </summary>
+        public bool DisableRedirect { get; set; }
+
+        /// <summary>
         /// Gets or sets the cryptography configuration
         /// </summary>
         public CryptographyConfiguration CryptographyConfiguration { get; set; }
