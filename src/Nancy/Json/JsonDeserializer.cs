@@ -495,7 +495,7 @@ namespace Nancy.Json
 			
 			if (jsonType != JsonType.STRING)
 			{
-                s = s.TrimEnd(new[] { '\n', '\r' });
+				s = s.TrimEnd(new[] { '\n', '\r' });
 			}
 
 			switch (jsonType) {
