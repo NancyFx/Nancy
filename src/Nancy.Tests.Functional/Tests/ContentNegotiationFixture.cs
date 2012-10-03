@@ -339,6 +339,8 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
                 with.Module(new ConfigurableNancyModule(x =>
                 {
                     x.Get("/", CreateNegotiatedResponse());
@@ -358,6 +360,8 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
                 with.Module(new ConfigurableNancyModule(x =>
                 {
                     x.Get("/", CreateNegotiatedResponse());
