@@ -27,6 +27,6 @@
         /// <summary>
         /// Gets the provider that is used to generate code.
         /// </summary>
-        CodeDomProvider CreateProvider();
+        CodeDomProvider Provider { get; }
     }
 }

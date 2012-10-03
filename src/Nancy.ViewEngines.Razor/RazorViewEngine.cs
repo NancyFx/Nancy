@@ -7,10 +7,8 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
-    using System.Web.Razor.Text;
 
     using Nancy.Bootstrapper;
     using Nancy.Responses;
@@ -18,10 +16,11 @@
     /// <summary>
     /// View engine for rendering razor views.
     /// </summary>
-    public class RazorViewEngine : IViewEngine
+    public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
+        private readonly object compileLock = new object();
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -134,7 +133,7 @@
 
             var razorResult = engine.GenerateCode(reader, sourceFileName:"placeholder");
 
-            var viewFactory = this.GenerateRazorViewFactory(renderer.CreateProvider(), razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
+            var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
             return viewFactory;
         }
@@ -178,8 +177,12 @@
 
             var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
 
-            var results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
-            
+            CompilerResults results;
+            lock (this.compileLock)
+            {
+                results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
+            }
+
             if (results.Errors.HasErrors)
             {
                 var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
@@ -354,6 +357,23 @@
             view.Initialize(this, renderContext, model);
 
             return view;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public void Dispose()
+        {
+            if (this.viewRenderers == null)
+            {
+                return;
+            }
+
+            foreach (var disposable in this.viewRenderers.OfType<IDisposable>())
+            {
+                disposable.Dispose();
+            }
         }
     }
 }
