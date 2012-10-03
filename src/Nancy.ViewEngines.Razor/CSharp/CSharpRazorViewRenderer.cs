@@ -32,9 +32,12 @@
         public RazorEngineHost Host { get; private set; }
 
         /// <summary>
-        /// Gets the provider that is used to generate code.
+        /// Creates the provider that is used to generate code.
         /// </summary>
-        public CodeDomProvider Provider { get; private set; }
+        public CodeDomProvider CreateProvider()
+        {
+            return new CSharpCodeProvider();
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CSharpRazorViewRenderer"/> class.
@@ -45,8 +48,6 @@
             {
                 typeof(Microsoft.CSharp.RuntimeBinder.Binder).GetAssemblyPath()
             };
-
-            this.Provider = new CSharpCodeProvider();
 
             this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
 
