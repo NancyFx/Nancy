@@ -344,8 +344,8 @@ namespace Nancy.Tests
         /// <param name="context">Context to return</param>
         private void SetupFakeNancyCompleteCallback(NancyContext context)
         {
-            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
-                .Invokes((i => ((Action<NancyContext>)i.Arguments[1]).Invoke(context)));
+            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
+                .Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
