@@ -61,16 +61,17 @@ namespace Nancy.Authentication.Forms
             pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
         }
 
-        /// <summary>
-        /// Creates a response that sets the authentication cookie and redirects
-        /// the user back to where they came from.
-        /// </summary>
-        /// <param name="context">Current context</param>
-        /// <param name="userIdentifier">User identifier guid</param>
-        /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
-        /// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
-        /// <returns>Nancy response with redirect.</returns>
-        public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
+    	/// <summary>
+    	/// Creates a response that sets the authentication cookie and redirects
+    	/// the user back to where they came from.
+    	/// </summary>
+    	/// <param name="context">Current context</param>
+    	/// <param name="userIdentifier">User identifier guid</param>
+    	/// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
+    	/// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
+		/// <param name="secure">Optional flag to control whether the cookie is secure (i.e. HTTPS only). Defaults to false.</param>
+    	/// <returns>Nancy response with redirect.</returns>
+    	public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/", bool secure = false)
         {
             var redirectUrl = fallbackRedirectUrl;
             string redirectQuerystringKey = GetRedirectQuerystringKey(currentConfiguration);
@@ -81,7 +82,7 @@ namespace Nancy.Authentication.Forms
             }
 
             var response = context.GetRedirect(redirectUrl);
-            var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
+			var authenticationCookie = BuildCookie(userIdentifier, cookieExpiry, secure, currentConfiguration);
             response.AddCookie(authenticationCookie);
 
             return response;
@@ -92,14 +93,15 @@ namespace Nancy.Authentication.Forms
         /// </summary>
         /// <param name="userIdentifier">User identifier guid</param>
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
+		/// <param name="secure">Optional flag to control whether the cookie is secure (i.e. HTTPS only). Defaults to false.</param>
         /// <returns>Nancy response with status <see cref="HttpStatusCode.OK"/></returns>
-        public static Response UserLoggedInResponse(Guid userIdentifier, DateTime? cookieExpiry = null)
+        public static Response UserLoggedInResponse(Guid userIdentifier, DateTime? cookieExpiry = null, bool secure = false)
         {
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
-                BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
+            var authenticationCookie =
+				BuildCookie(userIdentifier, cookieExpiry, secure, currentConfiguration);
 
             response.AddCookie(authenticationCookie);
 
@@ -212,18 +214,19 @@ namespace Nancy.Authentication.Forms
             return returnGuid;
         }
 
-        /// <summary>
-        /// Build the forms authentication cookie
-        /// </summary>
-        /// <param name="userIdentifier">Authenticated user identifier</param>
-        /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
-        /// <param name="configuration">Current configuration</param>
-        /// <returns>Nancy cookie instance</returns>
-        private static INancyCookie BuildCookie(Guid userIdentifier, DateTime? cookieExpiry, FormsAuthenticationConfiguration configuration)
+    	/// <summary>
+    	/// Build the forms authentication cookie
+    	/// </summary>
+    	/// <param name="userIdentifier">Authenticated user identifier</param>
+    	/// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
+		/// <param name="secure">Whether the cookie is secure (i.e. HTTPS only)</param>
+    	/// <param name="configuration">Current configuration</param>
+    	/// <returns>Nancy cookie instance</returns>
+    	private static INancyCookie BuildCookie(Guid userIdentifier, DateTime? cookieExpiry, bool secure, FormsAuthenticationConfiguration configuration)
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true) { Expires = cookieExpiry };
+			var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, secure) { Expires = cookieExpiry };
 
             return cookie;
         }

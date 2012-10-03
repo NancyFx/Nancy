@@ -218,6 +218,34 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_set_secure_attribute_if_secure_specified_when_logging_in_with_redirect()
+        {
+            // Given
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+
+            // When
+			var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1), secure: true);
+
+            // Then
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+                .Secure.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_set_secure_attribute_if_secure_specified_when_logging_in_without_redirect()
+        {
+            // Given
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+
+            // When
+            var result = FormsAuthentication.UserLoggedInResponse(userGuid, DateTime.Now.AddDays(1), secure: true);
+
+            // Then
+            result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
+                .Secure.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_encrypt_cookie_when_logging_in_with_redirect()
         {
             var mockEncrypter = A.Fake<IEncryptionProvider>();
