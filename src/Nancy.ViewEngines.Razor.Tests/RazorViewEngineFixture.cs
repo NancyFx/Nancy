@@ -1,4 +1,6 @@
-﻿namespace Nancy.ViewEngines.Razor.Tests
+﻿using System.Threading;
+
+namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
     using System.Dynamic;
@@ -466,6 +468,40 @@
             // Then
             var output = ReadAll(stream).Trim();
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
+        }
+
+        [Fact]
+        public void should_work_on_multiple_threads()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () =>
+                    {
+                        Thread.Sleep(500);
+                        return new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
+                    });
+
+            var wait = new ManualResetEvent(false);
+
+            var stream = new MemoryStream();
+
+            // When
+            ThreadPool.QueueUserWorkItem(_ =>
+                {
+                    var response2 = this.engine.RenderView(location, null, this.renderContext);
+                    response2.Contents.Invoke(new MemoryStream());
+                    wait.Set();
+                });
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+            
+            wait.WaitOne(1000).ShouldBeTrue();
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
 
         private static string ReadAll(Stream stream)
