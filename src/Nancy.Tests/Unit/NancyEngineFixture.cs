@@ -9,7 +9,7 @@ namespace Nancy.Tests.Unit
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
+    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     public class NancyEngineFixture
     {
@@ -39,7 +39,7 @@ namespace Nancy.Tests.Unit
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
 
-            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null));
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null, null));
 
             var applicationPipelines = new Pipelines();
 
@@ -328,6 +328,7 @@ namespace Nancy.Tests.Unit
                 new FakeRoute(),
                 DynamicDictionary.Empty,
                 null,
+                null,
                 null);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
@@ -350,6 +351,7 @@ namespace Nancy.Tests.Unit
             var resolvedRoute = new ResolveResult(
                 new FakeRoute(),
                 DynamicDictionary.Empty,
+                null,
                 null,
                 null);
 
@@ -378,6 +380,7 @@ namespace Nancy.Tests.Unit
             var resolvedRoute = new ResolveResult(
                 errorRoute,
                 DynamicDictionary.Empty,
+                null,
                 null,
                 null);
 
@@ -420,7 +423,7 @@ namespace Nancy.Tests.Unit
                 new Route("GET", "/", null, x => { throw new Exception(); });
 
             var resolved =
-                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null);
+                new ResolveResult(routeUnderTest, DynamicDictionary.Empty, null, null, null);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolved);
 
@@ -455,6 +458,7 @@ namespace Nancy.Tests.Unit
                new FakeRoute(),
                DynamicDictionary.Empty,
                null,
+               null,
                null);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
@@ -482,6 +486,7 @@ namespace Nancy.Tests.Unit
             var resolvedRoute = new ResolveResult(
                new FakeRoute(),
                DynamicDictionary.Empty,
+               null,
                null,
                null);
 
@@ -511,6 +516,7 @@ namespace Nancy.Tests.Unit
             var resolvedRoute = new ResolveResult(
                 new FakeRoute(), 
                 DynamicDictionary.Empty,
+                null,
                 null,
                 null);
 
