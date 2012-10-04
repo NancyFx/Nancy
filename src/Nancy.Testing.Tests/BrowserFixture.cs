@@ -1,4 +1,3 @@
-
 namespace Nancy.Testing.Tests
 {
     using System;
@@ -12,8 +11,6 @@ namespace Nancy.Testing.Tests
     using Nancy.Helpers;
     using Nancy.Session;
     using Xunit;
-    using FakeItEasy;
-    using Nancy.Authentication.Forms;
 
     public class BrowserFixture
     {
@@ -26,7 +23,7 @@ namespace Nancy.Testing.Tests
 
             CookieBasedSessions.Enable(bootstrapper);
 
-            browser = new Browser(bootstrapper);
+            this.browser = new Browser(bootstrapper);
         }
 
         [Fact]
@@ -36,7 +33,7 @@ namespace Nancy.Testing.Tests
             const string thisIsMyRequestBody = "This is my request body";
 
             // When
-            var result = browser.Post("/", with =>
+            var result = this.browser.Post("/", with =>
                                            {
                                                with.HttpRequest();
                                                with.Body(thisIsMyRequestBody);
@@ -55,8 +52,9 @@ namespace Nancy.Testing.Tests
             var writer = new StreamWriter(stream);
             writer.Write(thisIsMyRequestBody);
             writer.Flush();
+
             // When
-            var result = browser.Post("/", with =>
+            var result = this.browser.Post("/", with =>
                                            {
                                                with.HttpRequest();
                                                with.Body(stream, "text/plain");
@@ -72,15 +70,15 @@ namespace Nancy.Testing.Tests
             // Given
             var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
 
-            // When
-            var result = browser.Post("/", with =>
+            var result = this.browser.Post("/", with =>
                                             {
                                                 with.JsonBody(model);
                                             });
 
-            // Then
+            // When
             var actualModel = result.Body.DeserializeJson<EchoModel>();
 
+            // Then
             actualModel.ShouldNotBeNull();
             actualModel.SomeString.ShouldEqual(model.SomeString);
             actualModel.SomeInt.ShouldEqual(model.SomeInt);
@@ -171,7 +169,7 @@ namespace Nancy.Testing.Tests
                 };
 
             // When
-            var result = browser.Get("/cookie", with =>
+            var result = this.browser.Get("/cookie", with =>
             {
                 with.Cookie(cookies);
             });
@@ -185,7 +183,7 @@ namespace Nancy.Testing.Tests
         public void Should_add_a_cookie_to_the_request_and_get_a_cookie_in_response()
         {
             // Given, When
-            var result = browser.Get("/cookie", with => with.Cookie("CookieName", "CookieValue"));
+            var result = this.browser.Get("/cookie", with => with.Cookie("CookieName", "CookieValue"));
 
             // Then
             result.Cookies.Single(x => x.Name == "CookieName").Value.ShouldEqual("CookieValue");
@@ -207,7 +205,7 @@ namespace Nancy.Testing.Tests
             secondRequestWriter.Flush();
 
             // When
-            var result = browser.Post("/", with =>
+            var result = this.browser.Post("/", with =>
             {
                 with.HttpRequest();
                 with.Body(firstRequestStream, "text/plain");
@@ -226,7 +224,7 @@ namespace Nancy.Testing.Tests
         {
             // Given
             // When
-            var result = browser.Get(
+            var result = this.browser.Get(
                     "/session",
                     with => with.HttpRequest())
                 .Then
@@ -242,7 +240,7 @@ namespace Nancy.Testing.Tests
         {
             // Given
             // When
-            var result = browser.Get(
+            var result = this.browser.Get(
                     "/session",
                     with => with.HttpRequest())
                 .Then
@@ -260,44 +258,21 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_be_able_to_not_specify_delegate_for_basic_http_request()
         {
-            var result = browser.Get("/type");
+            // Given, When
+            var result = this.browser.Get("/type");
 
+            // Then
             result.Body.AsString().ShouldEqual("http");
         }
 
         [Fact]
         public void Should_add_ajax_header()
         {
-            var result = browser.Get("/ajax", with => with.AjaxRequest());
+            // Given, When
+            var result = this.browser.Get("/ajax", with => with.AjaxRequest());
 
+            // Then
             result.Body.AsString().ShouldEqual("ajax");
-        }
-
-        [Fact]
-        public void Should_add_forms_authentication_cookie_to_the_request()
-        {
-            var userId = A.Dummy<Guid>();
-
-            var formsAuthConfig = new FormsAuthenticationConfiguration()
-            {
-                RedirectUrl = "/login",
-                UserMapper = A.Fake<IUserMapper>(),
-            };
-
-            var encryptedId = formsAuthConfig.CryptographyConfiguration.EncryptionProvider.Encrypt(userId.ToString());
-            var hmacBytes = formsAuthConfig.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedId);
-            var hmacString = Convert.ToBase64String(hmacBytes);
-            var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
-
-            var response = browser.Get("/cookie", (with) =>
-            {
-                with.HttpRequest();
-                with.FormsAuth(userId, formsAuthConfig);
-            });
-
-            var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
-            var cookieValue = HttpUtility.UrlDecode(cookie.Value);
-            cookieValue.ShouldEqual(cookieContents);
         }
 
         public class EchoModel

@@ -1,5 +1,4 @@
-﻿
-namespace Nancy.Testing
+﻿namespace Nancy.Testing
 {
     using System;
     using System.Globalization;
@@ -8,7 +7,6 @@ namespace Nancy.Testing
     using System.Collections.Generic;
     using System.Linq;
 
-    using Nancy.Authentication.Forms;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
@@ -127,25 +125,6 @@ namespace Nancy.Testing
         public static void AjaxRequest(this BrowserContext browserContext)
         {
             browserContext.Header("X-Requested-With", "XMLHttpRequest");
-        }
-
-        /// <summary>
-        /// Adds forms authentication cookie to the headers of the <see cref="Browser"/>.
-        /// </summary>
-        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
-        /// <param name="userId">The user identifier</param>
-        /// <param name="formsAuthenticationConfiguration">Current configuration.</param>
-        public static void FormsAuth(this BrowserContext browserContext, Guid userId, FormsAuthenticationConfiguration formsAuthenticationConfiguration)
-        {
-            var encryptedId = formsAuthenticationConfiguration.CryptographyConfiguration.EncryptionProvider.Encrypt(userId.ToString());
-
-            var hmacBytes = formsAuthenticationConfiguration.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedId);
-
-            var hmacString = Convert.ToBase64String(hmacBytes);
-
-            var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
-
-            Cookie(browserContext, FormsAuthentication.FormsAuthenticationCookieName, cookieContents);
         }
 
         public static void Accept(this BrowserContext browserContext, MediaRange mediaRange)
