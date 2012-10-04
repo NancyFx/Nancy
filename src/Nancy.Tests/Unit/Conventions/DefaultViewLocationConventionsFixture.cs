@@ -122,7 +122,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[5];
+            var convention = this.conventions.ViewLocationConventions[7];
 
             // When
             var result = convention.Invoke(
@@ -139,7 +139,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[4];
+            var convention = this.conventions.ViewLocationConventions[6];
 
             // When
             var result = convention.Invoke(
@@ -156,7 +156,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[0];
+            var convention = this.conventions.ViewLocationConventions[2];
 
             // When
             var result = convention.Invoke(
@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[0];
+            var convention = this.conventions.ViewLocationConventions[2];
 
             // When
             var result = convention.Invoke(
@@ -224,7 +224,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[2];
+            var convention = this.conventions.ViewLocationConventions[3];
 
             // When
             var result = convention.Invoke(
@@ -275,7 +275,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[2];
+            var convention = this.conventions.ViewLocationConventions[3];
 
             // When
             var result = convention.Invoke(
@@ -292,7 +292,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[1];
+            var convention = this.conventions.ViewLocationConventions[4];
 
             // When
             var result = convention.Invoke(
@@ -309,7 +309,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[3];
+            var convention = this.conventions.ViewLocationConventions[5];
 
             // When
             var result = convention.Invoke(
@@ -319,6 +319,74 @@ namespace Nancy.Tests.Unit.Conventions
 
             // Then
             result.ShouldEqual("modulename/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_folder_in_modulepath_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[1];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename", ModulePath = "modulepath" });
+
+            // Then
+            result.ShouldEqual("modulepath/modulename/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_folder_in_modulepath_folder_in_views_folder()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[0];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename", ModulePath = "modulepath" });
+
+            // Then
+            result.ShouldEqual("views/modulepath/modulename/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_folder_in_modulepath_folder_when_modulepath_contains_leading_slash()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[1];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename", ModulePath = "/modulepath" });
+
+            // Then
+            result.ShouldEqual("modulepath/modulename/viewname");
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_viewname_in_modulename_folder_in_modulepath_folder_in_views_folder_when_modulepath_contains_leading_slash()
+        {
+            // Given
+            this.viewLocationConventions.Initialise(this.conventions);
+            var convention = this.conventions.ViewLocationConventions[0];
+
+            // When
+            var result = convention.Invoke(
+                "viewname",
+                null,
+                new ViewLocationContext { ModuleName = "modulename", ModulePath = "/modulepath" });
+
+            // Then
+            result.ShouldEqual("views/modulepath/modulename/viewname");
         }
     }
 }
