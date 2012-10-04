@@ -5,7 +5,7 @@ namespace Nancy.Routing
     using System.IO;
     using System.Linq;
     using Responses.Negotiation;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>>;
+    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -41,21 +41,30 @@ namespace Nancy.Routing
             context.Parameters = resolveResult.Item2;
             var resolveResultPreReq = resolveResult.Item3;
             var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(context, resolveResultPreReq);
+            var resolveResultOnError = resolveResult.Item5;
 
-            if (context.Response == null)
+            try
             {
-                context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+                ExecuteRoutePreReq(context, resolveResultPreReq);
+
+                if (context.Response == null)
+                {
+                    context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+                }
+
+                if (context.Request.Method.ToUpperInvariant() == "HEAD")
+                {
+                    context.Response = new HeadResponse(context.Response);
+                }
+
+                if (resolveResultPostReq != null)
+                {
+                    resolveResultPostReq.Invoke(context);
+                }
             }
-
-            if (context.Request.Method.ToUpperInvariant() == "HEAD")
+            catch (Exception exception)
             {
-                context.Response = new HeadResponse(context.Response);
-            }
-
-            if (resolveResultPostReq != null)
-            {
-                resolveResultPostReq.Invoke(context);
+                ExecuteRouteOnError(context, resolveResultOnError, exception);
             }
         }
 
@@ -71,6 +80,25 @@ namespace Nancy.Routing
             if (resolveResultPreReqResponse != null)
             {
                 context.Response = resolveResultPreReqResponse;
+            }
+        }
+
+        private static void ExecuteRouteOnError(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
+        {
+            if (resolveResultOnError == null)
+            {
+                return;
+            }
+
+            var resolveResultOnErrorResponse = resolveResultOnError.Invoke(context, exception);
+
+            if (resolveResultOnErrorResponse != null)
+            {
+                context.Response = resolveResultOnErrorResponse;
+            }
+            else
+            {
+                throw exception;
             }
         }
 
