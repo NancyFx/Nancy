@@ -202,7 +202,7 @@ namespace Nancy.Testing
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString);
+            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString, contextValues.UserHostAddress);
         }
     }
 }
