@@ -117,6 +117,34 @@ namespace Nancy.Tests.Unit.Security
         }
 
         [Fact]
+        public void Should_return_unauthorized_response_with_RequiresAnyClaim_enabled_and_no_username()
+        {
+            var module = new FakeHookedModule(new BeforePipeline());
+            module.RequiresAnyClaim(new[] { string.Empty });
+
+            var result = module.Before.Invoke(new NancyContext());
+
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
+        public void Should_return_unauthorized_response_with_RequiresAnyClaim_enabled_and_blank_username()
+        {
+            var module = new FakeHookedModule(new BeforePipeline());
+            module.RequiresAnyClaim(new[] { string.Empty });
+            var context = new NancyContext
+            {
+                CurrentUser = GetFakeUser(String.Empty)
+            };
+
+            var result = module.Before.Invoke(context);
+
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+        }
+
+        [Fact]
         public void Should_return_unauthorized_response_with_RequiresValidatedClaims_enabled_and_no_username()
         {
             var module = new FakeHookedModule(new BeforePipeline());
@@ -201,6 +229,54 @@ namespace Nancy.Tests.Unit.Security
                               {
                                   CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
                               };
+
+            var result = module.Before.Invoke(context);
+
+            result.ShouldBeNull();
+        }
+
+
+        [Fact]
+        public void Should_return_forbidden_response_with_RequiresAnyClaim_enabled_but_nonmatching_claims()
+        {
+            var module = new FakeHookedModule(new BeforePipeline());
+            module.RequiresAnyClaim(new[] { "Claim1" });
+            var context = new NancyContext
+            {
+                CurrentUser = GetFakeUser("username", new string[] { "Claim2", "Claim3" })
+            };
+
+            var result = module.Before.Invoke(context);
+
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public void Should_return_forbidden_response_with_RequiresAnyClaim_enabled_but_claims_key_missing()
+        {
+            var module = new FakeHookedModule(new BeforePipeline());
+            module.RequiresAnyClaim(new[] { "Claim1" });
+            var context = new NancyContext
+            {
+                CurrentUser = GetFakeUser("username")
+            };
+
+            var result = module.Before.Invoke(context);
+
+            result.ShouldNotBeNull();
+            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+        }
+
+        [Fact]
+        public void Should_return_null_with_RequiresAnyClaim_and_any_claim_met()
+        {
+            var module = new FakeHookedModule(new BeforePipeline());
+            module.RequiresAnyClaim(new[] { "Claim1", "Claim4" });
+            var context = new NancyContext
+            {
+                CurrentUser = GetFakeUser("username", new[] { "Claim1", "Claim2", "Claim3" })
+            };
 
             var result = module.Before.Invoke(context);
 
