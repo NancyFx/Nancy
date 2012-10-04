@@ -599,7 +599,7 @@ namespace Nancy.Demo.Hosting.Owin
             public const string ResponseStatusCode = "owin.ResponseStatusCode";
             public const string ResponseReasonPhrase = "owin.ResponseReasonPhrase";
 
-            public const string HttpContextBase = "aspnet.HttpContextBase";
+            public const string HttpContextBase = "System.Web.HttpContextBase";
 
             public const string WebSocketVersion = "websocket.Version";
             public const string WebSocketSupport = "websocket.Support";
@@ -609,7 +609,7 @@ namespace Nancy.Demo.Hosting.Owin
             public const string WebSocketCloseAsyncFunc = "websocket.CloseAsyncFunc";
             public const string WebSocketCallCancelled = "websocket.CallCancelled";
 
-            public const string AspNetWebSocketContext = "aspnet.AspNetWebSocketContext";
+            public const string AspNetWebSocketContext = "System.Web.WebSockets.AspNetWebSocketContext";
         }
     }
 }
