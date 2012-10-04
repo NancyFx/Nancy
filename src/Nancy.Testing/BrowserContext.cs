@@ -39,6 +39,11 @@
         string IBrowserContextValues.QueryString { get; set; }
 
         /// <summary>
+        /// Gets or sets the user host address
+        /// </summary>
+        string IBrowserContextValues.UserHostAddress { get; set; }
+
+        /// <summary>
         /// Gets or sets the body string
         /// </summary>
         string IBrowserContextValues.BodyString { get; set; }
@@ -137,6 +142,14 @@
                 this.Values.QueryString.Length == 0 ? "?" : "&", 
                 key,
                 value);
+        }
+
+        /// <summary>
+        /// Sets the user host address.
+        /// </summary>
+        public void UserHostAddress(string userHostAddress)
+        {
+            this.Values.UserHostAddress = userHostAddress;
         }
 
         private IBrowserContextValues Values
