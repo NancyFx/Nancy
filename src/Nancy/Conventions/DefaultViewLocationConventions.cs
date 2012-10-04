@@ -39,29 +39,59 @@
         {
             conventions.ViewLocationConventions = new List<Func<string, object, ViewLocationContext, string>>
             {
+                // 0 Handles: views / *modulepath* / *modulename* / *viewname*
+                (viewName, model, viewLocationContext) =>{
+                    if (string.IsNullOrEmpty(viewLocationContext.ModulePath))
+                    {
+                        return string.Empty;
+                    }
+
+                    var path = viewLocationContext.ModulePath.TrimStart(new[] { '/' });
+
+                    return  string.Concat("views/", path, "/", viewLocationContext.ModuleName, "/", viewName);
+                },
+
+                // 1 Handles: *modulepath* / *modulename* / *viewname*
+                (viewName, model, viewLocationContext) =>{
+                    if (string.IsNullOrEmpty(viewLocationContext.ModulePath))
+                    {
+                        return string.Empty;
+                    }
+
+                    var path = viewLocationContext.ModulePath.TrimStart(new[] { '/' });
+
+                    return  string.Concat(path, "/", viewLocationContext.ModuleName, "/", viewName);
+                },
+
+                // 2 Handles: views / *modulepath* / *viewname*
                 (viewName, model, viewLocationContext) =>{
                     return string.IsNullOrEmpty(viewLocationContext.ModulePath) ? string.Empty : string.Concat("views/", viewLocationContext.ModulePath.TrimStart(new[] {'/'}), "/", viewName);
                 },
 
-                (viewName, model, viewLocationContext) => {
-                    return string.Concat("views/", viewLocationContext.ModuleName, "/", viewName);
-                },
-
+                // 3 Handles: *modulepath* / *viewname*
                 (viewName, model, viewLocationContext) =>{
                     return string.IsNullOrEmpty(viewLocationContext.ModulePath) ? string.Empty : string.Concat(viewLocationContext.ModulePath.TrimStart(new[] { '/' }), "/", viewName);
                 },
 
+                // 4 Handles: views / *modulename* / *viewname*
+                (viewName, model, viewLocationContext) => {
+                    return string.Concat("views/", viewLocationContext.ModuleName, "/", viewName);
+                },
+
+                // 5 Handles: *modulename* / *viewname*
                 (viewName, model, viewLocationContext) => {
                     return string.Concat(viewLocationContext.ModuleName, "/", viewName);
                 },
 
+                // 6 Handles: views / *viewname*
                 (viewName, model, viewLocationContext) => {
                     return string.Concat("views/", viewName);
                 },
 
+                // 7 Handles: *viewname*
                 (viewName, model, viewLocationContext) => {
                     return viewName;
-                },
+                }
             };
         }
     }
