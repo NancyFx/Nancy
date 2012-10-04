@@ -42,6 +42,12 @@ namespace Nancy.Authentication.Forms
         public IUserMapper UserMapper { get; set; }
 
         /// <summary>
+        /// Gets or sets RequiresSSL property
+        /// </summary>
+        /// <value>The flag that indicates whether SSL is required</value>
+        public bool RequiresSSL { get; set; }
+
+        /// <summary>
         /// Gets or sets the cryptography configuration
         /// </summary>
         public CryptographyConfiguration CryptographyConfiguration { get; set; }
