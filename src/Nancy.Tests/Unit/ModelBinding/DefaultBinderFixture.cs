@@ -292,7 +292,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => typeConverter.CanConvertTo(typeof(string), null)).WithAnyArguments().Returns(true);
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments().Returns(null);
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new[] { typeConverter });
-            var binder = this.GetBinder();
+            var binder = this.GetBinder(new ITypeConverter[] { });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
             context.Request.Form["StringProperty"] = "Test";
 
@@ -488,7 +488,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_not_overwrite_nullable_property_if_already_set()
         {
             var binder = this.GetBinder();
-            var existing = new TestModel() { StringProperty = "Existing Value" };
+            var existing = new TestModel { StringProperty = "Existing Value" };
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
@@ -509,7 +509,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_not_overwrite_non_nullable_property_if_already_set()
         {
             var binder = this.GetBinder();
-            var existing = new TestModel() { IntProperty = 27};
+            var existing = new TestModel { IntProperty = 27 };
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
@@ -528,7 +528,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
-            var converters = typeConverters ?? new ITypeConverter[] { };
+            var converters = typeConverters ?? new ITypeConverter[] { new FallbackConverter(), };
             var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
             var converter = nameConverter ?? this.passthroughNameConverter;
             var defaults = bindingDefaults ?? this.emptyDefaults;
