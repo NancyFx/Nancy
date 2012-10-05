@@ -74,14 +74,20 @@ namespace Nancy.ModelBinding
 
                 var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                if ((modelProperty.PropertyType.IsValueType || existingValue == null) && 
-                    (!String.IsNullOrEmpty(stringValue)))
+                if (!String.IsNullOrEmpty(stringValue) && IsDefaultValue(existingValue, modelProperty.PropertyType))
                 {
                     this.BindProperty(modelProperty, stringValue, bindingContext);
                 }
             }
 
             return bindingContext.Model;
+        }
+
+        private bool IsDefaultValue(object existingValue, Type propertyType)
+        {
+            return propertyType.IsValueType
+                ? Equals(existingValue, Activator.CreateInstance(propertyType))
+                : existingValue == null;
         }
 
         private BindingContext CreateBindingContext(NancyContext context, Type modelType, object instance, IEnumerable<string> blackList)
