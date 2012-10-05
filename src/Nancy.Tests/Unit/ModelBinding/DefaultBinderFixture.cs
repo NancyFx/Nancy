@@ -258,7 +258,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["IntProperty"] = "12";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), "IntProperty");
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, "IntProperty");
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -362,14 +362,14 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Query["StringProperty"] = "Test";
-            context.Request.Query["IntProperty"] = "0";
+            context.Request.Query["IntProperty"] = "3";
 
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(3);
         }
 
         [Fact]
@@ -380,13 +380,13 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Parameters["StringProperty"] = "Test";
-            context.Parameters["IntProperty"] = "0";
+            context.Parameters["IntProperty"] = "3";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(3);
         }
 
         [Fact]
@@ -397,7 +397,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "0";
+            context.Request.Form["IntProperty"] = "3";
             context.Request.Query["StringProperty"] = "Test2";
             context.Request.Query["IntProperty"] = "1";
 
@@ -405,18 +405,17 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(3);
         }
 
         [Fact]
         public void Form_properties_should_take_precendence_over_request_properties_and_context_properties()
         {
-
             var binder = this.GetBinder();
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Form["StringProperty"] = "Test";
-            context.Request.Form["IntProperty"] = "0";
+            context.Request.Form["IntProperty"] = "3";
             context.Request.Query["StringProperty"] = "Test2";
             context.Request.Query["IntProperty"] = "1";
             context.Parameters["StringProperty"] = "Test3";
@@ -426,7 +425,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(3);
         }
 
         [Fact]
@@ -438,15 +437,15 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             context.Request.Query["StringProperty"] = "Test";
-            context.Request.Query["IntProperty"] = "0";
+            context.Request.Query["IntProperty"] = "12";
             context.Parameters["StringProperty"] = "Test2";
-            context.Parameters["IntProperty"] = "1";
+            context.Parameters["IntProperty"] = "13";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(12);
         }
 
         [Fact]
@@ -457,14 +456,14 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Form["StringProperty"] = "Test";
-            context.Request.Query["IntProperty"] = "0";
+            context.Request.Query["IntProperty"] = "12";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
 
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(12);
         }
 
         [Fact]
@@ -475,14 +474,56 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Request.Query["StringProperty"] = "Test";
-            context.Parameters["IntProperty"] = "0";
+            context.Parameters["IntProperty"] = "12";
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel));
 
             // Then
             result.StringProperty.ShouldEqual("Test");
-            result.IntProperty.ShouldEqual(0);
+            result.IntProperty.ShouldEqual(12);
+        }
+
+        [Fact]
+        public void Should_not_overwrite_nullable_property_if_already_set()
+        {
+            var binder = this.GetBinder();
+            var existing = new TestModel() { StringProperty = "Existing Value" };
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            context.Request.Query["StringProperty"] = "Test";
+            context.Request.Query["IntProperty"] = "12";
+            context.Parameters["StringProperty"] = "Test2";
+            context.Parameters["IntProperty"] = "1";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing);
+
+            // Then
+            result.StringProperty.ShouldEqual("Existing Value");
+            result.IntProperty.ShouldEqual(12);
+        }
+
+        [Fact]
+        public void Should_not_overwrite_non_nullable_property_if_already_set()
+        {
+            var binder = this.GetBinder();
+            var existing = new TestModel() { IntProperty = 27};
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            context.Request.Query["StringProperty"] = "Test";
+            context.Request.Query["IntProperty"] = "12";
+            context.Parameters["StringProperty"] = "Test2";
+            context.Parameters["IntProperty"] = "1";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing);
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(27);
         }
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
