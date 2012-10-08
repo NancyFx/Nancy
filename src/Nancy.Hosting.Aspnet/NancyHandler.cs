@@ -101,12 +101,12 @@ namespace Nancy.Hosting.Aspnet
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
-            foreach (var header in response.Headers)
+            foreach (var header in response.Headers.ToDictionary(x => x.Key, x => x.Value))
             {
                 context.Response.AddHeader(header.Key, header.Value);
             }
 
-            foreach(var cookie in response.Cookies)
+            foreach(var cookie in response.Cookies.ToArray())
             {
                 context.Response.AddHeader("Set-Cookie", cookie.ToString());
             }
