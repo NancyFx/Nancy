@@ -2,8 +2,7 @@
 {
     using System;
     using System.Web;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class HttpContextLifetimeProvider : TinyIoCContainer.ITinyIoCObjectLifetimeProvider
     {
@@ -32,7 +31,7 @@
 
     public static class TinyIoCAspNetExtensions
     {
-        public static TinyIoCContainer.RegisterOptions AsPerRequestSingleton(this TinyIoC.TinyIoCContainer.RegisterOptions registerOptions)
+        public static TinyIoCContainer.RegisterOptions AsPerRequestSingleton(this TinyIoCContainer.RegisterOptions registerOptions)
         {
             return TinyIoCContainer.RegisterOptions.ToCustomLifetimeManager(registerOptions, new HttpContextLifetimeProvider(), "per request singleton");
         }

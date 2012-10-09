@@ -13,9 +13,9 @@ namespace Nancy.Testing
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.Security;
+    using Nancy.TinyIoc;
     using Nancy.ViewEngines;
     using Responses.Negotiation;
-    using TinyIoC;
     using Nancy.Validation;
 
     /// <summary>

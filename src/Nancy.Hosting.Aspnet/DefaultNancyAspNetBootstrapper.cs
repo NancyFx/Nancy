@@ -5,8 +5,7 @@ namespace Nancy.Hosting.Aspnet
     using System.Collections.Generic;
 
     using Bootstrapper;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     /// <summary>
     /// TinyIoC ASP.Net Bootstrapper
