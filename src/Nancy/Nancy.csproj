@@ -185,6 +185,7 @@
     <Compile Include="Routing\IRouteDescriptionProvider.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
+    <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
     <Compile Include="StaticContentApplicationStartup.cs" />

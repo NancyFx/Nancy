@@ -6,6 +6,7 @@ namespace Nancy.Extensions
     using System.Linq;
     using System.Text.RegularExpressions;
     using Nancy.Helpers;
+    using Routing;
 
     public static class StringExtensions
     {
@@ -15,28 +16,29 @@ namespace Nancy.Extensions
         /// <value>A <see cref="Regex"/> object.</value>
         [DebuggerBrowsable(DebuggerBrowsableState.Never)]
         private static readonly Regex ParameterExpression =
-            new Regex(@"{(?<name>[A-Za-z0-9_]*)\}", RegexOptions.Compiled);
+            new Regex(@"{(?<name>[A-Za-z0-9_]*)(?:\?(?<default>[A-Za-z0-9_]*))?}", RegexOptions.Compiled);
 
-        /// <summary>   
-        /// Extracts the name of a parameter from a segment.
+        /// <summary>
+        /// Extracts information about the parameters in the <paramref name="segment"/>.
         /// </summary>
-        /// <param name="segment">The segment to extract the name from.</param>
-        /// <returns>A string containing the name of the parameter.</returns>
-        /// <exception cref="FormatException"></exception>
-        public static IEnumerable<string> GetParameterNames(this string segment)
+        /// <param name="segment">The segment that the information should be extracted from.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/>, containing <see cref="ParameterSegmentInformation"/> instances for the parameters in the segment.</returns>
+        public static IEnumerable<ParameterSegmentInformation> GetParameterDetails(this string segment)
         {
-            var nameMatch = ParameterExpression
-                .Matches(segment)
+            var matches = ParameterExpression
+                .Matches(segment);
+
+            var nameMatch = matches
                 .Cast<Match>()
-                .Where(x => x.Success);
+                .Select(x => x)
+                .ToList();
 
             if (nameMatch.Any())
             {
-
-                return nameMatch.Select(x => x.Groups["name"].Value);
+                return nameMatch.Select(x => new ParameterSegmentInformation(x.Groups["name"].Value, x.Groups["default"].Value, x.Groups["default"].Success));
             }
 
-            throw new FormatException("");
+            throw new FormatException("The segment did not contain any parameters.");
         }
 
         /// <summary>
