@@ -7,10 +7,11 @@ using Nancy.Authentication.Basic;
 namespace Nancy.Demo.Authentication.Basic
 {
     using Bootstrapper;
+    using Nancy.TinyIoc;
 
     public class AuthenticationBootstrapper : DefaultNancyBootstrapper
 	{
-		protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+		protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
 		{
             base.ApplicationStartup(container, pipelines);
 

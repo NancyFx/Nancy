@@ -5,6 +5,7 @@
     using Microsoft.CSharp;
 
     using Nancy.Tests.Fakes;
+    using Nancy.TinyIoc;
     
     using Xunit;
 
@@ -78,7 +79,7 @@
                 .CompiledAssembly;
 
             this.bootstrapper.Initialise ();
-            Assert.Throws<TinyIoC.TinyIoCResolutionException>(
+            Assert.Throws<TinyIoCResolutionException>(
                 () => this.bootstrapper.Container.Resolve(ass.GetType("IWillNotBeResolved")));
             
         }

@@ -8,8 +8,7 @@ namespace Nancy
     using System.Reflection;
 
     using Bootstrapper;
-
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     /// <summary>
     /// TinyIoC bootstrapper - registers default route resolver and registers itself as

@@ -48,7 +48,7 @@
 #endif
 
 #endregion
-namespace TinyIoC
+namespace Nancy.TinyIoc
 {
     using System;
     using System.Collections.Generic;
