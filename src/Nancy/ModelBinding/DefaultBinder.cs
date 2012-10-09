@@ -64,7 +64,7 @@ namespace Nancy.ModelBinding
 
             if (bodyDeserializedModel != null)
             {
-                return bodyDeserializedModel;
+                this.UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
             foreach (var modelProperty in bindingContext.ValidModelProperties)
@@ -81,6 +81,27 @@ namespace Nancy.ModelBinding
             }
 
             return bindingContext.Model;
+        }
+
+        private void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
+        {
+            foreach (var modelProperty in bindingContext.ValidModelProperties)
+            {
+                var existingValue =
+                    modelProperty.GetValue(bindingContext.Model, null);
+
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType))
+                {
+                    this.CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
+                }
+            }
+        }
+
+        private void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
+        {
+            var newValue = modelProperty.GetValue(bodyDeserializedModel, null);
+
+            modelProperty.SetValue(model, newValue, null);
         }
 
         private bool IsDefaultValue(object existingValue, Type propertyType)

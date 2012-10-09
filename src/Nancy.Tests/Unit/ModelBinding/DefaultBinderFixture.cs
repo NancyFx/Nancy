@@ -128,10 +128,10 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Should_return_object_from_deserializer_if_one_returned()
+        public void Should_use_object_from_deserializer_if_one_returned()
         {
             // Given
-            var modelObject = new object();
+            var modelObject = new TestModel { StringProperty = "Hello!" };
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
@@ -140,10 +140,11 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = binder.Bind(context, this.GetType());
+            var result = binder.Bind(context, typeof(TestModel));
 
             // Then
-            result.ShouldBeSameAs(modelObject);
+            result.ShouldBeOfType<TestModel>();
+            ((TestModel)result).StringProperty.ShouldEqual("Hello!");
         }
 
         [Fact]
@@ -227,8 +228,15 @@ namespace Nancy.Tests.Unit.ModelBinding
             var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
+            var validProperties = 0;
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(A<string>.Ignored)).Returns(true);
+            A.CallTo(() => deserializer.Deserialize(A<string>.Ignored, A<Stream>.Ignored, A<BindingContext>.Ignored))
+                                       .Invokes(f =>
+                                           {
+                                               validProperties = f.Arguments.Get<BindingContext>(2).ValidModelProperties.Count();
+                                           })
+                                       .Returns(new TestModel());
 
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new [] { deserializer });
 
@@ -236,7 +244,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel));
 
             // Then
-            A.CallTo(() => deserializer.Deserialize(A<string>.Ignored, A<Stream>.Ignored, A<BindingContext>.That.Matches(ctx => ctx.ValidModelProperties.Count() == 3))).MustHaveHappened(); ;
+            validProperties.ShouldEqual(4);
         }
 
         [Fact]
