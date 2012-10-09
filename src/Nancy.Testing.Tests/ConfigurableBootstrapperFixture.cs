@@ -179,7 +179,7 @@
                 new[] { typeof(NancyBootstrapperBase<>), typeof(NancyInternalConfiguration) };
 
             return typesToReflect
-                .SelectMany(x => x.GetProperties(BindingFlags.Public | BindingFlags.Instance))
+                .SelectMany(x => x.GetProperties(BindingFlags.Public | BindingFlags.Instance | BindingFlags.NonPublic))
                 .Select(x => x.Name)
                 .Where(x => !ignoreList.Contains(x, StringComparer.OrdinalIgnoreCase));
         }
