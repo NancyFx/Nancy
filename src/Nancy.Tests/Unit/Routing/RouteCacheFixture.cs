@@ -11,17 +11,19 @@
         private readonly INancyModuleCatalog fakeModuleCatalog;
         private readonly IRouteCache routeCache;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
+        private readonly IRouteDescriptionProvider routeDescriptionProvider;
 
         /// <summary>
         /// Initializes a new instance of the RouteCacheFixture class.
         /// </summary>
         public RouteCacheFixture()
         {
+            this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
             this.routeSegmentExtractor = A.Fake<IRouteSegmentExtractor>();
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
-            this.routeCache = 
-                new RouteCache(this.fakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), this.routeSegmentExtractor);
+            this.routeCache =
+                new RouteCache(this.fakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider);
         }
 
         [Fact]
@@ -110,6 +112,62 @@
                 var index = cachedRoute.Item1;
                 cachedRoute.Item2.ShouldBeSameAs(routes.ElementAt(index));
             }
+        }
+
+        [Fact]
+        public void Should_invoke_route_description_provider_with_module_that_route_is_defined_in()
+        {
+            // Given
+            var module = new FakeNancyModule(with =>
+            {
+                with.AddGetRoute("/");
+            });
+
+            var catalog = A.Fake<INancyModuleCatalog>();
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+
+            var descriptionProvider =
+                A.Fake<IRouteDescriptionProvider>();
+
+            // When
+            var cache = new RouteCache(
+                catalog,
+                new FakeModuleKeyGenerator(),
+                A.Fake<INancyContextFactory>(),
+                this.routeSegmentExtractor,
+                descriptionProvider);
+
+            // Then
+            A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_invoke_route_description_provider_with_path_of_route()
+        {
+            // Given
+            const string expectedPath = "/some/path/{capture}";
+
+            var module = new FakeNancyModule(with =>
+            {
+                with.AddGetRoute(expectedPath);
+            });
+
+            var catalog = A.Fake<INancyModuleCatalog>();
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+
+            var descriptionProvider =
+                A.Fake<IRouteDescriptionProvider>();
+
+            // When
+            var cache = new RouteCache(
+                catalog,
+                new FakeModuleKeyGenerator(),
+                A.Fake<INancyContextFactory>(),
+                this.routeSegmentExtractor,
+                descriptionProvider);
+
+            // Then
+            A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
         }
     }
 }
