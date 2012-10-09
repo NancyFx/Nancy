@@ -24,18 +24,5 @@ namespace Nancy.Tests.Unit.Extensions
         {
             string.Empty.IsParameterized().ShouldBeFalse();
         }
-
-        [Fact]
-        public void GetParameterNames_should_throw_format_exception_when_there_are_no_parameters()
-        {
-            var exception = Record.Exception(() => "route".GetParameterNames());
-            exception.ShouldBeOfType<FormatException>();
-        }
-
-        [Fact]
-        public void GetParameterNames_should_return_parameter_name()
-        {
-            "{param}".GetParameterNames().First().ShouldEqual("param");
-        }
     }
 }
