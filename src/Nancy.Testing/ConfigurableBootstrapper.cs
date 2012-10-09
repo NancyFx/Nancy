@@ -1123,6 +1123,19 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRequestDispatcher"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRequestDispatcher"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator RequestDispatcher<T>() where T : IRequestDispatcher
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new TypeRegistration(typeof(IRequestDispatcher), typeof(T)));
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteSegmentExtractor"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteSegmentExtractor"/> that the bootstrapper should use.</typeparam>
@@ -1140,23 +1153,10 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="routeSegmentExtractor">The <see cref="IRouteSegmentExtractor"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator RequestDispatcher(IRouteSegmentExtractor routeSegmentExtractor)
+            public ConfigurableBoostrapperConfigurator RouteSegmentExtractor(IRouteSegmentExtractor routeSegmentExtractor)
             {
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(IRouteSegmentExtractor), routeSegmentExtractor));
-
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IRequestDispatcher"/> instance of the specified type.
-            /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IRequestDispatcher"/> that the bootstrapper should use.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator RequestDispatcher<T>() where T : IRequestDispatcher
-            {
-                this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(IRequestDispatcher), typeof(T)));
 
                 return this;
             }
