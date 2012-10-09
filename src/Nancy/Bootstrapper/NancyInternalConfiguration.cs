@@ -87,6 +87,7 @@ namespace Nancy.Bootstrapper
                         RequestDispatcher = typeof(DefaultRequestDispatcher),
                         Diagnostics = typeof(DefaultDiagnostics),
                         RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
+                        RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     };
             }
         }
@@ -154,6 +155,8 @@ namespace Nancy.Bootstrapper
         public Type Diagnostics { get; set; }
 
         public Type RouteSegmentExtractor { get; set; }
+
+        public Type RouteDescriptionProvider { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -246,7 +249,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
                 new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
                 new TypeRegistration(typeof(IDiagnostics), this.Diagnostics), 
-                new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor)
+                new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
+                new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider)
             };
         }
 

@@ -15,12 +15,14 @@
         private readonly INancyModuleCatalog catalog;
         private readonly Func<dynamic, Response> expectedAction;
         private readonly INancyModuleBuilder moduleBuilder;
-        private readonly INancyContextFactory contextFactory;
         private readonly IModuleKeyGenerator moduleKeyGenerator;
+        private readonly IRouteDescriptionProvider routeDescriptionProvider;
         private FakeNancyModule expectedModule;
 
         public DefaultRouteResolverFixture()
         {
+            this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
+
             this.moduleBuilder = A.Fake<INancyModuleBuilder>();
             A.CallTo(() => this.moduleBuilder.BuildModule(A<NancyModule>.Ignored, A<NancyContext>.Ignored)).
                 ReturnsLazily(r => r.Arguments[0] as NancyModule);
@@ -41,7 +43,6 @@
                     c.AddParameter("foo", "bar");
                 }));
 
-            this.contextFactory = A.Fake<INancyContextFactory>();
             this.moduleKeyGenerator = A.Fake<IModuleKeyGenerator>();
             A.CallTo(() => moduleKeyGenerator.GetKeyForModuleType(A<Type>._)).ReturnsLazily(x => (string)x.Arguments[0]);
         }
@@ -552,7 +553,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filtered");
             var context = new NancyContext { Request = request };
@@ -569,7 +570,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/notfiltered");
             var context = new NancyContext { Request = request };
@@ -586,7 +587,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filt");
             var context = new NancyContext { Request = request };
@@ -607,7 +608,7 @@
             A.CallTo(() => moduleCatalog.GetModuleByKey(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(
                 new FakeNancyModuleWithPreAndPostHooks());
 
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/PrePost");
             var context = new NancyContext { Request = request };
