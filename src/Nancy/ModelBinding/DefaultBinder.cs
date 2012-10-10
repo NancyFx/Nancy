@@ -63,7 +63,7 @@ namespace Nancy.ModelBinding
 
             if (bodyDeserializedModel != null)
             {
-                return bodyDeserializedModel;
+                bindingContext.Model = bodyDeserializedModel;
             }
 
             foreach (var modelProperty in bindingContext.ValidModelProperties)
