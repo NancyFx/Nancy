@@ -85,6 +85,11 @@ namespace Nancy.ModelBinding
 
         private void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
         {
+            if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable())
+            {
+                bindingContext.Model = bodyDeserializedModel;
+            }
+
             foreach (var modelProperty in bindingContext.ValidModelProperties)
             {
                 var existingValue =
