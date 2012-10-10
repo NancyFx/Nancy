@@ -587,6 +587,20 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.AnotherStringProprety.ShouldEqual("From Context");
         }
 
+        [Fact]
+        public void Should_ignore_existing_instance_if_type_doesnt_match()
+        {
+            var binder = this.GetBinder();
+            var existing = new object();
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing);
+
+            // Then
+            result.ShouldNotBeSameAs(existing);
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new FallbackConverter(), };
