@@ -1,8 +1,7 @@
-﻿using Nancy.Security;
-
-namespace Nancy.Authentication.Forms
+﻿namespace Nancy.Authentication.Forms
 {
     using System;
+    using Nancy.Security;
 
     /// <summary>
     /// Provides a mapping between forms auth guid identifiers and
