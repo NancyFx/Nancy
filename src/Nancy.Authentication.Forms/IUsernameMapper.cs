@@ -11,7 +11,7 @@ namespace Nancy.Authentication.Forms
     public interface IUserMapper
     {
         /// <summary>
-        /// Get the real username from an indentifier
+        /// Get the real username from an identifier
         /// </summary>
         /// <param name="identifier">User identifier</param>
         /// <param name="context">The current NancyFx context</param>
