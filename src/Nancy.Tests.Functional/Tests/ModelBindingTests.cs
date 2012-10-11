@@ -33,7 +33,7 @@
             });
 
             // Then
-            Assert.Equal(result.StatusCode, HttpStatusCode.OK);
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
     }
 

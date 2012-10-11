@@ -48,11 +48,6 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
             var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] { bodyText });
 
-            if (context.DestinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Except(context.ValidModelProperties).Any())
-            {
-                return CreateObjectWithBlacklistExcluded(context, deserializedObject);
-            }
-
             return deserializedObject;
         }
 

@@ -13,7 +13,7 @@ namespace Nancy.ModelBinding
         /// <returns>Model adapter - cast to a model type to bind it</returns>
         public static dynamic Bind(this NancyModule module, params string[] blacklistedProperties)
         {
-            return new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context, blacklistedProperties);
+            return new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context, null, blacklistedProperties);
         }
 
         /// <summary>
@@ -35,23 +35,11 @@ namespace Nancy.ModelBinding
         /// <param name="module">Current module</param>
         /// <param name="instance">The class instance to bind properties to</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
-        public static void BindTo<TModel>(this NancyModule module, TModel instance, params string[] blacklistedProperties)
+        public static TModel BindTo<TModel>(this NancyModule module, TModel instance, params string[] blacklistedProperties)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException("instance", "The instance parameter cannot be null");
-            }
-
-            var boundModel = module.Bind(blacklistedProperties);
-
-            foreach (var item in TypeDescriptor.GetProperties(boundModel))
-            {
-                var value = item.GetValue(boundModel);
-                if (value != null)
-                {
-                    item.SetValue(instance, value);
-                }
-            }
+            dynamic adapter = new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context, instance, blacklistedProperties);
+            
+            return adapter;
         }
     }
 }
