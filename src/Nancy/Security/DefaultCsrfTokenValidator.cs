@@ -4,10 +4,18 @@ namespace Nancy.Security
     using System.Linq;
     using Cryptography;
 
+    /// <summary>
+    /// The default implementation of the <see cref="ICsrfTokenValidator"/> interface.
+    /// </summary>
     public class DefaultCsrfTokenValidator : ICsrfTokenValidator
     {
         private readonly IHmacProvider hmacProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultCsrfTokenValidator"/> class,
+        /// using the provided <paramref name="cryptoConfig"/>.
+        /// </summary>
+        /// <param name="cryptoConfig">The <see cref="CryptographyConfiguration"/> that should be used.</param>
         public DefaultCsrfTokenValidator(CryptographyConfiguration cryptoConfig)
         {
             this.hmacProvider = cryptoConfig.HmacProvider;
