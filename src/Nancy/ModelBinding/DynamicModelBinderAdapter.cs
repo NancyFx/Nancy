@@ -19,6 +19,11 @@
         private readonly NancyContext context;
 
         /// <summary>
+        /// Optional existing instance, or null
+        /// </summary>
+        private readonly object instance;
+
+        /// <summary>
         /// Properties that are blacklisted for binding
         /// </summary>
         private readonly string[] blacklistedProperties;
@@ -28,7 +33,8 @@
         /// </summary>
         /// <param name="locator">Model binder locator</param>
         /// <param name="context">Nancy context</param>
-        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, params string[] blacklistedProperties)
+        /// <param name="instance">Optional existing instance, or null</param>
+        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, object instance = null, params string[] blacklistedProperties)
         {
             if (locator == null)
             {
@@ -42,6 +48,7 @@
 
             this.locator = locator;
             this.context = context;
+            this.instance = instance;
             this.blacklistedProperties = blacklistedProperties;
         }
 
@@ -61,7 +68,7 @@
                 throw new ModelBindingException(binder.Type);
             }
 
-            result = modelBinder.Bind(this.context, binder.Type, this.blacklistedProperties);
+            result = modelBinder.Bind(this.context, binder.Type, this.instance, this.blacklistedProperties);
 
             return result != null || base.TryConvert(binder, out result);
         }

@@ -105,30 +105,6 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         }
 
         [Fact]
-        public void Should_only_set_allowed_properties()
-        {
-            // Given
-            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
-            var context = new BindingContext()
-            {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties().Where(p => !(p.Name == "ArrayProperty" || p.Name == "DateProperty")),
-            };
-
-            // When
-            var result = (TestModel)this.deserialize.Deserialize(
-                            "application/json",
-                            bodyStream,
-                            context);
-
-            // Then
-            result.StringProperty.ShouldEqual(this.testModel.StringProperty);
-            result.IntProperty.ShouldEqual(this.testModel.IntProperty);
-            result.ArrayProperty.ShouldBeNull();
-            result.DateProperty.ShouldEqual(default(DateTime));
-        }
-
-        [Fact]
         public void Should_deserialize_timespan()
         {
             // Given
