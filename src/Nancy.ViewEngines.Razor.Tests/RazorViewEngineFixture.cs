@@ -340,7 +340,6 @@ namespace Nancy.ViewEngines.Razor.Tests
                                         "<div>ViewThatUsesLayoutAndSection</div>");
         }
 
-
         [Fact]
         public void Should_be_able_to_render_view_with_layout_and_many_sections_to_stream()
         {
@@ -503,6 +502,23 @@ namespace Nancy.ViewEngines.Razor.Tests
             // Then
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
+
+        [Fact]
+        public void Should_set_status_code_to_500_when_exception_is_thrown_in_view()
+        {
+            // Given
+            var location = FindView("ViewThatThrowsException");
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
 
         private static string ReadAll(Stream stream)
         {
