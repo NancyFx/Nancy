@@ -24,20 +24,6 @@ namespace Nancy.Demo.Hosting.Aspnet
                     .WithHeader("X-Custom", "SomeValue");
             };
 
-            Get["/stream"] = parameters => {
-
-                var buffer = new MemoryStream();
-                using (var writer = new StreamWriter(new UnclosableStreamWrapper(buffer)))
-                {
-                    writer.Write("Hello from the stream");
-                    writer.Flush();
-                }
-
-                buffer.Position = 0;
-
-                return Response.FromStream(buffer, "text/html");
-            };
-
             Get["/user/{name}"] = parameters =>
             {
                 return (string)parameters.name;
