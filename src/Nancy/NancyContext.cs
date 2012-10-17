@@ -114,6 +114,11 @@ namespace Nancy
             {
                 ((IDisposable) this.request).Dispose();
             }
+
+            if (this.Response != null)
+            {
+                this.Response.Dispose();
+            }
         }
     }
 }

@@ -1,7 +1,9 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
+    using System.IO;
     using System.Linq;
+    using IO;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
