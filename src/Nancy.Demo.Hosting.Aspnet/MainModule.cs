@@ -1,7 +1,9 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
+    using System.IO;
     using System.Linq;
+    using IO;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
@@ -20,6 +22,20 @@ namespace Nancy.Demo.Hosting.Aspnet
                     .WithMediaRangeModel("text/html", new RatPack {FirstName = "Nancy fancy pants"})
                     .WithView("negotiatedview")
                     .WithHeader("X-Custom", "SomeValue");
+            };
+
+            Get["/stream"] = parameters => {
+
+                var buffer = new MemoryStream();
+                using (var writer = new StreamWriter(new UnclosableStreamWrapper(buffer)))
+                {
+                    writer.Write("Hello from the stream");
+                    writer.Flush();
+                }
+
+                buffer.Position = 0;
+
+                return Response.FromStream(buffer, "text/html");
             };
 
             Get["/user/{name}"] = parameters =>
