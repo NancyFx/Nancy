@@ -99,6 +99,7 @@
     <Compile Include="BasicAuthenticationConfiguration.cs" />
     <Compile Include="BasicHttpExtensions.cs" />
     <Compile Include="IUserValidator.cs" />
+    <Compile Include="UserPromptBehaviour.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

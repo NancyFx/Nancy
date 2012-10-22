@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nancy.Authentication.Basic;
-
-namespace Nancy.Demo.Authentication.Basic
+﻿namespace Nancy.Demo.Authentication.Basic
 {
+    using Nancy.Authentication.Basic;
     using Bootstrapper;
     using Nancy.TinyIoc;
 

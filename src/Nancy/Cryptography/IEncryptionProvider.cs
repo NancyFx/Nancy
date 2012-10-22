@@ -1,12 +1,12 @@
 namespace Nancy.Cryptography
 {
     /// <summary>
-    /// Provides symetrical encryption support
+    /// Provides symmetrical encryption support
     /// </summary>
     public interface IEncryptionProvider
     {
         /// <summary>
-        /// Encyrypt and base64 encode the string
+        /// Encrypt and base64 encode the string
         /// </summary>
         /// <param name="data">Data to encrypyt</param>
         /// <returns>Encrypted string</returns>

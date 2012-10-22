@@ -13,6 +13,14 @@
     {
         private readonly Rfc2898DeriveBytes provider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassphraseKeyGenerator"/> class, with
+        /// the provided <paramref name="passphrase"/>, <paramref name="salt"/> and optional
+        /// number of <paramref name="iterations"/>
+        /// </summary>
+        /// <param name="passphrase">The passphrade that should be used.</param>
+        /// <param name="salt">The salt</param>
+        /// <param name="iterations">The number of iterations. The default value is 10000.</param>
         public PassphraseKeyGenerator(string passphrase, byte[] salt, int iterations = 10000)
         {
             if (salt.Length < 8)

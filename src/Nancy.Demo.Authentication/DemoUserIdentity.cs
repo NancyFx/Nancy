@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using Nancy.Security;
-
-namespace Nancy.Demo.Authentication
+﻿namespace Nancy.Demo.Authentication
 {
+    using System.Collections.Generic;
+    using Nancy.Security;
+
     public class DemoUserIdentity : IUserIdentity
     {
         public string UserName { get; set; }
