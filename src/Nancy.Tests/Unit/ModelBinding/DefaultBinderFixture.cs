@@ -632,7 +632,7 @@ namespace Nancy.Tests.Unit.ModelBinding
                 { name, values }
             };
 
-            byte[] byteArray = Encoding.ASCII.GetBytes(body);
+            byte[] byteArray = Encoding.UTF8.GetBytes(body);
             var bodyStream = RequestStream.FromStream(new MemoryStream(byteArray));
 
             return new NancyContext
