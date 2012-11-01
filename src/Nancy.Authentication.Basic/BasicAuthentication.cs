@@ -1,10 +1,10 @@
 ﻿namespace Nancy.Authentication.Basic
 {
     using System;
-using System.Text;
-using Nancy.Bootstrapper;
+    using System.Text;
+    using Nancy.Bootstrapper;
     using Nancy.Extensions;
-using Nancy.Security;
+    using Nancy.Security;
 
     /// <summary>
     /// Nancy basic authentication implementation
@@ -89,7 +89,7 @@ using Nancy.Security;
 
         private static void RetrieveCredentials(NancyContext context, BasicAuthenticationConfiguration configuration)
         {
-            var credentials = 
+            var credentials =
                 ExtractCredentialsFromHeaders(context.Request);
 
             if (credentials != null && credentials.Length == 2)

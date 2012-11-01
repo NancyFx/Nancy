@@ -1,4 +1,4 @@
-﻿<viewdata model="Nancy.Validation.ValidationResult"/>
+﻿<viewdata model="Nancy.Validation.ModelValidationResult"/>
 <html>
   <head>
     <title>Customers</title>

@@ -114,7 +114,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions\EnvironmentExtensionsFixture.cs" />
     <Compile Include="Fakes\FakeConsumer.cs" />
     <Compile Include="Fakes\FakeProducer.cs" />
     <Compile Include="NancyOwinHostFixture.cs" />

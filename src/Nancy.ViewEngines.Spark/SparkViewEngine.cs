@@ -1,6 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Spark
 {
-    using System;
     using System.Collections.Generic;
     using System.Configuration;
     using System.Dynamic;
@@ -16,21 +15,28 @@
     public class SparkViewEngine : IViewEngine
     {
         private readonly IDescriptorBuilder descriptorBuilder;
-        private readonly ISparkViewEngine engine;
+        private readonly global::Spark.SparkViewEngine engine;
         private readonly ISparkSettings settings;
         private readonly string[] extensions = new[] { "spark", "shade" };
+
+        public SparkViewEngine()
+            : this(new DefaultRootPathProvider())
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
         /// </summary>
-        public SparkViewEngine()
+        public SparkViewEngine(IRootPathProvider rootPathProvider)
         {
             this.settings = (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-
-            this.engine = new global::Spark.SparkViewEngine(this.settings)
-            {
-                DefaultPageBaseType = typeof(NancySparkView).FullName
-            };
+            
+            this.engine = 
+                new global::Spark.SparkViewEngine(this.settings)
+                {
+                    DefaultPageBaseType = typeof (NancySparkView).FullName,
+                    BindingProvider = new NancyBindingProvider(rootPathProvider),
+                };
 
             this.descriptorBuilder = new DefaultDescriptorBuilder(this.engine);
         }

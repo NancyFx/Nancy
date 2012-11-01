@@ -8,7 +8,7 @@ namespace Nancy
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
-    public class Response
+    public class Response: IDisposable
     {
         /// <summary>
         /// Null object representing no body    
@@ -103,6 +103,14 @@ namespace Nancy
                 var writer = new StreamWriter(stream) { AutoFlush = true };
                 writer.Write(contents);
             };
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>This method can be overriden in sub-classes to dispose of response specific resources.</remarks>
+        public virtual void Dispose()
+        {
         }
     }
 }

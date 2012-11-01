@@ -5,6 +5,7 @@ namespace Nancy.Demo.Caching
     using Bootstrapper;
     using Nancy;
     using Nancy.Demo.Caching.CachingExtensions;
+    using Nancy.TinyIoc;
 
     public class CachingBootstrapper : DefaultNancyBootstrapper
     {
@@ -12,7 +13,7 @@ namespace Nancy.Demo.Caching
 
         private readonly Dictionary<string, Tuple<DateTime, Response, int>> cachedResponses = new Dictionary<string, Tuple<DateTime, Response, int>>();
 
-        protected override void ApplicationStartup(TinyIoC.TinyIoCContainer container, IPipelines pipelines)
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
         {
             base.ApplicationStartup(container, pipelines);
 

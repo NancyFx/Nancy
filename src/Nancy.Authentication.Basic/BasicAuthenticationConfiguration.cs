@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace Nancy.Authentication.Basic
+﻿namespace Nancy.Authentication.Basic
 {
-	/// <summary>
+    using System;
+    
+    /// <summary>
 	/// Configuration options for forms authentication
 	/// </summary>
 	public class BasicAuthenticationConfiguration
@@ -46,25 +45,4 @@ namespace Nancy.Authentication.Basic
         /// </summary>
         public UserPromptBehaviour UserPromptBehaviour { get; private set; }
     }
-
-    /// <summary>
-    /// Options to control when the browser prompts the user for credentials
-    /// </summary>
-    public enum UserPromptBehaviour
-    {
-        /// <summary>
-        /// Never present user with login prompt
-        /// </summary>
-        Never,
-        
-        /// <summary>
-        /// Always present user with login prompt
-        /// </summary>
-        Always,
-
-        /// <summary>
-        /// Only prompt the user for credentials on non-ajax requests
-        /// </summary>
-        NonAjax
-	}
 }

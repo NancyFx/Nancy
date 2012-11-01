@@ -27,7 +27,6 @@
         {
             conventions.AcceptHeaderCoercionConventions = new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>(2)
                                                               {
-                                                                  BuiltInAcceptHeaderCoercions.CoerceStupidBrowsers, 
                                                                   BuiltInAcceptHeaderCoercions.BoostHtml,
                                                                   BuiltInAcceptHeaderCoercions.CoerceBlankAcceptHeader,
                                                               };

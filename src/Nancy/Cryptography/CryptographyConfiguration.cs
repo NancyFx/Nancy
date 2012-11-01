@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Nancy.Cryptography
+﻿namespace Nancy.Cryptography
 {
+    using System;
+
     /// <summary>
     /// Cryptographic setup for classes that use encryption and HMAC
     /// </summary>

@@ -8,6 +8,8 @@
     /// </summary>
     public class StreamResponse : Response
     {
+        private Stream source;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="StreamResponse"/> class with the
         /// provided stream provider and content-type.
@@ -21,15 +23,26 @@
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private static Action<Stream> GetResponseBodyDelegate(Func<Stream> sourceDelegate)
+        private Action<Stream> GetResponseBodyDelegate(Func<Stream> sourceDelegate)
         {
             return stream =>
             {
-                using (var source = sourceDelegate.Invoke())
+                using (this.source = sourceDelegate.Invoke())
                 {
-                    source.CopyTo(stream);
+                    this.source.CopyTo(stream);
                 }
             };
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        public override void Dispose()
+        {
+            if (this.source != null)
+            {
+                this.source.Dispose();       
+            }
         }
     }
 }

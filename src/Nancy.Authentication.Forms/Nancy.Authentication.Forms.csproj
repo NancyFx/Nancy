@@ -104,7 +104,7 @@
     </Compile>
     <Compile Include="FormsAuthentication.cs" />
     <Compile Include="FormsAuthenticationConfiguration.cs" />
-    <Compile Include="IUsernameMapper.cs" />
+    <Compile Include="IUserMapper.cs" />
     <Compile Include="ModuleExtensions.cs" />
   </ItemGroup>
   <ItemGroup>

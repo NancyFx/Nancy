@@ -4,7 +4,7 @@ namespace Nancy.Cryptography
     using System.Text;
 
     /// <summary>
-    /// Provides SHA-1 HMACs
+    /// Provides SHA-256 HMACs
     /// </summary>
     public class DefaultHmacProvider : IHmacProvider
     {

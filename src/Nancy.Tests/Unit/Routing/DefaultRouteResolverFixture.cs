@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
+    using System.Collections.Generic;
     using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Routing;
@@ -14,12 +15,14 @@
         private readonly INancyModuleCatalog catalog;
         private readonly Func<dynamic, Response> expectedAction;
         private readonly INancyModuleBuilder moduleBuilder;
-        private readonly INancyContextFactory contextFactory;
         private readonly IModuleKeyGenerator moduleKeyGenerator;
+        private readonly IRouteDescriptionProvider routeDescriptionProvider;
         private FakeNancyModule expectedModule;
 
         public DefaultRouteResolverFixture()
         {
+            this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
+
             this.moduleBuilder = A.Fake<INancyModuleBuilder>();
             A.CallTo(() => this.moduleBuilder.BuildModule(A<NancyModule>.Ignored, A<NancyContext>.Ignored)).
                 ReturnsLazily(r => r.Arguments[0] as NancyModule);
@@ -33,21 +36,20 @@
             A.CallTo(() => this.catalog.GetModuleByKey(A<string>.Ignored, A<NancyContext>.Ignored)).ReturnsLazily(() => this.expectedModule);
 
             this.matcher = A.Fake<IRoutePatternMatcher>();
-            A.CallTo(() => this.matcher.Match(A<string>.Ignored, A<string>.Ignored, A<NancyContext>.Ignored)).ReturnsLazily(x =>
+            A.CallTo(() => this.matcher.Match(A<string>.Ignored, A<string>.Ignored, A<IEnumerable<string>>.Ignored, A<NancyContext>.Ignored)).ReturnsLazily(x =>
                 new FakeRoutePatternMatchResult(c =>
                 {
                     c.IsMatch(((string)x.Arguments[0]).Equals(((string)x.Arguments[1])));
                     c.AddParameter("foo", "bar");
                 }));
 
-            this.contextFactory = A.Fake<INancyContextFactory>();
             this.moduleKeyGenerator = A.Fake<IModuleKeyGenerator>();
-            A.CallTo(() => moduleKeyGenerator.GetKeyForModuleType(A<Type>._)).ReturnsLazily(x => (string) x.Arguments[0]);
+            A.CallTo(() => moduleKeyGenerator.GetKeyForModuleType(A<Type>._)).ReturnsLazily(x => (string)x.Arguments[0]);
         }
 
         private DefaultRouteResolver CreateResolver(Action<FakeRouteCache.FakeRouteCacheConfigurator> closure)
         {
-            var cache = 
+            var cache =
                 new FakeRouteCache(closure);
 
             return CreateResolver(cache);
@@ -63,9 +65,9 @@
         {
             // Given
             var request = new FakeRequest("get", "/foo/bar");
-            var context = new NancyContext {Request = request};
-            
-            var resolver = 
+            var context = new NancyContext { Request = request };
+
+            var resolver =
                 CreateResolver(x => x.AddGetRoute("/foo/bar", "module-key"));
 
             // When
@@ -103,14 +105,15 @@
             var request = new FakeRequest("get", "/foo/bar");
             var context = new NancyContext { Request = request };
 
-            var resolver = CreateResolver(x => {
+            var resolver = CreateResolver(x =>
+            {
                 x.AddGetRoute("/foo/{bar}", "first-module-key-parameters");
                 x.AddGetRoute("/foo/{bar}", "second-module-key-parameters");
             });
 
             this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/{bar}", this.expectedAction));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
             // When
@@ -127,15 +130,16 @@
             var request = new FakeRequest("get", "/foo/bar/foo");
             var context = new NancyContext { Request = request };
 
-            var resolver = CreateResolver(x => {
+            var resolver = CreateResolver(x =>
+            {
                 x.AddGetRoute("/foo/{bar}/{foo}", "module-key-two-parameters");
                 x.AddGetRoute("/foo/{bar}", "module-key-one-parameter");
             });
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", null)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<IEnumerable<string>>._, null)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{foo}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{foo}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("foo", "fake value")
                     .AddParameter("bar", "fake value 2")));
@@ -164,13 +168,13 @@
                 x.AddGetRoute("/{foo}/{bar}", "module-key-two-parameters");
             });
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar", null)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar", A<IEnumerable<string>>._, null)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", null)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<IEnumerable<string>>._, null)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", null)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<IEnumerable<string>>._, null)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("foo", "fake value")
                     .AddParameter("bar", "fake value")));
@@ -189,7 +193,7 @@
             // Given
             var request = new FakeRequest("get", "/foo/bar/me");
             var context = new NancyContext { Request = request };
-            
+
             var resolver = CreateResolver(x =>
             {
                 x.AddGetRoute("/foo/{bar}", "module-key-first");
@@ -200,15 +204,15 @@
 
             this.expectedModule = new FakeNancyModule(x => x.AddGetRoute("/foo/bar/{two}", this.expectedAction));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar/{two}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/bar/{two}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("two", "fake values")));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{two}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}/{two}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)
                     .AddParameter("bar", "fake values")
                     .AddParameter("two", "fake values")));
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/foo/{bar}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("bar", "fake value")));
 
             // When
@@ -223,16 +227,17 @@
         {
             var request = new FakeRequest("get", "/");
             var context = new NancyContext { Request = request };
-            
-            var resolver = CreateResolver(x => {
+
+            var resolver = CreateResolver(x =>
+            {
                 x.AddGetRoute("/{name}", "module-key-second");
                 x.AddGetRoute("/", "module-key-first");
                 x.AddGetRoute("/{name}", "module-key-second");
             });
 
-            A.CallTo(() => this.matcher.Match(request.Path, "/", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true)));
-            A.CallTo(() => this.matcher.Match(request.Path, "/{name}", A<NancyContext>.Ignored)).Returns(
+            A.CallTo(() => this.matcher.Match(request.Path, "/{name}", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(true).AddParameter("name", "fake values")));
 
             // When
@@ -247,14 +252,14 @@
         {
             // Given
             var request = new FakeRequest("get", "/foo/bar");
-            var context = new NancyContext {Request = request};
+            var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
 
             // When
             resolver.Resolve(context);
 
             // Then
-            A.CallTo(() => this.matcher.Match(request.Path, A<string>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(request.Path, A<string>.Ignored, A<IEnumerable<string>>._, A<NancyContext>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -269,7 +274,7 @@
             resolver.Resolve(context);
 
             // Then
-            A.CallTo(() => this.matcher.Match(A<string>.Ignored, A<string>.Ignored, context)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(A<string>.Ignored, A<string>.Ignored, A<IEnumerable<string>>._, context)).MustHaveHappened();
         }
 
         [Fact]
@@ -278,8 +283,9 @@
             // Given
             var request = new FakeRequest("get", "/foo/bar");
             var context = new NancyContext { Request = request };
-            
-            var resolver = CreateResolver(x => {
+
+            var resolver = CreateResolver(x =>
+            {
                 x.AddGetRoute("/foo/bar");
                 x.AddGetRoute("/bar/foo");
                 x.AddGetRoute("/foobar");
@@ -289,9 +295,9 @@
             resolver.Resolve(context);
 
             // Then
-            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/foo/bar", A<NancyContext>.Ignored)).MustHaveHappened();
-            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/bar/foo", A<NancyContext>.Ignored)).MustHaveHappened();
-            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/foobar", A<NancyContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/foo/bar", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/bar/foo", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).MustHaveHappened();
+            A.CallTo(() => this.matcher.Match(A<string>.Ignored, "/foobar", A<IEnumerable<string>>._, A<NancyContext>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
@@ -334,8 +340,9 @@
             // Given
             var request = new FakeRequest("POST", "/foo/bar");
             var context = new NancyContext { Request = request };
-            
-            var resolver = CreateResolver(x => {
+
+            var resolver = CreateResolver(x =>
+            {
                 x.AddGetRoute("/foo/bar");
                 x.AddPutRoute("/foo/bar");
             });
@@ -423,7 +430,7 @@
             var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddGetRoute("/bar/foo"));
 
-            A.CallTo(() => this.matcher.Match("/foo/bar", "/bar/foo", null)).Returns(
+            A.CallTo(() => this.matcher.Match("/foo/bar", "/bar/foo", A<IEnumerable<string>>._, null)).Returns(
                 new FakeRoutePatternMatchResult(x => x.IsMatch(false)));
 
             // When
@@ -456,7 +463,7 @@
         {
             // Given
             var request = new FakeRequest("OPTIONS", "/foo/bar");
-            var context = new NancyContext {Request = request};
+            var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
 
             // When 
@@ -470,17 +477,17 @@
         [Fact]
         public void Should_have_status_code_200_for_options_when_route_is_defined()
         {
-          // Given
-          var request = new FakeRequest("OPTIONS", "/foo/bar");
-          var context = new NancyContext { Request = request };
-          var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
+            // Given
+            var request = new FakeRequest("OPTIONS", "/foo/bar");
+            var context = new NancyContext { Request = request };
+            var resolver = CreateResolver(x => x.AddGetRoute("/foo/bar"));
 
-          // When 
-          var resolvedRoute = resolver.Resolve(context);
-          var response = (Response)resolvedRoute.Item1.Invoke(null);
+            // When 
+            var resolvedRoute = resolver.Resolve(context);
+            var response = (Response)resolvedRoute.Item1.Invoke(null);
 
-          // Then
-          response.StatusCode.ShouldEqual(HttpStatusCode.OK);
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
         [Fact]
@@ -505,7 +512,7 @@
         {
             // Given
             var request = new FakeRequest("OPTIONS", "/foo/bar");
-            var context = new NancyContext {Request = request};
+            var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x =>
             {
                 x.AddGetRoute("/foo/bar");
@@ -526,7 +533,7 @@
         {
             // Given
             var request = new FakeRequest("OPTIONS", "/foo/bar");
-            var context = new NancyContext {Request = request};
+            var context = new NancyContext { Request = request };
             var resolver = CreateResolver(x =>
             {
                 x.AddGetRoute("/foo/bar");
@@ -546,7 +553,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filtered");
             var context = new NancyContext { Request = request };
@@ -563,7 +570,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/notfiltered");
             var context = new NancyContext { Request = request };
@@ -580,7 +587,7 @@
         {
             // Given
             var moduleCatalog = new FakeModuleCatalog();
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/filt");
             var context = new NancyContext { Request = request };
@@ -601,7 +608,7 @@
             A.CallTo(() => moduleCatalog.GetModuleByKey(A<string>.Ignored, A<NancyContext>.Ignored)).Returns(
                 new FakeNancyModuleWithPreAndPostHooks());
 
-            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>());
+            var routeCache = new RouteCache(moduleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), A.Fake<IRouteSegmentExtractor>(), this.routeDescriptionProvider);
             var specificResolver = new DefaultRouteResolver(moduleCatalog, this.matcher, this.moduleBuilder, routeCache, null);
             var request = new FakeRequest("GET", "/PrePost");
             var context = new NancyContext { Request = request };

@@ -3,7 +3,7 @@ namespace Nancy.Tests.Unit
 {
     using Nancy.Bootstrapper;
     using Bootstrapper.Base;
-    using TinyIoC;
+    using Nancy.TinyIoc;
 
     public class DefaultNancyBootstrapperBootstrapperBaseFixture : BootstrapperBaseFixtureBase<TinyIoCContainer>
     {

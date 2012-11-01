@@ -13,6 +13,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
     using Nancy.ModelBinding.DefaultBodyDeserializers;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class JsonBodyDeserializerFixture
     {
@@ -101,30 +102,6 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             // Then
             result.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_only_set_allowed_properties()
-        {
-            // Given
-            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelJson));
-            var context = new BindingContext()
-            {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties().Where(p => !(p.Name == "ArrayProperty" || p.Name == "DateProperty")),
-            };
-
-            // When
-            var result = (TestModel)this.deserialize.Deserialize(
-                            "application/json",
-                            bodyStream,
-                            context);
-
-            // Then
-            result.StringProperty.ShouldEqual(this.testModel.StringProperty);
-            result.IntProperty.ShouldEqual(this.testModel.IntProperty);
-            result.ArrayProperty.ShouldBeNull();
-            result.DateProperty.ShouldEqual(default(DateTime));
         }
 
         [Fact]
@@ -245,7 +222,41 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             Assert.Equal(modelWithDoubleValues.Latitude, deserializedModelWithDoubleValues.Latitude);
             Assert.Equal(modelWithDoubleValues.Longitude, deserializedModelWithDoubleValues.Longitude);
         }
+
 #endif
+
+        [Theory]
+        [InlineData("\n")]
+        [InlineData("\n\r")]
+        [InlineData("\r\n")]
+        [InlineData("\r")]
+        public void Should_Serialize_Last_Prop_is_Bool_And_Trailing_NewLine(string lineEndings)
+        { 
+            // Given
+            var json = string.Concat("{\"Property\": true", lineEndings, "}");
+
+            // When
+            var s = new JavaScriptSerializer();
+            var deserialized = (dynamic)s.DeserializeObject(json);
+            
+            // Then
+            Assert.True(deserialized["Property"]);
+        }
+
+        [Fact]
+        public void Should_Serialize_Last_Prop_is_Bool()
+        {
+            // Given
+            var json = "{\"Property\": true}";
+            
+            // When
+            var s = new JavaScriptSerializer();
+            var deserialized = (dynamic)s.DeserializeObject(json);
+            
+            // Then
+            Assert.True(deserialized["Property"]);
+        }
+
         public class TestModel : IEquatable<TestModel>
         {
             public string StringProperty { get; set; }

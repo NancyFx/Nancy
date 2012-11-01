@@ -119,7 +119,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         class InterfaceModelBinder : IModelBinder
         {
-            public object Bind(NancyContext context, Type modelType, params string[] blackList)
+            public object Bind(NancyContext context, Type modelType, object instance = null, params string[] blackList)
             {
                 return new Concrete() as IAmAnInterface;
             }

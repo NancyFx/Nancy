@@ -7,7 +7,7 @@ namespace Nancy
     /// <summary>
     /// Represents a full Url of the form scheme://hostname:port/basepath/path?query#fragment
     /// </summary>
-    public class Url
+    public sealed class Url : ICloneable
     {
         private string basePath;
 
@@ -74,6 +74,19 @@ namespace Nancy
         /// </summary>
         public string Fragment { get; set; }
 
+        /// <summary>
+        /// Gets the domain part of the request
+        /// </summary>
+        public string SiteBase
+        {
+            get
+            {
+                return this.Scheme + "://" +
+                       GetHostName(this.HostName) +
+                       GetPort(this.Port);
+            }
+        }
+
         public override string ToString()
         {
             return this.Scheme + "://" + 
@@ -83,6 +96,33 @@ namespace Nancy
                 GetCorrectPath(this.Path) +
                 this.Query +
                 GetFragment(this.Fragment);
+        }
+
+        /// <summary>
+        /// Clones the url.
+        /// </summary>
+        /// <returns>Returns a new cloned instance of the url.</returns>
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        /// <summary>
+        /// Clones the url.
+        /// </summary>
+        /// <returns>Returns a new cloned instance of the url.</returns>
+        public Url Clone()
+        {
+            return new Url
+                       {
+                           BasePath = this.BasePath,
+                           Fragment = this.Fragment,
+                           HostName = this.HostName,
+                           Port = this.Port,
+                           Query = this.Query,
+                           Path = this.Path,
+                           Scheme = this.Scheme
+                       };
         }
 
         /// <summary>

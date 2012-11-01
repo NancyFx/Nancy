@@ -4,6 +4,7 @@ namespace Nancy.Tests.Functional.Tests
     using System.Collections.Generic;
     using System.IO;
 
+    using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -18,7 +19,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/int", x => 200);
+                with.Get("/int", (x,m) => 200);
             });
 
             var browser = new Browser(with =>
@@ -39,7 +40,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/string", x => "hello");
+                with.Get("/string", (x, m) => "hello");
             });
 
             var browser = new Browser(with =>
@@ -60,7 +61,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/httpstatuscode", x => HttpStatusCode.Accepted);
+                with.Get("/httpstatuscode", (x, m) => HttpStatusCode.Accepted);
             });
 
             var browser = new Browser(with =>
@@ -81,7 +82,7 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/action", x =>
+                with.Get("/action", (x, m) =>
                 {
                     Action<Stream> result = stream =>
                     {
@@ -115,7 +116,7 @@ namespace Nancy.Tests.Functional.Tests
 
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/headers", x =>
+                with.Get("/headers", (x, m) =>
                 {
                     var context =
                         new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -153,7 +154,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/", parameters =>
+                    x.Get("/", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -174,46 +175,6 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_ignore_stupid_browsers_that_ask_for_xml()
-        {
-            // Given
-            var browser = new Browser(with =>
-            {
-                with.ResponseProcessor<TestProcessor>();
-
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", parameters =>
-                    {
-                        var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
-
-                        var negotiator =
-                            new Negotiator(context);
-
-                        negotiator.WithAllowedMediaRange("application/xml");
-                        negotiator.WithAllowedMediaRange("text/html");
-
-                        return negotiator;
-                    });
-                }));
-            });
-
-            // When
-            var response = browser.Get("/", with =>
-            {
-                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; MSIE 7.0; Windows NT 6.0; en-US)");
-                with.Accept("application/xml", 1.0m);
-                with.Accept("application/xhtml+xml", 1.0m);
-                with.Accept("*/*", 0.9m);
-            });
-
-            // Then
-            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-            Assert.True(response.Body.AsString().Contains("text/html"), "Media type mismatch");
-        }
-
-        [Fact]
         public void Should_boost_html_priority_if_set_to_the_same_priority_as_others()
         {
             // Given
@@ -223,7 +184,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/", parameters =>
+                    x.Get("/", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -262,7 +223,7 @@ namespace Nancy.Tests.Functional.Tests
 
                 with.Module(new ConfigurableNancyModule(x =>
                 {
-                    x.Get("/test", parameters =>
+                    x.Get("/test", (parameters, module) =>
                     {
                         var context =
                             new NancyContext { NegotiationContext = new NegotiationContext() };
@@ -378,6 +339,8 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
                 with.Module(new ConfigurableNancyModule(x =>
                 {
                     x.Get("/", CreateNegotiatedResponse());
@@ -397,6 +360,8 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
                 with.Module(new ConfigurableNancyModule(x =>
                 {
                     x.Get("/", CreateNegotiatedResponse());
@@ -412,20 +377,125 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(response.Headers["Link"].Contains(@"</.xml>; rel=""application/xml"""));
         }
 
-        private static Func<dynamic, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        [Fact]
+        public void Should_set_negotiated_status_code_to_response_when_set_as_integer()
         {
-            var context =
-                new NancyContext { NegotiationContext = new NegotiationContext() };
-
-            var negotiator =
-                new Negotiator(context);
-
-            if (action != null)
+            // Given
+            var browser = new Browser(with =>
             {
-                action.Invoke(negotiator);
-            }
+                with.ResponseProcessor<TestProcessor>();
 
-            return parameters => negotiator;
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithStatusCode(507);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_to_response_when_set_as_httpstatuscode()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithStatusCode(HttpStatusCode.InsufficientStorage);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_throw_exception_if_view_location_fails()
+        {
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<ViewProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x => x.Get("/FakeModuleInvalidViewName", CreateNegotiatedResponse(neg => neg.WithView("blahblahblah")))));
+            });
+
+            // When
+            var result = Record.Exception(() =>
+                {
+                    var response = browser.Get(
+                        "/FakeModuleInvalidViewName",
+                        with =>
+                            { with.Accept("text/html", 1.0m); });
+                });
+
+            // Then
+            Assert.NotNull(result);
+            Assert.Contains("Unable to locate view", result.ToString());
+        }
+
+        [Fact]
+        public void Should_use_next_processor_if_processor_returns_null()
+        {
+            // Given
+            var browser = new Browser(with =>
+                {
+                with.ResponseProcessors(typeof(NullProcessor), typeof(TestProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/test", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithAllowedMediaRange("application/xml");
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/test", with =>
+            {
+                with.Accept("application/xml", 0.9m);
+            });
+
+            // Then
+            var bodyResult = response.Body.AsString();
+            Assert.True(bodyResult.StartsWith("application/xml"), string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
+        }
+
+        private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
+        {
+            return (parameters, module) =>
+                {
+                    var negotiator = new Negotiator(module.Context);
+
+                    if (action != null)
+                    {
+                        action.Invoke(negotiator);
+                    }
+
+                    return negotiator;
+                };
         }
 
         /// <summary>
@@ -458,6 +528,33 @@ namespace Nancy.Tests.Functional.Tests
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
                 return string.Format(ResponseTemplate, requestedMediaRange, model == null ? "None" : model.GetType());
+            }
+        }
+
+        public class NullProcessor : IResponseProcessor
+        {
+            private const string ResponseTemplate = "{0}\n{1}";
+
+            public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
+            {
+                get
+                {
+                    yield break;
+                }
+            }
+
+            public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return new ProcessorMatch
+                {
+                    RequestedContentTypeResult = MatchResult.ExactMatch,
+                    ModelResult = MatchResult.ExactMatch
+                };
+            }
+
+            public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
+            {
+                return null;
             }
         }
 

@@ -25,12 +25,7 @@ namespace Nancy.Authentication.Stateless
         {
             get
             {
-                if (GetUserIdentity == null)
-                {
-                    return false;
-                }
-
-                return true;
+                return this.GetUserIdentity != null;
             }
         }
     }

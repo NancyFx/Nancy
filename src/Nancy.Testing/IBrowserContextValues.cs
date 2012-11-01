@@ -41,5 +41,10 @@
         /// Gets or sets the querystring
         /// </summary>
         string QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user host address
+        /// </summary>
+        string UserHostAddress { get; set; }
     }
 }

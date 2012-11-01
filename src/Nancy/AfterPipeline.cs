@@ -8,8 +8,8 @@
     /// A simple pipleline for post-request hooks.
     /// </para>
     /// <para>
-    /// Can be implictly cast to/from the pre-request hook delegate signature
-    /// (Func NancyContext, Response) for assigning to NancyEngine or for building
+    /// Can be implictly cast to/from the post-request hook delegate signature
+    /// (Action NancyContext) for assigning to NancyEngine or for building
     /// composite pipelines.
     /// </para>
     /// </summary>

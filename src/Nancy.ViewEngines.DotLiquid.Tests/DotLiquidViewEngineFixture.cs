@@ -186,11 +186,9 @@
             stream.ShouldEqual("<h1>Hello Mr. </h1>");
         }
 
-#if !__MonoCS__
         [Fact]
         public void RenderView_should_accept_a_model_with_a_list_and_iterate_over_it()
         {
-            // TODO - Fixup on Mono
             // Given
             var location = new ViewLocationResult(
                 string.Empty,
@@ -213,7 +211,6 @@
             // Then
             stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
         }
-#endif
 
         private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
         {

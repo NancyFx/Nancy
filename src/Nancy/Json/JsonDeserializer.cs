@@ -493,6 +493,11 @@ namespace Nancy.Json
 			decimal decimalValue;
 			double doubleValue;
 			
+			if (jsonType != JsonType.STRING)
+			{
+				s = s.TrimEnd(new[] { '\n', '\r' });
+			}
+
 			switch (jsonType) {
 				case JsonType.INTEGER:
 					/* MS AJAX.NET JSON parser promotes big integers to double */
@@ -538,11 +543,17 @@ namespace Nancy.Json
 					break;
 
 				case JsonType.STRING:
-					if (s.StartsWith ("/Date(", StringComparison.Ordinal) && s.EndsWith (")/", StringComparison.Ordinal)) {
-						long javaScriptTicks = Convert.ToInt64 (s.Substring (6, s.Length - 8));
-						result = new DateTime ((javaScriptTicks * 10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
-					} else
-						result = s;
+                    if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal)) {
+                        int tzCharIndex = s.IndexOfAny(new char[] { '+', '-' }, 7);
+                        long javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
+                        DateTime time = new DateTime((javaScriptTicks * 10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
+                        if (tzCharIndex > 0) {
+                            time = time.ToLocalTime();
+                        }
+                        result = time;
+                    }
+                    else
+                        result = s;
 					break;
 
 				default:

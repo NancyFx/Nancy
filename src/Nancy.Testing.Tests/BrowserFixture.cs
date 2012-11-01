@@ -47,6 +47,23 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void Should_be_able_to_set_user_host_address()
+        {
+            // Given
+            const string userHostAddress = "127.0.0.1";
+
+            // When
+            var result = browser.Get("/userHostAddress", with =>
+                                                         {
+                                                             with.HttpRequest();
+                                                             with.UserHostAddress(userHostAddress);
+                                                         });
+
+            // Then
+            result.Body.AsString().ShouldEqual(userHostAddress);
+        }
+
+        [Fact]
         public void Should_be_able_to_send_stream_in_body()
         {
             // Given
@@ -339,6 +356,8 @@ namespace Nancy.Testing.Tests
                 };
 
                 Get["/nothing"] = ctx => string.Empty;
+
+                Get["/userHostAddress"] = ctx => Request.UserHostAddress;
 
                 Get["/session"] = ctx =>
                     {

@@ -1,10 +1,8 @@
-﻿using Nancy.Bootstrapper;
-
-namespace Nancy.Security
+﻿namespace Nancy.Security
 {
     using System;
     using Cookies;
-
+    using Nancy.Bootstrapper;
     using Nancy.Helpers;
 
     /// <summary>

@@ -58,7 +58,10 @@ namespace Nancy.Authentication.Forms
             currentConfiguration = configuration;
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
-            pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
+            if (!configuration.DisableRedirect)
+            {
+                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
+            }
         }
 
         /// <summary>
@@ -157,8 +160,7 @@ namespace Nancy.Authentication.Forms
 
                     if (userGuid != Guid.Empty)
                     {
-
-                      context.CurrentUser = configuration.UserMapper.GetUserFromIdentifier(userGuid, context);
+                        context.CurrentUser = configuration.UserMapper.GetUserFromIdentifier(userGuid, context);
                     }
 
                     return null;
@@ -223,7 +225,7 @@ namespace Nancy.Authentication.Forms
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true) { Expires = cookieExpiry };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL) { Expires = cookieExpiry };
 
             return cookie;
         }
@@ -235,7 +237,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            return new NancyCookie(formsAuthenticationCookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) };
+            return new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
         }
 
         /// <summary>
@@ -314,8 +316,5 @@ namespace Nancy.Authentication.Forms
 
             return redirectQuerystringKey;
         }
-
      }
-
-
 }

@@ -3,6 +3,7 @@ namespace Nancy.Security
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Nancy.Responses;
 
     /// <summary>
     /// Some simple helpers give some nice authentication syntax in the modules.
@@ -30,6 +31,17 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires authentication and any one of certain claims to be present.
+        /// </summary>
+        /// <param name="module">Module to enable</param>
+        /// <param name="requiredClaims">Claim(s) required</param>
+        public static void RequiresAnyClaim(this NancyModule module, IEnumerable<string> requiredClaims)
+        {
+            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(RequiresAnyClaim(requiredClaims));
+        }
+
+        /// <summary>
         /// This module requires claims to be validated
         /// </summary>
         /// <param name="module">Module to enable</param>
@@ -41,6 +53,25 @@ namespace Nancy.Security
         }
 
         /// <summary>
+        /// This module requires https.
+        /// </summary>
+        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
+        public static void RequiresHttps(this NancyModule module)
+        {
+            module.RequiresHttps(true);
+        }
+
+        /// <summary>
+        /// This module requires https.
+        /// </summary>
+        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
+        /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
+        public static void RequiresHttps(this NancyModule module, bool redirect)
+        {
+            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect));
+        }
+
+        /// <summary>
         /// Ensure that the module requires authentication.
         /// </summary>
         /// <param name="context">Current context</param>
@@ -48,8 +79,8 @@ namespace Nancy.Security
         private static Response RequiresAuthentication(NancyContext context)
         {
             Response response = null;
-            if ( (context.CurrentUser == null) ||
-                String.IsNullOrWhiteSpace(context.CurrentUser.UserName) )
+            if ((context.CurrentUser == null) ||
+                String.IsNullOrWhiteSpace(context.CurrentUser.UserName))
             {
                 response = new Response { StatusCode = HttpStatusCode.Unauthorized };
             }
@@ -71,11 +102,32 @@ namespace Nancy.Security
                                || ctx.CurrentUser.Claims == null
                                || claims.Any(c => !ctx.CurrentUser.Claims.Contains(c)))
                            {
-                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
                            }
 
                            return response;
                        };
+        }
+
+        /// <summary>
+        /// Gets a request hook for checking claims
+        /// </summary>
+        /// <param name="claims">Required claims</param>
+        /// <returns>Before hook delegate</returns>
+        private static Func<NancyContext, Response> RequiresAnyClaim(IEnumerable<string> claims)
+        {
+            return (ctx) =>
+                        {
+                            Response response = null;
+                            if (ctx.CurrentUser == null
+                                || ctx.CurrentUser.Claims == null
+                                || !claims.Any(c => ctx.CurrentUser.Claims.Contains(c)))
+                            {
+                                response = new Response { StatusCode = HttpStatusCode.Forbidden };
+                            }
+
+                            return response;
+                        };
         }
 
         /// <summary>
@@ -88,16 +140,39 @@ namespace Nancy.Security
             return (ctx) =>
                        {
                            Response response = null;
-                           var userClaims = ctx.CurrentUser.Claims;
                            if (ctx.CurrentUser == null
                                || ctx.CurrentUser.Claims == null
                                || !isValid(ctx.CurrentUser.Claims))
                            {
-                               response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
                            }
 
                            return response;
                        };
+        }
+
+        private static Func<NancyContext, Response> RequiresHttps(bool redirect)
+        {
+            return (ctx) =>
+                   {
+                       Response response = null;
+                       var request = ctx.Request;
+                       if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                       {
+                           if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                           {
+                               var redirectUrl = request.Url.Clone();
+                               redirectUrl.Scheme = "https";
+                               response = new RedirectResponse(redirectUrl.ToString());
+                           }
+                           else
+                           {
+                               response = new Response { StatusCode = HttpStatusCode.Forbidden };                               
+                           }
+                       }
+
+                       return response;
+                   };
         }
     }
 }

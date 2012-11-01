@@ -1,6 +1,7 @@
 namespace Nancy.Routing
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Represents the various parts of a route lambda.
@@ -37,6 +38,12 @@ namespace Nancy.Routing
         public Func<NancyContext, bool> Condition { get; private set; }
 
         /// <summary>
+        /// The description of what the route is for.
+        /// </summary>
+        /// <value>A <see cref="string"/> containing the description of the route.</value>
+        public string Description { get; set; }
+
+        /// <summary>
         /// Gets the method of the route.
         /// </summary>
         /// <value>A <see cref="string"/> containing the method of the route.</value>
@@ -47,5 +54,11 @@ namespace Nancy.Routing
         /// </summary>
         /// <value>A <see cref="string"/> containing the path of the route.</value>
         public string Path { get; private set; }
+
+        /// <summary>
+        /// Gets or set the segments, for the route, that was returned by the <see cref="IRouteSegmentExtractor"/>.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/>, containing the segments for the route.</value>
+        public IEnumerable<string> Segments { get; set; }
     }
 }

@@ -17,9 +17,14 @@
             var validator = 
                 module.ValidatorLocator.GetValidatorForType(typeof(T));
 
-            return (validator == null) ? 
-                ModelValidationResult.Valid : 
-                validator.Validate(instance);
+            var result =
+                (validator == null) ?
+                    ModelValidationResult.Valid :
+                    validator.Validate(instance);
+
+            module.ModelValidationResult = result;
+
+            return result;
         }
     }
 }

@@ -4,7 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using ModelBinding;
+    using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Session;
@@ -35,6 +35,7 @@ namespace Nancy
         {
             this.After = new AfterPipeline();
             this.Before = new BeforePipeline();
+            this.OnError = new ErrorPipeline();
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
         }
@@ -63,6 +64,18 @@ namespace Nancy
         public BeforePipeline Before { get; protected set; }
 
         /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during executing
+        /// the PreRequest hook, a route and the PostRequest hook. It can be used to set
+        /// the response and/or finish any ongoing tasks (close database session, etc).
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the current Nancy context
         /// </summary>
         /// <value>A <see cref="NancyContext"/> instance.</value>
@@ -76,6 +89,21 @@ namespace Nancy
             get
             {
                 return this.Context == null ? null : this.Context.ViewBag;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the model validation result
+        /// </summary>
+        public ModelValidationResult ModelValidationResult
+        {
+            get { return this.Context == null ? null : this.Context.ModelValidationResult; }
+            set
+            {
+                if (this.Context != null)
+                {
+                    this.Context.ModelValidationResult = value;                    
+                }
             }
         }
 
