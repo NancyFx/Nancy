@@ -18,6 +18,7 @@
     /// to run. <see cref="Start"/> will launch a thread that will listen for requests and then process them. All processing is done
     /// within a single thread - self hosting is not intended for production use, but rather as a development server.
     /// </remarks>
+    [Serializable]
     public class NancyHost  
     {
         private readonly IList<Uri> baseUriList;
