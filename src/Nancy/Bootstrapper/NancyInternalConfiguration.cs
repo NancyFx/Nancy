@@ -76,7 +76,7 @@ namespace Nancy.Bootstrapper
                         ModelValidatorLocator = typeof(DefaultValidatorLocator),
                         ViewLocationCache = typeof(DefaultViewLocationCache),
                         ViewLocationProvider = typeof(FileSystemViewLocationProvider),
-                        ErrorHandlers = new List<Type>(new[] { typeof(DefaultErrorHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IErrorHandler>(true))),
+                        StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IStatusHandler>(true))),
                         CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                         ObjectSerializer = typeof(DefaultObjectSerializer),
                         Serializers = new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) }),
@@ -134,7 +134,7 @@ namespace Nancy.Bootstrapper
 
         public Type ViewLocationProvider { get; set; }
 
-        public IList<Type> ErrorHandlers { get; set; }
+        public IList<Type> StatusCodeHandlers { get; set; }
 
         public Type CsrfTokenValidator { get; set; }
 
@@ -264,7 +264,7 @@ namespace Nancy.Bootstrapper
             {
                 new CollectionTypeRegistration(typeof(IResponseProcessor), this.ResponseProcessors), 
                 new CollectionTypeRegistration(typeof(ISerializer), this.Serializers), 
-                new CollectionTypeRegistration(typeof(IErrorHandler), this.ErrorHandlers), 
+                new CollectionTypeRegistration(typeof(IStatusHandler), this.StatusCodeHandlers), 
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders)
             };
         }

@@ -70,7 +70,7 @@ namespace Nancy.Testing
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
-                configurator.ErrorHandler<PassThroughErrorHandler>();
+                configurator.StatusCodeHandler<PassThroughStatusHandler>();
                 configuration.Invoke(configurator);
             }
         }
@@ -722,25 +722,25 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IErrorHandler"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IStatusHandler"/>.
             /// </summary>
-            /// <param name="errorHandlers">The <see cref="IErrorHandler"/> types that should be used by the bootstrapper.</param>
+            /// <param name="statusCodeHandlers">The <see cref="IStatusHandler"/> types that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ErrorHandlers(params Type[] errorHandlers)
+            public ConfigurableBoostrapperConfigurator StatusCodeHandlers(params Type[] statusCodeHandlers)
             {
-                this.bootstrapper.configuration.ErrorHandlers = new List<Type>(errorHandlers);
+                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(statusCodeHandlers);
 
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IErrorHandler"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IStatusHandler"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IErrorHandler"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IStatusHandler"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ErrorHandler<T>() where T : IErrorHandler
+            public ConfigurableBoostrapperConfigurator StatusCodeHandler<T>() where T : IStatusHandler
             {
-                this.bootstrapper.configuration.ErrorHandlers = new List<Type>( new[] { typeof(T) } );
+                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>( new[] { typeof(T) } );
                 return this;
             }
 

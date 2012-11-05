@@ -134,7 +134,7 @@
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
-    <Compile Include="Unit\ErrorHandling\DefaultErrorHandlerFixture.cs" />
+    <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />

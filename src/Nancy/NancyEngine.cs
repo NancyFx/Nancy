@@ -22,16 +22,16 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
-        private readonly IEnumerable<IErrorHandler> errorHandlers;
+        private readonly IEnumerable<IStatusHandler> statusCodeHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
         /// </summary>
         /// <param name="dispatcher">An <see cref="IRouteResolver"/> instance that will be used to resolve a route, from the modules, that matches the incoming <see cref="Request"/>.</param>
         /// <param name="contextFactory">A factory for creating contexts</param>
-        /// <param name="errorHandlers">Error handlers</param>
+        /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IErrorHandler> errorHandlers, IRequestTracing requestTracing)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusHandler> statusCodeHandlers, IRequestTracing requestTracing)
         {
             if (dispatcher == null)
             {
@@ -43,14 +43,14 @@
                 throw new ArgumentNullException("contextFactory");
             }
 
-            if (errorHandlers == null)
+            if (statusCodeHandlers == null)
             {
-                throw new ArgumentNullException("errorHandlers");
+                throw new ArgumentNullException("statusCodeHandlers");
             }
 
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
-            this.errorHandlers = errorHandlers;
+            this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
         }
 
@@ -96,7 +96,7 @@
 
             this.InvokeRequestLifeCycle(context, pipelines);
 
-            CheckErrorHandler(context);
+            this.CheckStatusCodeHandler(context);
 
             this.SaveTraceInformation(context);
 
@@ -192,16 +192,16 @@
             });
         }
 
-        private void CheckErrorHandler(NancyContext context)
+        private void CheckStatusCodeHandler(NancyContext context)
         {
             if (context.Response == null)
             {
                 return;
             }
 
-            foreach (var errorHandler in this.errorHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode, context)))
+            foreach (var statusCodeHandler in this.statusCodeHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode, context)))
             {
-                errorHandler.Handle(context.Response.StatusCode, context);
+                statusCodeHandler.Handle(context.Response.StatusCode, context);
             }
         }
 

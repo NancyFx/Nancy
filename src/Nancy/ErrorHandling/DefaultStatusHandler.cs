@@ -11,7 +11,7 @@ namespace Nancy.ErrorHandling
     /// <summary>
     /// Default error handler
     /// </summary>
-    public class DefaultErrorHandler : IErrorHandler
+    public class DefaultStatusHandler : IStatusHandler
     {
         private readonly IDictionary<HttpStatusCode, string> errorPages;
 
@@ -20,9 +20,9 @@ namespace Nancy.ErrorHandling
         private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultErrorHandler"/> type.
+        /// Initializes a new instance of the <see cref="DefaultStatusHandler"/> type.
         /// </summary>
-        public DefaultErrorHandler()
+        public DefaultStatusHandler()
         {
             this.errorPages = new Dictionary<HttpStatusCode, string>
                 {
