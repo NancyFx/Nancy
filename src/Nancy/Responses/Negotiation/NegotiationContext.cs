@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Cookies;
 
     /// <summary>
     /// Context for content negotiation.
@@ -14,10 +15,17 @@
         /// </summary>
         public NegotiationContext()
         {
+            this.Cookies = new List<INancyCookie>();
             this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
             this.MediaRangeModelMappings = new Dictionary<MediaRange, Func<dynamic>>();
             this.Headers = new Dictionary<string, string>();
         }
+
+        /// <summary>
+        /// Gets or sets additional cookies to assign to the response.
+        /// </summary>
+        /// <value>An <see cref="IList{T}"/> of <see cref="INancyCookie"/> instances.</value>
+        public IList<INancyCookie> Cookies { get; set; }
 
         /// <summary>
         /// Gets or sets the default model that will be used if a content type specific model is not specified.

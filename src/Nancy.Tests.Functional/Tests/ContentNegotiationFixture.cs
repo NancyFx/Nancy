@@ -3,7 +3,8 @@ namespace Nancy.Tests.Functional.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
-
+    using System.Linq;
+    using Cookies;
     using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
@@ -429,6 +430,36 @@ namespace Nancy.Tests.Functional.Tests
 
             // Then
             Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_cookies_to_response()
+        {
+            // Given
+            var negotiatedCookie = 
+                new NancyCookie("test", "test");
+
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config.WithCookie(negotiatedCookie);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("test/test", 0.9m);
+            });
+
+            // Then
+            Assert.Same(negotiatedCookie, response.Cookies.First());
         }
 
         [Fact]
