@@ -131,5 +131,48 @@ namespace Nancy.Tests.Unit
 
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/NewRoute");
         }
+
+        public class SubbedModuleTests
+        {
+            // These tests are to see if it's possible to subclass a NancyModule
+            // without breaking the existing implementation
+
+            [Fact]
+            public void Given_two_routes_should_have_multiple_routes_defined()
+            {
+                var moduleWithBasePath = new CustomNancyModule();
+
+                moduleWithBasePath.Get["/Test1", "/Test2"] = d => null;
+
+                moduleWithBasePath.Routes.First().Description.Path.ShouldEqual("/Test1");
+                moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
+            }
+
+            public class CustomNancyModule : NancyModule
+            {
+                public new CustomRouteBuilder Get
+                {
+                    get { return new CustomRouteBuilder("GET", this); }
+                }
+
+                public class CustomRouteBuilder : RouteBuilder
+                {
+                    public CustomRouteBuilder(string method, NancyModule parentModule) : base(method, parentModule)
+                    {
+                    }
+
+                    public Func<dynamic, dynamic> this[params string[] paths]
+                    {
+                        set
+                        {
+                            foreach (var path in paths)
+                            {
+                                this.AddRoute(path, null, value);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 }
