@@ -148,6 +148,16 @@ namespace Nancy.Tests.Unit
                 moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
             }
 
+            [Fact]
+            public void Using_method_not_overridden_rolls_back_to_default_route_registering()
+            {
+                var moduleWithBasePath = new CustomNancyModule();
+
+                moduleWithBasePath.Post["/Test1"] = d => null;
+
+                moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
+            }
+
             public class CustomNancyModule : NancyModule
             {
                 public new CustomRouteBuilder Get
