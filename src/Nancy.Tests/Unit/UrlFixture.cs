@@ -210,5 +210,54 @@ namespace Nancy.Tests.Unit
             // Then
             result.IsAbsoluteUri.ShouldBeTrue();
         }
+
+        [Theory]
+        [InlineData("https")]
+        [InlineData("Https")]
+        [InlineData("httPs")]
+        [InlineData("HTTPS")]
+        public void IsSecure_should_return_true_if_https(string scheme)
+        {
+            // Given
+            this.url.Scheme = scheme;
+
+            // When
+            var result = this.url.IsSecure;
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Theory]
+        [InlineData("http")]
+        [InlineData("Http")]
+        [InlineData("blah")]
+        [InlineData("blahs")]
+        public void IsSecure_should_return_false_if_scheme_is_not_https(string scheme)
+        {
+            // Given
+            this.url.Scheme = scheme;
+
+            // When
+            var result = this.url.IsSecure;
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        public void IsSecure_should_return_false_when_scheme_is_null_or_empty(string scheme)
+        {
+            // Given
+            this.url.Scheme = scheme;
+
+            // When
+            var result = this.url.IsSecure;
+
+            // Then
+            result.ShouldBeFalse();
+        }
     }
 }

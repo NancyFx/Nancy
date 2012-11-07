@@ -87,6 +87,17 @@ namespace Nancy
             }
         }
 
+        /// <summary>
+        /// Gets whether the url is secure or not.
+        /// </summary>
+        public bool IsSecure
+        {
+            get
+            {
+                return "https".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
         public override string ToString()
         {
             return this.Scheme + "://" + 
