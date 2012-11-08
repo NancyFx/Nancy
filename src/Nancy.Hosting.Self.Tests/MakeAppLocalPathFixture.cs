@@ -83,5 +83,18 @@ namespace Nancy.Hosting.Self.Tests
             // Then
             result.ShouldEqual("/");
 		}
+
+        [Fact]
+        public void Should_return_path_with_case_insensitive_base_uri_comparison()
+        {
+            // Given
+            var uri = new Uri("http://host/base/");
+
+            // When
+            var result = uri.MakeAppLocalPath(new Uri("http://host/Base/rel"));
+
+            // Then
+            result.ShouldEqual("/rel");
+        }
 	}
 }
