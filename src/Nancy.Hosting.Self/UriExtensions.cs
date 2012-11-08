@@ -25,7 +25,7 @@ namespace Nancy.Hosting.Self
 
         public static string MakeAppLocalPath(this Uri appBaseUri, Uri fullUri)
         {
-            return string.Concat("/", appBaseUri.Segments.ZipFill(fullUri.Segments, (x, y) => x != null && AppendSlashIfNeeded(x) == AppendSlashIfNeeded(y) ? null : y).Join());
+            return string.Concat("/", appBaseUri.Segments.ZipFill(fullUri.Segments, (x, y) => x != null && SegmentEquals(x, y) ? null : y).Join());
         }
 
         private static string AppendSlashIfNeeded(string segment)
