@@ -157,7 +157,7 @@ namespace Nancy.Security
                    {
                        Response response = null;
                        var request = ctx.Request;
-                       if (!request.Url.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                       if (!request.Url.IsSecure)
                        {
                            if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
                            {
