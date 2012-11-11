@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
+    using Helpers;
 
     public class InteractiveModule : DiagnosticModule
     {
@@ -28,7 +29,11 @@
 
             Get["/providers/{providerName}"] = ctx =>
                 {
-                    InteractiveDiagnostic diagnostic = this.interactiveDiagnostics.GetDiagnostic(ctx.providerName);
+                    var name =
+                        HttpUtility.UrlDecode((string)ctx.providerName);
+
+                    var diagnostic = 
+                        this.interactiveDiagnostics.GetDiagnostic(name);
 
                     if (diagnostic == null)
                     {
