@@ -33,6 +33,14 @@
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="RazorViewEngine"/> class with default configuration settings.
+        /// </summary>
+        public RazorViewEngine() 
+            : this(new DefaultRazorConfiguration())
+        {
+        }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
