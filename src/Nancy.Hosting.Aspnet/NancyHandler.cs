@@ -1,6 +1,8 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
     using System.Web;
@@ -42,19 +44,25 @@ namespace Nancy.Hosting.Aspnet
             var expectedRequestLength =
                 GetExpectedRequestLength(context.Request.Headers.ToDictionary());
 
-            var basePath =
-                context.Request.ApplicationPath.TrimEnd('/');
+            var basePath = context.Request.ApplicationPath;
+            Debug.Assert(basePath != null, "Base path must not be null.");
+
+            Uri requestUrl = context.Request.Url;
+            Debug.Assert(requestUrl != null, "Request Url must not be null.");
+
+            var path = requestUrl.AbsolutePath.Substring(basePath.Length);
+            path = string.IsNullOrWhiteSpace(path) ? "/" : path;
 
             var nancyUrl = new Url
-                               {
-                                   Scheme = context.Request.Url.Scheme,
-                                   HostName = context.Request.Url.Host,
-                                   Port = context.Request.Url.Port,
-                                   BasePath = basePath,
-                                   Path = context.Request.Url.AbsolutePath.Substring(basePath.Length),
-                                   Query = context.Request.Url.Query,
-                                   Fragment = context.Request.Url.Fragment,
-                               };
+            {
+                Scheme = requestUrl.Scheme,
+                HostName = requestUrl.Host,
+                Port = requestUrl.Port,
+                BasePath = basePath,
+                Path = path,
+                Query = requestUrl.Query,
+                Fragment = requestUrl.Fragment,
+            };
 
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
