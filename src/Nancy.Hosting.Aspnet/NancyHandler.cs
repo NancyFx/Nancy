@@ -48,15 +48,15 @@ namespace Nancy.Hosting.Aspnet
             path = string.IsNullOrWhiteSpace(path) ? "/" : path;
 
             var nancyUrl = new Url
-            {
-                Scheme = context.Request.Url.Scheme,
-                HostName = context.Request.Url.Host,
-                Port = context.Request.Url.Port,
-                BasePath = basePath,
-                Path = path,
-                Query = context.Request.Url.Query,
-                Fragment = context.Request.Url.Fragment,
-            };
+                               {
+                                   Scheme = context.Request.Url.Scheme,
+                                   HostName = context.Request.Url.Host,
+                                   Port = context.Request.Url.Port,
+                                   BasePath = basePath,
+                                   Path = path,
+                                   Query = context.Request.Url.Query,
+                                   Fragment = context.Request.Url.Fragment,
+                               };
 
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
