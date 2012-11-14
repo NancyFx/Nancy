@@ -94,8 +94,12 @@ namespace Nancy.Routing
 
         private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
         {
-            if (resolveResultOnError == null) return null;
-            return resolveResultOnError.Invoke(context, exception);
+            if (resolveResultOnError != null)
+            {
+                return resolveResultOnError.Invoke(context, exception);
+            }
+
+            return null;
         }
 
         private ResolveResult Resolve(NancyContext context)
