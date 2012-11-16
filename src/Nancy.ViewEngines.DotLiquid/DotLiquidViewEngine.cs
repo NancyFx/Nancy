@@ -1,10 +1,11 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
+    using Responses;
     using System.Collections.Generic;
     using System.IO;
-    using global::DotLiquid.FileSystems;
-    using Responses;
     using global::DotLiquid;
+    using global::DotLiquid.FileSystems;
+    using global::DotLiquid.NamingConventions;
 
     /// <summary>
     /// View engine for rendering dotLiquid views.
@@ -48,6 +49,7 @@
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
             Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext);
+            Template.NamingConvention = new CSharpNamingConvention();
         }
 
         /// <summary>
