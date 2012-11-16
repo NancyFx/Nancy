@@ -1,8 +1,7 @@
-using System.Collections.Generic;
-
 namespace Nancy.ModelBinding
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.Serialization;
 
     /// <summary>

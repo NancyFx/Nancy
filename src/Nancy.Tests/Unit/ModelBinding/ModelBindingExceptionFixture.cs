@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace Nancy.Tests.Unit.ModelBinding
+﻿namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Nancy.ModelBinding;
     using Xunit;
 
     public class ModelBindingExceptionFixture
     {
-        private const string PROPNAME = "Property";
-
         [Fact]
         public void Ctor_should_set_property_exceptions_and_bound_type()
         {

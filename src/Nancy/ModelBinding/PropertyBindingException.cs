@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Nancy.ModelBinding
+﻿namespace Nancy.ModelBinding
 {
+    using System;
+
     public class PropertyBindingException : Exception
     {
         private const string ExceptionMessage = "Unable to bind property: {0}; Attempted value: {1}";
@@ -25,8 +25,8 @@ namespace Nancy.ModelBinding
         public PropertyBindingException(string propertyName, string attemptedValue, Exception innerException = null) 
             : base(String.Format(ExceptionMessage, propertyName, attemptedValue), innerException)
         {
-            PropertyName = propertyName;
-            AttemptedValue = attemptedValue;
+            this.PropertyName = propertyName;
+            this.AttemptedValue = attemptedValue;
         }
     }
 }
