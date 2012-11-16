@@ -38,7 +38,7 @@
         {
             // Given
             var context = CreateContext();
-            
+
             // When
             this.engine.Initialize(context);
 
@@ -69,8 +69,8 @@
                 () => new StringReader(@"{% assign name = 'test' %}<h1>Hello Mr. {{ name }}</h1>")
             );
 
-            var currentStartupContext = 
-                CreateContext(new [] {location});
+            var currentStartupContext =
+                CreateContext(new[] { location });
 
             this.engine.Initialize(currentStartupContext);
 
@@ -92,11 +92,11 @@
                 string.Empty,
                 string.Empty,
                 "liquid",
-                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+                () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
             );
 
-            var currentStartupContext = 
-                CreateContext(new [] {location});
+            var currentStartupContext =
+                CreateContext(new[] { location });
 
             this.engine.Initialize(currentStartupContext);
 
@@ -118,11 +118,11 @@
                 string.Empty,
                 string.Empty,
                 "liquid",
-                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+                () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
             );
 
-            var currentStartupContext = 
-                CreateContext(new [] {location});
+            var currentStartupContext =
+                CreateContext(new[] { location });
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -143,7 +143,7 @@
                 string.Empty,
                 string.Empty,
                 "liquid",
-                () => new StringReader(@"<h1>Hello Mr. {{ viewbag.name }}</h1>")
+                () => new StringReader(@"<h1>Hello Mr. {{ ViewBag.Name }}</h1>")
             );
 
             var currentStartupContext =
@@ -169,12 +169,12 @@
                 string.Empty,
                 string.Empty,
                 "liquid",
-                () => new StringReader(@"<h1>Hello Mr. {{ model.name }}</h1>")
+                () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
             );
 
-            var currentStartupContext = 
-                CreateContext(new [] {location});
-            
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
@@ -194,22 +194,30 @@
                 string.Empty,
                 string.Empty,
                 "liquid",
-                () => new StringReader(@"<ul>{% for item in model.Widgets %}<li>{{ item.name }}</li>{% endfor %}</ul>")
+                () => new StringReader(@"<ul>{% for item in Model.Items %}<li>{{ item.Name }}</li>{% endfor %}</ul>")
             );
 
-            var currentStartupContext = 
-                CreateContext(new [] {location});
-            
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
+            // Construct the model for the View
+            IList<Article> articles = new List<Article>() {
+                new Article() {Name = "Hello"},
+                new Article() {Name = "Jamie!"},
+                new Article() {Name = "You're fun!"}
+            };
+
+            Magazine menu = new Magazine() { Items = articles };
+
             // When
-            var widgets = new List<object> { new { name = "Widget 1" }, new { name = "Widget 2" }, new { name = "Widget 3" }, new { name = "Widget 4" } };
-            var response = this.engine.RenderView(location, new { Widgets = widgets }, this.renderContext);
+            var response = this.engine.RenderView(location, menu, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<ul><li>Widget 1</li><li>Widget 2</li><li>Widget 3</li><li>Widget 4</li></ul>");
+            stream.ShouldEqual("<ul><li>Hello</li><li>Jamie!</li><li>You're fun!</li></ul>");
         }
 
         private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
@@ -217,26 +225,22 @@
             return new ViewEngineStartupContext(
                 this.renderContext.ViewCache,
                 results,
-                new [] {"liquid"});
+                new[] { "liquid" });
         }
     }
-	
-    public class Menu
+
+    public class Magazine
     {
-        public int Id { get; set; }
-        public string Text { get; set; }
-        public IList<MenuItem> Items { get; set; }
+        public IList<Article> Items { get; set; }
     }
 
-    public class MenuItem
+    public class Article : Drop
     {
-        public int Id { get; set; }
-        public string Controller { get; set; }
-        public string Action { get; set; }
+        public string Name { get; set; }
     }
-    public class Article
+
+    public class DropModel : Drop
     {
-        public int Id { get; set; }
-        public string Body { get; set; }
+        public string CamelCase { get; set; }
     }
 }
