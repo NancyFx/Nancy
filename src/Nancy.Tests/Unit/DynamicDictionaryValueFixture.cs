@@ -384,5 +384,167 @@
             String actual = value;
             Assert.Null(actual);
         }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_integer()
+        {
+            const int expected = 123;
+            dynamic value = new DynamicDictionaryValue(null);
+            int actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_string()
+        {
+            const string expected = "default value";
+            dynamic value = new DynamicDictionaryValue(null);
+            string actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_decimal()
+        {
+            const decimal expected = 88.43m;
+            dynamic value = new DynamicDictionaryValue(null);
+            decimal actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_double()
+        {
+            const double expected = 44.23d;
+            dynamic value = new DynamicDictionaryValue(null);
+            double actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_short()
+        {
+            const short expected = (short)4;
+            dynamic value = new DynamicDictionaryValue(null);
+            short actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_float()
+        {
+            const float expected = 9.343f;
+            dynamic value = new DynamicDictionaryValue(null);
+            float actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_long()
+        {
+            const long expected = 1000333000222000333L;
+            dynamic value = new DynamicDictionaryValue(null);
+            long actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_boolean()
+        {
+            const bool expected = true;
+            dynamic value = new DynamicDictionaryValue(null);
+            bool actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_supplied_default_value_of_datetime()
+        {
+            DateTime expected = DateTime.Parse("10 Dec, 2012");
+            dynamic value = new DynamicDictionaryValue(null);
+            DateTime actual = value.Default(expected);
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_integer()
+        {
+            const int expected = 0;
+            dynamic value = new DynamicDictionaryValue(null);
+            int actual = value.Default<int>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_string()
+        {
+            const string expected = null;
+            dynamic value = new DynamicDictionaryValue(null);
+            string actual = value.Default<string>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_decimal()
+        {
+            const decimal expected = 0m;
+            dynamic value = new DynamicDictionaryValue(null);
+            decimal actual = value.Default<decimal>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_double()
+        {
+            const double expected = 0d;
+            dynamic value = new DynamicDictionaryValue(null);
+            double actual = value.Default<double>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_short()
+        {
+            const short expected = (short)0;
+            dynamic value = new DynamicDictionaryValue(null);
+            short actual = value.Default<short>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_float()
+        {
+            const float expected = 0f;
+            dynamic value = new DynamicDictionaryValue(null);
+            float actual = value.Default<float>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_long()
+        {
+            const long expected = 0L;
+            dynamic value = new DynamicDictionaryValue(null);
+            long actual = value.Default<long>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_boolean()
+        {
+            const bool expected = false;
+            dynamic value = new DynamicDictionaryValue(null);
+            bool actual = value.Default<bool>();
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_null_when_calling_default_should_return_default_value_of_datetime()
+        {
+            DateTime expected = DateTime.MinValue;
+            dynamic value = new DynamicDictionaryValue(null);
+            DateTime actual = value.Default<DateTime>();
+            Assert.Equal(expected, actual);
+        }
     }
 }
