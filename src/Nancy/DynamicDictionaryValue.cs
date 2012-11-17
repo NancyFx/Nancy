@@ -1,4 +1,7 @@
-﻿namespace Nancy
+﻿using System.Collections.Generic;
+using System.Linq;
+
+namespace Nancy
 {
     using System;
     using System.Dynamic;
@@ -34,6 +37,22 @@
         public object Value
         {
             get { return this.value; }
+        }
+
+        /// <summary>
+        /// Returns a default value if Value is null
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
+        public T Default<T>(T defaultValue = default(T))
+        {
+            if (HasValue)
+            {
+                return (T)value;
+            }
+
+            return defaultValue;
         }
 
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
