@@ -46,7 +46,18 @@
         {
             if (HasValue)
             {
-                return (T)value;
+                try
+                {
+                    return(T) value;
+                }
+                catch
+                {
+                    var typeName = value.GetType().Name;
+                    var message = string.Format("Cannot convert value of type '{0}' to type '{1}'",
+                                                typeName, typeof(T).Name);
+
+                    throw new InvalidCastException(message);
+                }
             }
 
             return defaultValue;
