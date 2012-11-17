@@ -546,5 +546,14 @@
             DateTime actual = value.Default<DateTime>();
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void Given_double_value_when_calling_default_with_generic_type_thats_different_should_throw_InvalidCastException()
+        {
+            dynamic value = new DynamicDictionaryValue(12.25);
+
+            Exception exception = Assert.Throws<InvalidCastException>(() => value.Default<int>());
+            Assert.Equal("Cannot convert value of type 'Double' to type 'Int32'", exception.Message);
+        }
     }
 }
