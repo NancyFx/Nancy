@@ -8,24 +8,10 @@
     /// </summary>
     public class DynamicModelBinderAdapter : DynamicObject
     {
-        /// <summary>
-        /// Model binder locator
-        /// </summary>
         private readonly IModelBinderLocator locator;
-
-        /// <summary>
-        /// Nancy context
-        /// </summary>
         private readonly NancyContext context;
-
-        /// <summary>
-        /// Optional existing instance, or null
-        /// </summary>
         private readonly object instance;
-
-        /// <summary>
-        /// Properties that are blacklisted for binding
-        /// </summary>
+        private readonly BindingConfig configuration;
         private readonly string[] blacklistedProperties;
 
         /// <summary>
@@ -34,7 +20,9 @@
         /// <param name="locator">Model binder locator</param>
         /// <param name="context">Nancy context</param>
         /// <param name="instance">Optional existing instance, or null</param>
-        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, object instance = null, params string[] blacklistedProperties)
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
+        /// <param name="blacklistedProperties">Blacklisted property names</param>
+        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, object instance, BindingConfig configuration, params string[] blacklistedProperties)
         {
             if (locator == null)
             {
@@ -46,9 +34,15 @@
                 throw new ArgumentNullException("context");
             }
 
+            if (configuration == null)
+            {
+                throw new ArgumentNullException("configuration");
+            }
+
             this.locator = locator;
             this.context = context;
             this.instance = instance;
+            this.configuration = configuration;
             this.blacklistedProperties = blacklistedProperties;
         }
 
@@ -68,7 +62,7 @@
                 throw new ModelBindingException(binder.Type);
             }
 
-            result = modelBinder.Bind(this.context, binder.Type, this.instance, this.blacklistedProperties);
+            result = modelBinder.Bind(this.context, binder.Type, this.instance, this.configuration, this.blacklistedProperties);
 
             return result != null || base.TryConvert(binder, out result);
         }

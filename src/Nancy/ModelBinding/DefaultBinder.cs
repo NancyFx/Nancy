@@ -54,11 +54,13 @@ namespace Nancy.ModelBinding
         /// <param name="context">Current context</param>
         /// <param name="modelType">Model type to bind to</param>
         /// <param name="instance">Optional existing instance</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blackList">Blacklisted property names</param>
         /// <returns>Bound model</returns>
-        public object Bind(NancyContext context, Type modelType, object instance = null, params string[] blackList)
+        public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
         {
-            var bindingContext = this.CreateBindingContext(context, modelType, instance, blackList);
+            var bindingContext =
+                this.CreateBindingContext(context, modelType, instance, configuration, blackList);
 
             var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
 
@@ -75,7 +77,7 @@ namespace Nancy.ModelBinding
 
                 var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                if (!String.IsNullOrEmpty(stringValue) && IsDefaultValue(existingValue, modelProperty.PropertyType))
+                if (!String.IsNullOrEmpty(stringValue) &&  (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Overwrite ))
                 {
                     try
                     {
@@ -108,14 +110,14 @@ namespace Nancy.ModelBinding
                 var existingValue =
                     modelProperty.GetValue(bindingContext.Model, null);
 
-                if (IsDefaultValue(existingValue, modelProperty.PropertyType))
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Overwrite)
                 {
-                    this.CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
+                    CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
                 }
             }
         }
 
-        private void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
+        private static void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
         {
             var newValue = modelProperty.GetValue(bodyDeserializedModel, null);
 
@@ -129,10 +131,11 @@ namespace Nancy.ModelBinding
                 : existingValue == null;
         }
 
-        private BindingContext CreateBindingContext(NancyContext context, Type modelType, object instance, IEnumerable<string> blackList)
+        private BindingContext CreateBindingContext(NancyContext context, Type modelType, object instance, BindingConfig configuration, IEnumerable<string> blackList)
         {
             return new BindingContext
             {
+                Overwrite = configuration.Overwrite,
                 Context = context,
                 DestinationType = modelType,
                 Model = CreateModel(modelType, instance),
@@ -166,7 +169,7 @@ namespace Nancy.ModelBinding
                     memberName => (string)dictionary[memberName]);
         }
 
-        private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
+        private static void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
         {
             var destinationType = modelProperty.PropertyType;
 
@@ -210,12 +213,9 @@ namespace Nancy.ModelBinding
                 return Activator.CreateInstance(modelType);
             }
 
-            if (!modelType.IsAssignableFrom(instance.GetType()))
-            {
-                return Activator.CreateInstance(modelType);
-            }
-
-            return instance;
+            return !modelType.IsInstanceOfType(instance) ? 
+                Activator.CreateInstance(modelType) :
+                instance;
         }
 
         private static string GetValue(string propertyName, BindingContext context)

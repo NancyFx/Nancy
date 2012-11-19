@@ -38,5 +38,7 @@
         /// Available type converters - user converters followed by any defaults
         /// </summary>
         public IEnumerable<ITypeConverter> TypeConverters { get; set; }
+
+        public bool Overwrite { get; set; }
     }
 }
