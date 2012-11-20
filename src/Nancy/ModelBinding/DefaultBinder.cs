@@ -67,6 +67,7 @@ namespace Nancy.ModelBinding
                 this.UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
+            var bindingExceptions = new List<PropertyBindingException>();
             foreach (var modelProperty in bindingContext.ValidModelProperties)
             {
                 var existingValue =
@@ -76,8 +77,20 @@ namespace Nancy.ModelBinding
 
                 if (!String.IsNullOrEmpty(stringValue) && IsDefaultValue(existingValue, modelProperty.PropertyType))
                 {
-                    this.BindProperty(modelProperty, stringValue, bindingContext);
+                    try
+                    {
+                        this.BindProperty(modelProperty, stringValue, bindingContext);
+                    }
+                    catch(PropertyBindingException ex)
+                    {
+                        bindingExceptions.Add(ex);
+                    }
                 }
+            }
+
+            if (bindingExceptions.Any())
+            {
+                throw new ModelBindingException(modelType, bindingExceptions);
             }
 
             return bindingContext.Model;
@@ -168,7 +181,7 @@ namespace Nancy.ModelBinding
                 }
                 catch(Exception e)
                 {
-                    throw new ModelBindingException(context.DestinationType, modelProperty.Name, e);
+                    throw new PropertyBindingException(modelProperty.Name, stringValue, e);
                 }
             }
             else if (destinationType == typeof(string))

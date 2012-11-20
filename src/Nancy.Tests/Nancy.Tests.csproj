@@ -138,6 +138,7 @@
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
+    <Compile Include="Unit\ModelBinding\PropertyBindingExceptionFixture.cs" />
     <Compile Include="Unit\NamedPipelineBaseFixture.cs" />
     <Compile Include="Unit\ModuleNameFixture.cs" />
     <Compile Include="Unit\NancyContextFixture.cs" />
