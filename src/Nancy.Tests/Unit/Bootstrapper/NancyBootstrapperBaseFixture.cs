@@ -38,6 +38,20 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
+        public void Should_throw_invalidaoperationexception_when_get_engine_fails()
+        {
+            // Given
+            this.bootstrapper.ShouldThrowWhenGettingEngine = true;
+
+            // When
+            var exception = Record.Exception(() => this.bootstrapper.GetEngine());
+
+            // Then
+            exception.ShouldBeOfType<InvalidOperationException>();
+            exception.Message.ShouldEqual("Something went wrong when trying to satisfy one of the dependencies during composition, make sure that you've registered all new dependencies in the container and inspect the innerexception for more details.");
+        }
+
+        [Fact]
         public void GetEngine_Calls_ConfigureApplicationContainer_With_Container_From_GetContainer()
         {
             // Given
@@ -273,6 +287,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public List<ModuleRegistration> PassedModules { get; set; }
         public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
         public IApplicationRegistrations[] OverriddenApplicationRegistrationTasks { get; set; }
+        public bool ShouldThrowWhenGettingEngine { get; set; }
 
         protected override NancyInternalConfiguration InternalConfiguration
         {
@@ -292,6 +307,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
         protected override INancyEngine GetEngineInternal()
         {
+            if (this.ShouldThrowWhenGettingEngine)
+            {
+                throw new ApplicationException("Something when wrong when trying to compose the engine.");
+            }
+
             return this.FakeNancyEngine;
         }
 

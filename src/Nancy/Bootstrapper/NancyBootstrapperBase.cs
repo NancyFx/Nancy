@@ -346,7 +346,7 @@
                 throw new InvalidOperationException("Bootstrapper is not initialised. Call Initialise before GetEngine");
             }
 
-            var engine = this.GetEngineInternal();
+            var engine = this.SafeGetNancyEngineInstance();
 
             engine.RequestPipelinesFactory = this.InitializeRequestPipelines;
 
@@ -530,6 +530,20 @@
                     new CollectionTypeRegistration(typeof(IApplicationRegistrations), this.ApplicationRegistrationTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
+        }
+
+        private INancyEngine SafeGetNancyEngineInstance()
+        {
+            try
+            {
+                return this.GetEngineInternal();
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException(
+                    "Something went wrong when trying to satisfy one of the dependencies during composition, make sure that you've registered all new dependencies in the container and inspect the innerexception for more details.",
+                    ex);
+            }
         }
     }
 }
