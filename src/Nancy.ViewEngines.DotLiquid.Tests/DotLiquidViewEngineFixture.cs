@@ -187,6 +187,34 @@
         }
 
         [Fact]
+        public void When_rendering_model_inheriting_drop_should_preserve_camel_case()
+        {
+            // Writing the test name is snake_case is slightly ironic, no?
+
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{{ Model.CamelCase }}")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+            var stream = new MemoryStream();
+
+            // When
+            var dropModel = new DropModel() { CamelCase = "Hello Jamie!" };
+            var response = this.engine.RenderView(location, dropModel, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("Hello Jamie!");
+        }
+
+        [Fact]
         public void RenderView_should_accept_a_model_with_a_list_and_iterate_over_it()
         {
             // Given
@@ -238,5 +266,10 @@
     {
         public int Id { get; set; }
         public string Body { get; set; }
+    }
+
+    public class DropModel : Drop
+    {
+        public string CamelCase { get; set; }
     }
 }
