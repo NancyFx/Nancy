@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>xunit.extensions</id>
+    <version>1.9.1</version>
+    <title>xUnit.net: Extensions</title>
+    <authors>James Newkirk,  Brad Wilson</authors>
+    <owners>James Newkirk,  Brad Wilson</owners>
+    <licenseUrl>http://xunit.codeplex.com/license</licenseUrl>
+    <projectUrl>http://xunit.codeplex.com/</projectUrl>
+    <iconUrl>http://download.codeplex.com/Download?ProjectName=xunit&amp;DownloadId=365445</iconUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Extensions for the xUnit.net framework, including data theories (data-driven tests) and several extension attributes.</description>
+    <dependencies>
+      <dependency id="xunit" version="[1.9.1]" />
+    </dependencies>
+  </metadata>
+</package>

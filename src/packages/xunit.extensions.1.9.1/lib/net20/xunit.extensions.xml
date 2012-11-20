@@ -593,6 +593,12 @@
             Gets the property name.
             </summary>
         </member>
+        <member name="P:Xunit.Extensions.PropertyDataAttribute.PropertyType">
+            <summary>
+            Gets or sets the type to retrieve the property data from. If not set, then the property will be
+            retrieved from the unit test class.
+            </summary>
+        </member>
         <member name="T:Xunit.Extensions.SqlServerDataAttribute">
             <summary>
             Provides a data source for a data theory, with the data coming a Microsoft SQL Server.
