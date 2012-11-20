@@ -271,9 +271,4 @@
     {
         public string CamelCase { get; set; }
     }
-
-    public class DropModel : Drop
-    {
-        public string CamelCase { get; set; }
-    }
 }
