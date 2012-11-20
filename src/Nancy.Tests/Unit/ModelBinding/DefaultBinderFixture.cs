@@ -210,15 +210,21 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Given
             var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
             var context = new NancyContext { Request = new FakeRequest("GET", "/") };
-            context.Request.Form["IntProperty"] = "BADNUM";
+            context.Request.Form["IntProperty"] = "badint";
+            context.Request.Form["AnotherIntProperty"] = "morebad";
 
             // Then
             Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel)))
-                .ShouldMatch(e =>
-                             e.PropertyName == "IntProperty"
-                             && e.BoundType == typeof(TestModel)
-                             && e.InnerException.Message == "BADNUM is not a valid value for Int32."
-                );
+                .ShouldMatch(exception =>
+                             exception.BoundType == typeof(TestModel)
+                             && exception.PropertyBindingExceptions.Any(pe =>
+                                                                        pe.PropertyName == "IntProperty"
+                                                                        && pe.AttemptedValue == "badint"
+                                                                        && pe.InnerException.Message == "badint is not a valid value for Int32.")
+                             && exception.PropertyBindingExceptions.Any(pe =>
+                                                                        pe.PropertyName == "AnotherIntProperty"
+                                                                        && pe.AttemptedValue == "morebad"
+                                                                        && pe.InnerException.Message == "morebad is not a valid value for Int32."));
         }
 
         [Fact]
@@ -244,7 +250,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel));
 
             // Then
-            validProperties.ShouldEqual(4);
+            validProperties.ShouldEqual(5);
         }
 
         [Fact]
@@ -649,6 +655,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public string AnotherStringProprety { get; set; }
 
             public int IntProperty { get; set; }
+
+            public int AnotherIntProperty { get; set; }
 
             public DateTime DateProperty { get; set; }
 
