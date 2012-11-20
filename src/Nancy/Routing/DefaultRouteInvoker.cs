@@ -170,6 +170,11 @@ namespace Nancy.Routing
                 response.StatusCode = negotiator.NegotiationContext.StatusCode.Value;
             }
 
+            foreach (var cookie in negotiator.NegotiationContext.Cookies)
+            {
+                response.Cookies.Add(cookie);
+            }
+
             return response;
         }
 

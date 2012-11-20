@@ -1,12 +1,41 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Nancy.Responses.Negotiation;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Nancy.Responses.Negotiation;
+    using Cookies;
+
     public static class NegotiatorExtensions
     {
+        /// <summary>
+        /// Add a cookie to the response.
+        /// </summary>
+        /// <param name="negotiator">The <see cref="Negotiator"/> instance.</param>
+        /// <param name="cookie">The <see cref="INancyCookie"/> instance that should be added.</param>
+        /// <returns>The modified <see cref="Negotiator"/> instance.</returns>
+        public static Negotiator WithCookie(this Negotiator negotiator, INancyCookie cookie)
+        {
+            negotiator.NegotiationContext.Cookies.Add(cookie);
+            return negotiator;
+        }
+
+        /// <summary>
+        /// Add a collection of cookies to the response.
+        /// </summary>
+        /// <param name="negotiator">The <see cref="Negotiator"/> instance.</param>
+        /// <param name="cookies">The <see cref="INancyCookie"/> instances that should be added.</param>
+        /// <returns>The modified <see cref="Negotiator"/> instance.</returns>
+        public static Negotiator WithCookies(this Negotiator negotiator, IEnumerable<INancyCookie> cookies)
+        {
+            foreach (var cookie in cookies)
+            {
+                negotiator.WithCookie(cookie);
+            }
+            
+            return negotiator;
+        }
+
         /// <summary>
         /// Add a header to the response
         /// </summary>
