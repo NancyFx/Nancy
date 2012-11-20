@@ -762,5 +762,40 @@ namespace Nancy.Tests.Unit.Routing
             // Then
             Assert.DoesNotThrow(() => this.requestDispatcher.Dispatch(context));
         }
+
+        [Fact]
+        public void should_preserve_stacktrace_when_rethrowing_the_excption()
+        {
+            // Given
+            var route = new FakeRoute
+            {
+                Action = o => BrokenMethod()
+            };
+
+            var resolvedRoute = new Tuple<Route, DynamicDictionary, Func<NancyContext, Response>, Action<NancyContext>, Func<NancyContext, Exception, Response>>(
+                route,
+                DynamicDictionary.Empty,
+                ctx => null,
+                ctx => { },
+                (ctx, ex) => { return null; });
+
+            A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            var context =
+                new NancyContext { Request = new Request("GET", "/", "http") };
+
+
+
+            var exception = Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context));
+
+            Assert.Throws<Exception>(() => requestDispatcher.Dispatch(context))
+                        .StackTrace.ShouldContain("BrokenMethod");
+        }
+
+
+        private static Response BrokenMethod()
+        {
+            throw new Exception("You called the broken method!");
+        }
     }
 }

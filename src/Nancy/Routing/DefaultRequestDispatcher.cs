@@ -64,7 +64,16 @@ namespace Nancy.Routing
             }
             catch (Exception exception)
             {
-                ExecuteRouteOnError(context, resolveResultOnError, exception);
+                var response = ResolveErrorResult(context, resolveResultOnError, exception);
+
+                if (response != null)
+                {
+                    context.Response = response;
+                }
+                else
+                {
+                    throw;
+                }
             }
         }
 
@@ -83,23 +92,14 @@ namespace Nancy.Routing
             }
         }
 
-        private static void ExecuteRouteOnError(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
+        private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
         {
-            if (resolveResultOnError == null)
+            if (resolveResultOnError != null)
             {
-                return;
+                return resolveResultOnError.Invoke(context, exception);
             }
 
-            var resolveResultOnErrorResponse = resolveResultOnError.Invoke(context, exception);
-
-            if (resolveResultOnErrorResponse != null)
-            {
-                context.Response = resolveResultOnErrorResponse;
-            }
-            else
-            {
-                throw exception;
-            }
+            return null;
         }
 
         private ResolveResult Resolve(NancyContext context)
