@@ -1,6 +1,7 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.ComponentModel;
     using System.Dynamic;
     using System.Linq.Expressions;
     using Microsoft.CSharp.RuntimeBinder;
@@ -44,11 +45,11 @@
         /// <returns>If value is not null, value is returned, else default value is returned</returns>
         public T Default<T>(T defaultValue = default(T))
         {
-            if (HasValue)
+            if (this.HasValue)
             {
                 try
                 {
-                    return(T) value;
+                    return (T)value;
                 }
                 catch
                 {
