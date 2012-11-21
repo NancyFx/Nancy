@@ -70,7 +70,7 @@ namespace Nancy.Testing
                 var configurator =
                     new ConfigurableBoostrapperConfigurator(this);
 
-                configurator.StatusCodeHandler<PassThroughStatusHandler>();
+                configurator.StatusCodeHandler<PassThroughStatusCodeHandler>();
                 configuration.Invoke(configurator);
             }
         }
@@ -722,9 +722,9 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IStatusHandler"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IStatusCodeHandler"/>.
             /// </summary>
-            /// <param name="statusCodeHandlers">The <see cref="IStatusHandler"/> types that should be used by the bootstrapper.</param>
+            /// <param name="statusCodeHandlers">The <see cref="IStatusCodeHandler"/> types that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator StatusCodeHandlers(params Type[] statusCodeHandlers)
             {
@@ -734,11 +734,11 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IStatusHandler"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IStatusCodeHandler"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IStatusHandler"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IStatusCodeHandler"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator StatusCodeHandler<T>() where T : IStatusHandler
+            public ConfigurableBoostrapperConfigurator StatusCodeHandler<T>() where T : IStatusCodeHandler
             {
                 this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>( new[] { typeof(T) } );
                 return this;

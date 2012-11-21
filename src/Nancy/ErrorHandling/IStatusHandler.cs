@@ -3,7 +3,7 @@ namespace Nancy.ErrorHandling
     /// <summary>
     /// Provides informative responses for particular HTTP status codes
     /// </summary>
-    public interface IStatusHandler
+    public interface IStatusCodeHandler
     {
         /// <summary>
         /// Check if the error handler can handle errors of the provided status code.

@@ -3,7 +3,7 @@ using Nancy.ErrorHandling;
 
 namespace Nancy.Testing
 {
-    public class PassThroughStatusHandler : IStatusHandler
+    public class PassThroughStatusCodeHandler : IStatusCodeHandler
     {
         public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)
         {

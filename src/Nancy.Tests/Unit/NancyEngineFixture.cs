@@ -19,7 +19,7 @@ namespace Nancy.Tests.Unit
         private readonly NancyContext context;
         private readonly INancyContextFactory contextFactory;
         private readonly Response response;
-        private readonly IStatusHandler statusHandler;
+        private readonly IStatusCodeHandler statusCodeHandler;
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
 
@@ -29,12 +29,12 @@ namespace Nancy.Tests.Unit
             this.response = new Response();
             this.route = new FakeRoute(response);
             this.context = new NancyContext();
-            this.statusHandler = A.Fake<IStatusHandler>();
+            this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._)).Invokes(x => this.context.Response = new Response());
 
-            A.CallTo(() => this.statusHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create()).Returns(context);
@@ -51,7 +51,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, contextFactory, new[] { this.statusHandler }, A.Fake<IRequestTracing>())
+                new NancyEngine(this.requestDispatcher, contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>())
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -62,7 +62,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusHandler }, A.Fake<IRequestTracing>()));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -73,7 +73,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusHandler }, A.Fake<IRequestTracing>()));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -290,7 +290,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.statusHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -303,7 +303,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.statusHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustNotHaveHappened();
+            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -311,13 +311,13 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/", "http");
-            A.CallTo(() => this.statusHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(true);
+            A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(true);
 
             // When
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.statusHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.statusCodeHandler.Handle(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]

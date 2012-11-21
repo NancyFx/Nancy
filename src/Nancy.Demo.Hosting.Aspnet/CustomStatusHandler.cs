@@ -2,7 +2,7 @@
 {
     using Nancy.ErrorHandling;
 
-    public class CustomStatusHandler : IStatusHandler
+    public class CustomStatusCodeHandler : IStatusCodeHandler
     {
         /// <summary>
         /// Check if the error handler can handle errors of the provided status code.

@@ -22,7 +22,7 @@
             }
         }
         public FakeDefaultNancyBootstrapper()
-            : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusHandler) })))
+            : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) })))
         {
             
         }

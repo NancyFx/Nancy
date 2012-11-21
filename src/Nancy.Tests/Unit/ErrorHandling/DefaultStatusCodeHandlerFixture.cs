@@ -8,11 +8,11 @@ namespace Nancy.Tests.Unit.ErrorHandling
 
     public class DefaultStatusCodeHandlerFixture
     {
-        private readonly IStatusHandler statusHandler;
+        private readonly IStatusCodeHandler statusCodeHandler;
 
         public DefaultStatusCodeHandlerFixture()
         {
-            this.statusHandler = new DefaultStatusHandler();
+            this.statusCodeHandler = new DefaultStatusCodeHandler();
         }
 
         [Theory]
@@ -41,7 +41,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
         [InlineData(HttpStatusCode.Unauthorized)]
         public void Should_not_handle_non_error_codes(HttpStatusCode code)
         {
-            var result = this.statusHandler.HandlesStatusCode(code, null);
+            var result = this.statusCodeHandler.HandlesStatusCode(code, null);
 
             result.ShouldBeFalse();
         }
@@ -54,7 +54,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             context.Response = new Response();
 
             // When
-            this.statusHandler.Handle(HttpStatusCode.NotFound, context);
+            this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
 
             // Then
             context.Response.Contents.ShouldNotBeNull();
@@ -69,7 +69,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             context.Response = new Response() { StatusCode = HttpStatusCode.NotFound, Contents = contents };
 
             // When
-            this.statusHandler.Handle(HttpStatusCode.NotFound, context);
+            this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
 
             // Then
             context.Response.Contents.ShouldEqual(contents);
@@ -83,7 +83,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             context.Response = new Response { StatusCode = HttpStatusCode.NotFound };
 
             // When
-            this.statusHandler.Handle(HttpStatusCode.NotFound, context);
+            this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
 
             // Then
             using (var stream = new MemoryStream())
@@ -100,7 +100,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             var context = new NancyContext();
 
             // When
-            this.statusHandler.Handle(HttpStatusCode.NotFound, context);
+            this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
 
             // Then
             context.Response.ShouldNotBeNull();
