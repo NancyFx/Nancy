@@ -161,6 +161,12 @@ namespace Nancy.Hosting.Self.Tests
 			}
 		}
 
+        [SkippableFact]
+        public void Should_be_serializable()
+        {
+            var type = typeof(NancyHost);
+            Assert.True(type.Attributes.ToString().Contains("Serializable"));
+        }
 
 		private class NancyHostWrapper : IDisposable
 		{
