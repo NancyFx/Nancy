@@ -10,6 +10,11 @@
     public class BindingContext
     {
         /// <summary>
+        /// The binding configuration
+        /// </summary>
+        public BindingConfig Configuration { get; set; }
+
+        /// <summary>
         /// Current Nancy context
         /// </summary>
         public NancyContext Context { get; set; }

@@ -69,7 +69,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var locator = new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
             var locatedBinder = locator.GetBinderForType(typeof(Concrete), A<NancyContext>.Ignored);
 
-            var result = locatedBinder.Bind(null, typeof(Concrete)) as IAmAnInterface;
+            var result = locatedBinder.Bind(null, typeof(Concrete), null, new BindingConfig()) as IAmAnInterface;
 
             result.ShouldNotBeNull();
         }
@@ -77,11 +77,17 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_be_able_to_bind_interfaces_using_module_extensions()
         {
-            var binder = new InterfaceModelBinder();
-            var locator = new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
-            var module = new TestBindingModule();
-            module.Context = new NancyContext() { Request =  new FakeRequest("GET", "/") };
-            module.ModelBinderLocator = locator;
+            var binder = 
+                new InterfaceModelBinder();
+            
+            var locator = 
+                new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
+            
+            var module = new TestBindingModule
+            {
+                Context = new NancyContext() { Request = new FakeRequest("GET", "/") },
+                ModelBinderLocator = locator
+            };
 
             var result = module.TestBindInterface();
             var result2 = module.TestBindConcrete();
@@ -109,17 +115,17 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         interface IAmAnInterface
         {
-             
+
         }
 
         class Concrete : IAmAnInterface
         {
-             
+
         }
 
         class InterfaceModelBinder : IModelBinder
         {
-            public object Bind(NancyContext context, Type modelType, object instance = null, params string[] blackList)
+            public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
             {
                 return new Concrete() as IAmAnInterface;
             }

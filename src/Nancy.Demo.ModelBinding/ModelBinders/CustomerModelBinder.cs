@@ -25,9 +25,10 @@ namespace Nancy.Demo.ModelBinding.ModelBinders
         /// <param name="context">Current context</param>
         /// <param name="modelType">Model type to bind to</param>
         /// <param name="instance">Optional existing instance</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blackList">Blacklisted property names</param>
         /// <returns>Bound model</returns>
-        public object Bind(NancyContext context, Type modelType, object instance = null, params string[] blackList)
+        public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
         {
             var customer = (instance as Customer) ?? new Customer();
 
