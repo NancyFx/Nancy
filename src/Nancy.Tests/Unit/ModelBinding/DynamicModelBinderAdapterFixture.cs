@@ -11,7 +11,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_throw_if_locator_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DynamicModelBinderAdapter(null, new NancyContext()));
+            var result = Record.Exception(() => new DynamicModelBinderAdapter(null, new NancyContext(), null, A.Dummy<BindingConfig>()));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
@@ -21,23 +21,33 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_throw_if_context_is_null()
         {
             // Given, When
-            var result = Record.Exception(() => new DynamicModelBinderAdapter(A.Fake<IModelBinderLocator>(), null));
+            var result = Record.Exception(() => new DynamicModelBinderAdapter(A.Fake<IModelBinderLocator>(), null, null, A.Dummy<BindingConfig>()));
 
             // Then
             result.ShouldBeOfType(typeof(ArgumentNullException));
         }
 
         [Fact]
-        public void Should_pass_type_to_locator_when_cast_implcitly()
+        public void Should_throw_if_configuration_is_null()
+        {
+            // Given, When
+            var result = Record.Exception(() => new DynamicModelBinderAdapter(A.Fake<IModelBinderLocator>(), A.Dummy<NancyContext>(), null, null));
+
+            // Then
+            result.ShouldBeOfType(typeof(ArgumentNullException));
+        }
+
+        [Fact]
+        public void Should_pass_type_to_locator_when_cast_implicitly()
         {
             // Given
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
 
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext(), null, A.Dummy<BindingConfig>());
 
             // When
             Model result = adapter;
@@ -54,11 +64,11 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
 
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, context)).Returns(fakeModelBinder);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, null, A.Dummy<BindingConfig>());
 
             // When
             Model result = adapter;
@@ -73,11 +83,11 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Given
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
 
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext(), null, A.Dummy<BindingConfig>());
 
             // When
             var result = (Model)adapter;
@@ -92,11 +102,11 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Given
             var fakeModelBinder = A.Fake<IModelBinder>();
             var returnModel = new Model();
-            A.CallTo(() => fakeModelBinder.Bind(null, null, null)).WithAnyArguments().Returns(returnModel);
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
 
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext(), null, A.Dummy<BindingConfig>());
 
             // When
             Model result = adapter;
@@ -112,13 +122,124 @@ namespace Nancy.Tests.Unit.ModelBinding
             // Given
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(null);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext());
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, new NancyContext(), null, A.Dummy<BindingConfig>());
 
             // When
             var result = Record.Exception(() => (Model)adapter);
 
             // Then
             result.ShouldBeOfType(typeof(ModelBindingException));
+        }
+
+        [Fact]
+        public void Should_pass_context_to_binder()
+        {
+            // Given
+            var context = new NancyContext();
+
+            var fakeModelBinder = A.Fake<IModelBinder>();
+            var returnModel = new Model();
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
+
+            var fakeLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context , null, A.Dummy<BindingConfig>());
+
+            // When
+            Model result = adapter;
+
+            // Then
+            A.CallTo(() => fakeModelBinder.Bind(context, A<Type>._, A<object>._, A<BindingConfig>._, A<string[]>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_type_to_binder()
+        {
+            // Given
+            var context = new NancyContext();
+
+            var fakeModelBinder = A.Fake<IModelBinder>();
+            var returnModel = new Model();
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
+
+            var fakeLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, null, A.Dummy<BindingConfig>());
+
+            // When
+            Model result = adapter;
+
+            // Then
+            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, typeof(Model), A<object>._, A<BindingConfig>._, A<string[]>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_instance_to_binder()
+        {
+            // Given
+            var context = new NancyContext();
+            var instance = new Model();
+
+            var fakeModelBinder = A.Fake<IModelBinder>();
+            var returnModel = new Model();
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
+
+            var fakeLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, instance, A.Dummy<BindingConfig>());
+
+            // When
+            Model result = adapter;
+
+            // Then
+            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, A<Type>._, instance, A<BindingConfig>._, A<string[]>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_binding_configuration_to_binder()
+        {
+            // Given
+            var context = new NancyContext();
+            var instance = new Model();
+            var config = BindingConfig.Default;
+            var blacklist = new[] {"foo", "bar"};
+
+            var fakeModelBinder = A.Fake<IModelBinder>();
+            var returnModel = new Model();
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
+
+            var fakeLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, instance, config, blacklist);
+
+            // When
+            Model result = adapter;
+
+            // Then
+            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, A<Type>._, A<object>._, A<BindingConfig>._, blacklist)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Should_pass_blacklist_to_binder()
+        {
+            // Given
+            var context = new NancyContext();
+            var instance = new Model();
+            var config = BindingConfig.Default;
+
+            var fakeModelBinder = A.Fake<IModelBinder>();
+            var returnModel = new Model();
+            A.CallTo(() => fakeModelBinder.Bind(null, null, null, null)).WithAnyArguments().Returns(returnModel);
+
+            var fakeLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, instance, config);
+
+            // When
+            Model result = adapter;
+
+            // Then
+            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, A<Type>._, A<object>._, config, A<string[]>._)).MustHaveHappened();
         }
     }
 

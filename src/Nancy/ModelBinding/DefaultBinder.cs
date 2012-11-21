@@ -54,17 +54,19 @@ namespace Nancy.ModelBinding
         /// <param name="context">Current context</param>
         /// <param name="modelType">Model type to bind to</param>
         /// <param name="instance">Optional existing instance</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blackList">Blacklisted property names</param>
         /// <returns>Bound model</returns>
-        public object Bind(NancyContext context, Type modelType, object instance = null, params string[] blackList)
+        public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
         {
-            var bindingContext = this.CreateBindingContext(context, modelType, instance, blackList);
+            var bindingContext =
+                this.CreateBindingContext(context, modelType, instance, configuration, blackList);
 
             var bodyDeserializedModel = this.DeserializeRequestBody(bindingContext);
 
             if (bodyDeserializedModel != null)
             {
-                this.UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
             var bindingExceptions = new List<PropertyBindingException>();
@@ -75,11 +77,11 @@ namespace Nancy.ModelBinding
 
                 var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                if (!String.IsNullOrEmpty(stringValue) && IsDefaultValue(existingValue, modelProperty.PropertyType))
+                if (!String.IsNullOrEmpty(stringValue) &&  (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite ))
                 {
                     try
                     {
-                        this.BindProperty(modelProperty, stringValue, bindingContext);
+                        BindProperty(modelProperty, stringValue, bindingContext);
                     }
                     catch(PropertyBindingException ex)
                     {
@@ -96,7 +98,7 @@ namespace Nancy.ModelBinding
             return bindingContext.Model;
         }
 
-        private void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
+        private static void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
         {
             if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable())
             {
@@ -108,31 +110,32 @@ namespace Nancy.ModelBinding
                 var existingValue =
                     modelProperty.GetValue(bindingContext.Model, null);
 
-                if (IsDefaultValue(existingValue, modelProperty.PropertyType))
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
                 {
-                    this.CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
+                    CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
                 }
             }
         }
 
-        private void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
+        private static void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
         {
             var newValue = modelProperty.GetValue(bodyDeserializedModel, null);
 
             modelProperty.SetValue(model, newValue, null);
         }
 
-        private bool IsDefaultValue(object existingValue, Type propertyType)
+        private static bool IsDefaultValue(object existingValue, Type propertyType)
         {
             return propertyType.IsValueType
                 ? Equals(existingValue, Activator.CreateInstance(propertyType))
                 : existingValue == null;
         }
 
-        private BindingContext CreateBindingContext(NancyContext context, Type modelType, object instance, IEnumerable<string> blackList)
+        private BindingContext CreateBindingContext(NancyContext context, Type modelType, object instance, BindingConfig configuration, IEnumerable<string> blackList)
         {
             return new BindingContext
             {
+                Configuration = configuration,
                 Context = context,
                 DestinationType = modelType,
                 Model = CreateModel(modelType, instance),
@@ -166,7 +169,7 @@ namespace Nancy.ModelBinding
                     memberName => (string)dictionary[memberName]);
         }
 
-        private void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
+        private static void BindProperty(PropertyInfo modelProperty, string stringValue, BindingContext context)
         {
             var destinationType = modelProperty.PropertyType;
 
@@ -210,12 +213,9 @@ namespace Nancy.ModelBinding
                 return Activator.CreateInstance(modelType);
             }
 
-            if (!modelType.IsAssignableFrom(instance.GetType()))
-            {
-                return Activator.CreateInstance(modelType);
-            }
-
-            return instance;
+            return !modelType.IsInstanceOfType(instance) ? 
+                Activator.CreateInstance(modelType) :
+                instance;
         }
 
         private static string GetValue(string propertyName, BindingContext context)
