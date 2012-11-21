@@ -10,6 +10,11 @@
     public class BindingContext
     {
         /// <summary>
+        /// The binding configuration
+        /// </summary>
+        public BindingConfig Configuration { get; set; }
+
+        /// <summary>
         /// Current Nancy context
         /// </summary>
         public NancyContext Context { get; set; }
@@ -38,7 +43,5 @@
         /// Available type converters - user converters followed by any defaults
         /// </summary>
         public IEnumerable<ITypeConverter> TypeConverters { get; set; }
-
-        public bool Overwrite { get; set; }
     }
 }

@@ -66,7 +66,7 @@ namespace Nancy.ModelBinding
 
             if (bodyDeserializedModel != null)
             {
-                this.UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
+                UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
             var bindingExceptions = new List<PropertyBindingException>();
@@ -77,7 +77,7 @@ namespace Nancy.ModelBinding
 
                 var stringValue = GetValue(modelProperty.Name, bindingContext);
 
-                if (!String.IsNullOrEmpty(stringValue) &&  (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Overwrite ))
+                if (!String.IsNullOrEmpty(stringValue) &&  (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite ))
                 {
                     try
                     {
@@ -98,7 +98,7 @@ namespace Nancy.ModelBinding
             return bindingContext.Model;
         }
 
-        private void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
+        private static void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
         {
             if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable())
             {
@@ -110,7 +110,7 @@ namespace Nancy.ModelBinding
                 var existingValue =
                     modelProperty.GetValue(bindingContext.Model, null);
 
-                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Overwrite)
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
                 {
                     CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
                 }
@@ -124,7 +124,7 @@ namespace Nancy.ModelBinding
             modelProperty.SetValue(model, newValue, null);
         }
 
-        private bool IsDefaultValue(object existingValue, Type propertyType)
+        private static bool IsDefaultValue(object existingValue, Type propertyType)
         {
             return propertyType.IsValueType
                 ? Equals(existingValue, Activator.CreateInstance(propertyType))
@@ -135,7 +135,7 @@ namespace Nancy.ModelBinding
         {
             return new BindingContext
             {
-                Overwrite = configuration.Overwrite,
+                Configuration = configuration,
                 Context = context,
                 DestinationType = modelType,
                 Model = CreateModel(modelType, instance),
