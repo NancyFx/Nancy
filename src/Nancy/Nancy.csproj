@@ -130,6 +130,7 @@
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
     <Compile Include="Diagnostics\DescriptionAttribute.cs" />
