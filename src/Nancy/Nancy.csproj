@@ -208,7 +208,7 @@
     <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultStatusHandler.cs" />
-    <Compile Include="ErrorHandling\IStatusHandler.cs" />
+    <Compile Include="IStatusHandler.cs" />
     <Compile Include="ErrorPipeline.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
