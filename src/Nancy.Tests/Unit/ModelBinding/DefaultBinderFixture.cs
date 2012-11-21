@@ -290,7 +290,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, new BindingConfig());
 
             // Then
-            validProperties.ShouldEqual(5);
+            validProperties.ShouldEqual(6);
         }
 
         [Fact]

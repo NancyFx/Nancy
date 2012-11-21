@@ -81,7 +81,7 @@ namespace Nancy.ModelBinding
                 {
                     try
                     {
-                        this.BindProperty(modelProperty, stringValue, bindingContext);
+                        BindProperty(modelProperty, stringValue, bindingContext);
                     }
                     catch(PropertyBindingException ex)
                     {
