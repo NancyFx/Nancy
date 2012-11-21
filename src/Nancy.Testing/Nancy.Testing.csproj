@@ -124,7 +124,7 @@
     <Compile Include="IBrowserContextValues.cs" />
     <Compile Include="IndexHelper.cs" />
     <Compile Include="NodeWrapper.cs" />
-    <Compile Include="PassThroughErrorHandler.cs" />
+    <Compile Include="PassThroughStatusHandler.cs" />
     <Compile Include="PathHelper.cs" />
     <Compile Include="QueryWrapper.cs" />
     <Compile Include="AssertExtensions.cs" />
