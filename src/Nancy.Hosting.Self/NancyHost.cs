@@ -18,7 +18,7 @@
     /// to run. <see cref="Start"/> will launch a thread that will listen for requests and then process them. All processing is done
     /// within a single thread - self hosting is not intended for production use, but rather as a development server.
     ///NancyHost needs <see cref="SerializableAttribute"/> in order to be used from another appdomain under mono. Working with 
-    /// AppDomains is necessary if you want to unload the depencies that come with NancyHost.
+    /// AppDomains is necessary if you want to unload the dependencies that come with NancyHost.
     /// </remarks>
     [Serializable]
     public class NancyHost  
