@@ -18,7 +18,7 @@
     {
         public string GetRootPath()
         {
-            return Environment.CurrentDirectory;
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 }
