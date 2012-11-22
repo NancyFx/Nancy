@@ -64,6 +64,12 @@
             return defaultValue;
         }
 
+        /// <summary>
+        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue. 
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
         public T TryParse<T>(T defaultValue = default (T))
         {
             if (this.HasValue)
