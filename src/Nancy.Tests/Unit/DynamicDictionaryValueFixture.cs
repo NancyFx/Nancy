@@ -732,5 +732,231 @@
             //Then
             Assert.Equal("Cannot convert value of type 'Double' to type 'Int32'", exception.Message);
         }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_int_should_convert_to_int()
+        {
+            //Given
+            const int expected = 42;
+            const int notExpected = 100;
+            dynamic value = new DynamicDictionaryValue("42");
+
+            //When
+            int actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_decimal_should_convert_to_decimal()
+        {
+            //Given
+            const decimal expected = 55.23m;
+            const decimal notExpected = 99.99m;
+            dynamic value = new DynamicDictionaryValue("55.23");
+
+            //When
+            decimal actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_double_should_convert_to_double()
+        {
+            //Given
+            const double expected = 37.48d;
+            const double notExpected = 99.99d;
+            dynamic value = new DynamicDictionaryValue("37.48");
+
+            //When
+            double actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_short_should_convert_to_short()
+        {
+            //Given
+            const short expected = (short)13;
+            const short notExpected = (short)31;
+            dynamic value = new DynamicDictionaryValue("13");
+
+            //When
+            short actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_datetime_should_convert_to_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 Dec, 2012");
+            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
+            dynamic value = new DynamicDictionaryValue("13 December 2012");
+
+            //When
+            DateTime actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_int_and_no_default_should_convert_to_int()
+        {
+            //Given
+            const int expected = 42;
+            const int notExpected = 100;
+            dynamic value = new DynamicDictionaryValue("42");
+
+            //When
+            int actual = value.TryParse<int>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_decimal_and_no_default_should_convert_to_decimal()
+        {
+            //Given
+            const decimal expected = 55.23m;
+            const decimal notExpected = 99.99m;
+            dynamic value = new DynamicDictionaryValue("55.23");
+
+            //When
+            decimal actual = value.TryParse<decimal>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_double_and_no_default_should_convert_to_double()
+        {
+            //Given
+            const double expected = 37.48d;
+            const double notExpected = 99.99d;
+            dynamic value = new DynamicDictionaryValue("37.48");
+
+            //When
+            double actual = value.TryParse<double>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_short_and_no_default_should_convert_to_short()
+        {
+            //Given
+            const short expected = (short)13;
+            const short notExpected = (short)31;
+            dynamic value = new DynamicDictionaryValue("13");
+
+            //When
+            short actual = value.TryParse<short>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_with_datetime_and_no_default_should_convert_to_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 Dec, 2012");
+            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
+            dynamic value = new DynamicDictionaryValue("13 December 2012");
+
+            //When
+            DateTime actual = value.TryParse<DateTime>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_string_value_when_calling_tryparse_that_doesnt_covert_should_give_default()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 December 2012");
+            dynamic value = new DynamicDictionaryValue("Rawrrrr");
+
+            //When
+            DateTime actual = value.TryParse(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_int_value_when_calling_tryparse_with_string_should_covert_to_string()
+        {
+            //Given
+            const string expected = "13";
+            const string notExpected = "11";
+            dynamic value = new DynamicDictionaryValue(13);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_double_value_when_calling_tryparse_with_string_should_covert_to_string()
+        {
+            //Given
+            const string expected = "134.22";
+            const string notExpected = "187.34";
+            dynamic value = new DynamicDictionaryValue(134.22d);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_decimal_value_when_calling_tryparse_with_string_should_covert_to_string()
+        {
+            //Given
+            const string expected = "88.53234423";
+            const string notExpected = "76.3422";
+            dynamic value = new DynamicDictionaryValue(88.53234423);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Given_datetime_value_when_calling_tryparse_with_string_should_covert_to_string()
+        {
+            //This test is unrealistic in my opinion, but it should still call ToString on the datetime value
+
+            //Given
+            string expected = DateTime.Parse("22 Nov, 2012").ToString();
+            string notExpected = DateTime.Parse("18 Jun, 2011").ToString();
+            dynamic value = new DynamicDictionaryValue(DateTime.Parse("22 Nov, 2012"));
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
     }
 }
