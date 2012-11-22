@@ -64,6 +64,33 @@
             return defaultValue;
         }
 
+        public T TryParse<T>(T defaultValue = default (T))
+        {
+            if (this.HasValue)
+            {
+                if (value.GetType().IsAssignableFrom(typeof(T)))
+                {
+                    return (T)value;
+                }
+
+                var stringValue = value as string;
+                if (stringValue != null)
+                {
+                    var converter = TypeDescriptor.GetConverter(typeof(T));
+                    if (converter.IsValid(value))
+                    {
+                        return (T)converter.ConvertFromString(stringValue);
+                    }
+                }
+                else if (typeof(T) == typeof (string))
+                {
+                    return (T)Convert.ChangeType(value, TypeCode.String);
+                }
+            }
+
+            return defaultValue;
+        }
+
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
         {
             if (dynamicValue.value == null && compareValue == null)
