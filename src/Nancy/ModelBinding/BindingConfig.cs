@@ -6,9 +6,17 @@
     public class BindingConfig
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="BindingConfig"/> class.
+        /// </summary>
+        public BindingConfig()
+        {
+            this.Overwrite = true;
+        }
+
+        /// <summary>
         /// Binding configuration that permitts that the binder overwrites non-default values.
         /// </summary>
-        public static BindingConfig AllowOverwrite = new BindingConfig { Overwrite = true };
+        public static BindingConfig NoOverwrite = new BindingConfig { Overwrite = false };
 
         /// <summary>
         /// Default binding configuration.
