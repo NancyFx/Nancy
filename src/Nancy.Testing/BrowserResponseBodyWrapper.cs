@@ -10,7 +10,7 @@ namespace Nancy.Testing
     public class BrowserResponseBodyWrapper : IEnumerable<byte>
     {
         private readonly IEnumerable<byte> responseBytes;
-        private readonly DocumentWrapper responseDocument;
+        private DocumentWrapper responseDocument;
 
         public BrowserResponseBodyWrapper(Response response)
         {
@@ -18,7 +18,6 @@ namespace Nancy.Testing
                 GetContentStream(response);
 
             this.responseBytes = contentStream.ToArray();
-            this.responseDocument = new DocumentWrapper(this.responseBytes);
         }
 
         private static MemoryStream GetContentStream(Response response)
@@ -36,7 +35,15 @@ namespace Nancy.Testing
         /// <returns>A <see cref="QueryWrapper"/> instance.</returns>
         public QueryWrapper this[string selector]
         {
-            get { return this.responseDocument[selector]; }
+            get
+            {
+                if (this.responseDocument == null)
+                {
+                    this.responseDocument = new DocumentWrapper(this.responseBytes);
+                }
+
+                return this.responseDocument[selector];
+            }
         }
 
         /// <summary>
