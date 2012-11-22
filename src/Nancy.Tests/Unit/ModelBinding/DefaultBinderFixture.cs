@@ -160,7 +160,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = binder.Bind(context, typeof(TestModel), null, BindingConfig.AllowOverwrite);
+            var result = binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.ShouldBeOfType<TestModel>();
@@ -180,7 +180,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] {"application/xml"});
 
             // When
-            var result = binder.Bind(context, typeof (TestModel), null, BindingConfig.Default);
+            var result = binder.Bind(context, typeof (TestModel), null, BindingConfig.NoOverwrite);
 
             // Then
             result.ShouldBeOfType<TestModel>();
@@ -560,7 +560,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "1";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.Default);
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.NoOverwrite);
 
             // Then
             result.StringProperty.ShouldEqual("Existing Value");
@@ -581,7 +581,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "1";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.Default);
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.NoOverwrite);
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -600,7 +600,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "1";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.AllowOverwrite);
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("Test2");
@@ -619,7 +619,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "1";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.AllowOverwrite);
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("Test2");
@@ -750,6 +750,20 @@ namespace Nancy.Tests.Unit.ModelBinding
                 get { return 0; }
                 set { }
             }
+        }
+    }
+
+    public class BindingConfigFixture
+    {
+        [Fact]
+        public void Should_allow_overwrite_on_new_instance()
+        {
+            // Given
+            // When
+            var instance = new BindingConfig();
+
+            // Then
+            instance.Overwrite.ShouldBeTrue();
         }
     }
 }
