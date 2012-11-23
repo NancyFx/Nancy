@@ -84,9 +84,9 @@ namespace Nancy.Diagnostics
 
         private static Response GetDiagnosticsHelpView(NancyContext ctx)
         {
-            var renderer = new DiagnosticsViewRenderer(ctx);
-
-            return renderer["help"];
+            return (StaticConfiguration.IsRunningDebug)
+                       ? new DiagnosticsViewRenderer(ctx)["help"]
+                       : HttpStatusCode.NotFound;
         }
 
         private static Response GetDiagnosticsLoginView(NancyContext ctx)

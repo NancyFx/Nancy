@@ -62,7 +62,7 @@ namespace Nancy
         /// Checks the entry assembly to see whether it has been built in debug mode.
         /// If anything goes wrong it returns false.
         /// </summary>
-        private static bool IsRunningDebug
+        public static bool IsRunningDebug
         {
             get
             {
