@@ -236,153 +236,727 @@
         [Fact]
         public void Should_be_able_to_call_ConvertToBoolean()
         {
+            //Given
             const bool expected = true;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToBoolean(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToChar()
         {
+            //Given
             const char expected = 'a';
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToChar(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToSByte()
         {
+            //Given
             const sbyte expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToSByte(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToByte()
         {
+            //Given
             const byte expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToByte(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToInt16()
         {
+            //Given
             const short expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToInt16(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToUInt16()
         {
+            //Given
             const ushort expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToUInt16(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToInt32()
         {
+            //Given
             const int expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToInt32(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToUInt32()
         {
+            //Given
             const uint expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToUInt32(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToInt64()
         {
+            //Given
             const long expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToInt64(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToUInt64()
         {
+            //Given
             const ulong expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToUInt64(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToSingle()
         {
+            //Given
             const float expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToSingle(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToDouble()
         {
+            //Given
             const double expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToDouble(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToDecimal()
         {
+            //Given
             const decimal expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToDecimal(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToDateTime()
         {
+            //Given
             DateTime expected = new DateTime(1952, 3, 11);
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToDateTime(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertToString()
         {
+            //Given
             const string expected = "Forty two";
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ToString(value);
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_be_able_to_call_ConvertChangeType()
         {
+            //Given
             const int expected = 42;
             object value = new DynamicDictionaryValue(expected);
+
+            //When
             var actual = Convert.ChangeType(value, typeof(int));
+
+            //Then
             Assert.Equal(expected, actual);
         }
 
         [Fact]
         public void Should_return_null_when_value_is_null_and_casting_to_string()
         {
+            //Given
             dynamic value = new DynamicDictionaryValue(null);
             String actual = value;
+
+            //Then
             Assert.Null(actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_int_when_calling_default_given_null()
+        {
+            //Given
+            const int expected = 123;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            int actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_string_when_calling_default_given_null()
+        {
+            //Given
+            const string expected = "default value";
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            string actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_decimal_when_calling_default_given_null()
+        {
+            //Given
+            const decimal expected = 88.43m;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            decimal actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_double_when_calling_default_given_null()
+        {
+            //Given
+            const double expected = 44.23d;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            double actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_short_when_calling_default_given_null()
+        {
+            //Given
+            const short expected = (short)4;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            short actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_float_when_calling_default_given_null()
+        {
+            //Given
+            const float expected = 9.343f;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            float actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_long_when_calling_default_given_null()
+        {
+            //Given
+            const long expected = 1000333000222000333L;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            long actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_bool_when_calling_default_given_null()
+        {
+            //Given
+            const bool expected = true;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            bool actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_of_datetime_when_calling_default_given_null()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("10 Dec, 2012");
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            DateTime actual = value.Default(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_int_type_when_no_default_value_given()
+        {
+            //Given
+            const int expected = 0;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            int actual = value.Default<int>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_string_type_when_no_default_value_given()
+        {
+            //Given
+            const string expected = null;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            string actual = value.Default<string>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_decimal_type_when_no_default_value_given()
+        {
+            //Given
+            const decimal expected = 0m;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            decimal actual = value.Default<decimal>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_double_type_when_no_default_value_given()
+        {
+            //Given
+            const double expected = 0d;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            double actual = value.Default<double>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_short_type_when_no_default_value_given()
+        {
+            //Given
+            const short expected = (short)0;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            short actual = value.Default<short>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_float_type_when_no_default_value_given()
+        {
+            //Given
+            const float expected = 0f;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            float actual = value.Default<float>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_long_type_when_no_default_value_given()
+        {
+            //Given
+            const long expected = 0L;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            long actual = value.Default<long>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_bool_type_when_no_default_value_given()
+        {
+            //Given
+            const bool expected = false;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            bool actual = value.Default<bool>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_still_return_default_int_datetime_when_no_default_value_given()
+        {
+            //Given
+            DateTime expected = DateTime.MinValue;
+            dynamic value = new DynamicDictionaryValue(null);
+
+            //When
+            DateTime actual = value.Default<DateTime>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_throw_if_unable_to_explicitly_cast()
+        {
+            //Given
+            dynamic value = new DynamicDictionaryValue(12.25);
+
+            //When
+            Exception exception = Assert.Throws<InvalidCastException>(() => value.Default<int>());
+
+            //Then
+            Assert.Equal("Cannot convert value of type 'Double' to type 'Int32'", exception.Message);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_int()
+        {
+            //Given
+            const int expected = 42;
+            const int notExpected = 100;
+            dynamic value = new DynamicDictionaryValue("42");
+
+            //When
+            int actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_decimal()
+        {
+            //Given
+            const decimal expected = 55.23m;
+            const decimal notExpected = 99.99m;
+            dynamic value = new DynamicDictionaryValue("55.23");
+
+            //When
+            decimal actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_double()
+        {
+            //Given
+            const double expected = 37.48d;
+            const double notExpected = 99.99d;
+            dynamic value = new DynamicDictionaryValue("37.48");
+
+            //When
+            double actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_short()
+        {
+            //Given
+            const short expected = (short)13;
+            const short notExpected = (short)31;
+            dynamic value = new DynamicDictionaryValue("13");
+
+            //When
+            short actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 Dec, 2012");
+            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
+            dynamic value = new DynamicDictionaryValue("13 December 2012");
+
+            //When
+            DateTime actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_int()
+        {
+            //Given
+            const int expected = 42;
+            const int notExpected = 100;
+            dynamic value = new DynamicDictionaryValue("42");
+
+            //When
+            int actual = value.TryParse<int>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_decimal()
+        {
+            //Given
+            const decimal expected = 55.23m;
+            const decimal notExpected = 99.99m;
+            dynamic value = new DynamicDictionaryValue("55.23");
+
+            //When
+            decimal actual = value.TryParse<decimal>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_double()
+        {
+            //Given
+            const double expected = 37.48d;
+            const double notExpected = 99.99d;
+            dynamic value = new DynamicDictionaryValue("37.48");
+
+            //When
+            double actual = value.TryParse<double>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_short()
+        {
+            //Given
+            const short expected = (short)13;
+            const short notExpected = (short)31;
+            dynamic value = new DynamicDictionaryValue("13");
+
+            //When
+            short actual = value.TryParse<short>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 Dec, 2012");
+            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
+            dynamic value = new DynamicDictionaryValue("13 December 2012");
+
+            //When
+            DateTime actual = value.TryParse<DateTime>();
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_return_default_value_if_implicit_convert_fails_on_datetime()
+        {
+            //Given
+            DateTime expected = DateTime.Parse("13 December 2012");
+            dynamic value = new DynamicDictionaryValue("Rawrrrr");
+
+            //When
+            DateTime actual = value.TryParse(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_int_based_on_given_type_of_string()
+        {
+            //Given
+            const string expected = "13";
+            const string notExpected = "11";
+            dynamic value = new DynamicDictionaryValue(13);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_double_based_on_given_type_of_string()
+        {
+            //Given
+            const string expected = "134.22";
+            const string notExpected = "187.34";
+            dynamic value = new DynamicDictionaryValue(134.22d);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_decimal_based_on_given_type_of_string()
+        {
+            //Given
+            const string expected = "88.53234423";
+            const string notExpected = "76.3422";
+            dynamic value = new DynamicDictionaryValue(88.53234423m);
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
+        public void Should_implicitly_convert_from_datetime_based_on_given_type_of_string()
+        {
+            //This test is unrealistic in my opinion, but it should still call ToString on the datetime value
+
+            //Given
+            string expected = DateTime.Parse("22 Nov, 2012").ToString();
+            string notExpected = DateTime.Parse("18 Jun, 2011").ToString();
+            dynamic value = new DynamicDictionaryValue(DateTime.Parse("22 Nov, 2012"));
+
+            //When
+            string actual = value.TryParse(notExpected);
+
+            //Then
+            Assert.Equal(expected, actual);
         }
     }
 }
