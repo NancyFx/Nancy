@@ -22,6 +22,7 @@
             this.objectSerializer = new DefaultObjectSerializer();
         }
 
+#if DEBUG
         [Fact]
         public void Should_return_info_page_if_password_null()
         {
@@ -64,6 +65,7 @@
             // Then
             Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
         }
+#endif
 
         [Fact]
         public void Should_return_login_page_with_no_auth_cookie()
