@@ -144,7 +144,7 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_register_single_route_when_calling_non_overridden_post_from_sub_module()
+        public void Should_store_single_route_when_calling_non_overridden_post_from_sub_module()
         {
             var moduleWithBasePath = new CustomNancyModule();
 
