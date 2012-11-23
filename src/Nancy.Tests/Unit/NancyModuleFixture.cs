@@ -84,7 +84,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_condition_when_route_indexer_is_invoked_with_a_condition()
         {
             Func<NancyContext, bool> condition = r => true;
-            
+
             this.module.Get["/test", condition] = d => null;
 
             module.Routes.First().Description.Condition.ShouldBeSameAs(condition);
@@ -132,53 +132,48 @@ namespace Nancy.Tests.Unit
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/NewRoute");
         }
 
-        public class SubbedModuleTests
+        [Fact]
+        public void Should_store_two_routes_when_registering_single_get_method()
         {
-            // These tests are to see if it's possible to subclass a NancyModule
-            // without breaking the existing implementation
+            var moduleWithBasePath = new CustomNancyModule();
 
-            [Fact]
-            public void Given_two_routes_should_have_multiple_routes_defined()
+            moduleWithBasePath.Get["/Test1", "/Test2"] = d => null;
+
+            moduleWithBasePath.Routes.First().Description.Path.ShouldEqual("/Test1");
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
+        }
+
+        [Fact]
+        public void Should_register_single_route_when_calling_non_overridden_post_from_sub_module()
+        {
+            var moduleWithBasePath = new CustomNancyModule();
+
+            moduleWithBasePath.Post["/Test1"] = d => null;
+
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
+        }
+
+        public class CustomNancyModule : NancyModule
+        {
+            public new CustomRouteBuilder Get
             {
-                var moduleWithBasePath = new CustomNancyModule();
-
-                moduleWithBasePath.Get["/Test1", "/Test2"] = d => null;
-
-                moduleWithBasePath.Routes.First().Description.Path.ShouldEqual("/Test1");
-                moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
+                get { return new CustomRouteBuilder("GET", this); }
             }
 
-            [Fact]
-            public void Using_method_not_overridden_rolls_back_to_default_route_registering()
+            public class CustomRouteBuilder : RouteBuilder
             {
-                var moduleWithBasePath = new CustomNancyModule();
-
-                moduleWithBasePath.Post["/Test1"] = d => null;
-
-                moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
-            }
-
-            public class CustomNancyModule : NancyModule
-            {
-                public new CustomRouteBuilder Get
+                public CustomRouteBuilder(string method, NancyModule parentModule)
+                    : base(method, parentModule)
                 {
-                    get { return new CustomRouteBuilder("GET", this); }
                 }
 
-                public class CustomRouteBuilder : RouteBuilder
+                public Func<dynamic, dynamic> this[params string[] paths]
                 {
-                    public CustomRouteBuilder(string method, NancyModule parentModule) : base(method, parentModule)
+                    set
                     {
-                    }
-
-                    public Func<dynamic, dynamic> this[params string[] paths]
-                    {
-                        set
+                        foreach (var path in paths)
                         {
-                            foreach (var path in paths)
-                            {
-                                this.AddRoute(path, null, value);
-                            }
+                            this.AddRoute(path, null, value);
                         }
                     }
                 }
