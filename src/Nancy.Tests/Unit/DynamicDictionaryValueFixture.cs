@@ -469,7 +469,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_integer()
+        public void Should_return_default_value_of_int_when_calling_default_given_null()
         {
             //Given
             const int expected = 123;
@@ -483,7 +483,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_string()
+        public void Should_return_default_value_of_string_when_calling_default_given_null()
         {
             //Given
             const string expected = "default value";
@@ -497,7 +497,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_decimal()
+        public void Should_return_default_value_of_decimal_when_calling_default_given_null()
         {
             //Given
             const decimal expected = 88.43m;
@@ -511,7 +511,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_double()
+        public void Should_return_default_value_of_double_when_calling_default_given_null()
         {
             //Given
             const double expected = 44.23d;
@@ -525,7 +525,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_short()
+        public void Should_return_default_value_of_short_when_calling_default_given_null()
         {
             //Given
             const short expected = (short)4;
@@ -539,7 +539,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_float()
+        public void Should_return_default_value_of_float_when_calling_default_given_null()
         {
             //Given
             const float expected = 9.343f;
@@ -553,7 +553,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_long()
+        public void Should_return_default_value_of_long_when_calling_default_given_null()
         {
             //Given
             const long expected = 1000333000222000333L;
@@ -567,7 +567,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_boolean()
+        public void Should_return_default_value_of_bool_when_calling_default_given_null()
         {
             //Given
             const bool expected = true;
@@ -581,7 +581,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_supplied_default_value_of_datetime()
+        public void Should_return_default_value_of_datetime_when_calling_default_given_null()
         {
             //Given
             DateTime expected = DateTime.Parse("10 Dec, 2012");
@@ -595,7 +595,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_integer()
+        public void Should_still_return_default_int_type_when_no_default_value_given()
         {
             //Given
             const int expected = 0;
@@ -609,7 +609,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_string()
+        public void Should_still_return_default_string_type_when_no_default_value_given()
         {
             //Given
             const string expected = null;
@@ -623,7 +623,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_decimal()
+        public void Should_still_return_default_decimal_type_when_no_default_value_given()
         {
             //Given
             const decimal expected = 0m;
@@ -637,7 +637,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_double()
+        public void Should_still_return_default_double_type_when_no_default_value_given()
         {
             //Given
             const double expected = 0d;
@@ -651,7 +651,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_short()
+        public void Should_still_return_default_short_type_when_no_default_value_given()
         {
             //Given
             const short expected = (short)0;
@@ -665,7 +665,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_float()
+        public void Should_still_return_default_float_type_when_no_default_value_given()
         {
             //Given
             const float expected = 0f;
@@ -679,7 +679,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_long()
+        public void Should_still_return_default_long_type_when_no_default_value_given()
         {
             //Given
             const long expected = 0L;
@@ -693,7 +693,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_boolean()
+        public void Should_still_return_default_bool_type_when_no_default_value_given()
         {
             //Given
             const bool expected = false;
@@ -707,7 +707,7 @@
         }
 
         [Fact]
-        public void Given_null_when_calling_default_should_return_default_value_of_datetime()
+        public void Should_still_return_default_int_datetime_when_no_default_value_given()
         {
             //Given
             DateTime expected = DateTime.MinValue;
@@ -721,7 +721,7 @@
         }
 
         [Fact]
-        public void Given_double_value_when_calling_default_with_generic_type_thats_different_should_throw_InvalidCastException()
+        public void Should_throw_if_unable_to_explicitly_cast()
         {
             //Given
             dynamic value = new DynamicDictionaryValue(12.25);
@@ -734,7 +734,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_int_should_convert_to_int()
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_int()
         {
             //Given
             const int expected = 42;
@@ -749,7 +749,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_decimal_should_convert_to_decimal()
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_decimal()
         {
             //Given
             const decimal expected = 55.23m;
@@ -764,7 +764,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_double_should_convert_to_double()
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_double()
         {
             //Given
             const double expected = 37.48d;
@@ -779,7 +779,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_short_should_convert_to_short()
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_short()
         {
             //Given
             const short expected = (short)13;
@@ -794,7 +794,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_datetime_should_convert_to_datetime()
+        public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_datetime()
         {
             //Given
             DateTime expected = DateTime.Parse("13 Dec, 2012");
@@ -809,7 +809,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_int_and_no_default_should_convert_to_int()
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_int()
         {
             //Given
             const int expected = 42;
@@ -824,7 +824,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_decimal_and_no_default_should_convert_to_decimal()
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_decimal()
         {
             //Given
             const decimal expected = 55.23m;
@@ -839,7 +839,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_double_and_no_default_should_convert_to_double()
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_double()
         {
             //Given
             const double expected = 37.48d;
@@ -854,7 +854,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_short_and_no_default_should_convert_to_short()
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_short()
         {
             //Given
             const short expected = (short)13;
@@ -869,7 +869,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_with_datetime_and_no_default_should_convert_to_datetime()
+        public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_datetime()
         {
             //Given
             DateTime expected = DateTime.Parse("13 Dec, 2012");
@@ -884,7 +884,7 @@
         }
 
         [Fact]
-        public void Given_string_value_when_calling_tryparse_that_doesnt_covert_should_give_default()
+        public void Should_return_default_value_if_implicit_convert_fails_on_datetime()
         {
             //Given
             DateTime expected = DateTime.Parse("13 December 2012");
@@ -898,7 +898,7 @@
         }
 
         [Fact]
-        public void Given_int_value_when_calling_tryparse_with_string_should_covert_to_string()
+        public void Should_implicitly_convert_from_int_based_on_given_type_of_string()
         {
             //Given
             const string expected = "13";
@@ -913,7 +913,7 @@
         }
 
         [Fact]
-        public void Given_double_value_when_calling_tryparse_with_string_should_covert_to_string()
+        public void Should_implicitly_convert_from_double_based_on_given_type_of_string()
         {
             //Given
             const string expected = "134.22";
@@ -928,12 +928,12 @@
         }
 
         [Fact]
-        public void Given_decimal_value_when_calling_tryparse_with_string_should_covert_to_string()
+        public void Should_implicitly_convert_from_decimal_based_on_given_type_of_string()
         {
             //Given
             const string expected = "88.53234423";
             const string notExpected = "76.3422";
-            dynamic value = new DynamicDictionaryValue(88.53234423);
+            dynamic value = new DynamicDictionaryValue(88.53234423m);
 
             //When
             string actual = value.TryParse(notExpected);
@@ -943,7 +943,7 @@
         }
 
         [Fact]
-        public void Given_datetime_value_when_calling_tryparse_with_string_should_covert_to_string()
+        public void Should_implicitly_convert_from_datetime_based_on_given_type_of_string()
         {
             //This test is unrealistic in my opinion, but it should still call ToString on the datetime value
 
