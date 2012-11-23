@@ -1,6 +1,7 @@
 ﻿namespace Nancy
 {
     using System;
+    using System.ComponentModel;
     using System.Dynamic;
     using System.Linq.Expressions;
     using Microsoft.CSharp.RuntimeBinder;
@@ -34,6 +35,66 @@
         public object Value
         {
             get { return this.value; }
+        }
+
+        /// <summary>
+        /// Returns a default value if Value is null
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
+        public T Default<T>(T defaultValue = default(T))
+        {
+            if (this.HasValue)
+            {
+                try
+                {
+                    return (T)value;
+                }
+                catch
+                {
+                    var typeName = value.GetType().Name;
+                    var message = string.Format("Cannot convert value of type '{0}' to type '{1}'",
+                                                typeName, typeof(T).Name);
+
+                    throw new InvalidCastException(message);
+                }
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue. 
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
+        public T TryParse<T>(T defaultValue = default (T))
+        {
+            if (this.HasValue)
+            {
+                if (value.GetType().IsAssignableFrom(typeof(T)))
+                {
+                    return (T)value;
+                }
+
+                var stringValue = value as string;
+                if (stringValue != null)
+                {
+                    var converter = TypeDescriptor.GetConverter(typeof(T));
+                    if (converter.IsValid(value))
+                    {
+                        return (T)converter.ConvertFromString(stringValue);
+                    }
+                }
+                else if (typeof(T) == typeof (string))
+                {
+                    return (T)Convert.ChangeType(value, TypeCode.String);
+                }
+            }
+
+            return defaultValue;
         }
 
         public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
