@@ -20,9 +20,11 @@
                 var model = from property in properties
                         orderby property.Name
                         let value = (bool) property.GetValue(null, null)
+                        let description = GetDescription(property)
+                        where !string.IsNullOrEmpty(description)
                         select new {
                             Name = property.Name,
-                            Description = GetDescription(property),
+                            Description = description,
                             DisplayName = Regex.Replace(property.Name, "[A-Z]", " $0"),
                             Value = value,
                             Checked = (value) ? "checked='checked'" : string.Empty
