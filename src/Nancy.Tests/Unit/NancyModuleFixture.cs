@@ -84,7 +84,7 @@ namespace Nancy.Tests.Unit
         public void Should_store_route_with_condition_when_route_indexer_is_invoked_with_a_condition()
         {
             Func<NancyContext, bool> condition = r => true;
-            
+
             this.module.Get["/test", condition] = d => null;
 
             module.Routes.First().Description.Condition.ShouldBeSameAs(condition);
@@ -130,6 +130,54 @@ namespace Nancy.Tests.Unit
             moduleWithBasePath.Get["/NewRoute"] = d => null;
 
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/NewRoute");
+        }
+
+        [Fact]
+        public void Should_store_two_routes_when_registering_single_get_method()
+        {
+            var moduleWithBasePath = new CustomNancyModule();
+
+            moduleWithBasePath.Get["/Test1", "/Test2"] = d => null;
+
+            moduleWithBasePath.Routes.First().Description.Path.ShouldEqual("/Test1");
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test2");
+        }
+
+        [Fact]
+        public void Should_store_single_route_when_calling_non_overridden_post_from_sub_module()
+        {
+            var moduleWithBasePath = new CustomNancyModule();
+
+            moduleWithBasePath.Post["/Test1"] = d => null;
+
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
+        }
+
+        public class CustomNancyModule : NancyModule
+        {
+            public new CustomRouteBuilder Get
+            {
+                get { return new CustomRouteBuilder("GET", this); }
+            }
+
+            public class CustomRouteBuilder : RouteBuilder
+            {
+                public CustomRouteBuilder(string method, NancyModule parentModule)
+                    : base(method, parentModule)
+                {
+                }
+
+                public Func<dynamic, dynamic> this[params string[] paths]
+                {
+                    set
+                    {
+                        foreach (var path in paths)
+                        {
+                            this.AddRoute(path, null, value);
+                        }
+                    }
+                }
+            }
         }
     }
 }

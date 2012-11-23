@@ -274,7 +274,7 @@ namespace Nancy
                 set { this.AddRoute(path, condition, value); }
             }
 
-            private void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
+            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
                 var fullPath = String.Concat(this.parentModule.ModulePath, path);
 
