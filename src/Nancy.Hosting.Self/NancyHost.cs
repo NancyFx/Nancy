@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.Linq;
     using IO;
@@ -26,13 +27,22 @@
         private readonly IList<Uri> baseUriList;
         private readonly HttpListener listener;
         private readonly INancyEngine engine;
+        private readonly bool sendChunked;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, baseUris){}
+            : this(NancyBootstrapperLocator.Bootstrapper, true, baseUris) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// </summary>
+        /// <param name="sendChunked">Response uses Transfer-Encoding: Chunked instead of Content-Length.</param>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
+        public NancyHost(bool sendChunked, params Uri[] baseUris)
+            : this(NancyBootstrapperLocator.Bootstrapper, sendChunked, baseUris) { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
@@ -41,9 +51,20 @@
         /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, params Uri[] baseUris)
+            : this(bootstrapper, true, baseUris) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
+        /// the provided <paramref name="bootstrapper"/>.
+        /// </summary>
+        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="sendChunked">Response uses Transfer-Encoding: Chunked instead of Content-Length.</param>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
+        public NancyHost(INancyBootstrapper bootstrapper, bool sendChunked, params Uri[] baseUris)
         {
             baseUriList = baseUris;
             listener = new HttpListener();
+            this.sendChunked = sendChunked;
 
             foreach (var baseUri in baseUriList)
             {
@@ -59,12 +80,13 @@
         /// the provided <paramref name="bootstrapper"/>.
         /// </summary>
         /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
-        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
-        public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper)
-            : this (bootstrapper, baseUri)
+        /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
+        /// <param name="sendChunked">Response uses Transfer-Encoding: Chunked instead of Content-Length.</param>
+        public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, bool sendChunked = true)
+            : this(bootstrapper, sendChunked, baseUri)
         {
         }
-        
+
         /// <summary>
         /// Start listening for incoming requests.
         /// </summary>
@@ -122,7 +144,7 @@
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null);
         }
 
-        private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
+        private void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
         {
             foreach (var header in nancyResponse.Headers)
             {
@@ -137,9 +159,29 @@
             response.ContentType = nancyResponse.ContentType;
             response.StatusCode = (int)nancyResponse.StatusCode;
 
-            using (var output = response.OutputStream)
+            if (sendChunked)
             {
-                nancyResponse.Contents.Invoke(output);
+                using (var output = response.OutputStream)
+                {
+                    nancyResponse.Contents(output);
+                }
+            }
+            else
+            {
+                using (MemoryStream memoryStream = new MemoryStream())
+                {
+                    nancyResponse.Contents(memoryStream);
+                    memoryStream.Position = 0;
+
+                    response.SendChunked = false;
+                    response.ContentLength64 = memoryStream.Length;
+
+                    using (var output = response.OutputStream)
+                    {
+                        memoryStream.CopyTo(output);
+                        output.Flush();
+                    }
+                }
             }
         }
 
