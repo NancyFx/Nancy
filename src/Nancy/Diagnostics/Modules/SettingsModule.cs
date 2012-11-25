@@ -55,7 +55,8 @@
         {
             var attributes = property
                 .GetCustomAttributes(typeof (DescriptionAttribute), false)
-                .Cast<DescriptionAttribute>();
+                .Cast<DescriptionAttribute>()
+                .ToArray();
 
             return (!attributes.Any()) ? string.Empty : attributes.First().Description;
         }
