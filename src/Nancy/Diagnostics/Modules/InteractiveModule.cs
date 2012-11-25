@@ -29,11 +29,11 @@
 
             Get["/providers/{providerName}"] = ctx =>
                 {
-                    var name =
+                    var providerName =
                         HttpUtility.UrlDecode((string)ctx.providerName);
 
                     var diagnostic = 
-                        this.interactiveDiagnostics.GetDiagnostic(name);
+                        this.interactiveDiagnostics.GetDiagnostic(providerName);
 
                     if (diagnostic == null)
                     {
@@ -59,7 +59,13 @@
 
             Get["/providers/{providerName}/{methodName}"] = ctx =>
                 {
-                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(ctx.providerName, ctx.methodName);
+                    var providerName =
+                        HttpUtility.UrlDecode((string)ctx.providerName);
+
+                    var methodName =
+                        HttpUtility.UrlDecode((string)ctx.methodName);
+
+                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                     if (method == null)
                     {
@@ -73,7 +79,13 @@
 
             Get["/templates/{providerName}/{methodName}"] = ctx =>
                 {
-                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(ctx.providerName, ctx.methodName);
+                    var providerName =
+                        HttpUtility.UrlDecode((string)ctx.providerName);
+
+                    var methodName =
+                        HttpUtility.UrlDecode((string)ctx.methodName);
+
+                    InteractiveDiagnosticMethod method = this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                     if (method == null)
                     {
