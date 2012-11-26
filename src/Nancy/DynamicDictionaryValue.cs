@@ -1,10 +1,9 @@
-﻿using System.Globalization;
-
-namespace Nancy
+﻿namespace Nancy
 {
     using System;
     using System.ComponentModel;
     using System.Dynamic;
+    using System.Globalization;
     using System.Linq.Expressions;
     using Microsoft.CSharp.RuntimeBinder;
 

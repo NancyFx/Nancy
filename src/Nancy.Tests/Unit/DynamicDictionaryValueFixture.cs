@@ -1,8 +1,7 @@
-﻿using System.Globalization;
-
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Globalization;
     using Xunit;
 
     public class DynamicDictionaryValueFixture
