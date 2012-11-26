@@ -17,9 +17,6 @@ namespace Nancy.Diagnostics
     {
         private const string PipelineKey = "__Diagnostics";
 
-        private const string DiagsCookieName = "__ncd";
-        private const int DiagnosticsSessionTimeoutMinutes = 15;
-
         public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
@@ -115,7 +112,7 @@ namespace Nancy.Diagnostics
                 var view = GetDiagnosticsLoginView(ctx);
 
                 view.AddCookie(
-                    new NancyCookie(DiagsCookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) });
+                    new NancyCookie(diagnosticsConfiguration.CookieName, String.Empty, true) { Expires = DateTime.Now.AddDays(-1) });
 
                 return view;
             }
@@ -154,14 +151,14 @@ namespace Nancy.Diagnostics
                 return;
             }
 
-            session.Expiry = DateTime.Now.AddMinutes(DiagnosticsSessionTimeoutMinutes);
+            session.Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.Timeout);
             var serializedSession = serializer.Serialize(session);
 
             var encryptedSession = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Encrypt(serializedSession);
             var hmacBytes = diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedSession);
             var hmacString = Convert.ToBase64String(hmacBytes);
 
-            var cookie = new NancyCookie(DiagsCookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
+            var cookie = new NancyCookie(diagnosticsConfiguration.CookieName, String.Format("{1}{0}", encryptedSession, hmacString), true);
             
             context.Response.AddCookie(cookie);
         }
@@ -178,12 +175,12 @@ namespace Nancy.Diagnostics
                 return ProcessLogin(context, diagnosticsConfiguration, serializer);
             }
 
-            if (!context.Request.Cookies.ContainsKey(DiagsCookieName))
+            if (!context.Request.Cookies.ContainsKey(diagnosticsConfiguration.CookieName))
             {
                 return null;
             }
 
-            var encryptedValue = HttpUtility.UrlDecode(context.Request.Cookies[DiagsCookieName]);
+            var encryptedValue = HttpUtility.UrlDecode(context.Request.Cookies[diagnosticsConfiguration.CookieName]);
             var hmacStringLength = Base64Helpers.GetBase64Length(diagnosticsConfiguration.CryptographyConfiguration.HmacProvider.HmacLength);
             var encryptedSession = encryptedValue.Substring(hmacStringLength);
             var hmacString = encryptedValue.Substring(0, hmacStringLength);
@@ -230,7 +227,7 @@ namespace Nancy.Diagnostics
             {
                 Hash = hash,
                 Salt = salt,
-                Expiry = DateTime.Now.AddMinutes(DiagnosticsSessionTimeoutMinutes),
+                Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.Timeout)
             };
 
             return session;
@@ -239,7 +236,7 @@ namespace Nancy.Diagnostics
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             return context.Request.Method == "POST" && 
-                context.Request.Path == string.Concat(diagnosticsConfiguration.Path);
+                context.Request.Path == diagnosticsConfiguration.Path;
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
