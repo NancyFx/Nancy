@@ -9,10 +9,7 @@
                 return View["Dashboard"];
             };
 
-            Post["/"] = _ =>
-            {
-                return Response.AsRedirect("~" + DiagnosticsHook.ControlPanelPrefix);
-            };
+            Post["/"] = _ => Response.AsRedirect("~/");
         }
     }
 }

@@ -100,6 +100,12 @@ namespace Nancy.Diagnostics
         {
             var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
+            ctx.Request.Url.BasePath =
+                string.Concat(ctx.Request.Url.BasePath, ControlPanelPrefix);
+
+            ctx.Request.Url.Path =
+                ctx.Request.Url.Path.Replace(ControlPanelPrefix, string.Empty);
+
             if (session == null)
             {
                 var view = GetDiagnosticsLoginView(ctx);
@@ -110,7 +116,6 @@ namespace Nancy.Diagnostics
                 return view;
             }
 
-            // TODO - duplicate the context and strip out the "_/Nancy" bit so we don't need to use it in the module
             var resolveResult = routeResolver.Resolve(ctx);
 
             ctx.Parameters = resolveResult.Item2;
@@ -231,7 +236,7 @@ namespace Nancy.Diagnostics
         private static bool IsLoginRequest(NancyContext context)
         {
             // This feels dirty :)
-            return context.Request.Method == "POST" && context.Request.Path == "/_Nancy/";
+            return context.Request.Method == "POST" && context.Request.Path == string.Concat(ControlPanelPrefix, "/");
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
