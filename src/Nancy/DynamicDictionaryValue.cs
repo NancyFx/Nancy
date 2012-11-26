@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿using System.Globalization;
+
+namespace Nancy
 {
     using System;
     using System.ComponentModel;
@@ -79,18 +81,27 @@
                     return (T)value;
                 }
 
+                var TType = typeof (T);
+
                 var stringValue = value as string;
-                if (stringValue != null)
+                if (TType == typeof (DateTime))
                 {
-                    var converter = TypeDescriptor.GetConverter(typeof(T));
-                    if (converter.IsValid(value))
+                    DateTime result;
+
+                    if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out result))
                     {
-                        return (T)converter.ConvertFromString(stringValue);
+                        return (T)((object)result);
                     }
                 }
-                else if (typeof(T) == typeof (string))
+                else if (stringValue != null)
                 {
-                    return (T)Convert.ChangeType(value, TypeCode.String);
+                    var converter = TypeDescriptor.GetConverter(TType);
+                    
+                    return (T)converter.ConvertFromInvariantString(stringValue);
+                }
+                else if (TType == typeof (string))
+                {
+                    return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
                 }
             }
 

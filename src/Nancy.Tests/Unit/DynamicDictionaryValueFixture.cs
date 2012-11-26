@@ -1,4 +1,6 @@
-﻿namespace Nancy.Tests.Unit
+﻿using System.Globalization;
+
+namespace Nancy.Tests.Unit
 {
     using System;
     using Xunit;
@@ -813,7 +815,6 @@
         {
             //Given
             const int expected = 42;
-            const int notExpected = 100;
             dynamic value = new DynamicDictionaryValue("42");
 
             //When
@@ -828,7 +829,6 @@
         {
             //Given
             const decimal expected = 55.23m;
-            const decimal notExpected = 99.99m;
             dynamic value = new DynamicDictionaryValue("55.23");
 
             //When
@@ -843,7 +843,6 @@
         {
             //Given
             const double expected = 37.48d;
-            const double notExpected = 99.99d;
             dynamic value = new DynamicDictionaryValue("37.48");
 
             //When
@@ -858,7 +857,6 @@
         {
             //Given
             const short expected = (short)13;
-            const short notExpected = (short)31;
             dynamic value = new DynamicDictionaryValue("13");
 
             //When
@@ -873,7 +871,6 @@
         {
             //Given
             DateTime expected = DateTime.Parse("13 Dec, 2012");
-            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
             dynamic value = new DynamicDictionaryValue("13 December 2012");
 
             //When
@@ -948,8 +945,8 @@
             //This test is unrealistic in my opinion, but it should still call ToString on the datetime value
 
             //Given
-            string expected = DateTime.Parse("22 Nov, 2012").ToString();
-            string notExpected = DateTime.Parse("18 Jun, 2011").ToString();
+            string expected = DateTime.Parse("22 Nov, 2012").ToString(CultureInfo.InvariantCulture);
+            string notExpected = DateTime.Parse("18 Jun, 2011").ToString(CultureInfo.InvariantCulture);
             dynamic value = new DynamicDictionaryValue(DateTime.Parse("22 Nov, 2012"));
 
             //When
