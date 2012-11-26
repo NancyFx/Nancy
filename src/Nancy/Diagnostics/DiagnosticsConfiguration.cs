@@ -29,7 +29,7 @@
             this.CookieName = "__ncd";
             this.CryptographyConfiguration = cryptographyConfiguration;
             this.Path = "/_Nancy";
-            this.Timeout = 15;
+            this.SlidingTimeout = 15;
         }
 
         /// <summary>
@@ -56,17 +56,23 @@
         public string Path { get; set; }
 
         /// <summary>
-        /// The number of minutes that you stay logged into the diagnostics dashboard.
+        /// The number of minutes that expiry of the diagnostics dashboard will be extended each time it is used.
         /// </summary>
         /// <remarks>The default is 15 minutes.</remarks>
-        public int Timeout { get; set; }
+        public int SlidingTimeout { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid
         /// </summary>
         public bool Valid
         {
-            get { return !string.IsNullOrWhiteSpace(this.Password); }
+            get
+            {
+                return !string.IsNullOrWhiteSpace(this.Password) &&
+                    !string.IsNullOrWhiteSpace(this.CookieName) &&
+                    !string.IsNullOrWhiteSpace(this.Path) &&
+                    this.SlidingTimeout != 0;
+            }
         }
     }
 }

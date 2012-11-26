@@ -151,7 +151,7 @@ namespace Nancy.Diagnostics
                 return;
             }
 
-            session.Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.Timeout);
+            session.Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.SlidingTimeout);
             var serializedSession = serializer.Serialize(session);
 
             var encryptedSession = diagnosticsConfiguration.CryptographyConfiguration.EncryptionProvider.Encrypt(serializedSession);
@@ -227,7 +227,7 @@ namespace Nancy.Diagnostics
             {
                 Hash = hash,
                 Salt = salt,
-                Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.Timeout)
+                Expiry = DateTime.Now.AddMinutes(diagnosticsConfiguration.SlidingTimeout)
             };
 
             return session;
@@ -235,8 +235,8 @@ namespace Nancy.Diagnostics
 
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
-            return context.Request.Method == "POST" && 
-                context.Request.Path == diagnosticsConfiguration.Path;
+            return context.Request.Method == "POST" &&
+                context.Request.Path.TrimEnd(new[] { '/' }) == diagnosticsConfiguration.Path;
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
