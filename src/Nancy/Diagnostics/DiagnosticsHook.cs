@@ -104,7 +104,7 @@ namespace Nancy.Diagnostics
                 string.Concat(ctx.Request.Url.BasePath, ControlPanelPrefix);
 
             ctx.Request.Url.Path =
-                ctx.Request.Url.Path.Replace(ControlPanelPrefix, string.Empty);
+                ctx.Request.Url.Path.Substring(ControlPanelPrefix.Length);
 
             if (session == null)
             {
@@ -140,7 +140,6 @@ namespace Nancy.Diagnostics
 
             AddUpdateSessionCookie(session, ctx, diagnosticsConfiguration, serializer);
 
-            // If we duplicate the context this makes more sense :)
             return ctx.Response;
         }
 
