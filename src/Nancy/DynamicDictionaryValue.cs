@@ -87,7 +87,7 @@
                 {
                     DateTime result;
 
-                    if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.AssumeLocal, out result))
+                    if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
                     {
                         return (T)((object)result);
                     }
