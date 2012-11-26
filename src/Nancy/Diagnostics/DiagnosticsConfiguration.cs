@@ -14,8 +14,14 @@
 
         public DiagnosticsConfiguration(CryptographyConfiguration cryptographyConfiguration)
         {
-            CryptographyConfiguration = cryptographyConfiguration;
+            this.CryptographyConfiguration = cryptographyConfiguration;
+            this.Path = "/_Nancy";
         }
+
+        /// <summary>
+        /// Gets or sets the path that the diagnostics dashboard will be accessible on.
+        /// </summary>
+        public string Path { get; set; }
 
         /// <summary>
         /// Gets or sets password for accessing the diagnostics screen.

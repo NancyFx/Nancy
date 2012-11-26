@@ -15,10 +15,6 @@ namespace Nancy.Diagnostics
 
     public static class DiagnosticsHook
     {
-        internal const string ControlPanelPrefix = "/_Nancy";
-
-        internal const string ResourcePrefix = ControlPanelPrefix + "/Resources/";
-        
         private const string PipelineKey = "__Diagnostics";
 
         private const string DiagsCookieName = "__ncd";
@@ -50,16 +46,19 @@ namespace Nancy.Diagnostics
                             return null;
                         }
 
-                        if (!ctx.Request.Path.StartsWith(ControlPanelPrefix, StringComparison.OrdinalIgnoreCase))
+                        if (!ctx.Request.Path.StartsWith(diagnosticsConfiguration.Path, StringComparison.OrdinalIgnoreCase))
                         {
                             return null;
                         }
 
-                        if (ctx.Request.Path.StartsWith(ResourcePrefix, StringComparison.OrdinalIgnoreCase))
+                        var resourcePrefix =
+                            string.Concat(diagnosticsConfiguration.Path, "/Resources/");
+
+                        if (ctx.Request.Path.StartsWith(resourcePrefix, StringComparison.OrdinalIgnoreCase))
                         {
                             var resourceNamespace = "Nancy.Diagnostics.Resources";
 
-                            var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(ResourcePrefix, string.Empty)) ?? string.Empty;
+                            var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(resourcePrefix, string.Empty)) ?? string.Empty;
                             if (!string.IsNullOrEmpty(path))
                             {
                                 resourceNamespace += string.Format(".{0}", path.Replace('\\', '.'));
@@ -101,10 +100,15 @@ namespace Nancy.Diagnostics
             var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
             ctx.Request.Url.BasePath =
-                string.Concat(ctx.Request.Url.BasePath, ControlPanelPrefix);
+                string.Concat(ctx.Request.Url.BasePath, diagnosticsConfiguration.Path);
 
             ctx.Request.Url.Path =
-                ctx.Request.Url.Path.Substring(ControlPanelPrefix.Length);
+                ctx.Request.Url.Path.Substring(diagnosticsConfiguration.Path.Length);
+
+            if (ctx.Request.Url.Path.Length.Equals(0))
+            {
+                ctx.Request.Url.Path = "/";
+            }
 
             if (session == null)
             {
@@ -169,7 +173,7 @@ namespace Nancy.Diagnostics
                 return null;
             }
 
-            if (IsLoginRequest(context))
+            if (IsLoginRequest(context, diagnosticsConfiguration))
             {
                 return ProcessLogin(context, diagnosticsConfiguration, serializer);
             }
@@ -232,10 +236,10 @@ namespace Nancy.Diagnostics
             return session;
         }
 
-        private static bool IsLoginRequest(NancyContext context)
+        private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
-            // This feels dirty :)
-            return context.Request.Method == "POST" && context.Request.Path == string.Concat(ControlPanelPrefix, "/");
+            return context.Request.Method == "POST" && 
+                context.Request.Path == string.Concat(diagnosticsConfiguration.Path);
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
