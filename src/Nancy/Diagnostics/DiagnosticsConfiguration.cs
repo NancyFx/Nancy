@@ -7,6 +7,7 @@
     /// </summary>
     public class DiagnosticsConfiguration
     {
+        private string path;
  
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class,
@@ -52,8 +53,12 @@
         /// <summary>
         /// Gets or sets the path that the diagnostics dashboard will be accessible on.
         /// </summary>
-        /// <remarks>The default is /_Nancy</remarks>
-        public string Path { get; set; }
+        /// <remarks>The default is /_Nancy. The path should always start with a forward slash.</remarks>
+        public string Path
+        {
+            get { return this.path; }
+            set { this.path = (!value.StartsWith("/")) ? string.Concat("/", value) : value; }
+        }
 
         /// <summary>
         /// The number of minutes that expiry of the diagnostics dashboard will be extended each time it is used.
