@@ -1,11 +1,14 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
     using Responses;
+    using System;
     using System.Collections.Generic;
+    using System.Dynamic;
     using System.IO;
     using global::DotLiquid;
     using global::DotLiquid.FileSystems;
     using global::DotLiquid.NamingConventions;
+    using global::DotLiquid.Exceptions;
 
     /// <summary>
     /// View engine for rendering dotLiquid views.
@@ -61,25 +64,98 @@
         /// <returns>A response</returns>
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
-            return new HtmlResponse(contents: stream =>
-            {
-                var hashedModel =
-                    Hash.FromAnonymousObject(new
-                        {
-                            Model = new DynamicDrop(model),
-                            ViewBag = new DynamicDrop(renderContext.Context.ViewBag)
-                        });
+            Template parsed;
+            Hash hashedModel;
+            HttpStatusCode status;
 
-                var parsed = renderContext.ViewCache.GetOrAdd(
+            try
+            {
+                // Set the parsed template
+                parsed = renderContext.ViewCache.GetOrAdd(
                     viewLocationResult,
                     x => Template.Parse(viewLocationResult.Contents.Invoke().ReadToEnd()));
 
-                parsed.Render(stream, new RenderParameters
+                hashedModel = Hash.FromAnonymousObject(new
+                {
+                    Model = new DynamicDrop(model),
+                    ViewBag = new DynamicDrop(renderContext.Context.ViewBag)
+                });
+
+                // If we got past that, we have a good response
+                status = HttpStatusCode.OK;
+
+            }
+            catch (SyntaxException syntaxException)
+            {
+                // Syntax Exceptions cause a 500
+                status = HttpStatusCode.InternalServerError;
+
+                // Build the error message
+                String errorMessage = String.Format("Syntax error in liquid view '{0}':\r\n\r\n{1}",
+                    String.Format("{0}/{1}.{2}", viewLocationResult.Location, viewLocationResult.Name, viewLocationResult.Extension),
+                    syntaxException.Message);
+
+                // Create the error model with a Nancy DynamicDictionary because i can ;)
+                DynamicDictionary errorModel = new DynamicDictionary();
+                errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
+
+                // Hash up the Error model so DotLiquid will understand it
+                hashedModel =
+                    Hash.FromAnonymousObject(new
                     {
-                        LocalVariables = hashedModel,
-                        Registers = Hash.FromAnonymousObject(new { nancy = renderContext })
+                        Model = new DynamicDrop(errorModel)
                     });
+
+                // Grab the error HTML from the embedded resource and build up the DotLiquid template.
+                String errorHtml = LoadResource(@"500.liquid");
+                parsed = Template.Parse(errorHtml);
+            }
+            catch (Exception ex)
+            {
+                status = HttpStatusCode.InternalServerError;
+                // Build the error message
+                String errorMessage = String.Format("Error: {0}", ex.Message);
+
+                // Create the error model with a Nancy DynamicDictionary because i can ;)
+                DynamicDictionary errorModel = new DynamicDictionary();
+                errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
+
+                // Hash up the Error model so DotLiquid will understand it
+                hashedModel =
+                    Hash.FromAnonymousObject(new
+                    {
+                        Model = new DynamicDrop(errorModel)
+                    });
+
+                // Grab the error HTML from the embedded resource
+                String errorHtml = LoadResource(@"500.liquid");
+                parsed = Template.Parse(errorHtml);
+            }
+
+            // Build the response
+            return new HtmlResponse(statusCode: status, contents: stream =>
+            {
+                parsed.Render(stream, new RenderParameters
+                {
+                    LocalVariables = hashedModel,
+                    Registers = Hash.FromAnonymousObject(new { nancy = renderContext })
+                });
             });
+        }
+
+        private static string LoadResource(string filename)
+        {
+            var resourceStream = typeof(DotLiquidViewEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
+
+            if (resourceStream == null)
+            {
+                return string.Empty;
+            }
+
+            using (var reader = new StreamReader(resourceStream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

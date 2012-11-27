@@ -187,6 +187,31 @@
         }
 
         [Fact]
+        public void Syntax_errors_should_return_500()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% if true %}{% end %}")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
         public void When_rendering_model_inheriting_drop_should_preserve_camel_case()
         {
             // Writing the test name is snake_case is slightly ironic, no?
