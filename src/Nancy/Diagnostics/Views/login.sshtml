@@ -13,7 +13,7 @@
 	<div class="grid_3">&nbsp;</div>
 	<div class="grid_2" id="login">Password:</div>
 	<div class="grid_4">
-		<form action="@Path['~/_Nancy/']" method="post">
+		<form action="@Path['~/']" method="post">
 			<input type="password" id="Password" name="Password" />
 			<input type="submit" value="Go"/>
 		</form>

@@ -3,12 +3,11 @@
     public abstract class DiagnosticModule : NancyModule
     {
         protected DiagnosticModule()
-            : base(DiagnosticsHook.ControlPanelPrefix)
         {
         }
 
         protected DiagnosticModule(string basePath)
-            : base(DiagnosticsHook.ControlPanelPrefix + basePath)
+            : base(basePath)
         {
             
         }

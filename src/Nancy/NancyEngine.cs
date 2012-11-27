@@ -22,6 +22,7 @@
         private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
+        private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
 
         /// <summary>
@@ -31,7 +32,8 @@
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing)
+        /// <param name="diagnosticsConfiguration"></param>
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             if (dispatcher == null)
             {
@@ -52,6 +54,7 @@
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
+            this.diagnosticsConfiguration = diagnosticsConfiguration;
         }
 
         /// <summary>
@@ -132,7 +135,7 @@
         private bool EnableTracing(NancyContext ctx)
         {
             return StaticConfiguration.EnableRequestTracing &&
-                   !ctx.Request.Path.StartsWith(DiagnosticsHook.ControlPanelPrefix);
+                   !ctx.Request.Path.StartsWith(this.diagnosticsConfiguration.Path);
         }
 
         private Guid GetDiagnosticsSessionGuid(NancyContext ctx)

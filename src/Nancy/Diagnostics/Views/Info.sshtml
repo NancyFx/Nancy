@@ -3,7 +3,7 @@
 @Section['Title']Info@EndSection
 
 @Section['Header']
-	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/Resources/jsonreport.js']"></script>
 @EndSection
 
 @Section['Page_Title']
@@ -15,7 +15,7 @@
 </div>
 
 <script language="javascript" type="text/javascript">
-	$.getJSON("@Path['~/_Nancy/Info/Data']")
+	$.getJSON("@Path['~/Info/Data']")
 	 .success(function (data) {
             $("#data").html(_.modelreport(data));
 	 });

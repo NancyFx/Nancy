@@ -38,7 +38,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy");
+            var result = browser.Get(diagsConfig.Path);
 
             // Then
             Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
@@ -60,7 +60,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy");
+            var result = browser.Get(diagsConfig.Path);
 
             // Then
             Assert.True(result.Body.AsString().Contains("Diagnostics Disabled"));
@@ -83,7 +83,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy");
+            var result = browser.Get(diagsConfig.Path);
 
             // Then
             result.Body["#login"].ShouldExistOnce();
@@ -105,7 +105,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy", with =>
+            var result = browser.Get(diagsConfig.Path, with =>
                 {
                     with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
                 });
@@ -130,7 +130,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy", with =>
+            var result = browser.Get(diagsConfig.Path, with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10)));
             });
@@ -155,7 +155,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get("/_Nancy", with =>
+            var result = browser.Get(diagsConfig.Path, with =>
             {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("wrongPassword"));
             });
@@ -180,7 +180,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Post("/_Nancy", with =>
+            var result = browser.Post(diagsConfig.Path, with =>
             {
                 with.FormValue("Password", "wrongpassword");
             });
@@ -206,7 +206,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Post("/_Nancy/", with =>
+            var result = browser.Post(diagsConfig.Path, with =>
             {
                 with.FormValue("Password", "password");
             });
@@ -233,7 +233,8 @@
             var expiryDate = DateTime.Now.AddMinutes(5);
 
             // When
-            var result = browser.Get("/_Nancy", with =>{
+            var result = browser.Get(diagsConfig.Path, with =>
+            {
                 with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate));
             });
 

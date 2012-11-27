@@ -3,7 +3,7 @@
 @Section['Title']Dashboard@EndSection
 
 @Section['Header']
-	<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
+	<script src="@Path['~/Resources/diagnostics.js']"></script>
 @EndSection
 
 @Section['Page_Title']
@@ -11,10 +11,10 @@
 @EndSection
 
 @Section['Body']
-	<a id="infoBox" class="grid_3 icon-block" href="@Path['~/_Nancy/info']"></a>
-	<a id="interactiveBox" class="grid_3 icon-block" href="@Path['~/_Nancy/interactive']"></a>
-	<a id="traceBox" class="grid_3 icon-block" href="@Path['~/_Nancy/trace']"></a>
-	<a id="settingsBox" class="grid_3 icon-block" href="@Path['~/_Nancy/settings']"></a>
+	<a id="infoBox" class="grid_3 icon-block" href="@Path['~/info']"></a>
+	<a id="interactiveBox" class="grid_3 icon-block" href="@Path['~/interactive']"></a>
+	<a id="traceBox" class="grid_3 icon-block" href="@Path['~/trace']"></a>
+	<a id="settingsBox" class="grid_3 icon-block" href="@Path['~/settings']"></a>
 
 	<div class="grid_3 description-text">
 		<h2>Information</h2>

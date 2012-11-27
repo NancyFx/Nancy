@@ -3,13 +3,13 @@
 @Section['Title']Interactive Diagnostics@EndSection
 
 @Section['Header']
-	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/interactive-diagnostics.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/Modules/interactive/providers.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/Modules/interactive/methods.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/Modules/interactive/results.js']"></script>
+	<script src="@Path['~/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/Resources/interactive-diagnostics.js']"></script>
+	<script src="@Path['~/Resources/Modules/interactive/providers.js']"></script>
+	<script src="@Path['~/Resources/Modules/interactive/methods.js']"></script>
+	<script src="@Path['~/Resources/Modules/interactive/results.js']"></script>
 
-	<link href="@Path['~/_Nancy/Resources/interactive.css']" rel="Stylesheet" />
+	<link href="@Path['~/Resources/interactive.css']" rel="Stylesheet" />
 @EndSection
 
 @Section['Page_Title']

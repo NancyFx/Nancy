@@ -3,13 +3,13 @@
 @Section['Title']Request Tracing@EndSection
 
 @Section['Header']
-	<link href="@Path['~/_Nancy/Resources/request-tracing.css']" rel="Stylesheet" />
+	<link href="@Path['~/Resources/request-tracing.css']" rel="Stylesheet" />
 
-	<script src="@Path['~/_Nancy/Resources/jsonreport.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/Modules/tracing/sessions.js']"></script>
-	<script src="@Path['~/_Nancy/Resources/Modules/tracing/traces.js']"></script>
+	<script src="@Path['~/Resources/jsonreport.js']"></script>
+	<script src="@Path['~/Resources/Modules/tracing/sessions.js']"></script>
+	<script src="@Path['~/Resources/Modules/tracing/traces.js']"></script>
 
-	<script src="@Path['~/_Nancy/Resources/request-tracing.js']"></script>
+	<script src="@Path['~/Resources/request-tracing.js']"></script>
 @EndSection
 
 @Section['Page_Title']
