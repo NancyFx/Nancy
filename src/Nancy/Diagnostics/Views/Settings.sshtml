@@ -30,7 +30,7 @@
 		$("input[type='checkbox']").click(function() {
 		
 			$.ajax({
-				  url: "/_Nancy/settings/",
+				  url: "/settings/",
 				  type: "POST",
 				  data: {Name: $(this).val(), Value:$(this).is(':checked') },
 				  dataType: "json",

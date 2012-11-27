@@ -14,19 +14,19 @@
 
 			Nancy.config = { };
 
-			Nancy.config.basePath = "@Path['~/_Nancy/']";
+			Nancy.config.basePath = "@Path['~/']";
 		</script>
-		<script src="@Path['~/_Nancy/Resources/jquery-1.7.1.min.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/underscore-min.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/backbone-min.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/handlebars.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/nancy-common.js']"></script>
-		<script src="@Path['~/_Nancy/Resources/diagnostics.js']"></script>
+		<script src="@Path['~/Resources/jquery-1.7.1.min.js']"></script>
+		<script src="@Path['~/Resources/underscore-min.js']"></script>
+		<script src="@Path['~/Resources/backbone-min.js']"></script>
+		<script src="@Path['~/Resources/handlebars.js']"></script>
+		<script src="@Path['~/Resources/nancy-common.js']"></script>
+		<script src="@Path['~/Resources/diagnostics.js']"></script>
 
-		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/reset.css']" />
-		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/text.css']" />
-		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/960.css']" />
-		<link rel="Stylesheet" type="text/css" media="all" href="@Path['~/_Nancy/Resources/main.css']"  />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/Resources/reset.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/Resources/text.css']" />
+		<link rel="stylesheet" type="text/css" media="all" href="@Path['~/Resources/960.css']" />
+		<link rel="Stylesheet" type="text/css" media="all" href="@Path['~/Resources/main.css']"  />
 
 		@Section['Header'];
 	</head>
@@ -34,8 +34,8 @@
 		<div class="container_12">
 
 			<div class="grid_6 header">
-				<a href="@Path['~/_Nancy']">
-					<img src="@Path['~/_Nancy/Resources/logo.png']" width="380px" alt="Nancy" />
+				<a href="@Path['~/']">
+					<img src="@Path['~/Resources/logo.png']" width="380px" alt="Nancy" />
 				</a>
 			</div>
 
