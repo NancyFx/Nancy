@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Xbehave</id>
+    <version>0.14.0</version>
+    <title>xBehave.net</title>
+    <authors>Adam Ralph</authors>
+    <owners>Adam Ralph</owners>
+    <licenseUrl>https://github.com/xbehave/xbehave.net/blob/master/license.txt</licenseUrl>
+    <projectUrl>https://github.com/xbehave/xbehave.net</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A BDD/TDD framework based on xUnit.net and inspired by Gherkin. Allows features and scenarios to be written directly in code rather than mapping to external feature files. Works seamlessly with xUnit.net tooling.</description>
+    <releaseNotes>(Enhancement) Pass default values for scenario parameters not covered by examples (https://github.com/xbehave/xbehave.net/issues/5).
+(Bug) Scenario methods with malformed parameters and examples fail silently (https://github.com/xbehave/xbehave.net/issues/7)</releaseNotes>
+    <copyright>Copyright (c) 2011 - 2012 Adam Ralph (adam@adamralph.com)</copyright>
+    <tags>xUnit.net BDD test TDD</tags>
+    <dependencies>
+      <dependency id="xunit" version="[1.9.1]" />
+      <dependency id="xunit.extensions" version="[1.9.1]" />
+    </dependencies>
+  </metadata>
+</package>

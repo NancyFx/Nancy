@@ -1,36 +1,41 @@
 namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
-    using Xunit;
+    using Xbehave;
 
     public class DefaultResponseFormatterFixture
     {
-        [Fact]
-        public void Should_return_path_provided_by_root_path_provider()
+        [Scenario]
+        public void GettingTheRootPath(IRootPathProvider rootPathProvider, DefaultResponseFormatter formatter, string rootPath)
         {
-            // Given
-            var rootPathProvider = A.Fake<IRootPathProvider>();
-            A.CallTo(() => rootPathProvider.GetRootPath()).Returns("foo");
-            var formatter = new DefaultResponseFormatter(rootPathProvider, null, new ISerializer[] { });
+            "Given a root path provider which returns a root path of 'foo'"
+                .Given(() =>
+                {
+                    rootPathProvider = A.Fake<IRootPathProvider>();
+                    A.CallTo(() => rootPathProvider.GetRootPath()).Returns("foo");
+                });
 
-            // When
-            var result = formatter.RootPath;
+            "And a default response formatter constructed using the root path provider"
+                .And(() => formatter = new DefaultResponseFormatter(rootPathProvider, null, new ISerializer[] { }));
 
-            // Then
-            result.ShouldEqual("foo");
+            "When getting the root path"
+                .When(() => rootPath = formatter.RootPath);
+
+            "Then the root path should equal 'foo'"
+                .Then(() => rootPath.ShouldEqual("foo"));
         }
 
-        [Fact]
-        public void Should_return_context_that_was_used_when_creating_instance()
+        [Scenario]
+        public void GettingTheContext(NancyContext context, DefaultResponseFormatter formatter)
         {
-            // Given
-            var context = new NancyContext();
+            "Given a context"
+                .Given(() => context = new NancyContext());
 
-            // When
-            var formatter = new DefaultResponseFormatter(null, context, new ISerializer[] { });
+            "When constructing a default response formatter using the context"
+                .When(() => formatter = new DefaultResponseFormatter(null, context, new ISerializer[] { }));
 
-            // Then
-            formatter.Context.ShouldBeSameAs(context);
+            "Then the formatter context should be the same as the given context"
+                .Then(() => formatter.Context.ShouldBeSameAs(context));
         }
     }
 }
