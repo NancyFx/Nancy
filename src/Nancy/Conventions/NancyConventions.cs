@@ -81,8 +81,11 @@
         /// </summary>
         private void BuildDefaultConventions()
         {
-            this.conventions = AppDomainAssemblyTypeScanner
-                .TypesOf<IConvention>()
+            var defaultConventions =
+                AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.OnlyNancy);
+                
+            this.conventions = defaultConventions
+                .Union(AppDomainAssemblyTypeScanner.TypesOf<IConvention>(ScanMode.ExcludeNancy))
                 .Select(t => (IConvention)Activator.CreateInstance(t));
 
             foreach (var convention in this.conventions)
