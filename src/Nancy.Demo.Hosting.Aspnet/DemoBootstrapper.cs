@@ -45,8 +45,6 @@
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
-            CookieBasedSessions.Enable(pipelines);
-
             pipelines.AfterRequest += (ctx) =>
             {
                 var username = ctx.Request.Query.pirate;

@@ -5,11 +5,12 @@
     using System.Linq;
     using System.Threading;
     using Bootstrapper;
-
+    using Nancy.Cache;
     using Nancy.Cookies;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
+    using Nancy.Session;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -24,6 +25,8 @@
         private readonly IRequestTracing requestTracing;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
+        private readonly ISessionStore sessionStore;
+        private readonly ICacheStore cacheStore;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -32,8 +35,7 @@
         /// <param name="contextFactory">A factory for creating contexts</param>
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
-        /// <param name="diagnosticsConfiguration"></param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, ISessionStore sessionStore, ICacheStore cacheStore)
         {
             if (dispatcher == null)
             {
@@ -50,11 +52,23 @@
                 throw new ArgumentNullException("statusCodeHandlers");
             }
 
+            if (sessionStore == null)
+            {
+                throw new ArgumentNullException("sessionStore");
+            }
+
+            if (cacheStore == null)
+            {
+                throw new ArgumentNullException("cacheStore");
+            }
+
             this.dispatcher = dispatcher;
             this.contextFactory = contextFactory;
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
             this.diagnosticsConfiguration = diagnosticsConfiguration;
+            this.sessionStore = sessionStore;            
+            this.cacheStore = cacheStore;
         }
 
         /// <summary>
@@ -88,6 +102,8 @@
 
             var context = this.contextFactory.Create();
             context.Request = request;
+            context.SessionStore = this.sessionStore;
+            context.Cache = this.cacheStore;
 
             if (preRequest != null)
             {

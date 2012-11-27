@@ -4,16 +4,16 @@ namespace Nancy.Testing.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Linq;
-
-    using Nancy.Extensions;
-    using Nancy.Tests;
-    using Nancy.Helpers;
-    using Nancy.Session;
-    using Xunit;
+    using System.Text;
+    
     using FakeItEasy;
     using Nancy.Authentication.Forms;
+    using Nancy.Extensions;
+    using Nancy.Helpers;
+    using Nancy.Session;
+    using Nancy.Tests;
+    using Xunit;
 
     public class BrowserFixture
     {
@@ -23,9 +23,7 @@ namespace Nancy.Testing.Tests
         {
             var bootstrapper =
                 new ConfigurableBootstrapper(config => config.Modules(typeof(EchoModule)));
-
-            CookieBasedSessions.Enable(bootstrapper);
-
+           
             browser = new Browser(bootstrapper);
         }
 
@@ -361,13 +359,13 @@ namespace Nancy.Testing.Tests
 
                 Get["/session"] = ctx =>
                     {
-                        var value = Session["moo"] ?? "";
+                        string value = Session.moo;
 
                         var output = "Current session value is: " + value;
 
-                        if (string.IsNullOrEmpty(value.ToString()))
+                        if (String.IsNullOrEmpty(value))
                         {
-                            Session["moo"] = "I've created a session!";
+                            Session.moo = "I've created a session!";
                         }
 
                         var response = (Response)output;

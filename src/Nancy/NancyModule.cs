@@ -198,7 +198,7 @@ namespace Nancy
         /// <summary>
         /// Gets the current session.
         /// </summary>
-        public ISession Session
+        public dynamic Session
         {
             get { return this.Request.Session; }
         }

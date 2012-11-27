@@ -115,6 +115,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\ResponseExtensions.cs" />
+    <Compile Include="Fakes\FakeIdBasedSessionStore.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithDependency.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
+    <Compile Include="Unit\Cache\InProcessCacheStoreFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
@@ -216,11 +218,13 @@
     <Compile Include="Unit\Security\CsrfStartupFixture.cs" />
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
-    <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
     <Compile Include="Unit\Cryptography\RijndaelEncryptionProviderFixture.cs" />
+    <Compile Include="Unit\Sessions\CookieBasedSessionStoreFixture.cs" />
     <Compile Include="Unit\Sessions\DefaultSessionObjectFormatterFixture.cs" />
-    <Compile Include="Unit\Sessions\NullSessionProviderFixture.cs" />
-    <Compile Include="Unit\Sessions\SessionFixture.cs" />
+    <Compile Include="Unit\Sessions\DynamicSessionFixture.cs" />
+    <Compile Include="Unit\Sessions\AbstractIdBasedSessionStoreFixture.cs" />
+    <Compile Include="Unit\Sessions\SessionApplicationStartupFixture.cs" />
+    <Compile Include="Unit\Sessions\SessionHooksFixture.cs" />
     <Compile Include="Unit\TextFormatterFixture.cs" />
     <Compile Include="Unit\StaticContentConventionBuilderFixture.cs" />
     <Compile Include="Unit\UrlFixture.cs" />

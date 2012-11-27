@@ -4,6 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Linq;
     
     /// <summary>
     /// A dictionary that supports dynamic access.
@@ -99,7 +100,7 @@
         /// Gets or sets the <see cref="DynamicDictionaryValue"/> with the specified name.
         /// </summary>
         /// <value>A <see cref="DynamicDictionaryValue"/> instance containing a value.</value>
-        public dynamic this[string name]
+        public virtual dynamic this[string name]
         {
             get
             {
@@ -227,7 +228,7 @@
         /// <summary>
         /// Removes all items from the <see cref="DynamicDictionary"/>.
         /// </summary>
-        public void Clear()
+        public virtual void Clear()
         {
             this.dictionary.Clear();
         }
@@ -279,7 +280,7 @@
         /// </summary>
         /// <returns><see langword="true" /> if the element is successfully removed; otherwise, <see langword="false" />.</returns>
         /// <param name="key">The key of the element to remove.</param>
-        public bool Remove(string key)
+        public virtual bool Remove(string key)
         {
             return this.dictionary.Remove(key);
         }
@@ -289,7 +290,7 @@
         /// </summary>
         /// <returns><see langword="true" /> if <paramref name="item"/> was successfully removed from the <see cref="DynamicDictionary"/>; otherwise, <see langword="false" />.</returns>
         /// <param name="item">The object to remove from the <see cref="DynamicDictionary"/>.</param>
-        public bool Remove(KeyValuePair<string, dynamic> item)
+        public virtual bool Remove(KeyValuePair<string, dynamic> item)
         {
             var dynamicValueKeyValuePair = 
                 GetDynamicKeyValuePair(item);
@@ -316,6 +317,15 @@
         private static string GetNeutralKey(string key)
         {
             return key.Replace("-", string.Empty);
+        }
+
+        /// <summary>
+        /// Returns an unwrapped dictionary where the items are their original values types and not wrapped in <see cref="DynamicDictionaryValue"/>
+        /// </summary>
+        /// <returns>A new dictionary containing the unwrapped items</returns>
+        public IDictionary<string, object> GetValueDictionary()
+        {
+            return this.dictionary.ToDictionary(d => d.Key, d => ((DynamicDictionaryValue)d.Value).Value);
         }
     }
 }

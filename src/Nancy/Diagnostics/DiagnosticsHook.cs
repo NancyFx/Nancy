@@ -12,7 +12,7 @@ namespace Nancy.Diagnostics
     using Responses;
     using Responses.Negotiation;
     using Routing;
-
+    
     public static class DiagnosticsHook
     {
         private const string PipelineKey = "__Diagnostics";

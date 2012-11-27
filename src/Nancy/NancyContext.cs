@@ -1,13 +1,14 @@
-
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Diagnostics;
-    using Nancy.Responses.Negotiation;
-    using Nancy.Security;
-    using Nancy.Validation;
+    using Cache;
+    using Diagnostics;
+    using Responses.Negotiation;
+    using Security;
+    using Session;
+	using Nancy.Validation;
 
     /// <summary>
     /// Nancy context.
@@ -92,6 +93,16 @@ namespace Nancy
             get { return this.modelValidationResult ?? new ModelValidationResult(null); }
             set { this.modelValidationResult = value; }
         }
+
+        /// <summary>
+		/// Current Session store
+		/// </summary>
+		public ISessionStore SessionStore { get; set; }
+
+        /// <summary>
+        /// Current Cache Store
+        /// </summary>
+        public ICacheStore Cache { get; set; }
 
         /// <summary>
         /// Context of content negotiation (if relevent)

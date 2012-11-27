@@ -1104,5 +1104,23 @@ namespace Nancy.Tests.Unit
             // Then
             result.ShouldBeFalse();
         }
+
+        [Fact]
+        public void Should_be_able_to_fetch_value_types()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input["number"] = 1;
+            input["string"] = "one";
+
+            // When
+            var result = input.GetValueDictionary();
+
+            // Then
+            result["number"].ShouldBeOfType<Int32>();
+            result["number"].ShouldEqual(1);
+            result["string"].ShouldBeOfType<String>();
+            result["string"].ShouldEqual("one");
+        }
     }
 }

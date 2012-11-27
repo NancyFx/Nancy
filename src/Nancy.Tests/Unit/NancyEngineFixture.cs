@@ -3,10 +3,12 @@ namespace Nancy.Tests.Unit
     using System;
     using FakeItEasy;
     using Nancy.Bootstrapper;
+    using Nancy.Cache;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
     using Nancy.Routing;
+    using Nancy.Session;
     using Nancy.Tests.Fakes;
     using Xunit;
     using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
@@ -22,7 +24,9 @@ namespace Nancy.Tests.Unit
         private readonly IStatusCodeHandler statusCodeHandler;
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
+        private readonly ISessionStore sessionStore;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
+        private readonly ICacheStore cacheStore;
 
         public NancyEngineFixture()
         {
@@ -33,6 +37,8 @@ namespace Nancy.Tests.Unit
             this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
             this.diagnosticsConfiguration = new DiagnosticsConfiguration();
+            this.sessionStore = A.Fake<ISessionStore>();
+            this.cacheStore = A.Fake<ICacheStore>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._)).Invokes(x => this.context.Response = new Response());
 
@@ -53,7 +59,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration)
+                new NancyEngine(this.requestDispatcher, contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.sessionStore, this.cacheStore)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -64,7 +70,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, A.Fake<ISessionStore>(), A.Fake<ICacheStore>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -75,7 +81,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, A.Fake<ISessionStore>(), A.Fake<ICacheStore>()));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -86,7 +92,29 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, A.Fake<ISessionStore>(), A.Fake<ICacheStore>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_session_store()
+        { 
+            // Given
+            var exception =
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, null, A.Fake<ICacheStore>()));
+
+            // Then
+            exception.ShouldBeOfType<ArgumentNullException>();
+        }
+
+        [Fact]
+        public void Should_throw_argumentnullexception_when_created_with_null_cache_store()
+        {
+            // Given
+            var exception =
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, A.Fake<ISessionStore>(), null));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -537,6 +565,31 @@ namespace Nancy.Tests.Unit
 
             // Then
             returnedException.InnerException.ShouldBeSameAs(expectedException);
+        }
+
+        [Fact]
+        public void Should_set_session_store_on_context() { 
+            // Given
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.SessionStore.ShouldBeSameAs(this.sessionStore);
+        }
+
+        [Fact]
+        public void Should_set_cache_store_on_context()
+        {
+            // Given
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Cache.ShouldBeSameAs(this.cacheStore);
         }
     }
 }

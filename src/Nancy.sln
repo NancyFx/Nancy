@@ -103,6 +103,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless", "Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj", "{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Sessions", "Nancy.Demo.Sessions\Nancy.Demo.Sessions.csproj", "{6B2DD33E-F638-4AA0-A314-12745D927157}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -681,6 +683,18 @@ Global
 		{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}.Release|x86.ActiveCfg = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoDebug|Any CPU.Build.0 = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoDebug|x86.ActiveCfg = Debug|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.MonoRelease|x86.ActiveCfg = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B2DD33E-F638-4AA0-A314-12745D927157}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -733,6 +747,7 @@ Global
 		{F417B81C-B914-4BFD-8299-6BBD11072B01} = {4A24657F-9695-437B-9702-2541ED280628}
 		{B5E3586D-81DE-49C3-83BC-062684795127} = {4A24657F-9695-437B-9702-2541ED280628}
 		{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC} = {4A24657F-9695-437B-9702-2541ED280628}
+		{6B2DD33E-F638-4AA0-A314-12745D927157} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj

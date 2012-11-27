@@ -4,16 +4,17 @@ namespace Nancy.Bootstrapper
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
-    using Nancy.Diagnostics;
-    using Nancy.ErrorHandling;
-    using Nancy.ModelBinding;
-    using Nancy.Routing;
-    using Nancy.ViewEngines;
+    using Cache;
+    using Diagnostics;
+    using ErrorHandling;
+    using ModelBinding;
     using Responses;
     using Responses.Negotiation;
+    using Routing;
     using Security;
-    using Nancy.Validation;
+    using Session;
+    using Validation;
+    using ViewEngines;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -88,6 +89,8 @@ namespace Nancy.Bootstrapper
                         Diagnostics = typeof(DefaultDiagnostics),
                         RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                         RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
+                        SessionStore = typeof(CookieBasedSessionStore),
+                        CacheStore = typeof(InProcessCacheStore),
                     };
             }
         }
@@ -146,6 +149,8 @@ namespace Nancy.Bootstrapper
 
         public Type RequestTracing { get; set; }
 
+        public Type SessionStore { get; set; }
+		
         public Type RouteInvoker { get; set; }
 
         public IList<Type> ResponseProcessors { get; set; }
@@ -157,6 +162,8 @@ namespace Nancy.Bootstrapper
         public Type RouteSegmentExtractor { get; set; }
 
         public Type RouteDescriptionProvider { get; set; }
+		
+        public Type CacheStore { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -246,11 +253,13 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
                 new TypeRegistration(typeof(IModelValidatorLocator), this.ModelValidatorLocator),
                 new TypeRegistration(typeof(IRequestTracing), this.RequestTracing),
+                new TypeRegistration(typeof(ISessionStore), this.SessionStore),
                 new TypeRegistration(typeof(IRouteInvoker), this.RouteInvoker),
                 new TypeRegistration(typeof(IRequestDispatcher), this.RequestDispatcher),
                 new TypeRegistration(typeof(IDiagnostics), this.Diagnostics), 
                 new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
-                new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider)
+                new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
+                new TypeRegistration(typeof(ICacheStore), this.CacheStore),
             };
         }
 

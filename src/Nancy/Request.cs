@@ -83,8 +83,6 @@ namespace Nancy
 
             this.Headers = new RequestHeaders(headers ?? new Dictionary<string, IEnumerable<string>>());
 
-            this.Session = new NullSessionProvider();
-
             this.ParseFormData();
             this.RewriteMethod();
         }
@@ -138,9 +136,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the current session.
+        /// Gets or sets the current session.
         /// </summary>
-        public ISession Session { get; set; }
+        public dynamic Session { get; set; }
 
         /// <summary>
         /// Gets the cookie data from the request header if it exists
