@@ -162,6 +162,7 @@ namespace Nancy.Bootstrapper
         /// <typeparam name="TType">Type to search for</typeparam>
         /// <param name="excludeInternalTypes">Whether to exclude types inside the core Nancy assembly</param>
         /// <returns>IEnumerable of types</returns>
+        [Obsolete("This method has been replaced by the overload that accepts a ScanMode parameter and will be removed in a subsequent release.")]
         public static IEnumerable<Type> TypesOf<TType>(bool excludeInternalTypes = false)
         {
             var returnTypes = Types.Where(t => typeof(TType).IsAssignableFrom(t));
@@ -172,6 +173,27 @@ namespace Nancy.Bootstrapper
             }
 
             return returnTypes;
+        }
+
+        /// <summary>
+        /// Gets all types implementing a particular interface/base class
+        /// </summary>
+        /// <typeparam name="TType">Type to search for</typeparam>
+        /// <param name="mode">A <see cref="ScanMode"/> value to determin which type set to scan in.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
+        public static IEnumerable<Type> TypesOf<TType>(ScanMode mode)
+        {
+            var returnTypes = 
+                Types.Where(t => typeof(TType).IsAssignableFrom(t));
+
+            if (mode == ScanMode.All)
+            {
+                return returnTypes;
+            }
+
+            return (mode == ScanMode.OnlyNancy) ?
+                returnTypes.Where(t => t.Assembly == nancyAssembly) :
+                returnTypes.Where(t => t.Assembly != nancyAssembly);
         }
     }
 
