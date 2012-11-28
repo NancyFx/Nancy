@@ -1,5 +1,7 @@
 namespace Nancy.ModelBinding
 {
+    using Nancy.Validation;
+
     public static class ModuleExtensions
     {
         /// <summary>
@@ -38,6 +40,20 @@ namespace Nancy.ModelBinding
         }
 
         /// <summary>
+        /// Bind the incoming request to a model and validate
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="module">Current module</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        /// <returns>Bound model instance</returns>
+        public static TModel BindAndValidate<TModel>(this NancyModule module, params string[] blacklistedProperties)
+        {
+            var model = module.Bind<TModel>(blacklistedProperties);
+            module.Validate(model);
+            return model;
+        }
+
+        /// <summary>
         /// Bind the incoming request to a model
         /// </summary>
         /// <typeparam name="TModel">Model type</typeparam>
@@ -48,6 +64,21 @@ namespace Nancy.ModelBinding
         public static TModel Bind<TModel>(this NancyModule module, BindingConfig configuration, params string[] blacklistedProperties)
         {
             return module.Bind(configuration, blacklistedProperties);
+        }
+
+        /// <summary>
+        /// Bind the incoming request to a model and validate
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="module">Current module</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        /// <returns>Bound model instance</returns>
+        public static TModel BindAndValidate<TModel>(this NancyModule module, BindingConfig configuration, params string[] blacklistedProperties)
+        {
+            var model = module.Bind<TModel>(configuration, blacklistedProperties);
+            module.Validate(model);
+            return model;
         }
 
         /// <summary>
