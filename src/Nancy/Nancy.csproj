@@ -107,7 +107,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
-    <Compile Include="Bootstrapper\IAppDomainDirectoryProvider.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
     <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
