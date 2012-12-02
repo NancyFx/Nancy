@@ -88,8 +88,7 @@ namespace Nancy.Bootstrapper
         /// <param name="wildcardFilename">Wildcard to match the assemblies to load</param>
         public static void LoadAssemblies(string wildcardFilename)
         {
-            var directoryProvider = new AppDomainDirectoryProvider();
-            foreach (var directory in directoryProvider.GetDirectories())
+            foreach (var directory in GetAssemblyDirectories())
             {
                 LoadAssemblies(directory, wildcardFilename);
             }
@@ -198,6 +197,26 @@ namespace Nancy.Bootstrapper
             return (mode == ScanMode.OnlyNancy) ?
                 returnTypes.Where(t => t.Assembly == nancyAssembly) :
                 returnTypes.Where(t => t.Assembly != nancyAssembly);
+        }
+
+        /// <summary>
+        /// Returns the directories containing dll files. It uses the default convention as stated by microsoft.
+        /// </summary>
+        /// <see cref="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
+        private static IEnumerable<string> GetAssemblyDirectories()
+        {
+            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPath != null)
+            {
+                yield return AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
+                if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
+                {
+                    yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+                }
+            }
+            else
+            {
+                yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            }
         }
     }
 
