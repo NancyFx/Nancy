@@ -88,7 +88,11 @@ namespace Nancy.Bootstrapper
         /// <param name="wildcardFilename">Wildcard to match the assemblies to load</param>
         public static void LoadAssemblies(string wildcardFilename)
         {
-            LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, wildcardFilename);
+            var directoryProvider = new AppDomainDirectoryProvider();
+            foreach (var directory in directoryProvider.GetDirectories())
+            {
+                LoadAssemblies(directory, wildcardFilename);
+            }
         }
 
         /// <summary>
