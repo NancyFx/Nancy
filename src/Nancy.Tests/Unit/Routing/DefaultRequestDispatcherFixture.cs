@@ -763,6 +763,7 @@ namespace Nancy.Tests.Unit.Routing
             Assert.DoesNotThrow(() => this.requestDispatcher.Dispatch(context));
         }
 
+#if !__MonoCS__ 
         [Fact]
         public void should_preserve_stacktrace_when_rethrowing_the_excption()
         {
@@ -791,7 +792,7 @@ namespace Nancy.Tests.Unit.Routing
             Assert.Throws<Exception>(() => requestDispatcher.Dispatch(context))
                         .StackTrace.ShouldContain("BrokenMethod");
         }
-
+#endif
 
         private static Response BrokenMethod()
         {
