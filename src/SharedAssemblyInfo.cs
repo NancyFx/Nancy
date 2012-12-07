@@ -5,7 +5,8 @@ using System.Reflection;
 [assembly: AssemblyCompany("Nancy")]
 [assembly: AssemblyProduct("Nancy")]
 [assembly: AssemblyCopyright("Copyright (C) Andreas Hakansson, Steven Robbins and contributors")]
-[assembly: AssemblyVersion("0.14.0")]
+[assembly: AssemblyVersion("0.14.1")]
+
 
 
 
