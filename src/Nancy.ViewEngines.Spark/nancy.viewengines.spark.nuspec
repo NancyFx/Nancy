@@ -14,7 +14,7 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
-      <dependency id="Spark" version="1.5.1" />
+      <dependency id="Spark" version="1.7.0.0" />
     </dependencies> 
     <tags>Nancy Viewengine Spark</tags>
   </metadata>
