@@ -15,7 +15,7 @@
 
         public Tuple<bool, string> Validate(NancyConventions conventions)
         {
-            if (conventions.StaticContentsConventions == null)
+            if (conventions.AcceptHeaderCoercionConventions == null)
             {
                 return Tuple.Create(false, "The accept header coercion conventions cannot be null.");
             }
