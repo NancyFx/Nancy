@@ -118,6 +118,7 @@
     <Compile Include="Bootstrapper\ScanMode.cs" />
     <Compile Include="Conventions\AcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\BuiltInAcceptHeaderCoercions.cs" />
+    <Compile Include="Conventions\BuiltInCultureConventions.cs" />
     <Compile Include="Conventions\CultureConventions.cs" />
     <Compile Include="Conventions\DefaultAcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\DefaultCultureConventions.cs" />

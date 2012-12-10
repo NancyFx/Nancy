@@ -32,55 +32,13 @@ namespace Nancy.Conventions
 
         private void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>
+            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>(5)
             {
-                (ctx) =>
-                    {
-                        if (ctx.Request.Form["CurrentCulture"] != null)
-                        {
-                            return (CultureInfo) ctx.Request.Form["CurrentCulture"];
-                        }
-
-                        return null;
-                    },
-
-                (ctx) =>
-                    {
-                        var firstParameter =
-                            ctx.Request.Url.Path.Split(new char[] {'/'}, StringSplitOptions.RemoveEmptyEntries).
-                                FirstOrDefault();
-
-                        if (firstParameter != null && IsValidCultureInfoName(firstParameter))
-                        {
-                            return new CultureInfo(firstParameter);
-                        }
-
-                        return null;
-                    },
-               (ctx) =>
-                   {
-                       if (!(ctx.Request.Session is NullSessionProvider) && ctx.Request.Session["CurrentCulutre"] != null)
-                       {
-                           return (CultureInfo)ctx.Request.Session["CurrentCulture"];
-                       }
-
-                       return null;
-                   },
-
-                (ctx) =>
-                    {
-                        string cookieCulture = null;
-
-                        if (ctx.Request.Cookies.TryGetValue("CurrentCulture", out cookieCulture))
-                        {
-                          return  new CultureInfo(cookieCulture);
-                        }
-
-                        return null;
-                    },
-                    
-             
-                (ctx) => Thread.CurrentThread.CurrentCulture
+                BuiltInCultureConventions.FormCulture,
+                BuiltInCultureConventions.PathCulture,
+                BuiltInCultureConventions.SessionCulture,
+                BuiltInCultureConventions.CookieCulture,
+                BuiltInCultureConventions.ThreadCulture
             };
 
         }
