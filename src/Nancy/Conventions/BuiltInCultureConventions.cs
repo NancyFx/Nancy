@@ -31,6 +31,16 @@
             return null;
         }
 
+        public static CultureInfo HeaderCulture(NancyContext context)
+        {
+            if (context.Request.Headers.AcceptLanguage.Any())
+            {
+                return new CultureInfo(context.Request.Headers.AcceptLanguage.First().Item1);
+            }
+
+            return null;
+        }
+
         private static bool IsValidCultureInfoName(string name)
         {
             var validCulture = false;
