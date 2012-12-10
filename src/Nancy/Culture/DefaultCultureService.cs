@@ -38,7 +38,6 @@
             else
             {
                 CurrentCulture = Thread.CurrentThread.CurrentCulture;
-                CurrentCulture = new CultureInfo("de-DE");
             }
 
             return CurrentCulture;
