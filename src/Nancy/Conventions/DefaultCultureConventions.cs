@@ -32,10 +32,11 @@ namespace Nancy.Conventions
 
         private void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>(5)
+            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>(6)
             {
                 BuiltInCultureConventions.FormCulture,
                 BuiltInCultureConventions.PathCulture,
+                BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
                 BuiltInCultureConventions.ThreadCulture
