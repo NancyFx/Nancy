@@ -1,46 +1,33 @@
-﻿namespace Nancy.Culture
+﻿
+namespace Nancy.Culture
 {
-    using System;
-    using System.Threading;
     using System.Globalization;
+    using Nancy.Conventions;
     using System.Linq;
-    using Nancy.Session;
-
 
     public class DefaultCultureService : ICultureService
     {
-        public CultureInfo CurrentCulture { get; set; }
+        private readonly CultureConventions cultureConventions;
+
+        public DefaultCultureService(CultureConventions cultureConventions)
+        {
+            this.cultureConventions = cultureConventions;
+        }
 
         public CultureInfo DetermineCurrentCulture(NancyContext context)
         {
-            //TODO: Possibly check IUserMapper for stored culture in a profile?
+            CultureInfo culture = null;
 
-            string cookieCulture = null;
-
-            var firstParameter = context.Request.Url.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
-
-            if (context.Request.Form["CurrentCulture"] != null)
+            foreach (var func in this.cultureConventions)
             {
-                CurrentCulture = (CultureInfo)context.Request.Form["CurrentCulture"];
-            }
-            else if (firstParameter != null)
-            {
-                CurrentCulture = new CultureInfo(firstParameter);
-            }
-            else if (!(context.Request.Session is NullSessionProvider) && context.Request.Session["CurrentCulutre"] != null)
-            {
-                CurrentCulture = (CultureInfo)context.Request.Session["CurrentCulture"];
-            }
-            else if (context.Request.Cookies.TryGetValue("CurrentCulture", out cookieCulture))
-            {
-                CurrentCulture = new CultureInfo(cookieCulture);
-            }
-            else
-            {
-                CurrentCulture = Thread.CurrentThread.CurrentCulture;
+                culture = func(context);
+                if (culture != null)
+                {
+                    break;
+                }
             }
 
-            return CurrentCulture;
+            return culture;
         }
     }
 }

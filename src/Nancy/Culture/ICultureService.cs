@@ -5,6 +5,5 @@
     public interface ICultureService
     {
         CultureInfo DetermineCurrentCulture(NancyContext context);
-        CultureInfo CurrentCulture { get; set; }
     }
 }
