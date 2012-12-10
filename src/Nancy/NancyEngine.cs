@@ -10,6 +10,7 @@
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
+    using Nancy.Culture;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -23,6 +24,7 @@
         private readonly INancyContextFactory contextFactory;
         private readonly IRequestTracing requestTracing;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
+        private readonly ICultureService cultureService;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
 
         /// <summary>
@@ -33,7 +35,7 @@
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="diagnosticsConfiguration"></param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, ICultureService cultureService)
         {
             if (dispatcher == null)
             {
@@ -55,6 +57,7 @@
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
             this.diagnosticsConfiguration = diagnosticsConfiguration;
+            this.cultureService = cultureService;
         }
 
         /// <summary>
@@ -97,6 +100,8 @@
             var pipelines =
                 this.RequestPipelinesFactory.Invoke(context);
 
+            this.SetCulture(context);
+
             this.InvokeRequestLifeCycle(context, pipelines);
 
             this.CheckStatusCodeHandler(context);
@@ -104,6 +109,11 @@
             this.SaveTraceInformation(context);
 
             return context;
+        }
+
+        private void SetCulture(NancyContext context)
+        {
+            context.Culture = this.cultureService.DetermineCurrentCulture(context);
         }
 
         private void SaveTraceInformation(NancyContext ctx)
@@ -214,12 +224,12 @@
             {
                 InvokePreRequestHook(context, pipelines.BeforeRequest);
 
-                if (context.Response == null) 
+                if (context.Response == null)
                 {
                     this.dispatcher.Dispatch(context);
                 }
 
-                if (pipelines.AfterRequest != null) 
+                if (pipelines.AfterRequest != null)
                 {
                     pipelines.AfterRequest.Invoke(context);
                 }
@@ -248,7 +258,7 @@
             try
             {
                 if (pipeline == null)
-                { 
+                {
                     throw new RequestExecutionException(ex);
                 }
 

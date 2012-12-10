@@ -8,6 +8,7 @@ namespace Nancy
     using Nancy.Responses.Negotiation;
     using Nancy.Security;
     using Nancy.Validation;
+    using System.Globalization;
 
     /// <summary>
     /// Nancy context.
@@ -92,6 +93,11 @@ namespace Nancy
             get { return this.modelValidationResult ?? new ModelValidationResult(null); }
             set { this.modelValidationResult = value; }
         }
+
+        /// <summary>
+        /// Gets or sets the context's culture
+        /// </summary>
+        public CultureInfo Culture { get; set; }
 
         /// <summary>
         /// Context of content negotiation (if relevent)
