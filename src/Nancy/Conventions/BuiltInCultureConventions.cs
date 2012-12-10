@@ -12,7 +12,11 @@
         {
             if (context.Request.Form["CurrentCulture"] != null)
             {
-                return (CultureInfo)context.Request.Form["CurrentCulture"];
+                var cultureLetters = context.Request.Form["CurrentCulture"];
+                if (!IsValidCultureInfoName(cultureLetters))
+                    return null;
+
+                return new CultureInfo(cultureLetters);
             }
 
             return null;
@@ -35,24 +39,14 @@
         {
             if (context.Request.Headers.AcceptLanguage.Any())
             {
-                return new CultureInfo(context.Request.Headers.AcceptLanguage.First().Item1);
+                var cultureLetters = context.Request.Headers.AcceptLanguage.First().Item1;
+                if (!IsValidCultureInfoName(cultureLetters))
+                    return null;
+
+                return new CultureInfo(cultureLetters);
             }
 
             return null;
-        }
-
-        private static bool IsValidCultureInfoName(string name)
-        {
-            var validCulture = false;
-            foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-            {
-                if (culture.Name == name)
-                {
-                    validCulture = true;
-                    break;
-                }
-            }
-            return validCulture;
         }
 
         public static CultureInfo SessionCulture(NancyContext context)
@@ -71,6 +65,9 @@
 
             if (context.Request.Cookies.TryGetValue("CurrentCulture", out cookieCulture))
             {
+                if (!IsValidCultureInfoName(cookieCulture))
+                    return null;
+
                 return new CultureInfo(cookieCulture);
             }
 
@@ -80,6 +77,20 @@
         public static CultureInfo ThreadCulture(NancyContext context)
         {
             return Thread.CurrentThread.CurrentCulture;
+        }
+
+        public static bool IsValidCultureInfoName(string name)
+        {
+            var validCulture = false;
+            foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            {
+                if (culture.Name == name)
+                {
+                    validCulture = true;
+                    break;
+                }
+            }
+            return validCulture;
         }
     }
 }
