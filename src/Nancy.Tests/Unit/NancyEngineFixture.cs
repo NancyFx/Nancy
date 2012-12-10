@@ -1,3 +1,5 @@
+
+
 namespace Nancy.Tests.Unit
 {
     using System;
@@ -9,6 +11,7 @@ namespace Nancy.Tests.Unit
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
+    using Nancy.Culture;
     using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     public class NancyEngineFixture
@@ -23,6 +26,8 @@ namespace Nancy.Tests.Unit
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
+        private readonly ICultureService cultureService;
+
 
         public NancyEngineFixture()
         {
@@ -33,6 +38,7 @@ namespace Nancy.Tests.Unit
             this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
             this.diagnosticsConfiguration = new DiagnosticsConfiguration();
+            this.cultureService = A.Fake<ICultureService>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._)).Invokes(x => this.context.Response = new Response());
 
@@ -53,7 +59,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration)
+                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -64,7 +70,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -75,7 +81,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -86,7 +92,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
