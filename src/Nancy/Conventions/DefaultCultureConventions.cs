@@ -44,19 +44,5 @@ namespace Nancy.Conventions
 
         }
 
-        private static bool IsValidCultureInfoName(string name)
-        {
-            var validCulture = false;
-            foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-            {
-                if (culture.Name == name)
-                {
-                    validCulture = true;
-                    break;
-                }
-            }
-            return validCulture;
-        }
-
     }
 }
