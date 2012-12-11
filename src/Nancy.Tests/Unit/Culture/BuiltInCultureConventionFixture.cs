@@ -15,14 +15,6 @@
 
     public class BuiltInCultureConventionFixture
     {
-        private NancyContext CreateContextRequest(string path, IDictionary<string, IEnumerable<string>> cultureHeaders = null)
-        {
-            var context = new NancyContext();
-            var request = new Request("GET", path, cultureHeaders, null, "http");
-            context.Request = request;
-            return context;
-        }
-
         [Fact]
         public void Should_return_null_if_form_not_populated()
         {
@@ -62,27 +54,6 @@
 
             //Then
             culture.ShouldBeNull();
-        }
-
-        private NancyContext PopulateForm(string cultureName)
-        {
-            string bodyContent = "CurrentCulture=" + cultureName;
-            var memory = new MemoryStream();
-            var writer = new StreamWriter(memory);
-            writer.Write(bodyContent);
-            writer.Flush();
-            memory.Position = 0;
-
-            var headers =
-                new Dictionary<string, IEnumerable<string>>
-                {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
-                };
-
-
-            var context = new NancyContext();
-            context.Request = new Request("POST", "/", headers, RequestStream.FromStream(memory), "http");
-            return context;
         }
 
         [Theory]
@@ -348,6 +319,35 @@
 
             //Then
             result.ShouldBeTrue();
+        }
+
+        private NancyContext PopulateForm(string cultureName)
+        {
+            string bodyContent = "CurrentCulture=" + cultureName;
+            var memory = new MemoryStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+
+            var context = new NancyContext();
+            context.Request = new Request("POST", "/", headers, RequestStream.FromStream(memory), "http");
+            return context;
+        }
+
+        private NancyContext CreateContextRequest(string path, IDictionary<string, IEnumerable<string>> cultureHeaders = null)
+        {
+            var context = new NancyContext();
+            var request = new Request("GET", path, cultureHeaders, null, "http");
+            context.Request = request;
+            return context;
         }
     }
 }

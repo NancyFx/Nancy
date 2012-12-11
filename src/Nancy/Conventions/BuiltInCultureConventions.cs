@@ -6,8 +6,17 @@
     using System.Threading;
     using Nancy.Session;
 
+    /// <summary>
+    /// Built in functions for determining current culture
+    /// <seealso cref="DefaultCultureConventions"/>
+    /// </summary>
     public static class BuiltInCultureConventions
     {
+        /// <summary>
+        /// Checks to see if the Form has a CurrentCulture key.
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo if found in Form otherwise null</returns>
         public static CultureInfo FormCulture(NancyContext context)
         {
             if (context.Request.Form["CurrentCulture"] != null)
@@ -22,6 +31,11 @@
             return null;
         }
 
+        /// <summary>
+        /// Checks to see if the first argument in the Path can be used to make a CultureInfo.
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo if found in Path otherwise null</returns>
         public static CultureInfo PathCulture(NancyContext context)
         {
             var firstParameter =
@@ -35,6 +49,11 @@
             return null;
         }
 
+        /// <summary>
+        /// Checks to see if the AcceptLanguage in the Headers can be used to make a CultureInfo. Uses highest weighted if multiple defined.
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo if found in Headers otherwise null</returns>
         public static CultureInfo HeaderCulture(NancyContext context)
         {
             if (context.Request.Headers.AcceptLanguage.Any())
@@ -49,6 +68,11 @@
             return null;
         }
 
+        /// <summary>
+        /// Checks to see if the Session has a CurrentCulture key
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo if found in Session otherwise null</returns>
         public static CultureInfo SessionCulture(NancyContext context)
         {
             if (!(context.Request.Session is NullSessionProvider) && context.Request.Session["CurrentCulture"] != null)
@@ -59,6 +83,11 @@
             return null;
         }
 
+        /// <summary>
+        /// Checks to see if the Cookies has a CurrentCulture key
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo if found in Cookies otherwise null</returns>
         public static CultureInfo CookieCulture(NancyContext context)
         {
             string cookieCulture = null;
@@ -74,11 +103,21 @@
             return null;
         }
 
+        /// <summary>
+        /// Uses the Thread.CurrentThread.CurrentCulture
+        /// </summary>
+        /// <param name="context">NancyContext</param>
+        /// <returns>CultureInfo from CurrentThread</returns>
         public static CultureInfo ThreadCulture(NancyContext context)
         {
             return Thread.CurrentThread.CurrentCulture;
         }
 
+        /// <summary>
+        /// Validates culture name
+        /// </summary>
+        /// <param name="name">Culture name eg\en-GB</param>
+        /// <returns>True/False if valid culture</returns>
         public static bool IsValidCultureInfoName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
