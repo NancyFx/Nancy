@@ -12,7 +12,7 @@
         {
             if (context.Request.Form["CurrentCulture"] != null)
             {
-                var cultureLetters = context.Request.Form["CurrentCulture"];
+                string cultureLetters = context.Request.Form["CurrentCulture"];
                 if (!IsValidCultureInfoName(cultureLetters))
                     return null;
 
@@ -51,7 +51,7 @@
 
         public static CultureInfo SessionCulture(NancyContext context)
         {
-            if (!(context.Request.Session is NullSessionProvider) && context.Request.Session["CurrentCulutre"] != null)
+            if (!(context.Request.Session is NullSessionProvider) && context.Request.Session["CurrentCulture"] != null)
             {
                 return (CultureInfo)context.Request.Session["CurrentCulture"];
             }
@@ -81,7 +81,11 @@
 
         public static bool IsValidCultureInfoName(string name)
         {
+            if (string.IsNullOrWhiteSpace(name))
+                return false;
+
             var validCulture = false;
+
             foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
                 if (culture.Name == name)
@@ -90,6 +94,7 @@
                     break;
                 }
             }
+
             return validCulture;
         }
     }
