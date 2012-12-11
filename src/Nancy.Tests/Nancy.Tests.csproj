@@ -131,6 +131,7 @@
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
+    <Compile Include="Unit\Culture\BuiltInCultureConventionFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
