@@ -125,6 +125,16 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void HandleRequest_should_call_culture_service_to_assign_culture()
+        {
+            var request = new Request("GET", "/", "http");
+
+            this.engine.HandleRequest(request);
+
+            A.CallTo(() => this.cultureService.DetermineCurrentCulture(A<NancyContext>.Ignored)).MustHaveHappened();
+        }
+
+        [Fact]
         public void HandleRequest_should_set_correct_response_on_returned_context()
         {
             // Given
