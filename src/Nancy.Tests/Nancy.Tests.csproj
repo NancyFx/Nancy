@@ -259,6 +259,9 @@
     <EmbeddedResource Include="Resources\Views\staticviewresource.html" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\Assets\Styles\space in name.css">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\Assets\Styles\dotted.filename.css">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
