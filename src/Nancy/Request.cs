@@ -234,12 +234,7 @@ namespace Nancy
                 }
                 else
                 {
-                    this.files.Add(new HttpFile(
-                                       httpMultipartBoundary.ContentType,
-                                       httpMultipartBoundary.Filename,
-                                       httpMultipartBoundary.Value,
-                                       httpMultipartBoundary.Name
-                                       ));
+                    this.files.Add(new HttpFile(httpMultipartBoundary));
                 }
             }
 
