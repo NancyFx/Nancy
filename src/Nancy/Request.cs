@@ -232,7 +232,7 @@ namespace Nancy
                                        httpMultipartBoundary.ContentType,
                                        httpMultipartBoundary.Filename,
                                        httpMultipartBoundary.Value,
-									   httpMultipartBoundary.Name //include the form field that posted this file
+                                       httpMultipartBoundary.Name //include the form field that posted this file
                                        ));
                 }
             }
