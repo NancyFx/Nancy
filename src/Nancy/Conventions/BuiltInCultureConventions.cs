@@ -22,8 +22,11 @@
             if (context.Request.Form["CurrentCulture"] != null)
             {
                 string cultureLetters = context.Request.Form["CurrentCulture"];
+                
                 if (!IsValidCultureInfoName(cultureLetters))
+                {
                     return null;
+                }
 
                 return new CultureInfo(cultureLetters);
             }
@@ -38,8 +41,7 @@
         /// <returns>CultureInfo if found in Path otherwise null</returns>
         public static CultureInfo PathCulture(NancyContext context)
         {
-            var firstParameter =
-                            context.Request.Url.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var firstParameter = context.Request.Url.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
 
             if (firstParameter != null && IsValidCultureInfoName(firstParameter))
             {
@@ -59,8 +61,11 @@
             if (context.Request.Headers.AcceptLanguage.Any())
             {
                 var cultureLetters = context.Request.Headers.AcceptLanguage.First().Item1;
+
                 if (!IsValidCultureInfoName(cultureLetters))
+                {
                     return null;
+                }
 
                 return new CultureInfo(cultureLetters);
             }
@@ -75,7 +80,8 @@
         /// <returns>CultureInfo if found in Session otherwise null</returns>
         public static CultureInfo SessionCulture(NancyContext context)
         {
-            if (!(context.Request.Session is NullSessionProvider) && context.Request.Session["CurrentCulture"] != null)
+            var sessionType = context.Request.Session as NullSessionProvider;
+            if (sessionType == null && context.Request.Session["CurrentCulture"] != null)
             {
                 return (CultureInfo)context.Request.Session["CurrentCulture"];
             }
@@ -95,7 +101,9 @@
             if (context.Request.Cookies.TryGetValue("CurrentCulture", out cookieCulture))
             {
                 if (!IsValidCultureInfoName(cookieCulture))
+                {
                     return null;
+                }
 
                 return new CultureInfo(cookieCulture);
             }
@@ -121,13 +129,15 @@
         public static bool IsValidCultureInfoName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
+            {
                 return false;
+            }
 
             var validCulture = false;
 
-            foreach (CultureInfo culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
+            foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
             {
-                if (culture.Name == name)
+                if (culture.Name.Equals(name, StringComparison.Ordinal))
                 {
                     validCulture = true;
                     break;

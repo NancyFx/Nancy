@@ -1,5 +1,4 @@
-﻿
-namespace Nancy.Conventions
+﻿namespace Nancy.Conventions
 {
     using System;
     using System.Collections.Generic;

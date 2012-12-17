@@ -9,6 +9,6 @@ namespace Nancy
         /// Create a new NancyContext
         /// </summary>
         /// <returns>NancyContext instance</returns>
-        NancyContext Create();
+        NancyContext Create(Request request);
     }
 }

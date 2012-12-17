@@ -323,7 +323,7 @@
 
         private NancyContext PopulateForm(string cultureName)
         {
-            string bodyContent = "CurrentCulture=" + cultureName;
+            string bodyContent = string.Concat("CurrentCulture=", cultureName);
             var memory = new MemoryStream();
             var writer = new StreamWriter(memory);
             writer.Write(bodyContent);

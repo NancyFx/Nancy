@@ -1,5 +1,3 @@
-
-
 namespace Nancy.Tests.Unit
 {
     using System;
@@ -45,7 +43,7 @@ namespace Nancy.Tests.Unit
             A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
             contextFactory = A.Fake<INancyContextFactory>();
-            A.CallTo(() => contextFactory.Create()).Returns(context);
+            A.CallTo(() => contextFactory.Create(new Request("GET","/","http"))).Returns(context);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null, null));
 
@@ -121,7 +119,7 @@ namespace Nancy.Tests.Unit
             this.engine.HandleRequest(request);
 
             // Then
-            A.CallTo(() => this.contextFactory.Create()).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => this.contextFactory.Create(request)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -139,6 +137,8 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var request = new Request("GET", "/", "http");
+
+            this.context.Request = request;
 
             A.CallTo(() => this.requestDispatcher.Dispatch(this.context)).Invokes(x => this.context.Response = this.response);
 

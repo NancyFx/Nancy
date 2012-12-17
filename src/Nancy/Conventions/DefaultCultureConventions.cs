@@ -1,5 +1,4 @@
-﻿
-namespace Nancy.Conventions
+﻿namespace Nancy.Conventions
 {
     using System;
     using System.Collections.Generic;
@@ -18,7 +17,6 @@ namespace Nancy.Conventions
         public void Initialise(NancyConventions conventions)
         {
             this.ConfigureDefaultConventions(conventions);
-
         }
 
         /// <summary>
