@@ -24,8 +24,6 @@ namespace Nancy.Tests.Unit
         private readonly IRouteInvoker routeInvoker;
         private readonly IRequestDispatcher requestDispatcher;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
-        private readonly ICultureService cultureService;
-
 
         public NancyEngineFixture()
         {
@@ -36,14 +34,13 @@ namespace Nancy.Tests.Unit
             this.statusCodeHandler = A.Fake<IStatusCodeHandler>();
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
             this.diagnosticsConfiguration = new DiagnosticsConfiguration();
-            this.cultureService = A.Fake<ICultureService>();
 
             A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._)).Invokes(x => this.context.Response = new Response());
 
             A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
             contextFactory = A.Fake<INancyContextFactory>();
-            A.CallTo(() => contextFactory.Create(new Request("GET","/","http"))).Returns(context);
+            A.CallTo(() => contextFactory.Create(A<Request>._)).Returns(context);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null, null));
 
@@ -57,7 +54,7 @@ namespace Nancy.Tests.Unit
             });
 
             this.engine =
-                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService)
+                new NancyEngine(this.requestDispatcher, this.contextFactory, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration)
                 {
                     RequestPipelinesFactory = ctx => applicationPipelines
                 };
@@ -68,7 +65,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
+                Record.Exception(() => new NancyEngine(null, A.Fake<INancyContextFactory>(), new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -79,7 +76,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, null, new[] { this.statusCodeHandler }, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -90,7 +87,7 @@ namespace Nancy.Tests.Unit
         {
             // Given, When
             var exception =
-                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration, this.cultureService));
+                Record.Exception(() => new NancyEngine(this.requestDispatcher, A.Fake<INancyContextFactory>(), null, A.Fake<IRequestTracing>(), this.diagnosticsConfiguration));
 
             // Then
             exception.ShouldBeOfType<ArgumentNullException>();
@@ -123,25 +120,13 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void HandleRequest_should_call_culture_service_to_assign_culture()
-        {
-            var request = new Request("GET", "/", "http");
-
-            this.engine.HandleRequest(request);
-
-            A.CallTo(() => this.cultureService.DetermineCurrentCulture(A<NancyContext>.Ignored)).MustHaveHappened();
-        }
-
-        [Fact]
         public void HandleRequest_should_set_correct_response_on_returned_context()
         {
             // Given
             var request = new Request("GET", "/", "http");
 
-            this.context.Request = request;
-
             A.CallTo(() => this.requestDispatcher.Dispatch(this.context)).Invokes(x => this.context.Response = this.response);
-
+            
             // When
             var result = this.engine.HandleRequest(request);
 
@@ -207,6 +192,8 @@ namespace Nancy.Tests.Unit
             engine.RequestPipelinesFactory = (ctx) => pipelines;
 
             var request = new Request("GET", "/", "http");
+
+            this.context.Request = request;
 
             // When
             this.engine.HandleRequest(request);
