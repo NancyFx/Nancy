@@ -89,8 +89,7 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            var context = this.contextFactory.Create();
-            context.Request = request;
+            var context = this.contextFactory.Create(request);
 
             if (preRequest != null)
             {
