@@ -142,6 +142,7 @@
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
+    <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
     <Compile Include="ModelBinding\PropertyBindingException.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
