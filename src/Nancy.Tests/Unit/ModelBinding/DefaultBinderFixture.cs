@@ -1,3 +1,5 @@
+using Xunit.Extensions;
+
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
@@ -529,16 +531,14 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
-        public void Form_properties_should_be_bound_culturally_aware()
+        public void Form_properties_should_be_bound_culturally_aware_if_numeric()
         {
 
             var binder = this.GetBinder();
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
             context.Culture = new CultureInfo("de-DE");
-            context.Request.Form["StringProperty"] = "Test";
             context.Request.Form["DoubleProperty"] = "4,50";
-
 
             // When
             var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
@@ -546,6 +546,28 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.StringProperty.ShouldEqual("Test");
             result.DoubleProperty.ShouldEqual(4.50);
         }
+
+        [Theory]
+        [InlineData("12/25/2012", 12, 25, 2012)]
+        [InlineData("12/12/2012", 12, 12, 2012)]
+        public void Form_properties_should_be_bound_culturally_aware_if_datetime(string date, int month, int day, int year)
+        {
+
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Culture = new CultureInfo("en-US");
+            context.Request.Form["DateProperty"] = date;
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            // Then
+            result.DateProperty.Date.Month.ShouldEqual(month);
+            result.DateProperty.Date.Day.ShouldEqual(day);
+            result.DateProperty.Date.Year.ShouldEqual(year);
+        }
+
+
 
         [Fact]
         public void Should_be_able_to_bind_from_request_and_context_simultaneously()
@@ -706,7 +728,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
-            var converters = typeConverters ?? new ITypeConverter[] { new NumericConverter(), new FallbackConverter(), };
+            var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter(), };
             var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
             var converter = nameConverter ?? this.passthroughNameConverter;
             var defaults = bindingDefaults ?? this.emptyDefaults;
