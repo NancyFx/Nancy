@@ -1,3 +1,5 @@
+using Xunit.Extensions;
+
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
@@ -5,7 +7,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.IO;
     using System.Linq;
     using System.Text;
-
+    using System.Globalization;
     using FakeItEasy;
 
     using Nancy.IO;
@@ -171,20 +173,20 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_use_object_from_deserializer_if_one_returned_and_not_overwrite_when_not_allowed()
         {
             // Given
-            var modelObject = new TestModel {StringPropertyWithDefaultValue = "Hello!"};
+            var modelObject = new TestModel { StringPropertyWithDefaultValue = "Hello!" };
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
-            var binder = this.GetBinder(bodyDeserializers: new[] {deserializer});
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] {"application/xml"});
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = binder.Bind(context, typeof (TestModel), null, BindingConfig.NoOverwrite);
+            var result = binder.Bind(context, typeof(TestModel), null, BindingConfig.NoOverwrite);
 
             // Then
             result.ShouldBeOfType<TestModel>();
-            ((TestModel) result).StringPropertyWithDefaultValue.ShouldEqual("Default Value");
+            ((TestModel)result).StringPropertyWithDefaultValue.ShouldEqual("Default Value");
         }
 
         [Fact]
@@ -290,7 +292,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, new BindingConfig());
 
             // Then
-            validProperties.ShouldEqual(6);
+            validProperties.ShouldEqual(7);
         }
 
         [Fact]
@@ -529,6 +531,45 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Form_properties_should_be_bound_culturally_aware_if_numeric()
+        {
+
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Culture = new CultureInfo("de-DE");
+            context.Request.Form["DoubleProperty"] = "4,50";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.DoubleProperty.ShouldEqual(4.50);
+        }
+
+        [Theory]
+        [InlineData("12/25/2012", 12, 25, 2012)]
+        [InlineData("12/12/2012", 12, 12, 2012)]
+        public void Form_properties_should_be_bound_culturally_aware_if_datetime(string date, int month, int day, int year)
+        {
+
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Culture = new CultureInfo("en-US");
+            context.Request.Form["DateProperty"] = date;
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            // Then
+            result.DateProperty.Date.Month.ShouldEqual(month);
+            result.DateProperty.Date.Day.ShouldEqual(day);
+            result.DateProperty.Date.Year.ShouldEqual(year);
+        }
+
+
+
+        [Fact]
         public void Should_be_able_to_bind_from_request_and_context_simultaneously()
         {
 
@@ -687,7 +728,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
-            var converters = typeConverters ?? new ITypeConverter[] { new FallbackConverter(), };
+            var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter(), };
             var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
             var converter = nameConverter ?? this.passthroughNameConverter;
             var defaults = bindingDefaults ?? this.emptyDefaults;
@@ -744,6 +785,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public DateTime DateProperty { get; set; }
 
             public string StringPropertyWithDefaultValue { get; set; }
+
+            public double DoubleProperty { get; set; }
 
             public int this[int index]
             {

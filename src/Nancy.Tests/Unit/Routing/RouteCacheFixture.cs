@@ -5,6 +5,7 @@
     using Xunit;
     using FakeItEasy;
     using Nancy.Routing;
+    using Nancy.Culture;
 
     public class RouteCacheFixture
     {
@@ -23,7 +24,7 @@
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
             this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider);
+                new RouteCache(this.fakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
         }
 
         [Fact]
@@ -135,7 +136,8 @@
                 new FakeModuleKeyGenerator(),
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
-                descriptionProvider);
+                descriptionProvider,
+                A.Fake<ICultureService>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -164,7 +166,8 @@
                 new FakeModuleKeyGenerator(),
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
-                descriptionProvider);
+                descriptionProvider,
+                A.Fake<ICultureService>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
