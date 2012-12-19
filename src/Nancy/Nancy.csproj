@@ -273,6 +273,7 @@
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
+    <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
@@ -378,6 +379,7 @@
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
+    <Compile Include="ViewEngines\IViewRenderer.cs" />
     <Compile Include="ViewEngines\IViewResolver.cs" />
     <Compile Include="ViewEngines\ResourceViewLocationProvider.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\IViewEngineHost.cs" />
