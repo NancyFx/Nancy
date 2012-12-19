@@ -311,7 +311,9 @@
         [InlineData("en-GB")]
         [InlineData("de-DE")]
         [InlineData("en-US")]
+#if !__MonoCS__
         [InlineData("iu-Latn-CA")]
+#endif
         public void Validation_should_return_true_if_valid_culture_name(string cultureName)
         {
             //Given/When
