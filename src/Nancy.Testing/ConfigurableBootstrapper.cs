@@ -8,6 +8,7 @@ namespace Nancy.Testing
 
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
+    using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
@@ -1492,15 +1493,40 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IFieldNameConverter"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IDiagnostics"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IFieldNameConverter"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IDiagnostics"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator Diagnostics<T>() where T : IDiagnostics
             {
                 this.bootstrapper.configuration.Diagnostics = typeof(T);
                 return this;
             }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="ICultureService "/>.
+            /// </summary>
+            /// <param name="cultureService">The <see cref="ICultureService "/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator CultureService(ICultureService cultureService)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(ICultureService), cultureService));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ICultureService"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ICultureService"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator CultureService<T>() where T : ICultureService 
+            {
+                this.bootstrapper.configuration.Diagnostics = typeof(T);
+                return this;
+            }
+
 
             /// <summary>
             /// Configures the bootstrapper to add an assembly ignore predicate to the list
