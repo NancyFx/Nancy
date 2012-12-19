@@ -214,7 +214,10 @@ namespace Nancy.Bootstrapper
                 yield return privateBinPathDirectory;
             }
 
-            yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
+            {
+                yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            }
         }
     }
 
