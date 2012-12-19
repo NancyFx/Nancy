@@ -205,15 +205,16 @@ namespace Nancy.Bootstrapper
         /// <see cref="http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
         private static IEnumerable<string> GetAssemblyDirectories()
         {
-            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPath != null)
+            var privateBinPathDirectories = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath == null
+                                                ? new string[] { }
+                                                : AppDomain.CurrentDomain.SetupInformation.PrivateBinPath.Split(';');
+
+            foreach (var privateBinPathDirectory in privateBinPathDirectories)
             {
-                yield return AppDomain.CurrentDomain.SetupInformation.PrivateBinPath;
-                if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
-                {
-                    yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
-                }
+                yield return privateBinPathDirectory;
             }
-            else
+
+            if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
             {
                 yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
             }
