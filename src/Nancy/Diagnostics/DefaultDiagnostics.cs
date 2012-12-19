@@ -4,6 +4,7 @@
     using ModelBinding;
     using Nancy.Bootstrapper;
     using Responses.Negotiation;
+    using Nancy.Culture;
 
     /// <summary>
     /// Wires up the diagnostics support at application startup.
@@ -18,8 +19,9 @@
         private readonly NancyInternalConfiguration configuration;
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IEnumerable<IResponseProcessor> responseProcessors;
+        private readonly ICultureService cultureService;
 
-        public DefaultDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors)
+        public DefaultDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, ICultureService cultureService)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -29,6 +31,7 @@
             this.configuration = configuration;
             this.modelBinderLocator = modelBinderLocator;
             this.responseProcessors = responseProcessors;
+            this.cultureService = cultureService;
         }
 
         /// <summary>
@@ -37,7 +40,7 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration, this.modelBinderLocator, this.responseProcessors);
+            DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.serializers, this.requestTracing, this.configuration, this.modelBinderLocator, this.responseProcessors, this.cultureService);
         }
     }
 }

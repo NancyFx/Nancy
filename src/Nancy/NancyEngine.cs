@@ -10,6 +10,7 @@
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
+    using Nancy.Culture;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -86,8 +87,7 @@
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
             }
 
-            var context = this.contextFactory.Create();
-            context.Request = request;
+            var context = this.contextFactory.Create(request);
 
             if (preRequest != null)
             {
@@ -214,12 +214,12 @@
             {
                 InvokePreRequestHook(context, pipelines.BeforeRequest);
 
-                if (context.Response == null) 
+                if (context.Response == null)
                 {
                     this.dispatcher.Dispatch(context);
                 }
 
-                if (pipelines.AfterRequest != null) 
+                if (pipelines.AfterRequest != null)
                 {
                     pipelines.AfterRequest.Invoke(context);
                 }
@@ -248,7 +248,7 @@
             try
             {
                 if (pipeline == null)
-                { 
+                {
                     throw new RequestExecutionException(ex);
                 }
 

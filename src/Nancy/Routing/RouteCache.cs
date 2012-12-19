@@ -4,6 +4,7 @@
     using System.Linq;
     using Nancy.Bootstrapper;
     using System;
+    using Nancy.Culture;
 
     /// <summary>
     /// Caches information about all the available routes that was discovered by the bootstrapper.
@@ -21,13 +22,15 @@
         /// <param name="moduleKeyGenerator">The <see cref="IModuleKeyGenerator"/> used to generate module keys.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider)
+        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
         {
             this.moduleKeyGenerator = moduleKeyGenerator;
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
 
-            using (var context = contextFactory.Create())
+            var request = new Request("GET", "/", "http");
+
+            using (var context = contextFactory.Create(request))
             {
                 this.BuildCache(moduleCatalog.GetAllModules(context));
             }
