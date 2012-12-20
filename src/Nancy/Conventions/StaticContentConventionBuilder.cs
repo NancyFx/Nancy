@@ -6,6 +6,7 @@ namespace Nancy.Conventions
     using System.Linq;
     using System.Security;
     using System.Text.RegularExpressions;
+    using Helpers;
     using Responses;
 
     /// <summary>
@@ -33,7 +34,7 @@ namespace Nancy.Conventions
             return (ctx, root) =>{
 
                 var path =
-                    ctx.Request.Path;
+                    HttpUtility.UrlDecode(ctx.Request.Path);
 
                 var fileName = 
                     Path.GetFileName(path);
