@@ -94,6 +94,20 @@ namespace Nancy.ModelBinding
         }
 
         /// <summary>
+        /// Bind the incoming request to an existing instance and validate
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="module">Current module</param>
+        /// <param name="instance">The class instance to bind properties to</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        public static TModel BindToAndValidate<TModel>(this NancyModule module, TModel instance, params string[] blacklistedProperties)
+        {
+            var model = module.BindTo<TModel>(instance, blacklistedProperties);
+            module.Validate(model);
+            return model;
+        }
+
+        /// <summary>
         /// Bind the incoming request to an existing instance
         /// </summary>
         /// <typeparam name="TModel">Model type</typeparam>
@@ -107,6 +121,21 @@ namespace Nancy.ModelBinding
                 new DynamicModelBinderAdapter(module.ModelBinderLocator, module.Context, instance, configuration, blacklistedProperties);
 
             return adapter;
+        }
+
+        /// <summary>
+        /// Bind the incoming request to an existing instance and validate
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="module">Current module</param>
+        /// <param name="instance">The class instance to bind properties to</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
+        /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        public static TModel BindToAndValidate<TModel>(this NancyModule module, TModel instance, BindingConfig configuration, params string[] blacklistedProperties)
+        {
+            var model = module.BindTo<TModel>(instance, configuration, blacklistedProperties);
+            module.Validate(model);
+            return model;
         }
     }
 }
