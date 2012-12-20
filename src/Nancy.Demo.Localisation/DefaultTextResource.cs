@@ -1,4 +1,4 @@
-namespace Nancy.Demo.Localisation
+namespace Nancy.Demo.Localization
 {
 
     using Nancy.ViewEngines.Razor;

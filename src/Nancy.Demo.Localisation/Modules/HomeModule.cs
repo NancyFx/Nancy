@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading;
 using System.Web;
 
-namespace Nancy.Demo.Localisation
+namespace Nancy.Demo.Localization
 {
     public class HomeModule : NancyModule
     {
