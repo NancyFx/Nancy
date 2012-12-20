@@ -211,7 +211,10 @@ namespace Nancy.Bootstrapper
 
             foreach (var privateBinPathDirectory in privateBinPathDirectories)
             {
-                yield return privateBinPathDirectory;
+                if (!string.IsNullOrWhiteSpace(privateBinPathDirectory))
+                {
+                    yield return privateBinPathDirectory;
+                }
             }
 
             if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
