@@ -4,7 +4,7 @@ namespace Nancy.ViewEngines.Razor
 {
     using System.Globalization;
 
-    public interface ILocationlisation : IEnumerable<KeyValuePair<string, string>>
+    public interface ITextResource : IEnumerable<KeyValuePair<string, IDictionary<string, string>>>
     {
         string this[string key] { get; set; }
         CultureInfo CurrentCulture { get; set; }

@@ -22,7 +22,7 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
-        private readonly ILocationlisation locationlisation;
+        private readonly ITextResource textResource;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
 
@@ -40,7 +40,7 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration, ILocationlisation locationlisation)
+        public RazorViewEngine(IRazorConfiguration configuration, ITextResource textResource)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -49,7 +49,7 @@
             };
 
             this.razorConfiguration = configuration;
-            this.locationlisation = locationlisation;
+            this.textResource = textResource;
         }
 
         /// <summary>
@@ -347,7 +347,7 @@
 
             var view = viewFactory.Invoke();
 
-            view.Localisation = this.locationlisation;
+            view.TextResource = this.textResource;
             
             view.Code = string.Empty;
 

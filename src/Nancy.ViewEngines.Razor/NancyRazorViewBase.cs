@@ -16,6 +16,7 @@
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
+        private dynamic text;
 
         /// <summary>
         /// Gets the body.
@@ -78,7 +79,19 @@
         /// </summary>
         public abstract void Execute();
 
-        public ILocationlisation Localisation { get; set; }
+        
+        public dynamic Text
+        {
+            get
+            {
+                if (text == null)
+                    text = new TextThingy(this.TextResource);
+
+                return text;
+            }
+        }
+
+        public ITextResource TextResource { get; set; }
 
         /// <summary>
         /// Initializes the specified engine.
@@ -88,7 +101,7 @@
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
-            Localisation.CurrentCulture = renderContext.Context.Culture;
+            this.TextResource.CurrentCulture = renderContext.Context.Culture;
         }
 
         /// <summary>
@@ -318,7 +331,7 @@
             this.Model = (TModel)model;
             this.Url = new UrlHelpers<TModel>(engine, renderContext);
             this.ViewBag = renderContext.Context.ViewBag;
-            this.Localisation.CurrentCulture = renderContext.Context.Culture;
+            this.TextResource.CurrentCulture = renderContext.Context.Culture;
         }
     }
 }

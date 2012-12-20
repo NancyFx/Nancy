@@ -109,12 +109,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
-    <Compile Include="DefaultLocationlisation.cs" />
+    <Compile Include="DefaultTextResource.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlString.cs" />
-    <Compile Include="ILocationlisation.cs" />
+    <Compile Include="ITextResource.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="ModelFinder.cs" />
@@ -128,6 +128,7 @@
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
+    <Compile Include="TextThingy.cs" />
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeGenerator.cs" />

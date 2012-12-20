@@ -18,7 +18,7 @@ namespace Nancy.ViewEngines.Razor
                 return new[]
                            {
                                new TypeRegistration(typeof(IRazorConfiguration), typeof(DefaultRazorConfiguration)), 
-                               new TypeRegistration(typeof(ILocationlisation), typeof(DefaultLocationlisation))
+                               new TypeRegistration(typeof(ITextResource), typeof(DefaultTextResource))
                            };
             }
         }
