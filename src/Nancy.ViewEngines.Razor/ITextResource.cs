@@ -6,7 +6,6 @@ namespace Nancy.ViewEngines.Razor
 
     public interface ITextResource : IEnumerable<KeyValuePair<string, IDictionary<string, string>>>
     {
-        string this[string key] { get; set; }
-        CultureInfo CurrentCulture { get; set; }
+        string this[string key, string culture] { get; set; }
     }
 }

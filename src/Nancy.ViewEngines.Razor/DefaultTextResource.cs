@@ -6,6 +6,7 @@ namespace Nancy.ViewEngines.Razor
 
     public class DefaultTextResource : ITextResource
     {
+        private readonly IRenderContext renderContext;
         private readonly IDictionary<string, IDictionary<string, string>> dictionary;
 
         public DefaultTextResource()
@@ -24,7 +25,7 @@ namespace Nancy.ViewEngines.Razor
             return GetEnumerator();
         }
 
-        public string this[string key]
+        public string this[string key, string culture]
         {
             get
             {
@@ -34,12 +35,11 @@ namespace Nancy.ViewEngines.Razor
 
                 }
 
-                return dictionary[key].ContainsKey(CurrentCulture.Name) ? dictionary[key][CurrentCulture.Name] : null;
+                return dictionary[key].ContainsKey(culture) ? dictionary[key][culture] : null;
             }
 
-            set { dictionary[key][CurrentCulture.Name] = value; }
+            set { dictionary[key][culture] = value; }
         }
 
-        public CultureInfo CurrentCulture { get; set; }
     }
 }
