@@ -46,6 +46,7 @@ namespace Nancy.ModelBinding
         /// <param name="module">Current module</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
         /// <returns>Bound model instance</returns>
+        /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
         public static TModel BindAndValidate<TModel>(this NancyModule module, params string[] blacklistedProperties)
         {
             var model = module.Bind<TModel>(blacklistedProperties);
@@ -74,6 +75,7 @@ namespace Nancy.ModelBinding
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
         /// <returns>Bound model instance</returns>
+        /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
         public static TModel BindAndValidate<TModel>(this NancyModule module, BindingConfig configuration, params string[] blacklistedProperties)
         {
             var model = module.Bind<TModel>(configuration, blacklistedProperties);
@@ -100,6 +102,7 @@ namespace Nancy.ModelBinding
         /// <param name="module">Current module</param>
         /// <param name="instance">The class instance to bind properties to</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
         public static TModel BindToAndValidate<TModel>(this NancyModule module, TModel instance, params string[] blacklistedProperties)
         {
             var model = module.BindTo<TModel>(instance, blacklistedProperties);
@@ -131,6 +134,7 @@ namespace Nancy.ModelBinding
         /// <param name="instance">The class instance to bind properties to</param>
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
+        /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
         public static TModel BindToAndValidate<TModel>(this NancyModule module, TModel instance, BindingConfig configuration, params string[] blacklistedProperties)
         {
             var model = module.BindTo<TModel>(instance, configuration, blacklistedProperties);
