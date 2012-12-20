@@ -718,6 +718,295 @@
 
             Assert.Equal("<html><body><form>CSRF</form><body></html>", result);
         }
+
+        [Fact]
+        public void Should_replace_primitive_context_with_value()
+        {
+            // Given
+            const string input = @"<html><head></head><body>Hello there @Context</body></html>";
+
+            ((FakeViewEngineHost) this.fakeHost).Context = "Frank";
+
+            // When
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hello there Frank</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replace_primitive_context_with_value_when_followed_by_closing_tag()
+        {
+            // Given
+            const string input = @"<html><head></head><body>Hello there @Context;</body></html>";
+            ((FakeViewEngineHost)this.fakeHost).Context = "Frank";
+
+            // When
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hello there Frank</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replaces_valid_context_property_when_followed_by_closing_tag()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Name;</body></html>";
+            dynamic context = new ExpandoObject();
+            context.Name = "Frank";
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there Frank</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replace_multiple_context_properties_with_the_same_name()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Name;, nice to see you @Context.Name;</body></html>";
+            dynamic context = new ExpandoObject();
+            context.Name = "Frank";
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there Frank, nice to see you Frank</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replace_invalid_context_properties_with_error_string()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Wrong;</body></html>";
+            dynamic context = new ExpandoObject();
+            context.Name = "Frank";
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there [ERR!]</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_not_replace_context_properties_if_case_is_incorrect()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.name;</body></html>";
+            dynamic context = new ExpandoObject();
+            context.Name = "Franke";
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there [ERR!]</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_replace_multiple_context_properties_from_dictionary()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Name; - welcome to @Context.SiteName;</body></html>";
+            dynamic context = new ExpandoObject();
+            context.Name = "Frank";
+            context.SiteName = "Cool Site!";
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there Frank - welcome to Cool Site!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_context_statement_to_be_followed_by_a_newline()
+        {
+            const string input = "<html><head></head><body>Hello there @Context.Name;\n</body></html>";
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal("<html><head></head><body>Hello there Frank\n</body></html>", output);
+        }
+
+        [Fact]
+        public void Context_substitutions_work_with_standard_anonymous_type_objects()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Name; - welcome to @Context.SiteName;</body></html>";
+            var context = new { Name = "Bob", SiteName = "Cool Site!" };
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there Bob - welcome to Cool Site!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_sub_properties_using_context_statement()
+        {
+            const string input = @"<h1>Hello @Context.User.Username;</h1>";
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<h1>Hello Frank123</h1>", output);
+        }
+
+        [Fact]
+        public void Should_allow_Context_substitutions_wihout_semi_colon()
+        {
+            const string input = @"<html><head></head><body>Hello there @Context.Name</body></html>";
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello there Frank</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_expand_partial_content_with_context()
+        {
+            const string input = @"<html><head></head><body>@Partial['testing'];</body></html>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.GetTemplateCallback = (s, m) => "Hello @Context.Name";
+            var viewEngine = new SuperSimpleViewEngine();
+
+            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello Frank</body></html>", result);
+        }
+
+        [Fact]
+        public void Should_also_expand_master_page_with_same_context()
+        {
+            const string input = "@Master['myMaster']\r\n@Section['Header'];\r\nHeader\r\n@EndSection\r\n@Section['Footer']\r\nFooter\r\n@EndSection";
+            const string master = @"Hello @Context.Name!<div id='header'>@Section['Header'];</div><div id='footer'>@Section['Footer'];</div>";
+            var fakeViewEngineHost = new FakeViewEngineHost();
+            fakeViewEngineHost.GetTemplateCallback = (s, m) => master;
+            var viewEngine = new SuperSimpleViewEngine();
+
+            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+
+            Assert.Equal("Hello Frank!<div id='header'>\r\nHeader\r\n</div><div id='footer'>\r\nFooter\r\n</div>", result);
+        }
+
+
+        [Fact]
+        public void Should_stuffrender_block_when_ifnot_statement_returns_false()
+        {
+            const string input = @"<html><head></head><body>@IfNot.Context.HasUsers;<p>No users found!</p>@EndIf;</body></html>";
+            
+            var model = new FakeModel("Nancy", new List<string>() { "Nancy "});
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body><p>No users found!</p></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_ifnot_and_endif_and_context_model_source()
+        {
+            const string input = @"<html><head></head><body>@IfNot.Context.HasUsers;No users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>No users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_ifnot_and_endif_and_model_model_source()
+        {
+            const string input = @"<html><head></head><body>@IfNot.Model.HasUsers;No users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>());
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>No users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_ifnot_and_endif_and_implicit_model_model_source()
+        {
+            const string input = @"<html><head></head><body>@IfNot.HasUsers;No users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>());
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>No users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_if_and_endif_and_context_model_source()
+        {
+            const string input = @"<html><head></head><body>@If.Context.HasUsers;Users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>());
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_if_and_endif_and_model_model_source()
+        {
+            const string input = @"<html><head></head><body>@If.Model.HasUsers;Users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_allow_if_and_endif_and_implicit_model_model_source()
+        {
+            const string input = @"<html><head></head><body>@If.HasUsers;Users found!@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Users found!</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_support_each_block_with_model_as_model_source()
+        {
+            const string input = @"<html><head></head><body><ul>@Each.Model.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() );
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_support_each_block_with_implicit_model_source()
+        {
+            const string input = @"<html><head></head><body><ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+        }
     }
 
     public class User

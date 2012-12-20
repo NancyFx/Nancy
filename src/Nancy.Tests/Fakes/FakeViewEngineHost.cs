@@ -9,6 +9,11 @@ namespace Nancy.Tests.Fakes
         public Func<string, object, string> GetTemplateCallback { get; set; }
         public Func<string, string> ExpandPathCallBack { get; set; }
 
+        public FakeViewEngineHost()
+        {
+            this.Context = new FakeContext {Name = "Frank" };
+        }
+
         /// <summary>
         /// Html "safe" encode a string
         /// </summary>
@@ -21,6 +26,29 @@ namespace Nancy.Tests.Fakes
                 Replace(">", "&gt;").
                 Replace("\"", "&quot;");
         }
+
+        private class FakeContext
+        {
+            public FakeContext()
+            {
+                this.User = new FakeUser { Username = "Frank123" };
+            }
+
+            public string Name { get; set; }
+
+            public FakeUser User { get; set; }
+
+            public class FakeUser
+            {
+                public string Username { get; set; }
+            }
+        }
+
+        /// <summary>
+        /// Context object of the host application.
+        /// </summary>
+        /// <value>An instance of the context object from the host.</value>
+        public object Context { get; set; }
 
         /// <summary>
         /// Get the contenst of a template
