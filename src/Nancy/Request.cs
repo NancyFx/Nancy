@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Specialized;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
@@ -219,22 +220,27 @@ namespace Nancy
             var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
             var multipart = new HttpMultipart(this.Body, boundary);
 
+            var formValues =
+                new NameValueCollection();
+
             foreach (var httpMultipartBoundary in multipart.GetBoundaries())
             {
                 if (string.IsNullOrEmpty(httpMultipartBoundary.Filename))
                 {
-                    var reader = new StreamReader(httpMultipartBoundary.Value);
-                    this.form[httpMultipartBoundary.Name] = reader.ReadToEnd();
+                    var reader = 
+                        new StreamReader(httpMultipartBoundary.Value);
+                    formValues.Add(httpMultipartBoundary.Name, reader.ReadToEnd());
+
                 }
                 else
                 {
-                    this.files.Add(new HttpFile(
-                                       httpMultipartBoundary.ContentType,
-                                       httpMultipartBoundary.Filename,
-                                       httpMultipartBoundary.Value,
-									   httpMultipartBoundary.Name //include the form field that posted this file
-                                       ));
+                    this.files.Add(new HttpFile(httpMultipartBoundary));
                 }
+            }
+
+            foreach (var key in formValues.AllKeys.Where(key => key != null))
+            {
+                this.form[key] = formValues[key];
             }
 
             this.Body.Position = 0;

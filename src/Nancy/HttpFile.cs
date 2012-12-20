@@ -7,6 +7,24 @@
     /// </summary>
     public class HttpFile
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpFile"/> class,
+        /// using the provided <paramref name="boundary"/>.
+        /// </summary>
+        /// <param name="boundary">The <see cref="HttpMultipartBoundary"/> that contains the file information.</param>
+        public HttpFile(HttpMultipartBoundary boundary)
+            : this(boundary.ContentType, boundary.Filename, boundary.Value, boundary.Name)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="HttpFile"/> class,
+        /// using the provided values
+        /// </summary>
+        /// <paramref name="contentType">The content type of the file.</paramref>
+        /// <paramref name="name">The name of the file.</paramref>
+        /// <paramref name="value">The content of the file.</paramref>
+        /// <paramref name="key">The name of the field that uploaded the file.</paramref>
         public HttpFile(string contentType, string name, Stream value, string key)
         {
             this.ContentType = contentType;
