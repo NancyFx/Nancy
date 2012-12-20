@@ -347,7 +347,7 @@
 
             var view = viewFactory.Invoke();
 
-            view.Text = new TextResourceFinder(this.textResource, renderContext.Context.Culture.Name);
+            view.Text = new TextResourceFinder(this.textResource, renderContext.Context);
             
             view.Code = string.Empty;
 

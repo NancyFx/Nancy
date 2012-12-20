@@ -25,7 +25,7 @@ namespace Nancy.ViewEngines.Razor
             return GetEnumerator();
         }
 
-        public string this[string key, string culture]
+        public string this[string key, NancyContext context]
         {
             get
             {
@@ -35,10 +35,10 @@ namespace Nancy.ViewEngines.Razor
 
                 }
 
-                return dictionary[key].ContainsKey(culture) ? dictionary[key][culture] : null;
+                return dictionary[key].ContainsKey(context.Culture.Name) ? dictionary[key][context.Culture.Name] : null;
             }
 
-            set { dictionary[key][culture] = value; }
+            set { dictionary[key][context.Culture.Name] = value; }
         }
 
     }

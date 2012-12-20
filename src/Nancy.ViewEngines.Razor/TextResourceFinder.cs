@@ -8,20 +8,20 @@ using System.Text;
 
 namespace Nancy.ViewEngines.Razor
 {
-    public class TextResourceFinder : DynamicObject, ITextResourceFinder
+    public class TextResourceFinder : DynamicObject
     {
         private readonly ITextResource textResource;
-        private readonly string culture;
+        private readonly NancyContext context;
 
-        public TextResourceFinder(ITextResource textResource, string culture)
+        public TextResourceFinder(ITextResource textResource, NancyContext context)
         {
             this.textResource = textResource;
-            this.culture = culture;
+            this.context = context;
         }
 
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = this.textResource[binder.Name, this.culture];
+            result = this.textResource[binder.Name, this.context];
             return true;
         }
     }
