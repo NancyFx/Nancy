@@ -128,7 +128,7 @@
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
-    <Compile Include="TextThingy.cs" />
+    <Compile Include="TextResourceFinder.cs" />
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeGenerator.cs" />

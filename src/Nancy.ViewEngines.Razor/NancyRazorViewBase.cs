@@ -16,7 +16,6 @@
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
-        private dynamic text;
 
         /// <summary>
         /// Gets the body.
@@ -79,17 +78,10 @@
         /// </summary>
         public abstract void Execute();
 
-        
-        public dynamic Text
-        {
-            get
-            {
-                if (text == null)
-                    text = new TextThingy(this.TextResource);
-
-                return text;
-            }
-        }
+        /// <summary>
+        /// Used to retun text resources
+        /// </summary>
+        public dynamic Text { get; set; }
 
         public ITextResource TextResource { get; set; }
 
@@ -101,7 +93,6 @@
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
-            this.TextResource.CurrentCulture = renderContext.Context.Culture;
         }
 
         /// <summary>
@@ -331,7 +322,6 @@
             this.Model = (TModel)model;
             this.Url = new UrlHelpers<TModel>(engine, renderContext);
             this.ViewBag = renderContext.Context.ViewBag;
-            this.TextResource.CurrentCulture = renderContext.Context.Culture;
         }
     }
 }
