@@ -8,6 +8,9 @@
     using System.Linq;
     using System.Text;
 
+    /// <summary>
+    /// Returns text from an implemented ITextResource
+    /// </summary>
     public class TextResourceFinder : DynamicObject
     {
         private readonly ITextResource textResource;
