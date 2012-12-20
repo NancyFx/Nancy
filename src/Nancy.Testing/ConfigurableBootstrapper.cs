@@ -160,7 +160,7 @@ namespace Nancy.Testing
 
                 var assemblyUnderTest = AppDomain.CurrentDomain
                     .GetAssemblies()
-                    .SingleOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+                    .FirstOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
 
                 if (assemblyUnderTest != null)
                 {
