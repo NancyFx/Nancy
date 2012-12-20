@@ -83,8 +83,6 @@
         /// </summary>
         public dynamic Text { get; set; }
 
-        public ITextResource TextResource { get; set; }
-
         /// <summary>
         /// Initializes the specified engine.
         /// </summary>
