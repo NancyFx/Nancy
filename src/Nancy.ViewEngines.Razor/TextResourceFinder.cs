@@ -22,6 +22,12 @@
             this.context = context;
         }
 
+        /// <summary>
+        /// Finds text resource
+        /// </summary>
+        /// <param name="binder">GetMemberBinder with dynamic text key</param>
+        /// <param name="result">Text item</param>
+        /// <returns></returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
             result = this.textResource[binder.Name, this.context];
