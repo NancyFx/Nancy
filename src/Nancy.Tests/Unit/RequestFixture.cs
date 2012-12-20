@@ -508,6 +508,30 @@ namespace Nancy.Tests.Unit
             memory.Position.ShouldEqual(0L);
         }
 
+        [Fact]
+        public void Should_preserve_all_values_when_multiple_are_posted_using_same_name_after_parsing_multipart_encoded_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(
+                    new KeyValuePair<string, string>("age", "32"),
+                    new KeyValuePair<string, string>("age", "42"),
+                    new KeyValuePair<string, string>("age", "52")
+                ));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            ((string)request.Form.age).ShouldEqual("32,42,52");
+        }
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());
@@ -518,11 +542,11 @@ namespace Nancy.Tests.Unit
             return RequestStream.FromStream(stream);
         }
 
-        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        private static byte[] BuildMultipartFormValues(params KeyValuePair<string, string>[] values)
         {
             var boundaryBuilder = new StringBuilder();
 
-            foreach (var key in formValues.Keys)
+            foreach (var pair in values)
             {
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
@@ -530,12 +554,12 @@ namespace Nancy.Tests.Unit
                 boundaryBuilder.Append("----NancyFormBoundary");
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", pair.Key);
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
-                boundaryBuilder.Append(formValues[key]);
+                boundaryBuilder.Append(pair.Value);
             }
 
             boundaryBuilder.Append('\r');
@@ -546,6 +570,14 @@ namespace Nancy.Tests.Unit
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
 
             return bytes;
+        }
+
+        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        {
+            var pairs =
+                formValues.Keys.Select(key => new KeyValuePair<string, string>(key, formValues[key]));
+
+            return BuildMultipartFormValues(pairs.ToArray());
         }
 
         private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string, string>> formValues)
