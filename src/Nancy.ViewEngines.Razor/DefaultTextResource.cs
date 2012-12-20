@@ -1,12 +1,10 @@
 namespace Nancy.ViewEngines.Razor
 {
-    using System.Globalization;
     using System.Collections;
     using System.Collections.Generic;
 
     public class DefaultTextResource : ITextResource
     {
-        private readonly IRenderContext renderContext;
         private readonly IDictionary<string, IDictionary<string, string>> dictionary;
 
         public DefaultTextResource()

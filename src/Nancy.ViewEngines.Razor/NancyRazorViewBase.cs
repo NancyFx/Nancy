@@ -6,7 +6,6 @@
     using System.IO;
     using System.Text;
     using Nancy.Helpers;
-    using Nancy.Culture;
 
     /// <summary>
     /// Base class for nancy razor views.

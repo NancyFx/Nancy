@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Dynamic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines.Razor
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Globalization;
+    using System.Linq;
+    using System.Text;
+
     public class TextResourceFinder : DynamicObject
     {
         private readonly ITextResource textResource;

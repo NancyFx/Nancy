@@ -9,10 +9,6 @@
     using System.Reflection;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
-    using System.Collections;
-    using System.Resources;
-    using Nancy.Culture;
-
     using Nancy.Bootstrapper;
     using Nancy.Responses;
 

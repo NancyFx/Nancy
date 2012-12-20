@@ -1,8 +1,6 @@
-using System.Collections.Generic;
-
 namespace Nancy.ViewEngines.Razor
 {
-    using System.Globalization;
+    using System.Collections.Generic;
 
     public interface ITextResource : IEnumerable<KeyValuePair<string, IDictionary<string, string>>>
     {
