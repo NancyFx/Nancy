@@ -1,5 +1,7 @@
-namespace Nancy.ViewEngines.Razor
+namespace Nancy.Demo.Localisation
 {
+
+    using Nancy.ViewEngines.Razor;
     using System.Collections;
     using System.Collections.Generic;
 

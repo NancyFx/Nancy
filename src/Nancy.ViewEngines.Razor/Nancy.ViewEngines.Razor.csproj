@@ -109,7 +109,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
-    <Compile Include="DefaultTextResource.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
