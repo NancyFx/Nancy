@@ -109,10 +109,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
+    <Compile Include="DefaultLocationlisation.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlString.cs" />
+    <Compile Include="ILocationlisation.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="ModelFinder.cs" />

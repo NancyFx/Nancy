@@ -9,6 +9,9 @@
     using System.Reflection;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
+    using System.Collections;
+    using System.Resources;
+    using Nancy.Culture;
 
     using Nancy.Bootstrapper;
     using Nancy.Responses;
@@ -19,6 +22,7 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
+        private readonly ILocationlisation locationlisation;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
 
@@ -36,7 +40,7 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration)
+        public RazorViewEngine(IRazorConfiguration configuration, ILocationlisation locationlisation)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -45,6 +49,7 @@
             };
 
             this.razorConfiguration = configuration;
+            this.locationlisation = locationlisation;
         }
 
         /// <summary>
@@ -131,7 +136,7 @@
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
 
-            var razorResult = engine.GenerateCode(reader, sourceFileName:"placeholder");
+            var razorResult = engine.GenerateCode(reader, sourceFileName: "placeholder");
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
@@ -227,10 +232,10 @@
         private static string BuildErrorMessages(IEnumerable<CompilerError> errors)
         {
             return errors.Select(error => String.Format(
-                "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)", 
-                error.ErrorNumber, 
-                error.Line, 
-                error.Column, 
+                "[{0}] Line: {1} Column: {2} - {3} (<a class='LineLink' href='#{1}'>show</a>)",
+                error.ErrorNumber,
+                error.Line,
+                error.Column,
                 error.ErrorText)).Aggregate((s1, s2) => s1 + "<br/>" + s2);
         }
 
@@ -342,6 +347,8 @@
 
             var view = viewFactory.Invoke();
 
+            view.Localisation = this.locationlisation;
+            
             view.Code = string.Empty;
 
             return view;
@@ -349,9 +356,9 @@
 
         private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = (model == null) ? null :  model.GetType();
+            var modelType = (model == null) ? null : model.GetType();
 
-            var view = 
+            var view =
                 this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
 
             view.Initialize(this, renderContext, model);

@@ -13,7 +13,14 @@ namespace Nancy.ViewEngines.Razor
         /// </summary>
         public IEnumerable<TypeRegistration> TypeRegistrations
         {
-            get { return new[] { new TypeRegistration(typeof(IRazorConfiguration), typeof(DefaultRazorConfiguration)) }; }
+            get
+            {
+                return new[]
+                           {
+                               new TypeRegistration(typeof(IRazorConfiguration), typeof(DefaultRazorConfiguration)), 
+                               new TypeRegistration(typeof(ILocationlisation), typeof(DefaultLocationlisation))
+                           };
+            }
         }
 
         /// <summary>

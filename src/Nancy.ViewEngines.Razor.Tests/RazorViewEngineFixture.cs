@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using Nancy.Culture;
 
 namespace Nancy.ViewEngines.Razor.Tests
 {
@@ -19,11 +20,13 @@ namespace Nancy.ViewEngines.Razor.Tests
         private readonly IRazorConfiguration configuration;
         private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRootPathProvider rootPathProvider;
+        private readonly ILocationlisation locationlisation;
 
         public RazorViewEngineFixture()
         {
             this.configuration = A.Fake<IRazorConfiguration>();
-            this.engine = new RazorViewEngine(this.configuration);
+            this.locationlisation = A.Fake<ILocationlisation>();
+            this.engine = new RazorViewEngine(this.configuration, this.locationlisation);
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<NancyRazorViewBase>>>.Ignored))
@@ -381,7 +384,8 @@ namespace Nancy.ViewEngines.Razor.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_render_view_with_layout_and_optional_section_with_default_to_stream() { 
+        public void Should_be_able_to_render_view_with_layout_and_optional_section_with_default_to_stream()
+        {
             //Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionWithDefaults");
             var stream = new MemoryStream();
@@ -398,7 +402,8 @@ namespace Nancy.ViewEngines.Razor.Tests
         }
 
         [Fact]
-        public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream() {
+        public void Should_be_able_to_render_view_with_layout_and_optional_section_overriding_the_default_to_stream()
+        {
             //Given
             var location = FindView("ViewThatUsesLayoutAndOptionalSectionOverridingDefaults");
             var stream = new MemoryStream();
@@ -413,7 +418,7 @@ namespace Nancy.ViewEngines.Razor.Tests
                                         "<div>OptionalSectionOverride</div>",
                                         "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
         }
-        
+
         [Fact]
         public void Should_use_custom_view_base_with_csharp_views()
         {
@@ -479,10 +484,10 @@ namespace Nancy.ViewEngines.Razor.Tests
                 string.Empty,
                 "cshtml",
                 () =>
-                    {
-                        Thread.Sleep(500);
-                        return new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
-                    });
+                {
+                    Thread.Sleep(500);
+                    return new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>");
+                });
 
             var wait = new ManualResetEvent(false);
 
@@ -497,7 +502,7 @@ namespace Nancy.ViewEngines.Razor.Tests
                 });
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
-            
+
             wait.WaitOne(1000).ShouldBeTrue();
 
             // Then
