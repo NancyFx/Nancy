@@ -61,7 +61,7 @@ namespace Nancy.Demo.Localization.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Hello.
+        ///   Looks up a localized string similar to Hello Sir.
         /// </summary>
         public static string Greeting {
             get {
