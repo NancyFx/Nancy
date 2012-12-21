@@ -34,5 +34,20 @@
 
             return source.IsGenericType && source.GetGenericTypeDefinition() == enumerableType;
         }
+
+        /// <summary>
+        /// Determines if a type is numeric.  Nullable numeric types are considered numeric.
+        /// </summary>
+        /// <remarks>
+        /// Boolean is not considered numeric.
+        /// </remarks>
+        public static bool IsNumeric(this Type source)
+        {
+            if (source == null)
+            {
+                return false;
+            }
+            return source.IsValueType && !source.IsEnum && (source.IsPrimitive || source == typeof(decimal));
+        }
     }
 }
