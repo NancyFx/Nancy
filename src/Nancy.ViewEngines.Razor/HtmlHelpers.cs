@@ -95,6 +95,9 @@
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
         }
 
+        /// <summary>
+        /// Returns current culture name
+        /// </summary>
         public string CurrentLocale
         {
             get { return this.RenderContext.Context.Culture.Name; }

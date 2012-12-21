@@ -90,6 +90,7 @@ namespace Nancy.Bootstrapper
                     RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
+                    DefaultTextResource = typeof(DefaultTextResource),
                 };
             }
         }
@@ -161,6 +162,8 @@ namespace Nancy.Bootstrapper
         public Type RouteDescriptionProvider { get; set; }
 
         public Type CultureService { get; set; }
+
+        public Type DefaultTextResource { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -256,6 +259,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
+                new TypeRegistration(typeof(ITextResource), this.DefaultTextResource), 
             };
         }
 
