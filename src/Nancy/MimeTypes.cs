@@ -220,6 +220,7 @@ namespace Nancy
 			mimeTypes.Add ("la", "audio/nspaudio");
 			mimeTypes.Add ("lam", "audio/x-liveaudio");
 			mimeTypes.Add ("latex", "application/x-latex");
+            mimeTypes.Add ("less", "text/css");
 			mimeTypes.Add ("list", "text/plain");
 			mimeTypes.Add ("lma", "audio/nspaudio");
 			mimeTypes.Add ("log", "text/plain");
