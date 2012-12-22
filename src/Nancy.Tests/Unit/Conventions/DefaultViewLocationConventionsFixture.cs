@@ -122,7 +122,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[7];
+            var convention = this.conventions.ViewLocationConventions[15];
 
             // When
             var result = convention.Invoke(
@@ -139,7 +139,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[6];
+            var convention = this.conventions.ViewLocationConventions[13];
 
             // When
             var result = convention.Invoke(
@@ -156,7 +156,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[2];
+            var convention = this.conventions.ViewLocationConventions[5];
 
             // When
             var result = convention.Invoke(
@@ -173,7 +173,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[2];
+            var convention = this.conventions.ViewLocationConventions[5];
 
             // When
             var result = convention.Invoke(
@@ -224,7 +224,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[3];
+            var convention = this.conventions.ViewLocationConventions[7];
 
             // When
             var result = convention.Invoke(
@@ -275,7 +275,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[3];
+            var convention = this.conventions.ViewLocationConventions[7];
 
             // When
             var result = convention.Invoke(
@@ -292,7 +292,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[4];
+            var convention = this.conventions.ViewLocationConventions[9];
 
             // When
             var result = convention.Invoke(
@@ -309,7 +309,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[5];
+            var convention = this.conventions.ViewLocationConventions[11];
 
             // When
             var result = convention.Invoke(
@@ -326,7 +326,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[1];
+            var convention = this.conventions.ViewLocationConventions[3];
 
             // When
             var result = convention.Invoke(
@@ -343,7 +343,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[0];
+            var convention = this.conventions.ViewLocationConventions[1];
 
             // When
             var result = convention.Invoke(
@@ -360,7 +360,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[1];
+            var convention = this.conventions.ViewLocationConventions[3];
 
             // When
             var result = convention.Invoke(
@@ -377,7 +377,7 @@ namespace Nancy.Tests.Unit.Conventions
         {
             // Given
             this.viewLocationConventions.Initialise(this.conventions);
-            var convention = this.conventions.ViewLocationConventions[0];
+            var convention = this.conventions.ViewLocationConventions[1];
 
             // When
             var result = convention.Invoke(
