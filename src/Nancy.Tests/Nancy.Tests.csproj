@@ -231,6 +231,7 @@
     <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
     <Compile Include="Unit\Validation\DefaultValidatorLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultRenderContextFixture.cs" />
+    <Compile Include="Unit\ViewEngines\DefaultTextResourceFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewLocationCacheFixture.cs" />
     <Compile Include="Fakes\FakeViewLocationCache.cs" />
     <Compile Include="Fakes\FakeViewEngine.cs" />

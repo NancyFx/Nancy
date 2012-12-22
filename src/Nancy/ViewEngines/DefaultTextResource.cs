@@ -14,7 +14,7 @@ namespace Nancy.ViewEngines
         {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            culturedAssembly = assemblies.FirstOrDefault(x => x.GetManifestResourceNames().Any(y => y.Contains("Text.")));
+            culturedAssembly = assemblies.FirstOrDefault(x => x.GetManifestResourceNames().Any(y => y.Contains(".Resources.Text")));
             if (culturedAssembly != null)
             {
                 resourceManager = new ResourceManager(culturedAssembly.GetName().Name + ".Resources.Text",
