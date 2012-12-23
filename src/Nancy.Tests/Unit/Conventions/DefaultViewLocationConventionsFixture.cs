@@ -1,6 +1,3 @@
-using System.Globalization;
-using Xunit.Extensions;
-
 namespace Nancy.Tests.Unit.Conventions
 {
     using System;
@@ -8,6 +5,8 @@ namespace Nancy.Tests.Unit.Conventions
     using Nancy.Conventions;
     using Nancy.ViewEngines;
     using Xunit;
+    using System.Globalization;
+    using Xunit.Extensions;
 
     public class DefaultViewLocationConventionsFixture
     {
