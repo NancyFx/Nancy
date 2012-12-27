@@ -119,6 +119,9 @@ namespace Nancy.Routing
             var negotiator =
                 GetNegotiator(routeResult, context);
 
+            var compatibleHeaders =
+                this.GetCompatibleHeaders(context, negotiator);
+
             context.WriteTraceLog(sb =>
             {
                 var allowableFormats = negotiator.NegotiationContext
@@ -126,15 +129,12 @@ namespace Nancy.Routing
                     .Select(mr => mr.ToString())
                     .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                var acceptFormats = context.Request.Headers["accept"]
+                var acceptFormats = compatibleHeaders.Select(h=>h.Item1)
                                                     .Aggregate((t1, t2) => t1 + ", " + t2);
 
                 sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n", acceptFormats);
                 sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
             });
-
-            var compatibleHeaders =
-                this.GetCompatibleHeaders(context, negotiator);
 
             if (!compatibleHeaders.Any())
             {

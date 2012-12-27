@@ -196,10 +196,7 @@ namespace Nancy.Testing
 
             var contextValues =
                 (IBrowserContextValues)context;
-            if (!contextValues.Headers.ContainsKey("accept"))
-            {
-                contextValues.Headers.Add("accept",new []{"*/*"});
-            }
+
             BuildRequestBody(contextValues);
 
             var requestStream =
