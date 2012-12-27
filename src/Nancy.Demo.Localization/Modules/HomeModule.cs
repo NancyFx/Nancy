@@ -1,31 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Threading;
-using System.Web;
-
-namespace Nancy.Demo.Localization
+﻿namespace Nancy.Demo.Razor.Localization.Modules
 {
+    using System.Globalization;
+
     public class HomeModule : NancyModule
     {
         public HomeModule()
         {
-            Get["/"] = parameters =>
-                           {
-                               return View["Index"];
-                           };
+            Get["/"] = parameters => View["Index"];
 
-            Get["/cultureview"] = parameters =>
-                                      {
-                                          return View["CultureView"];
-                                      };
+            Get["/cultureview"] = parameters => View["CultureView"];
 
             Get["/cultureviewgerman"] = parameters =>
-                                            {
-                                                this.Context.Culture = new CultureInfo("de-DE");
-                                                return View["CultureView"];
-                                            };
+                                        {
+                                            Context.Culture = new CultureInfo("de-DE");
+                                            return View["CultureView"];
+                                        };
         }
     }
 }

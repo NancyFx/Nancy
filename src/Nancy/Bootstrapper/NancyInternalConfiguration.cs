@@ -15,6 +15,7 @@ namespace Nancy.Bootstrapper
     using Security;
     using Nancy.Validation;
     using Nancy.Culture;
+    using Nancy.Localization;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -90,7 +91,7 @@ namespace Nancy.Bootstrapper
                     RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
-                    DefaultTextResource = typeof(DefaultTextResource),
+                    DefaultTextResource = typeof(ResourceBasedTextResource),
                 };
             }
         }

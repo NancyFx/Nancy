@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
-    using Nancy.ViewEngines;
     using Xunit;
+    using Nancy.Localization;
 
     public class DefaultTextResourceFixture
     {
@@ -9,7 +9,7 @@
         public void Should_Return_Null_If_No_Assembly_Found()
         {
             //Given
-            var defaultTextResource = new DefaultTextResource();
+            var defaultTextResource = new ResourceBasedTextResource();
             var context = new NancyContext();
 
             //When

@@ -11,6 +11,7 @@
     using System.Web.Razor.Parser.SyntaxTree;
     using Nancy.Bootstrapper;
     using Nancy.Responses;
+    using Nancy.Localization;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -36,6 +37,7 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
+        /// <param name="textResource">The <see cref="ITextResource"/> that should be used by the engine.</param>
         public RazorViewEngine(IRazorConfiguration configuration, ITextResource textResource)
         {
             this.viewRenderers = new List<IRazorViewRenderer>

@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using Nancy.Culture;
-
-namespace Nancy.ViewEngines.Razor.Tests
+﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
     using System.Dynamic;
@@ -12,6 +9,8 @@ namespace Nancy.ViewEngines.Razor.Tests
     using Xunit;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
+    using System.Threading;
+    using Nancy.Localization;
 
     public class RazorViewEngineFixture
     {
