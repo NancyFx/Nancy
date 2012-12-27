@@ -1,9 +1,6 @@
 ﻿namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
 
     /// <summary>
     /// Converter for datetime types

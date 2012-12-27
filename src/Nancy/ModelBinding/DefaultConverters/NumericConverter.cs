@@ -1,6 +1,4 @@
-﻿using System.Globalization;
-
-namespace Nancy.ModelBinding.DefaultConverters
+﻿namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
     using Extensions;

@@ -534,7 +534,9 @@ namespace Nancy.Tests.Unit.ModelBinding
         [InlineData("en-GB", 450)]
         [InlineData("en-US", 450)]
         [InlineData("se-SE", 4.50)]
-        public void Form_properties_should_be_bound_culturally_aware_if_numeric(string culture, double expected)
+        [InlineData("ru-RU", 4.50)]
+        [InlineData("zh-TW", 450)]
+        public void Should_be_able_to_bind_culturally_aware_form_properties_if_numeric(string culture, double expected)
         {
             // Given
             var binder = this.GetBinder();
@@ -555,7 +557,11 @@ namespace Nancy.Tests.Unit.ModelBinding
         [InlineData("12/12/2012", 12, 12, 2012, "en-US")]
         [InlineData("25/12/2012", 12, 25, 2012, "en-GB")]
         [InlineData("12/12/2012", 12, 12, 2012, "en-GB")]
-        public void Form_properties_should_be_bound_culturally_aware_if_datetime(string date, int month, int day, int year, string culture)
+        [InlineData("12/12/2012", 12, 12, 2012, "ru-RU")]
+        [InlineData("25/12/2012", 12, 25, 2012, "ru-RU")]
+        [InlineData("2012-12-25", 12, 25, 2012, "zh-TW")]
+        [InlineData("2012-12-12", 12, 12, 2012, "zh-TW")]
+        public void Should_be_able_to_bind_culturally_aware_form_properties_if_datetime(string date, int month, int day, int year, string culture)
         {
             // Given
             var binder = this.GetBinder();
