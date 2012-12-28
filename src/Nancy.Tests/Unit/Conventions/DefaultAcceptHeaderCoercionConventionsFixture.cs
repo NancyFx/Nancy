@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using Nancy.Conventions;
-using Nancy.Testing;
-using Xunit;
-
-namespace Nancy.Tests.Unit.Conventions
+﻿namespace Nancy.Tests.Unit.Conventions
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using Nancy.Conventions;
+    using Nancy.Testing;
+    using Xunit;
+
     public class DefaultAcceptHeaderCoercionConventionsFixture
     {
          
