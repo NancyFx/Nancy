@@ -15,7 +15,14 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         public NancyViewEngineHost(IRenderContext renderContext)
         {
             this.renderContext = renderContext;
+            this.Context = this.renderContext.Context;
         }
+
+        /// <summary>
+        /// Context object of the host application.
+        /// </summary>
+        /// <value>An instance of the context object from the host.</value>
+        public object Context { get; private set; }
 
         /// <summary>
         /// Html "safe" encode a string

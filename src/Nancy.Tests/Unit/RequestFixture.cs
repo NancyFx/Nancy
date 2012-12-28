@@ -16,12 +16,14 @@ namespace Nancy.Tests.Unit
         public void Should_dispose_request_stream_when_being_disposed()
         {
             // Given
-            var stream = A.Fake<RequestStream>(x => {
-                x.Implements(typeof (IDisposable));
+            var stream = A.Fake<RequestStream>(x =>
+            {
+                x.Implements(typeof(IDisposable));
                 x.WithArgumentsForConstructor(() => new RequestStream(0, false));
             });
 
-            var url = new Url() {
+            var url = new Url()
+            {
                 Scheme = "http",
                 Path = "localhost"
             };
@@ -150,7 +152,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             const string path = "/";
-            
+
             // When
             var request = new Request("GET", path, "http");
 
@@ -198,7 +200,7 @@ namespace Nancy.Tests.Unit
             writer.Flush();
             memory.Position = 0;
 
-            var headers = 
+            var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
                     { "content-type", new[] { "application/x-www-form-urlencoded" } }
@@ -381,28 +383,28 @@ namespace Nancy.Tests.Unit
             return reader.ReadToEnd();
         }
 
-		[Fact]
-		public void Should_be_able_to_invoke_form_repeatedly()
-		{
-			const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
-			var memory = new MemoryStream();
-			var writer = new StreamWriter(memory);
-			writer.Write(bodyContent);
-			writer.Flush();
-			memory.Position = 0;
+        [Fact]
+        public void Should_be_able_to_invoke_form_repeatedly()
+        {
+            const string bodyContent = "name=John+Doe&gender=male&family=5&city=kent&city=miami&other=abc%0D%0Adef&nickname=J%26D";
+            var memory = new MemoryStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
 
-			var headers =
-				new Dictionary<string, IEnumerable<string>>
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
                 {
                     { "content-type", new[] { "application/x-www-form-urlencoded" } }
                 };
 
-			// When
+            // When
             var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
-			request.Form.ToString();
-			// Then
-			((string)request.Form.name).ShouldEqual("John Doe");
-		}
+            
+            // Then
+            ((string)request.Form.name).ShouldEqual("John Doe");
+        }
 
         [Fact]
         public void Should_throw_argumentnullexception_when_initialized_with_null_protocol()
@@ -439,25 +441,25 @@ namespace Nancy.Tests.Unit
             request.Url.Scheme.ShouldEqual(protocol);
         }
 
-		[Fact]
-		public void Should_split_cookie_in_two_parts_only()
-		{
-			// Given, when
-			var cookieName = "_nc";
-			var cookieData = "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
-			var headers = new Dictionary<string, IEnumerable<string>> ();
-			var cookies = new List<string> ();
-			cookies.Add (string.Format ("{0}={1}", cookieName, cookieData));
-			headers.Add ("cookie", cookies);
-			var newUrl = new Url
-			{
-				Path = "/"
-			};
-			var request = new Request ("GET", newUrl, null, headers);
+        [Fact]
+        public void Should_split_cookie_in_two_parts_only()
+        {
+            // Given, when
+            var cookieName = "_nc";
+            var cookieData = "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string>();
+            cookies.Add(string.Format("{0}={1}", cookieName, cookieData));
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
 
-			// Then
-			request.Cookies[cookieName].ShouldEqual (cookieData);
-		}
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);
+        }
 
         [Fact]
         public void Should_move_request_body_position_to_zero_after_parsing_url_encoded_data()
@@ -506,6 +508,30 @@ namespace Nancy.Tests.Unit
             memory.Position.ShouldEqual(0L);
         }
 
+        [Fact]
+        public void Should_preserve_all_values_when_multiple_are_posted_using_same_name_after_parsing_multipart_encoded_data()
+        {
+            // Given
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(
+                    new KeyValuePair<string, string>("age", "32"),
+                    new KeyValuePair<string, string>("age", "42"),
+                    new KeyValuePair<string, string>("age", "52")
+                ));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
+
+            // Then
+            ((string)request.Form.age).ShouldEqual("32,42,52");
+        }
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());
@@ -516,11 +542,11 @@ namespace Nancy.Tests.Unit
             return RequestStream.FromStream(stream);
         }
 
-        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        private static byte[] BuildMultipartFormValues(params KeyValuePair<string, string>[] values)
         {
             var boundaryBuilder = new StringBuilder();
 
-            foreach (var key in formValues.Keys)
+            foreach (var pair in values)
             {
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
@@ -528,12 +554,12 @@ namespace Nancy.Tests.Unit
                 boundaryBuilder.Append("----NancyFormBoundary");
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
-                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", key);
+                boundaryBuilder.AppendFormat("Content-Disposition: form-data; name=\"{0}\"", pair.Key);
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
                 boundaryBuilder.Append('\r');
                 boundaryBuilder.Append('\n');
-                boundaryBuilder.Append(formValues[key]);
+                boundaryBuilder.Append(pair.Value);
             }
 
             boundaryBuilder.Append('\r');
@@ -544,6 +570,14 @@ namespace Nancy.Tests.Unit
                 Encoding.ASCII.GetBytes(boundaryBuilder.ToString());
 
             return bytes;
+        }
+
+        private static byte[] BuildMultipartFormValues(Dictionary<string, string> formValues)
+        {
+            var pairs =
+                formValues.Keys.Select(key => new KeyValuePair<string, string>(key, formValues[key]));
+
+            return BuildMultipartFormValues(pairs.ToArray());
         }
 
         private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string, string>> formValues)

@@ -15,4 +15,8 @@
 	<h3>Encoding</h3>
 	<p>Model output can also be encoded:</p>
 	<p>@!Model.NaughtyStuff</p>
+	<p>
+		<h2>The context stuff</h2>
+		The requested path: @Context.Request.Path
+	</p>
 @EndSection

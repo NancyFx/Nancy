@@ -118,13 +118,18 @@
     <Compile Include="Bootstrapper\ScanMode.cs" />
     <Compile Include="Conventions\AcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\BuiltInAcceptHeaderCoercions.cs" />
+    <Compile Include="Conventions\BuiltInCultureConventions.cs" />
+    <Compile Include="Conventions\CultureConventions.cs" />
     <Compile Include="Conventions\DefaultAcceptHeaderCoercionConventions.cs" />
+    <Compile Include="Conventions\DefaultCultureConventions.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="Conventions\StaticContentsConventions.cs" />
+    <Compile Include="Culture\DefaultCultureService.cs" />
+    <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
@@ -268,6 +273,7 @@
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
+    <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
@@ -373,6 +379,7 @@
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />
+    <Compile Include="ViewEngines\IViewRenderer.cs" />
     <Compile Include="ViewEngines\IViewResolver.cs" />
     <Compile Include="ViewEngines\ResourceViewLocationProvider.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\IViewEngineHost.cs" />

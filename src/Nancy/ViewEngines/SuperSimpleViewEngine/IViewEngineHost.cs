@@ -7,6 +7,12 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     public interface IViewEngineHost
     {
         /// <summary>
+        /// Context object of the host application.
+        /// </summary>
+        /// <value>An instance of the context object from the host.</value>
+        object Context { get; }
+
+        /// <summary>
         /// Html "safe" encode a string
         /// </summary>
         /// <param name="input">Input string</param>

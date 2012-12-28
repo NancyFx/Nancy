@@ -5,7 +5,7 @@ namespace Nancy.Conventions
     using System.Linq;
 
     /// <summary>
-    /// Build in functions for coercing accept headers.
+    /// Built in functions for coercing accept headers.
     /// <seealso cref="DefaultAcceptHeaderCoercionConventions"/>
     /// </summary>
     public static class BuiltInAcceptHeaderCoercions
