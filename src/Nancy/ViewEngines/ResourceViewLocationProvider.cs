@@ -82,7 +82,9 @@
 
             string commonNamespace;
             if (!RootNamespaces.TryGetValue(assembly, out commonNamespace))
+            {
                 commonNamespace = ExtractAssemblyRootNamespace(assembly);
+            }
 
             if (string.IsNullOrWhiteSpace(commonNamespace))
             {
@@ -156,8 +158,7 @@
         private static string GetResourceExtension(string resourceName)
         {
             var extension = Path.GetExtension(resourceName);
-            if (extension != null) return extension.Substring(1);
-            return string.Empty;
+            return extension != null ? extension.Substring(1) : string.Empty;
         }
     }
 }
