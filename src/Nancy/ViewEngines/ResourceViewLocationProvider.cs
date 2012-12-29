@@ -17,12 +17,12 @@
         /// <summary>
         /// User-configured root namespaces for assemblies.
         /// </summary>
-        public static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
+        public readonly static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
         
         /// <summary>
         /// A list of assemblies to ignore when scanning for embedded views.
         /// </summary>
-        public static IList<Assembly> Ignore = new List<Assembly>();
+        public readonly static IList<Assembly> Ignore = new List<Assembly>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
@@ -80,11 +80,11 @@
                 throw new InvalidOperationException(errorMessage);
             }
 
-            var commonNamespace = RootNamespaces.ContainsKey(assembly) ?
-                RootNamespaces[assembly] : 
-                ExtractAssemblyRootNamespace(assembly);
+            string commonNamespace;
+            if (!RootNamespaces.TryGetValue(assembly, out commonNamespace))
+                commonNamespace = ExtractAssemblyRootNamespace(assembly);
 
-            if (string.IsNullOrEmpty(commonNamespace))
+            if (string.IsNullOrWhiteSpace(commonNamespace))
             {
                 return Enumerable.Empty<ViewLocationResult>();
             }
@@ -155,7 +155,9 @@
 
         private static string GetResourceExtension(string resourceName)
         {
-            return Path.GetExtension(resourceName).Substring(1);
+            var extension = Path.GetExtension(resourceName);
+            if (extension != null) return extension.Substring(1);
+            return string.Empty;
         }
     }
 }
