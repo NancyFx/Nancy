@@ -11,7 +11,7 @@
         public void Should_Return_Null_If_No_Assembly_Found()
         {
             //Given
-            var resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
+            var resourceAssemblyProvider = A.Fake<IAssemblyProvider>();
             A.CallTo(() => resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { typeof(NancyEngine).Assembly });
 
             var defaultTextResource = new ResourceBasedTextResource(resourceAssemblyProvider);

@@ -271,7 +271,7 @@
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
-    <Compile Include="DefaultResourceAssemblyProvider.cs" />
+    <Compile Include="DefaultAssemblyProvider.cs" />
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="Localization\ResourceBasedTextResource.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
@@ -374,7 +374,7 @@
     <Compile Include="ViewEngines\IFileSystemReader.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
-    <Compile Include="IResourceAssemblyProvider.cs" />
+    <Compile Include="IAssemblyProvider.cs" />
     <Compile Include="ViewEngines\IResourceReader.cs" />
     <Compile Include="Localization\ITextResource.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />

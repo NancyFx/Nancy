@@ -11,7 +11,7 @@ namespace Nancy.Localization
     /// </summary>
     public class ResourceBasedTextResource  : ITextResource
     {
-        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
+        private readonly IAssemblyProvider assemblyProvider;
         private readonly Assembly culturedAssembly;
         private readonly ResourceManager resourceManager;
 
@@ -19,11 +19,11 @@ namespace Nancy.Localization
         /// Initializes a new instance of <see cref="ResourceBasedTextResource"/> to read strings from *.resx files
         /// </summary>
         /// <remarks>Looks for *.resx files in a Resources folder with files called Text.resx as default or Text.CultureName.resx eg/ Text.en-GB.resx</remarks>
-        public ResourceBasedTextResource(IResourceAssemblyProvider resourceAssemblyProvider)
+        public ResourceBasedTextResource(IAssemblyProvider assemblyProvider)
         {
-            this.resourceAssemblyProvider = resourceAssemblyProvider;
+            this.assemblyProvider = assemblyProvider;
 
-            this.culturedAssembly = this.resourceAssemblyProvider
+            this.culturedAssembly = this.assemblyProvider
                 .GetAssembliesToScan()
                 .FirstOrDefault(x => x.GetManifestResourceNames().Any(y => y.Contains(".Resources.Text")));
 
