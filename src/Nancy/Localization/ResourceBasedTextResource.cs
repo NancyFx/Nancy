@@ -6,7 +6,7 @@ namespace Nancy.Localization
     using System.Resources;
 
     /// <summary>
-    /// Resx implementation of ITextResource
+    /// Resource based implementation of <see cref="ITextResource"/>
     /// </summary>
     public class ResourceBasedTextResource  : ITextResource
     {
@@ -19,13 +19,18 @@ namespace Nancy.Localization
         /// <remarks>Looks for *.resx files in a Resources folder with files called Text.resx as default or Text.CultureName.resx eg/ Text.en-GB.resx</remarks>
         public ResourceBasedTextResource()
         {
-            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = 
+                AppDomain.CurrentDomain.GetAssemblies();
 
-            culturedAssembly = assemblies.FirstOrDefault(x => x.GetManifestResourceNames().Any(y => y.Contains(".Resources.Text")));
-            if (culturedAssembly != null)
+            this.culturedAssembly = 
+                assemblies.FirstOrDefault(x => x.GetManifestResourceNames().Any(y => y.Contains(".Resources.Text")));
+
+            if (this.culturedAssembly != null)
             {
-                resourceManager = new ResourceManager(culturedAssembly.GetName().Name + ".Resources.Text",
-                                                      culturedAssembly);
+                var baseName =
+                    string.Concat(culturedAssembly.GetName().Name, ".Resources.Text");
+
+                this.resourceManager = new ResourceManager(baseName, culturedAssembly);
             }
         }
 
@@ -37,15 +42,7 @@ namespace Nancy.Localization
         /// <returns>Returns a string value from culture specific or default file or null if key does not exist as determined by <see cref="ResourceManager"/> </returns>
         public string this[string key, NancyContext context]
         {
-            get
-            {
-                if (resourceManager == null)
-                {
-                    return null;
-                }
-
-                return resourceManager.GetString(key, context.Culture);
-            }
+            get { return resourceManager == null ? null : resourceManager.GetString(key, context.Culture); }
         }
     }
 }
