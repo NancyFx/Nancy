@@ -1,0 +1,17 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+<html>
+<head>
+    <title>Razor Localization Demo</title>
+</head>
+<body>
+    <div id="container">
+        @RenderBody()
+        <br/>
+        <a href="/">Text Resource Example</a>
+        <br/>
+        <a href="/cultureview">Default Culture View Example</a>
+        <br/>
+        <a href="/cultureviewgerman">German Culture View Example</a>
+    </div>
+</body>
+</html>
