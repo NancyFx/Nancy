@@ -310,7 +310,7 @@ namespace Nancy
                 set { this.AddRoute(path, condition, value); }
             }
 
-            public Func<dynamic, Task<dynamic>> this[string path, bool meh]
+            public Func<dynamic, Task<dynamic>> this[string path, bool runAsync]
             {
                 set { this.AddRoute(path, null, o => ((Task<dynamic>)value.Invoke(o)).Result); }
             }
