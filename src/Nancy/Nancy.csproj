@@ -162,6 +162,7 @@
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
+    <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />

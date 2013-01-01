@@ -123,7 +123,10 @@ namespace Nancy.Diagnostics
 
             if (ctx.Response == null)
             {
-                ctx.Response = resolveResult.Route.Invoke(resolveResult.Parameters);
+                // Don't care about async here, so just get the result
+                var task = resolveResult.Route.Invoke(resolveResult.Item2);
+                task.Wait();
+                ctx.Response = task.Result;
             }
 
             if (ctx.Request.Method.ToUpperInvariant() == "HEAD")
