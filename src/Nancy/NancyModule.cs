@@ -4,6 +4,8 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
@@ -69,6 +71,11 @@ namespace Nancy
         public RouteBuilder Get
         {
             get { return new RouteBuilder("GET", this); }
+        }
+
+        public AsyncRouteBuilder GetAsync
+        {
+            get { return new AsyncRouteBuilder("GET", this); }    
         }
 
         /// <summary>
@@ -230,6 +237,39 @@ namespace Nancy
                 {
                     this.Context.ModelValidationResult = value;                    
                 }
+
+        public class AsyncRouteBuilder : IHideObjectMembers
+        {
+            private readonly string method;
+            private readonly NancyModule parentModule;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
+            /// </summary>
+            /// <param name="method">The HTTP request method that the route should be available for.</param>
+            /// <param name="parentModule">The <see cref="NancyModule"/> that the route is being configured for.</param>
+            public AsyncRouteBuilder(string method, NancyModule parentModule)
+            {
+                this.method = method;
+                this.parentModule = parentModule;
+            }
+
+            /// <summary>
+            /// Defines a Nancy route for the specified <paramref name="path"/>.
+            /// </summary>
+            /// <value>A delegate that is used to invoke the route.</value>
+            public Func<dynamic, Task<dynamic>> this[string path]
+            {
+                set { this.AddRoute(path, null, value); }
+            }
+
+            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, Task<dynamic>> value)
+            {
+                var fullPath = String.Concat(this.parentModule.ModulePath, path);
+
+                var syncFunc = new Func<dynamic, dynamic>(o => ((Task<dynamic>)value(o)).Result);
+
+                this.parentModule.routes.Add(new Route(this.method, fullPath, condition, syncFunc));
             }
         }
 
@@ -268,6 +308,16 @@ namespace Nancy
             public Func<dynamic, dynamic> this[string path, Func<NancyContext, bool> condition]
             {
                 set { this.AddRoute(path, condition, value); }
+            }
+
+            public Func<dynamic, Task<dynamic>> this[string path, bool meh]
+            {
+                set { this.AddRoute(path, null, o => ((Task<dynamic>)value.Invoke(o)).Result); }
+            }
+
+            public Func<dynamic, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool meh]
+            {
+                set { this.AddRoute(path, condition, o => ((Task<dynamic>)value.Invoke(o)).Result); }
             }
 
             protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)

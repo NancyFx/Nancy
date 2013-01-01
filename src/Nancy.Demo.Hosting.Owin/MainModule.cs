@@ -2,6 +2,8 @@ namespace Nancy.Demo.Hosting.Owin
 {
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net.Http;
+
     using Models;
     using Nancy.Hosting.Owin;
 
@@ -9,6 +11,17 @@ namespace Nancy.Demo.Hosting.Owin
     {
         public MainModule()
         {
+            Get["/test", true] = async x =>
+                {
+                    var client = new HttpClient();
+
+                    var res = await client.GetAsync("http://nancyfx.org");
+
+                    var content = await res.Content.ReadAsStringAsync();
+
+                    return content;
+                };
+
             Get["/"] = x =>
                 {
                     var model = new Index() { Name = "Boss Hawg" };
