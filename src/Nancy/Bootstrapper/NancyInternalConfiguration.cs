@@ -46,6 +46,7 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
             };
 
         /// <summary>
