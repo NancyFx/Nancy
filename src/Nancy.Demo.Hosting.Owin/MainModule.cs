@@ -11,7 +11,18 @@ namespace Nancy.Demo.Hosting.Owin
     {
         public MainModule()
         {
-            Get["/test", true] = async x =>
+            GetAsync["/test1"] = async x =>
+            {
+                var client = new HttpClient();
+
+                var res = await client.GetAsync("http://nancyfx.org");
+
+                var content = await res.Content.ReadAsStringAsync();
+
+                return content;
+            };
+
+            Get["/test2", true] = async x =>
                 {
                     var client = new HttpClient();
 

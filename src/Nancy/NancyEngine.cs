@@ -189,20 +189,14 @@
 
         public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
         {
-            // TODO - potentially do some things sync like the pre-req hooks?
-            // Possibly not worth it as the thread pool is quite clever
-            // when it comes to fast running tasks such as ones where the prehook returns a redirect.
-            ThreadPool.QueueUserWorkItem(s =>
+            try
             {
-                try
-                {
-                    onComplete.Invoke(this.HandleRequest(request, preRequest));
-                }
-                catch (Exception e)
-                {
-                    onError.Invoke(e);
-                }
-            });
+                onComplete.Invoke(this.HandleRequest(request, preRequest));
+            }
+            catch (Exception e)
+            {
+                onError.Invoke(e);
+            }
         }
 
         private void CheckStatusCodeHandler(NancyContext context)
