@@ -62,7 +62,7 @@
         /// Creates a route from a sync delegate signature
         /// </summary>
         /// <param name="description"></param>
-        /// <param name="action">The action that should take place when the route is invoked.</param>
+        /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
         public static Route FromSync(RouteDescription description, Func<dynamic, dynamic> syncFunc)
         {
@@ -75,11 +75,11 @@
         /// <param name="method">The HTTP method that the route is declared for.</param>
         /// <param name="path">The path that the route is declared for.</param>
         /// <param name="condition">A condition that needs to be satisfied inorder for the route to be eligiable for invocation.</param>
-        /// <param name="action">The action that should take place when the route is invoked.</param>
+        /// <param name="syncFunc">The action that should take place when the route is invoked.</param>
         /// <returns>A Route instance</returns>
-        public static Route FromSync(string method, string path, Func<NancyContext, bool> condition, Func<dynamic, Task<dynamic>> action)
+        public static Route FromSync(string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> syncFunc)
         {
-            return FromSync(new RouteDescription(method, path, condition), action);
+            return FromSync(new RouteDescription(method, path, condition), syncFunc);
         }
 
         /// <summary>
