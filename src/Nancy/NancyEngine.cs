@@ -158,7 +158,7 @@
                     this.SaveTraceInformation(t.Result);
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
-            task.ContinueWith(t => { throw t.Exception ?? new Exception("Request task faulted"); });
+            task.ContinueWith(t => { throw t.Exception ?? new Exception("Request task faulted"); }, TaskContinuationOptions.OnlyOnFaulted);
 
             return task;
         }
@@ -263,10 +263,12 @@
 
                     dispatchTask.ContinueWith(td =>
                         {
+                            context.Response = td.Result;
+
                             var postHookTask = InvokePostRequestHook(context, pipelines.AfterRequest);
                             postHookTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
-                            postHookTask.ContinueWith(tph => tcs.SetResult(context), TaskContinuationOptions.NotOnRanToCompletion);
-                        }, TaskContinuationOptions.NotOnRanToCompletion);
+                            postHookTask.ContinueWith(tph => tcs.SetResult(context), TaskContinuationOptions.OnlyOnRanToCompletion);
+                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
             return tcs.Task;

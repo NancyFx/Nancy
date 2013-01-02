@@ -35,25 +35,46 @@ namespace Nancy.Routing
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
         public Task<Response> Invoke(Route route, DynamicDictionary parameters, NancyContext context)
         {
-            dynamic result;
+            var tcs = new TaskCompletionSource<Response>();
 
+            var result = route.Invoke(parameters);
             try
             {
                 result = route.Invoke(parameters);
             }
             catch (RouteExecutionEarlyExitException earlyExitException)
             {
-                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
-                result = earlyExitException.Response;
             }
 
-            if (result == null)
-            {
-                context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
-                result = new Response();
-            }
+            result.ContinueWith(t =>
+                {
+                    var earlyExitException = t.Exception as RouteExecutionEarlyExitException;
 
-            return this.InvokeRouteWithStrategy(result, context);
+                    if (earlyExitException != null)
+                    {
+                        context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
+                        tcs.SetResult(earlyExitException.Response);
+                    }
+                    else
+                    {
+                        tcs.SetException(t.Exception);
+                    }
+                }, TaskContinuationOptions.OnlyOnFaulted);
+
+            result.ContinueWith(t =>
+                {
+                    var returnResult = t.Result;
+                    if (returnResult == null)
+                    {
+                        context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
+
+                        returnResult = new Response();
+                    }
+
+                    tcs.SetResult(this.InvokeRouteWithStrategy(returnResult, context));
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+            return tcs.Task;
         }
 
         private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)

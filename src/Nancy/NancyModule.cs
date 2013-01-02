@@ -272,12 +272,12 @@ namespace Nancy
 
             public Func<dynamic, Task<dynamic>> this[string path, bool runAsync]
             {
-                set { this.AddRoute(path, null, o => ((Task<dynamic>)value.Invoke(o)).Result); }
+                set { this.AddRoute(path, null, value); }
             }
 
-            public Func<dynamic, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool meh]
+            public Func<dynamic, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
-                set { this.AddRoute(path, condition, o => ((Task<dynamic>)value.Invoke(o)).Result); }
+                set { this.AddRoute(path, condition, value); }
             }
 
             protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)

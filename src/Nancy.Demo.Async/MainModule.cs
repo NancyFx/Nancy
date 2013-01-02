@@ -24,7 +24,7 @@
 
                     result += "Response: " + content.Split('\n')[0];
 
-                    return result;
+                    return (Response)result;
                 };
         }
     }
