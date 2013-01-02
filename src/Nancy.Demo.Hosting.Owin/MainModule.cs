@@ -3,6 +3,7 @@ namespace Nancy.Demo.Hosting.Owin
     using System.Collections.Generic;
     using System.Linq;
     using System.Net.Http;
+    using System.Threading.Tasks;
 
     using Models;
     using Nancy.Hosting.Owin;
@@ -11,6 +12,15 @@ namespace Nancy.Demo.Hosting.Owin
     {
         public MainModule()
         {
+            Get["/moo"] = x => "moo";
+
+            Get["/test3", true] = async x =>
+                { 
+                    await Task.Delay(500);
+
+                    return "done";
+                };
+
             Get["/test2", true] = async x =>
                 {
                     var client = new HttpClient();

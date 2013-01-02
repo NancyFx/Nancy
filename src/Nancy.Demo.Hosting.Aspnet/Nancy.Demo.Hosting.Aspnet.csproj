@@ -215,7 +215,7 @@
           <AutoAssignPort>False</AutoAssignPort>
           <DevelopmentServerPort>40965</DevelopmentServerPort>
           <DevelopmentServerVPath>/NancyTest/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:59015/</IISUrl>
+          <IISUrl>http://localhost:59017/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>
