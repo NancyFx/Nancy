@@ -11,6 +11,6 @@
         /// Dispatches a requests.
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
-        Task Dispatch(NancyContext context);
+        Task<Response> Dispatch(NancyContext context);
     }
 }

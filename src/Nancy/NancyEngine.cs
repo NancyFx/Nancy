@@ -80,6 +80,17 @@
         }
 
         /// <summary>
+        /// Handles an incoming <see cref="Request"/> async.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <param name="onComplete">Delegate to call when the request is complete</param>
+        /// <param name="onError">Deletate to call when any errors occur</param>
+        public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
+        {
+            this.HandleRequest(request, null, onComplete, onError);
+        }
+
+        /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
@@ -230,38 +241,90 @@
 
         private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
         {
-            throw new NotImplementedException();
-            try
-            {
-                InvokePreRequestHook(context, pipelines.BeforeRequest);
+            var tcs = new TaskCompletionSource<NancyContext>();
 
-                if (context.Response == null)
-                {
-                    this.dispatcher.Dispatch(context);
-                }
+            var preHookTask = InvokePreRequestHook(context, pipelines.BeforeRequest);
 
-                if (pipelines.AfterRequest != null)
+            preHookTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
+
+            preHookTask.ContinueWith(t =>
                 {
-                    pipelines.AfterRequest.Invoke(context);
-                }
-            }
-            catch (Exception ex)
-            {
-                InvokeOnErrorHook(context, pipelines.OnError, ex);
-            }
+                    if (t.Result != null)
+                    {
+                        context.Response = t.Result;
+
+                        tcs.SetResult(context);
+
+                        return;
+                    }
+
+                    var dispatchTask = this.dispatcher.Dispatch(context);
+                    dispatchTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
+
+                    dispatchTask.ContinueWith(td =>
+                        {
+                            var postHookTask = InvokePostRequestHook(context, pipelines.AfterRequest);
+                            postHookTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
+                            postHookTask.ContinueWith(tph => tcs.SetResult(context), TaskContinuationOptions.NotOnRanToCompletion);
+                        }, TaskContinuationOptions.NotOnRanToCompletion);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+            return tcs.Task;
         }
 
-        private static void InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
+        private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
         {
-            if (pipeline != null)
+            return t =>
+                {
+                    try
+                    {
+                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception);
+
+                        tcs.SetResult(context);
+                    }
+                    catch (Exception e)
+                    {
+                        tcs.SetException(e);
+                    }
+                };
+        }
+
+        private static Task<Response> InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
+        {
+            // TODO - actually make it async
+            var tcs = new TaskCompletionSource<Response>();
+
+            try
             {
                 var preRequestResponse = pipeline.Invoke(context);
 
-                if (preRequestResponse != null)
-                {
-                    context.Response = preRequestResponse;
-                }
+                tcs.SetResult(preRequestResponse);
             }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
+
+            return tcs.Task;
+        }
+
+        private Task InvokePostRequestHook(NancyContext context, AfterPipeline pipeline)
+        {
+            // TODO - actually make it async
+            var tcs = new TaskCompletionSource<object>();
+
+            try
+            {
+                pipeline.Invoke(context);
+
+                tcs.SetResult(null);
+            }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
+
+            return tcs.Task;
         }
 
         private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
