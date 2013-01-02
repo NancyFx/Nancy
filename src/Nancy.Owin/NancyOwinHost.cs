@@ -82,6 +82,7 @@
                 StoreEnvironment(environment),
                 RequestComplete(environment, tcs), 
                 RequestErrored(tcs));
+                tcs.SetException);
 
             return tcs.Task;
         }
