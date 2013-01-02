@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Routing
 {
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Defines the functionality for invoking a <see cref="Route"/> and returning a <see cref="Response"/>
     /// </summary>
@@ -12,6 +14,6 @@
         /// <param name="parameters">The parameters that the route should be invoked with.</param>
         /// <param name="context">The context of the route that is being invoked.</param>
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
-        Response Invoke(Route route, DynamicDictionary parameters, NancyContext context);
+        Task<Response> Invoke(Route route, DynamicDictionary parameters, NancyContext context);
     }
 }

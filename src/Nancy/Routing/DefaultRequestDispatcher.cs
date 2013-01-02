@@ -4,7 +4,10 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
+
     using Responses.Negotiation;
+    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -33,44 +36,46 @@ namespace Nancy.Routing
         /// Dispatches a requests.
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
-        public void Dispatch(NancyContext context)
+        public Task<Response> Dispatch(NancyContext context)
         {
+            // TODO - add back in the full module execution, similar to nancy engine, rather than just the route
             var resolveResult = this.Resolve(context);
 
-            context.Parameters = resolveResult.Parameters;
 
-            try
-            {
-                ExecuteRoutePreReq(context, resolveResult.Before);
+            return this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
 
-                if (context.Response == null)
-                {
-                    context.Response = this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
-                }
+            //try
+            //{
+            //    ExecuteRoutePreReq(context, resolveResultPreReq);
 
-                if (context.Request.Method.ToUpperInvariant() == "HEAD")
-                {
-                    context.Response = new HeadResponse(context.Response);
-                }
+            //    if (context.Response == null)
+            //    {
+            //        context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+            //    }
 
-                if (resolveResult.After != null)
-                {
-                    resolveResult.After.Invoke(context);
-                }
-            }
-            catch (Exception exception)
-            {
-                var response = ResolveErrorResult(context, resolveResult.OnError, exception);
+            //    if (context.Request.Method.ToUpperInvariant() == "HEAD")
+            //    {
+            //        context.Response = new HeadResponse(context.Response);
+            //    }
 
-                if (response != null)
-                {
-                    context.Response = response;
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            //    if (resolveResultPostReq != null)
+            //    {
+            //        resolveResultPostReq.Invoke(context);
+            //    }
+            //}
+            //catch (Exception exception)
+            //{
+            //    var response = ResolveErrorResult(context, resolveResultOnError, exception);
+
+            //    if (response != null)
+            //    {
+            //        context.Response = response;
+            //    }
+            //    else
+            //    {
+            //        throw;
+            //    }
+            //}
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
@@ -122,7 +127,7 @@ namespace Nancy.Routing
                     var match =
                         this.InvokeRouteResolver(context, modifiedRequestPath, newMediaRanges);
 
-                    if (!(match.Route is NotFoundRoute))
+                    if (!(match.Item1 is NotFoundRoute))
                     {
                         return match;
                     }

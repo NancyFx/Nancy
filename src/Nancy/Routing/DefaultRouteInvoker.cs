@@ -4,6 +4,7 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading.Tasks;
 
     using Nancy.Conventions;
     using Nancy.ErrorHandling;
@@ -32,7 +33,7 @@ namespace Nancy.Routing
         /// <param name="parameters">The parameters that the route should be invoked with.</param>
         /// <param name="context">The context of the route that is being invoked.</param>
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
-        public Response Invoke(Route route, DynamicDictionary parameters, NancyContext context)
+        public Task<Response> Invoke(Route route, DynamicDictionary parameters, NancyContext context)
         {
             dynamic result;
 
