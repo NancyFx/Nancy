@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Bootstrapper;
@@ -12,7 +11,6 @@
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
-    using Nancy.Culture;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -126,6 +124,8 @@
 
         private Task<NancyContext> HandleRequestInternal(Request request, Func<NancyContext, NancyContext> preRequest)
         {
+            var tcs = new TaskCompletionSource<NancyContext>();
+
             if (request == null)
             {
                 throw new ArgumentNullException("request", "The request parameter cannot be null.");
@@ -156,11 +156,13 @@
                     this.CheckStatusCodeHandler(t.Result);
 
                     this.SaveTraceInformation(t.Result);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
-            task.ContinueWith(t => { throw t.Exception ?? new Exception("Request task faulted"); }, TaskContinuationOptions.OnlyOnFaulted);
+                    tcs.SetResult(t.Result);
+                }, TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
 
-            return task;
+            task.ContinueWith(t => tcs.SetException(t.Exception), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+
+            return tcs.Task;
         }
 
         private void SaveTraceInformation(NancyContext ctx)
