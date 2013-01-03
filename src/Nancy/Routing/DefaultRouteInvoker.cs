@@ -130,9 +130,10 @@ namespace Nancy.Routing
                     .Aggregate((t1, t2) => t1 + ", " + t2);
 
                 var acceptFormats = compatibleHeaders.Select(h=>h.Item1)
-                                                    .Aggregate((t1, t2) => t1 + ", " + t2);
+                                                     .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                sb.AppendFormat("[DefaultRouteInvoker] Accept header: {0}\n", acceptFormats);
+                sb.AppendFormat("[DefaultRouteInvoker] Original accept header: {0}\n", context.Request.Headers["accept"]);
+                sb.AppendFormat("[DefaultRouteInvoker] Coerced accept header: {0}\n", acceptFormats);
                 sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
             });
 
