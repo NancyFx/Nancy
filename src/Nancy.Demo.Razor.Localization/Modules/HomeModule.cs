@@ -6,6 +6,7 @@
     {
         public HomeModule()
         {
+
             Get["/"] = parameters => View["Index"];
 
             Get["/cultureview"] = parameters => View["CultureView"];

@@ -46,6 +46,7 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
             };
 
         /// <summary>
@@ -91,7 +92,8 @@ namespace Nancy.Bootstrapper
                     RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
-                    DefaultTextResource = typeof(ResourceBasedTextResource),
+                    TextResource = typeof(ResourceBasedTextResource),
+                    ResourceAssemblyProvider = typeof(DefaultAssemblyProvider),
                 };
             }
         }
@@ -164,7 +166,9 @@ namespace Nancy.Bootstrapper
 
         public Type CultureService { get; set; }
 
-        public Type DefaultTextResource { get; set; }
+        public Type TextResource { get; set; }
+
+        public Type ResourceAssemblyProvider { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -260,7 +264,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
-                new TypeRegistration(typeof(ITextResource), this.DefaultTextResource), 
+                new TypeRegistration(typeof(ITextResource), this.TextResource), 
+                new TypeRegistration(typeof(IAssemblyProvider), this.ResourceAssemblyProvider), 
             };
         }
 

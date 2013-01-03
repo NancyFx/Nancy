@@ -1,5 +1,6 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
+    using System;
     using System.Dynamic;
     using Nancy.Localization;
 
@@ -30,8 +31,50 @@
         /// <returns>Returns a value or a non existing value from the <see cref="ITextResource"/> implementation</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = this.textResource[binder.Name, this.context];
+            result = 
+                new DynamicMemberChainer(binder.Name, this.context, this.textResource);
+
             return true;
+        }
+
+        public class DynamicMemberChainer : DynamicObject
+        {
+            private string memberName;
+            private readonly NancyContext context;
+            private readonly ITextResource textResource;
+
+            public DynamicMemberChainer(string memberName, NancyContext context, ITextResource resource)
+            {
+                this.memberName = memberName;
+                this.context = context;
+                this.textResource = resource;
+            }
+
+            public override bool TryGetMember(GetMemberBinder binder, out object result)
+            {
+                this.memberName =
+                    string.Concat(this.memberName, ".", binder.Name);
+
+                result = this;
+
+                return true;
+            }
+
+            public override bool TryConvert(ConvertBinder binder, out object result)
+            {
+                if (binder.ReturnType == typeof(string))
+                {
+                    result = this.textResource[this.memberName, this.context];
+                    return true;
+                }
+
+                throw new InvalidOperationException("Cannot cast dynamic member access to anything else than a string.");
+            }
+
+            public override string ToString()
+            {
+                return this.textResource[this.memberName, this.context]; ;
+            }
         }
     }
 }

@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="GreetingViewBase.cs" />
     <Compile Include="RazorViewEngineFixture.cs" />
+    <Compile Include="TextResourceFinderFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor.Tests.Models\Nancy.ViewEngines.Razor.Tests.Models.csproj">
