@@ -5,7 +5,6 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Runtime.InteropServices;
     using FakeItEasy;
     using Nancy.ViewEngines;
     using Xunit;
@@ -13,14 +12,14 @@ namespace Nancy.Tests.Unit.ViewEngines
     public class ResourceViewLocationProviderFixture
     {
         private readonly IResourceReader reader;
-        private readonly IResourceAssemblyProvider assemblyProvider;
+        private readonly IAssemblyProvider assemblyProvider;
         private readonly ResourceViewLocationProvider viewProvider;
 
         public ResourceViewLocationProviderFixture()
         {
             ResourceViewLocationProvider.Ignore.Clear(); 
             this.reader = A.Fake<IResourceReader>();
-            this.assemblyProvider = A.Fake<IResourceAssemblyProvider>();
+            this.assemblyProvider = A.Fake<IAssemblyProvider>();
             this.viewProvider = new ResourceViewLocationProvider(this.reader, this.assemblyProvider);
 
             if (!ResourceViewLocationProvider.RootNamespaces.ContainsKey(this.GetType().Assembly))

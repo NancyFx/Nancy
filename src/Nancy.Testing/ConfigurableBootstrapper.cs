@@ -5,7 +5,7 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Reflection;
-
+    using Localization;
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Nancy.Culture;
@@ -1137,6 +1137,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IAssemblyProvider"/>.
+            /// </summary>
+            /// <param name="assemblyProvider">The <see cref="IAssemblyProvider"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider(IAssemblyProvider assemblyProvider)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IAssemblyProvider), assemblyProvider));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IAssemblyProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IAssemblyProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider<T>() where T : IAssemblyProvider
+            {
+                this.bootstrapper.configuration.ResourceAssemblyProvider = typeof(T);
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteDescriptionProvider"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteDescriptionProvider"/> that the bootstrapper should use.</typeparam>
@@ -1211,6 +1235,30 @@ namespace Nancy.Testing
                 this.bootstrapper.registeredTypes.Add(
                     new CollectionTypeRegistration(typeof(IResponseProcessor), responseProcessors));
 
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="ITextResource"/>.
+            /// </summary>
+            /// <param name="textResource">The <see cref="ITextResource"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator TextResource(ITextResource textResource)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(ITextResource), textResource));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="ITextResource"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="ITextResource"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator TextResource<T>() where T : ITextResource
+            {
+                this.bootstrapper.configuration.TextResource = typeof(T);
                 return this;
             }
 

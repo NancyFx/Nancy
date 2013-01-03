@@ -12,7 +12,7 @@
     public class ResourceViewLocationProvider : IViewLocationProvider
     {
         private readonly IResourceReader resourceReader;
-        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
+        private readonly IAssemblyProvider assemblyProvider;
         
         /// <summary>
         /// User-configured root namespaces for assemblies.
@@ -28,7 +28,7 @@
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
         /// </summary>
         public ResourceViewLocationProvider()
-            : this(new DefaultResourceReader(), new DefaultResourceAssemblyProvider())
+            : this(new DefaultResourceReader(), new DefaultAssemblyProvider())
         {
         }
 
@@ -36,11 +36,11 @@
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
         /// </summary>
         /// <param name="resourceReader">An <see cref="IResourceReader"/> instance that should be used when extracting embedded views.</param>
-        /// <param name="resourceAssemblyProvider">An <see cref="IResourceAssemblyProvider"/> instance that should be used to determine which assemblies to scan for embedded views.</param>
-        public ResourceViewLocationProvider(IResourceReader resourceReader, IResourceAssemblyProvider resourceAssemblyProvider)
+        /// <param name="assemblyProvider">An <see cref="IAssemblyProvider"/> instance that should be used to determine which assemblies to scan for embedded views.</param>
+        public ResourceViewLocationProvider(IResourceReader resourceReader, IAssemblyProvider assemblyProvider)
         {
             this.resourceReader = resourceReader;
-            this.resourceAssemblyProvider = resourceAssemblyProvider;
+            this.assemblyProvider = assemblyProvider;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            return this.resourceAssemblyProvider
+            return this.assemblyProvider
                 .GetAssembliesToScan()
                 .Where(x => !Ignore.Contains(x))
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
