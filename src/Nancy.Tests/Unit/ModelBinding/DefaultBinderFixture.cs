@@ -5,7 +5,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.IO;
     using System.Linq;
     using System.Text;
-
+    using System.Globalization;
     using FakeItEasy;
 
     using Nancy.IO;
@@ -15,6 +15,7 @@ namespace Nancy.Tests.Unit.ModelBinding
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
+    using Xunit.Extensions;
 
     using Xunit;
 
@@ -171,20 +172,20 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_use_object_from_deserializer_if_one_returned_and_not_overwrite_when_not_allowed()
         {
             // Given
-            var modelObject = new TestModel {StringPropertyWithDefaultValue = "Hello!"};
+            var modelObject = new TestModel { StringPropertyWithDefaultValue = "Hello!" };
             var deserializer = A.Fake<IBodyDeserializer>();
             A.CallTo(() => deserializer.CanDeserialize(null)).WithAnyArguments().Returns(true);
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments().Returns(modelObject);
-            var binder = this.GetBinder(bodyDeserializers: new[] {deserializer});
+            var binder = this.GetBinder(bodyDeserializers: new[] { deserializer });
 
-            var context = CreateContextWithHeader("Content-Type", new[] {"application/xml"});
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = binder.Bind(context, typeof (TestModel), null, BindingConfig.NoOverwrite);
+            var result = binder.Bind(context, typeof(TestModel), null, BindingConfig.NoOverwrite);
 
             // Then
             result.ShouldBeOfType<TestModel>();
-            ((TestModel) result).StringPropertyWithDefaultValue.ShouldEqual("Default Value");
+            ((TestModel)result).StringPropertyWithDefaultValue.ShouldEqual("Default Value");
         }
 
         [Fact]
@@ -290,7 +291,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, new BindingConfig());
 
             // Then
-            validProperties.ShouldEqual(6);
+            validProperties.ShouldEqual(7);
         }
 
         [Fact]
@@ -528,6 +529,57 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.IntProperty.ShouldEqual(12);
         }
 
+        [Theory]
+        [InlineData("de-DE", 4.50)]
+        [InlineData("en-GB", 450)]
+        [InlineData("en-US", 450)]
+        [InlineData("se-SE", 4.50)]
+        [InlineData("ru-RU", 4.50)]
+        [InlineData("zh-TW", 450)]
+        public void Should_be_able_to_bind_culturally_aware_form_properties_if_numeric(string culture, double expected)
+        {
+            // Given
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Culture = new CultureInfo(culture);
+            context.Request.Form["DoubleProperty"] = "4,50";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+
+            // Then
+            result.DoubleProperty.ShouldEqual(expected);
+        }
+
+        [Theory]
+        [InlineData("12/25/2012", 12, 25, 2012, "en-US")]
+        [InlineData("12/12/2012", 12, 12, 2012, "en-US")]
+        [InlineData("25/12/2012", 12, 25, 2012, "en-GB")]
+        [InlineData("12/12/2012", 12, 12, 2012, "en-GB")]
+        [InlineData("12/12/2012", 12, 12, 2012, "ru-RU")]
+        [InlineData("25/12/2012", 12, 25, 2012, "ru-RU")]
+        [InlineData("2012-12-25", 12, 25, 2012, "zh-TW")]
+        [InlineData("2012-12-12", 12, 12, 2012, "zh-TW")]
+        public void Should_be_able_to_bind_culturally_aware_form_properties_if_datetime(string date, int month, int day, int year, string culture)
+        {
+            // Given
+            var binder = this.GetBinder();
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Culture = new CultureInfo(culture);
+            context.Request.Form["DateProperty"] = date;
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            // Then
+            result.DateProperty.Date.Month.ShouldEqual(month);
+            result.DateProperty.Date.Day.ShouldEqual(day);
+            result.DateProperty.Date.Year.ShouldEqual(year);
+        }
+
+
+
         [Fact]
         public void Should_be_able_to_bind_from_request_and_context_simultaneously()
         {
@@ -687,7 +739,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
-            var converters = typeConverters ?? new ITypeConverter[] { new FallbackConverter(), };
+            var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter(), };
             var deserializers = bodyDeserializers ?? new IBodyDeserializer[] { };
             var converter = nameConverter ?? this.passthroughNameConverter;
             var defaults = bindingDefaults ?? this.emptyDefaults;
@@ -744,6 +796,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public DateTime DateProperty { get; set; }
 
             public string StringPropertyWithDefaultValue { get; set; }
+
+            public double DoubleProperty { get; set; }
 
             public int this[int index]
             {
