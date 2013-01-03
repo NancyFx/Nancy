@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Bootstrapper
 {
+    using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
@@ -76,12 +77,24 @@
 
             if (locatedFavIcons.Any())
             {
-                var image =
-                    Image.FromFile(locatedFavIcons.First());
+                try
+                {
+                    var image =
+                        Image.FromFile(locatedFavIcons.First());
 
-                var converter = new ImageConverter();
+                    var converter = new ImageConverter();
 
-                icon = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                    icon = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                }
+                catch (Exception e)
+                {
+                    if (!StaticConfiguration.DisableErrorTraces)
+                    {
+                        throw new InvalidDataException("Unable to load favicon, please check the format is compatible with GDI+", e);
+                    }
+
+                    return null;
+                }
             }
 
             return icon;
