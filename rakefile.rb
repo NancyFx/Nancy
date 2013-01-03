@@ -210,7 +210,6 @@ def get_assembly_version(file)
   File.open(file, 'r') do |file|
     file.each_line do |line|
       result = /\[assembly: AssemblyInformationalVersion\(\"(.*?)\"\)\]/.match(line)
-      result = /\[assembly: AssemblyVersion\(\"(.*?)\"\)\]/.match(line) if result.nil?
 
       return result[1] if !result.nil?
     end
@@ -221,6 +220,7 @@ end
 
 $nancy_version = get_assembly_version SHARED_ASSEMBLY_INFO
 puts "Version: #{$nancy_version}"
+
 #TODO:
 #-----
 #  8. Git info into shared assemby info (see fubumvc sample, also psake sample in mefcontrib)
