@@ -103,7 +103,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.S
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Stateless", "Nancy.Demo.Authentication.Stateless\Nancy.Demo.Authentication.Stateless.csproj", "{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Razor.Localization", "Nancy.Demo.Razor.Localization\Nancy.Demo.Razor.Localization.csproj", "{396F0BCE-5B51-4B6A-931E-312880C24725}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Razor.Localization", "Nancy.Demo.Localization\Nancy.Demo.Razor.Localization.csproj", "{396F0BCE-5B51-4B6A-931E-312880C24725}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
