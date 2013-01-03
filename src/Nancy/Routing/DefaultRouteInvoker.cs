@@ -119,8 +119,7 @@ namespace Nancy.Routing
             var negotiator =
                 GetNegotiator(routeResult, context);
 
-            var compatibleHeaders =
-                this.GetCompatibleHeaders(context, negotiator);
+            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context).ToArray();
 
             context.WriteTraceLog(sb =>
             {
@@ -129,13 +128,20 @@ namespace Nancy.Routing
                     .Select(mr => mr.ToString())
                     .Aggregate((t1, t2) => t1 + ", " + t2);
 
-                var acceptFormats = compatibleHeaders.Select(h=>h.Item1)
-                                                     .Aggregate((t1, t2) => t1 + ", " + t2);
+                var originalAccept = context.Request.Headers["accept"].Any()
+                                         ? string.Join(", ", context.Request.Headers["accept"])
+                                         : "None";
 
-                sb.AppendFormat("[DefaultRouteInvoker] Original accept header: {0}\n", context.Request.Headers["accept"]);
-                sb.AppendFormat("[DefaultRouteInvoker] Coerced accept header: {0}\n", acceptFormats);
+                var coercedAccept = coercedAcceptHeaders.Any() ?
+                                        coercedAcceptHeaders.Select(h => h.Item1).Aggregate((t1, t2) => t1 + ", " + t2) :
+                                        "None";
+
+                sb.AppendFormat("[DefaultRouteInvoker] Original accept header: {0}\n", originalAccept);
+                sb.AppendFormat("[DefaultRouteInvoker] Coerced accept header: {0}\n", coercedAccept);
                 sb.AppendFormat("[DefaultRouteInvoker] Acceptable media ranges: {0}\n", allowableFormats);
             });
+
+            var compatibleHeaders = this.GetCompatibleHeaders(coercedAcceptHeaders, context, negotiator);
 
             if (!compatibleHeaders.Any())
             {
@@ -211,10 +217,8 @@ namespace Nancy.Routing
             response.Headers["Link"] = links;
         }
 
-        private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(NancyContext context, Negotiator negotiator)
+        private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(IEnumerable<Tuple<string, decimal>> coercedAcceptHeaders, NancyContext context, Negotiator negotiator)
         {
-            var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context).ToArray();
-
             List<Tuple<string, decimal>> acceptHeaders;
 
             var permissableMediaRanges = negotiator.NegotiationContext.PermissableMediaRanges;
