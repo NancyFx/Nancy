@@ -209,7 +209,8 @@ def get_assembly_version(file)
 
   File.open(file, 'r') do |file|
     file.each_line do |line|
-      result = /\[assembly: AssemblyVersion\(\"(.*?)\"\)\]/.match(line)
+      result = /\[assembly: AssemblyInformationalVersion\(\"(.*?)\"\)\]/.match(line)
+      result = /\[assembly: AssemblyVersion\(\"(.*?)\"\)\]/.match(line) if result.nil?
 
       return result[1] if !result.nil?
     end
