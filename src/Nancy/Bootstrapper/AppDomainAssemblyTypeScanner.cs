@@ -15,6 +15,7 @@ namespace Nancy.Bootstrapper
     {
         static AppDomainAssemblyTypeScanner()
         {
+            IgnoredAssemblies = NancyInternalConfiguration.DefaultIgnoredAssemblies;
             LoadNancyAssemblies();
         }
 
