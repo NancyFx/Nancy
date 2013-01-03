@@ -50,8 +50,9 @@ namespace Nancy.Localization
                 var components =
                     GetKeyComponents(key);
 
-                var manager =
-                    this.resourceManagers[components.Item1];
+                var manager = this.resourceManagers.ContainsKey(components.Item1) ?
+                    this.resourceManagers[components.Item1] :
+                    null;
 
                 return (manager == null) ? null : manager.GetString(components.Item2, context.Culture);
             }

@@ -18,7 +18,7 @@
             var context = new NancyContext();
 
             //When
-            var result = defaultTextResource["Greeting", context];
+            var result = defaultTextResource["Texts.Greeting", context];
 
             //Then
             result.ShouldBeNull();
