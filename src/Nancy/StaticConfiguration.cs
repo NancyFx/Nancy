@@ -17,6 +17,7 @@ namespace Nancy
         {
             disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
+            MultipartLimit = 1000;
         }
 
         /// <summary>
@@ -69,6 +70,11 @@ namespace Nancy
                 return isRunningDebug ?? (bool)(isRunningDebug = GetDebugMode());
             }
         }
+
+        /// <summary>
+        /// Gets or sets the limit on the number of multipart sections in a request
+        /// </summary>
+        public static int MultipartLimit { get; set; }
 
         private static bool GetDebugMode()
         {

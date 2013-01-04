@@ -163,6 +163,20 @@ namespace Nancy.Tests.Unit
             actual.ShouldEqual(expected);
         }
 
+        [Fact]
+        public void Should_limit_the_number_of_boundaries()
+        {
+            // Given
+            var stream = BuildInputStream(null, StaticConfiguration.MultipartLimit + 10);
+            var multipart = new HttpMultipart(stream, Boundary);
+
+            // When
+            var boundaries = multipart.GetBoundaries();
+
+            // Then
+            boundaries.Count().ShouldEqual(StaticConfiguration.MultipartLimit);
+        }
+
         //
         private static HttpMultipartSubStream BuildInputStream(string padding, int numberOfBoundaries)
         {
