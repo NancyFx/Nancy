@@ -11,7 +11,7 @@ namespace Nancy.Localization
     /// </summary>
     public class ResourceBasedTextResource  : ITextResource
     {
-        private readonly IAssemblyProvider assemblyProvider;
+        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
         private readonly IDictionary<string, ResourceManager> resourceManagers;
         
         /// <summary>
@@ -29,12 +29,13 @@ namespace Nancy.Localization
         /// <summary>
         /// Initializes a new instance of <see cref="ResourceBasedTextResource"/> to read strings from *.resx files
         /// </summary>
-        public ResourceBasedTextResource(IAssemblyProvider assemblyProvider)
+        /// <param name="resourceAssemblyProvider">The <see cref="IResourceAssemblyProvider"/> that should be used when scanning.</param>
+        public ResourceBasedTextResource(IResourceAssemblyProvider resourceAssemblyProvider)
         {
-            this.assemblyProvider = assemblyProvider;
+            this.resourceAssemblyProvider = resourceAssemblyProvider;
 
             var resources = 
-                from assembly in this.assemblyProvider.GetAssembliesToScan()
+                from assembly in this.resourceAssemblyProvider.GetAssembliesToScan()
                 where ScanningPredicate.Invoke(assembly)
                 from resourceName in assembly.GetManifestResourceNames()
                 where resourceName.EndsWith(".resources")

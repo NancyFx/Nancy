@@ -95,7 +95,7 @@ namespace Nancy.Bootstrapper
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
-                    ResourceAssemblyProvider = typeof(DefaultAssemblyProvider),
+                    ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
                 };
             }
         }
@@ -267,7 +267,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
-                new TypeRegistration(typeof(IAssemblyProvider), this.ResourceAssemblyProvider), 
+                new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
             };
         }
 

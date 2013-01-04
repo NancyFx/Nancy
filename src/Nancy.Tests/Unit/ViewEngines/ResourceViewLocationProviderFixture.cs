@@ -12,22 +12,22 @@ namespace Nancy.Tests.Unit.ViewEngines
     public class ResourceViewLocationProviderFixture
     {
         private readonly IResourceReader reader;
-        private readonly IAssemblyProvider assemblyProvider;
+        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
         private readonly ResourceViewLocationProvider viewProvider;
 
         public ResourceViewLocationProviderFixture()
         {
             ResourceViewLocationProvider.Ignore.Clear(); 
             this.reader = A.Fake<IResourceReader>();
-            this.assemblyProvider = A.Fake<IAssemblyProvider>();
-            this.viewProvider = new ResourceViewLocationProvider(this.reader, this.assemblyProvider);
+            this.resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
+            this.viewProvider = new ResourceViewLocationProvider(this.reader, this.resourceAssemblyProvider);
 
             if (!ResourceViewLocationProvider.RootNamespaces.ContainsKey(this.GetType().Assembly))
             {
                 ResourceViewLocationProvider.RootNamespaces.Add(this.GetType().Assembly, "Some.Resource");
             }
 
-            A.CallTo(() => this.assemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().Assembly });
+            A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().Assembly });
         }
 
         [Fact]
@@ -176,7 +176,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_scan_assemblies_returned_by_assembly_provider()
         {
             // Given
-            A.CallTo(() => this.assemblyProvider.GetAssembliesToScan()).Returns(new[]
+            A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[]
             {
                 typeof(NancyEngine).Assembly,
                 this.GetType().Assembly
@@ -196,7 +196,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_not_scan_ignored_assemblies()
         {
             // Given
-            A.CallTo(() => this.assemblyProvider.GetAssembliesToScan()).Returns(new[]
+            A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[]
             {
                 typeof(NancyEngine).Assembly,
                 this.GetType().Assembly

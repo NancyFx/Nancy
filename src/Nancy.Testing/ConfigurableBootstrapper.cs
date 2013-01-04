@@ -1137,24 +1137,24 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IAssemblyProvider"/>.
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResourceAssemblyProvider"/>.
             /// </summary>
-            /// <param name="assemblyProvider">The <see cref="IAssemblyProvider"/> instance that should be used by the bootstrapper.</param>
+            /// <param name="resourceAssemblyProvider">The <see cref="IResourceAssemblyProvider"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider(IAssemblyProvider assemblyProvider)
+            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider(IResourceAssemblyProvider resourceAssemblyProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IAssemblyProvider), assemblyProvider));
+                    new InstanceRegistration(typeof(IResourceAssemblyProvider), resourceAssemblyProvider));
 
                 return this;
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IAssemblyProvider"/> instance of the specified type.
+            /// Configures the bootstrapper to create an <see cref="IResourceAssemblyProvider"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IAssemblyProvider"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="IResourceAssemblyProvider"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider<T>() where T : IAssemblyProvider
+            public ConfigurableBoostrapperConfigurator ResourceAssemblyProvider<T>() where T : IResourceAssemblyProvider
             {
                 this.bootstrapper.configuration.ResourceAssemblyProvider = typeof(T);
                 return this;
