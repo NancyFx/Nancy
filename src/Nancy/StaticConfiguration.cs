@@ -17,12 +17,13 @@ namespace Nancy
         {
             disableErrorTraces = !(disableCaches = IsRunningDebug);
             CaseSensitive = false;
+            RequestQueryFormMultipartLimit = 1000;
         }
 
         /// <summary>
         /// Gets or sets a value indicating whether Nancy should disable caching
         /// </summary>
-        [Description("Determins if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
+        [Description("Determines if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
         public static bool DisableCaches
         {
             get
@@ -69,6 +70,12 @@ namespace Nancy
                 return isRunningDebug ?? (bool)(isRunningDebug = GetDebugMode());
             }
         }
+
+        /// <summary>
+        /// Gets or sets the limit on the number of query string variables, form fields,
+        /// or multipart sections in a request.
+        /// </summary>
+        public static int RequestQueryFormMultipartLimit { get; set; }
 
         private static bool GetDebugMode()
         {
