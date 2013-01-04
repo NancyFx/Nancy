@@ -65,10 +65,18 @@ namespace Nancy.Extensions
         {
             var coll = HttpUtility.ParseQueryString(queryString);
             var ret = new DynamicDictionary();
-            
+
+            var found = 0;
             foreach (var key in coll.AllKeys.Where(key => key != null))
             {
                 ret[key] = coll[key];
+
+                found++;
+
+                if (found >= StaticConfiguration.RequestQueryFormMultipartLimit)
+                {
+                    break;
+                }
             }
             
             return ret;

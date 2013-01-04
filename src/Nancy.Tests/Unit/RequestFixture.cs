@@ -532,6 +532,62 @@ namespace Nancy.Tests.Unit
             ((string)request.Form.age).ShouldEqual("32,42,52");
         }
 
+        [Fact]
+        public void Should_limit_the_amount_of_form_fields_parsed()
+        {
+            // Given
+            var sb = new StringBuilder();
+            for (int i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append('&');
+                }
+
+                sb.AppendFormat("Field{0}=Value{0}", i);
+            }
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(sb.ToString());
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", "/", headers, memory, "http");
+
+            // Then
+            ((IEnumerable<string>)request.Form.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
+        }
+
+        [Fact]
+        public void Should_limit_the_amount_of_querystring_fields_parsed()
+        {
+            // Given
+            var sb = new StringBuilder();
+            for (int i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
+            {
+                if (i > 0)
+                {
+                    sb.Append('&');
+                }
+
+                sb.AppendFormat("Field{0}=Value{0}", i);
+            }
+            var memory = CreateRequestStream();
+
+            // When
+            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), memory, "http", sb.ToString());
+
+            // Then
+            ((IEnumerable<string>)request.Query.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
+        }
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());
