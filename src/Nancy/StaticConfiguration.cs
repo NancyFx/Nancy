@@ -23,7 +23,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets a value indicating whether Nancy should disable caching
         /// </summary>
-        [Description("Determins if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
+        [Description("Determines if Nancy should disable the internal caches. This will have an impact on performance and should not be used in production.")]
         public static bool DisableCaches
         {
             get
