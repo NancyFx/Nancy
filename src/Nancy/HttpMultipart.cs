@@ -47,7 +47,8 @@ namespace Nancy
             var boundarySubStreams = new List<HttpMultipartSubStream>();
             var boundaryStart = this.GetNextBoundaryPosition();
 
-            while (MultipartIsNotCompleted(boundaryStart))
+            var found = 0;
+            while (MultipartIsNotCompleted(boundaryStart) && found < StaticConfiguration.RequestQueryFormMultipartLimit)
             {
                 var boundaryEnd = this.GetNextBoundaryPosition();
                 boundarySubStreams.Add(new HttpMultipartSubStream(
@@ -56,6 +57,8 @@ namespace Nancy
                     this.GetActualEndOfBoundary(boundaryEnd)));
 
                 boundaryStart = boundaryEnd;
+
+                found++;
             }
 
             return boundarySubStreams;

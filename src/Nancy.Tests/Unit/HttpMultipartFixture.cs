@@ -167,14 +167,14 @@ namespace Nancy.Tests.Unit
         public void Should_limit_the_number_of_boundaries()
         {
             // Given
-            var stream = BuildInputStream(null, StaticConfiguration.MultipartLimit + 10);
+            var stream = BuildInputStream(null, StaticConfiguration.RequestQueryFormMultipartLimit + 10);
             var multipart = new HttpMultipart(stream, Boundary);
 
             // When
             var boundaries = multipart.GetBoundaries();
 
             // Then
-            boundaries.Count().ShouldEqual(StaticConfiguration.MultipartLimit);
+            boundaries.Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
         }
 
         //
