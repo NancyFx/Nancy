@@ -533,7 +533,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [InlineData("de-DE", 4.50)]
         [InlineData("en-GB", 450)]
         [InlineData("en-US", 450)]
-        [InlineData("se-SE", 4.50)]
+        [InlineData("sv-SE", 4.50)]
         [InlineData("ru-RU", 4.50)]
         [InlineData("zh-TW", 450)]
         public void Should_be_able_to_bind_culturally_aware_form_properties_if_numeric(string culture, double expected)
