@@ -47,6 +47,8 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
             };
 
         /// <summary>
@@ -93,7 +95,7 @@ namespace Nancy.Bootstrapper
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
-                    ResourceAssemblyProvider = typeof(DefaultAssemblyProvider),
+                    ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
                 };
             }
         }
@@ -265,7 +267,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
-                new TypeRegistration(typeof(IAssemblyProvider), this.ResourceAssemblyProvider), 
+                new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
             };
         }
 
