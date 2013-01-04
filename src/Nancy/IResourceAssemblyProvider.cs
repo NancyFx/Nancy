@@ -6,7 +6,7 @@
     /// <summary>
     /// Defines the functionality for retrieving which assemblies that should be used by Nancy.
     /// </summary>
-    public interface IAssemblyProvider
+    public interface IResourceAssemblyProvider
     {
         /// <summary>
         /// Gets a list of assemblies that should be scanned.
