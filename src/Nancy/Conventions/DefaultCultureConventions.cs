@@ -45,7 +45,6 @@
             conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>(6)
             {
                 BuiltInCultureConventions.FormCulture,
-                BuiltInCultureConventions.PathCulture,
                 BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
