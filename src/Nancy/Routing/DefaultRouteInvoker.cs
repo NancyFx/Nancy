@@ -71,7 +71,16 @@ namespace Nancy.Routing
                         returnResult = new Response();
                     }
 
-                    tcs.SetResult(this.InvokeRouteWithStrategy(returnResult, context));
+                    try
+                    {
+                        var negotiatedResult = this.InvokeRouteWithStrategy(returnResult, context);
+
+                        tcs.SetResult(negotiatedResult);
+                    }
+                    catch (Exception e)
+                    {
+                        tcs.SetException(e);                        
+                    }
                 }, TaskContinuationOptions.OnlyOnRanToCompletion);
 
             return tcs.Task;

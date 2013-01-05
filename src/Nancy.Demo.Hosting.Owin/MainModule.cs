@@ -84,6 +84,9 @@ namespace Nancy.Demo.Hosting.Owin
 
                                    return string.Format("You made a {0} request to {1} which runs on owin {2}.", requestMethod, requestPath, owinVersion);
                                };
+
+            Get["/error1"] = x => View["nope"];
+
         }
 
         private static T GetOwinEnvironmentValue<T>(IDictionary<string, object> env, string name, T defaultValue = default(T))
