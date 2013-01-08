@@ -90,11 +90,7 @@
     </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
     <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
