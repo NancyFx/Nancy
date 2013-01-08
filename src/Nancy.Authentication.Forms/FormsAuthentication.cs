@@ -73,14 +73,30 @@ namespace Nancy.Authentication.Forms
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
         /// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
         /// <returns>Nancy response with redirect.</returns>
-        public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
+        public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = null)
         {
             var redirectUrl = fallbackRedirectUrl;
+
+            if (string.IsNullOrEmpty(redirectUrl))
+            {
+                redirectUrl = context.Request.Url.BasePath;
+            }
+
+            if (string.IsNullOrEmpty(redirectUrl))
+            {
+                redirectUrl = "/";
+            }
+
             string redirectQuerystringKey = GetRedirectQuerystringKey(currentConfiguration);
 
             if (context.Request.Query[redirectQuerystringKey].HasValue)
             {
-                redirectUrl = context.Request.Query[redirectQuerystringKey];
+                var queryUrl = (string)context.Request.Query[redirectQuerystringKey];
+
+                if (context.IsLocalUrl(queryUrl))
+                {
+                    redirectUrl = queryUrl;
+                }
             }
 
             var response = context.GetRedirect(redirectUrl);
