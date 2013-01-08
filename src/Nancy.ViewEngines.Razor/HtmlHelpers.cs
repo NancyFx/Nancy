@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq.Expressions;
+    using Nancy.Security;
 
     /// <summary>
     /// Helpers to generate html content.
@@ -106,14 +107,9 @@
         /// <summary>
         /// Returns current authenticated user name
         /// </summary>
-        public string CurrentUser
+        public IUserIdentity CurrentUser
         {
-            get
-            {
-                return this.RenderContext.Context.CurrentUser == null
-                           ? string.Empty
-                           : this.RenderContext.Context.CurrentUser.UserName;
-            }
+            get { return this.RenderContext.Context.CurrentUser; }
         }
 
         /// <summary>
