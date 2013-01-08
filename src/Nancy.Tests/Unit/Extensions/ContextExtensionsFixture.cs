@@ -103,5 +103,53 @@
             result.ShouldEqual("/scripts/test.js");
         }
 
+        [Fact]
+        public void Should_report_simple_relative_path_as_local()
+        {
+            var context = this.CreateContext();
+
+            var result = context.IsLocalUrl("/stuff");
+
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_report_same_host_absolute_url_as_local()
+        {
+            var context = this.CreateContext();
+
+            var result = context.IsLocalUrl("http://test.com/someotherpath");
+
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_report_empty_string_as_nonlocal()
+        {
+            var context = this.CreateContext();
+
+            var result = context.IsLocalUrl("");
+
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_report_different_host_absolute_url_as_nonlocal()
+        {
+            var context = this.CreateContext();
+
+            var result = context.IsLocalUrl("http://anothertest.com/someotherpath");
+
+            result.ShouldBeFalse();
+        }
+
+        private NancyContext CreateContext(Url url = null)
+        {
+            var request = new Request(
+                "GET",
+                url ?? new Url() { Scheme = "http", BasePath = "testing", HostName = "test.com", Path = "test" });
+
+            return new NancyContext() { Request = request };
+        }
     }
 }
