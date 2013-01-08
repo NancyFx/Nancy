@@ -89,7 +89,7 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the anti forgery token.</returns>
         public IHtmlString AntiForgeryToken()
         {
-            var tokenKeyValue = 
+            var tokenKeyValue =
                 this.RenderContext.GetCsrfToken();
 
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
@@ -101,6 +101,27 @@
         public string CurrentLocale
         {
             get { return this.RenderContext.Context.Culture.Name; }
+        }
+
+        /// <summary>
+        /// Returns current authenticated user name
+        /// </summary>
+        public string CurrentUser
+        {
+            get
+            {
+                return this.RenderContext.Context.CurrentUser == null
+                           ? string.Empty
+                           : this.RenderContext.Context.CurrentUser.UserName;
+            }
+        }
+
+        /// <summary>
+        /// Determines if current user is authenticated
+        /// </summary>
+        public bool IsAuthenticated
+        {
+            get { return this.RenderContext.Context.CurrentUser != null; }
         }
     }
 }
