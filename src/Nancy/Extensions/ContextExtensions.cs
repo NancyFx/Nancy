@@ -85,5 +85,33 @@ namespace Nancy.Extensions
         {
             context.Trace.TraceLog.WriteLog(logDelegate);
         }
+
+        /// <summary>
+        /// Returns a boolean indicating whether a given url string is local or not
+        /// </summary>
+        /// <param name="context">Nancy context</param>
+        /// <param name="url">Url string (relative or absolute)</param>
+        /// <returns>True if local, false otherwise</returns>
+        public static bool IsLocalUrl(this NancyContext context, string url)
+        {
+            if (string.IsNullOrEmpty(url))
+            {
+                return false;
+            }
+
+            Uri uri;
+
+            if (Uri.TryCreate(url, UriKind.Relative, out uri))
+            {
+                return true;
+            }
+
+            if (!Uri.TryCreate(url, UriKind.Absolute, out uri))
+            {
+                return false;
+            }
+
+            return string.Equals(uri.Host, context.Request.Url.HostName, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }
