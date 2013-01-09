@@ -15,6 +15,7 @@ namespace Nancy.Bootstrapper
     using Security;
     using Nancy.Validation;
     using Nancy.Culture;
+    using Nancy.Localization;
 
     /// <summary>
     /// Configuration class for Nancy's internals.
@@ -45,6 +46,9 @@ namespace Nancy.Bootstrapper
                 asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
                 asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
             };
 
         /// <summary>
@@ -90,6 +94,8 @@ namespace Nancy.Bootstrapper
                     RouteSegmentExtractor = typeof(DefaultRouteSegmentExtractor),
                     RouteDescriptionProvider = typeof(DefaultRouteDescriptionProvider),
                     CultureService = typeof(DefaultCultureService),
+                    TextResource = typeof(ResourceBasedTextResource),
+                    ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
                 };
             }
         }
@@ -161,6 +167,10 @@ namespace Nancy.Bootstrapper
         public Type RouteDescriptionProvider { get; set; }
 
         public Type CultureService { get; set; }
+
+        public Type TextResource { get; set; }
+
+        public Type ResourceAssemblyProvider { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -256,6 +266,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteSegmentExtractor), this.RouteSegmentExtractor),
                 new TypeRegistration(typeof(IRouteDescriptionProvider), this.RouteDescriptionProvider),
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
+                new TypeRegistration(typeof(ITextResource), this.TextResource), 
+                new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
             };
         }
 

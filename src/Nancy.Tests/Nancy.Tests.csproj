@@ -129,6 +129,7 @@
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
+    <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
     <Compile Include="Unit\Culture\BuiltInCultureConventionFixture.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
+    <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
@@ -231,6 +233,7 @@
     <Compile Include="Unit\Validation\ValidationResultFixture.cs" />
     <Compile Include="Unit\Validation\DefaultValidatorLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultRenderContextFixture.cs" />
+    <Compile Include="Unit\Localization\ResourceBasedTextResourceFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewLocationCacheFixture.cs" />
     <Compile Include="Fakes\FakeViewLocationCache.cs" />
     <Compile Include="Fakes\FakeViewEngine.cs" />

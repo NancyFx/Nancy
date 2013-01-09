@@ -78,13 +78,19 @@
         public abstract void Execute();
 
         /// <summary>
+        /// Used to retun text resources
+        /// </summary>
+        public dynamic Text { get; set; }
+
+        /// <summary>
         /// Initializes the specified engine.
         /// </summary>
         /// <param name="engine">The engine.</param>
         /// <param name="renderContext">The render context.</param>
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
-        { }
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
@@ -272,6 +278,8 @@
             return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
         }
     }
+
+
 
     /// <summary>
     /// A strongly-typed view base.

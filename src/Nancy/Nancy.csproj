@@ -147,6 +147,8 @@
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
+    <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
+    <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
     <Compile Include="ModelBinding\PropertyBindingException.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
@@ -269,8 +271,9 @@
     <Compile Include="ViewEngines\DefaultFileSystemReader.cs" />
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
-    <Compile Include="ViewEngines\DefaultResourceAssemblyProvider.cs" />
+    <Compile Include="ResourceAssemblyProvider.cs" />
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
+    <Compile Include="Localization\ResourceBasedTextResource.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
     <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
@@ -371,8 +374,9 @@
     <Compile Include="ViewEngines\IFileSystemReader.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
-    <Compile Include="ViewEngines\IResourceAssemblyProvider.cs" />
+    <Compile Include="IResourceAssemblyProvider.cs" />
     <Compile Include="ViewEngines\IResourceReader.cs" />
+    <Compile Include="Localization\ITextResource.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
     <Compile Include="ViewEngines\IViewLocationCache.cs" />

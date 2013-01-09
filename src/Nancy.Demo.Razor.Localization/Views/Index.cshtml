@@ -1,0 +1,18 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+@{
+    Layout = "razor-layout.cshtml";
+}
+
+<h1>The below greeting should be based on your culture:</h1>
+
+<h3>"@Text.Text.Greeting"</h3>
+
+<p>
+    You will see:
+    <br />
+    { "en-GB", "Hello Sir" }
+     <br />
+    { "de-DE", "Guten Tag" }
+     <br />
+    { "en-US", "Howdy Partner" }
+</p>

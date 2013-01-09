@@ -57,9 +57,11 @@ namespace Nancy.Authentication.Forms.Tests
                 RequiresSSL = true
             };
 
-            this.context = new NancyContext()
+            this.context = new NancyContext
                                {
-                                   Request = new FakeRequest("GET", "/")
+                                    Request = new Request(
+                                                    "GET",
+                                                    new Url { Scheme = "http", BasePath = "/testing", HostName = "test.com", Path = "test" })
                                };
 
             this.userGuid = new Guid("3D97EB33-824A-4173-A2C1-633AC16C1010");
@@ -469,7 +471,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             // Given
             var fakePipelines = new Pipelines();
-            
+
             FormsAuthentication.Enable(fakePipelines, this.config);
 
             var queryContext = new NancyContext()
@@ -490,7 +492,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             // Given
             var fakePipelines = new Pipelines();
-            
+
             this.config.RedirectQuerystringKey = "next";
             FormsAuthentication.Enable(fakePipelines, this.config);
 
@@ -537,7 +539,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             this.config.RedirectQuerystringKey = string.Empty;
             FormsAuthentication.Enable(fakePipelines, this.config);
-            
+
             var queryContext = new NancyContext()
             {
                 Request = new FakeRequest("GET", "/secure", "?foo=bar"),
@@ -624,6 +626,45 @@ namespace Nancy.Authentication.Forms.Tests
             // Then
             var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
             cookie.Secure.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_redirect_to_base_path_if_non_local_url_and_no_fallback()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+            context.Request.Query[config.RedirectQuerystringKey] = "http://moo.com/";
+
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+
+            result.ShouldBeOfType(typeof(Response));
+            result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
+            result.Headers["Location"].ShouldEqual("/testing");
+        }
+
+        [Fact]
+        public void Should_redirect_to_fallback_if_non_local_url_and_fallback_set()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+            context.Request.Query[config.RedirectQuerystringKey] = "http://moo.com/";
+
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, fallbackRedirectUrl:"/moo");
+
+            result.ShouldBeOfType(typeof(Response));
+            result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
+            result.Headers["Location"].ShouldEqual("/moo");
+        }
+
+        [Fact]
+        public void Should_redirect_to_given_url_if_local()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
+            context.Request.Query[config.RedirectQuerystringKey] = "~/login";
+
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+
+            result.ShouldBeOfType(typeof(Response));
+            result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
+            result.Headers["Location"].ShouldEqual("/testing/login");
         }
     }
 }
