@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Linq.Expressions;
+    using Nancy.Security;
 
     /// <summary>
     /// Helpers to generate html content.
@@ -89,7 +90,7 @@
         /// <returns>An <see cref="IHtmlString"/> representation of the anti forgery token.</returns>
         public IHtmlString AntiForgeryToken()
         {
-            var tokenKeyValue = 
+            var tokenKeyValue =
                 this.RenderContext.GetCsrfToken();
 
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
@@ -101,6 +102,22 @@
         public string CurrentLocale
         {
             get { return this.RenderContext.Context.Culture.Name; }
+        }
+
+        /// <summary>
+        /// Returns current authenticated user name
+        /// </summary>
+        public IUserIdentity CurrentUser
+        {
+            get { return this.RenderContext.Context.CurrentUser; }
+        }
+
+        /// <summary>
+        /// Determines if current user is authenticated
+        /// </summary>
+        public bool IsAuthenticated
+        {
+            get { return this.RenderContext.Context.CurrentUser != null; }
         }
     }
 }
