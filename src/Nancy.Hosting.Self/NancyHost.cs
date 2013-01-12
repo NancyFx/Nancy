@@ -26,59 +26,97 @@
         private readonly IList<Uri> baseUriList;
         private readonly HttpListener listener;
         private readonly INancyEngine engine;
+        private readonly HostConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// Uses the default configuration
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, baseUris){}
+            : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris) { }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
+        /// Uses the specified configuration.
+        /// </summary>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
+        /// <param name="configuration">Configuration to use</param>
+        public NancyHost(HostConfiguration configuration, params Uri[] baseUris)
+            : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris){}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
         /// the provided <paramref name="bootstrapper"/>.
+        /// Uses the default configuration
         /// </summary>
         /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, params Uri[] baseUris)
+            : this(bootstrapper, new HostConfiguration(), baseUris)
         {
-            baseUriList = baseUris;
-            listener = new HttpListener();
+        }
 
-            foreach (var baseUri in baseUriList)
-            {
-                listener.Prefixes.Add(baseUri.ToString().Replace("localhost", "+"));
-            }
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
+        /// the provided <paramref name="bootstrapper"/>.
+        /// Uses the specified configuration.
+        /// </summary>
+        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="configuration">Configuration to use</param>
+        /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
+        public NancyHost(INancyBootstrapper bootstrapper, HostConfiguration configuration, params Uri[] baseUris)
+        {
+            this.configuration = configuration ?? new HostConfiguration();
+            this.baseUriList = baseUris;
+            this.listener = new HttpListener();
 
             bootstrapper.Initialise();
-            engine = bootstrapper.GetEngine();
+            this.engine = bootstrapper.GetEngine();
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
         /// the provided <paramref name="bootstrapper"/>.
+        /// Uses the default configuration
         /// </summary>
         /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
         /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper)
-            : this (bootstrapper, baseUri)
+            : this(bootstrapper, new HostConfiguration(), baseUri)
         {
         }
-        
+
         /// <summary>
-        /// Start listening for incoming requests.
+        /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
+        /// the provided <paramref name="bootstrapper"/>.
+        /// Uses the specified configuration.
+        /// </summary>
+        /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
+        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="configuration">Configuration to use</param>
+        public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, HostConfiguration configuration)
+            : this (bootstrapper, configuration, baseUri)
+        {
+        }
+
+        /// <summary>
+        /// Start listening for incoming requests with the given configuration
         /// </summary>
         public void Start()
         {
+            this.AddPrefixes();
+
             listener.Start();
             try
             {
                 listener.BeginGetContext(GotCallback, null);
             }
-            catch (HttpListenerException)
+            catch (Exception e)
             {
-                // this will be thrown when listener is closed while waiting for a request
-                return;
+                this.configuration.UnhandledExceptionCallback.Invoke(e);
+
+                throw;
             }
         }
 
@@ -88,6 +126,21 @@
         public void Stop()
         {
             listener.Stop();
+        }
+
+        private void AddPrefixes()
+        {
+            foreach (var baseUri in baseUriList)
+            {
+                var prefix = baseUri.ToString();
+
+                if (this.configuration.RewriteLocalhost)
+                {
+                    prefix = prefix.Replace("localhost", "+");
+                }
+
+                listener.Prefixes.Add(prefix);
+            }
         }
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
@@ -178,10 +231,10 @@
                 listener.BeginGetContext(GotCallback, null);
                 Process(ctx);
             }
-            catch (HttpListenerException)
+            catch (Exception e)
             {
-                // this will be thrown when listener is closed while waiting for a request
-                return;
+                this.configuration.UnhandledExceptionCallback.Invoke(e);
+                listener.BeginGetContext(GotCallback, null);
             }
         }
 
@@ -189,26 +242,22 @@
         {
             try
             {
-
                 var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
                 using (var nancyContext = engine.HandleRequest(nancyRequest))
                 {
-
                     try
                     {
                         ConvertNancyResponseToResponse(nancyContext.Response, ctx.Response);
                     }
-                    catch (Exception ex)
+                    catch (Exception e)
                     {
-                        nancyContext.Trace.TraceLog.WriteLog(s => s.AppendLine(string.Concat("[SelfHost] Exception while rendering response: ", ex)));
-                        //TODO - the content of the tracelog is not used in this case
+                        this.configuration.UnhandledExceptionCallback.Invoke(e);
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                //TODO -  this swallows the exception so that it doesn't kill the host
-                // pass it to the host process for handling by the caller ?
+                this.configuration.UnhandledExceptionCallback.Invoke(e);
             }
         }
     }
