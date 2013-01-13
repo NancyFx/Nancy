@@ -52,7 +52,7 @@
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
             Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext);
-            Template.NamingConvention = new CSharpNamingConvention();
+            Template.NamingConvention = new RubyNamingConvention();
         }
 
         /// <summary>
