@@ -111,6 +111,32 @@
         }
 
         [Fact]
+        public void RenderView_with_lowercase_filter_should_return_lowercase_string()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'Test' %}<h1>Hello Mr. {{ name | downcase }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
+
+        [Fact]
         public void When_passing_a_null_model_should_return_an_empty_string()
         {
             // Given
