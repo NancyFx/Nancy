@@ -33,6 +33,10 @@ namespace Nancy
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
         protected NancyModule(string modulePath)
         {
+            this.After = new AfterPipeline();
+            this.Before = new BeforePipeline();
+            this.OnError = new ErrorPipeline();
+
             this.ModulePath = modulePath;
             this.routes = new List<Route>();
         }

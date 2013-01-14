@@ -48,10 +48,6 @@ namespace Nancy.Routing
             module.ModelBinderLocator = this.modelBinderLocator;
             module.ValidatorLocator = this.validatorLocator;
 
-            module.After = new AfterPipeline();
-            module.Before = new BeforePipeline();
-            module.OnError = new ErrorPipeline();
-
             return module;
         }
 
