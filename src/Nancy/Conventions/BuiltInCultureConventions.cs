@@ -41,11 +41,18 @@
         /// <returns>CultureInfo if found in Path otherwise null</returns>
         public static CultureInfo PathCulture(NancyContext context)
         {
-            var firstParameter = context.Request.Url.Path.Split(new char[] { '/' }, StringSplitOptions.RemoveEmptyEntries).FirstOrDefault();
+            var segments = 
+                context.Request.Url.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
 
-            if (firstParameter != null && IsValidCultureInfoName(firstParameter))
+            var firstSegment =
+                segments.FirstOrDefault();
+
+            if (firstSegment != null && IsValidCultureInfoName(firstSegment))
             {
-                return new CultureInfo(firstParameter);
+                context.Request.Url.Path = 
+                    string.Concat("/", string.Join("/", segments.Skip(1)));
+
+                return new CultureInfo(firstSegment);
             }
 
             return null;
