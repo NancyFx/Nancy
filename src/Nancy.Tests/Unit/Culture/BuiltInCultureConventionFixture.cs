@@ -86,6 +86,21 @@
             culture.Name.ShouldEqual(expected);
         }
 
+        [Theory]
+        [InlineData("/en-GB", "/")]
+        [InlineData("/en-GB/product", "/product")]
+        public void Should_culture_of_request_path_if_first_path_parameter_valid_culture(string path, string expectedPath)
+        {
+            //Given
+            var context = CreateContextRequest(path);
+
+            //When
+            var culture = BuiltInCultureConventions.PathCulture(context);
+
+            //Then
+            context.Request.Url.Path.ShouldEqual(expectedPath);
+        }
+
         [Fact]
         public void Should_return_null_if_headers_not_populated()
         {
