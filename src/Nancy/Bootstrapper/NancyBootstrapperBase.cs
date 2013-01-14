@@ -96,7 +96,7 @@
                     this.modules 
                     ?? 
                     (this.modules = AppDomainAssemblyTypeScanner
-                                        .TypesOf<NancyModuleBase>(true)
+                                        .TypesOf<INancyModule>(true)
                                         .NotOfType<DiagnosticModule>()
                                         .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
                                         .ToArray());
@@ -326,7 +326,7 @@
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public abstract IEnumerable<NancyModuleBase> GetAllModules(NancyContext context);
+        public abstract IEnumerable<INancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
         /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
@@ -334,7 +334,7 @@
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public abstract NancyModuleBase GetModuleByKey(string moduleKey, NancyContext context);
+        public abstract INancyModule GetModuleByKey(string moduleKey, NancyContext context);
 
         /// <summary>
         /// Gets the configured INancyEngine

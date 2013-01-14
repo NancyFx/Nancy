@@ -45,7 +45,7 @@
             return !this.Values.SelectMany(r => r).Any();
         }
 
-        private void BuildCache(IEnumerable<NancyModuleBase> modules)
+        private void BuildCache(IEnumerable<INancyModule> modules)
         {
             foreach (var module in modules)
             {

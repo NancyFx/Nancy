@@ -11,6 +11,6 @@
         /// <param name="module">The <see cref="NancyModule"/> that shoule be configured.</param>
         /// <param name="context">The current request context.</param>
         /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
-        NancyModuleBase BuildModule(NancyModuleBase module, NancyContext context);
+        INancyModule BuildModule(INancyModule module, NancyContext context);
     }
 }

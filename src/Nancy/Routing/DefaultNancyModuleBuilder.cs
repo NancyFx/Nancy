@@ -38,7 +38,7 @@ namespace Nancy.Routing
         /// <param name="module">The <see cref="NancyModule"/> that shoule be configured.</param>
         /// <param name="context">The current request context.</param>
         /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
-        public NancyModuleBase BuildModule(NancyModuleBase module, NancyContext context)
+        public INancyModule BuildModule(INancyModule module, NancyContext context)
         {
             CreateNegotiationContext(module, context);
 
@@ -48,10 +48,14 @@ namespace Nancy.Routing
             module.ModelBinderLocator = this.modelBinderLocator;
             module.ValidatorLocator = this.validatorLocator;
 
+            module.After = new AfterPipeline();
+            module.Before = new BeforePipeline();
+            module.OnError = new ErrorPipeline();
+
             return module;
         }
 
-        private static void CreateNegotiationContext(NancyModuleBase module, NancyContext context)
+        private static void CreateNegotiationContext(INancyModule module, NancyContext context)
         {
             // TODO - not sure if this should be here or not, but it'll do for now :)
             context.NegotiationContext = new NegotiationContext

@@ -12,7 +12,7 @@
 		/// </summary>
 		/// <param name="module">Module to enable</param>
 		/// <param name="configuration">Basic authentication configuration</param>
-		public static void EnableBasicAuthentication(this NancyModuleBase module, BasicAuthenticationConfiguration configuration)
+		public static void EnableBasicAuthentication(this INancyModule module, BasicAuthenticationConfiguration configuration)
 		{
 			BasicAuthentication.Enable(module, configuration);
 		}
