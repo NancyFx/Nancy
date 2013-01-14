@@ -4,7 +4,7 @@
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
-        protected override Diagnostics.DiagnosticsConfiguration DiagnosticsConfiguration
+        protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
             get
             {
