@@ -58,7 +58,7 @@
                 foreach (var routeDescription in routes)
                 {
                     routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
-                    routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path);
+                    routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
                 }
 
                 this.AddRoutesToCache(module.Routes.Select(r => r.Description), moduleKey);
