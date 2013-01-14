@@ -39,7 +39,7 @@
         /// </summary>
         /// <param name="module">Module to add handlers to (usually "this")</param>
         /// <param name="configuration">Forms authentication configuration</param>
-        public static void Enable(NancyModule module, BasicAuthenticationConfiguration configuration)
+        public static void Enable(NancyModuleBase module, BasicAuthenticationConfiguration configuration)
         {
             if (module == null)
             {

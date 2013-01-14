@@ -27,7 +27,7 @@ namespace Nancy.Demo.Authentication.Forms
 
                 if (userGuid == null)
                 {
-                    return Context.GetRedirect("~/login?error=true&username=" + (string)this.Request.Form.Username);
+                    return this.Context.GetRedirect("~/login?error=true&username=" + (string)this.Request.Form.Username);
                 }
 
                 DateTime? expiry = null;

@@ -21,9 +21,9 @@ namespace Nancy.Diagnostics
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        public IEnumerable<NancyModuleBase> GetAllModules(NancyContext context)
         {
-            return this.container.ResolveAll<NancyModule>(false);
+            return this.container.ResolveAll<NancyModuleBase>(false);
         }
 
         /// <summary>
@@ -32,9 +32,9 @@ namespace Nancy.Diagnostics
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public NancyModuleBase GetModuleByKey(string moduleKey, NancyContext context)
         {
-            return this.container.Resolve<NancyModule>(moduleKey);
+            return this.container.Resolve<NancyModuleBase>(moduleKey);
         }
 
         private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
@@ -60,7 +60,7 @@ namespace Nancy.Diagnostics
 
             foreach (var moduleType in AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray())
             {
-                diagContainer.Register(typeof(NancyModule), moduleType, moduleKeyGenerator.GetKeyForModuleType(moduleType)).AsMultiInstance();
+                diagContainer.Register(typeof(NancyModuleBase), moduleType, moduleKeyGenerator.GetKeyForModuleType(moduleType)).AsMultiInstance();
             }
 
             return diagContainer;

@@ -116,12 +116,12 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/json"] = x => {
                 var model = new RatPack { FirstName = "Andy" };
-                return Response.AsJson(model);
+                return this.Response.AsJson(model);
             };
 
             Get["/xml"] = x => {
                 var model = new RatPack { FirstName = "Andy" };
-                return Response.AsXml(model);
+                return this.Response.AsXml(model);
             };
 
             Get["/session"] = x => {
@@ -163,7 +163,7 @@ namespace Nancy.Demo.Hosting.Aspnet
             {
                 this.ValidateCsrfToken();
 
-                return string.Format("Hello {0}!", Request.Form.Name);
+                return string.Format("Hello {0}!", this.Request.Form.Name);
             };
 
             Get["/csrfWithExpiry"] = x =>
@@ -178,7 +178,7 @@ namespace Nancy.Demo.Hosting.Aspnet
                 {
                     this.ValidateCsrfToken(TimeSpan.FromSeconds(20));
 
-                    return string.Format("Hello {0}!", Request.Form.Name);
+                    return string.Format("Hello {0}!", this.Request.Form.Name);
                 };
 
             Get["/viewNotFound"] = _ => View["I-do-not-exist"];

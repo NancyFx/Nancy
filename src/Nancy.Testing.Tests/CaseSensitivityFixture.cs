@@ -14,7 +14,7 @@
             {
                 Get["/"] = _ =>
                 {
-                    string name = Request.Query.animal.HasValue ? Request.Query.animal : "";
+                    string name = this.Request.Query.animal.HasValue ? this.Request.Query.animal : "";
                     return name;
                 };
 

@@ -20,7 +20,7 @@ namespace Nancy.Hosting.Self.Tests
                     return response;
                 };
 
-            Post["/rel"] = parameters => new StreamReader(Request.Body).ReadToEnd();
+            Post["/rel"] = parameters => new StreamReader(this.Request.Body).ReadToEnd();
 
         	Get["/exception"] = parameters => new Response() {Contents = s =>
         	                                                             	{

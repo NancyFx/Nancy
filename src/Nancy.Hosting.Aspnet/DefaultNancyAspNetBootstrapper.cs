@@ -45,9 +45,9 @@ namespace Nancy.Hosting.Aspnet
         /// </summary>
         /// <param name="context">Current request context</param>
         /// <returns>IEnumerable of NancyModule</returns>
-        public override sealed IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        public override sealed IEnumerable<NancyModuleBase> GetAllModules(NancyContext context)
         {
-            return this.ApplicationContainer.ResolveAll<NancyModule>(false);
+            return this.ApplicationContainer.ResolveAll<NancyModuleBase>(false);
         }
 
         /// <summary>
@@ -56,9 +56,9 @@ namespace Nancy.Hosting.Aspnet
         /// <param name="moduleKey">Module key of the module to retrieve</param>
         /// <param name="context">Current request context</param>
         /// <returns>NancyModule instance</returns>
-        public override sealed NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override sealed NancyModuleBase GetModuleByKey(string moduleKey, NancyContext context)
         {
-            return this.ApplicationContainer.Resolve<NancyModule>(moduleKey);
+            return this.ApplicationContainer.Resolve<NancyModuleBase>(moduleKey);
         }
 
         /// <summary>
@@ -156,7 +156,7 @@ namespace Nancy.Hosting.Aspnet
         {
             foreach (var registrationType in moduleRegistrationTypes)
             {
-                container.Register(typeof(NancyModule), registrationType.ModuleType, registrationType.ModuleKey).AsPerRequestSingleton();
+                container.Register(typeof(NancyModuleBase), registrationType.ModuleType, registrationType.ModuleKey).AsPerRequestSingleton();
             }
         }
 

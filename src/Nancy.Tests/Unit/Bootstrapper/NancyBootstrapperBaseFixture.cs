@@ -352,9 +352,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        public override IEnumerable<NancyModuleBase> GetAllModules(NancyContext context)
         {
-            return this.PassedModules.Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType));
+            return this.PassedModules.Select(m => (NancyModuleBase)Activator.CreateInstance(m.ModuleType));
         }
 
         /// <summary>
@@ -363,11 +363,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override NancyModuleBase GetModuleByKey(string moduleKey, NancyContext context)
         {
             return
                 this.PassedModules.Where(m => String.Equals(m.ModuleKey, moduleKey, StringComparison.InvariantCulture))
-                    .Select(m => (NancyModule)Activator.CreateInstance(m.ModuleType))
+                    .Select(m => (NancyModuleBase)Activator.CreateInstance(m.ModuleType))
                     .FirstOrDefault();
         }
 
@@ -481,7 +481,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public override IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        public override IEnumerable<NancyModuleBase> GetAllModules(NancyContext context)
         {
             throw new NotImplementedException();
         }
@@ -492,7 +492,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override NancyModuleBase GetModuleByKey(string moduleKey, NancyContext context)
         {
             throw new NotImplementedException();
         }
