@@ -10,7 +10,7 @@
 
         public bool FilteredFilter(NancyContext context)
         {
-            return true;
+            return false;
         }
 
         [NancyRoute("GET", "/filtered")]

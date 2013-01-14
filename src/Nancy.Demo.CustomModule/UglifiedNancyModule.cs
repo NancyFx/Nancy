@@ -109,7 +109,15 @@
 
         private Func<NancyContext, bool> GetFilter(string routeMethodName)
         {
-            return null;
+            var type = this.GetType();
+            var method = type.GetMethod(routeMethodName + "Filter", BindingFlags.Public | BindingFlags.Instance);
+
+            if (method == null)
+            {
+                return null;
+            }
+
+            return (Func<NancyContext, bool>)Delegate.CreateDelegate(typeof(Func<NancyContext, bool>), this, method.Name);
         }
 
         /// <summary>
