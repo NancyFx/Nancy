@@ -335,7 +335,7 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_add_vary_accept_header_when_multiple_accept_headers_can_be_satisfied()
+        public void Should_add_vary_accept_header()
         {
             // Given
             var browser = new Browser(with =>
@@ -349,10 +349,11 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = browser.Get("/");
+            var response = browser.Get("/", with => with.Header("Accept", "application/json"));
 
             // Then
             Assert.True(response.Headers.ContainsKey("Vary"));
+            Assert.True(response.Headers["Vary"].Contains("Accept"));
         }
 
         [Fact]
