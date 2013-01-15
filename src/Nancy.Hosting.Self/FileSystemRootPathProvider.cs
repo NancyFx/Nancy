@@ -10,7 +10,8 @@ namespace Nancy.Hosting.Self
         {
             var assembly = Assembly.GetEntryAssembly();
 
-            return assembly == null ? Environment.CurrentDirectory : Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+            return assembly == null ? Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) :
+                Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
         }
     }
 }
