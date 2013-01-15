@@ -234,7 +234,15 @@
             catch (Exception e)
             {
                 this.configuration.UnhandledExceptionCallback.Invoke(e);
-                listener.BeginGetContext(GotCallback, null);
+
+                try
+                {
+                    listener.BeginGetContext(GotCallback, null);
+                }
+                catch (Exception ex)
+                {
+                    this.configuration.UnhandledExceptionCallback.Invoke(e);
+                }
             }
         }
 
