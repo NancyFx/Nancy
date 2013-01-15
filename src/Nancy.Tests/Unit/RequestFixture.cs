@@ -113,25 +113,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_argumentoutofrangeexception_when_initialized_with_null_uri()
+        public void Should_throw_null_exception_when_initialized_with_null_uri()
         {
             // Given, When
             var exception =
                 Record.Exception(() => new Request("GET", null, "http"));
 
             // Then
-            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
-        }
-
-        [Fact]
-        public void Should_throw_argumentoutofrangeexception_when_initialized_with_empty_uri()
-        {
-            // Given, When
-            var exception =
-                Record.Exception(() => new Request("GET", string.Empty, "http"));
-
-            // Then
-            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
+            exception.ShouldBeOfType<ArgumentNullException>();
         }
 
         [Fact]
@@ -407,14 +396,14 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_throw_argumentnullexception_when_initialized_with_null_protocol()
+        public void Should_throw_argumentoutofrangeexception_when_initialized_with_null_protocol()
         {
             // Given, When
             var exception =
                 Record.Exception(() => new Request("GET", "/", null));
 
             // Then
-            exception.ShouldBeOfType<ArgumentNullException>();
+            exception.ShouldBeOfType<ArgumentOutOfRangeException>();
         }
 
         [Fact]
@@ -586,6 +575,14 @@ namespace Nancy.Tests.Unit
 
             // Then
             ((IEnumerable<string>)request.Query.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
+        }
+
+        [Fact]
+        public void Should_change_empty_path_to_root()
+        {
+            var request = new Request("GET", "", "http");
+
+            request.Path.ShouldEqual("/");
         }
 
         private static RequestStream CreateRequestStream()
