@@ -21,7 +21,7 @@ namespace Nancy.Routing
         public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
             this.processors = processors;
-            this.coercionConventions = coercionConventions; 
+            this.coercionConventions = coercionConventions;
         }
 
         /// <summary>
@@ -160,10 +160,7 @@ namespace Nancy.Routing
                 response = new NotAcceptableResponse();
             }
 
-            if (compatibleHeaders.Count() > 1)
-            {
-                response.WithHeader("Vary", "Accept");
-            }
+            response.WithHeader("Vary", "Accept");
 
             AddLinkHeaders(context, compatibleHeaders, response);
 
@@ -207,7 +204,7 @@ namespace Nancy.Routing
                 return;
             }
 
-            var baseUrl = 
+            var baseUrl =
                 context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
 
             var links = linkProcessors
