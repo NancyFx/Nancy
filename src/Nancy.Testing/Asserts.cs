@@ -86,10 +86,15 @@
                 throw new AssertException("The collection was null.");
                
             }
-            
-            if(values.Count() != 1)
+
+            if (values.Count() == 0)
             {
-                throw new AssertException("The collection contained more than one values.");
+                throw new AssertException("The collection contained no values.");
+            }
+
+            if (values.Count() > 1)
+            {
+                throw new AssertException("The collection contained more than one value.");
             }
 
             return values.First();
