@@ -13,8 +13,8 @@
     <licenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</licenseUrl>
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
-      <dependency id="Nancy" />
-	  <dependency id="CsQuery" />
+    <dependency id="Nancy" />
+	  <dependency id="CsQuery" version="1.3.3" />
     </dependencies> 
     <tags>Nancy Testing</tags>
   </metadata>
