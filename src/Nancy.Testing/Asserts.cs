@@ -44,6 +44,14 @@
             }
         }
 
+        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.InvariantCulture)
+        {
+            if (!String.Equals(expected, actual, comparisonType))
+            {
+                throw new AssertException(string.Format("The expected value '{0}' was not equal to the actual value '{1}'.", expected, actual));
+            }
+        }
+
         public static void False(bool condition)
         {
             if (condition)
