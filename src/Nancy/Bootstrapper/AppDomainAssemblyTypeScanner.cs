@@ -15,6 +15,8 @@ namespace Nancy.Bootstrapper
     {
         static AppDomainAssemblyTypeScanner()
         {
+            SetDefaultAssembliesToScan();
+
             LoadNancyAssemblies();
         }
 
@@ -38,23 +40,25 @@ namespace Nancy.Bootstrapper
         /// </summary>
         private static bool nancyAssembliesLoaded;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private static IEnumerable<Func<Assembly, bool>> ignoredAssemblies;
+        private static IEnumerable<Func<Assembly, bool>> assembliesToScan;
 
         /// <summary>
-        /// Gets or sets a set of rules for ignoring assemblies while scanning through them.
+        /// Gets or sets a set of rules for which assemblies are scanned
+        /// Defaults to just assemblies that have references to nancy, and nancy
+        /// itself.
+        /// Each item in the enumerable is a delegate that takes the assembly and 
+        /// returns true if it is to be included. Returning false doesn't mean it won't
+        /// be included as a true from another delegate will take precedence.
         /// </summary>
-        public static IEnumerable<Func<Assembly, bool>> IgnoredAssemblies 
+        public static IEnumerable<Func<Assembly, bool>> AssembliesToScan
         { 
             private get 
             {
-                return ignoredAssemblies;
+                return assembliesToScan;
             } 
             set 
             {
-                ignoredAssemblies = value;
+                assembliesToScan = value;
                 UpdateTypes ();
             }
         }
@@ -108,7 +112,8 @@ namespace Nancy.Bootstrapper
 
             var unloadedAssemblies =
                 Directory.GetFiles(containingDirectory, wildcardFilename).Where(
-                    f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase));
+                    f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+
 
             foreach (var unloadedAssembly in unloadedAssemblies)
             {
@@ -132,13 +137,22 @@ namespace Nancy.Bootstrapper
                      select type).ToArray();
         }
 
+        private static void SetDefaultAssembliesToScan()
+        {
+            assembliesToScan = new Func<Assembly, bool>[]
+                                   {
+                                       x => x == nancyAssembly,
+                                       x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy.", StringComparison.OrdinalIgnoreCase))
+                                   };
+        }
+
         /// <summary>
         /// Updates the assembly cache from the appdomain
         /// </summary>
         private static void UpdateAssemblies()
         {
             assemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                          where IgnoredAssemblies != null ? !IgnoredAssemblies.Any(asm => asm(assembly)) : true
+                          where AssembliesToScan.Any(asm => asm(assembly))
                           where !assembly.IsDynamic
                           where !assembly.ReflectionOnly
                           select assembly).ToArray();

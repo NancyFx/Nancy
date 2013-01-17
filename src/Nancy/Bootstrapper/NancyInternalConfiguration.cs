@@ -179,30 +179,6 @@ namespace Nancy.Bootstrapper
 
         public Type TrieNodeFactory { get; set; }
 
-        public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
-        {
-            get
-            {
-                return this.ignoredAssemblies;
-            }
-
-            set
-            {
-                this.ignoredAssemblies = new List<Func<Assembly, bool>>(value);
-
-                UpdateIgnoredAssemblies(value);
-            }
-        }
-
-        /// <summary>
-        /// Updates the ignored assemblies in the type scanner to keep them in sync
-        /// </summary>
-        /// <param name="assemblies">Assemblies ignore predicates</param>
-        private static void UpdateIgnoredAssemblies(IEnumerable<Func<Assembly, bool>> assemblies)
-        {
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = assemblies;
-        }
-
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
         /// </summary>
