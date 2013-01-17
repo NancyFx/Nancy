@@ -53,8 +53,6 @@
         /// </summary>
         protected NancyBootstrapperBase()
         {
-            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
-
             this.ApplicationPipelines = new Pipelines();
             this.conventions = new NancyConventions();
         }
@@ -207,6 +205,9 @@
         /// </summary>
         public void Initialise()
         {
+            AppDomainAssemblyTypeScanner.IgnoredAssemblies = this.InternalConfiguration.IgnoredAssemblies;
+            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
+
             if (this.InternalConfiguration == null)
             {
                 throw new InvalidOperationException("Configuration cannot be null");
