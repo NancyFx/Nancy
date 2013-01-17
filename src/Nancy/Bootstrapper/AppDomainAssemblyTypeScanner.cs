@@ -13,11 +13,6 @@ namespace Nancy.Bootstrapper
     /// </summary>
     public static class AppDomainAssemblyTypeScanner
     {
-        static AppDomainAssemblyTypeScanner()
-        {
-            LoadNancyAssemblies();
-        }
-
         /// <summary>
         /// Nancy core assembly
         /// </summary>
@@ -66,6 +61,10 @@ namespace Nancy.Bootstrapper
         {
             get
             {
+                if (!nancyAssembliesLoaded)
+                {
+                    LoadNancyAssemblies();
+                }
                 return types;
             }
         }
@@ -149,6 +148,13 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public static void LoadNancyAssemblies()
         {
+            //If the ignoredassemblies is null at this point get the default ignored assemblies from the internal config.
+            //These will get updates when the user adjusts them.
+            if (IgnoredAssemblies == null)
+            {
+                IgnoredAssemblies = NancyInternalConfiguration.DefaultIgnoredAssemblies;
+            }
+
             if (nancyAssembliesLoaded)
             {
                 return;

@@ -217,7 +217,7 @@
             {
                 throw new InvalidOperationException("Configuration is invalid");
             }
-
+            
             this.ApplicationContainer = this.GetApplicationContainer();
 
             this.RegisterBootstrapperTypes(this.ApplicationContainer);

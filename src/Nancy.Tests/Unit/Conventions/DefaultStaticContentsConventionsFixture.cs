@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Xunit;
 
@@ -13,6 +13,7 @@
 
         public DefaultStaticContentsConventionsFixture()
         {
+            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
             this.conventions = new NancyConventions();
             this.staticContentsConventions = new DefaultStaticContentsConventions();
         }

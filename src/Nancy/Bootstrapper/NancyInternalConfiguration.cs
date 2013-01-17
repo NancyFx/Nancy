@@ -58,6 +58,7 @@ namespace Nancy.Bootstrapper
         {
             get
             {
+                UpdateIgnoredAssemblies(DefaultIgnoredAssemblies);
                 return new NancyInternalConfiguration
                 {
                     RouteResolver = typeof(DefaultRouteResolver),
@@ -294,6 +295,8 @@ namespace Nancy.Bootstrapper
         public NancyInternalConfiguration WithIgnoredAssembly(Func<Assembly, bool> ignorePredicate)
         {
             this.ignoredAssemblies.Add(ignorePredicate);
+            
+            UpdateIgnoredAssemblies(IgnoredAssemblies);
 
             return this;
         }
