@@ -1,3 +1,4 @@
+using System.Runtime.InteropServices;
 using System.Reflection;
 
 [assembly: AssemblyTitle("Nancy")]
@@ -5,8 +6,5 @@ using System.Reflection;
 [assembly: AssemblyCompany("Nancy")]
 [assembly: AssemblyProduct("Nancy")]
 [assembly: AssemblyCopyright("Copyright (C) Andreas Hakansson, Steven Robbins and contributors")]
-[assembly: AssemblyVersion("0.15.2")]
-[assembly: AssemblyInformationalVersion("0.15.2")]
-
-
-
+[assembly: AssemblyVersion("0.15.3")]
+[assembly: AssemblyInformationalVersion("0.15.3")]
