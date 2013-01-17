@@ -36,6 +36,7 @@
         }
         public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
         {
+            this.configuration = configuration;
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
         }
 
