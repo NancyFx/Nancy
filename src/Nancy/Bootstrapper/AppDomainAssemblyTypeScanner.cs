@@ -15,8 +15,6 @@ namespace Nancy.Bootstrapper
     {
         static AppDomainAssemblyTypeScanner()
         {
-            SetDefaultAssembliesToScan();
-
             LoadNancyAssemblies();
         }
 
@@ -43,6 +41,16 @@ namespace Nancy.Bootstrapper
         private static IEnumerable<Func<Assembly, bool>> assembliesToScan;
 
         /// <summary>
+        /// The default assemblies for scanning.
+        /// Includes the nancy assembly and anythign referencing a nancy assembly
+        /// </summary>
+        public static Func<Assembly, bool>[] DefaultAssembliesToScan = new Func<Assembly, bool>[]
+                                          {
+                                              x => x == nancyAssembly,
+                                              x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase))
+                                          };
+
+        /// <summary>
         /// Gets or sets a set of rules for which assemblies are scanned
         /// Defaults to just assemblies that have references to nancy, and nancy
         /// itself.
@@ -54,7 +62,7 @@ namespace Nancy.Bootstrapper
         { 
             private get 
             {
-                return assembliesToScan;
+                return assembliesToScan ?? (assembliesToScan = DefaultAssembliesToScan);
             } 
             set 
             {
@@ -135,15 +143,6 @@ namespace Nancy.Bootstrapper
                      from type in assembly.SafeGetExportedTypes()
                      where !type.IsAbstract
                      select type).ToArray();
-        }
-
-        private static void SetDefaultAssembliesToScan()
-        {
-            assembliesToScan = new Func<Assembly, bool>[]
-                                   {
-                                       x => x == nancyAssembly,
-                                       x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase))
-                                   };
         }
 
         /// <summary>
