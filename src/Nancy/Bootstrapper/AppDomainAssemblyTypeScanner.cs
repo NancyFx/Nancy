@@ -142,7 +142,7 @@ namespace Nancy.Bootstrapper
             assembliesToScan = new Func<Assembly, bool>[]
                                    {
                                        x => x == nancyAssembly,
-                                       x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy.", StringComparison.OrdinalIgnoreCase))
+                                       x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase))
                                    };
         }
 
