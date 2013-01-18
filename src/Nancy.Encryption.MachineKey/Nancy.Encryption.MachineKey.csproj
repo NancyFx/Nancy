@@ -62,6 +62,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="MachineKeyCryptographyConfigurations.cs" />
     <Compile Include="MachineKeyEncryptionProvider.cs" />
     <Compile Include="MachineKeyHmacProvider.cs" />
   </ItemGroup>
