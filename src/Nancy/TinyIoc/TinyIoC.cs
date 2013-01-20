@@ -1157,7 +1157,17 @@ namespace Nancy.TinyIoc
                     throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
             if (implementationTypes.Count() != implementationTypes.Distinct().Count())
-                throw new ArgumentException("types: The same implementation type cannot be specificed multiple times");
+            {
+                var queryForDuplicatedTypes = from i in implementationTypes
+                                             group i by i
+                                             into j
+                                             where j.Count() > 1
+                                             select j.Key.FullName;
+
+                var fullNamesOfDuplicatedTypes = string.Join(",\n", queryForDuplicatedTypes);
+
+                throw new ArgumentException("types: The same implementation type cannot be specificed multiple times\n\n" + fullNamesOfDuplicatedTypes);
+            }
 
             var registerOptions = new List<RegisterOptions>();
 
