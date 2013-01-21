@@ -18,6 +18,9 @@
     /// </summary>
     public class MachineKeyHmacProvider : IHmacProvider
     {
+        /// <summary>
+        /// Gets the length of the HMAC signature in bytes
+        /// </summary>
         public int HmacLength { get; private set; }
 
         public MachineKeyHmacProvider()
@@ -25,6 +28,11 @@
             this.GetHmacLength();
         }
 
+        /// <summary>
+        /// Create a hmac from the given data
+        /// </summary>
+        /// <param name="data">Data to create hmac from</param>
+        /// <returns>Hmac bytes</returns>
         public byte[] GenerateHmac(string data)
         {
             var input = Encoding.UTF8.GetBytes(data);
@@ -32,6 +40,11 @@
             return this.GenerateHmac(input);
         }
 
+        /// <summary>
+        /// Create a hmac from the given data
+        /// </summary>
+        /// <param name="data">Data to create hmac from</param>
+        /// <returns>Hmac bytes</returns>
         public byte[] GenerateHmac(byte[] data)
         {
             var encoded = MachineKey.Encode(data, MachineKeyProtection.Validation);
@@ -41,6 +54,9 @@
             return bytes.Skip(bytes.Length - HmacLength).ToArray();
         }
 
+        /// <summary>
+        /// Uses reflection to get the hmac length that machine key will generate
+        /// </summary>
         private void GetHmacLength()
         {
             // Yucky reflection because it doesn't expose this for some reason :(
@@ -58,7 +74,14 @@
             }
         }
 
-        public static byte[] HexStringToByteArray(string data)
+        /// <summary>
+        /// Converts a string of "hex bytes" to actual bytes.
+        /// We could just use the same method as .net does but
+        /// like a lot of useful things in .net, it's internal.
+        /// </summary>
+        /// <param name="data">String of hex bytes</param>
+        /// <returns>Actual byte array</returns>
+        private static byte[] HexStringToByteArray(string data)
         {
             if (string.IsNullOrEmpty(data) || data.Length % 2 != 0)
             {
