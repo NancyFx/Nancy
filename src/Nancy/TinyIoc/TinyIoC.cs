@@ -1164,7 +1164,7 @@ namespace Nancy.TinyIoc
                                              where j.Count() > 1
                                              select j.Key.FullName;
 
-                var fullNamesOfDuplicatedTypes = string.Join(",\n", queryForDuplicatedTypes);
+                var fullNamesOfDuplicatedTypes = string.Join(",\n", queryForDuplicatedTypes.ToArray());
 
                 throw new ArgumentException("types: The same implementation type cannot be specificed multiple times\n\n" + fullNamesOfDuplicatedTypes);
             }
