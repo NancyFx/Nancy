@@ -150,6 +150,10 @@
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
     <Compile Include="ModelBinding\PropertyBindingException.cs" />
+    <Compile Include="HttpParser\HeaderParser.cs" />
+    <Compile Include="HttpParser\HttpParserStreamExtensions.cs" />
+    <Compile Include="HttpParser\RequestLine.cs" />
+    <Compile Include="HttpParser\RequestLineParser.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
