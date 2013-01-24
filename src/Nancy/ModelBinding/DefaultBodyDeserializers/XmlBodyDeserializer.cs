@@ -1,13 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Xml.Serialization;
-
 namespace Nancy.ModelBinding.DefaultBodyDeserializers
 {
+    using System;
+    using System.IO;
+    using System.Xml.Serialization;
+
     public class XmlBodyDeserializer : IBodyDeserializer
     {
         public bool CanDeserialize(string contentType)
@@ -27,15 +23,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
 
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
-            var attributeOverrides = new XmlAttributeOverrides();
-            var propertiesToIgnore = context.DestinationType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
-                                                    .Except(context.ValidModelProperties);
-            foreach (var validModelProperty in propertiesToIgnore)
-            {
-                attributeOverrides.Add(context.DestinationType, validModelProperty.Name, new XmlAttributes{XmlIgnore = true});
-            }
-
-            var ser = new XmlSerializer(context.DestinationType, attributeOverrides);
+            var ser = new XmlSerializer(context.DestinationType);
             return ser.Deserialize(bodyStream);
         }
     }
