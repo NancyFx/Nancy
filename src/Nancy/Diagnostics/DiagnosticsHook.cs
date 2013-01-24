@@ -18,6 +18,8 @@ namespace Nancy.Diagnostics
     {
         private const string PipelineKey = "__Diagnostics";
 
+        internal const string ItemsKey = "DIAGS_REQUEST";
+
         public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, ICultureService cultureService)
         {
             var keyGenerator = new DefaultModuleKeyGenerator();
@@ -48,6 +50,8 @@ namespace Nancy.Diagnostics
                         {
                             return null;
                         }
+
+                        ctx.Items[ItemsKey] = true;
 
                         var resourcePrefix =
                             string.Concat(diagnosticsConfiguration.Path, "/Resources/");
