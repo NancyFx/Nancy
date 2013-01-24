@@ -239,7 +239,7 @@
                 {
                     listener.BeginGetContext(GotCallback, null);
                 }
-                catch (Exception ex)
+                catch
                 {
                     this.configuration.UnhandledExceptionCallback.Invoke(e);
                 }
