@@ -1166,7 +1166,7 @@ namespace Nancy.TinyIoc
 
                 var fullNamesOfDuplicatedTypes = string.Join(",\n", queryForDuplicatedTypes.ToArray());
 
-                throw new ArgumentException("types: The same implementation type cannot be specificed multiple times\n\n" + fullNamesOfDuplicatedTypes);
+                throw new ArgumentException("types: The same implementation type cannot be specified multiple times\n\n" + fullNamesOfDuplicatedTypes);
             }
 
             var registerOptions = new List<RegisterOptions>();
