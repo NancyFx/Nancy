@@ -51,6 +51,8 @@ namespace Nancy.Diagnostics
                             return null;
                         }
 
+                        ctx.Items[ItemsKey] = true;
+
                         var resourcePrefix =
                             string.Concat(diagnosticsConfiguration.Path, "/Resources/");
 
@@ -104,8 +106,6 @@ namespace Nancy.Diagnostics
 
             ctx.Request.Url.Path =
                 ctx.Request.Url.Path.Substring(diagnosticsConfiguration.Path.Length);
-
-            ctx.Items[ItemsKey] = true;
 
             if (ctx.Request.Url.Path.Length.Equals(0))
             {
