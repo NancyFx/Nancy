@@ -91,7 +91,10 @@
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
+            this.RenderContext = renderContext;
         }
+
+        protected IRenderContext RenderContext { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
@@ -244,6 +247,11 @@
             return this.childSections.ContainsKey(sectionName);
         }
 
+        public virtual string ResolveUrl(string url)
+        {
+            return this.RenderContext.ParsePath(url);
+        }
+
         /// <summary>
         /// Executes the view.
         /// </summary>
@@ -335,6 +343,8 @@
         /// <param name="model">The model.</param>
         public override void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
+            base.Initialize(engine, renderContext, model);
+
             this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
             this.Model = (TModel)model;
             this.Url = new UrlHelpers<TModel>(engine, renderContext);

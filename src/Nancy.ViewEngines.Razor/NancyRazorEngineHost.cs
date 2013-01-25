@@ -22,7 +22,10 @@
             this.DefaultNamespace = "RazorOutput";
             this.DefaultClassName = "RazorView";
 
-            this.GeneratedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
+            var context = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
+            context.ResolveUrlMethodName = "ResolveUrl";
+
+            this.GeneratedClassContext = context;
 		}
 
         /// <summary>
