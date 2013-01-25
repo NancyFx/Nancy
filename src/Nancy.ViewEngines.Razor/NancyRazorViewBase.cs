@@ -253,7 +253,7 @@
                 {
                     section.Value.Invoke();
                 }
-                catch (NullReferenceException e)
+                catch (NullReferenceException)
                 {
                     throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key));
                 }
