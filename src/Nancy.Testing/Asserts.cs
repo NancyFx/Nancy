@@ -44,6 +44,14 @@
             }
         }
 
+        public static void Equal(string expected, string actual, StringComparison comparisonType = StringComparison.InvariantCulture)
+        {
+            if (!String.Equals(expected, actual, comparisonType))
+            {
+                throw new AssertException(string.Format("The expected value '{0}' was not equal to the actual value '{1}'.", expected, actual));
+            }
+        }
+
         public static void False(bool condition)
         {
             if (condition)
@@ -86,10 +94,15 @@
                 throw new AssertException("The collection was null.");
                
             }
-            
-            if(values.Count() != 1)
+
+            if (values.Count() == 0)
             {
-                throw new AssertException("The collection contained more than one values.");
+                throw new AssertException("The collection contained no values.");
+            }
+
+            if (values.Count() > 1)
+            {
+                throw new AssertException("The collection contained more than one value.");
             }
 
             return values.First();
