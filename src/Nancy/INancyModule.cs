@@ -8,7 +8,7 @@ namespace Nancy
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// Nancy base class
+    /// Nancy module base interface
     /// Defines all the properties / behaviour needed by Nancy internally
     /// </summary>
     public interface INancyModule
