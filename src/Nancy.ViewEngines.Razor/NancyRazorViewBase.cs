@@ -121,7 +121,15 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
         {
-            contents.Append("Attribute");
+            // TODO - write this properly :P may be worth creating types for the tuple hell and casting to them
+            contents.Append(prefix.Item1);
+
+            foreach (var value in values)
+            {
+                contents.Append(value.Item2.Item1);
+            }
+
+            contents.Append(suffix.Item1);
         }
 
         /// <summary>

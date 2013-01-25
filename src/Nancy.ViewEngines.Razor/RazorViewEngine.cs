@@ -134,7 +134,7 @@
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
 
-            var razorResult = engine.GenerateCode(reader);
+            var razorResult = engine.GenerateCode(reader, null, null, "roo");
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
