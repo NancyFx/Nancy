@@ -26,20 +26,10 @@
             SetBaseType(DEFAULT_MODEL_TYPE_NAME);
         }
 
-        protected override bool TryVisitSpecialSpan(Span span)
-        {
-            return TryVisit(span, new Action<ModelSpan>(this.VisitModelSpan));
-        }
-
-		private void VisitModelSpan(ModelSpan span)
-		{
-			this.SetBaseType(span.ModelTypeName);
-		}
-
         private void SetBaseType(string modelTypeName)
         {
-            this.GeneratedClass.BaseTypes.Clear();
-            this.GeneratedClass.BaseTypes.Add(new CodeTypeReference(this.Host.DefaultBaseClass + "<" + modelTypeName + ">"));
+            this.Context.GeneratedClass.BaseTypes.Clear();
+            this.Context.GeneratedClass.BaseTypes.Add(new CodeTypeReference(this.Host.DefaultBaseClass + "<" + modelTypeName + ">"));
         }
     }
 }

@@ -37,10 +37,10 @@
 			    return new NancyCSharpRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
 			}
 
-            if (incomingCodeGenerator is VBRazorCodeGenerator)
-            {
-                return new NancyVisualBasicRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
-            }
+            //if (incomingCodeGenerator is VBRazorCodeGenerator)
+            //{
+            //    return new NancyVisualBasicRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
+            //}
 
             return base.DecorateCodeGenerator(incomingCodeGenerator);
 		}
@@ -57,10 +57,10 @@
 			    return new NancyCSharpRazorCodeParser();
 			}
 
-            if (incomingCodeParser is VBCodeParser)
-            {
-                return new NancyVisualBasicRazorCodeParser();
-            }
+            //if (incomingCodeParser is VBCodeParser)
+            //{
+            //    return new NancyVisualBasicRazorCodeParser();
+            //}
 
 			return base.DecorateCodeParser(incomingCodeParser);
 		}

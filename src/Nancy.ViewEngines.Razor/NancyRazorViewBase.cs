@@ -119,6 +119,11 @@
             contents.Append(value);
         }
 
+        public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
+        {
+            contents.Append("Attribute");
+        }
+
         /// <summary>
         /// Writes the provided <paramref name="value"/> to the provided <paramref name="writer"/>.
         /// </summary>
