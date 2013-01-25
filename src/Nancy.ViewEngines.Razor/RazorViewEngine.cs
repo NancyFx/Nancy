@@ -188,6 +188,10 @@
 
             if (results.Errors.HasErrors)
             {
+                var output = new string[results.Output.Count];
+                results.Output.CopyTo(output, 0);
+                var outputString = string.Join("\n", output);
+
                 var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
                 var templateLines = GetViewBodyLines(viewLocationResult);
                 var errors = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();

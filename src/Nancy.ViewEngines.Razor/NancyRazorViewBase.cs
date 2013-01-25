@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Text;
     using Nancy.Helpers;
 
@@ -121,6 +122,12 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
         {
+            var things = values.Select(tuple => tuple.Item2.Item1 );
+            if (things.All(s => s == null || (s is bool && !(bool)s)))
+            {
+                return;
+            }
+
             // TODO - write this properly :P may be worth creating types for the tuple hell and casting to them
             contents.Append(prefix.Item1);
 
