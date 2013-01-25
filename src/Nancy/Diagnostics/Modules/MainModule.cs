@@ -9,7 +9,7 @@
                 return View["Dashboard"];
             };
 
-            Post["/"] = _ => Response.AsRedirect("~/");
+            Post["/"] = _ => this.Response.AsRedirect("~/");
         }
     }
 }

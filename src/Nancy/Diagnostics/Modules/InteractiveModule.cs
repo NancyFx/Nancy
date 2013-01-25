@@ -34,7 +34,7 @@
                         })
                     .ToArray();
 
-                return Response.AsJson(providers);
+                return this.Response.AsJson(providers);
             };
 
             Get["/providers/{providerName}"] = ctx =>
@@ -64,7 +64,7 @@
                         })
                     .ToArray();
 
-                return Response.AsJson(methods);
+                return this.Response.AsJson(methods);
             };
 
             Get["/providers/{providerName}/{methodName}"] = ctx =>
@@ -86,7 +86,7 @@
                 object[] arguments = 
                     GetArguments(method, this.Request.Query);
 
-                return Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
+                return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
             };
 
             Get["/templates/{providerName}/{methodName}"] = ctx =>

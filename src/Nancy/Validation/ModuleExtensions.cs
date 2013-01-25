@@ -12,7 +12,7 @@
         /// <param name="module">The module that the validation is performed from.</param>
         /// <param name="instance">The instance that is being validated.</param>
         /// <returns>A <see cref="ModelValidationResult"/> instance.</returns>
-        public static ModelValidationResult Validate<T>(this NancyModule module, T instance)
+        public static ModelValidationResult Validate<T>(this INancyModule module, T instance)
         {
             var validator = 
                 module.ValidatorLocator.GetValidatorForType(typeof(T));

@@ -25,7 +25,7 @@ namespace Nancy.Demo.ModelBinding
                     DB.Events.Add(model);
                     DB.Events.Add(model2);
 
-                    return Response.AsRedirect("/Events");
+                    return this.Response.AsRedirect("/Events");
                 };
         }
     }

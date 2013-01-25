@@ -28,7 +28,7 @@ namespace Nancy.Demo.Validation
                     }
 
                     DB.Customers.Add(model);
-                    return Response.AsRedirect("/Customers");
+                    return this.Response.AsRedirect("/Customers");
                 };
         }
     }

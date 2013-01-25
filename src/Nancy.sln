@@ -109,6 +109,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey.Tests", "Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.csproj", "{429873F5-1E53-4ECC-A9EC-7950C789C6DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.CustomModule", "Nancy.Demo.CustomModule\Nancy.Demo.CustomModule.csproj", "{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -719,6 +721,18 @@ Global
 		{429873F5-1E53-4ECC-A9EC-7950C789C6DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{429873F5-1E53-4ECC-A9EC-7950C789C6DF}.Release|Any CPU.Build.0 = Release|Any CPU
 		{429873F5-1E53-4ECC-A9EC-7950C789C6DF}.Release|x86.ActiveCfg = Release|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoDebug|Any CPU.ActiveCfg = MonoDebug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoDebug|Any CPU.Build.0 = MonoDebug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoDebug|x86.ActiveCfg = Debug|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoRelease|Any CPU.ActiveCfg = MonoRelease|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoRelease|Any CPU.Build.0 = MonoRelease|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.MonoRelease|x86.ActiveCfg = Release|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -774,6 +788,7 @@ Global
 		{B5E3586D-81DE-49C3-83BC-062684795127} = {4A24657F-9695-437B-9702-2541ED280628}
 		{BAE74CD5-57C2-40E3-8F7A-EDE5721C2ACC} = {4A24657F-9695-437B-9702-2541ED280628}
 		{396F0BCE-5B51-4B6A-931E-312880C24725} = {4A24657F-9695-437B-9702-2541ED280628}
+		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj

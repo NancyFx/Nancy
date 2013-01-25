@@ -51,7 +51,7 @@ namespace Nancy.Demo.Hosting.Owin
 
             Get["/owin"] = x =>
                                {
-                                   var env = GetOwinEnvironmentValue<IDictionary<string, object>>(Context.Items, NancyOwinHost.RequestEnvironmentKey);
+                                   var env = GetOwinEnvironmentValue<IDictionary<string, object>>(this.Context.Items, NancyOwinHost.RequestEnvironmentKey);
                                    if (env == null)
                                        return "Not running on owin host";
 

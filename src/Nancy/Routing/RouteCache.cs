@@ -45,7 +45,7 @@
             return !this.Values.SelectMany(r => r).Any();
         }
 
-        private void BuildCache(IEnumerable<NancyModule> modules)
+        private void BuildCache(IEnumerable<INancyModule> modules)
         {
             foreach (var module in modules)
             {
@@ -53,15 +53,15 @@
                 var moduleKey = this.moduleKeyGenerator.GetKeyForModuleType(moduleType);
 
                 var routes =
-                    module.Routes.Select(r => r.Description);
+                    module.Routes.Select(r => r.Description).ToArray();
 
                 foreach (var routeDescription in routes)
                 {
                     routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
-                    routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path);
+                    routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
                 }
 
-                this.AddRoutesToCache(module.Routes.Select(r => r.Description), moduleKey);
+                this.AddRoutesToCache(routes, moduleKey);
             }
         }
 

@@ -19,7 +19,7 @@
 
             Get["/sessions"] = _ =>
             {
-                return Response.AsJson(this.sessionProvider.GetSessions().Select(s => new { Id = s.Id }).ToArray());
+                return this.Response.AsJson(this.sessionProvider.GetSessions().Select(s => new { Id = s.Id }).ToArray());
             };
 
             Get["/sessions/{id}"] = ctx =>
@@ -38,7 +38,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                return Response.AsJson(session.RequestTraces.Select(t => new
+                return this.Response.AsJson(session.RequestTraces.Select(t => new
                     {
                         t.Method,
                         t.RequestUrl,
