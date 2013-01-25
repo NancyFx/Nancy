@@ -725,7 +725,7 @@
             // Given
             const string input = @"<html><head></head><body>Hello there @Context</body></html>";
 
-            ((FakeViewEngineHost) this.fakeHost).Context = "Frank";
+            ((FakeViewEngineHost)this.fakeHost).Context = "Frank";
 
             // When
             var output = viewEngine.Render(input, null, this.fakeHost);
@@ -894,8 +894,8 @@
         public void Should_stuffrender_block_when_ifnot_statement_returns_false()
         {
             const string input = @"<html><head></head><body>@IfNot.Context.HasUsers;<p>No users found!</p>@EndIf;</body></html>";
-            
-            var model = new FakeModel("Nancy", new List<string>() { "Nancy "});
+
+            var model = new FakeModel("Nancy", new List<string>() { "Nancy " });
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
@@ -988,7 +988,7 @@
             const string input = @"<html><head></head><body><ul>@Each.Model.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
             var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
 
-            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() );
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -1006,6 +1006,50 @@
             var output = viewEngine.Render(input, model, this.fakeHost);
 
             Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_include_block_with_ifnull_if_value_null()
+        {
+            const string input = @"<html><head></head><body>@IfNull.Name;No users found@EndIf;</body></html>";
+            var model = new User(null, true);
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>No users found</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_not_include_block_with_ifnull_if_value_non_null()
+        {
+            const string input = @"<html><head></head><body>@IfNull.Name;No users found@EndIf;</body></html>";
+            var model = new User("Bob", true);
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_include_block_with_ifnotnull_if_value_non_null()
+        {
+            const string input = @"<html><head></head><body>@IfNotNull.Name;Hello @Model.Name@EndIf;</body></html>";
+            var model = new User("Bob", true);
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hello Bob</body></html>", output);
+        }
+
+        [Fact]
+        public void Should_not_include_block_with_ifnotnull_if_value_null()
+        {
+            const string input = @"<html><head></head><body>@IfNotNull.Name;Hello @Model.Name@EndIf;</body></html>";
+            var model = new User(null, true);
+
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body></body></html>", output);
         }
     }
 

@@ -25,7 +25,7 @@ namespace Nancy.BindingDemo
                     DB.Customers.Add(model);
                     DB.Customers.Add(model2);
 
-                    return Response.AsRedirect("/Customers");
+                    return this.Response.AsRedirect("/Customers");
                 };
         }
     }

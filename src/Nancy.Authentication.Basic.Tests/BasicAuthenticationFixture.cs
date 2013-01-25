@@ -275,6 +275,12 @@
 
         class FakeModule : NancyModule
         {
+            public FakeModule()
+            {
+                this.After = new AfterPipeline();
+                this.Before = new BeforePipeline();
+                this.OnError = new ErrorPipeline();
+            }
         }
     }
 }

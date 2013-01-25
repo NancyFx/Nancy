@@ -15,18 +15,6 @@ namespace Nancy.Localization
         private readonly IDictionary<string, ResourceManager> resourceManagers;
         
         /// <summary>
-        /// Convention that determins if an Assembly should be scanned for resources.
-        /// </summary>
-        /// <remarks>The default convention will scan all assemblies that references another assemblies that has a name that starts with Nancy*</remarks>
-        public static Func<Assembly, bool> ScanningPredicate = assembly =>
-        {
-            return assembly.GetReferencedAssemblies().Any(reference =>
-            {
-                return reference.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase);
-            });
-        };
-
-        /// <summary>
         /// Initializes a new instance of <see cref="ResourceBasedTextResource"/> to read strings from *.resx files
         /// </summary>
         /// <param name="resourceAssemblyProvider">The <see cref="IResourceAssemblyProvider"/> that should be used when scanning.</param>
@@ -36,7 +24,6 @@ namespace Nancy.Localization
 
             var resources = 
                 from assembly in this.resourceAssemblyProvider.GetAssembliesToScan()
-                where ScanningPredicate.Invoke(assembly)
                 from resourceName in assembly.GetManifestResourceNames()
                 where resourceName.EndsWith(".resources")
                 let parts = resourceName.Split(new[] { '.' })

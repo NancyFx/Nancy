@@ -13,12 +13,12 @@ namespace Nancy.Demo.Caching
             };
 
             Get["/cached"] = x => {
-                Context.EnableOutputCache(30);
+                this.Context.EnableOutputCache(30);
                 return View["Payload.cshtml", DateTime.Now.ToString()];
             };
 
             Get["/uncached"] = x => {
-                Context.DisableOutputCache();
+                this.Context.DisableOutputCache();
                 return View["Payload.cshtml", DateTime.Now.ToString()];
             };
         }

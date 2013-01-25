@@ -120,6 +120,7 @@ task :nuget_package => [:publish] do
 
     # Update the copied *.nuspec files to correct version numbers and other common values
     nuspecs.each do |nuspec|
+        puts "Updating #{nuspec}"
         update_xml nuspec do |xml|
             # Override the version number in the nuspec file with the one from this rake file (set above)
             xml.root.elements["metadata/version"].text = $nancy_version

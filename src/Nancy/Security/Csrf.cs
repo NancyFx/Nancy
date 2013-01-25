@@ -78,7 +78,7 @@
         /// </summary>
         /// <param name="module">Nancy module</param>
         /// <returns></returns>
-        public static void CreateNewCsrfToken(this NancyModule module)
+        public static void CreateNewCsrfToken(this INancyModule module)
         {
             var token = new CsrfToken
             {
@@ -99,7 +99,7 @@
         /// <param name="module">Module object</param>
         /// <param name="validityPeriod">Optional validity period before it times out</param>
         /// <exception cref="CsrfValidationException">If validation fails</exception>
-        public static void ValidateCsrfToken(this NancyModule module, TimeSpan? validityPeriod = null)
+        public static void ValidateCsrfToken(this INancyModule module, TimeSpan? validityPeriod = null)
         {
             var request = module.Request;
 

@@ -59,7 +59,7 @@
             return new ResolveResult(route, routeMatchToReturn.Item4.Parameters, associatedModule.Before, associatedModule.After, associatedModule.OnError);
         }
 
-        private NancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)
+        private INancyModule GetInitializedModuleForMatch(NancyContext context, RouteCandidate routeMatchToReturn)
         {
             var module =
                 this.nancyModuleCatalog.GetModuleByKey(routeMatchToReturn.Item1, context);

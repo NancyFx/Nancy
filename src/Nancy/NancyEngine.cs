@@ -135,7 +135,7 @@
         private bool EnableTracing(NancyContext ctx)
         {
             return StaticConfiguration.EnableRequestTracing &&
-                   !ctx.Request.Path.StartsWith(this.diagnosticsConfiguration.Path);
+                   !ctx.Items.ContainsKey(DiagnosticsHook.ItemsKey);
         }
 
         private Guid GetDiagnosticsSessionGuid(NancyContext ctx)

@@ -1,16 +1,10 @@
-using System.Xml.Serialization;
-
 namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
-    using System;
     using System.IO;
-    using System.Linq;
     using System.Text;
-
-    using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
-
+    using System.Xml.Serialization;
     using Xunit;
 
     public class XmlBodyDeserializerFixture
@@ -25,6 +19,82 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             testModel = new TestModel {Bar = 13, Foo = "lil"};
             testModelXml = ToXmlString(testModel);
         }
+
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_application_xml()
+        {
+            // Given
+            const string contentType = "application/xml";
+
+            // When
+            var result = this.deserialize.CanDeserialize(contentType);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_text_xml()
+        {
+            // Given
+            const string contentType = "text/xml";
+
+            // When
+            var result = this.deserialize.CanDeserialize(contentType);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_report_true_for_can_deserialize_for_custom_xml()
+        {
+            // Given
+            const string contentType = "application/vnd.org.nancyfx.mything+xml";
+
+            // When
+            var result = this.deserialize.CanDeserialize(contentType);
+
+            // Then
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Should_report_false_for_can_deserialize_for_json_format()
+        {
+            // Given
+            const string contentType = "text/json";
+
+            // When
+            var result = this.deserialize.CanDeserialize(contentType);
+
+            // Then
+            result.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_deserialize_xml_model()
+        {
+            // Given
+            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
+            var context = new BindingContext()
+            {
+                DestinationType = typeof(TestModel),
+                ValidModelProperties = typeof(TestModel).GetProperties(),
+            };
+
+            // When
+            var result = (TestModel)this.deserialize.Deserialize(
+                            "application/xml",
+                            bodyStream,
+                            context);
+
+            // Then
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType(typeof(TestModel));
+            result.ShouldEqual(this.testModel);
+        }
+
         public static string ToXmlString<T>(T input)
         {
             string xml;
@@ -35,85 +105,6 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 xml = Encoding.Default.GetString(ms.ToArray());
             }
             return xml;
-        }
-
-        [Fact]
-        public void Should_report_true_for_can_deserialize_for_application_xml()
-        {
-            const string contentType = "application/xml";
-
-            var result = this.deserialize.CanDeserialize(contentType);
-
-            result.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_report_true_for_can_deserialize_for_text_xml()
-        {
-            const string contentType = "text/xml";
-
-            var result = this.deserialize.CanDeserialize(contentType);
-
-            result.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_report_true_for_can_deserialize_for_custom_xml()
-        {
-            const string contentType = "application/vnd.org.nancyfx.mything+xml";
-
-            var result = this.deserialize.CanDeserialize(contentType);
-
-            result.ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_report_false_for_can_deserialize_for_json_format()
-        {
-            const string contentType = "text/json";
-
-            var result = this.deserialize.CanDeserialize(contentType);
-
-            result.ShouldBeFalse();
-        }
-
-        [Fact]
-        public void Should_deserialize_xml_model()
-        {
-            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
-            var context = new BindingContext()
-            {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
-            };
-
-            var result = (TestModel)this.deserialize.Deserialize(
-                            "application/xml",
-                            bodyStream,
-                            context);
-
-            result.ShouldNotBeNull();
-            result.ShouldBeOfType(typeof(TestModel));
-            result.ShouldEqual(this.testModel);
-        }
-
-        [Fact]
-        public void Should_only_set_allowed_properties()
-        {
-            var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
-            var context = new BindingContext()
-            {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties().Where(p => p.Name == "Foo"),
-            };
-
-            var result = (TestModel)this.deserialize.Deserialize(
-                            "application/xml",
-                            bodyStream,
-                            context);
-
-            result.Foo.ShouldEqual(testModel.Foo);
-            result.Bar.ShouldNotEqual(testModel.Bar);
         }
 
         public class TestModel

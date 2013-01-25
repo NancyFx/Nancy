@@ -22,7 +22,7 @@ namespace Nancy.Extensions
         /// <param name="name">The type name taken from GetType().Name.</param>
         /// <returns>A string containing the name of the parameter.</returns>
         /// <exception cref="FormatException"></exception>
-        public static string GetModuleName(this NancyModule module)
+        public static string GetModuleName(this INancyModule module)
         {
             var typeName = module.GetType().Name;
             var nameMatch =
