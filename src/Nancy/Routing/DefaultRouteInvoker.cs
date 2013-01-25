@@ -60,7 +60,7 @@ namespace Nancy.Routing
             {
                 return (Response)result;
             }
-            catch (Exception e)
+            catch
             {
                 return null;
             }
