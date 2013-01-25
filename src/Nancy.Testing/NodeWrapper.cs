@@ -19,6 +19,11 @@ namespace Nancy.Testing
             this.element = element;
         }
 
+        /// <summary>
+        /// Tests for the presence of an attribute with the specified name.
+        /// </summary>
+        /// <param name="name">The name of the attribute to test for.</param>
+        /// <returns>True if the node contains an attribute with the specified name, false otherwise.</returns>
         public bool HasAttribute(string name)
         {
             return this.element.HasAttribute(name);
