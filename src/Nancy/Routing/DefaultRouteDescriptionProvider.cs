@@ -17,7 +17,7 @@ namespace Nancy.Routing
         /// <param name="module">The module that the route is defined in.</param>
         /// <param name="path">The path of the route that the description should be retrieved for.</param>
         /// <returns>A <see cref="string"/> containing the description of the route if it could be found, otherwise <see cref="string.Empty"/>.</returns>
-        public string GetDescription(NancyModule module, string path)
+        public string GetDescription(INancyModule module, string path)
         {
             var assembly =
                 module.GetType().Assembly;

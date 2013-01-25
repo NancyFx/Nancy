@@ -38,7 +38,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
-        public override sealed IEnumerable<NancyModule> GetAllModules(NancyContext context)
+        public override sealed IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
@@ -51,7 +51,7 @@ namespace Nancy.Bootstrapper
         /// <param name="moduleKey">Module key</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override sealed NancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override sealed INancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
@@ -138,7 +138,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="container">Container to use</param>
         /// <returns>Collection of NancyModule instances</returns>
-        protected abstract IEnumerable<NancyModule> GetAllModules(TContainer container);
+        protected abstract IEnumerable<INancyModule> GetAllModules(TContainer container);
 
         /// <summary>
         /// Retreive a specific module instance from the container by its key
@@ -146,6 +146,6 @@ namespace Nancy.Bootstrapper
         /// <param name="container">Container to use</param>
         /// <param name="moduleKey">Module key of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected abstract NancyModule GetModuleByKey(TContainer container, string moduleKey);
+        protected abstract INancyModule GetModuleByKey(TContainer container, string moduleKey);
     }
 }

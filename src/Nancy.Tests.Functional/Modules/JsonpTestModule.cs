@@ -10,8 +10,8 @@ namespace Nancy.Tests.Functional.Modules
         public JsonpTestModule() : base("/test")
         {
             Get["/string"] = x => "Normal Response";
-            Get["/json"] = x => Response.AsJson(true);
-            Get["/{name}"] = parameters => Response.AsJson(new { parameters.name });
+            Get["/json"] = x => this.Response.AsJson(true);
+            Get["/{name}"] = parameters => this.Response.AsJson(new { parameters.name });
         }
     }
 }

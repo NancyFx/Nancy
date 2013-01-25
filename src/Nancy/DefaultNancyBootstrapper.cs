@@ -101,7 +101,7 @@ namespace Nancy
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
                 container.Register(
-                    typeof(NancyModule), 
+                    typeof(INancyModule), 
                     moduleRegistrationType.ModuleType, 
                     moduleRegistrationType.ModuleKey).
                     AsSingleton();
@@ -164,9 +164,9 @@ namespace Nancy
         /// </summary>
         /// <param name="container">Container to use</param>
         /// <returns>Collection of NancyModule instances</returns>
-        protected override sealed IEnumerable<NancyModule> GetAllModules(TinyIoCContainer container)
+        protected override sealed IEnumerable<INancyModule> GetAllModules(TinyIoCContainer container)
         {
-            var nancyModules = container.ResolveAll<NancyModule>(false);
+            var nancyModules = container.ResolveAll<INancyModule>(false);
             return nancyModules;
         }
 
@@ -176,9 +176,9 @@ namespace Nancy
         /// <param name="container">Container to use</param>
         /// <param name="moduleKey">Module key of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected override sealed NancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
+        protected override sealed INancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
         {
-            return container.Resolve<NancyModule>(moduleKey);
+            return container.Resolve<INancyModule>(moduleKey);
         }
 
         /// <summary>

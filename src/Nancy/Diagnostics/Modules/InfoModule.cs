@@ -45,7 +45,7 @@
                         ((IEnumerable<object>) value).Select(x => x.ToString());
                 }
 
-                return Response.AsJson((object)data);
+                return this.Response.AsJson((object)data);
             };
         }
 

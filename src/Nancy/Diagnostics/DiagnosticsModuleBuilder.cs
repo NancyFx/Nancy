@@ -24,12 +24,16 @@ namespace Nancy.Diagnostics
         /// <param name="module">The <see cref="NancyModule"/> that shoule be configured.</param>
         /// <param name="context">The current request context.</param>
         /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
-        public NancyModule BuildModule(NancyModule module, NancyContext context)
+        public INancyModule BuildModule(INancyModule module, NancyContext context)
         {
             // Currently we don't connect view location, binders etc.
             module.Context = context;
             module.Response = new DefaultResponseFormatter(rootPathProvider, context, serializers);
             module.ModelBinderLocator = this.modelBinderLocator;
+
+            module.After = new AfterPipeline();
+            module.Before = new BeforePipeline();
+            module.OnError = new ErrorPipeline();
 
             return module;
         }

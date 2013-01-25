@@ -11,7 +11,7 @@
 
 			Get["/"] = x =>
 			{
-				return "Hello " + Context.CurrentUser.UserName;
+				return "Hello " + this.Context.CurrentUser.UserName;
 			};
 		}
 	}
