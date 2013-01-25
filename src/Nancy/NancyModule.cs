@@ -107,6 +107,13 @@ namespace Nancy
             get { return new RouteBuilder("PUT", this); }
         }
 
+        /// <summary>
+        ///  Get the root path of the routes in the current module.
+        ///  </summary>
+        /// <value>
+        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
+        /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
+        /// </remarks>
         public string ModulePath { get; private set; }
 
         /// <summary>
