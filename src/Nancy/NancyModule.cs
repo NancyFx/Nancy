@@ -2,6 +2,7 @@ namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.IO;
 
     using Nancy.ModelBinding;
@@ -217,6 +218,7 @@ namespace Nancy
         /// <summary>
         /// Gets or sets the model validation result
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public virtual ModelValidationResult ModelValidationResult
         {
             get { return this.Context == null ? null : this.Context.ModelValidationResult; }

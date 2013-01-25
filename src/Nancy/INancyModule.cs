@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System.Collections.Generic;
+    using System.ComponentModel;
 
     using Nancy.ModelBinding;
     using Nancy.Routing;
@@ -57,6 +58,7 @@ namespace Nancy
         /// <summary>
         ///  Gets or sets the model validation result
         ///  </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         ModelValidationResult ModelValidationResult { get; set; }
 
         /// <summary>
