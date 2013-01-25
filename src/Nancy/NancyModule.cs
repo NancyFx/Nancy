@@ -148,6 +148,9 @@ namespace Nancy
             get { return new Negotiator(this.Context); }
         }
 
+        /// <summary>
+        ///  Gets or sets the validator locator.
+        ///  </summary>
         public IModelValidatorLocator ValidatorLocator { get; set; }
 
         /// <summary>
