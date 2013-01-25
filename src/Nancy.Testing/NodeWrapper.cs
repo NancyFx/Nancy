@@ -19,6 +19,11 @@ namespace Nancy.Testing
             this.element = element;
         }
 
+        public bool HasAttribute(string name)
+        {
+            return this.element.HasAttribute(name);
+        }
+
         public IndexHelper<string, string> Attributes
         {
             get { return new IndexHelper<string, string>(x => this.element.Attributes[x]); }
