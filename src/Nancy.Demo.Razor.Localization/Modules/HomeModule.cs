@@ -13,7 +13,7 @@
 
             Get["/cultureviewgerman"] = parameters =>
                                         {
-                                            Context.Culture = new CultureInfo("de-DE");
+                                            this.Context.Culture = new CultureInfo("de-DE");
                                             return View["CultureView"];
                                         };
         }

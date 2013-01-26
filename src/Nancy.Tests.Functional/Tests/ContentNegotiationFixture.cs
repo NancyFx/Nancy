@@ -146,6 +146,40 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Should_add_negotiated_content_headers_to_response()
+        {
+          // Given
+
+          var module = new ConfigurableNancyModule(with =>
+          {
+            with.Get("/headers", (x, m) =>
+            {
+              var context =
+                  new NancyContext { NegotiationContext = new NegotiationContext() };
+
+              var negotiator =
+                  new Negotiator(context);
+              negotiator.WithContentType("text/xml");
+
+              return negotiator;
+            });
+          });
+
+          var brower = new Browser(with =>
+          {
+            with.ResponseProcessor<TestProcessor>();
+
+            with.Module(module);
+          });
+
+          // When
+          var response = brower.Get("/headers");
+
+          // Then
+          Assert.Equal("text/xml", response.Context.Response.ContentType);
+        }
+
+        [Fact]
         public void Should_apply_default_accept_when_no_accept_header_sent()
         {
             // Given

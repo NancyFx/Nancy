@@ -49,6 +49,16 @@
         }
 
         /// <summary>
+        /// Add a content type to the response
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="contentType">Content type value</param>
+        /// <returns>Modified negotiator</returns>
+        public static Negotiator WithContentType(this Negotiator negotiator, string contentType)
+        {
+          return negotiator.WithHeaders(new { Header = "Content-Type", Value = contentType });
+        }
+        /// <summary>
         /// Adds headers to the response using anonymous types
         /// </summary>
         /// <param name="negotiator">Negotiator object</param>

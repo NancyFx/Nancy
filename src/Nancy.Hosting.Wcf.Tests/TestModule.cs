@@ -19,7 +19,7 @@
                 };
 
             Post["/rel"] = parameters => {
-                return new StreamReader(Request.Body).ReadToEnd();
+                return new StreamReader(this.Request.Body).ReadToEnd();
             };
         }
     }

@@ -18,7 +18,7 @@
                 var validator = 
                     this.ValidatorLocator.GetValidatorForType(typeof(Product));
 
-                return Response.AsJson(validator.Description);
+                return this.Response.AsJson(validator.Description);
             };
 
             Post["/"] = parameters => {

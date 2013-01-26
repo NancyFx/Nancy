@@ -585,7 +585,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-        /// Gets the master page name, if one is specificed
+		/// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>Master page name or String.Empty</returns>

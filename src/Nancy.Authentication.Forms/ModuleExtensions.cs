@@ -16,7 +16,7 @@ namespace Nancy.Authentication.Forms
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
         /// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
         /// <returns>Nancy response with redirect if request was not ajax, otherwise with OK.</returns>
-        public static Response Login(this NancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
+        public static Response Login(this INancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
         {
             return module.Context.Request.IsAjaxRequest() ?
                 LoginWithoutRedirect(module, userIdentifier, cookieExpiry) :
@@ -31,7 +31,7 @@ namespace Nancy.Authentication.Forms
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
         /// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
         /// <returns>Nancy response instance</returns>
-        public static Response LoginAndRedirect(this NancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
+        public static Response LoginAndRedirect(this INancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
         {
             return FormsAuthentication.UserLoggedInRedirectResponse(module.Context, userIdentifier, cookieExpiry, fallbackRedirectUrl);
         }
@@ -43,7 +43,7 @@ namespace Nancy.Authentication.Forms
         /// <param name="userIdentifier">User identifier guid</param>
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
         /// <returns>Nancy response instance</returns>
-        public static Response LoginWithoutRedirect(this NancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null)
+        public static Response LoginWithoutRedirect(this INancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null)
         {
             return FormsAuthentication.UserLoggedInResponse(userIdentifier, cookieExpiry);
         }
@@ -54,7 +54,7 @@ namespace Nancy.Authentication.Forms
         /// <param name="module">Nancy module</param>
         /// <param name="redirectUrl">URL to redirect to</param>
         /// <returns>Nancy response with redirect if request was not ajax, otherwise with OK.</returns>
-        public static Response Logout(this NancyModule module, string redirectUrl)
+        public static Response Logout(this INancyModule module, string redirectUrl)
         {
             return module.Context.Request.IsAjaxRequest() ?
                FormsAuthentication.LogOutResponse() :
@@ -67,12 +67,17 @@ namespace Nancy.Authentication.Forms
         /// <param name="module">Nancy module</param>
         /// <param name="redirectUrl">URL to redirect to</param>
         /// <returns>Nancy response instance</returns>
-        public static Response LogoutAndRedirect(this NancyModule module, string redirectUrl)
+        public static Response LogoutAndRedirect(this INancyModule module, string redirectUrl)
         {
             return FormsAuthentication.LogOutAndRedirectResponse(module.Context, redirectUrl);
         }
 
-        public static Response LogoutWithoutRedirect(this NancyModule module)
+        /// <summary>
+        /// Logs the user out without a redirect
+        /// </summary>
+        /// <param name="module">Nancy module</param>
+        /// <returns>Nancy response instance</returns>
+        public static Response LogoutWithoutRedirect(this INancyModule module)
         {
             return FormsAuthentication.LogOutResponse();
         }
