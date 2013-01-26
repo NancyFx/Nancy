@@ -166,6 +166,7 @@ namespace Nancy.Routing
 
             if (!(response is NotAcceptableResponse))
             {
+                CheckForContentTypeHeader(negotiator, response);
                 AddNegotiatedHeaders(negotiator, response);
             }
 
@@ -182,8 +183,17 @@ namespace Nancy.Routing
             return response;
         }
 
-        private static void AddNegotiatedHeaders(Negotiator negotiator, Response response)
+        private static void CheckForContentTypeHeader(Negotiator negotiator, Response response)
         {
+          if (negotiator.NegotiationContext.Headers.ContainsKey("Content-Type"))
+          {
+            response.ContentType = negotiator.NegotiationContext.Headers["Content-Type"];
+            negotiator.NegotiationContext.Headers.Remove("Content-Type");
+          }
+        }
+
+        private static void AddNegotiatedHeaders(Negotiator negotiator, Response response)
+        { 
             foreach (var header in negotiator.NegotiationContext.Headers)
             {
                 response.Headers[header.Key] = header.Value;
