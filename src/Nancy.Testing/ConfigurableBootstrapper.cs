@@ -78,7 +78,7 @@ namespace Nancy.Testing
 
         private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
         {
-            var testAssemblyName = 
+            var testAssemblyName =
                 testAssembly.GetName().Name;
 
             LoadReferencesForAssemblyUnderTest(testAssemblyName);
@@ -89,7 +89,7 @@ namespace Nancy.Testing
             base.ApplicationStartup(container, pipelines);
             foreach (var action in this.applicationStartupActions)
             {
-                action.Invoke(container,pipelines);
+                action.Invoke(container, pipelines);
             }
         }
 
@@ -98,7 +98,7 @@ namespace Nancy.Testing
             base.RequestStartup(container, pipelines, context);
             foreach (var action in this.requestStartupActions)
             {
-                action.Invoke(container,pipelines,context);
+                action.Invoke(container, pipelines, context);
             }
         }
 
@@ -120,7 +120,7 @@ namespace Nancy.Testing
         /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
         public new NancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
-            var module = 
+            var module =
                 this.catalog.GetModuleByKey(moduleKey, context);
 
             return module ?? base.GetModuleByKey(moduleKey, context);
@@ -654,11 +654,29 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator Dependencies(params object[] dependencies)
+            public ConfigurableBoostrapperConfigurator Dependencies(params object[] dependencies) 
             {
                 foreach (var dependency in dependencies)
                 {
                     this.Dependency(dependency);
+                }
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to register the specified types and instances as a dependencies.
+            /// </summary>
+            /// <param name="dependencies">An array of maps between the interfaces and instances that should be registered with the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
+            public ConfigurableBoostrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies) 
+                where T : Type
+                where K: class 
+            {
+                foreach (var dependency in dependencies)
+                {
+                   this.bootstrapper.registeredInstances.Add(
+                       new InstanceRegistration(dependency.Item1, dependency.Item2));
                 }
 
                 return this;
@@ -690,6 +708,7 @@ namespace Nancy.Testing
             {
                 foreach (var dependency in dependencies)
                 {
+                    // This is doesn't work
                     this.Dependency(dependency);
                 }
 
@@ -741,7 +760,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
             public ConfigurableBoostrapperConfigurator StatusCodeHandler<T>() where T : IStatusCodeHandler
             {
-                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>( new[] { typeof(T) } );
+                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] { typeof(T) });
                 return this;
             }
 
@@ -1569,7 +1588,7 @@ namespace Nancy.Testing
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="ICultureService"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            public ConfigurableBoostrapperConfigurator CultureService<T>() where T : ICultureService 
+            public ConfigurableBoostrapperConfigurator CultureService<T>() where T : ICultureService
             {
                 this.bootstrapper.configuration.Diagnostics = typeof(T);
                 return this;
