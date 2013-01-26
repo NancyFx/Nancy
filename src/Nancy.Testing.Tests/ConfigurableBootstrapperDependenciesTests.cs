@@ -1,9 +1,9 @@
-﻿using System;
-using FakeItEasy;
-using Xunit;
-
-namespace Nancy.Testing.Tests
+﻿namespace Nancy.Testing.Tests
 {
+    using System;
+    using FakeItEasy;
+    using Xunit;
+
     public class ConfigurableBootstrapperDependenciesTests
     {
         private const string _dataFromFake = "Faked version ITestDependency";
