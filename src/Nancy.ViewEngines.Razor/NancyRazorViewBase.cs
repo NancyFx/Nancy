@@ -125,21 +125,56 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
         {
-            var things = values.Select(tuple => tuple.Item2.Item1 );
-            if (things.All(s => s == null || (s is bool && !(bool)s)))
-            {
-                return;
-            }
-
-            // TODO - write this properly :P may be worth creating types for the tuple hell and casting to them
-            contents.Append(prefix.Item1);
+            var writtenAttribute = false;
+            var attributeBuilder = new StringBuilder(prefix.Item1);
 
             foreach (var value in values)
             {
-                contents.Append(value.Item2.Item1);
+                if (ShouldWriteValue(value.Item2.Item1))
+                {
+                    var stringValue = this.GetStringValue(value.Item2.Item1);
+                    var valuePrefix = value.Item1.Item1;
+
+                    if (!String.IsNullOrEmpty(valuePrefix))
+                    {
+                        attributeBuilder.Append(valuePrefix);
+                    }
+
+                    attributeBuilder.Append(stringValue);
+                    writtenAttribute = true;
+                }
             }
 
-            contents.Append(suffix.Item1);
+            attributeBuilder.Append(suffix.Item1);
+
+            var renderAttribute = writtenAttribute || values.Length == 0;
+
+            if (renderAttribute)
+            {
+                contents.Append(attributeBuilder);
+            }
+        }
+
+        private string GetStringValue(object value)
+        {
+            return value as string ?? value.ToString();
+        }
+
+        private bool ShouldWriteValue(object value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            if (value is bool)
+            {
+                var boolValue = (bool) value;
+
+                return boolValue;
+            }
+
+            return true;
         }
 
         /// <summary>

@@ -2,9 +2,9 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
   <metadata>
     <id>System.Web.Razor.Unofficial</id>
-    <version>2.0</version>
-    <authors>Microsoft</authors>
-    <owners>Microsoft</owners>
+    <version>2.0.1</version>
+    <authors>Steven Robbins,  Microsoft</authors>
+    <owners>Steven Robbins,  Microsoft</owners>
     <licenseUrl>http://aspnetwebstack.codeplex.com/license</licenseUrl>
     <projectUrl>https://github.com/grumpydev/System.Web.Razor.Unofficial</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
