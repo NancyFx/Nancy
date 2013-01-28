@@ -1,11 +1,11 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
+    using Nancy.Helpers;
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Text;
-    using Nancy.Helpers;
 
     /// <summary>
     /// Base class for nancy razor views.
@@ -240,7 +240,8 @@
             }
             catch (NullReferenceException)
             {
-                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null");
+                throw new ViewRenderException(
+                    "Unable to render the view. This may be because the Model, or a property on the Model, is null, or the path to the view is incorrect.");
             }
 
             this.Body = this.contents.ToString();

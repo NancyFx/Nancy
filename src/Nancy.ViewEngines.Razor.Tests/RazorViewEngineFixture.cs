@@ -1,16 +1,16 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
+    using FakeItEasy;
+    using Nancy.Localization;
+    using Nancy.Tests;
+    using Nancy.ViewEngines.Razor.Tests.Models;
     using System;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using FakeItEasy;
-    using Xunit;
-    using Nancy.Tests;
-    using Nancy.ViewEngines.Razor.Tests.Models;
     using System.Threading;
-    using Nancy.Localization;
+    using Xunit;
 
     public class RazorViewEngineFixture
     {
@@ -472,6 +472,28 @@
             // Then
             var output = ReadAll(stream).Trim();
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
+        }
+
+        [Fact]
+        public void Should_tell_view_name_when_loading_missing_view()
+        {
+            bool threwException = false;
+            try
+            {
+                var result = new ViewLocationResult("MyPath", "NonExistingView", "cshtml", () => new StringReader(string.Empty));
+                var response = engine.RenderView(result, null, renderContext);
+
+                Stream stream = new MemoryStream();
+                response.Contents.Invoke(stream);
+            }
+            catch (Exception e)
+            {
+                threwException = true;
+                Assert.IsType<ViewRenderException>(e);
+                Assert.Equal("Could not render MyPath/NonExistingView.cshtml", e.Message);
+            }
+
+            Assert.True(threwException);
         }
 
         [Fact(Skip = "Multi-threading regression test")]

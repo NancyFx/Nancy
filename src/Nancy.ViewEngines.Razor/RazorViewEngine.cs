@@ -1,5 +1,8 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
+    using Nancy.Bootstrapper;
+    using Nancy.Localization;
+    using Nancy.Responses;
     using System;
     using System.CodeDom;
     using System.CodeDom.Compiler;
@@ -9,9 +12,6 @@
     using System.Reflection;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
-    using Nancy.Bootstrapper;
-    using Nancy.Responses;
-    using Nancy.Localization;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -345,8 +345,13 @@
 
             var view = viewFactory.Invoke();
 
+            if (string.IsNullOrWhiteSpace(view.Path))
+            {
+                throw new ViewRenderException(string.Format("Could not render {0}/{1}.{2}", viewLocationResult.Location, viewLocationResult.Name, viewLocationResult.Extension));
+            }
+
             view.Text = new TextResourceFinder(this.textResource, renderContext.Context);
-            
+
             view.Code = string.Empty;
 
             return view;
