@@ -24,7 +24,7 @@ namespace Nancy.Testing
         /// provided <see cref="ConfigurableBootstrapper"/> configuration.
         /// </summary>
         /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
-        public Browser(Action<ConfigurableBootstrapper.ConfigurableBoostrapperConfigurator> action)
+        public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action)
             : this(new ConfigurableBootstrapper(action))
         {
         }

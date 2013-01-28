@@ -50,7 +50,7 @@
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the default configuration
         /// </summary>
-        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, params Uri[] baseUris)
             : this(bootstrapper, new HostConfiguration(), baseUris)
@@ -62,7 +62,7 @@
         /// the provided <paramref name="bootstrapper"/>.
         /// Uses the specified configuration.
         /// </summary>
-        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         /// <param name="configuration">Configuration to use</param>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, HostConfiguration configuration, params Uri[] baseUris)
@@ -81,7 +81,7 @@
         /// Uses the default configuration
         /// </summary>
         /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
-        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper)
             : this(bootstrapper, new HostConfiguration(), baseUri)
         {
@@ -93,7 +93,7 @@
         /// Uses the specified configuration.
         /// </summary>
         /// <param name="baseUri">The <see cref="Uri"/> that the host will listen to.</param>
-        /// <param name="bootstrapper">The boostrapper that should be used to handle the request.</param>
+        /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         /// <param name="configuration">Configuration to use</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, HostConfiguration configuration)
             : this (bootstrapper, configuration, baseUri)
