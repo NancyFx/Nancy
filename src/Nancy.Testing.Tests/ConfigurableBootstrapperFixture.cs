@@ -91,7 +91,7 @@
         {
             // Given
             var availableMembers =
-                typeof(ConfigurableBootstrapper.ConfigurableBoostrapperConfigurator)
+                typeof(ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator)
                 .GetMethods(BindingFlags.Public | BindingFlags.Instance)
                 .Select(x => x.Name)
                 .Distinct();
