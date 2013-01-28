@@ -123,6 +123,7 @@
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="BrowserResponseExtensionsTests.cs" />
     <Compile Include="CaseSensitivityFixture.cs" />
+    <Compile Include="ConfigurableBootstrapperDependenciesTests.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
     <Compile Include="DocumentWrapperTests.cs" />
