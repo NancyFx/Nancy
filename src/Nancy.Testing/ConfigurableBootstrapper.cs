@@ -698,23 +698,7 @@ namespace Nancy.Testing
                 return this;
             }
 
-            /// <summary>
-            /// Configures the bootstrapper to use the provided types as a dependency.
-            /// </summary>
-            /// <param name="dependencies">The types that should be used registered as dependencies with the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBoostrapperConfigurator"/>.</returns>
-            /// <remarks>This method will register the types for all the interfaces they implement and the types themselves.</remarks>
-            public ConfigurableBoostrapperConfigurator Dependencies(params Type[] dependencies)
-            {
-                foreach (var dependency in dependencies)
-                {
-                    // This is doesn't work
-                    this.Dependency(dependency);
-                }
-
-                return this;
-            }
-
+            
             /// <summary>
             /// Configures the bootstrapper to use the provided types as a dependency.
             /// </summary>

@@ -18,10 +18,8 @@
         /// <param name="buffer">The document represented as a byte array.</param>
         public DocumentWrapper(IEnumerable<byte> buffer)
         {
-            var characters =
-                Encoding.UTF8.GetString(buffer.ToArray()).ToCharArray();
-
-            this.document = CQ.Create(characters);
+            var utf8String = Encoding.UTF8.GetString(buffer.ToArray());
+            this.document = CQ.Create(utf8String);
         }
 
         /// <summary>

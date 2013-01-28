@@ -52,7 +52,7 @@
         private static string[] GetViewEngines()
         {
             var engines =
-                AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
+                AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>(ScanMode.All);
 
             return engines
                 .Select(engine => engine.Name.Split(new [] { "ViewEngine" }, StringSplitOptions.None)[0])

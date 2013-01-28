@@ -229,7 +229,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
                 };
 
             // Then
-            AppDomainAssemblyTypeScanner.TypesOf<IEnumerable>().Where(t => t.Assembly.FullName.StartsWith("mscorlib")).Count().ShouldEqual(0);
+            AppDomainAssemblyTypeScanner
+                .TypesOf<IEnumerable>(ScanMode.All)
+                .Where(t => t.Assembly.FullName.StartsWith("mscorlib"))
+                .Count().ShouldEqual(0);
         }
 
         [Fact]
