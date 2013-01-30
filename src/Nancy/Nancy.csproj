@@ -278,6 +278,7 @@
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
     <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
+    <Compile Include="ViewEngines\ExpiringViewCache.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
@@ -372,6 +373,7 @@
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\DefaultViewResolver.cs" />
+    <Compile Include="ViewEngines\FileSystemViewLocationResult.cs" />
     <Compile Include="ViewEngines\IFileSystemReader.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />

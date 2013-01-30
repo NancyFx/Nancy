@@ -51,11 +51,13 @@
 
             return
                 from match in matches
-                select new ViewLocationResult(
+                select new FileSystemViewLocationResult(
                     GetViewLocation(match.Item1, rootPath),
                     Path.GetFileNameWithoutExtension(match.Item1),
                     Path.GetExtension(match.Item1).Substring(1),
-                    match.Item2);
+                    match.Item2,
+                    match.Item1,
+                    this.fileSystemReader);
         }
 
         private static string GetViewLocation(string match, string rootPath)
