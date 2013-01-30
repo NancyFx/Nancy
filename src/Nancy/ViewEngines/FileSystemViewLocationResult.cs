@@ -36,8 +36,6 @@
             this.fileContents = contents;
             this.Contents = this.GetContents;
             this.fileName = fullFilename;
-
-            this.lastUpdated = fileSystem.GetLastModified(this.fileName);
         }
 
         /// <summary>
