@@ -1,5 +1,6 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -69,7 +70,7 @@
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
         public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions, string viewName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private static string GetViewLocation(string match, string rootPath)

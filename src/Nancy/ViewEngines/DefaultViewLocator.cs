@@ -86,11 +86,21 @@
 
         private ViewLocationResult[] GetUncachedMatchingViews(string viewName)
         {
-            var supportedViewExtensions =
-                GetSupportedViewExtensions();
+            var viewExtension = this.GetExtension(viewName);
+
+            var supportedViewExtensions = String.IsNullOrEmpty(viewExtension)
+                                              ? GetSupportedViewExtensions()
+                                              : new[] { viewExtension };
 
             return this.viewLocationProvider.GetLocatedViews(supportedViewExtensions, viewName)
                                             .ToArray();
+        }
+
+        private string GetExtension(string viewName)
+        {
+            var extension = Path.GetExtension(viewName);
+
+            return !String.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
         }
 
         private ViewLocationResult[] GetCachedMatchingViews(string viewName)
