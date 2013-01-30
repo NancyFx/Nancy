@@ -62,6 +62,18 @@
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
         }
 
+        /// <summary>
+        /// Returns an <see cref="ViewLocationResult"/> instance for all the views matching the viewName that could be located by the provider.
+        /// </summary>
+        /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+        /// <param name="viewName">The name of the view to try and find</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
+        /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
+        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions, string viewName)
+        {
+            throw new System.NotImplementedException();
+        }
+
         private IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)
         {
             var resourceStreams = 

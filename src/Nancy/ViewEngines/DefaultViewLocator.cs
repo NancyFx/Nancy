@@ -4,17 +4,28 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
 
     /// <summary>
     /// The default implementation for how views are located by Nancy.
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
-        private readonly IViewLocationCache viewLocationCache;
+        private readonly List<ViewLocationResult> viewLocationResults;
 
-        public DefaultViewLocator(IViewLocationCache viewLocationCache)
+        private readonly IViewLocationProvider viewLocationProvider;
+
+        private readonly IEnumerable<IViewEngine> viewEngines;
+
+        private readonly ReaderWriterLockSlim padlock;
+
+        public DefaultViewLocator(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
-            this.viewLocationCache = viewLocationCache;
+            this.viewLocationProvider = viewLocationProvider;
+            this.viewEngines = viewEngines;
+
+            // No need to lock here, we get constructed on app startup
+            this.viewLocationResults = new List<ViewLocationResult>(this.GetInititialViewLocations());
         }
 
         /// <summary>
@@ -30,19 +41,82 @@
                 return null;
             }
 
-            var viewsThatMatchesCritera = this.viewLocationCache
-                .Where(x => NameMatchesView(viewName, x))
-                .Where(x => ExtensionMatchesView(viewName, x))
-                .Where(x => LocationMatchesView(viewName, x))
-                .ToList();
-
-            var count = viewsThatMatchesCritera.Count();
-            if (count > 1)
+            this.padlock.EnterUpgradeableReadLock();
+            try
             {
-                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(count, viewsThatMatchesCritera));
-            }
+                var cachedResults = this.GetCachedMatchingViews(viewName);
+                if (cachedResults.Length == 1)
+                {
+                    return cachedResults.First();
+                }
 
-            return viewsThatMatchesCritera.SingleOrDefault();
+                if (cachedResults.Length > 1)
+                {
+                    throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
+                }
+
+                var uncachedResults = this.GetUncachedMatchingViews(viewName);
+                if (!uncachedResults.Any())
+                {
+                    return null;
+                }
+
+                this.padlock.EnterWriteLock();
+                try
+                {
+                    this.viewLocationResults.AddRange(uncachedResults);
+                }
+                finally
+                {
+                    this.padlock.ExitWriteLock();
+                }
+
+                if (uncachedResults.Length > 1)
+                {
+                    throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(uncachedResults.Length, uncachedResults));
+                }
+
+                return uncachedResults.First();
+            }
+            finally
+            {
+                this.padlock.ExitUpgradeableReadLock();                    
+            }
+        }
+
+        private ViewLocationResult[] GetUncachedMatchingViews(string viewName)
+        {
+            var supportedViewExtensions =
+                GetSupportedViewExtensions();
+
+            return this.viewLocationProvider.GetLocatedViews(supportedViewExtensions, viewName)
+                                            .ToArray();
+        }
+
+        private ViewLocationResult[] GetCachedMatchingViews(string viewName)
+        {
+            return this.viewLocationResults.Where(x => NameMatchesView(viewName, x))
+                       .Where(x => ExtensionMatchesView(viewName, x))
+                       .Where(x => LocationMatchesView(viewName, x))
+                       .ToArray();
+        }
+
+        private IEnumerable<ViewLocationResult> GetInititialViewLocations()
+        {
+            var supportedViewExtensions =
+                GetSupportedViewExtensions();
+
+            var viewsLocatedByProviders =
+                this.viewLocationProvider.GetLocatedViews(supportedViewExtensions);
+
+            return viewsLocatedByProviders.ToArray();
+        }
+
+        private IEnumerable<string> GetSupportedViewExtensions()
+        {
+            return this.viewEngines
+                .SelectMany(engine => engine.Extensions)
+                .Distinct();
         }
 
         private static string GetAmgiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
@@ -65,10 +139,10 @@
 
         private static bool LocationMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var filename = Path.GetFileName( viewName );
-            var index = viewName.LastIndexOf(filename, System.StringComparison.OrdinalIgnoreCase );
-            var location = index >= 0 ? viewName.Remove( index, filename.Length ) : viewName;
-            location = location.TrimEnd( new[] { '/' } );
+            var filename = Path.GetFileName(viewName);
+            var index = viewName.LastIndexOf(filename, System.StringComparison.OrdinalIgnoreCase);
+            var location = index >= 0 ? viewName.Remove(index, filename.Length) : viewName;
+            location = location.TrimEnd(new[] { '/' });
 
             return viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
         }
