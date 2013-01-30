@@ -26,7 +26,7 @@ namespace Nancy.ViewEngines
             var viewsLocatedByProviders = 
                 this.viewLocationProvider.GetLocatedViews(supportedViewExtensions);
 
-            return viewsLocatedByProviders;
+            return viewsLocatedByProviders.ToArray();
         }
 
         private IEnumerable<string> GetSupportedViewExtensions()
