@@ -1,5 +1,7 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Defines the functionality for locating the requested view.
     /// </summary>

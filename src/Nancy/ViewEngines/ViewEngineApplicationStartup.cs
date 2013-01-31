@@ -9,21 +9,21 @@ namespace Nancy.ViewEngines
     public class ViewEngineApplicationStartup : IApplicationStartup
     {
         private readonly IEnumerable<IViewEngine> viewEngines;
-        private readonly IViewLocationCache viewLocationCache;
         private readonly IViewCache viewCache;
+        private readonly IViewLocator viewLocator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewEngineApplicationStartup"/> class, with the
         /// provided <paramref name="viewEngines"/>, <paramref name="viewLocationCache"/> and <paramref name="viewCache"/>.
         /// </summary>
         /// <param name="viewEngines">The available view engines.</param>
-        /// <param name="viewLocationCache">The view location cache.</param>
         /// <param name="viewCache">The view cache.</param>
-        public ViewEngineApplicationStartup(IEnumerable<IViewEngine> viewEngines, IViewLocationCache viewLocationCache, IViewCache viewCache)
+        /// <param name="viewLocator">The view locator.</param>
+        public ViewEngineApplicationStartup(IEnumerable<IViewEngine> viewEngines, IViewCache viewCache, IViewLocator viewLocator)
         {
             this.viewEngines = viewEngines;
-            this.viewLocationCache = viewLocationCache;
             this.viewCache = viewCache;
+            this.viewLocator = viewLocator;
         }
 
         /// <summary>
@@ -42,7 +42,7 @@ namespace Nancy.ViewEngines
         {
             return new ViewEngineStartupContext(
                 this.viewCache,
-                this.viewLocationCache,
+                this.viewLocator,
                 viewEngine.Extensions);
         }
     }

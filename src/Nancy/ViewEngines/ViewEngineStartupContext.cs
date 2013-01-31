@@ -5,34 +5,17 @@
 
     public class ViewEngineStartupContext
     {
-        private readonly IEnumerable<ViewLocationResult> viewLocationCache;
-        private readonly IEnumerable<ViewLocationResult> availableViews;
+        private readonly IViewLocator viewLocator;
 
-        public ViewEngineStartupContext(IViewCache viewCache, IEnumerable<ViewLocationResult> viewLocationCache, IEnumerable<string> extensions)
+        public ViewEngineStartupContext(IViewCache viewCache, IViewLocator viewLocator, IEnumerable<string> extensions)
         {
-            this.viewLocationCache = viewLocationCache;
+            this.viewLocator = viewLocator;
             this.Extensions = extensions;
             this.ViewCache = viewCache;
-            this.availableViews = GetViewsThatEngineCanRender(this.viewLocationCache, this.Extensions);
         }
 
         public IViewCache ViewCache { get; private set; }
 
-        public IEnumerable<ViewLocationResult> ViewLocationResults
-        {
-            get
-            {
-                return StaticConfiguration.DisableCaches
-                           ? GetViewsThatEngineCanRender(this.viewLocationCache, this.Extensions)
-                           : this.availableViews;
-            }
-        }
-
         public IEnumerable<string> Extensions { get; private set; }
-
-        private static IEnumerable<ViewLocationResult> GetViewsThatEngineCanRender(IEnumerable<ViewLocationResult> viewLocationCache, IEnumerable<string> extensions)
-        {
-            return extensions.SelectMany(extension => viewLocationCache.Where(x => x.Extension.Equals(extension))).ToArray();
-        }
     }
 }
