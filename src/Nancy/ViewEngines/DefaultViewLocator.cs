@@ -41,18 +41,21 @@
                 return null;
             }
 
+            // If we can't do runtime discovery there's no need to lock anything
+            // as we can assume our cache is immutable.
+            if (!StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+            {
+                return this.LocateCachedView(viewName);
+            }
+
             this.padlock.EnterUpgradeableReadLock();
             try
             {
-                var cachedResults = this.GetCachedMatchingViews(viewName);
-                if (cachedResults.Length == 1)
-                {
-                    return cachedResults.First();
-                }
+                var cachedResult = this.LocateCachedView(viewName);
 
-                if (cachedResults.Length > 1)
+                if (cachedResult != null)
                 {
-                    throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
+                    return cachedResult;
                 }
 
                 if (!StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
@@ -60,33 +63,54 @@
                     return null;
                 }
 
-                var uncachedResults = this.GetUncachedMatchingViews(viewName);
-                if (!uncachedResults.Any())
-                {
-                    return null;
-                }
-
-                this.padlock.EnterWriteLock();
-                try
-                {
-                    this.viewLocationResults.AddRange(uncachedResults);
-                }
-                finally
-                {
-                    this.padlock.ExitWriteLock();
-                }
-
-                if (uncachedResults.Length > 1)
-                {
-                    throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(uncachedResults.Length, uncachedResults));
-                }
-
-                return uncachedResults.First();
+                return this.LocateAndCacheUncachedView(viewName);
             }
             finally
             {
                 this.padlock.ExitUpgradeableReadLock();                    
             }
+        }
+
+        private ViewLocationResult LocateAndCacheUncachedView(string viewName)
+        {
+            var uncachedResults = this.GetUncachedMatchingViews(viewName);
+            if (!uncachedResults.Any())
+            {
+                return null;
+            }
+
+            this.padlock.EnterWriteLock();
+            try
+            {
+                this.viewLocationResults.AddRange(uncachedResults);
+            }
+            finally
+            {
+                this.padlock.ExitWriteLock();
+            }
+
+            if (uncachedResults.Length > 1)
+            {
+                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(uncachedResults.Length, uncachedResults));
+            }
+
+            return uncachedResults.First();
+        }
+
+        private ViewLocationResult LocateCachedView(string viewName)
+        {
+            var cachedResults = this.GetCachedMatchingViews(viewName);
+            if (cachedResults.Length == 1)
+            {
+                return cachedResults.Single();
+            }
+
+            if (cachedResults.Length > 1)
+            {
+                throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
+            }
+            
+            return null;
         }
 
         private ViewLocationResult[] GetUncachedMatchingViews(string viewName)
