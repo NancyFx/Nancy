@@ -4,7 +4,7 @@
     using System.Collections.Concurrent;
 
     /// <summary>
-    /// Default view cache implementation.
+    /// View cache that supports expiring content if it is stale
     /// </summary>
     public class DefaultViewCache : IViewCache
     {
@@ -27,12 +27,16 @@
         /// <returns>An instance of the type specified by the <typeparamref name="TCompiledView"/> type.</returns>
         public TCompiledView GetOrAdd<TCompiledView>(ViewLocationResult viewLocationResult, Func<ViewLocationResult, TCompiledView> valueFactory)
         {
-            //if (StaticConfiguration.DisableCaches)
-            //{
-            //    return valueFactory(viewLocationResult);
-            //}
+            if (StaticConfiguration.Caching.EnableRuntimeViewUpdates)
+            {
+                if (viewLocationResult.IsStale())
+                {
+                    object old;
+                    this.cache.TryRemove(viewLocationResult, out old);
+                }
+            }
 
-            return (TCompiledView)this.cache.GetOrAdd(viewLocationResult, (x) => valueFactory(x));
+            return (TCompiledView)this.cache.GetOrAdd(viewLocationResult, x => valueFactory(x));
         }
     }
 }

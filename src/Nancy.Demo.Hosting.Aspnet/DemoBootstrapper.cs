@@ -12,14 +12,6 @@
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
     {
-        protected override NancyInternalConfiguration InternalConfiguration
-        {
-            get
-            {
-                return NancyInternalConfiguration.WithOverrides(with => with.ViewCache = typeof(ExpiringViewCache));
-            }
-        }
-
         // Override with a valid password (albeit a really really bad one!)
         // to enable the diagnostics dashboard
         protected override DiagnosticsConfiguration DiagnosticsConfiguration

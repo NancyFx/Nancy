@@ -275,9 +275,8 @@
     <Compile Include="ResourceAssemblyProvider.cs" />
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="Localization\ResourceBasedTextResource.cs" />
-    <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
-    <Compile Include="ViewEngines\ExpiringViewCache.cs" />
+    <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
