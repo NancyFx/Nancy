@@ -33,7 +33,7 @@
                 this.cache.TryRemove(viewLocationResult, out old);
             }
 
-            return (TCompiledView)this.cache.GetOrAdd(viewLocationResult, (x) => valueFactory(x));
+            return (TCompiledView)this.cache.GetOrAdd(viewLocationResult, x => valueFactory(x));
         }
     }
 }
