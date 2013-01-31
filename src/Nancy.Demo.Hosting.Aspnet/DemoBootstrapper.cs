@@ -49,7 +49,6 @@
             base.ApplicationStartup(container, pipelines);
 
             StaticConfiguration.EnableRequestTracing = true;
-            StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));

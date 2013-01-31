@@ -55,6 +55,11 @@
                     throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
                 }
 
+                if (!StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+                {
+                    return null;
+                }
+
                 var uncachedResults = this.GetUncachedMatchingViews(viewName);
                 if (!uncachedResults.Any())
                 {

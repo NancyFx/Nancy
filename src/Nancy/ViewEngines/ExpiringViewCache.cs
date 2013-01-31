@@ -27,10 +27,13 @@
         /// <returns>An instance of the type specified by the <typeparamref name="TCompiledView"/> type.</returns>
         public TCompiledView GetOrAdd<TCompiledView>(ViewLocationResult viewLocationResult, Func<ViewLocationResult, TCompiledView> valueFactory)
         {
-            if (viewLocationResult.IsStale())
+            if (StaticConfiguration.Caching.EnableRuntimeViewUpdates)
             {
-                object old;
-                this.cache.TryRemove(viewLocationResult, out old);
+                if (viewLocationResult.IsStale())
+                {
+                    object old;
+                    this.cache.TryRemove(viewLocationResult, out old);
+                }
             }
 
             return (TCompiledView)this.cache.GetOrAdd(viewLocationResult, x => valueFactory(x));
