@@ -16,6 +16,11 @@ namespace Nancy.Tests.Unit.ViewEngines
 
         public ViewEngineStartupFixture()
         {
+            this.views = new List<ViewLocationResult>
+            {
+                new ViewLocationResult("", "", "html", null),
+                new ViewLocationResult("", "", "spark", null),
+            };
 
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
