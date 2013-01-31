@@ -69,9 +69,12 @@
         /// <param name="viewName">The name of the view to try and find</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
         /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
-        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions, string viewName)
+        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions, string location, string viewName)
         {
-            throw new System.NotImplementedException();
+            var allResults = this.GetLocatedViews(supportedViewExtensions);
+
+            return allResults.Where(vlr => vlr.Location.Equals(location, StringComparison.OrdinalIgnoreCase) &&
+                                           vlr.Name.Equals(viewName, StringComparison.OrdinalIgnoreCase));
         }
 
         private IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)

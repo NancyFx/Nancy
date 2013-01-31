@@ -17,7 +17,7 @@
 
         private readonly IEnumerable<IViewEngine> viewEngines;
 
-        private readonly ReaderWriterLockSlim padlock;
+        private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
 
         public DefaultViewLocator(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
@@ -86,21 +86,17 @@
 
         private ViewLocationResult[] GetUncachedMatchingViews(string viewName)
         {
-            var viewExtension = this.GetExtension(viewName);
+            var viewExtension = GetExtensionFromViewName(viewName);
 
             var supportedViewExtensions = String.IsNullOrEmpty(viewExtension)
                                               ? GetSupportedViewExtensions()
                                               : new[] { viewExtension };
 
-            return this.viewLocationProvider.GetLocatedViews(supportedViewExtensions, viewName)
+            var location = GetLocationFromViewName(viewName);
+            var nameWithoutExtension = GetFilenameWithoutExtensionFromViewName(viewName);
+
+            return this.viewLocationProvider.GetLocatedViews(supportedViewExtensions, location, nameWithoutExtension)
                                             .ToArray();
-        }
-
-        private string GetExtension(string viewName)
-        {
-            var extension = Path.GetExtension(viewName);
-
-            return !String.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
         }
 
         private ViewLocationResult[] GetCachedMatchingViews(string viewName)
@@ -141,28 +137,46 @@
 
         private static bool ExtensionMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var extension = Path.GetExtension(viewName);
+            var extension = GetExtensionFromViewName(viewName);
 
             return string.IsNullOrEmpty(extension) ||
-                viewLocationResult.Extension.Equals(extension.Substring(1), StringComparison.OrdinalIgnoreCase);
+                viewLocationResult.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool LocationMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var filename = Path.GetFileName(viewName);
-            var index = viewName.LastIndexOf(filename, System.StringComparison.OrdinalIgnoreCase);
-            var location = index >= 0 ? viewName.Remove(index, filename.Length) : viewName;
-            location = location.TrimEnd(new[] { '/' });
+            var location = GetLocationFromViewName(viewName);
 
             return viewLocationResult.Location.Equals(location, StringComparison.OrdinalIgnoreCase);
         }
 
         private static bool NameMatchesView(string viewName, ViewLocationResult viewLocationResult)
         {
-            var name = Path.GetFileNameWithoutExtension(viewName);
+            var name = GetFilenameWithoutExtensionFromViewName(viewName);
 
             return (!string.IsNullOrEmpty(name)) &&
                 viewLocationResult.Name.Equals(name, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetFilenameWithoutExtensionFromViewName(string viewName)
+        {
+            return Path.GetFileNameWithoutExtension(viewName);
+        }
+
+        private static string GetLocationFromViewName(string viewName)
+        {
+            var filename = Path.GetFileName(viewName);
+            var index = viewName.LastIndexOf(filename, StringComparison.OrdinalIgnoreCase);
+            var location = index >= 0 ? viewName.Remove(index, filename.Length) : viewName;
+            location = location.TrimEnd(new[] { '/' });
+            return location;
+        }
+
+        private static string GetExtensionFromViewName(string viewName)
+        {
+            var extension = Path.GetExtension(viewName);
+
+            return !String.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
         }
     }
 }
