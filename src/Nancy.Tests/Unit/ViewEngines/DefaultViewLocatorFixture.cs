@@ -9,6 +9,8 @@ namespace Nancy.Tests.Unit.ViewEngines
     using Xunit;
     using Xunit.Extensions;
 
+    using System.Linq;
+
     public class DefaultViewLocatorFixture
     {
         private readonly ViewLocationResult viewLocation;
@@ -290,6 +292,30 @@ namespace Nancy.Tests.Unit.ViewEngines
            // Then
            result.ShouldBeSameAs( expectedView );
         }
+
+        [Fact]
+        public void Should_get_located_views_from_view_location_providers_with_available_extensions_when_created()
+        {
+            // Given
+            var viewEngine1 = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine1.Extensions).Returns(new[] { "html" });
+
+            var viewEngine2 = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine2.Extensions).Returns(new[] { "spark" });
+
+            var viewLocationProvider = A.Fake<IViewLocationProvider>();
+            var expectedViewEngineExtensions = new[] { "html", "spark" };
+            var viewEngine = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine.Extensions).Returns(expectedViewEngineExtensions);
+
+            // When
+            new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+
+            // Then
+            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
+                    x => x.All(expectedViewEngineExtensions.Contains)))).MustHaveHappened();
+        }
+
 
         private static DefaultViewLocator CreateViewLocator(params ViewLocationResult[] results)
         {
