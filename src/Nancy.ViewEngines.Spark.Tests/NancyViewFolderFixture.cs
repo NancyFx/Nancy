@@ -113,10 +113,11 @@ namespace Nancy.ViewEngines.Spark.Tests
 
         private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
         {
-            return new ViewEngineStartupContext(
-                this.cache,
-                results,
-                this.extensions);
+            throw new NotImplementedException();
+            //return new ViewEngineStartupContext(
+            //    this.cache,
+            //    results,
+            //    this.extensions);
         }
     }
 }

@@ -7,14 +7,12 @@ namespace Nancy.Tests.Unit.ViewEngines
 
     public class DefaultViewLocatorFixture
     {
-        private readonly IViewLocationCache viewLocationCache;
         private readonly ViewLocationResult viewLocation;
         private readonly DefaultViewLocator viewLocator;
 
         public DefaultViewLocatorFixture()
         {
             this.viewLocation = new ViewLocationResult("location", "view", "html", null);
-            this.viewLocationCache = new FakeViewLocationCache(this.viewLocation);
             this.viewLocator = CreateViewLocator(this.viewLocationCache);
         }
 

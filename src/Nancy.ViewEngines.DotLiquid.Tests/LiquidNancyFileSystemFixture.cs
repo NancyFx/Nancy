@@ -1,13 +1,12 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
-    using System;
     using System.IO;
     using System.Collections.Generic;
     using FakeItEasy;
     using global::DotLiquid;
     using global::DotLiquid.Exceptions;
     using Nancy.Tests;
-    using Nancy.Tests.Fakes;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -221,27 +220,28 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
 
         private LiquidNancyFileSystem CreateFileSystem(out Context context, params ViewLocationResult[] viewLocationResults)
         {
+            var viewLocationProvider = A.Fake<IViewLocationProvider>();
+            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
+                                               .Returns(viewLocationResults);
+
+            var viewEngine = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+
             var startupContext = new ViewEngineStartupContext(
                 null,
-                viewLocationResults,
+                viewLocator,
                 new[] { "liquid" });
-
-            var cache = new FakeViewLocationCache(viewLocationResults);
-            var locator = CreateViewLocator(cache);
             
             var renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
-                .ReturnsLazily(x => locator.LocateView(x.Arguments.Get<string>(0), null));
+                .ReturnsLazily(x => viewLocator.LocateView(x.Arguments.Get<string>(0), null));
 
             context = new Context(new List<Hash>(), new Hash(),
                 Hash.FromAnonymousObject(new { nancy = renderContext }), false);
 
             return new LiquidNancyFileSystem(startupContext);
-        }
-
-        private static DefaultViewLocator CreateViewLocator(IViewLocationCache viewLocationCache)
-        {
-            return new DefaultViewLocator(viewLocationCache);
         }
     }
 }

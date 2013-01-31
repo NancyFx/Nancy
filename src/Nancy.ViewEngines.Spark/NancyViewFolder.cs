@@ -31,17 +31,18 @@ namespace Nancy.ViewEngines.Spark
         /// <returns>A <see cref="IViewFile"/> instance.</returns>
         public IViewFile GetViewSource(string path)
         {
-            var searchPath = ConvertPath(path);
+            throw new NotImplementedException();
+            //var searchPath = ConvertPath(path);
 
-            var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults
-                .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+            //var viewLocationResult = this.viewEngineStartupContext.ViewLocationResults
+            //    .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
 
-            if (viewLocationResult == null)
-            {
-                throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
-            }
+            //if (viewLocationResult == null)
+            //{
+            //    throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
+            //}
 
-            return new NancyViewFile(viewLocationResult);
+            //return new NancyViewFile(viewLocationResult);
         }
 
         /// <summary>
@@ -51,14 +52,15 @@ namespace Nancy.ViewEngines.Spark
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the matched views.</returns>
         public IList<string> ListViews(string path)
         {
-            return this.viewEngineStartupContext.
-                ViewLocationResults.
-                Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
-                Select(v =>
-                    v.Location.Length == path.Length ?
-                        v.Name + "." + v.Extension : 
-                        v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
-                ToList();
+            throw new NotImplementedException();
+            //return this.viewEngineStartupContext.
+            //    ViewLocationResults.
+            //    Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
+            //    Select(v =>
+            //        v.Location.Length == path.Length ?
+            //            v.Name + "." + v.Extension : 
+            //            v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
+            //    ToList();
         }
 
         /// <summary>
@@ -68,10 +70,11 @@ namespace Nancy.ViewEngines.Spark
         /// <returns><see langword="true"/> if the view exists in the view folder; otherwise <see langword="false"/>.</returns>
         public bool HasView(string path)
         {
-            var searchPath = 
-                ConvertPath(path);
+            throw new NotImplementedException();
+            //var searchPath = 
+            //    ConvertPath(path);
 
-            return this.viewEngineStartupContext.ViewLocationResults.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+            //return this.viewEngineStartupContext.ViewLocationResults.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
         }
 
         private static bool CompareViewPaths(string storedViewPath, string requestedViewPath)
