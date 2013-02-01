@@ -64,14 +64,14 @@ namespace Nancy.Routing
 
                                         ExecutePost(context, resolveResult.After, tcs);
                                     },
-                                faultedTask => HandleFaultedTask(context, resolveResult.OnError, tcs));
+                                HandleFaultedTask(context, resolveResult.OnError, tcs));
                             
                             return;
                         }
 
                         ExecutePost(context, resolveResult.After, tcs);
                     },
-                faultedTask => HandleFaultedTask(context, resolveResult.OnError, tcs));
+                HandleFaultedTask(context, resolveResult.OnError, tcs));
 
             return tcs.Task;
         }
