@@ -1,10 +1,15 @@
 namespace Nancy.ViewEngines.Spark
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
+    using System.Threading;
+
+    using Nancy.Responses.Negotiation;
+
     using global::Spark.FileSystem;
 
     /// <summary>
@@ -14,7 +19,11 @@ namespace Nancy.ViewEngines.Spark
     {
         private readonly ViewEngineStartupContext viewEngineStartupContext;
 
-        private ViewLocationResult[] currentlyLocatedViews;
+        private List<ViewLocationResult> currentlyLocatedViews;
+
+        private ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
+
+        private readonly ConcurrentDictionary<string, IViewFile> cachedFiles = new ConcurrentDictionary<string, IViewFile>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyViewFolder"/> class, using the provided
@@ -24,7 +33,10 @@ namespace Nancy.ViewEngines.Spark
         public NancyViewFolder(ViewEngineStartupContext viewEngineStartupContext)
         {
             this.viewEngineStartupContext = viewEngineStartupContext;
-            this.currentlyLocatedViews = viewEngineStartupContext.ViewLocator.GetAllCurrentlyDiscoveredViews().ToArray();
+
+            // No need to lock here
+            this.currentlyLocatedViews =
+                new List<ViewLocationResult>(viewEngineStartupContext.ViewLocator.GetAllCurrentlyDiscoveredViews());
         }
 
         /// <summary>
@@ -36,15 +48,50 @@ namespace Nancy.ViewEngines.Spark
         {
             var searchPath = ConvertPath(path);
 
-            var viewLocationResult = this.currentlyLocatedViews
-                .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+            IViewFile fileResult;
+            if (this.cachedFiles.TryGetValue(searchPath, out fileResult))
+            {
+                return fileResult;
+            }
 
-            if (viewLocationResult == null)
+            ViewLocationResult result = null;
+
+            this.padlock.EnterUpgradeableReadLock();
+            try
+            {
+                result = this.currentlyLocatedViews
+                             .FirstOrDefault(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+
+                if (result == null && StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+                {
+                    result = this.viewEngineStartupContext.ViewLocator.LocateView(searchPath, GetFakeContext());
+
+                    this.padlock.EnterWriteLock();
+                    try
+                    {
+                        this.currentlyLocatedViews.Add(result);
+                    }
+                    finally
+                    {
+                        this.padlock.ExitWriteLock();
+                    }
+                }
+            }
+            finally
+            {
+                this.padlock.ExitUpgradeableReadLock();
+            }
+
+
+            if (result == null)
             {
                 throw new FileNotFoundException(string.Format("Template {0} not found", path), path);
             }
 
-            return new NancyViewFile(viewLocationResult);
+            fileResult = new NancyViewFile(result);
+            this.cachedFiles.AddOrUpdate(searchPath, s => fileResult, (s, o) => fileResult);
+
+            return fileResult;
         }
 
         /// <summary>
@@ -54,13 +101,23 @@ namespace Nancy.ViewEngines.Spark
         /// <returns>An <see cref="IEnumerable{T}"/> that contains the matched views.</returns>
         public IList<string> ListViews(string path)
         {
-            return currentlyLocatedViews.
-                Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
-                Select(v =>
-                    v.Location.Length == path.Length ?
-                        v.Name + "." + v.Extension :
-                        v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
-                ToList();
+            this.padlock.EnterReadLock();
+
+            try
+            {
+                return currentlyLocatedViews.
+                    Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
+                    Select(v =>
+                        v.Location.Length == path.Length ?
+                            v.Name + "." + v.Extension :
+                            v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
+                    ToList();
+
+            }
+            finally
+            {
+                this.padlock.ExitReadLock();                
+            }
         }
 
         /// <summary>
@@ -73,7 +130,39 @@ namespace Nancy.ViewEngines.Spark
             var searchPath =
                 ConvertPath(path);
 
-            return this.currentlyLocatedViews.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+            this.padlock.EnterUpgradeableReadLock();
+            try
+            {
+                var hasCached = this.currentlyLocatedViews.Any(v => CompareViewPaths(GetSafeViewPath(v), searchPath));
+
+                if (hasCached || !StaticConfiguration.Caching.EnableRuntimeViewDiscovery)
+                {
+                    return hasCached;
+                }
+
+                var newView = this.viewEngineStartupContext.ViewLocator.LocateView(searchPath, GetFakeContext());
+
+                if (newView == null)
+                {
+                    return false;
+                }
+
+                this.padlock.EnterWriteLock();
+                try
+                {
+                    this.currentlyLocatedViews.Add(newView);
+
+                    return true;
+                }
+                finally
+                {
+                    this.padlock.ExitWriteLock();
+                }
+            }
+            finally
+            {
+                this.padlock.ExitUpgradeableReadLock();
+            }
         }
 
         private static bool CompareViewPaths(string storedViewPath, string requestedViewPath)
@@ -93,31 +182,69 @@ namespace Nancy.ViewEngines.Spark
                 string.Concat(result.Location, "/", result.Name, ".", result.Extension);
         }
 
+        // Horrible hack, but we have no way to get a context
+        private static NancyContext GetFakeContext()
+        {
+            var ctx = new NancyContext();
+
+            ctx.Request = new Request("GET", "/", "http");
+
+            ctx.NegotiationContext = new NegotiationContext();
+
+            return ctx;
+        }
+
         public class NancyViewFile : IViewFile
         {
+            private readonly object updateLock = new object();
+
             private readonly ViewLocationResult viewLocationResult;
-            private readonly long created;
+
+            private string contents;
+
+            private long lastUpdated;
 
             public NancyViewFile(ViewLocationResult viewLocationResult)
             {
                 this.viewLocationResult = viewLocationResult;
-                this.created = DateTime.Now.Ticks;
+
+                this.UpdateContents();
             }
 
             public long LastModified
             {
-                get { return StaticConfiguration.Caching.EnableRuntimeViewUpdates ? DateTime.Now.Ticks : this.created; }
+                get
+                {
+                    if (StaticConfiguration.Caching.EnableRuntimeViewUpdates && this.viewLocationResult.IsStale())
+                    {
+                        this.UpdateContents();
+                    }
+
+                    return this.lastUpdated;
+                }
             }
 
             public Stream OpenViewStream()
             {
-                string view;
-                using (var reader = this.viewLocationResult.Contents.Invoke())
+                if (StaticConfiguration.Caching.EnableRuntimeViewUpdates && this.viewLocationResult.IsStale())
                 {
-                    view = reader.ReadToEnd();
+                    this.UpdateContents();
                 }
 
-                return new MemoryStream(Encoding.UTF8.GetBytes(view));
+                return new MemoryStream(Encoding.UTF8.GetBytes(this.contents));
+            }
+
+            private void UpdateContents()
+            {
+                lock (this.updateLock)
+                {
+                    using (var reader = this.viewLocationResult.Contents.Invoke())
+                    {
+                        this.contents = reader.ReadToEnd();
+                    }
+
+                    this.lastUpdated = DateTime.Now.Ticks;
+                }
             }
         }
     }

@@ -113,11 +113,21 @@ namespace Nancy.ViewEngines.Spark.Tests
 
         private ViewEngineStartupContext CreateContext(params ViewLocationResult[] results)
         {
-            throw new NotImplementedException();
-            //return new ViewEngineStartupContext(
-            //    this.cache,
-            //    results,
-            //    this.extensions);
+            var viewLocationProvider = A.Fake<IViewLocationProvider>();
+            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
+                                               .Returns(results);
+
+            var viewEngine = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+
+            var startupContext = new ViewEngineStartupContext(
+                this.cache,
+                viewLocator,
+                this.extensions);
+
+            return startupContext;
         }
     }
 }
