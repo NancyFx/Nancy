@@ -1,8 +1,10 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web;
     using IO;
     using Nancy.Extensions;
@@ -27,14 +29,25 @@ namespace Nancy.Hosting.Aspnet
         /// Processes the ASP.NET request with Nancy.
         /// </summary>
         /// <param name="context">The <see cref="HttpContextBase"/> of the request.</param>
-        public void ProcessRequest(HttpContextBase context)
+        /// <param name="cb"></param>
+        /// <param name="state"></param>
+        public Task<Tuple<NancyContext, HttpContextBase>> ProcessRequest(HttpContextBase context, AsyncCallback cb, object state)
         {
             var request = CreateNancyRequest(context);
 
-            using (var nancyContext = this.engine.HandleRequest(request))
+            var tcs = new TaskCompletionSource<Tuple<NancyContext, HttpContextBase>>(state);
+
+            if (cb != null)
             {
-                SetNancyResponseToHttpResponse(context, nancyContext.Response);
+                tcs.Task.ContinueWith(task => cb(task), TaskContinuationOptions.ExecuteSynchronously);
             }
+
+            this.engine.HandleRequest(
+                request, 
+                ctx => tcs.SetResult(new Tuple<NancyContext, HttpContextBase>(ctx, context)), 
+                tcs.SetException);
+
+            return tcs.Task;
         }
 
         private static Request CreateNancyRequest(HttpContextBase context)
@@ -106,7 +119,7 @@ namespace Nancy.Hosting.Aspnet
             return contentLength;
         }
 
-        private static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
+        public static void SetNancyResponseToHttpResponse(HttpContextBase context, Response response)
         {
             SetHttpResponseHeaders(context, response);
 
