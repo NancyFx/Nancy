@@ -6,6 +6,8 @@ namespace Nancy.Routing
     using System.Linq;
     using System.Threading.Tasks;
 
+    using Nancy.Helpers;
+
     using Responses.Negotiation;
     using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
@@ -38,59 +40,97 @@ namespace Nancy.Routing
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
         public Task<Response> Dispatch(NancyContext context)
         {
-            // TODO - add back in the full module execution, similar to nancy engine, rather than just the route
+            // TODO - May need to make this run off context rather than response .. seems a bit icky currently
+            var tcs = new TaskCompletionSource<Response>();
+
             var resolveResult = this.Resolve(context);
 
 
-            return this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
+            var preReqTask = ExecuteRoutePreReq(context, resolveResult.Before);
 
-            //try
-            //{
-            //    ExecuteRoutePreReq(context, resolveResultPreReq);
+            preReqTask.WhenCompleted(
+                completedTask =>
+                    {
+                        context.Response = completedTask.Result;
 
-            //    if (context.Response == null)
-            //    {
-            //        context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
-            //    }
+                        if (context.Response == null)
+                        {
+                            var routeTask = this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
 
-            //    if (context.Request.Method.ToUpperInvariant() == "HEAD")
-            //    {
-            //        context.Response = new HeadResponse(context.Response);
-            //    }
+                            routeTask.WhenCompleted(
+                                completedRouteTask =>
+                                    {
+                                        context.Response = completedRouteTask.Result;
 
-            //    if (resolveResultPostReq != null)
-            //    {
-            //        resolveResultPostReq.Invoke(context);
-            //    }
-            //}
-            //catch (Exception exception)
-            //{
-            //    var response = ResolveErrorResult(context, resolveResultOnError, exception);
+                                        ExecutePost(context, resolveResult.After, tcs);
+                                    },
+                                faultedTask => HandleFaultedTask(context, resolveResult.OnError, tcs));
+                            
+                            return;
+                        }
 
-            //    if (response != null)
-            //    {
-            //        context.Response = response;
-            //    }
-            //    else
-            //    {
-            //        throw;
-            //    }
-            //}
+                        ExecutePost(context, resolveResult.After, tcs);
+                    },
+                faultedTask => HandleFaultedTask(context, resolveResult.OnError, tcs));
+
+            return tcs.Task;
         }
 
-        private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        private void ExecutePost(NancyContext context, Action<NancyContext> postHook, TaskCompletionSource<Response> tcs)
         {
+            try
+            {
+                postHook.Invoke(context);
+
+                tcs.SetResult(context.Response);
+            }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
+        }
+
+        private Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
+        {
+            return task =>
+                {
+                    var response = ResolveErrorResult(context, onError, task.Exception);
+    
+                    if (response != null)
+                    {
+                        context.Response = response;
+
+                        tcs.SetResult(response);
+                    }
+                    else
+                    {
+                        tcs.SetException(task.Exception);
+                    }
+                };
+        }
+
+        private static Task<Response> ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        {
+            // TODO - actually make it async
             if (resolveResultPreReq == null)
             {
-                return;
+                TaskHelpers.GetCompletedTask<Response>(null);
             }
 
-            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
+            var tcs = new TaskCompletionSource<Response>();
 
-            if (resolveResultPreReqResponse != null)
+            try
             {
-                context.Response = resolveResultPreReqResponse;
+                var preRequestResponse = resolveResultPreReq.Invoke(context);
+
+                tcs.SetResult(preRequestResponse);
             }
+            catch (Exception e)
+            {
+                tcs.SetException(e);
+            }
+
+            return tcs.Task;
         }
 
         private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
