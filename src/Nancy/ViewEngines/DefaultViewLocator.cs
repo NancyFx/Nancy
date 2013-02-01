@@ -71,6 +71,30 @@
             }
         }
 
+        /// <summary>
+        /// Gets all the views that are currently discovered
+        /// Note: this is *not* the recommended way to deal with the view locator
+        /// as it doesn't allow for runtime discovery of views with the 
+        /// <see cref="StaticConfiguration.Caching"/> settings.
+        /// </summary>
+        /// <returns>A collection of <see cref="ViewLocationResult"/> instances</returns>
+        public IEnumerable<ViewLocationResult> GetAllCurrentlyDiscoveredViews()
+        {
+            this.padlock.EnterReadLock();
+
+            try
+            {
+                // Make a copy to avoid any modification issues
+                var newList = new List<ViewLocationResult>(this.viewLocationResults.Count);
+                this.viewLocationResults.ForEach(newList.Add);
+                return newList;
+            }
+            finally
+            {
+                this.padlock.ExitReadLock();                
+            }
+        }
+
         private ViewLocationResult LocateAndCacheUncachedView(string viewName)
         {
             var uncachedResults = this.GetUncachedMatchingViews(viewName);
