@@ -12,6 +12,8 @@
     using Nancy.ErrorHandling;
     using Nancy.Routing;
 
+    using Nancy.Helpers;
+
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
     /// </summary>
@@ -124,6 +126,8 @@
 
         private Task<NancyContext> HandleRequestInternal(Request request, Func<NancyContext, NancyContext> preRequest)
         {
+            // TODO - replace continuations with a fast continue from the pipeline spike
+
             var tcs = new TaskCompletionSource<NancyContext>();
 
             if (request == null)
@@ -151,16 +155,20 @@
 
             var task = this.InvokeRequestLifeCycle(context, pipelines);
 
-            task.ContinueWith(t =>
+            task.WhenCompleted(
+                completeTask =>
                 {
-                    this.CheckStatusCodeHandler(t.Result);
+                    this.CheckStatusCodeHandler(completeTask.Result);
 
-                    this.SaveTraceInformation(t.Result);
+                    this.SaveTraceInformation(completeTask.Result);
 
-                    tcs.SetResult(t.Result);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion | TaskContinuationOptions.ExecuteSynchronously);
-
-            task.ContinueWith(t => tcs.SetException(t.Exception), TaskContinuationOptions.OnlyOnFaulted | TaskContinuationOptions.ExecuteSynchronously);
+                    tcs.SetResult(completeTask.Result);
+                },
+                errorTask =>
+                {
+                    tcs.SetException(errorTask.Exception);
+                },
+                true);
 
             return tcs.Task;
         }
@@ -247,9 +255,7 @@
 
             var preHookTask = InvokePreRequestHook(context, pipelines.BeforeRequest);
 
-            preHookTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
-
-            preHookTask.ContinueWith(t =>
+            preHookTask.WhenCompleted(t =>
                 {
                     if (t.Result != null)
                     {
@@ -261,17 +267,22 @@
                     }
 
                     var dispatchTask = this.dispatcher.Dispatch(context);
-                    dispatchTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
 
-                    dispatchTask.ContinueWith(td =>
+                    dispatchTask.WhenCompleted(
+                        completedTask =>
                         {
-                            context.Response = td.Result;
+                            context.Response = completedTask.Result;
 
                             var postHookTask = InvokePostRequestHook(context, pipelines.AfterRequest);
-                            postHookTask.ContinueWith(HandleFaultedTask(context, pipelines, tcs), TaskContinuationOptions.OnlyOnFaulted);
-                            postHookTask.ContinueWith(tph => tcs.SetResult(context), TaskContinuationOptions.OnlyOnRanToCompletion);
-                        }, TaskContinuationOptions.OnlyOnRanToCompletion);
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+
+                            postHookTask.WhenCompleted(
+                                completedPostHookTask => tcs.SetResult(context),
+                                HandleFaultedTask(context, pipelines, tcs));
+                        },
+                        HandleFaultedTask(context, pipelines, tcs));
+
+                },
+                HandleFaultedTask(context, pipelines, tcs));
 
             return tcs.Task;
         }
