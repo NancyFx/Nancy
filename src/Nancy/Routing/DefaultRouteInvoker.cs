@@ -9,6 +9,7 @@ namespace Nancy.Routing
     using Nancy.Conventions;
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
+    using Nancy.Helpers;
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
 
@@ -38,32 +39,11 @@ namespace Nancy.Routing
             var tcs = new TaskCompletionSource<Response>();
 
             var result = route.Invoke(parameters);
-            try
-            {
-                result = route.Invoke(parameters);
-            }
-            catch (RouteExecutionEarlyExitException earlyExitException)
-            {
-            }
 
-            result.ContinueWith(t =>
+            result.WhenCompleted(
+                completedTask =>
                 {
-                    var earlyExitException = t.Exception as RouteExecutionEarlyExitException;
-
-                    if (earlyExitException != null)
-                    {
-                        context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
-                        tcs.SetResult(earlyExitException.Response);
-                    }
-                    else
-                    {
-                        tcs.SetException(t.Exception);
-                    }
-                }, TaskContinuationOptions.OnlyOnFaulted);
-
-            result.ContinueWith(t =>
-                {
-                    var returnResult = t.Result;
+                    var returnResult = completedTask.Result;
                     if (returnResult == null)
                     {
                         context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Invocation of route returned null"));
@@ -81,7 +61,21 @@ namespace Nancy.Routing
                     {
                         tcs.SetException(e);                        
                     }
-                }, TaskContinuationOptions.OnlyOnRanToCompletion);
+                }, 
+                faultedTask =>
+                {
+                    var earlyExitException = faultedTask.Exception as RouteExecutionEarlyExitException;
+
+                    if (earlyExitException != null)
+                    {
+                        context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
+                        tcs.SetResult(earlyExitException.Response);
+                    }
+                    else
+                    {
+                        tcs.SetException(faultedTask.Exception);
+                    }
+                });
 
             return tcs.Task;
         }
