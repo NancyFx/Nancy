@@ -120,8 +120,7 @@
         public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
         {
             this.HandleRequestInternal(request, preRequest)
-                .ContinueWith(t => onComplete(t.Result), TaskContinuationOptions.OnlyOnRanToCompletion)
-                .ContinueWith(t => onError(t.Exception), TaskContinuationOptions.OnlyOnFaulted);
+                .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
         }
 
         private Task<NancyContext> HandleRequestInternal(Request request, Func<NancyContext, NancyContext> preRequest)
