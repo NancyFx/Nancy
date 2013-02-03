@@ -81,7 +81,7 @@ namespace Nancy
         {
             try
             {
-                var assembly = AppDomainAssemblyTypeScanner.TypesOf<INancyModule>(true).FirstOrDefault().Assembly;
+                var assembly = AppDomainAssemblyTypeScanner.TypesOf<INancyModule>(ScanMode.ExcludeNancy).FirstOrDefault().Assembly;
 
                 var attributes = assembly.GetCustomAttributes(typeof(DebuggableAttribute), true);
 
