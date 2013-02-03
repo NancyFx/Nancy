@@ -7,6 +7,7 @@
     using Nancy.Diagnostics;
     using Nancy.Session;
     using Nancy.TinyIoc;
+    using Nancy.ViewEngines;
     using Nancy.ViewEngines.Razor;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
@@ -40,7 +41,6 @@
             base.ApplicationStartup(container, pipelines);
 
             StaticConfiguration.EnableRequestTracing = true;
-            StaticConfiguration.DisableCaches = false;
             StaticConfiguration.DisableErrorTraces = false;
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));

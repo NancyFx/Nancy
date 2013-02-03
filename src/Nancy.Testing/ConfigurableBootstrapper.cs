@@ -1369,30 +1369,6 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IViewLocationCache"/>.
-            /// </summary>
-            /// <param name="viewLocationCache">The <see cref="IViewLocationCache"/> instance that should be used by the bootstrapper.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator ViewLocationCache(IViewLocationCache viewLocationCache)
-            {
-                this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewLocationCache), viewLocationCache));
-
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IViewLocationCache"/> instance of the specified type.
-            /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IViewLocationCache"/> that the bootstrapper should use.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator ViewLocationCache<T>() where T : IViewLocationCache
-            {
-                this.bootstrapper.configuration.ViewLocationCache = typeof(T);
-                return this;
-            }
-
-            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="IViewLocationProvider"/>.
             /// </summary>
             /// <param name="viewLocationProvider">The <see cref="IViewLocationProvider"/> instance that should be used by the bootstrapper.</param>

@@ -25,6 +25,16 @@
                 .ToList();
         }
 
+        /// <summary>
+        /// Gets the last modified time for the file specified
+        /// </summary>
+        /// <param name="filename">Filename</param>
+        /// <returns>Time the file was last modified</returns>
+        public DateTime GetLastModified(string filename)
+        {
+            return File.GetLastWriteTimeUtc(filename);
+        }
+
         private static IEnumerable<string> GetFilenames(string path, string extension)
         {
             return Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);

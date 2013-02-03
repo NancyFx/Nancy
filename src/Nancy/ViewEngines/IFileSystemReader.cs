@@ -16,5 +16,12 @@ namespace Nancy.ViewEngines
         /// <param name="supportedViewExtensions">A list of view extensions to look for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing view locations and contents readers.</returns>
         IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, IEnumerable<string> supportedViewExtensions);
+
+        /// <summary>
+        /// Gets the last modified time for the file specified
+        /// </summary>
+        /// <param name="filename">Filename</param>
+        /// <returns>Time the file was last modified</returns>
+        DateTime GetLastModified(string filename);
     }
 }

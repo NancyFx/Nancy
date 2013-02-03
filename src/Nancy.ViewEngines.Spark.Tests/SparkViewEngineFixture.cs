@@ -463,9 +463,11 @@
             var stream = new MemoryStream();
             var engine = new SparkViewEngine();
 
+            var locator = new DefaultViewLocator(this.fileSystemViewLocationProvider, new[] { engine });
+            
             var context = new ViewEngineStartupContext(
-                A.Fake<IViewCache>(),
-                this.fileSystemViewLocationProvider.GetLocatedViews(engine.Extensions), engine.Extensions);
+                                    A.Fake<IViewCache>(),
+                                    locator);
 
             engine.Initialize(context);
 

@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
     using System;
+    using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using global::DotLiquid;
     using global::DotLiquid.FileSystems;
@@ -14,14 +15,18 @@
     {
         private readonly ViewEngineStartupContext viewEngineStartupContext;
 
+        private readonly IEnumerable<string> extensions;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="LiquidNancyFileSystem"/> class,
         /// with the provided <paramref name="context"/>.
         /// </summary>
         /// <param name="context">The context that the engine can operate in.</param>
-        public LiquidNancyFileSystem(ViewEngineStartupContext context)
+        /// <param name="extensions"></param>
+        public LiquidNancyFileSystem(ViewEngineStartupContext context, IEnumerable<string> extensions)
         {
             viewEngineStartupContext = context;
+            this.extensions = extensions;
         }
 
         /// <summary>
@@ -41,7 +46,7 @@
 
                 // Try to find a matching template using established view conventions
                 ViewLocationResult viewLocation = null;
-                if (viewEngineStartupContext.Extensions.Any(
+                if (extensions.Any(
                     s => templateName.EndsWith(s, StringComparison.OrdinalIgnoreCase)))
                 {
                     // The template name does end with a valid extension, just try to find it
@@ -50,7 +55,7 @@
                 else
                 {
                     // The template name does not end with a valid extension, try all the possibilities
-                    foreach (string extension in viewEngineStartupContext.Extensions)
+                    foreach (string extension in extensions)
                     {
                         viewLocation = renderContext.LocateView(String.Concat(templateName, ".", extension), null);
                         if (viewLocation != null) break;

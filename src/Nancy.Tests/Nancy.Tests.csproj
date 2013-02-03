@@ -234,11 +234,10 @@
     <Compile Include="Unit\Validation\DefaultValidatorLocatorFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultRenderContextFixture.cs" />
     <Compile Include="Unit\Localization\ResourceBasedTextResourceFixture.cs" />
-    <Compile Include="Unit\ViewEngines\DefaultViewLocationCacheFixture.cs" />
-    <Compile Include="Fakes\FakeViewLocationCache.cs" />
     <Compile Include="Fakes\FakeViewEngine.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewRendererFixture.cs" />
     <Compile Include="Unit\ViewEngines\FileSystemViewLocationProviderFixture.cs" />
+    <Compile Include="Unit\ViewEngines\FileSystemViewLocationResultFixture.cs" />
     <Compile Include="Unit\ViewEngines\ResourceViewLocationProviderFixture.cs" />
     <Compile Include="Unit\ViewEngines\ViewEngineStartupFixture.cs" />
     <Compile Include="Unit\ViewEngines\DefaultViewFactoryFixture.cs" />
