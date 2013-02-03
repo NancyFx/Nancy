@@ -128,7 +128,7 @@
             return new RazorTemplateEngine(engineHost);
         }
 
-        private Func<NancyRazorViewBase> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
@@ -141,7 +141,7 @@
             return viewFactory;
         }
 
-        private Func<NancyRazorViewBase> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var outputAssemblyName = Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
@@ -222,13 +222,13 @@
                 return () => new NancyRazorErrorView(error);
             }
 
-            if (Activator.CreateInstance(type) as NancyRazorViewBase == null)
+            if (Activator.CreateInstance(type) as INancyRazorView == null)
             {
-                const string error = "Could not construct RazorOutput.Template or it does not inherit from RazorViewBase";
+                const string error = "Could not construct RazorOutput.Template or it does not inherit from INancyRazorView";
                 return () => new NancyRazorErrorView(error);
             }
 
-            return () => (NancyRazorViewBase)Activator.CreateInstance(type);
+            return () => (INancyRazorView)Activator.CreateInstance(type);
         }
 
         private static string BuildErrorMessages(IEnumerable<CompilerError> errors)
@@ -342,7 +342,7 @@
             return new Uri(assembly.EscapedCodeBase).LocalPath;
         }
 
-        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
+        private INancyRazorView GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
@@ -350,6 +350,7 @@
 
             var view = viewFactory.Invoke();
 
+            // TODO - don't like where this is, this should really be done by the RenderContextFactory so the INancyRazorView can just be a marker
             view.Text = new TextResourceFinder(this.textResource, renderContext.Context);
             
             view.Code = string.Empty;
@@ -357,7 +358,7 @@
             return view;
         }
 
-        private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
+        private INancyRazorView GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
             var modelType = (model == null) ? null : model.GetType();
 

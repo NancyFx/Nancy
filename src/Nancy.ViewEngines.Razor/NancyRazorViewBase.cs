@@ -4,18 +4,45 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using System.Linq;
     using System.Text;
     using Nancy.Helpers;
 
     /// <summary>
+    /// Default base class for nancy razor views
+    /// </summary>
+    public abstract class NancyRazorViewBase : NancyRazorViewBase<dynamic>
+    {
+    }
+
+    /// <summary>
     /// Base class for nancy razor views.
     /// </summary>
-    public abstract class NancyRazorViewBase
+    /// <typeparam name="TModel">Model type</typeparam>
+    public abstract class NancyRazorViewBase<TModel> : INancyRazorView
     {
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
+
+        /// <summary>
+        /// Gets the Html helper.
+        /// </summary>
+        public HtmlHelpers<TModel> Html { get; private set; }
+
+        /// <summary>
+        /// Gets the model.
+        /// </summary>
+        public TModel Model { get; private set; }
+
+        /// <summary>
+        /// Gets the Url helper.
+        /// </summary>
+        public UrlHelpers<TModel> Url { get; private set; }
+
+        /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag { get; private set; }
 
         /// <summary>
         /// Gets the body.
@@ -92,6 +119,10 @@
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
             this.RenderContext = renderContext;
+            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
+            this.Model = (TModel)model;
+            this.Url = new UrlHelpers<TModel>(engine, renderContext);
+            this.ViewBag = renderContext.Context.ViewBag;
         }
 
         protected IRenderContext RenderContext { get; set; }
@@ -342,48 +373,7 @@
         }
     }
 
-
-
-    /// <summary>
-    /// A strongly-typed view base.
-    /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    public abstract class NancyRazorViewBase<TModel> : NancyRazorViewBase
-    {
-        /// <summary>
-        /// Gets the Html helper.
-        /// </summary>
-        public HtmlHelpers<TModel> Html { get; private set; }
-
-        /// <summary>
-        /// Gets the model.
-        /// </summary>
-        public TModel Model { get; private set; }
-
-        /// <summary>
-        /// Gets the Url helper.
-        /// </summary>
-        public UrlHelpers<TModel> Url { get; private set; }
-
-        /// <summary>
-        /// Non-model specific data for rendering in the response
-        /// </summary>
-        public dynamic ViewBag { get; private set; }
-
-        /// <summary>
-        /// Initializes the specified engine.
-        /// </summary>
-        /// <param name="engine">The engine.</param>
-        /// <param name="renderContext">The render context.</param>
-        /// <param name="model">The model.</param>
-        public override void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
-        {
-            base.Initialize(engine, renderContext, model);
-
-            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
-            this.Model = (TModel)model;
-            this.Url = new UrlHelpers<TModel>(engine, renderContext);
-            this.ViewBag = renderContext.Context.ViewBag;
-        }
-    }
+    //public abstract class NancyRazorViewBase : NancyRazorViewBase<dynamic>
+    //{
+    //}
 }

@@ -112,6 +112,7 @@
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlString.cs" />
+    <Compile Include="INancyRazorView.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="ModelFinder.cs" />
