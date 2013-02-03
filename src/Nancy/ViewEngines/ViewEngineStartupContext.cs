@@ -7,10 +7,9 @@
     /// </summary>
     public class ViewEngineStartupContext
     {
-        public ViewEngineStartupContext(IViewCache viewCache, IViewLocator viewLocator, IEnumerable<string> extensions)
+        public ViewEngineStartupContext(IViewCache viewCache, IViewLocator viewLocator)
         {
             this.ViewLocator = viewLocator;
-            this.Extensions = extensions;
             this.ViewCache = viewCache;
         }
 
@@ -24,10 +23,5 @@
         /// Gets the Nancy view locator
         /// </summary>
         public IViewLocator ViewLocator { get; private set; }
-
-        /// <summary>
-        /// Gets the extensions registered for the view engine
-        /// </summary>
-        public IEnumerable<string> Extensions { get; private set; }
     }
 }

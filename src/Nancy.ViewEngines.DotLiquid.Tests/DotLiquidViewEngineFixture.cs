@@ -43,7 +43,7 @@
             this.engine.Initialize(context);
 
             // Then
-            A.CallTo(() => factory.GetFileSystem(context)).MustHaveHappened();
+            A.CallTo(() => factory.GetFileSystem(context, A<IEnumerable<string>>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -286,8 +286,7 @@
 
             var startupContext = new ViewEngineStartupContext(
                 null,
-                viewLocator,
-                new[] { "liquid" });
+                viewLocator);
 
             return startupContext;
         }

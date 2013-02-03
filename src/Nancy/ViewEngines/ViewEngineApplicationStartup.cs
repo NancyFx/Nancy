@@ -42,8 +42,7 @@ namespace Nancy.ViewEngines
         {
             return new ViewEngineStartupContext(
                 this.viewCache,
-                this.viewLocator,
-                viewEngine.Extensions);
+                this.viewLocator);
         }
     }
 }

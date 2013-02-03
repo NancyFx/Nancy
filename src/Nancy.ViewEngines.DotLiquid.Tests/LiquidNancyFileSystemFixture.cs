@@ -231,8 +231,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
 
             var startupContext = new ViewEngineStartupContext(
                 null,
-                viewLocator,
-                new[] { "liquid" });
+                viewLocator);
             
             var renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
@@ -241,7 +240,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
             context = new Context(new List<Hash>(), new Hash(),
                 Hash.FromAnonymousObject(new { nancy = renderContext }), false);
 
-            return new LiquidNancyFileSystem(startupContext);
+            return new LiquidNancyFileSystem(startupContext, new[] { "liquid" });
         }
     }
 }

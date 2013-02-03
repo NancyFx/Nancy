@@ -124,8 +124,7 @@ namespace Nancy.ViewEngines.Spark.Tests
 
             var startupContext = new ViewEngineStartupContext(
                 this.cache,
-                viewLocator,
-                this.extensions);
+                viewLocator);
 
             return startupContext;
         }

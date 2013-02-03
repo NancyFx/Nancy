@@ -467,8 +467,7 @@
             
             var context = new ViewEngineStartupContext(
                                     A.Fake<IViewCache>(),
-                                    locator, 
-                                    engine.Extensions);
+                                    locator);
 
             engine.Initialize(context);
 
