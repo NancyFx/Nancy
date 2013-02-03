@@ -57,7 +57,7 @@
         public void Should_return_stale_if_modified_changed_since_last_read()
         {
             var vlr = new FileSystemViewLocationResult("here", "there", "everywhere", () => null, "full", this.reader);
-            A.CallTo(() => this.reader.GetLastModified(A<string>._)).Returns(DateTime.UtcNow);
+            A.CallTo(() => this.reader.GetLastModified(A<string>._)).Returns(DateTime.UtcNow.AddMinutes(-1));
             vlr.Contents();
             A.CallTo(() => this.reader.GetLastModified(A<string>._)).Returns(DateTime.UtcNow);
 
