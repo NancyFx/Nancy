@@ -1,8 +1,7 @@
-﻿namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.Localization
 {
     using System;
     using System.Dynamic;
-    using Nancy.Localization;
 
     /// <summary>
     /// Returns text from an implemented ITextResource

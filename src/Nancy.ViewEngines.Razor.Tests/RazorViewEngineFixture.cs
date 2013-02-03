@@ -19,13 +19,11 @@
         private readonly IRazorConfiguration configuration;
         private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRootPathProvider rootPathProvider;
-        private readonly ITextResource textResource;
 
         public RazorViewEngineFixture()
         {
             this.configuration = A.Fake<IRazorConfiguration>();
-            this.textResource = A.Fake<ITextResource>();
-            this.engine = new RazorViewEngine(this.configuration, this.textResource);
+            this.engine = new RazorViewEngine(this.configuration);
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<NancyRazorViewBase>>>.Ignored))

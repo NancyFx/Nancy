@@ -19,7 +19,6 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
-        private readonly ITextResource textResource;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
 
@@ -38,7 +37,7 @@
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
         /// <param name="textResource">The <see cref="ITextResource"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration, ITextResource textResource)
+        public RazorViewEngine(IRazorConfiguration configuration)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -47,7 +46,6 @@
             };
 
             this.razorConfiguration = configuration;
-            this.textResource = textResource;
         }
 
         /// <summary>
@@ -350,17 +348,12 @@
 
             var view = viewFactory.Invoke();
 
-            // TODO - don't like where this is, this should really be done by the RenderContextFactory so the INancyRazorView can just be a marker
-            view.Text = new TextResourceFinder(this.textResource, renderContext.Context);
-            
-            view.Code = string.Empty;
-
             return view;
         }
 
         private INancyRazorView GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = (model == null) ? null : model.GetType();
+            var modelType = (model == null) ? typeof(object) : model.GetType();
 
             var view =
                 this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);

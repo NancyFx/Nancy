@@ -101,14 +101,20 @@
         public IDictionary<string, Action> Sections { get; set; }
 
         /// <summary>
+        /// Used to retun text resources
+        /// </summary>
+        public dynamic Text
+        {
+            get
+            {
+                return this.RenderContext.TextResourceFinder;
+            }
+        }
+
+        /// <summary>
         /// Executes the view.
         /// </summary>
         public abstract void Execute();
-
-        /// <summary>
-        /// Used to retun text resources
-        /// </summary>
-        public dynamic Text { get; set; }
 
         /// <summary>
         /// Initializes the specified engine.

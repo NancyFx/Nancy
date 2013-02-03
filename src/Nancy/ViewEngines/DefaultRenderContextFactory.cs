@@ -1,6 +1,9 @@
 ﻿namespace Nancy.ViewEngines
 {
     using Cryptography;
+
+    using Nancy.Localization;
+
     using Session;
 
     /// <summary>
@@ -10,16 +13,18 @@
     {
         private readonly IViewCache viewCache;
         private readonly IViewResolver viewResolver;
+        private readonly ITextResource textResource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRenderContextFactory"/> class.
         /// </summary>
         /// <param name="viewCache">The view cache that should be used by the created render context.</param>
         /// <param name="viewResolver">The view resolver that should be sused by the created render context.</param>
-        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver)
+        public DefaultRenderContextFactory(IViewCache viewCache, IViewResolver viewResolver, ITextResource textResource)
         {
             this.viewCache = viewCache;
             this.viewResolver = viewResolver;
+            this.textResource = textResource;
         }
 
         /// <summary>
@@ -29,7 +34,7 @@
         /// <returns>A <see cref="IRenderContext"/> instance.</returns>
         public IRenderContext GetRenderContext(ViewLocationContext viewLocationContext)
         {
-            return new DefaultRenderContext(this.viewResolver, this.viewCache, viewLocationContext);
+            return new DefaultRenderContext(this.viewResolver, this.viewCache, this.textResource, viewLocationContext);
         }
     }
 }
