@@ -248,19 +248,28 @@
 
             foreach (var applicationRegistrationTask in this.GetApplicationRegistrationTasks().ToList())
             {
-                if (applicationRegistrationTask.TypeRegistrations != null)
+                var applicationTypeRegistrations = 
+                    applicationRegistrationTask.TypeRegistrations;
+
+                if (applicationTypeRegistrations != null)
                 {
-                    this.RegisterTypes(this.ApplicationContainer, applicationRegistrationTask.TypeRegistrations);
+                    this.RegisterTypes(this.ApplicationContainer, applicationTypeRegistrations);
                 }
 
-                if (applicationRegistrationTask.CollectionTypeRegistrations != null)
+                var applicationCollectionRegistrations =
+                    applicationRegistrationTask.CollectionTypeRegistrations;
+
+                if (applicationCollectionRegistrations != null)
                 {
-                    this.RegisterCollectionTypes(this.ApplicationContainer, applicationRegistrationTask.CollectionTypeRegistrations);
+                    this.RegisterCollectionTypes(this.ApplicationContainer, applicationCollectionRegistrations);
                 }
 
-                if (applicationRegistrationTask.InstanceRegistrations != null)
+                var applicationInstanceRegistrations =
+                    applicationRegistrationTask.InstanceRegistrations;
+
+                if (applicationInstanceRegistrations != null)
                 {
-                    this.RegisterInstances(this.ApplicationContainer, applicationRegistrationTask.InstanceRegistrations);
+                    this.RegisterInstances(this.ApplicationContainer, applicationInstanceRegistrations);
                 }
             }
 
