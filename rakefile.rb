@@ -3,6 +3,7 @@ require 'rubygems'
 require 'albacore'
 require 'rake/clean'
 require 'rexml/document'
+require './customassemblyinfo'
 
 OUTPUT = "build"
 CONFIGURATION = 'Release'
@@ -43,7 +44,6 @@ desc "Update shared assemblyinfo file for the build"
 task :assembly_info do
   puts "Main project does not update assembly info"
 end
-
 
 desc "Compile solution file"
 msbuild :compile => [:assembly_info] do |msb|
@@ -163,9 +163,16 @@ task :nuget_publish, :api_key do |task, args|
 end
 
 desc "Updates the SharedAssemblyInfo version"
-assemblyinfo :update_version, :assembly_info do |asm, args|
+assemblyinfo :update_version, [:version] do |asm, args|
     asm.input_file = SHARED_ASSEMBLY_INFO
     asm.version = args.version if !args.version.nil?
+    asm.output_file = SHARED_ASSEMBLY_INFO
+end
+
+desc "Updates the SharedAssemblyInfo informational version"
+customassemblyinfo :update_informational_version, [:version] do |asm, args|
+    asm.input_file = SHARED_ASSEMBLY_INFO
+    asm.assembly_informational_version = args.version if !args.version.nil?
     asm.output_file = SHARED_ASSEMBLY_INFO
 end
 
