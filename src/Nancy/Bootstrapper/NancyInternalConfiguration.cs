@@ -79,7 +79,6 @@ namespace Nancy.Bootstrapper
                     ViewCache = typeof(DefaultViewCache),
                     RenderContextFactory = typeof(DefaultRenderContextFactory),
                     ModelValidatorLocator = typeof(DefaultValidatorLocator),
-                    ViewLocationCache = typeof(DefaultViewLocationCache),
                     ViewLocationProvider = typeof(FileSystemViewLocationProvider),
                     StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(true))),
                     CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
@@ -137,8 +136,6 @@ namespace Nancy.Bootstrapper
         public Type ViewCache { get; set; }
 
         public Type RenderContextFactory { get; set; }
-
-        public Type ViewLocationCache { get; set; }
 
         public Type ViewLocationProvider { get; set; }
 
@@ -254,7 +251,6 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewResolver), this.ViewResolver),
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
-                new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 

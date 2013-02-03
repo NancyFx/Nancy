@@ -11,13 +11,27 @@ namespace Nancy.Tests.Unit.ViewEngines
     {
         private IList<ViewLocationResult> views;
         private readonly IViewCache viewCache;
-        private readonly IViewLocationCache viewLocationCache;
+
+        private readonly IViewLocator viewLocator;
 
         public ViewEngineStartupFixture()
         {
+            this.views = new List<ViewLocationResult>
+            {
+                new ViewLocationResult("", "", "html", null),
+                new ViewLocationResult("", "", "spark", null),
+            };
+
+            var viewLocationProvider = A.Fake<IViewLocationProvider>();
+            A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
+                                               .Returns(views);
+
+            var viewEngine = A.Fake<IViewEngine>();
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+
+            this.viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+
             this.viewCache = A.Fake<IViewCache>();
-            this.viewLocationCache = A.Fake<IViewLocationCache>();
-            A.CallTo(() => this.viewLocationCache.GetEnumerator()).ReturnsLazily(() => this.views.GetEnumerator());
         }
 
         [Fact]
@@ -25,7 +39,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var engines = new[] { A.Fake<IViewEngine>(), A.Fake<IViewEngine>() };
-            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
+            var startup = new ViewEngineApplicationStartup(engines, this.viewCache, this.viewLocator);
 
             // When
             startup.Initialize(null);
@@ -40,35 +54,13 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var engines = new[] { A.Fake<IViewEngine>() };
-            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
+            var startup = new ViewEngineApplicationStartup(engines, this.viewCache, this.viewLocator);
 
             // When
             startup.Initialize(null);
 
             // Then
             A.CallTo(() => engines[0].Initialize(A<ViewEngineStartupContext>.That.Matches(x => x.ViewCache.Equals(this.viewCache)))).MustHaveHappened();
-        }
-
-        [Fact]
-        public void Should_invoke_initialize_on_engine_with_matching_view_locations_set_on_context()
-        {
-            // Given
-            var engines = new[] { A.Fake<IViewEngine>() };
-            A.CallTo(() => engines[0].Extensions).Returns(new[] { "html", "spark" });
-
-            this.views = new List<ViewLocationResult>
-            {
-                new ViewLocationResult("", "", "html", null),
-                new ViewLocationResult("", "", "spark", null),
-            };
-
-            var startup = new ViewEngineApplicationStartup(engines, this.viewLocationCache, this.viewCache);
-
-            // When
-            startup.Initialize(null);
-
-            // Then
-            A.CallTo(() => engines[0].Initialize(A<ViewEngineStartupContext>.That.Matches(x => x.ViewLocationResults.Count().Equals(2)))).MustHaveHappened();
         }
     }
 }

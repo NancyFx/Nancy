@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Diagnostics.Modules
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
@@ -8,14 +9,16 @@
 
     public class SettingsModule : DiagnosticModule
     {
+        private static readonly IEnumerable<Type> Types = new[] { typeof(StaticConfiguration) }.Union(
+                                                                  typeof(StaticConfiguration).GetNestedTypes(BindingFlags.Static | BindingFlags.Public));
+
         public SettingsModule()
             : base("/settings")
         {
-            Get["/"] = _ => {
-
-                var properties = typeof(StaticConfiguration)
-                    .GetProperties(BindingFlags.Static | BindingFlags.Public)
-                    .Where(x => x.PropertyType == typeof(bool));
+            Get["/"] = _ =>
+            {
+                var properties = Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
+                                      .Where(x => x.PropertyType == typeof(bool));
 
                 var model = from property in properties
                         orderby property.Name
@@ -38,9 +41,7 @@
                 var model = 
                     this.Bind<SettingsModel>();
 
-                var property = typeof(StaticConfiguration)
-                    .GetProperties(BindingFlags.Static | BindingFlags.Public)
-                    .SingleOrDefault(x => x.Name.Equals(model.Name, StringComparison.OrdinalIgnoreCase));
+                var property = GetProperty(model);
 
                 if (property != null)
                 {
@@ -49,6 +50,12 @@
                 
                 return HttpStatusCode.OK;
             };
+        }
+
+        private static PropertyInfo GetProperty(SettingsModel model)
+        {
+            return Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
+                        .SingleOrDefault(x => x.Name.Equals(model.Name, StringComparison.OrdinalIgnoreCase));
         }
 
         private static string GetDescription(PropertyInfo property)

@@ -1,5 +1,6 @@
 ﻿namespace Nancy.ViewEngines
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -46,16 +47,55 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            var matches =
-                this.fileSystemReader.GetViewsWithSupportedExtensions(this.rootPath, supportedViewExtensions);
+            return this.GetViewsFromPath(this.rootPath, supportedViewExtensions);
+        }
 
-            return
-                from match in matches
-                select new ViewLocationResult(
-                    GetViewLocation(match.Item1, rootPath),
-                    Path.GetFileNameWithoutExtension(match.Item1),
-                    Path.GetExtension(match.Item1).Substring(1),
-                    match.Item2);
+        /// <summary>
+        /// Returns an <see cref="ViewLocationResult"/> instance for all the views matching the viewName that could be located by the provider.
+        /// </summary>
+        /// <param name="supportedViewExtensions">An <see cref="IEnumerable{T}"/> instance, containing the view engine file extensions that is supported by the running instance of Nancy.</param>
+        /// <param name="viewName">The name of the view to try and find</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ViewLocationResult"/> instances for the located views.</returns>
+        /// <remarks>If no views could be located, this method should return an empty enumerable, never <see langword="null"/>.</remarks>
+        public IEnumerable<ViewLocationResult> GetLocatedViews(IEnumerable<string> supportedViewExtensions, string location, string viewName)
+        {
+            if (string.IsNullOrEmpty(this.rootPath))
+            {
+                return Enumerable.Empty<ViewLocationResult>();
+            }
+
+            var path = this.rootPath;
+
+            if (!string.IsNullOrEmpty(location))
+            {
+                path = Path.Combine(path, location.Replace('/', Path.DirectorySeparatorChar));
+            }
+
+            if (!Directory.Exists(path))
+            {
+                return Enumerable.Empty<ViewLocationResult>();
+            }
+
+            var results = this.GetViewsFromPath(path, supportedViewExtensions);
+
+            return results.Where(vlr => vlr.Location.Equals(location, StringComparison.OrdinalIgnoreCase) &&
+                                        vlr.Name.Equals(viewName, StringComparison.OrdinalIgnoreCase));
+
+        }
+
+        private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, IEnumerable<string> supportedViewExtensions)
+        {
+            var matches = this.fileSystemReader.GetViewsWithSupportedExtensions(path, supportedViewExtensions);
+
+            return from match in matches
+                   select
+                       new FileSystemViewLocationResult(
+                       GetViewLocation(match.Item1, this.rootPath),
+                       Path.GetFileNameWithoutExtension(match.Item1),
+                       Path.GetExtension(match.Item1).Substring(1),
+                       match.Item2,
+                       match.Item1,
+                       this.fileSystemReader);
         }
 
         private static string GetViewLocation(string match, string rootPath)
