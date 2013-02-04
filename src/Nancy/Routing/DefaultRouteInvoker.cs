@@ -46,26 +46,13 @@ namespace Nancy.Routing
 
         private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
         {
-            var isResponse =
-                (CastResultToResponse(result) != null);
+            var isResponse = (result as Response != null);
 
             return (isResponse)
                 ? ProcessAsRealResponse(result, context)
                 : this.ProcessAsNegotiator(result, context);
         }
-
-        private static Response CastResultToResponse(dynamic result)
-        {
-            try
-            {
-                return (Response)result;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
+        
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessorsByHeader(string acceptHeader, dynamic model, NancyContext context)
         {
             var compatibleProcessors = this.processors
