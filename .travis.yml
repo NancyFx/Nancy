@@ -6,4 +6,7 @@ install:
   - gem install rake
   - gem install albacore
   - rake mono
+notifications:
+  email:
+    - nancy@nancyfx.org
 gemfile: Gemfile
