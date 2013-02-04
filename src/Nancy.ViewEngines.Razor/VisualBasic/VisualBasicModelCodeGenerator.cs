@@ -1,12 +1,12 @@
-namespace Nancy.ViewEngines.Razor
+﻿namespace Nancy.ViewEngines.Razor.VisualBasic
 {
     using System;
     using System.Globalization;
     using System.Web.Razor.Generator;
 
-    public class ModelCodeGenerator : SetBaseTypeCodeGenerator
+    public class VisualBasicModelCodeGenerator : SetBaseTypeCodeGenerator
     {
-        public ModelCodeGenerator(string baseType)
+        public VisualBasicModelCodeGenerator(string baseType)
             : base(baseType)
         {
         }
@@ -15,7 +15,7 @@ namespace Nancy.ViewEngines.Razor
         {
             return String.Format(
                 CultureInfo.InvariantCulture,
-                "{0}<{1}>",
+                "{0}(Of {1})",
                 context.Host.DefaultBaseClass,
                 baseType);
         }

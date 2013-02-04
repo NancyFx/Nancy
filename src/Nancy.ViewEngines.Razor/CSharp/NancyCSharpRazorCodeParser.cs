@@ -28,7 +28,7 @@
 
             var endModelLocation = CurrentLocation;
 
-            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s => new ModelCodeGenerator(s));
+            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s => new CSharpModelCodeGenerator(s));
 
             if (this.modelStatementFound)
             {

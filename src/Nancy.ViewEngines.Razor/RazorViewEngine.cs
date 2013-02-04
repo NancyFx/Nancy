@@ -278,7 +278,7 @@
         private static Type FindModelType(Block block, Type passedModelType)
         {
             var modelBlock =
-                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == typeof(ModelCodeGenerator));
+                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == typeof(CSharpModelCodeGenerator));
 
             if (modelBlock == null)
             {

@@ -63,7 +63,7 @@
             }
 
             var baseType = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
-            this.Span.CodeGenerator = new ModelCodeGenerator(baseType);
+            this.Span.CodeGenerator = new VisualBasicModelCodeGenerator(baseType);
 
             this.CheckForInheritsAndModelStatements();
             
@@ -94,45 +94,5 @@
                 this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @Inherits statement and an @ModelType statement."));
             }
         }
-
-        //private bool ParseModelStatement(CodeBlockInfo block)
-        //{
-        //    using (this.StartBlock(BlockType.Directive))
-        //    {
-        //        block.ResumeSpans(this.Context);
-        //        var currentLocation = CurrentLocation;
-        //        var acceptedCharacters = this.RequireSingleWhiteSpace() ? AcceptedCharacters.None : AcceptedCharacters.Any;
-
-        //        this.End(MetaCodeSpan.Create(this.Context, false, acceptedCharacters));
-
-        //        if (this.modelStatementFound)
-        //        {
-        //            this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "Only one @ModelType statement is allowed."));
-        //        }
-
-        //        this.modelStatementFound = true;
-        //        this.Context.AcceptWhiteSpace(false);
-        //        string modelTypeName = null;
-
-        //        if (ParserHelpers.IsIdentifierStart(this.CurrentCharacter))
-        //        {
-        //            using (this.Context.StartTemporaryBuffer())
-        //            {
-        //                this.Context.AcceptUntil(ParserHelpers.IsNewLine);
-        //                modelTypeName = this.Context.ContentBuffer.ToString();
-        //                this.Context.AcceptTemporaryBuffer();
-        //            }
-        //            this.Context.AcceptNewLine();
-        //        }
-        //        else
-        //        {
-        //            this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "@ModelType must be followed by a type name."));
-        //        }
-
-        //        this.CheckForInheritsAndModelStatements();
-        //        this.End(new ModelSpan(this.Context, modelTypeName));
-        //    }
-        //    return false;
-        //}
     }
 }
