@@ -95,8 +95,11 @@
                 else if (stringValue != null)
                 {
                     var converter = TypeDescriptor.GetConverter(TType);
-                    
-                    return (T)converter.ConvertFromInvariantString(stringValue);
+
+                    if (converter.IsValid(stringValue))
+                    {
+                        return (T) converter.ConvertFromInvariantString(stringValue);
+                    }
                 }
                 else if (TType == typeof (string))
                 {
