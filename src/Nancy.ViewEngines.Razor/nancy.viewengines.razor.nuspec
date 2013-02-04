@@ -14,7 +14,7 @@
     <projectUrl>http://nancyfx.org</projectUrl>
     <dependencies>
       <dependency id="Nancy" />
-      <dependency is="System.Web.Razor.Unofficial" />
+      <dependency id="System.Web.Razor.Unofficial" />
     </dependencies> 
     <tags>Nancy Viewengine Razor</tags>
   </metadata>
