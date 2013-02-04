@@ -2,7 +2,7 @@ language: ruby
 rvm:
   - 1.9.3
 install:
-  - sudo apt-get install mono-devel mono-gmcs
+  - sudo apt-get install mono-devel mono-gmcs vbnc
   - gem install rake
   - gem install albacore
   - rake mono
