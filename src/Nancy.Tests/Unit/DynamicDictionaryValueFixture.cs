@@ -824,6 +824,20 @@
         }
 
         [Fact]
+        public void Should_return_default_when_given_string_that_is_not_a_number()
+        {
+            //Given
+            const int expected = 100;
+            dynamic value = new DynamicDictionaryValue("4abc2");
+
+            //When
+            int actual = value.TryParse<int>(expected);
+
+            //Then
+            Assert.Equal(expected, actual);
+        }
+
+        [Fact]
         public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_decimal()
         {
             //Given
