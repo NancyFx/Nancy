@@ -179,15 +179,26 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
+        /// Gets all non-Nancy types implementing a particular interface/base class
+        /// </summary>
+        /// <param name="type">Type to search for</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
+        /// <remarks>Will scan with <see cref="ScanMode.ExcludeNancy"/>.</remarks>
+        public static IEnumerable<Type> TypesOf(Type type)
+        {
+            return TypesOf(type, ScanMode.ExcludeNancy);
+        }
+
+        /// <summary>
         /// Gets all types implementing a particular interface/base class
         /// </summary>
-        /// <typeparam name="TType">Type to search for</typeparam>
+        /// <param name="type">Type to search for</param>
         /// <param name="mode">A <see cref="ScanMode"/> value to determin which type set to scan in.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
-        public static IEnumerable<Type> TypesOf<TType>(ScanMode mode)
+        public static IEnumerable<Type> TypesOf(Type type, ScanMode mode)
         {
-            var returnTypes = 
-                Types.Where(t => typeof(TType).IsAssignableFrom(t));
+            var returnTypes =
+                Types.Where(type.IsAssignableFrom);
 
             if (mode == ScanMode.All)
             {
@@ -197,6 +208,28 @@ namespace Nancy.Bootstrapper
             return (mode == ScanMode.OnlyNancy) ?
                 returnTypes.Where(t => t.Assembly == nancyAssembly) :
                 returnTypes.Where(t => t.Assembly != nancyAssembly);
+        }
+
+        /// <summary>
+        /// Gets all non-Nancy types implementing a particular interface/base class
+        /// </summary>
+        /// <typeparam name="TType">Type to search for</typeparam>
+        /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
+        /// <remarks>Will scan with <see cref="ScanMode.ExcludeNancy"/>.</remarks>
+        public static IEnumerable<Type> TypesOf<TType>()
+        {
+            return TypesOf<TType>(ScanMode.ExcludeNancy);
+        }
+
+        /// <summary>
+        /// Gets all types implementing a particular interface/base class
+        /// </summary>
+        /// <typeparam name="TType">Type to search for</typeparam>
+        /// <param name="mode">A <see cref="ScanMode"/> value to determin which type set to scan in.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
+        public static IEnumerable<Type> TypesOf<TType>(ScanMode mode)
+        {
+            return TypesOf(typeof(TType), mode);
         }
 
         /// <summary>
