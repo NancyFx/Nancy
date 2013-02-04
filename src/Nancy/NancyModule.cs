@@ -4,7 +4,6 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
-    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.ModelBinding;
@@ -230,8 +229,10 @@ namespace Nancy
             {
                 if (this.Context != null)
                 {
-                    this.Context.ModelValidationResult = value;                    
+                    this.Context.ModelValidationResult = value;
                 }
+            }
+        }
 
         /// <summary>
         /// Helper class for configuring a route handler in a module.
