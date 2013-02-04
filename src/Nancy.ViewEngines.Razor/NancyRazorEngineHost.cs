@@ -29,26 +29,6 @@
 		}
 
         /// <summary>
-        /// Decorates the code generator.
-        /// </summary>
-        /// <param name="incomingCodeGenerator">The incoming code generator.</param>
-        /// <returns></returns>
-		public override RazorCodeGenerator DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)
-		{
-			if (incomingCodeGenerator is CSharpRazorCodeGenerator)
-			{
-			    return new NancyCSharpRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
-			}
-
-            //if (incomingCodeGenerator is VBRazorCodeGenerator)
-            //{
-            //    return new NancyVisualBasicRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
-            //}
-
-            return base.DecorateCodeGenerator(incomingCodeGenerator);
-		}
-
-        /// <summary>
         /// Decorates the code parser.
         /// </summary>
         /// <param name="incomingCodeParser">The incoming code parser.</param>
@@ -60,10 +40,10 @@
 			    return new NancyCSharpRazorCodeParser();
 			}
 
-            //if (incomingCodeParser is VBCodeParser)
-            //{
-            //    return new NancyVisualBasicRazorCodeParser();
-            //}
+            if (incomingCodeParser is VBCodeParser)
+            {
+                return new NancyVisualBasicRazorCodeParser();
+            }
 
 			return base.DecorateCodeParser(incomingCodeParser);
 		}

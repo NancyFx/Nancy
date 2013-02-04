@@ -1,10 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Razor.CSharp
 {
-    using System;
     using System.Globalization;
-    using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
-    using System.Web.Razor.Parser.SyntaxTree;
     using System.Web.Razor.Text;
 
     /// <summary>
@@ -61,61 +58,6 @@
             {
                 this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @inherits statement and an @model statement."));
             }
-        }
-
-        //private bool ParseModelStatement(CodeBlockInfo block)
-        //{
-        //    var currentLocation = this.CurrentLocation;
-        //    var acceptedCharacters = this.RequireSingleWhiteSpace() ? AcceptedCharacters.None : AcceptedCharacters.Any;
-
-        //    this.End(MetaCodeSpan.Create(this.Context, false, acceptedCharacters));
-
-        //    if (this.modelStatementFound)
-        //    {
-        //        this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "Only one @model statement is allowed."));
-        //    }
-            
-        //    this.modelStatementFound = true;
-        //    this.Context.AcceptWhiteSpace(false);
-        //    string modelTypeName = null;
-
-        //    if (ParserHelpers.IsIdentifierStart(this.CurrentCharacter))
-        //    {
-        //        using (this.Context.StartTemporaryBuffer())
-        //        {
-        //            this.Context.AcceptUntil(ParserHelpers.IsNewLine);
-        //            modelTypeName = this.Context.ContentBuffer.ToString();
-        //            this.Context.AcceptTemporaryBuffer();
-        //        }
-
-        //        this.Context.AcceptNewLine();
-        //    }
-        //    else
-        //    {
-        //        this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "@model must be followed by a type name."));
-        //    }
-            
-        //    this.CheckForInheritsAndModelStatements();
-        //    this.End(new ModelSpan(this.Context, modelTypeName));
-
-        //    return false;
-        //}
-    }
-
-    public class ModelCodeGenerator : SetBaseTypeCodeGenerator
-    {
-        public ModelCodeGenerator(string baseType)
-            : base(baseType)
-        {
-        }
-
-        protected override string ResolveType(CodeGeneratorContext context, string baseType)
-        {
-            return String.Format(
-                CultureInfo.InvariantCulture,
-                "{0}<{1}>",
-                context.Host.DefaultBaseClass,
-                baseType);
         }
     }
 }

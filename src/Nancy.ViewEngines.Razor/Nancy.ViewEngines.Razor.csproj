@@ -115,9 +115,8 @@
     <Compile Include="INancyRazorView.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
-    <Compile Include="ModelSpan.cs" />
-    <Compile Include="CSharp\NancyCSharpRazorCodeGenerator.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="ModelCodeGenerator.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
@@ -127,7 +126,6 @@
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
-    <Compile Include="VisualBasic\NancyVisualBasicRazorCodeGenerator.cs" />
     <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
