@@ -179,14 +179,14 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Gets all non-Nancy types implementing a particular interface/base class
+        /// Gets all types implementing a particular interface/base class
         /// </summary>
         /// <param name="type">Type to search for</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
-        /// <remarks>Will scan with <see cref="ScanMode.ExcludeNancy"/>.</remarks>
+        /// <remarks>Will scan with <see cref="ScanMode.All"/>.</remarks>
         public static IEnumerable<Type> TypesOf(Type type)
         {
-            return TypesOf(type, ScanMode.ExcludeNancy);
+            return TypesOf(type, ScanMode.All);
         }
 
         /// <summary>
@@ -211,14 +211,14 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Gets all non-Nancy types implementing a particular interface/base class
+        /// Gets all types implementing a particular interface/base class
         /// </summary>
         /// <typeparam name="TType">Type to search for</typeparam>
         /// <returns>An <see cref="IEnumerable{T}"/> of types.</returns>
-        /// <remarks>Will scan with <see cref="ScanMode.ExcludeNancy"/>.</remarks>
+        /// <remarks>Will scan with <see cref="ScanMode.All"/>.</remarks>
         public static IEnumerable<Type> TypesOf<TType>()
         {
-            return TypesOf<TType>(ScanMode.ExcludeNancy);
+            return TypesOf<TType>(ScanMode.All);
         }
 
         /// <summary>
