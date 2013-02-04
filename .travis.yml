@@ -5,7 +5,7 @@ install:
   - sudo apt-get install mono-devel mono-gmcs mono-vbnc
   - gem install rake
   - gem install albacore
-  - rake mono
+script: rake mono
 notifications:
   email:
     - nancy@nancyfx.org
