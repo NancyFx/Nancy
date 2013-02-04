@@ -175,12 +175,19 @@
             }
         }
 
-        public static void ShouldEqual(this MemoryStream stream, string expected)
+        public static void ShouldEqual(this MemoryStream stream, string expected, bool trim = false)
         {
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
             {
-                reader.ReadToEnd().ShouldEqual(expected);
+                var actual = reader.ReadToEnd();
+                    
+                if (trim)
+                {
+                    actual = actual.Trim();
+                }
+
+                actual.ShouldEqual(expected);
             }
         }
     }

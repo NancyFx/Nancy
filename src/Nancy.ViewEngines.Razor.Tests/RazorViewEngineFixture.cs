@@ -22,15 +22,16 @@
 
         public RazorViewEngineFixture()
         {
+            StaticConfiguration.DisableErrorTraces = false;
             this.configuration = A.Fake<IRazorConfiguration>();
             this.engine = new RazorViewEngine(this.configuration);
 
             var cache = A.Fake<IViewCache>();
-            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<NancyRazorViewBase>>>.Ignored))
+            A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))
                 .ReturnsLazily(x =>
                 {
                     var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, Func<NancyRazorViewBase>>>(1).Invoke(result);
+                    return x.GetArgument<Func<ViewLocationResult, Func<INancyRazorView>>>(1).Invoke(result);
                 });
 
             this.renderContext = A.Fake<IRenderContext>();
@@ -39,7 +40,7 @@
                 .ReturnsLazily(x =>
                 {
                     var viewName = x.GetArgument<string>(0);
-                    return FindView(viewName); ;
+                    return FindView(viewName);
                 });
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
@@ -149,7 +150,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
+            stream.ShouldEqual("<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>", true);
         }
 
         [Fact]
@@ -205,7 +206,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>");
+            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
         [Fact]
@@ -263,7 +264,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>");
+            stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
         [Fact]
