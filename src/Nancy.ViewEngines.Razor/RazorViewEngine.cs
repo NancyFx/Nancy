@@ -12,6 +12,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Responses;
     using Nancy.Localization;
+    using Nancy.ViewEngines.Razor.CSharp;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -269,55 +270,45 @@
 
         private static Type FindModelType(Block block, Type passedModelType)
         {
-            return passedModelType;
-            //var modelFinder = new ModelFinder();
-            //block.Accept(modelFinder);
+            var modelBlock =
+                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == typeof(ModelCodeGenerator));
 
-            //if (string.IsNullOrWhiteSpace(modelFinder.ModelTypeName))
-            //{
-            //    return passedModelType ?? typeof(object);
-            //}
+            if (modelBlock == null)
+            {
+                return passedModelType ?? typeof(object);
+            }
 
-            //Type modelType;
+            if (string.IsNullOrEmpty(modelBlock.Content))
+            {
+                return passedModelType ?? typeof(object);
+            }
 
-            //if (passedModelType != null)
-            //{
-            //    modelType = passedModelType;
-            //    while (modelType != null)
-            //    {
-            //        if (modelType.FullName == modelFinder.ModelTypeName || modelType.Name == modelFinder.ModelTypeName)
-            //        {
-            //            return modelType;
-            //        }
+            var discoveredModelType = modelBlock.Content.Trim();
 
-            //        modelType = modelType.BaseType;
-            //    }
+            Type modelType;
 
-            //    throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}.  Ensure that the model passed to the view is assignable to the model declared in the view.", modelFinder.ModelTypeName));
-            //}
+            modelType = Type.GetType(discoveredModelType);
 
-            //modelType = Type.GetType(modelFinder.ModelTypeName);
+            if (modelType != null)
+            {
+                return modelType;
+            }
 
-            //if (modelType != null)
-            //{
-            //    return modelType;
-            //}
+            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName == discoveredModelType).FirstOrDefault();
 
-            //modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName == modelFinder.ModelTypeName).FirstOrDefault();
+            if (modelType != null)
+            {
+                return modelType;
+            }
 
-            //if (modelType != null)
-            //{
-            //    return modelType;
-            //}
+            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.Name == discoveredModelType).FirstOrDefault();
 
-            //modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.Name == modelFinder.ModelTypeName).FirstOrDefault();
+            if (modelType != null)
+            {
+                return modelType;
+            }
 
-            //if (modelType != null)
-            //{
-            //    return modelType;
-            //}
-
-            //throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}. Try using a fully qualified type name and ensure that the assembly is added to the configuration file.", modelFinder.ModelTypeName));
+            throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}. Try using a fully qualified type name and ensure that the assembly is added to the configuration file.", discoveredModelType));
         }
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)

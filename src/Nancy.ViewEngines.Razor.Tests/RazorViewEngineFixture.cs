@@ -234,7 +234,7 @@
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual("<h1>Mr. Somebody likes Music!</h1>");
+            stream.ShouldEqual("<h1>Mr. Somebody likes Music!</h1>", true);
         }
 
         [Fact]
