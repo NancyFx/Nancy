@@ -1,5 +1,7 @@
 language: ruby
 rvm:
   - 1.9.3
-script: "bundle exec rake mono"
+install:
+  - sudo apt-get install mono-devel mono-gmcs
+  - bundle exec rake mono
 gemfile: Gemfile
