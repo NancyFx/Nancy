@@ -268,6 +268,13 @@
             return templateLines.ToArray();
         }
 
+        /// <summary>
+        /// Tries to find the model type from the document
+        /// So documents using @model will actually be able to reference the model type
+        /// </summary>
+        /// <param name="block">The document</param>
+        /// <param name="passedModelType">The model type from the base class</param>
+        /// <returns>The model type, if discovered, or the passedModelType if not</returns>
         private static Type FindModelType(Block block, Type passedModelType)
         {
             var modelBlock =
@@ -285,23 +292,21 @@
 
             var discoveredModelType = modelBlock.Content.Trim();
 
-            Type modelType;
-
-            modelType = Type.GetType(discoveredModelType);
+            var modelType = Type.GetType(discoveredModelType);
 
             if (modelType != null)
             {
                 return modelType;
             }
 
-            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName == discoveredModelType).FirstOrDefault();
+            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == discoveredModelType);
 
             if (modelType != null)
             {
                 return modelType;
             }
 
-            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.Name == discoveredModelType).FirstOrDefault();
+            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == discoveredModelType);
 
             if (modelType != null)
             {
