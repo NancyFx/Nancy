@@ -115,6 +115,7 @@
     <Content Include="Views\razor-error.cshtml" />
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
+    <Content Include="Views\razor2.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
@@ -148,6 +149,7 @@
     <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="Models\Razor2.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="PngSerializer.cs" />
