@@ -84,6 +84,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Models\MyModel.cs" />
     <Compile Include="Modules\RazorWithTracingTestModule.cs" />
     <Compile Include="Modules\JsonpTestModule.cs" />
     <Compile Include="Modules\RazorTestModule.cs" />
@@ -93,6 +94,7 @@
     <Compile Include="Tests\ModelBindingTests.cs" />
     <Compile Include="Tests\StaticContentTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
+    <Compile Include="Tests\ViewLocationTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">
@@ -140,6 +142,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\My.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\RazorPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
