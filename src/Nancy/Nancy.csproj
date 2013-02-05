@@ -146,6 +146,7 @@
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />

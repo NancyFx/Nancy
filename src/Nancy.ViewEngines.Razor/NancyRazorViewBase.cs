@@ -8,13 +8,41 @@
     using Nancy.Helpers;
 
     /// <summary>
+    /// Default base class for nancy razor views
+    /// </summary>
+    public abstract class NancyRazorViewBase : NancyRazorViewBase<dynamic>
+    {
+    }
+
+    /// <summary>
     /// Base class for nancy razor views.
     /// </summary>
-    public abstract class NancyRazorViewBase
+    /// <typeparam name="TModel">Model type</typeparam>
+    public abstract class NancyRazorViewBase<TModel> : INancyRazorView
     {
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
+
+        /// <summary>
+        /// Gets the Html helper.
+        /// </summary>
+        public HtmlHelpers<TModel> Html { get; private set; }
+
+        /// <summary>
+        /// Gets the model.
+        /// </summary>
+        public TModel Model { get; private set; }
+
+        /// <summary>
+        /// Gets the Url helper.
+        /// </summary>
+        public UrlHelpers<TModel> Url { get; private set; }
+
+        /// <summary>
+        /// Non-model specific data for rendering in the response
+        /// </summary>
+        public dynamic ViewBag { get; private set; }
 
         /// <summary>
         /// Gets the body.
@@ -73,14 +101,20 @@
         public IDictionary<string, Action> Sections { get; set; }
 
         /// <summary>
+        /// Used to retun text resources
+        /// </summary>
+        public dynamic Text
+        {
+            get
+            {
+                return this.RenderContext.TextResourceFinder;
+            }
+        }
+
+        /// <summary>
         /// Executes the view.
         /// </summary>
         public abstract void Execute();
-
-        /// <summary>
-        /// Used to retun text resources
-        /// </summary>
-        public dynamic Text { get; set; }
 
         /// <summary>
         /// Initializes the specified engine.
@@ -90,7 +124,14 @@
         /// <param name="model">The model.</param>
         public virtual void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
         {
+            this.RenderContext = renderContext;
+            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
+            this.Model = (TModel)model;
+            this.Url = new UrlHelpers<TModel>(engine, renderContext);
+            this.ViewBag = renderContext.Context.ViewBag;
         }
+
+        protected IRenderContext RenderContext { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
@@ -117,6 +158,60 @@
         public virtual void WriteLiteral(object value)
         {
             contents.Append(value);
+        }
+
+        public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params Tuple<Tuple<string, int>, Tuple<object, int>, bool>[] values)
+        {
+            var writtenAttribute = false;
+            var attributeBuilder = new StringBuilder(prefix.Item1);
+
+            foreach (var value in values)
+            {
+                if (ShouldWriteValue(value.Item2.Item1))
+                {
+                    var stringValue = this.GetStringValue(value.Item2.Item1);
+                    var valuePrefix = value.Item1.Item1;
+
+                    if (!String.IsNullOrEmpty(valuePrefix))
+                    {
+                        attributeBuilder.Append(valuePrefix);
+                    }
+
+                    attributeBuilder.Append(stringValue);
+                    writtenAttribute = true;
+                }
+            }
+
+            attributeBuilder.Append(suffix.Item1);
+
+            var renderAttribute = writtenAttribute || values.Length == 0;
+
+            if (renderAttribute)
+            {
+                contents.Append(attributeBuilder);
+            }
+        }
+
+        private string GetStringValue(object value)
+        {
+            return value as string ?? value.ToString();
+        }
+
+        private bool ShouldWriteValue(object value)
+        {
+            if (value == null)
+            {
+                return false;
+            }
+
+            if (value is bool)
+            {
+                var boolValue = (bool) value;
+
+                return boolValue;
+            }
+
+            return true;
         }
 
         /// <summary>
@@ -224,6 +319,11 @@
             return this.childSections.ContainsKey(sectionName);
         }
 
+        public virtual string ResolveUrl(string url)
+        {
+            return this.RenderContext.ParsePath(url);
+        }
+
         /// <summary>
         /// Executes the view.
         /// </summary>
@@ -276,49 +376,6 @@
             var str = value as IHtmlString;
 
             return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
-        }
-    }
-
-
-
-    /// <summary>
-    /// A strongly-typed view base.
-    /// </summary>
-    /// <typeparam name="TModel">The type of the model.</typeparam>
-    public abstract class NancyRazorViewBase<TModel> : NancyRazorViewBase
-    {
-        /// <summary>
-        /// Gets the Html helper.
-        /// </summary>
-        public HtmlHelpers<TModel> Html { get; private set; }
-
-        /// <summary>
-        /// Gets the model.
-        /// </summary>
-        public TModel Model { get; private set; }
-
-        /// <summary>
-        /// Gets the Url helper.
-        /// </summary>
-        public UrlHelpers<TModel> Url { get; private set; }
-
-        /// <summary>
-        /// Non-model specific data for rendering in the response
-        /// </summary>
-        public dynamic ViewBag { get; private set; }
-
-        /// <summary>
-        /// Initializes the specified engine.
-        /// </summary>
-        /// <param name="engine">The engine.</param>
-        /// <param name="renderContext">The render context.</param>
-        /// <param name="model">The model.</param>
-        public override void Initialize(RazorViewEngine engine, IRenderContext renderContext, object model)
-        {
-            this.Html = new HtmlHelpers<TModel>(engine, renderContext, (TModel)model);
-            this.Model = (TModel)model;
-            this.Url = new UrlHelpers<TModel>(engine, renderContext);
-            this.ViewBag = renderContext.Context.ViewBag;
         }
     }
 }

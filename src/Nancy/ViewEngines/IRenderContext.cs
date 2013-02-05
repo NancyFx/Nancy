@@ -2,6 +2,8 @@ namespace Nancy.ViewEngines
 {
     using System.Collections.Generic;
 
+    using Nancy.Localization;
+
     /// <summary>
     /// Defines the functionality of the context that is passed into a view engine when the view is requested to be rendered.
     /// </summary>
@@ -18,6 +20,16 @@ namespace Nancy.ViewEngines
         /// </summary>
         /// <value>An <see cref="IViewCache"/> instance.</value>
         IViewCache ViewCache { get; }
+
+        /// <summary>
+        /// Gets the text resource for localisation
+        /// </summary>
+        ITextResource TextResource { get; }
+
+        /// <summary>
+        /// Gets the text resource finder for localisation
+        /// </summary>
+        dynamic TextResourceFinder { get; }
 
         /// <summary>
         /// Parses a path and returns an absolute url path, taking into account

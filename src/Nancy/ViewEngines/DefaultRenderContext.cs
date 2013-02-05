@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using Cryptography;
     using Nancy.Extensions;
+    using Nancy.Localization;
+
     using Security;
     using Session;
 
@@ -14,19 +16,27 @@
     {
         private readonly IViewResolver viewResolver;
         private readonly IViewCache viewCache;
+
+        private readonly ITextResource textResource;
+
         private readonly ViewLocationContext viewLocationContext;
+
+        private TextResourceFinder textResourceFinder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRenderContext"/> class.
         /// </summary>
         /// <param name="viewResolver"></param>
         /// <param name="viewCache"></param>
+        /// <param name="textResource"></param>
         /// <param name="viewLocationContext"></param>
-        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, ViewLocationContext viewLocationContext)
+        public DefaultRenderContext(IViewResolver viewResolver, IViewCache viewCache, ITextResource textResource, ViewLocationContext viewLocationContext)
         {
             this.viewResolver = viewResolver;
             this.viewCache = viewCache;
+            this.textResource = textResource;
             this.viewLocationContext = viewLocationContext;
+            this.textResourceFinder = new TextResourceFinder(textResource, viewLocationContext.Context);
         }
 
         /// <summary>
@@ -45,6 +55,22 @@
         public IViewCache ViewCache
         {
             get { return this.viewCache; }
+        }
+
+        /// <summary>
+        /// Gets the text resource for localisation
+        /// </summary>
+        public ITextResource TextResource
+        {
+            get { return this.textResource; }
+        }
+
+        /// <summary>
+        /// Gets the text resource finder for localisation
+        /// </summary>
+        public dynamic TextResourceFinder
+        {
+            get { return this.textResourceFinder; }
         }
 
         /// <summary>

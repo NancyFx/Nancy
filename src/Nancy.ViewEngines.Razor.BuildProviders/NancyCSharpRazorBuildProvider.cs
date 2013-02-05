@@ -24,12 +24,7 @@
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("C#");
 
-            this.host = new RazorEngineHost(new CSharpRazorCodeLanguage())
-            {
-                DefaultBaseClass = typeof(NancyRazorViewBase).FullName,
-                DefaultNamespace = "RazorOutput",
-                DefaultClassName = "RazorView"
-            };
+            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
         }
 
         /// <summary>

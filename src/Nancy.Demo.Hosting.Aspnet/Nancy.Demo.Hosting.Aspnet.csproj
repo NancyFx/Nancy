@@ -20,6 +20,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -111,6 +115,7 @@
     <Content Include="Views\razor-error.cshtml" />
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
+    <Content Include="Views\razor2.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
@@ -144,6 +149,7 @@
     <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />
+    <Compile Include="Models\Razor2.cs" />
     <Compile Include="Models\SomeViewModel.cs" />
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="PngSerializer.cs" />
@@ -166,7 +172,7 @@
       <Name>Nancy.ViewEngines.Nustache</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
-      <Project>{2C6F51DF-015C-4DB6-B44C-0E5E4F25E2A9}</Project>
+      <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
