@@ -345,6 +345,7 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
+    <Compile Include="Security\UserIdentityExtensions.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
     <Compile Include="DefaultObjectSerializer.cs" />
