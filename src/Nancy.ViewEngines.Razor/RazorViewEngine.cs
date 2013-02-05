@@ -37,7 +37,6 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        /// <param name="textResource">The <see cref="ITextResource"/> that should be used by the engine.</param>
         public RazorViewEngine(IRazorConfiguration configuration)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
