@@ -267,6 +267,7 @@
             stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
+#if !__MonoCS__			
         [Fact]
         public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
         {
@@ -284,6 +285,7 @@
             // Then
             stream.ShouldEqual("\r\n<h1>Hello at " + model.ToString("MM/dd/yyyy") + "</h1>");
         }
+#endif
 
         [Fact]
         public void Should_be_able_to_render_view_with_layout_to_stream()
@@ -445,6 +447,7 @@
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
+#if !__MonoCS__			
         [Fact]
         public void Should_use_custom_view_base_with_vb_views()
         {
@@ -459,7 +462,7 @@
                 "vbhtml",
                 () => new StringReader(view.ToString())
             );
-
+#endif
             var stream = new MemoryStream();
 
             A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
