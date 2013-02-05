@@ -378,8 +378,4 @@
             return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
         }
     }
-
-    //public abstract class NancyRazorViewBase : NancyRazorViewBase<dynamic>
-    //{
-    //}
 }
