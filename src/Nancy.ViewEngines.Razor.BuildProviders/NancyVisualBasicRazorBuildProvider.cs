@@ -23,12 +23,7 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("VB");
 
-            this.host = new RazorEngineHost(new VBRazorCodeLanguage())
-            {
-                DefaultBaseClass = typeof(NancyRazorViewBase).FullName,
-                DefaultNamespace = "RazorOutput",
-                DefaultClassName = "RazorView"
-            };
+            this.host = new NancyRazorEngineHost(new VBRazorCodeLanguage());
         }
 
         /// <summary>

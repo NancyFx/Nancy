@@ -12,6 +12,7 @@
     using Nancy.Bootstrapper;
     using Nancy.Responses;
     using Nancy.Localization;
+    using Nancy.ViewEngines.Razor.CSharp;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -19,7 +20,6 @@
     public class RazorViewEngine : IViewEngine, IDisposable
     {
         private readonly IRazorConfiguration razorConfiguration;
-        private readonly ITextResource textResource;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
 
@@ -37,8 +37,7 @@
         /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
         /// </summary>
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        /// <param name="textResource">The <see cref="ITextResource"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration, ITextResource textResource)
+        public RazorViewEngine(IRazorConfiguration configuration)
         {
             this.viewRenderers = new List<IRazorViewRenderer>
             {
@@ -47,7 +46,6 @@
             };
 
             this.razorConfiguration = configuration;
-            this.textResource = textResource;
         }
 
         /// <summary>
@@ -128,20 +126,20 @@
             return new RazorTemplateEngine(engineHost);
         }
 
-        private Func<NancyRazorViewBase> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
             var engine = this.GetRazorTemplateEngine(renderer.Host);
 
-            var razorResult = engine.GenerateCode(reader, sourceFileName: "placeholder");
+            var razorResult = engine.GenerateCode(reader, null, null, "roo");
 
             var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
 
             return viewFactory;
         }
 
-        private Func<NancyRazorViewBase> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var outputAssemblyName = Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
@@ -188,6 +186,10 @@
 
             if (results.Errors.HasErrors)
             {
+                var output = new string[results.Output.Count];
+                results.Output.CopyTo(output, 0);
+                var outputString = string.Join("\n", output);
+
                 var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
                 var templateLines = GetViewBodyLines(viewLocationResult);
                 var errors = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
@@ -218,13 +220,13 @@
                 return () => new NancyRazorErrorView(error);
             }
 
-            if (Activator.CreateInstance(type) as NancyRazorViewBase == null)
+            if (Activator.CreateInstance(type) as INancyRazorView == null)
             {
-                const string error = "Could not construct RazorOutput.Template or it does not inherit from RazorViewBase";
+                const string error = "Could not construct RazorOutput.Template or it does not inherit from INancyRazorView";
                 return () => new NancyRazorErrorView(error);
             }
 
-            return () => (NancyRazorViewBase)Activator.CreateInstance(type);
+            return () => (INancyRazorView)Activator.CreateInstance(type);
         }
 
         private static string BuildErrorMessages(IEnumerable<CompilerError> errors)
@@ -265,56 +267,52 @@
             return templateLines.ToArray();
         }
 
+        /// <summary>
+        /// Tries to find the model type from the document
+        /// So documents using @model will actually be able to reference the model type
+        /// </summary>
+        /// <param name="block">The document</param>
+        /// <param name="passedModelType">The model type from the base class</param>
+        /// <returns>The model type, if discovered, or the passedModelType if not</returns>
         private static Type FindModelType(Block block, Type passedModelType)
         {
-            var modelFinder = new ModelFinder();
-            block.Accept(modelFinder);
+            var modelBlock =
+                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == typeof(CSharpModelCodeGenerator));
 
-            if (string.IsNullOrWhiteSpace(modelFinder.ModelTypeName))
+            if (modelBlock == null)
             {
                 return passedModelType ?? typeof(object);
             }
 
-            Type modelType;
-
-            if (passedModelType != null)
+            if (string.IsNullOrEmpty(modelBlock.Content))
             {
-                modelType = passedModelType;
-                while (modelType != null)
-                {
-                    if (modelType.FullName == modelFinder.ModelTypeName || modelType.Name == modelFinder.ModelTypeName)
-                    {
-                        return modelType;
-                    }
-
-                    modelType = modelType.BaseType;
-                }
-
-                throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}.  Ensure that the model passed to the view is assignable to the model declared in the view.", modelFinder.ModelTypeName));
+                return passedModelType ?? typeof(object);
             }
 
-            modelType = Type.GetType(modelFinder.ModelTypeName);
+            var discoveredModelType = modelBlock.Content.Trim();
+
+            var modelType = Type.GetType(discoveredModelType);
 
             if (modelType != null)
             {
                 return modelType;
             }
 
-            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName == modelFinder.ModelTypeName).FirstOrDefault();
+            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.FullName == discoveredModelType);
 
             if (modelType != null)
             {
                 return modelType;
             }
 
-            modelType = AppDomainAssemblyTypeScanner.Types.Where(t => t.Name == modelFinder.ModelTypeName).FirstOrDefault();
+            modelType = AppDomainAssemblyTypeScanner.Types.FirstOrDefault(t => t.Name == discoveredModelType);
 
             if (modelType != null)
             {
                 return modelType;
             }
 
-            throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}. Try using a fully qualified type name and ensure that the assembly is added to the configuration file.", modelFinder.ModelTypeName));
+            throw new NotSupportedException(string.Format("Unable to discover CLR Type for model by the name of {0}. Try using a fully qualified type name and ensure that the assembly is added to the configuration file.", discoveredModelType));
         }
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
@@ -337,7 +335,7 @@
             return new Uri(assembly.EscapedCodeBase).LocalPath;
         }
 
-        private NancyRazorViewBase GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
+        private INancyRazorView GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
@@ -345,16 +343,12 @@
 
             var view = viewFactory.Invoke();
 
-            view.Text = new TextResourceFinder(this.textResource, renderContext.Context);
-            
-            view.Code = string.Empty;
-
             return view;
         }
 
-        private NancyRazorViewBase GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
+        private INancyRazorView GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = (model == null) ? null : model.GetType();
+            var modelType = (model == null) ? typeof(object) : model.GetType();
 
             var view =
                 this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);

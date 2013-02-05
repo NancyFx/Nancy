@@ -1,31 +1,89 @@
 ﻿namespace Nancy.ViewEngines.Razor.VisualBasic
 {
+    using System;
     using System.Globalization;
+    using System.Linq;
+    using System.Web.Razor.Generator;
     using System.Web.Razor.Parser;
     using System.Web.Razor.Parser.SyntaxTree;
     using System.Web.Razor.Text;
+    using System.Web.Razor.Tokenizer.Symbols;
 
     /// <summary>
     /// Nancy razor parser for visual basic files.
     /// </summary>
     public class NancyVisualBasicRazorCodeParser : VBCodeParser
     {
-        private SourceLocation? endInheritsLocation;
+        internal const string ModelTypeKeyword = "ModelType";
+
         private bool modelStatementFound;
+        private SourceLocation? endInheritsLocation;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyVisualBasicRazorCodeParser"/> class.
         /// </summary>
         public NancyVisualBasicRazorCodeParser()
         {
-            this.KeywordHandlers.Add("ModelType", this.ParseModelStatement);
+            MapDirective(ModelTypeKeyword, ModelTypeDirective);
         }
 
-        protected override bool ParseInheritsStatement(CodeBlockInfo block)
+        protected virtual bool ModelTypeDirective()
         {
-            this.endInheritsLocation = CurrentLocation;
-            var result = base.ParseInheritsStatement(block);
+            this.AssertDirective(ModelTypeKeyword);
+
+            this.Span.CodeGenerator = SpanCodeGenerator.Null;
+            this.Context.CurrentBlock.Type = BlockType.Directive;
+            this.AcceptAndMoveNext();
+
+            var endModelLocation = CurrentLocation;
+
+            if (At(VBSymbolType.WhiteSpace))
+            {
+                Span.EditHandler.AcceptedCharacters = AcceptedCharacters.None;
+            }
+
+            this.AcceptWhile(VBSymbolType.WhiteSpace);
+            this.Output(SpanKind.MetaCode);
+
+            if (this.modelStatementFound)
+            {
+                this.Context.OnError(endModelLocation, string.Format(CultureInfo.CurrentCulture, "Cannot have more than one @model statement."));
+            }
+            this.modelStatementFound = true;
+
+            if (this.EndOfFile || At(VBSymbolType.WhiteSpace) || At(VBSymbolType.NewLine))
+            {
+                this.Context.OnError(endModelLocation, "The 'model' keyword must be followed by a type name on the same line.", ModelTypeKeyword);
+            }
+
+            AcceptUntil(VBSymbolType.NewLine);
+            if (!Context.DesignTimeMode)
+            {
+                this.Optional(VBSymbolType.NewLine);
+            }
+
+            var baseType = string.Concat(Span.Symbols.Select(s => s.Content)).Trim();
+            this.Span.CodeGenerator = new VisualBasicModelCodeGenerator(baseType);
+
             this.CheckForInheritsAndModelStatements();
+            
+            this.Output(SpanKind.Code);
+            
+            return false;
+        }
+
+        protected override bool InheritsStatement()
+        {
+            this.AssertDirective("Inherits");
+
+            this.AcceptAndMoveNext();
+
+            this.endInheritsLocation = this.CurrentLocation;
+
+            var result = base.InheritsStatement();
+
+            this.CheckForInheritsAndModelStatements();
+
             return result;
         }
 
@@ -33,48 +91,8 @@
         {
             if (this.modelStatementFound && this.endInheritsLocation.HasValue)
             {
-                this.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @Inherits statement and an @ModelType statement."));
+                this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @Inherits statement and an @ModelType statement."));
             }
-        }
-
-        private bool ParseModelStatement(CodeBlockInfo block)
-        {
-            using (this.StartBlock(BlockType.Directive))
-            {
-                block.ResumeSpans(this.Context);
-                var currentLocation = CurrentLocation;
-                var acceptedCharacters = this.RequireSingleWhiteSpace() ? AcceptedCharacters.None : AcceptedCharacters.Any;
-                
-                this.End(MetaCodeSpan.Create(this.Context, false, acceptedCharacters));
-
-                if (this.modelStatementFound)
-                {
-                    this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "Only one @ModelType statement is allowed."));
-                }
-                
-                this.modelStatementFound = true;
-                this.Context.AcceptWhiteSpace(false);
-                string modelTypeName = null;
-
-                if (ParserHelpers.IsIdentifierStart(this.CurrentCharacter))
-                {
-                    using (this.Context.StartTemporaryBuffer())
-                    {
-                        this.Context.AcceptUntil(ParserHelpers.IsNewLine);
-                        modelTypeName = this.Context.ContentBuffer.ToString();
-                        this.Context.AcceptTemporaryBuffer();
-                    }
-                    this.Context.AcceptNewLine();
-                }
-                else
-                {
-                    this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "@ModelType must be followed by a type name."));
-                }
-
-                this.CheckForInheritsAndModelStatements();
-                this.End(new ModelSpan(this.Context, modelTypeName));
-            }
-            return false;
         }
     }
 }

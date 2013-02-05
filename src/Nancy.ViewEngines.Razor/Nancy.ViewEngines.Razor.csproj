@@ -88,6 +88,10 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
+    <Reference Include="System.Web.Razor, Version=2.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\System.Web.Razor.Unofficial.2.0.1\lib\net40\System.Web.Razor.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml.Linq">
     </Reference>
     <Reference Include="System.Data.DataSetExtensions">
@@ -98,26 +102,20 @@
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
-    <Reference Include="System.Web.Razor, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\razor\System.Web.Razor.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="CSharp\CSharpModelCodeGenerator.cs" />
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="IHtmlString.cs" />
+    <Compile Include="INancyRazorView.cs" />
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
-    <Compile Include="ModelFinder.cs" />
-    <Compile Include="ModelSpan.cs" />
-    <Compile Include="CSharp\NancyCSharpRazorCodeGenerator.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
@@ -126,10 +124,9 @@
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
-    <Compile Include="TextResourceFinder.cs" />
     <Compile Include="UrlHelpers.cs" />
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
-    <Compile Include="VisualBasic\NancyVisualBasicRazorCodeGenerator.cs" />
+    <Compile Include="VisualBasic\VisualBasicModelCodeGenerator.cs" />
     <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -162,6 +159,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

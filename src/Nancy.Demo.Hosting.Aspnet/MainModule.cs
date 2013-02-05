@@ -93,6 +93,8 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["razor-strong.vbhtml", new RatPack { FirstName = "Frank" }];
             };
 
+            Get["/razor2"] = _ => new Razor2();
+
             Get["/ssve"] = x =>
             {
                 var model = new RatPack { FirstName = "You" };
