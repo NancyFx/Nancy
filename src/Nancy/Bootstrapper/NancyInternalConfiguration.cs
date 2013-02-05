@@ -80,7 +80,7 @@ namespace Nancy.Bootstrapper
                     RenderContextFactory = typeof(DefaultRenderContextFactory),
                     ModelValidatorLocator = typeof(DefaultValidatorLocator),
                     ViewLocationProvider = typeof(FileSystemViewLocationProvider),
-                    StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(true))),
+                    StatusCodeHandlers = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(ScanMode.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
                     CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                     ObjectSerializer = typeof(DefaultObjectSerializer),
                     Serializers = AppDomainAssemblyTypeScanner.TypesOf<ISerializer>(ScanMode.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
