@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Conventions
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
     using System.Threading;
@@ -12,6 +13,16 @@
     /// </summary>
     public static class BuiltInCultureConventions
     {
+        /// <summary>
+        /// Gets a set of all valid cultures
+        /// </summary>
+        public static HashSet<string> CultureNames { get; private set; }
+
+        static BuiltInCultureConventions()
+        {
+            CultureNames = new HashSet<string>(CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name));
+        }
+
         /// <summary>
         /// Checks to see if the Form has a CurrentCulture key.
         /// </summary>
@@ -140,18 +151,7 @@
                 return false;
             }
 
-            var validCulture = false;
-
-            foreach (var culture in CultureInfo.GetCultures(CultureTypes.SpecificCultures))
-            {
-                if (culture.Name.Equals(name, StringComparison.Ordinal))
-                {
-                    validCulture = true;
-                    break;
-                }
-            }
-
-            return validCulture;
+            return CultureNames.Contains(name);
         }
     }
 }
