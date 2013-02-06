@@ -107,6 +107,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AttributeValue.cs" />
     <Compile Include="CSharp\CSharpModelCodeGenerator.cs" />
     <Compile Include="CSharp\CSharpRazorViewRenderer.cs" />
     <Compile Include="DefaultRazorConfiguration.cs" />
