@@ -92,9 +92,8 @@
             if (values == null)
             {
                 throw new AssertException("The collection was null.");
-               
-            }
-
+            } 
+            
             if (values.Count() == 0)
             {
                 throw new AssertException("The collection contained no values.");
@@ -106,6 +105,26 @@
             }
 
             return values.First();
+        }
+
+        public static IEnumerable<T> Exactly<T>(IEnumerable<T> values, int numberOfOccurrances)
+        {
+            if (values == null)
+            {
+                throw new AssertException("The collection was null.");
+            }
+
+            var elements = values.Count();
+            if(elements != numberOfOccurrances)
+            {
+                var message =
+                    string.Format(
+                        "The collection didn't exactly contain the expected number of occurances.\nActual: {0}\nExpected: {1}",
+                        elements, numberOfOccurrances);
+                throw new AssertException(message);
+            }
+
+            return values;
         }
 
         public static void True(bool condition)
