@@ -510,6 +510,21 @@
             stream.ShouldEqual("<h1>Hello Mr. test</h1>");
         }
 
+        [Fact]
+        public void Should_render_attributes_with_code_inside()
+        {
+            var location = FindView("ViewThatUsesAttributeWithCodeInside");
+            var stream = new MemoryStream();
+
+            //When
+            var response = this.engine.RenderView(location, new TestModel { Name = "Bob", Slug = "BobSlug" }, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain("<a href=\"BobSlug\">Bob</a>");
+        }
+
         private static string ReadAll(Stream stream)
         {
             stream.Position = 0;
