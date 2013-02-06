@@ -117,6 +117,7 @@
     </Compile>
     <Compile Include="GreetingViewBase.cs" />
     <Compile Include="RazorViewEngineFixture.cs" />
+    <Compile Include="TestModel.cs" />
     <Compile Include="TextResourceFinderFixture.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -135,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\ViewThatUsesModelVB.vbhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
