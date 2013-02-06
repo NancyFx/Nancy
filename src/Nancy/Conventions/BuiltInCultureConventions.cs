@@ -20,7 +20,9 @@
 
         static BuiltInCultureConventions()
         {
-            CultureNames = new HashSet<string>(CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name));
+            CultureNames = new HashSet<string>(
+                                    CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name),
+                                    StringComparer.OrdinalIgnoreCase);
         }
 
         /// <summary>
