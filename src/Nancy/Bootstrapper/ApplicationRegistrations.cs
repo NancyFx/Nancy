@@ -5,7 +5,7 @@
     using System.Linq;
 
     /// <summary>
-    /// 
+    /// Helper class for providing application registrations
     /// </summary>
     public abstract class ApplicationRegistrations : IApplicationRegistrations
     {
@@ -41,7 +41,7 @@
         /// Scans for the implementation of <typeparamref name="T"/> and registers it.
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to scan for and register as.</typeparam>
-        public void Register<TRegistration>() where TRegistration : Type
+        public void Register<TRegistration>()
         {
             var implementation = AppDomainAssemblyTypeScanner
                 .TypesOf<TRegistration>()
@@ -67,7 +67,7 @@
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="implementation">The <see cref="Type"/> to register as <typeparamref name="TRegistration"/>.</param>
-        public void Register<TRegistration>(TRegistration implementation) where TRegistration : Type
+        public void Register<TRegistration>(Type implementation)
         {
             this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation));
         }
@@ -77,7 +77,7 @@
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="instance">The instance to register.</param>
-        public void Register<TRegistration>(object instance)
+        public void Register<TRegistration>(TRegistration instance)
         {
             this.instanceRegistrations.Add(new InstanceRegistration(typeof(TRegistration), instance));
         }
@@ -92,7 +92,7 @@
         /// When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in and it will also ignore
         /// the type specified by <paramref name="defaultImplementation"/>.
         /// </remarks>
-        public void RegisterWithDefault<TRegistration>(TRegistration defaultImplementation) where TRegistration : Type
+        public void RegisterWithDefault<TRegistration>(Type defaultImplementation)
         {
             var implementation = AppDomainAssemblyTypeScanner
                 .TypesOf<TRegistration>()
@@ -110,7 +110,7 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementationFactory">Factory that provides an instance of <typeparamref name="TRegistration"/>.</param>
         /// <remarks>When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in</remarks>
-        public void RegisterWithDefault<TRegistration>(Func<object> defaultImplementationFactory)
+        public void RegisterWithDefault<TRegistration>(Func<TRegistration> defaultImplementationFactory)
         {
             var implementation = AppDomainAssemblyTypeScanner
                 .TypesOf<TRegistration>()
