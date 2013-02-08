@@ -468,6 +468,144 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Should_set_negotiated_status_code_by_accepted_media_range_when_set_as_integer()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config
+                            .WithStatusCode(415)
+                            .WithMediaRangeStatusCode("text/html", 200);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_by_accepted_media_range_when_set_as_httpstatuscode()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config
+                            .WithStatusCode(HttpStatusCode.UnsupportedMediaType)
+                            .WithMediaRangeStatusCode("text/html", HttpStatusCode.OK);
+                    }));
+                }));
+            });
+
+            // When
+            var response = browser.Get("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_by_media_range_with_highest_quality_factor()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config
+                            .WithMediaRangeStatusCode("application/xml", 415)
+                            .WithMediaRangeStatusCode("application/json", 204);
+                    }));
+                }));
+            });
+
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("application/xml", 0.8m);
+                with.Accept("application/json", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_to_default_when_no_media_ranges_match()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config
+                            .WithStatusCode(415)
+                            .WithMediaRangeStatusCode("text/html", 200);
+                    }));
+                }));
+            });
+
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("application/xml", 0.8m);
+                with.Accept("application/json", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.UnsupportedMediaType, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_negotiated_status_code_to_OK_when_no_negotiated_status_code_is_set()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse(config =>
+                    {
+                        config
+                            .WithModel("");
+                    }));
+                }));
+            });
+
+            var response = browser.Get("/", with =>
+            {
+                with.Accept("application/xml", 0.8m);
+                with.Accept("application/json", 0.9m);
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+        }
+
+        [Fact]
         public void Should_set_negotiated_cookies_to_response()
         {
             // Given

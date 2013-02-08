@@ -112,6 +112,21 @@ namespace Nancy.Routing
             return null;
         }
 
+        private static HttpStatusCode? NegotiateStatusCode(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Negotiator negotiator)
+        {
+            foreach (var compatibleHeader in compatibleHeaders)
+            {
+                var statusCode = negotiator.NegotiationContext.GetStatusCodeForMediaRange(compatibleHeader.Item1);
+
+                if (statusCode.HasValue)
+                {
+                    return statusCode;
+                }
+            }
+
+            return null;
+        }
+
         private Response ProcessAsNegotiator(object routeResult, NancyContext context)
         {
             context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as negotiation"));
@@ -170,9 +185,11 @@ namespace Nancy.Routing
                 AddNegotiatedHeaders(negotiator, response);
             }
 
-            if (negotiator.NegotiationContext.StatusCode.HasValue)
+            var statusCode = NegotiateStatusCode(compatibleHeaders, negotiator);
+            
+            if (statusCode.HasValue)
             {
-                response.StatusCode = negotiator.NegotiationContext.StatusCode.Value;
+                response.StatusCode = statusCode.Value;
             }
 
             foreach (var cookie in negotiator.NegotiationContext.Cookies)
