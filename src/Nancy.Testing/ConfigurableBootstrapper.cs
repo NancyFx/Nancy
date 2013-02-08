@@ -277,15 +277,9 @@ namespace Nancy.Testing
         /// <summary>
         /// Gets the root path provider
         /// </summary>
-        protected override Type RootPathProvider
+        protected override IRootPathProvider RootPathProvider
         {
-            get
-            {
-                var rootPathProvider =
-                    this.Resolve<IRootPathProvider>();
-
-                return (rootPathProvider != null) ? rootPathProvider.First() : base.RootPathProvider;
-            }
+            get { return new DefaultRootPathProvider(); }
         }
 
         /// <summary>
