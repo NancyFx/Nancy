@@ -232,7 +232,7 @@
         /// <returns>Updated negotiator object</returns>
         public static Negotiator WithStatusCode(this Negotiator negotiator, int statusCode)
         {
-            negotiator.NegotiationContext.DefaultStatusCode= (HttpStatusCode)statusCode;
+            negotiator.NegotiationContext.DefaultStatusCode = (HttpStatusCode)statusCode;
             return negotiator;
         }
 
