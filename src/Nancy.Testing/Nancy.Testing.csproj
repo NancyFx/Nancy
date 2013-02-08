@@ -125,6 +125,7 @@
     <Compile Include="PathHelper.cs" />
     <Compile Include="QueryWrapper.cs" />
     <Compile Include="AssertExtensions.cs" />
+    <Compile Include="TestingBootstrapper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj">
