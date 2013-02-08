@@ -565,8 +565,8 @@
         private static IRootPathProvider GetRootPathProvider()
         {
             var providerType = AppDomainAssemblyTypeScanner
-                .TypesOf<IRootPathProvider>()
-                .SingleOrDefault(type => type != typeof(DefaultRootPathProvider));
+                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
+                .SingleOrDefault();
 
             if (providerType == null)
             {
