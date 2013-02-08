@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using System.Reflection;
     using Diagnostics;
     using Nancy.Cryptography;
     using Nancy.ModelBinding;
@@ -25,6 +24,11 @@
         /// prior to calling GetEngine.
         /// </summary>
         private bool initialised;
+
+        /// <summary>
+        /// Stores the <see cref="IRootPathProvider"/> used by Nancy
+        /// </summary>
+        private IRootPathProvider rootPathProvider;
 
         /// <summary>
         /// Default Nancy conventions
@@ -163,9 +167,9 @@
         /// <summary>
         /// Gets the root path provider
         /// </summary>
-        protected virtual Type RootPathProvider
+        protected virtual IRootPathProvider RootPathProvider
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IRootPathProvider>(true).FirstOrDefault() ?? typeof(DefaultRootPathProvider); }
+            get { return this.rootPathProvider ?? (this.rootPathProvider = GetRootPathProvider()); }
         }
 
         /// <summary>
@@ -506,7 +510,7 @@
         /// <returns>Collection of TypeRegistration types</returns>
         private IEnumerable<TypeRegistration> GetAdditionalTypes()
         {
-            return new[] { new TypeRegistration(typeof(IRootPathProvider), this.RootPathProvider) };
+            return Enumerable.Empty<TypeRegistration>();
         }
 
         /// <summary>
@@ -520,6 +524,7 @@
                 new InstanceRegistration(typeof(CryptographyConfiguration), this.CryptographyConfiguration),
                 new InstanceRegistration(typeof(NancyInternalConfiguration), this.InternalConfiguration), 
                 new InstanceRegistration(typeof(DiagnosticsConfiguration), this.DiagnosticsConfiguration), 
+                new InstanceRegistration(typeof(IRootPathProvider), this.RootPathProvider), 
             };
         }
 
@@ -554,6 +559,21 @@
                     "Something went wrong when trying to satisfy one of the dependencies during composition, make sure that you've registered all new dependencies in the container and inspect the innerexception for more details.",
                     ex);
             }
+        }
+
+
+        private static IRootPathProvider GetRootPathProvider()
+        {
+            var providerType = AppDomainAssemblyTypeScanner
+                .TypesOf<IRootPathProvider>()
+                .SingleOrDefault(type => type != typeof(DefaultRootPathProvider));
+
+            if (providerType == null)
+            {
+                providerType = typeof(DefaultRootPathProvider);
+            }
+
+            return Activator.CreateInstance(providerType) as IRootPathProvider;
         }
     }
 }
