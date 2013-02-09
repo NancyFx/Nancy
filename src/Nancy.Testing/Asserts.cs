@@ -11,9 +11,9 @@
     {
         public static void Contains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
         {
-            comparer = 
+            comparer =
                 comparer ?? new AssertEqualityComparer<T>();
-            
+
             if (actual != null)
             {
                 if (actual.Any(value => comparer.Equals(expected, value)))
@@ -92,8 +92,8 @@
             if (values == null)
             {
                 throw new AssertException("The collection was null.");
-            } 
-            
+            }
+
             if (values.Count() == 0)
             {
                 throw new AssertException("The collection contained no values.");
@@ -115,7 +115,7 @@
             }
 
             var elements = values.Count();
-            if(elements != numberOfOccurrances)
+            if (elements != numberOfOccurrances)
             {
                 var message =
                     string.Format(
