@@ -1,10 +1,8 @@
-using System.Collections.Generic;
-
 namespace Nancy.Testing
 {
     using System;
     using System.Linq;
-    using System.Threading;
+
     //using Xunit;
 
     /// <summary>
@@ -59,7 +57,6 @@ namespace Nancy.Testing
             var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrances);
             return new AndConnector<QueryWrapper>(nodeWrappers as QueryWrapper);
         }
-
 
         /// <summary>
         /// Asserts that an element should be of a specific class
