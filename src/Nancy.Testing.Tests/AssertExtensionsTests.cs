@@ -73,6 +73,26 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void ShouldExistsExactly2_Exists2_ReturnsResultAndConnector()
+        {
+            // Given, when
+            var result = this.query[".class"].ShouldExistExactly(2);
+
+            // Then
+            Assert.IsType<AndConnector<QueryWrapper>>(result);
+        }
+
+        [Fact]
+        public void ShouldExistsExactly3_Exists2_ReturnsResultAndConnector()
+        {
+            // When
+            var result = Record.Exception(() => this.query[".class"].ShouldExistExactly(3));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
         public void ShouldExistOnce_DoesNotExist_ShouldThrowAssert()
         {
             // Given, When

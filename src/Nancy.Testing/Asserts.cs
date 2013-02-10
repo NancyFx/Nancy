@@ -11,9 +11,9 @@
     {
         public static void Contains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
         {
-            comparer = 
+            comparer =
                 comparer ?? new AssertEqualityComparer<T>();
-            
+
             if (actual != null)
             {
                 if (actual.Any(value => comparer.Equals(expected, value)))
@@ -92,7 +92,6 @@
             if (values == null)
             {
                 throw new AssertException("The collection was null.");
-               
             }
 
             if (values.Count() == 0)
@@ -106,6 +105,26 @@
             }
 
             return values.First();
+        }
+
+        public static IEnumerable<T> Exactly<T>(IEnumerable<T> values, int numberOfOccurrances)
+        {
+            if (values == null)
+            {
+                throw new AssertException("The collection was null.");
+            }
+
+            var elements = values.Count();
+            if (elements != numberOfOccurrances)
+            {
+                var message =
+                    string.Format(
+                        "The collection didn't exactly contain the expected number of occurances.\nActual: {0}\nExpected: {1}",
+                        elements, numberOfOccurrances);
+                throw new AssertException(message);
+            }
+
+            return values;
         }
 
         public static void True(bool condition)

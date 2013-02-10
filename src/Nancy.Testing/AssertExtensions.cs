@@ -2,7 +2,7 @@ namespace Nancy.Testing
 {
     using System;
     using System.Linq;
-    using System.Threading;
+
     //using Xunit;
 
     /// <summary>
@@ -46,6 +46,16 @@ namespace Nancy.Testing
         public static AndConnector<NodeWrapper> ShouldExistOnce(this QueryWrapper query)
         {
             return new AndConnector<NodeWrapper>(Asserts.Single(query));
+        }
+
+        /// <summary>
+        /// Asserts that an element or element should exist exactly the specified number of times
+        /// <param name="expectedNumberOfOccurrances">The expected number of times the element should exist</param>
+        /// </summary>
+        public static AndConnector<QueryWrapper> ShouldExistExactly(this QueryWrapper query, int expectedNumberOfOccurrances)
+        {
+            var nodeWrappers = Asserts.Exactly(query, expectedNumberOfOccurrances);
+            return new AndConnector<QueryWrapper>(nodeWrappers as QueryWrapper);
         }
 
         /// <summary>
