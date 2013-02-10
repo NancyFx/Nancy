@@ -5,7 +5,7 @@ namespace Nancy.Bootstrapper
     /// <summary>
     /// Represents an instance to be registered into the container
     /// </summary>
-    public class InstanceRegistration
+    public class InstanceRegistration : ContainerRegistration
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="InstanceRegistration"/> class.
@@ -26,16 +26,13 @@ namespace Nancy.Bootstrapper
 
             this.RegistrationType = registrationType;
             this.Implementation = implementation;
+
+            this.ValidateTypeCompatibility(implementation.GetType());
         }
 
         /// <summary>
         /// Implementation object instance i.e. instance of MyClassThatImplementsIMyInterface
         /// </summary>
         public object Implementation { get; private set; }
-
-        /// <summary>
-        /// Registration type i.e. IMyInterface
-        /// </summary>
-        public Type RegistrationType { get; private set; }
     }
 }
