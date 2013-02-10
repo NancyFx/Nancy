@@ -84,7 +84,7 @@
 
         /// <summary>
         /// Scans for a <see cref="Type"/> that implements <typeparamref name="TRegistration"/>. If found, then it
-        /// will be used for the registartion, else it will use <paramref name="defaultImplementation"/>.
+        /// will be used for the registration, else it will use <paramref name="defaultImplementation"/>.
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementation">The implementation of <typeparamref name="TRegistration"/> that will be use if no other implenmentation can be found.</param>
