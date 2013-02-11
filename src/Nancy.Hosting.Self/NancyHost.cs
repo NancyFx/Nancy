@@ -134,7 +134,7 @@
             {
                 var prefix = baseUri.ToString();
 
-                if (this.configuration.RewriteLocalhost)
+                if (this.configuration.RewriteLocalhost && !baseUri.Host.Contains("."))
                 {
                     prefix = prefix.Replace("localhost", "+");
                 }
