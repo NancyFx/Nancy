@@ -5,7 +5,7 @@ namespace Nancy.Bootstrapper
     /// <summary>
     /// Represents a type to be registered into the container
     /// </summary>
-    public sealed class TypeRegistration
+    public sealed class TypeRegistration : ContainerRegistration
     {
         /// <summary>
         /// Represents a type to be registered into the container
@@ -23,24 +23,16 @@ namespace Nancy.Bootstrapper
             {
                 throw new ArgumentNullException("implementationType");
             }
-    
-            if (!registrationType.IsAssignableFrom(implementationType))
-            {
-                throw new ArgumentException("implementationType must implement registrationType", "implementationType");    
-            }
 
             this.RegistrationType = registrationType;
             this.ImplementationType = implementationType;
+
+            this.ValidateTypeCompatibility(implementationType);
         }
 
         /// <summary>
         /// Implementation type i.e. MyClassThatImplementsIMyInterface
         /// </summary>
         public Type ImplementationType { get; private set; }
-
-        /// <summary>
-        /// Registration type i.e. IMyInterface
-        /// </summary>
-        public Type RegistrationType { get; private set; }
     }
 }

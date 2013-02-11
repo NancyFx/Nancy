@@ -26,7 +26,6 @@
             // We don't call base because we don't want autoregister
             // we just register our one known dependency as an application level singleton
             existingContainer.Register<IApplicationDependency, ApplicationDependencyClass>().AsSingleton();
-            existingContainer.Register<IRazorConfiguration, MyRazorConfiguration>().AsSingleton();
         }
 
         protected override void ConfigureRequestContainer(TinyIoCContainer existingContainer, NancyContext context)

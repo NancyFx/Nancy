@@ -1,6 +1,7 @@
 namespace Nancy.Bootstrapper
 {
     using System;
+    using System.Linq;
     using System.Collections.Generic;
 
     /// <summary>
@@ -8,7 +9,7 @@ namespace Nancy.Bootstrapper
     /// container to later be resolved using an IEnumerable{RegistrationType}
     /// constructor dependency.
     /// </summary>
-    public class CollectionTypeRegistration
+    public class CollectionTypeRegistration : ContainerRegistration
     {
         /// <summary>
         /// Represents a type to be registered multiple times into the
@@ -19,14 +20,21 @@ namespace Nancy.Bootstrapper
         /// <param name="implementationTypes">Collection of implementation type i.e. MyClassThatImplementsIMyInterface</param>
         public CollectionTypeRegistration(Type registrationType, IEnumerable<Type> implementationTypes)
         {
+            if (registrationType == null)
+            {
+                throw new ArgumentNullException("registrationType");
+            }
+
+            if (implementationTypes == null)
+            {
+                throw new ArgumentNullException("implementationTypes");
+            }
+
             this.RegistrationType = registrationType;
             this.ImplementationTypes = implementationTypes;
-        }
 
-        /// <summary>
-        /// Registration type i.e. IMyInterface
-        /// </summary>
-        public Type RegistrationType { get; private set; }
+            this.ValidateTypeCompatibility(implementationTypes.ToArray());
+        }
 
         /// <summary>
         /// Collection of implementation type i.e. MyClassThatImplementsIMyInterface
