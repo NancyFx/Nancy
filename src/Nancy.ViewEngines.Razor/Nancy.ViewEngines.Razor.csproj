@@ -113,6 +113,7 @@
     <Compile Include="DefaultRazorConfiguration.cs" />
     <Compile Include="HelperResult.cs" />
     <Compile Include="HtmlHelpers.cs" />
+    <Compile Include="HtmlHelpersExtensions.cs" />
     <Compile Include="IHtmlString.cs" />
     <Compile Include="INancyRazorView.cs" />
     <Compile Include="IRazorConfiguration.cs" />
