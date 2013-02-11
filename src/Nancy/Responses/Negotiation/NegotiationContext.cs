@@ -18,6 +18,7 @@
             this.Cookies = new List<INancyCookie>();
             this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
             this.MediaRangeModelMappings = new Dictionary<MediaRange, Func<dynamic>>();
+            this.MediaRangeStatusCodeMappings = new Dictionary<MediaRange, Func<HttpStatusCode>>();
             this.Headers = new Dictionary<string, string>();
         }
 
@@ -34,6 +35,12 @@
         public dynamic DefaultModel { get; set; }
 
         /// <summary>
+        /// Gets or sets the default status code that will be used when no media range-specific status code matches.
+        /// </summary>
+        /// <value>The default status code.</value>
+        public HttpStatusCode? DefaultStatusCode { get; set; }
+
+        /// <summary>
         /// Gets or sets the additional response headers required.
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the headers.</value>
@@ -44,6 +51,12 @@
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the media range model mappings.</value>
         public IDictionary<MediaRange, Func<dynamic>> MediaRangeModelMappings { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status code mappings for media ranges.
+        /// </summary>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the media range status code mappings.</value>
+        public IDictionary<MediaRange, Func<HttpStatusCode>> MediaRangeStatusCodeMappings { get; set; }
 
         /// <summary>
         /// The name of the <see cref="NancyModule"/> that is locating a view.
@@ -62,12 +75,6 @@
         /// </summary>
         /// <value>A list of the allowed media ranges.</value>
         public IList<MediaRange> PermissableMediaRanges { get; set; }
-
-        /// <summary>
-        /// Gets or sets the status code of the response.
-        /// </summary>
-        /// <value>A <see cref="HttpStatusCode"/> value.</value>
-        public HttpStatusCode? StatusCode { get; set; }
         
         /// <summary>
         /// Gets or sets the view name if one is required.
@@ -89,6 +96,22 @@
             return matching ?
                 this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
                 this.DefaultModel;
+        }
+
+        /// <summary>
+        /// Gets the mapped status code for the specified media range.
+        /// </summary>
+        /// <param name="mediaRange">The <see cref="MediaRange"/> to get the status code for.</param>
+        /// <returns>The status code for the specified <paramref name="mediaRange"/> if it has been mapped; otherwise, the <see cref="DefaultStatusCode"/> will be returned.</returns>
+        public HttpStatusCode? GetStatusCodeForMediaRange(MediaRange mediaRange)
+        {
+            var matching =
+                this.MediaRangeStatusCodeMappings.Any(
+                    m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype));
+
+            return matching ?
+                this.MediaRangeStatusCodeMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
+                this.DefaultStatusCode;
         }
     }
 }

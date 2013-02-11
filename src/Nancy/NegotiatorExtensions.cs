@@ -183,6 +183,48 @@
         }
 
         /// <summary>
+        /// Sets the status code to use for a particular media range.
+        /// Will also add the MediaRange to the allowed list
+        /// </summary>
+        /// <param name="negotiator">The negotiator object.</param>
+        /// <param name="range">A media range to match against.</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>An updated negotiator object.</returns>
+        public static Negotiator WithMediaRangeStatusCode(this Negotiator negotiator, MediaRange range, HttpStatusCode statusCode)
+        {
+            return negotiator.WithMediaRangeStatusCode(range, () => statusCode);
+        }
+
+        /// <summary>
+        /// Sets the status code to use for a particular media range.
+        /// Will also add the MediaRange to the allowed list
+        /// </summary>
+        /// <param name="negotiator">The negotiator object.</param>
+        /// <param name="range">A media range to match against.</param>
+        /// <param name="statusCode">The status code that should be used.</param>
+        /// <returns>An updated negotiator object.</returns>
+        public static Negotiator WithMediaRangeStatusCode(this Negotiator negotiator, MediaRange range, int statusCode)
+        {
+            return negotiator.WithMediaRangeStatusCode(range, () => (HttpStatusCode)statusCode);
+        }
+
+        /// <summary>
+        /// Sets the status code to use for a particular media range.
+        /// Will also add the MediaRange to the allowed list
+        /// </summary>
+        /// <param name="negotiator">The negotiator object.</param>
+        /// <param name="range">A media range to match against.</param>
+        /// <param name="statusCodeFactory">A factory for returning the status code that should be used.</param>
+        /// <returns>An updated negotiator object.</returns>
+        public static Negotiator WithMediaRangeStatusCode(this Negotiator negotiator, MediaRange range, Func<HttpStatusCode> statusCodeFactory)
+        {
+            negotiator.NegotiationContext.PermissableMediaRanges.Add(range);
+            negotiator.NegotiationContext.MediaRangeStatusCodeMappings.Add(range, statusCodeFactory);
+
+            return negotiator;
+        }
+
+        /// <summary>
         /// Sets the status code that should be assigned to the final response.
         /// </summary>
         /// <param name="negotiator">Negotiator object</param>
@@ -190,7 +232,7 @@
         /// <returns>Updated negotiator object</returns>
         public static Negotiator WithStatusCode(this Negotiator negotiator, int statusCode)
         {
-            negotiator.NegotiationContext.StatusCode = (HttpStatusCode)statusCode;
+            negotiator.NegotiationContext.DefaultStatusCode = (HttpStatusCode)statusCode;
             return negotiator;
         }
 
@@ -202,7 +244,7 @@
         /// <returns>Updated negotiator object</returns>
         public static Negotiator WithStatusCode(this Negotiator negotiator, HttpStatusCode statusCode)
         {
-            negotiator.NegotiationContext.StatusCode = statusCode;
+            negotiator.NegotiationContext.DefaultStatusCode = statusCode;
             return negotiator;
         }
 
