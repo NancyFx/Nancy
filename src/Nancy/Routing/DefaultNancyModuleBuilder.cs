@@ -57,7 +57,7 @@ namespace Nancy.Routing
             context.NegotiationContext = new NegotiationContext
                                              {
                                                  ModuleName = module.GetModuleName(),
-                                                 ModulePath = module.ModulePath,
+                                                 ModulePath = module.GetModulePath(context),
                                              };
         }
     }

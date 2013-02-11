@@ -36,5 +36,44 @@ namespace Nancy.Extensions
             return typeName;
         }
 
+        /// <summary>
+        /// Derives the module path from the request path when the module path has parameterized
+        /// or regex path variables. 
+        /// </summary>
+        /// <param name="module">The current module</param>
+        /// <param name="context">The current context</param>
+        /// <returns>A string containing the derived module path</returns>
+        public static string GetModulePath(this NancyModule module, NancyContext context)
+        {
+            if (string.IsNullOrEmpty(module.ModulePath))
+            {
+                return string.Empty;
+            }
+           
+            if (!IsParameterizedPath(module) && !IsRegexPath(module))   
+            {
+                return module.ModulePath;
+            }
+
+            var segments = module.ModulePath.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+            var requestPathSegments = context.Request.Path.Split(new[] {"/"}, StringSplitOptions.RemoveEmptyEntries);
+
+            if (requestPathSegments.Length < segments.Length)
+            {
+                return string.Empty;
+            }
+
+            return string.Concat("/", string.Join("/", requestPathSegments.Take(segments.Length)));
+        }
+
+        private static bool IsRegexPath(NancyModule module)
+        {
+            return module.ModulePath.Contains("(?");
+        }
+
+        private static bool IsParameterizedPath(NancyModule module)
+        {
+            return module.ModulePath.Contains("{");
+        }
     }
 }
