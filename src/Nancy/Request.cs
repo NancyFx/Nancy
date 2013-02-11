@@ -253,12 +253,34 @@ namespace Nancy
                 return;
             }
 
-            if (!this.Form["_method"].HasValue)
+            var overrides = 
+                new List<Tuple<string, string>>
+                {
+                    Tuple.Create("_method form input element", (string)this.Form["_method"]),
+                    Tuple.Create("X-HTTP-Method-Override form input element", (string)this.Form["X-HTTP-Method-Override"]),
+                    Tuple.Create("X-HTTP-Method-Override header", this.Headers["X-HTTP-Method-Override"].FirstOrDefault())
+                };
+
+            var providedOverride =
+                overrides.Where(x => !string.IsNullOrEmpty(x.Item2));
+
+            if (!providedOverride.Any())
             {
                 return;
             }
 
-            this.Method = this.Form["_method"];
+            if (providedOverride.Count() > 1)
+            {
+                var overrideSources =
+                    string.Join(", ", providedOverride);
+
+                var errorMessage =
+                    string.Format("More than one HTTP method override was provided. The provided values where: {0}", overrideSources);
+
+                throw new InvalidOperationException(errorMessage);
+            }
+
+            this.Method = providedOverride.Single().Item2;
         }
     }
 }
