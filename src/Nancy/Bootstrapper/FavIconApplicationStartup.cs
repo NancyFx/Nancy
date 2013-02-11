@@ -102,7 +102,17 @@
 
         private static byte[] ScanForFavIcon()
         {
-            return LocateIconOnFileSystem() ?? ExtractDefaultIcon();
+            byte[] locatedIcon = null;
+
+            try
+            {
+                locatedIcon = LocateIconOnFileSystem();
+            }
+            catch (Exception)
+            {
+            }
+
+            return locatedIcon ?? ExtractDefaultIcon();
         }
     }
 }
