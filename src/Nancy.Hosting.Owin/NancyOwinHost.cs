@@ -13,6 +13,7 @@
     /// <summary>
     /// Nancy host for OWIN hosts
     /// </summary>
+    [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
     public class NancyOwinHost
     {
         private readonly INancyEngine engine;
@@ -22,6 +23,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
+        [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
         public NancyOwinHost()
             : this(NancyBootstrapperLocator.Bootstrapper)
         {
@@ -31,6 +33,7 @@
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
         /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
+        [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
         public NancyOwinHost(INancyBootstrapper bootstrapper)
         {
             bootstrapper.Initialise();
