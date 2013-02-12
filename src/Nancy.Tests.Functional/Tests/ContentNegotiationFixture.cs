@@ -441,6 +441,54 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Should_not_throw_exception_because_of_uncommon_accept_header()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Header("Accept", "application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"");
+            });
+
+            // Then
+            Assert.Equal((HttpStatusCode)200, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_not_throw_exception_because_of_uncommon_accept_header_parameter_ordering()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Header("Accept", "Accept: application/xhtml+xml; q=1; profile=\"http://www.wapforum. org/xhtml\"");
+            });
+
+            // Then
+            Assert.Equal((HttpStatusCode)200, response.StatusCode);
+        }
+
+        [Fact]
         public void Should_set_negotiated_status_code_to_response_when_set_as_httpstatuscode()
         {
             // Given

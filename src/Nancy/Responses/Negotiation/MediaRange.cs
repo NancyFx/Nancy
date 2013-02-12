@@ -1,6 +1,7 @@
 namespace Nancy.Responses.Negotiation
 {
     using System;
+    using System.Linq;
 
     /// <summary>
     /// Represents a media range from an accept header
@@ -49,6 +50,8 @@ namespace Nancy.Responses.Negotiation
             {
                 throw new ArgumentException("inputString cannot be null or empty", contentType);
             }
+
+            contentType = contentType.Split(';').First();
 
             var parts = contentType.Split('/');
 
