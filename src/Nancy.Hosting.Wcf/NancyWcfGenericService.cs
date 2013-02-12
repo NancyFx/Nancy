@@ -79,6 +79,7 @@
                 GetExpectedRequestLength(webRequest.Headers.ToDictionary());
 
             var nancyUrl = new Url {
+                BasePath = webRequest.UriTemplateMatch.BaseUri.AbsolutePath,
                 Scheme = webRequest.UriTemplateMatch.RequestUri.Scheme,
                 HostName = webRequest.UriTemplateMatch.BaseUri.Host,
                 Port = webRequest.UriTemplateMatch.RequestUri.IsDefaultPort ? null : (int?)webRequest.UriTemplateMatch.RequestUri.Port,                    

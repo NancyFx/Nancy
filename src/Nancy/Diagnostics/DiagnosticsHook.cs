@@ -72,6 +72,8 @@ namespace Nancy.Diagnostics
                                 Path.GetFileName(ctx.Request.Url.Path));
                         }
 
+                        RewriteDiagnosticsUrl(diagnosticsConfiguration, ctx);
+
                         return diagnosticsConfiguration.Valid
                                    ? ExecuteDiagnostics(ctx, diagnosticsRouteResolver, diagnosticsConfiguration, serializer)
                                    : GetDiagnosticsHelpView(ctx);
@@ -101,16 +103,7 @@ namespace Nancy.Diagnostics
         {
             var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
-            ctx.Request.Url.BasePath =
-                string.Concat(ctx.Request.Url.BasePath, diagnosticsConfiguration.Path);
-
-            ctx.Request.Url.Path =
-                ctx.Request.Url.Path.Substring(diagnosticsConfiguration.Path.Length);
-
-            if (ctx.Request.Url.Path.Length.Equals(0))
-            {
-                ctx.Request.Url.Path = "/";
-            }
+            
 
             if (session == null)
             {
@@ -241,7 +234,7 @@ namespace Nancy.Diagnostics
         private static bool IsLoginRequest(NancyContext context, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             return context.Request.Method == "POST" &&
-                context.Request.Path.TrimEnd(new[] { '/' }) == diagnosticsConfiguration.Path;
+                context.Request.Url.BasePath.TrimEnd(new[] { '/' }).EndsWith(diagnosticsConfiguration.Path);
         }
 
         private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
@@ -256,6 +249,20 @@ namespace Nancy.Diagnostics
             if (resolveResultPreReqResponse != null)
             {
                 context.Response = resolveResultPreReqResponse;
+            }
+        }
+
+        private static void RewriteDiagnosticsUrl(DiagnosticsConfiguration diagnosticsConfiguration, NancyContext ctx)
+        {
+            ctx.Request.Url.BasePath =
+                string.Concat(ctx.Request.Url.BasePath, diagnosticsConfiguration.Path);
+
+            ctx.Request.Url.Path =
+                ctx.Request.Url.Path.Substring(diagnosticsConfiguration.Path.Length);
+
+            if (ctx.Request.Url.Path.Length.Equals(0))
+            {
+                ctx.Request.Url.Path = "/";
             }
         }
     }
