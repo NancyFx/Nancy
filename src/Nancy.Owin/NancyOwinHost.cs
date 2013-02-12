@@ -45,7 +45,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var serverClientIp = Get<string>(environment, "server.CLIENT_IP");
+            var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
             var url = new Url
