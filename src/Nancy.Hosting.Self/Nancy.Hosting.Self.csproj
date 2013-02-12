@@ -103,6 +103,7 @@
     <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="HostConfiguration.cs" />
     <Compile Include="NancyHost.cs" />
+    <Compile Include="NetSh.cs" />
     <Compile Include="UriExtensions.cs">
       <SubType>Code</SubType>
     </Compile>
