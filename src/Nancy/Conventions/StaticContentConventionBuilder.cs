@@ -4,7 +4,6 @@ namespace Nancy.Conventions
     using System.Collections.Concurrent;
     using System.IO;
     using System.Linq;
-    using System.Security;
     using System.Text.RegularExpressions;
     using Helpers;
     using Responses;
@@ -31,8 +30,13 @@ namespace Nancy.Conventions
         /// <returns>A <see cref="GenericFileResponse"/> instance for the requested static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, string contentPath = null, params string[] allowedExtensions)
         {
-            return (ctx, root) =>{
+            if (!requestedPath.StartsWith("/"))
+            {
+                requestedPath = string.Concat("/", requestedPath);
+            }
 
+            return (ctx, root) =>
+            {
                 var path =
                     HttpUtility.UrlDecode(ctx.Request.Path);
 
@@ -46,11 +50,6 @@ namespace Nancy.Conventions
 
                 var pathWithoutFilename = 
                     GetPathWithoutFilename(fileName, path);
-
-                if (!requestedPath.StartsWith("/"))
-                {
-                    requestedPath = string.Concat("/", requestedPath);
-                }
 
                 if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
