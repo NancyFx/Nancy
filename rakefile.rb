@@ -81,7 +81,7 @@ end
 
 desc "Executes xUnit tests"
 xunit :xunit => [:compile] do |xunit|
-    tests = FileList["src/**/#{CONFIGURATION}/*.Tests.*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
+    tests = FileList["src/**/#{CONFIGURATION}/*.Tests*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
 
     xunit.command = "tools/xunit/xunit.console.clr4.x86.exe"
     xunit.assemblies = tests
@@ -89,7 +89,7 @@ end
 
 desc "Executes xUnit tests using Mono"
 xunit :xunitmono => [] do |xunit|
-    tests = FileList["src/**/#{CONFIGURATIONMONO}/*.Tests.*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
+    tests = FileList["src/**/#{CONFIGURATIONMONO}/*.Tests*.dll"].exclude(/obj\//).exclude(/Nancy.ViewEngines.Razor.Tests.Models/)
 
     xunit.command = "tools/xunit/xunitmono.sh"
     xunit.assemblies = tests
