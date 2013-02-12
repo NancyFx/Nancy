@@ -11,12 +11,12 @@
         /// The username of the authenticated user.
         /// </summary>
         /// <value>A <see cref="string"/> containing the username.</value>
-        string UserName { get; set; }
+        string UserName { get; }
 
         /// <summary>
         /// The claims of the authenticated user.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/>, containing the claims.</value>
-        IEnumerable<string> Claims { get; set; } 
+        IEnumerable<string> Claims { get; } 
     }
 }
