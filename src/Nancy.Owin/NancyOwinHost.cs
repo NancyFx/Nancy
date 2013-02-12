@@ -1,19 +1,18 @@
-﻿namespace Nancy.Hosting.Owin
+﻿namespace Nancy.Owin
 {
     using System;
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.IO;
 
     /// <summary>
     /// Nancy host for OWIN hosts
     /// </summary>
-    [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
     public class NancyOwinHost
     {
         private readonly INancyEngine engine;
@@ -23,18 +22,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
-        [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
-        public NancyOwinHost()
-            : this(NancyBootstrapperLocator.Bootstrapper)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
-        /// </summary>
+        /// <param name="next">Next middleware to run if necessary</param>
         /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
-        [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
-        public NancyOwinHost(INancyBootstrapper bootstrapper)
+        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper)
         {
             bootstrapper.Initialise();
 
@@ -46,7 +36,7 @@
         /// </summary>
         /// <param name="environment">Application environment</param>
         /// <returns>Returns result</returns>
-        public Task ProcessRequest(IDictionary<string, object> environment)
+        public Task Invoke(IDictionary<string, object> environment)
         {
             var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
             var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
@@ -55,7 +45,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var serverClientIp = Get<string>(environment, "server.CLIENT_IP");
+            var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
             var url = new Url
@@ -78,15 +68,42 @@
                     serverClientIp);
 
             var tcs = new TaskCompletionSource<int>();
-            engine.HandleRequest(
+
+            this.engine.HandleRequest(
                 nancyRequest,
-                context =>
+                StoreEnvironment(environment),
+                RequestComplete(environment, tcs), 
+                RequestErrored(tcs));
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Gets a delegate to store the OWIN environment into the NancyContext
+        /// </summary>
+        /// <param name="environment">OWIN Environment</param>
+        /// <returns>Delegate</returns>
+        private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment)
+        {
+            return context =>
                 {
                     environment["nancy.NancyContext"] = context;
                     context.Items[RequestEnvironmentKey] = environment;
                     return context;
-                },
-                context =>
+                };
+        }
+
+        /// <summary>
+        /// Gets a delegate to handle converting a nancy response
+        /// to the format required by OWIN and signals that the we are
+        /// now complete.
+        /// </summary>
+        /// <param name="environment">OWIN environment</param>
+        /// <param name="tcs">The task completion source to signal</param>
+        /// <returns>Delegate</returns>
+        private static Action<NancyContext> RequestComplete(IDictionary<string, object> environment, TaskCompletionSource<int> tcs)
+        {
+            return context =>
                 {
                     var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
                     var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
@@ -115,10 +132,17 @@
                     context.Dispose();
 
                     tcs.TrySetResult(0);
+                };
+        }
 
-                }, tcs.SetException);
-
-            return tcs.Task;
+        /// <summary>
+        /// Gets a delegate to handle request errors
+        /// </summary>
+        /// <param name="tcs">Completion source to signal</param>
+        /// <returns>Delegate</returns>
+        private Action<Exception> RequestErrored(TaskCompletionSource<int> tcs)
+        {
+            return tcs.SetException;
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
