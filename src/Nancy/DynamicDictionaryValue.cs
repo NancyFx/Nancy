@@ -75,35 +75,42 @@
         {
             if (this.HasValue)
             {
-                if (value.GetType().IsAssignableFrom(typeof(T)))
+                try
                 {
-                    return (T)value;
-                }
-
-                var TType = typeof (T);
-
-                var stringValue = value as string;
-                if (TType == typeof (DateTime))
-                {
-                    DateTime result;
-
-                    if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                    if (value.GetType().IsAssignableFrom(typeof(T)))
                     {
-                        return (T)((object)result);
+                        return (T)value;
+                    }
+
+                    var TType = typeof (T);
+
+                    var stringValue = value as string;
+                    if (TType == typeof (DateTime))
+                    {
+                        DateTime result;
+
+                        if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                        {
+                            return (T)((object)result);
+                        }
+                    }
+                    else if (stringValue != null)
+                    {
+                        var converter = TypeDescriptor.GetConverter(TType);
+
+                        if (converter.IsValid(stringValue))
+                        {
+                            return (T) converter.ConvertFromInvariantString(stringValue);
+                        }
+                    }
+                    else if (TType == typeof (string))
+                    {
+                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
                     }
                 }
-                else if (stringValue != null)
+                catch
                 {
-                    var converter = TypeDescriptor.GetConverter(TType);
-
-                    if (converter.IsValid(stringValue))
-                    {
-                        return (T) converter.ConvertFromInvariantString(stringValue);
-                    }
-                }
-                else if (TType == typeof (string))
-                {
-                    return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
+                    return defaultValue;
                 }
             }
 
