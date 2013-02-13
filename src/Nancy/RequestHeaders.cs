@@ -307,7 +307,7 @@ namespace Nancy
                     {
                         decimal temp;
                         var stringValue = trimmedValue.Substring(2);
-                        if (decimal.TryParse(stringValue, out temp))
+                        if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out temp))
                         {
                             quality = temp;
                             break;
