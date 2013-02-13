@@ -12,6 +12,14 @@
         private const string StylesheetContents = @"body {
 	background-color: white;
 }";
+
+        private readonly string directory;
+
+        public StaticContentConventionBuilderFixture()
+        {
+            this.directory = Environment.CurrentDirectory;
+        }
+
         [Fact]
         public void Should_retrieve_static_content_when_file_name_contains_url_encoded_spaces()
         {
@@ -97,14 +105,14 @@
             var result = GetStaticContent("css", "../../outside/styles.css");
 
             // Then
-            result.ShouldBeNull();
+            result.ShouldEqual("Static content returned an invalid response of (null)");
         }
 
         [Fact]
         public void Should_retrieve_static_content_when_root_is_relative_path()
         {
             // Given
-            var resources = Path.Combine(Environment.CurrentDirectory, "Resources");
+            var resources = Path.Combine(directory, "Resources");
             var relativeRootFolder = Path.Combine(resources, @"../");
 
             // When
@@ -126,7 +134,7 @@
             };
 
             // When
-            var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
+            var exception = Record.Exception(() => convention.Invoke(context, directory));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -144,13 +152,13 @@
             };
 
             // When
-            var exception = Record.Exception(() => convention.Invoke(context, Environment.CurrentDirectory));
+            var exception = Record.Exception(() => convention.Invoke(context, directory));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
         }
 
-        private static string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null)
+        private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null)
         {
             var resource =
                 string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
@@ -164,23 +172,25 @@
             var resolver =
                 StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
 
-            var rootFolder = root ?? Environment.CurrentDirectory;
+            var rootFolder = root ?? directory;
 
             GenericFileResponse.SafePaths.Add(rootFolder);
 
             var response =
-                resolver.Invoke(context, rootFolder) as GenericFileResponse;
+                resolver.Invoke(context, rootFolder);
 
-            if (response != null)
+            var fileResponse = response as GenericFileResponse;
+
+            if (fileResponse != null)
             {
                 using (var stream = new MemoryStream())
                 {
-                    response.Contents(stream);
+                    fileResponse.Contents(stream);
                     return Encoding.UTF8.GetString(stream.GetBuffer(), 0, (int)stream.Length);
                 }
             }
 
-            return null;
+            return string.Format("Static content returned an invalid response of {0}", response == null ? "(null)" : response.GetType().ToString());
         }
     }
 }
