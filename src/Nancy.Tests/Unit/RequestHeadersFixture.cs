@@ -147,8 +147,9 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("text/plain");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "text/plain" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "text/ninja" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
@@ -273,8 +274,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("utf-8");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "utf-8" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "iso-8859-5" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
@@ -462,8 +464,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("en-US");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "en-US" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "sv-SE" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
@@ -2021,6 +2024,21 @@
 
             // Then
             values.Contains("User-Agent").ShouldBeFalse();
+        }
+
+        [Theory]
+        [InlineData("text/html;q=0.8", "text/html", 0.8)]
+        [InlineData("application/javascript;q=0.9,text/html;q=0.2,text/text", "text/html", 0.2)]
+        [InlineData("application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 1.0)]
+        [InlineData("application/xhtml+xml; q=0.2; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.2)]
+        [InlineData("application/xhtml+xml; q=.7; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.7)]
+        public void Should_retrieve_weighting_for_accept_headers(string header, string typeToCheck, double weighting)
+        {
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { header } } };
+
+            var headers = new RequestHeaders(rawHeaders);
+
+            headers.Accept.First(a => a.Item1 == typeToCheck).Item2.ShouldEqual((decimal)weighting);
         }
 
         private static void ValidateCookie(INancyCookie cookie, string name, string value)

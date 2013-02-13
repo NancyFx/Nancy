@@ -83,7 +83,7 @@ namespace Nancy
             get { return this.GetValue("Cache-Control"); }
             set { this.SetHeaderValues("Cache-Control", value, x => x); }
         }
-        
+
         /// <summary>
         /// Contains name/value pairs of information stored for that URL.
         /// </summary>
@@ -259,7 +259,7 @@ namespace Nancy
         {
             return GetEnumerator();
         }
-        
+
         /// <summary>
         /// Gets the values for the header identified by the <paramref name="name"/> parameter.
         /// </summary>
@@ -285,7 +285,7 @@ namespace Nancy
             var values = this.GetValue(header);
 
             return values
-                .SelectMany(x => x.Split(new [] {','}, StringSplitOptions.RemoveEmptyEntries))
+                .SelectMany(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
                 .Select(x => x.Trim())
                 .ToList();
         }
@@ -294,24 +294,32 @@ namespace Nancy
         {
             var values = this.GetSplitValues(headerName);
 
-            var parsed = values.Select(x => {
-                var q = x.Split(new[] {";q="}, StringSplitOptions.RemoveEmptyEntries);
-
+            var parsed = values.Select(x =>
+            {
+                var sections = x.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                var mediaRange = sections[0].Trim();
                 var quality = 1m;
-                if (q.Length > 1)
+
+                for (var index = 1; index < sections.Length; index++)
                 {
-                    if(!decimal.TryParse(q[1], NumberStyles.Float, CultureInfo.InvariantCulture, out quality))
+                    var trimmedValue = sections[index].Trim();
+                    if (trimmedValue.StartsWith("q=", StringComparison.OrdinalIgnoreCase))
                     {
-                        return null;
+                        decimal temp;
+                        var stringValue = trimmedValue.Substring(2);
+                        if (decimal.TryParse(stringValue, out temp))
+                        {
+                            quality = temp;
+                            break;
+                        }
                     }
                 }
 
-                return new Tuple<string, decimal>(q[0].Trim(), quality);
+                return new Tuple<string, decimal>(mediaRange, quality);
             });
 
             return parsed
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Item2);
+                    .OrderByDescending(x => x.Item2);
         }
 
         private static object GetDefaultValue(Type T)
@@ -335,7 +343,7 @@ namespace Nancy
 
         private static IEnumerable<INancyCookie> GetNancyCookies(IEnumerable<string> cookies)
         {
-            if(cookies == null)
+            if (cookies == null)
             {
                 return Enumerable.Empty<INancyCookie>();
             }
