@@ -319,8 +319,7 @@ namespace Nancy
             });
 
             return parsed
-                .Where(x => x != null)
-                .OrderByDescending(x => x.Item2);
+                    .OrderByDescending(x => x.Item2);
         }
 
         private static object GetDefaultValue(Type T)
