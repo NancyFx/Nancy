@@ -147,8 +147,9 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("text/plain");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "text/plain" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "text/ninja" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
@@ -273,8 +274,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("utf-8");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "utf-8" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "iso-8859-5" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
@@ -462,8 +464,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
-            headers[0].Item1.ShouldEqual("en-US");
+            headers.Count.ShouldEqual(2);
+            headers.FirstOrDefault(t => t.Item1 == "en-US" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.FirstOrDefault(t => t.Item1 == "sv-SE" && t.Item2 == 1.0m).ShouldNotBeNull();
         }
 
         [Fact]
