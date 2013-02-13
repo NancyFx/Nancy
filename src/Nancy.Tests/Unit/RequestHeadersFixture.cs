@@ -2028,6 +2028,7 @@
         [InlineData("application/javascript;q=0.9,text/html;q=0.2,text/text", "text/html", 0.2)]
         [InlineData("application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 1.0)]
         [InlineData("application/xhtml+xml; q=0.2; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.2)]
+        [InlineData("application/xhtml+xml; q=.7; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.7)]
         public void Should_retrieve_weighting_for_accept_headers(string header, string typeToCheck, double weighting)
         {
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { header } } };
