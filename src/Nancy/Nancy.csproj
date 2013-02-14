@@ -150,6 +150,7 @@
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />

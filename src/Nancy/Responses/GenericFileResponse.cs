@@ -4,6 +4,9 @@ namespace Nancy.Responses
 {
     using System;
     using System.IO;
+    using System.Linq;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// A response representing a file. 
@@ -32,6 +35,18 @@ namespace Nancy.Responses
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
         public GenericFileResponse(string filePath) : 
             this (filePath, MimeTypes.GetMimeType(filePath))
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
+        /// by the <param name="filePath" /> parameter.
+        /// </summary>
+        /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
+        /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
+        /// <param name="context">Current context</param>
+        public GenericFileResponse(string filePath, NancyContext context)
+            : this(filePath, MimeTypes.GetMimeType(filePath), context)
         {
         }
 
@@ -106,20 +121,40 @@ namespace Nancy.Responses
 
                 if (IsSafeFilePath(rootPath, fullPath))
                 {
-                    Filename = Path.GetFileName(fullPath);
+                    this.Filename = Path.GetFileName(fullPath);
 
-                    var fi = new FileInfo(fullPath);
-                    // TODO - set a standard caching time and/or public?
-                    Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
-                    Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
-                    Contents = GetFileContent(fullPath);
-                    ContentType = contentType;
-                    StatusCode = HttpStatusCode.OK;
+                    this.SetResponseValues(contentType, fullPath, context);
+
                     return;
                 }
             }
 
             StatusCode = HttpStatusCode.NotFound;
+        }
+
+        private void SetResponseValues(string contentType, string fullPath, NancyContext context)
+        {
+            // TODO - set a standard caching time and/or public?
+            var fi = new FileInfo(fullPath);
+
+            var lastWriteTimeUtc = fi.LastWriteTimeUtc;
+            var etag = lastWriteTimeUtc.Ticks.ToString("x");
+            var lastModified = lastWriteTimeUtc.ToString("R");
+
+            if (CacheHelpers.ReturnNotModified(etag, lastWriteTimeUtc, context))
+            {
+                this.StatusCode = HttpStatusCode.NotModified;
+                this.ContentType = null;
+                this.Contents = Response.NoBody;
+
+                return;
+            }
+
+            this.Headers["ETag"] = etag;
+            this.Headers["Last-Modified"] = lastModified;
+            this.Contents = GetFileContent(fullPath);
+            this.ContentType = contentType;
+            this.StatusCode = HttpStatusCode.OK;
         }
     }
 }

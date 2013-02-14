@@ -13,12 +13,12 @@ namespace Nancy.Conventions
     /// </summary>
     public class StaticContentConventionBuilder
     {
-        private static readonly ConcurrentDictionary<string, Func<Response>> ResponseFactoryCache;
+        private static readonly ConcurrentDictionary<string, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
         static StaticContentConventionBuilder()
         {
-            ResponseFactoryCache = new ConcurrentDictionary<string, Func<Response>>();
+            ResponseFactoryCache = new ConcurrentDictionary<string, Func<NancyContext, Response>>();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace Nancy.Conventions
                 var responseFactory =
                     ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
 
-                return responseFactory.Invoke();
+                return responseFactory.Invoke(ctx);
             };
         }
 
@@ -101,11 +101,11 @@ namespace Nancy.Conventions
                 var responseFactory =
                     ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
 
-                return responseFactory.Invoke();
+                return responseFactory.Invoke(ctx);
             };
         }
 
-        private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
+        private static Func<string, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
             return requestPath =>
             {
@@ -115,7 +115,7 @@ namespace Nancy.Conventions
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
-                    return () => null;
+                    return ctx => null;
                 }
 
                 var transformedRequestPath = 
@@ -133,17 +133,17 @@ namespace Nancy.Conventions
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path outside the content folder '", contentPath, "'")));
-                    return () => null;
+                    return ctx => null;
                 }
 
                 if (!File.Exists(fileName))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested file '", fileName, "' does not exist")));
-                    return () => null;
+                    return ctx => null;
                 }
 
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Returning file '", fileName, "'")));
-                return () => new GenericFileResponse(fileName);
+                return ctx => new GenericFileResponse(fileName, ctx);
             };
         }
 

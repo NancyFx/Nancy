@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using Nancy.Conventions;
@@ -20,6 +21,8 @@
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
+
+            GenericFileResponse.SafePaths.Add(this.directory);
         }
 
         [Fact]
@@ -165,7 +168,7 @@
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var etag = initialResult.Headers["ETag"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } }};
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } } };
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -185,7 +188,7 @@
         }
 
         [Fact]
-        public void Should_return_full_response_if_changed_and_conditional_request_on_modified_sent()
+        public void Should_return_full_response_if_changed_and_conditional_request_on_etag_sent()
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var etag = initialResult.Headers["ETag"];
@@ -197,11 +200,14 @@
         }
 
         [Fact]
-        public void Should_return_full_response_if_changed_and_conditional_request_on_etag_sent()
+        public void Should_return_full_response_if_changed_and_conditional_request_on_modified_sent()
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
-            var moddedTime = initialResult.Headers["Last-Modified"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTime } } };
+            var moddedTimeString = initialResult.Headers["Last-Modified"];
+            var moddedTime = DateTime.ParseExact(moddedTimeString, "R", CultureInfo.InvariantCulture, DateTimeStyles.None)
+                                     .AddHours(-1);
+            moddedTimeString = moddedTime.ToString("R", CultureInfo.InvariantCulture);
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTimeString } } };
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -222,7 +228,7 @@
 
         private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
         {
-            var response = this.GetStaticContentResponse(virtualDirectory, requestedFilename, root);
+            var response = this.GetStaticContentResponse(virtualDirectory, requestedFilename, root, headers);
 
             var fileResponse = response as GenericFileResponse;
 
@@ -240,13 +246,9 @@
 
         private Response GetStaticContentResponse(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
         {
-            var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
+            var context = GetContext(virtualDirectory, requestedFilename, headers);
 
-            var request = new Request("GET", new Url { Path=resource, Scheme = "http" }, headers: headers ?? new Dictionary<string, IEnumerable<string>>());
-
-            var context = new NancyContext { Request = request };
-            
-            var resolver = StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
+            var resolver = GetResolver(virtualDirectory);
 
             var rootFolder = root ?? this.directory;
 
@@ -254,6 +256,24 @@
 
             var response = resolver.Invoke(context, rootFolder);
             return response;
+        }
+
+        private static NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
+        {
+            var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
+
+            var request = new Request(
+                "GET",
+                new Url { Path = resource, Scheme = "http" },
+                headers: headers ?? new Dictionary<string, IEnumerable<string>>());
+
+            var context = new NancyContext { Request = request };
+            return context;
+        }
+
+        private static Func<NancyContext, string, Response> GetResolver(string virtualDirectory)
+        {
+            return StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
         }
     }
 }
