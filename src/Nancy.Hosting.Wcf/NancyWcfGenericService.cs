@@ -64,7 +64,8 @@
                     {
                         nancyContext.Response.Contents(stream);
                         nancyContext.Dispose();
-                    }, nancyContext.Response.ContentType);
+                    }, 
+                    nancyContext.Response.ContentType);
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
@@ -133,7 +134,10 @@
         {
             SetHttpResponseHeaders(webResponse, nancyResponse);
 
-            webResponse.ContentType = nancyResponse.ContentType;
+            if (nancyResponse.ContentType != null)
+            {
+                webResponse.ContentType = nancyResponse.ContentType;
+            }
             webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
         }
 
