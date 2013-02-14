@@ -76,11 +76,24 @@
                 return Enumerable.Empty<ViewLocationResult>();
             }
 
-            var results = this.GetViewsFromPath(path, supportedViewExtensions);
+            var results = this.GetViewsFromPath(path, viewName, supportedViewExtensions);
 
-            return results.Where(vlr => vlr.Location.Equals(location, StringComparison.OrdinalIgnoreCase) &&
-                                        vlr.Name.Equals(viewName, StringComparison.OrdinalIgnoreCase));
+            return results;
+        }
 
+        private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, string viewName, IEnumerable<string> supportedViewExtensions)
+        {
+            var matches = this.fileSystemReader.GetViewsWithSupportedExtensions(path, viewName, supportedViewExtensions);
+
+            return from match in matches
+                   select
+                       new FileSystemViewLocationResult(
+                       GetViewLocation(match.Item1, this.rootPath),
+                       Path.GetFileNameWithoutExtension(match.Item1),
+                       Path.GetExtension(match.Item1).Substring(1),
+                       match.Item2,
+                       match.Item1,
+                       this.fileSystemReader);
         }
 
         private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, IEnumerable<string> supportedViewExtensions)

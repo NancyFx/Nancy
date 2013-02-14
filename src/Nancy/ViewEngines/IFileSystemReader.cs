@@ -23,5 +23,14 @@ namespace Nancy.ViewEngines
         /// <param name="filename">Filename</param>
         /// <returns>Time the file was last modified</returns>
         DateTime GetLastModified(string filename);
+
+        /// <summary>
+        /// Gets information about specific views that are stored in folders below the applications root path.
+        /// </summary>
+        /// <param name="path">The path of the folder where the views should be looked for.</param>
+        /// <param name="viewName">Name of the view to search for</param>
+        /// <param name="supportedViewExtensions">A list of view extensions to look for.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing view locations and contents readers.</returns>
+        IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, string viewName, IEnumerable<string> supportedViewExtensions);
     }
 }

@@ -35,6 +35,38 @@
             return File.GetLastWriteTimeUtc(filename);
         }
 
+        /// <summary>
+        /// Gets information about specific views that are stored in folders below the applications root path.
+        /// </summary>
+        /// <param name="path">The path of the folder where the views should be looked for.</param>
+        /// <param name="viewName">Name of the view to search for</param>
+        /// <param name="supportedViewExtensions">A list of view extensions to look for.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> containing view locations and contents readers.</returns>
+        public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, string viewName, IEnumerable<string> supportedViewExtensions)
+        {
+            return GetFilenames(path, viewName, supportedViewExtensions)
+                       .Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
+                       .ToList();
+        }
+
+        private static IEnumerable<string> GetFilenames(string path, string viewName, IEnumerable<string> supportedViewExtensions)
+        {
+            return Directory.GetFiles(path, viewName + ".*", SearchOption.TopDirectoryOnly)
+                            .Where(f => IsValidExtention(f, supportedViewExtensions));
+        }
+
+        private static bool IsValidExtention(string filename, IEnumerable<string> supportedViewExtensions)
+        {
+            var extension = Path.GetExtension(filename);
+
+            if (string.IsNullOrEmpty(extension))
+            {
+                return false;
+            }
+
+            return supportedViewExtensions.Contains(extension.Substring(1));
+        }
+
         private static IEnumerable<string> GetFilenames(string path, string extension)
         {
             return Directory.GetFiles(path, string.Concat("*.", extension), SearchOption.AllDirectories);
