@@ -95,6 +95,7 @@ namespace Nancy.Bootstrapper
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
                     ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
+                    StaticContentProvider = typeof(DefaultStaticContentProvider)
                 };
             }
         }
@@ -168,6 +169,8 @@ namespace Nancy.Bootstrapper
         public Type TextResource { get; set; }
 
         public Type ResourceAssemblyProvider { get; set; }
+
+        public Type StaticContentProvider { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -264,6 +267,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
                 new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
+                new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
             };
         }
 

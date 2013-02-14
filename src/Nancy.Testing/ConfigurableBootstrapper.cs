@@ -1543,10 +1543,33 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator CultureService<T>() where T : ICultureService
             {
-                this.bootstrapper.configuration.Diagnostics = typeof(T);
+                this.bootstrapper.configuration.CultureService = typeof(T);
                 return this;
             }
 
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="ICultureService "/>.
+            /// </summary>
+            /// <param name="staticContentProvider">The <see cref="IStaticContentProvider "/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator StaticContentProvider(IStaticContentProvider staticContentProvider)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IStaticContentProvider), staticContentProvider));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IStaticContentProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IStaticContentProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator StaticContentProvider<T>() where T : IStaticContentProvider
+            {
+                this.bootstrapper.configuration.StaticContentProvider = typeof(T);
+                return this;
+            }
 
             /// <summary>
             /// Configures the bootstrapper to add an assembly ignore predicate to the list
