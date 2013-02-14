@@ -65,7 +65,7 @@
                         nancyContext.Response.Contents(stream);
                         nancyContext.Dispose();
                     }, 
-                    nancyContext.Response.ContentType);
+                    nancyContext.Response.ContentType ?? "none/none"); // Stupid WCF forces us to specify a content type
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
