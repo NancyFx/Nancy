@@ -288,7 +288,7 @@ namespace Nancy.Authentication.Forms
         /// <param name="cookieValue">Encrypted and signed cookie value</param>
         /// <param name="configuration">Current configuration</param>
         /// <returns>Decrypted value, or empty on error or if failed validation</returns>
-        private static string DecryptAndValidateAuthenticationCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
+        public static string DecryptAndValidateAuthenticationCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
         {
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
             var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
@@ -308,7 +308,7 @@ namespace Nancy.Authentication.Forms
             var decrypted = encryptionProvider.Decrypt(encryptedCookie);
 
             // Only return the decrypted result if the hmac was ok
-            return hmacValid ? decrypted : String.Empty;
+            return hmacValid ? decrypted : string.Empty;
         }
 
         /// <summary>
