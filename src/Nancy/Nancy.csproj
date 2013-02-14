@@ -203,7 +203,7 @@
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
-    <Compile Include="StaticContentApplicationStartup.cs" />
+    <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />
