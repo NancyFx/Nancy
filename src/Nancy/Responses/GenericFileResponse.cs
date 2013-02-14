@@ -41,9 +41,10 @@ namespace Nancy.Responses
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <param name="contentType">The content-type of the response.</param>
-        public GenericFileResponse(string filePath, string contentType)
+        /// <param name="context">Current context</param>
+        public GenericFileResponse(string filePath, string contentType, NancyContext context = null)
         {
-            InitializeGenericFileResonse(filePath, contentType);
+            InitializeGenericFileResonse(filePath, contentType, context);
         }
 
         /// <summary>
@@ -80,7 +81,7 @@ namespace Nancy.Responses
             return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
-        private void InitializeGenericFileResonse(string filePath, string contentType)
+        private void InitializeGenericFileResonse(string filePath, string contentType, NancyContext context)
         {
             if (string.IsNullOrEmpty(filePath))
             {
