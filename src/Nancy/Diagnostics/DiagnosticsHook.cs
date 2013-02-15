@@ -119,14 +119,12 @@ namespace Nancy.Diagnostics
 
             var resolveResult = routeResolver.Resolve(ctx);
 
-            ctx.Parameters = resolveResult.Item2;
-            var resolveResultPreReq = resolveResult.Item3;
-            var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(ctx, resolveResultPreReq);
+            ctx.Parameters = resolveResult.Parameters;
+            ExecuteRoutePreReq(ctx, resolveResult.Before);
 
             if (ctx.Response == null)
             {
-                ctx.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                ctx.Response = resolveResult.Route.Invoke(resolveResult.Parameters);
             }
 
             if (ctx.Request.Method.ToUpperInvariant() == "HEAD")
@@ -134,9 +132,9 @@ namespace Nancy.Diagnostics
                 ctx.Response = new HeadResponse(ctx.Response);
             }
 
-            if (resolveResultPostReq != null)
+            if (resolveResult.After != null)
             {
-                resolveResultPostReq.Invoke(ctx);
+                resolveResult.After.Invoke(ctx);
             }
 
             AddUpdateSessionCookie(session, ctx, diagnosticsConfiguration, serializer);

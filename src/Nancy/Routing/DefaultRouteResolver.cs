@@ -63,12 +63,14 @@
             var route = associatedModule.Routes.ElementAt(result.RouteIndex);
             var parameters = DynamicDictionary.Create(result.Parameters);
 
-            return new ResolveResult(
-                            route,
-                            parameters,
-                            associatedModule.Before,
-                            associatedModule.After,
-                            associatedModule.OnError);
+            return new ResolveResult
+                       {
+                           Route = route,
+                           Parameters = parameters,
+                           Before = associatedModule.Before,
+                           After = associatedModule.After,
+                           OnError = associatedModule.OnError
+                       };
         }
 
         private INancyModule GetModuleFromMatchResult(NancyContext context, MatchResult result)
@@ -81,12 +83,14 @@
 
         private ResolveResult GetNotFoundResult(NancyContext context)
         {
-            return new ResolveResult(
-                            new NotFoundRoute(context.Request.Method, context.Request.Path),
-                            DynamicDictionary.Empty,
-                            null,
-                            null,
-                            null);
+            return new ResolveResult
+            {
+                Route = new NotFoundRoute(context.Request.Method, context.Request.Path),
+                Parameters = DynamicDictionary.Empty,
+                Before = null,
+                After = null,
+                OnError = null
+            };
         }
     }
 }
