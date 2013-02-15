@@ -6,15 +6,18 @@
     using System.Text;
 
     /// <summary>
-    /// A greedy capture node - designed to be a fallback "catch any" segment on the
-    /// end of a route.
-    /// e.g. /foo/bar/[greedy] - this node will be hit for /foo/bar/[anything that doesn't match another route], but
+    /// A greedy capture node e.g. {greedy*}
+    /// e.g. /foo/bar/{greedy*} - this node will be hit for /foo/bar/[anything that doesn't match another route], but
     /// not for just /foo/bar
+    /// e.g. /foo/{greedy*}/bar - this node will be hit for /foo/[anything that doesn't match another route]/bar
     /// </summary>
     public class GreedyCaptureNode : TrieNode
     {
         private string parameterName;
 
+        /// <summary>
+        /// Score for this node
+        /// </summary>
         public override int Score
         {
             get { return 0; }
@@ -26,6 +29,15 @@
             this.GetParameterName();
         }
 
+        /// <summary>
+        /// Gets all matches for a given requested route
+        /// Overridden to handle greedy capturing
+        /// </summary>
+        /// <param name="segments">Requested route segments</param>
+        /// <param name="currentIndex">Current index in the route segments</param>
+        /// <param name="capturedParameters">Currently captured parameters</param>
+        /// <param name="context">Current Nancy context</param>
+        /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
         public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
             var fullGreedy = this.GetFullGreedy(segments, currentIndex, capturedParameters);
@@ -62,6 +74,17 @@
             return results;
         }
 
+        /// <summary>
+        /// Matches the segment for a requested route
+        /// Not-required or called for this node type
+        /// </summary>
+        /// <param name="segment">Segment string</param>
+        /// <returns>A <see cref="SegmentMatch"/> instance representing the result of the match</returns>
+        public override SegmentMatch Match(string segment)
+        {
+            throw new NotSupportedException();
+        }
+
         private IEnumerable<MatchResult> GetFullGreedy(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters)
         {
             if (!this.NodeData.Any())
@@ -73,11 +96,6 @@
             capturedParameters[this.parameterName] = value;
 
             return this.NodeData.Select(nd => nd.ToResult(capturedParameters));
-        }
-
-        public override SegmentMatch Match(string segment)
-        {
-            throw new NotSupportedException();
         }
 
         private void GetParameterName()

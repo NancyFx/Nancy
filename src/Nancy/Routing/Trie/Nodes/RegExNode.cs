@@ -2,12 +2,18 @@ namespace Nancy.Routing.Trie.Nodes
 {
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// A regular expression capture node e.g. (?<foo>\d{2,4})
+    /// </summary>
     public class RegExNode : TrieNode
     {
         private Regex expression;
 
         private string[] groupNames;
 
+        /// <summary>
+        /// Score for this node
+        /// </summary>
         public override int Score
         {
             get { return 1000; }
@@ -19,12 +25,11 @@ namespace Nancy.Routing.Trie.Nodes
             this.BuildRegEx();
         }
 
-        private void BuildRegEx()
-        {
-            this.expression = new Regex(this.RouteDefinitionSegment, RegexOptions.Compiled);
-            this.groupNames = expression.GetGroupNames();
-        }
-
+        /// <summary>
+        /// Matches the segment for a requested route
+        /// </summary>
+        /// <param name="segment">Segment string</param>
+        /// <returns>A <see cref="SegmentMatch"/> instance representing the result of the match</returns>
         public override SegmentMatch Match(string segment)
         {
             var match = this.expression.Match(segment);
@@ -45,6 +50,12 @@ namespace Nancy.Routing.Trie.Nodes
             }
 
             return result;
+        }
+    
+        private void BuildRegEx()
+        {
+            this.expression = new Regex(this.RouteDefinitionSegment, RegexOptions.Compiled);
+            this.groupNames = this.expression.GetGroupNames();
         }
     }
 }
