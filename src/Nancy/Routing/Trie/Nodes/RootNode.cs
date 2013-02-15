@@ -9,6 +9,8 @@ namespace Nancy.Routing.Trie.Nodes
     {
         private SegmentMatch segmentMatch = new SegmentMatch(true);
 
+        private readonly Dictionary<string, object> localCaptures = new Dictionary<string, object>();
+
         /// <summary>
         /// Score for this node
         /// </summary>
@@ -32,14 +34,12 @@ namespace Nancy.Routing.Trie.Nodes
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
         public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
-            this.AddAdditionalParameters(capturedParameters);
-
             if (segments.Length == 0)
             {
-                return this.BuildResults(capturedParameters);
+                return this.BuildResults(capturedParameters, this.localCaptures);
             }
 
-            return this.GetMatchingChildren(segments, currentIndex, capturedParameters, context);
+            return this.GetMatchingChildren(segments, currentIndex, capturedParameters, this.localCaptures, context);
         }
 
         /// <summary>

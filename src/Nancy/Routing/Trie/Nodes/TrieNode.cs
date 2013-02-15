@@ -67,7 +67,7 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="routeDescription">The route description</param>
         public void Add(string[] segments, string moduleKey, int routeIndex, RouteDescription routeDescription)
         {
-            this.Add(segments, -1, 0, 0, moduleKey, routeIndex, routeDescription);    
+            this.Add(segments, -1, 0, 0, moduleKey, routeIndex, routeDescription);
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace Nancy.Routing.Trie.Nodes
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
         public virtual IEnumerable<MatchResult> GetMatches(string[] segments, NancyContext context)
         {
-            return this.GetMatches(segments, 0, new Dictionary<string, object>(), context);
+            return this.GetMatches(segments, 0, new Dictionary<string, object>(this.AdditionalParameters), context);
         }
 
         /// <summary>
@@ -122,27 +122,20 @@ namespace Nancy.Routing.Trie.Nodes
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
         public virtual IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
-            this.AddAdditionalParameters(capturedParameters);
-
             var segmentMatch = this.Match(segments[currentIndex]);
             if (segmentMatch == SegmentMatch.NoMatch)
             {
                 return MatchResult.NoMatches;
             }
 
-            foreach (var capturedParameter in segmentMatch.CapturedParameters)
-            {
-                capturedParameters[capturedParameter.Key] = capturedParameter.Value;
-            }
-
             if (this.NoMoreSegments(segments, currentIndex))
             {
-                return this.BuildResults(capturedParameters) ?? MatchResult.NoMatches;
+                return this.BuildResults(capturedParameters, segmentMatch.CapturedParameters) ?? MatchResult.NoMatches;
             }
 
             currentIndex++;
 
-            return this.GetMatchingChildren(segments, currentIndex, capturedParameters, context);
+            return this.GetMatchingChildren(segments, currentIndex, capturedParameters, segmentMatch.CapturedParameters, context);
         }
 
         /// <summary>
@@ -199,31 +192,41 @@ namespace Nancy.Routing.Trie.Nodes
         }
 
         /// <summary>
-        /// Adds the additional parameters to the captured parameters
-        /// </summary>
-        /// <param name="capturedParameters">Currently captured parameters</param>
-        protected void AddAdditionalParameters(IDictionary<string, object> capturedParameters)
-        {
-            foreach (var additionalParameter in this.AdditionalParameters)
-            {
-                capturedParameters[additionalParameter.Key] = additionalParameter.Value;
-            }
-        }
-
-        /// <summary>
         /// Build the results collection from the captured parameters if
         /// this node is the end result
         /// </summary>
         /// <param name="capturedParameters">Currently captured parameters</param>
+        /// <param name="dictionary"></param>
         /// <returns>Array of <see cref="MatchResult"/> objects corresponding to each set of <see cref="NodeData"/> stored at this node</returns>
-        protected IEnumerable<MatchResult> BuildResults(IDictionary<string, object> capturedParameters)
+        protected IEnumerable<MatchResult> BuildResults(IDictionary<string, object> capturedParameters, IDictionary<string, object> localCaptures)
         {
             if (!this.NodeData.Any())
             {
                 return null;
             }
 
-            return this.NodeData.Select(n => n.ToResult(capturedParameters));
+            var parameters = new Dictionary<string, object>(capturedParameters);
+
+            if (this.AdditionalParameters.Any())
+            {
+                foreach (var additionalParameter in this.AdditionalParameters)
+                {
+                    if (!parameters.ContainsKey(additionalParameter.Key))
+                    {
+                        parameters[additionalParameter.Key] = additionalParameter.Value;
+                    }
+                }
+            }
+
+            if (localCaptures.Any())
+            {
+                foreach (var localCapture in localCaptures)
+                {
+                    parameters[localCapture.Key] = localCapture.Value;
+                }
+            }
+
+            return this.NodeData.Select(n => n.ToResult(parameters));
         }
 
         /// <summary>
@@ -231,18 +234,57 @@ namespace Nancy.Routing.Trie.Nodes
         /// </summary>
         /// <param name="segments">Requested route segments</param>
         /// <param name="currentIndex">Current index</param>
-        /// <param name="capturedParameters">Currently captured parameters</param>
+        /// <param name="capturedParameters"></param>
+        /// <param name="localParameters">Currently captured parameters</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>Collection of <see cref="MatchResult"/> objects</returns>
-        protected IEnumerable<MatchResult> GetMatchingChildren(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
+        protected IEnumerable<MatchResult> GetMatchingChildren(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, IDictionary<string, object> localParameters, NancyContext context)
         {
+            var parameters = capturedParameters;
+            if (localParameters.Any() || this.AdditionalParameters.Any())
+            {
+                parameters = new Dictionary<string, object>(parameters);
+
+                foreach (var localParameter in localParameters)
+                {
+                    parameters[localParameter.Key] = localParameter.Value;
+                }
+
+                foreach (var additionalParameter in AdditionalParameters)
+                {
+                    parameters[additionalParameter.Key] = additionalParameter.Value;
+                }
+            }
+
             foreach (var childNode in this.Children.Values)
             {
-                foreach (var match in childNode.GetMatches(segments, currentIndex, new Dictionary<string, object>(capturedParameters), context))
+                foreach (var match in childNode.GetMatches(segments, currentIndex, parameters, context))
                 {
                     yield return match;
                 }
             }
+
+
+            //if (capturedParameters.Any())
+            //{
+            //    foreach (var childNode in this.Children.Values)
+            //    {
+            //        foreach (var match in childNode.GetMatches(segments, currentIndex, new Dictionary<string, object>(capturedParameters), context))
+            //        {
+            //            yield return match;
+            //        }
+            //    }
+            //}
+            //else
+            //{
+            //    foreach (var childNode in this.Children.Values)
+            //    {
+            //        foreach (var match in childNode.GetMatches(segments, currentIndex, new Dictionary<string, object>(), context))
+            //        {
+            //            yield return match;
+            //        }
+            //    }
+            //}
         }
 
         /// <summary>
