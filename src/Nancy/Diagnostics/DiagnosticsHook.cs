@@ -9,6 +9,9 @@ namespace Nancy.Diagnostics
     using Cryptography;
     using Helpers;
     using ModelBinding;
+
+    using Nancy.Routing.Trie;
+
     using Responses;
     using Responses.Negotiation;
     using Routing;
@@ -29,10 +32,9 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
-                new DefaultRoutePatternMatcher(),
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache,
-                responseProcessors);
+                new RouteResolverTrie(new TrieNodeFactory()));
 
             var serializer = new DefaultObjectSerializer();
 
