@@ -2,10 +2,26 @@ namespace Nancy.Routing.Trie
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// A segment match result
+    /// </summary>
     public class SegmentMatch
     {
+        private static SegmentMatch noMatch = new SegmentMatch(false);
+
+        /// <summary>
+        /// Gets a value indicating whether the match was sucessful or not
+        /// </summary>
         public bool Matches { get; private set; }
 
+        /// <summary>
+        /// Gets a <see cref="SegmentMatch"/> representing "no match"
+        /// </summary>
+        public static SegmentMatch NoMatch { get { return noMatch; } }
+
+        /// <summary>
+        /// Gets the captured parameters from the match, if the match was sucessful
+        /// </summary>
         public IDictionary<string, object> CapturedParameters { get; private set; }
 
         public SegmentMatch(bool matches)
@@ -18,7 +34,5 @@ namespace Nancy.Routing.Trie
             }
         }
 
-        private static SegmentMatch noMatch = new SegmentMatch(false);
-        public static SegmentMatch NoMatch { get { return noMatch; } }
     }
 }

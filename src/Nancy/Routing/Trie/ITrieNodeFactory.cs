@@ -2,6 +2,9 @@ namespace Nancy.Routing.Trie
 {
     using Nancy.Routing.Trie.Nodes;
 
+    /// <summary>
+    /// Factory for creating trie nodes from route definition segments
+    /// </summary>
     public interface ITrieNodeFactory
     {
         /// <summary>
@@ -9,7 +12,7 @@ namespace Nancy.Routing.Trie
         /// </summary>
         /// <param name="parent">Parent node</param>
         /// <param name="segment">Segment</param>
-        /// <returns>TrieNode instance</returns>
+        /// <returns>Corresponding TrieNode instance</returns>
         TrieNode GetNodeForSegment(TrieNode parent, string segment);
     }
 }

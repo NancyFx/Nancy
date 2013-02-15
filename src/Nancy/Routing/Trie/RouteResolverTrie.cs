@@ -7,6 +7,9 @@ namespace Nancy.Routing.Trie
 
     using Nancy.Routing.Trie.Nodes;
 
+    /// <summary>
+    /// The default route resolution trie
+    /// </summary>
     public class RouteResolverTrie : IRouteResolverTrie
     {
         private readonly ITrieNodeFactory nodeFactory;
@@ -20,6 +23,10 @@ namespace Nancy.Routing.Trie
             this.nodeFactory = nodeFactory;
         }
 
+        /// <summary>
+        /// Build the trie from the route cache
+        /// </summary>
+        /// <param name="cache">The route cache</param>
         public void BuildTrie(IRouteCache cache)
         {
             foreach (var cacheItem in cache)
@@ -47,6 +54,13 @@ namespace Nancy.Routing.Trie
             }
         }
 
+        /// <summary>
+        /// Get all matches for the given method and path
+        /// </summary>
+        /// <param name="method">HTTP method</param>
+        /// <param name="path">Reqeusted path</param>
+        /// <param name="context">Current Nancy context</param>
+        /// <returns>An array of <see cref="MatchResult"/> elements</returns>
         public MatchResult[] GetMatches(string method, string path, NancyContext context)
         {
             if (string.IsNullOrEmpty(path))
@@ -64,6 +78,13 @@ namespace Nancy.Routing.Trie
                                           .ToArray();
         }
 
+        /// <summary>
+        /// Returns a string that represents the current object.
+        /// </summary>
+        /// <returns>
+        /// A string that represents the current object.
+        /// </returns>
+        /// <filterpriority>2</filterpriority>
         public override string ToString()
         {
             var sb = new StringBuilder();

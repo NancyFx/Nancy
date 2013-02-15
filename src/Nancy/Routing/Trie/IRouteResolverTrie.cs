@@ -8,7 +8,7 @@ namespace Nancy.Routing.Trie
         /// <summary>
         /// Build the trie from the route cache
         /// </summary>
-        /// <param name="cache"></param>
+        /// <param name="cache">The route cache</param>
         void BuildTrie(IRouteCache cache);
 
         /// <summary>

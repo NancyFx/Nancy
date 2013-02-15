@@ -3,10 +3,8 @@ namespace Nancy.Routing.Trie
     using System;
     using System.Collections.Generic;
 
-    using Nancy;
-
     /// <summary>
-    /// NodeData from the route trie
+    /// Match result for a matched route
     /// </summary>
     public class MatchResult : NodeData, IComparable<MatchResult>
     {
@@ -15,12 +13,12 @@ namespace Nancy.Routing.Trie
         private static readonly MatchResult[] noMatches = new MatchResult[] { }; 
 
         /// <summary>
-        /// Captured parameters
+        /// Gets or sets the captured parameters
         /// </summary>
         public IDictionary<string, object> Parameters { get; set; }
 
         /// <summary>
-        /// An object to represent "no match"
+        /// Gets the "no match" <see cref="MatchResult"/>
         /// </summary>
         public static MatchResult NoMatch
         {
@@ -31,7 +29,7 @@ namespace Nancy.Routing.Trie
         }
 
         /// <summary>
-        /// An object to represent "no matches"
+        /// Gets the "no matches" <see cref="MatchResult"/> collection
         /// </summary>
         public static MatchResult[] NoMatches
         {
