@@ -1,15 +1,12 @@
 ﻿namespace Nancy.Routing
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
 
     using Nancy;
-    using Nancy.Responses.Negotiation;
     using Nancy.Routing.Trie;
 
     using MatchResult = Nancy.Routing.Trie.MatchResult;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, Nancy.DynamicDictionary, System.Func<Nancy.NancyContext, Nancy.Response>, System.Action<Nancy.NancyContext>, System.Func<Nancy.NancyContext, System.Exception, Nancy.Response>>;
 
     public class DefaultRouteResolver : IRouteResolver
     {

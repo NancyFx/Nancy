@@ -5,7 +5,6 @@ namespace Nancy.Routing
     using System.IO;
     using System.Linq;
     using Responses.Negotiation;
-    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
