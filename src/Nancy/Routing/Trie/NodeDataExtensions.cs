@@ -21,6 +21,7 @@
                 Method = data.Method,
                 RouteIndex = data.RouteIndex,
                 RouteLength = data.RouteLength,
+                Condition = data.Condition,
                 Score = data.Score
             };
         }
