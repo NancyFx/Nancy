@@ -45,7 +45,8 @@
                 return this.GetNotFoundResult(context);
             }
 
-            Array.Sort(results);
+            // Sort in descending order
+            Array.Sort(results, (m1, m2) => -m1.CompareTo(m2));
 
             for (var index = 0; index < results.Length; index++)
             {
