@@ -785,12 +785,9 @@ namespace Nancy.Tests.Unit.Routing
             var context =
                 new NancyContext { Request = new Request("GET", "/", "http") };
 
-
-
             var exception = Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context));
 
-            Assert.Throws<Exception>(() => requestDispatcher.Dispatch(context))
-                        .StackTrace.ShouldContain("BrokenMethod");
+            exception.StackTrace.ShouldContain("BrokenMethod");
         }
 #endif
 
