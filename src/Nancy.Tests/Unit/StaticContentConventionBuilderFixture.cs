@@ -1,9 +1,12 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Text;
     using Nancy.Conventions;
+    using Nancy.IO;
     using Nancy.Responses;
     using Xunit;
 
@@ -18,6 +21,8 @@
         public StaticContentConventionBuilderFixture()
         {
             this.directory = Environment.CurrentDirectory;
+
+            GenericFileResponse.SafePaths.Add(this.directory);
         }
 
         [Fact]
@@ -158,26 +163,72 @@
             exception.ShouldBeOfType<ArgumentException>();
         }
 
-        private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null)
+        [Fact]
+        public void Should_return_not_modified_if_not_changed_and_conditional_request_on_etag_sent()
         {
-            var resource =
-                string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
+            var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
+            var etag = initialResult.Headers["ETag"];
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } } };
 
-            var context =
-                new NancyContext
-                {
-                    Request = new Request("GET", resource, "http")
-                };
+            var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
-            var resolver =
-                StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotModified);
+        }
 
-            var rootFolder = root ?? directory;
+        [Fact]
+        public void Should_return_not_modified_if_not_changed_and_conditional_request_on_modified_sent()
+        {
+            var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
+            var moddedTime = initialResult.Headers["Last-Modified"];
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTime } } };
 
-            GenericFileResponse.SafePaths.Add(rootFolder);
+            var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
-            var response =
-                resolver.Invoke(context, rootFolder);
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotModified);
+        }
+
+        [Fact]
+        public void Should_return_full_response_if_changed_and_conditional_request_on_etag_sent()
+        {
+            var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
+            var etag = initialResult.Headers["ETag"];
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag.Substring(1) } } };
+
+            var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void Should_return_full_response_if_changed_and_conditional_request_on_modified_sent()
+        {
+            var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
+            var moddedTimeString = initialResult.Headers["Last-Modified"];
+            var moddedTime = DateTime.ParseExact(moddedTimeString, "R", CultureInfo.InvariantCulture, DateTimeStyles.None)
+                                     .AddHours(-1);
+            moddedTimeString = moddedTime.ToString("R", CultureInfo.InvariantCulture);
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTimeString } } };
+
+            var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void Not_modified_response_should_have_no_body()
+        {
+            var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
+            var etag = initialResult.Headers["ETag"];
+            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } } };
+
+            var result = this.GetStaticContent("css/css", "styles.css", headers: headers);
+
+            result.ShouldEqual(string.Empty);
+        }
+
+        private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
+        {
+            var response = this.GetStaticContentResponse(virtualDirectory, requestedFilename, root, headers);
 
             var fileResponse = response as GenericFileResponse;
 
@@ -191,6 +242,38 @@
             }
 
             return string.Format("Static content returned an invalid response of {0}", response == null ? "(null)" : response.GetType().ToString());
+        }
+
+        private Response GetStaticContentResponse(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
+        {
+            var context = GetContext(virtualDirectory, requestedFilename, headers);
+
+            var resolver = GetResolver(virtualDirectory);
+
+            var rootFolder = root ?? this.directory;
+
+            GenericFileResponse.SafePaths.Add(rootFolder);
+
+            var response = resolver.Invoke(context, rootFolder);
+            return response;
+        }
+
+        private static NancyContext GetContext(string virtualDirectory, string requestedFilename, IDictionary<string, IEnumerable<string>> headers = null)
+        {
+            var resource = string.Format("/{0}/{1}", virtualDirectory, requestedFilename);
+
+            var request = new Request(
+                "GET",
+                new Url { Path = resource, Scheme = "http" },
+                headers: headers ?? new Dictionary<string, IEnumerable<string>>());
+
+            var context = new NancyContext { Request = request };
+            return context;
+        }
+
+        private static Func<NancyContext, string, Response> GetResolver(string virtualDirectory)
+        {
+            return StaticContentConventionBuilder.AddDirectory(virtualDirectory, "Resources/Assets/Styles");
         }
     }
 }

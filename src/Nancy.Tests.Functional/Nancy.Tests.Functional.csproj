@@ -92,7 +92,7 @@
     <Compile Include="Tests\TracingSmokeTests.cs" />
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />
-    <Compile Include="Tests\StaticContentTests.cs" />
+    <Compile Include="Tests\ManualStaticContentTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
   </ItemGroup>
   <ItemGroup>

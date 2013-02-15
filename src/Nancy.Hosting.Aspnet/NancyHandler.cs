@@ -99,7 +99,10 @@ namespace Nancy.Hosting.Aspnet
         {
             SetHttpResponseHeaders(context, response);
 
-            context.Response.ContentType = response.ContentType;
+            if (response.ContentType != null)
+            {
+                context.Response.ContentType = response.ContentType;
+            }
             context.Response.StatusCode = (int)response.StatusCode;
             response.Contents.Invoke(context.Response.OutputStream);         
         }

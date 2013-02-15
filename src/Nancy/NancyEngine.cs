@@ -25,6 +25,7 @@
         private readonly IRequestTracing requestTracing;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
+        private readonly IStaticContentProvider staticContentProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -34,7 +35,8 @@
         /// <param name="statusCodeHandlers">Error handlers</param>
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="diagnosticsConfiguration"></param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration)
+        /// <param name="staticContentProvider">The provider to use for serving static content</param>
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
         {
             if (dispatcher == null)
             {
@@ -56,6 +58,7 @@
             this.statusCodeHandlers = statusCodeHandlers;
             this.requestTracing = requestTracing;
             this.diagnosticsConfiguration = diagnosticsConfiguration;
+            this.staticContentProvider = staticContentProvider;
         }
 
         /// <summary>
@@ -92,6 +95,13 @@
             if (preRequest != null)
             {
                 context = preRequest(context);
+            }
+
+            var staticContentResponse = this.staticContentProvider.GetContent(context);
+            if (staticContentResponse != null)
+            {
+                context.Response = staticContentResponse;
+                return context;
             }
 
             var pipelines =

@@ -187,7 +187,10 @@
                 response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
-            response.ContentType = nancyResponse.ContentType;
+            if (nancyResponse.ContentType != null)
+            {
+                response.ContentType = nancyResponse.ContentType;
+            }
             response.StatusCode = (int)nancyResponse.StatusCode;
 
             using (var output = response.OutputStream)
