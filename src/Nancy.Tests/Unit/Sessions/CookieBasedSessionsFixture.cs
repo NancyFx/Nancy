@@ -15,6 +15,8 @@ namespace Nancy.Tests.Unit.Sessions
 
     using Xunit;
 
+    using Helpers = Nancy.Helpers;
+
     public class CookieBasedSessionsFixture
     {
         private const string ValidData = "VgPJvXYwcXkn0gxDvg84tsfV9F5he1ZxhjsTZK1UZHVqWk7izPd9XsWnuFMrtQNRJEfyiqU2J7tAZDQvdKjQij9wUO6mOTCyZ7HPHK/pEnkgDFMXbHDctGQZSbb2WZZxola+Q3nP2tlQ+Tx//N6YyK7BwpsNPrvyHAvU1z5YzHfPT6HEowIl8mz/uUL6o+FME/Goi7RN2getMeYaPCs0fJkiMCAomnnagAy4aXN0Ak/p7Y3K/kpNAS6PvNu4aok0zVpfo1utP84GyyLomfr4urmDNFIe8PBVoKhuomxjsUOddaarHqqmN3PXOp15SPXPDxEKfpuLzhmqXnStiB8nH9qMBYI/AuLHMckDzkeESH5rQ2q2+1RgCN82PujzGhhVnBMk95ZS9k9zKCvKQa2yzVkaHqwSESyOFboU89kLAEQ0h48dtoJ2FTBs9GjsL3Z4fGogeLwjIvP8I8JF39HI+9U3PC2KnicA/bgUL/Z1paDzZYTrqQS4QSyFgy4DOxYz";

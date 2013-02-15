@@ -133,11 +133,13 @@
     <Compile Include="Culture\DefaultCultureService.cs" />
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
@@ -148,6 +150,8 @@
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="Helpers\CacheHelpers.cs" />
+    <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
@@ -203,7 +207,7 @@
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\RouteCandidateExtensions.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
-    <Compile Include="StaticContentApplicationStartup.cs" />
+    <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />

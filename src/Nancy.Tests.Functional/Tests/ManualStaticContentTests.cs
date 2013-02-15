@@ -7,17 +7,18 @@
 
     using Xunit;
 
-    public class StaticContentTests
+    public class ManualStaticContentTests
     {
         private readonly INancyBootstrapper bootstrapper;
 
         private readonly Browser browser;
 
-        public StaticContentTests()
+        public ManualStaticContentTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
                     configuration =>
                         {
+                            configuration.ApplicationStartup((c, p) => StaticContent.Enable(p));
                             configuration.Modules(new Type[] { });
                         });
 
