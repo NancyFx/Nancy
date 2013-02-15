@@ -236,7 +236,13 @@ namespace Nancy.Routing.Trie.Nodes
         /// <returns>Collection of <see cref="MatchResult"/> objects</returns>
         protected IEnumerable<MatchResult> GetMatchingChildren(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
-            return this.Children.Values.SelectMany(k => k.GetMatches(segments, currentIndex, new Dictionary<string, object>(capturedParameters), context));
+            foreach (var childNode in this.Children.Values)
+            {
+                foreach (var match in childNode.GetMatches(segments, currentIndex, new Dictionary<string, object>(capturedParameters), context))
+                {
+                    yield return match;
+                }
+            }
         }
 
         /// <summary>
