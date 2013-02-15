@@ -19,7 +19,7 @@ namespace Nancy.Routing.Trie.Nodes
         {
         }
 
-        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters)
+        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
             this.AddAdditionalParameters(capturedParameters);
 
@@ -28,7 +28,7 @@ namespace Nancy.Routing.Trie.Nodes
                 return this.BuildResults(capturedParameters);
             }
 
-            return this.GetMatchingChildren(segments, currentIndex, capturedParameters);
+            return this.GetMatchingChildren(segments, currentIndex, capturedParameters, context);
         }
 
         public override SegmentMatch Match(string segment)

@@ -5,9 +5,6 @@ namespace Nancy.Routing.Trie
     using System.Linq;
     using System.Text;
 
-    using Nancy;
-    using Nancy.Routing;
-
     using Nancy.Routing.Trie.Nodes;
 
     public class RouteResolverTrie : IRouteResolverTrie
@@ -23,7 +20,6 @@ namespace Nancy.Routing.Trie
             this.nodeFactory = nodeFactory;
         }
 
-        // TODO - need more info in here - module key etc
         public void BuildTrie(IRouteCache cache)
         {
             foreach (var cacheItem in cache)
@@ -51,7 +47,7 @@ namespace Nancy.Routing.Trie
             }
         }
 
-        public MatchResult[] GetMatches(string method, string path)
+        public MatchResult[] GetMatches(string method, string path, NancyContext context)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -64,7 +60,7 @@ namespace Nancy.Routing.Trie
                 return MatchResult.NoMatches;
             }
 
-            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries))
+            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
                                           .ToArray();
         }
 

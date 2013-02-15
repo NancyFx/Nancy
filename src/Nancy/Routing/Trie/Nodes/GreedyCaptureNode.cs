@@ -26,7 +26,7 @@
             this.GetParameterName();
         }
 
-        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters)
+        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
         {
             var fullGreedy = this.GetFullGreedy(segments, currentIndex, capturedParameters);
             if (!this.Children.Any())
@@ -47,7 +47,7 @@
                 {
                     var parameters = new Dictionary<string, object>(capturedParameters);
                     parameters[this.parameterName] = sb.ToString();
-                    results.AddRange(matchingChild.GetMatches(segments, currentIndex, parameters));
+                    results.AddRange(matchingChild.GetMatches(segments, currentIndex, parameters, context));
                 }
 
                 sb.AppendFormat("/{0}", currentSegment);
