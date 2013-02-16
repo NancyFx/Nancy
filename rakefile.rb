@@ -171,6 +171,22 @@ task :nuget_publish, :api_key do |task, args|
     end
 end
 
+desc "Pushes the nuget packages in the nuget folder up to the specified feed"
+task :nuget_publish_alt, :api_key, :source do |task, args|
+    raise "Missing source" if args.source.nil?
+    nupkgs = FileList["#{OUTPUT}/nuget/*#{$nancy_version}.nupkg"]
+    nupkgs.each do |nupkg| 
+        puts "Pushing #{nupkg} to {#args.source}"
+        nuget_push = NuGetPush.new
+        nuget_push.apikey = args.api_key if !args.empty?
+        nuget_push.command = "tools/nuget/nuget.exe"
+        nuget_push.package = "\"" + nupkg + "\""
+        nuget_push.source = args.source
+        nuget_push.create_only = false
+        nuget_push.execute
+    end
+end
+
 desc "Updates the SharedAssemblyInfo version"
 assemblyinfo :update_version, [:version] do |asm, args|
     asm.input_file = SHARED_ASSEMBLY_INFO
