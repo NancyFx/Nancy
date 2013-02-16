@@ -134,16 +134,18 @@
 
             var razorResult = engine.GenerateCode(reader, null, null, "roo");
 
-            var viewFactory = this.GenerateRazorViewFactory(renderer.Provider, razorResult, referencingAssembly, renderer.Assemblies, passedModelType, viewLocationResult);
+            var viewFactory = this.GenerateRazorViewFactory(renderer, razorResult, referencingAssembly, passedModelType, viewLocationResult);
 
             return viewFactory;
         }
 
-        private Func<INancyRazorView> GenerateRazorViewFactory(CodeDomProvider codeProvider, GeneratorResults razorResult, Assembly referencingAssembly, IEnumerable<string> rendererSpecificAssemblies, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GenerateRazorViewFactory(IRazorViewRenderer viewRenderer, GeneratorResults razorResult, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
-            var outputAssemblyName = Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
+            var outputAssemblyName = 
+                Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var modelType = FindModelType(razorResult.Document, passedModelType);
+            var modelType = 
+                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
 
             var assemblies = new List<string>
             {
@@ -159,7 +161,7 @@
             }
 
             assemblies = assemblies
-                .Union(rendererSpecificAssemblies)
+                .Union(viewRenderer.Assemblies)
                 .ToList();
 
             if (this.razorConfiguration != null)
@@ -181,7 +183,7 @@
             CompilerResults results;
             lock (this.compileLock)
             {
-                results = codeProvider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
+                results = viewRenderer.Provider.CompileAssemblyFromDom(compilerParameters, razorResult.GeneratedCode);
             }
 
             if (results.Errors.HasErrors)
@@ -273,11 +275,12 @@
         /// </summary>
         /// <param name="block">The document</param>
         /// <param name="passedModelType">The model type from the base class</param>
+        /// <param name="modelCodeGenerator">The model code generator</param>
         /// <returns>The model type, if discovered, or the passedModelType if not</returns>
-        private static Type FindModelType(Block block, Type passedModelType)
+        private static Type FindModelType(Block block, Type passedModelType, Type modelCodeGenerator)
         {
             var modelBlock =
-                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == typeof(CSharpModelCodeGenerator));
+                block.Flatten().FirstOrDefault(b => b.CodeGenerator.GetType() == modelCodeGenerator);
 
             if (modelBlock == null)
             {
