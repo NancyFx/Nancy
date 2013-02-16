@@ -5,7 +5,6 @@ namespace Nancy.Routing
     using System.IO;
     using System.Linq;
     using Responses.Negotiation;
-    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -38,18 +37,15 @@ namespace Nancy.Routing
         {
             var resolveResult = this.Resolve(context);
 
-            context.Parameters = resolveResult.Item2;
-            var resolveResultPreReq = resolveResult.Item3;
-            var resolveResultPostReq = resolveResult.Item4;
-            var resolveResultOnError = resolveResult.Item5;
+            context.Parameters = resolveResult.Parameters;
 
             try
             {
-                ExecuteRoutePreReq(context, resolveResultPreReq);
+                ExecuteRoutePreReq(context, resolveResult.Before);
 
                 if (context.Response == null)
                 {
-                    context.Response = this.routeInvoker.Invoke(resolveResult.Item1, resolveResult.Item2, context);
+                    context.Response = this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
                 }
 
                 if (context.Request.Method.ToUpperInvariant() == "HEAD")
@@ -57,14 +53,14 @@ namespace Nancy.Routing
                     context.Response = new HeadResponse(context.Response);
                 }
 
-                if (resolveResultPostReq != null)
+                if (resolveResult.After != null)
                 {
-                    resolveResultPostReq.Invoke(context);
+                    resolveResult.After.Invoke(context);
                 }
             }
             catch (Exception exception)
             {
-                var response = ResolveErrorResult(context, resolveResultOnError, exception);
+                var response = ResolveErrorResult(context, resolveResult.OnError, exception);
 
                 if (response != null)
                 {
@@ -126,7 +122,7 @@ namespace Nancy.Routing
                     var match =
                         this.InvokeRouteResolver(context, modifiedRequestPath, newMediaRanges);
 
-                    if (!(match.Item1 is NotFoundRoute))
+                    if (!(match.Route is NotFoundRoute))
                     {
                         return match;
                     }

@@ -9,6 +9,9 @@ namespace Nancy.Diagnostics
     using Cryptography;
     using Helpers;
     using ModelBinding;
+
+    using Nancy.Routing.Trie;
+
     using Responses;
     using Responses.Negotiation;
     using Routing;
@@ -29,10 +32,9 @@ namespace Nancy.Diagnostics
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,
-                new DefaultRoutePatternMatcher(),
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache,
-                responseProcessors);
+                new RouteResolverTrie(new TrieNodeFactory()));
 
             var serializer = new DefaultObjectSerializer();
 
@@ -117,14 +119,12 @@ namespace Nancy.Diagnostics
 
             var resolveResult = routeResolver.Resolve(ctx);
 
-            ctx.Parameters = resolveResult.Item2;
-            var resolveResultPreReq = resolveResult.Item3;
-            var resolveResultPostReq = resolveResult.Item4;
-            ExecuteRoutePreReq(ctx, resolveResultPreReq);
+            ctx.Parameters = resolveResult.Parameters;
+            ExecuteRoutePreReq(ctx, resolveResult.Before);
 
             if (ctx.Response == null)
             {
-                ctx.Response = resolveResult.Item1.Invoke(resolveResult.Item2);
+                ctx.Response = resolveResult.Route.Invoke(resolveResult.Parameters);
             }
 
             if (ctx.Request.Method.ToUpperInvariant() == "HEAD")
@@ -132,9 +132,9 @@ namespace Nancy.Diagnostics
                 ctx.Response = new HeadResponse(ctx.Response);
             }
 
-            if (resolveResultPostReq != null)
+            if (resolveResult.After != null)
             {
-                resolveResultPostReq.Invoke(ctx);
+                resolveResult.After.Invoke(ctx);
             }
 
             AddUpdateSessionCookie(session, ctx, diagnosticsConfiguration, serializer);

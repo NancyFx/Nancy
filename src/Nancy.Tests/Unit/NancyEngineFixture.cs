@@ -10,7 +10,6 @@ namespace Nancy.Tests.Unit
     using Nancy.Tests.Fakes;
     using Xunit;
     using Nancy.Culture;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     public class NancyEngineFixture
     {
@@ -42,7 +41,8 @@ namespace Nancy.Tests.Unit
             contextFactory = A.Fake<INancyContextFactory>();
             A.CallTo(() => contextFactory.Create(A<Request>._)).Returns(context);
 
-            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(new ResolveResult(route, DynamicDictionary.Empty, null, null, null));
+            var resolveResult = new ResolveResult { Route = route, Parameters = DynamicDictionary.Empty, Before = null, After = null, OnError = null };
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolveResult);
 
             var applicationPipelines = new Pipelines();
 
@@ -126,7 +126,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", "/", "http");
 
             A.CallTo(() => this.requestDispatcher.Dispatch(this.context)).Invokes(x => this.context.Response = this.response);
-            
+
             // When
             var result = this.engine.HandleRequest(request);
 
@@ -361,7 +361,7 @@ namespace Nancy.Tests.Unit
                 null);
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
-            
+
             A.CallTo(() => this.requestDispatcher.Dispatch(context)).Throws(new NotImplementedException());
 
             var request = new Request("GET", "/", "http");
@@ -378,8 +378,8 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var testEx = new Exception();
-            
-            var errorRoute = 
+
+            var errorRoute =
                 new Route("GET", "/", null, x => { throw testEx; });
 
             var resolvedRoute = new ResolveResult(
@@ -519,7 +519,7 @@ namespace Nancy.Tests.Unit
             var expectedException = new Exception();
 
             var resolvedRoute = new ResolveResult(
-                new FakeRoute(), 
+                new FakeRoute(),
                 DynamicDictionary.Empty,
                 null,
                 null,

@@ -12,6 +12,7 @@
     {
         private readonly IRootPathProvider rootPathProvider;
         private readonly StaticContentsConventions conventions;
+        private string rootPath;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStaticContentProvider"/> class, using the
@@ -22,6 +23,7 @@
         public DefaultStaticContentProvider(IRootPathProvider rootPathProvider, StaticContentsConventions conventions)
         {
             this.rootPathProvider = rootPathProvider;
+            this.rootPath = this.rootPathProvider.GetRootPath();
             this.conventions = conventions;
         }
 
@@ -32,9 +34,17 @@
         /// <returns>Response if serving content, null otherwise</returns>
         public Response GetContent(NancyContext context)
         {
-            return this.conventions
-                       .Select(convention => convention.Invoke(context, this.rootPathProvider.GetRootPath()))
-                       .FirstOrDefault(response => response != null);
+            foreach (var convention in this.conventions)
+            {
+                var result = convention.Invoke(context, this.rootPath);
+
+                if (result != null)
+                {
+                    return result;
+                }
+            }
+
+            return null;
         }
     }
 }
