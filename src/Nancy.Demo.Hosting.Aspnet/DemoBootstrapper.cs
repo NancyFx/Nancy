@@ -5,6 +5,7 @@
     using Conventions;
 
     using Nancy.Diagnostics;
+    using Nancy.Security;
     using Nancy.Session;
     using Nancy.TinyIoc;
     using Nancy.ViewEngines;
@@ -41,6 +42,7 @@
 
             StaticConfiguration.EnableRequestTracing = true;
             StaticConfiguration.DisableErrorTraces = false;
+            Csrf.Enable(pipelines);
 
             this.Conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory("moo", "Content"));
 
