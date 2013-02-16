@@ -212,9 +212,12 @@
                 return;
             }
 
-            foreach (var statusCodeHandler in this.statusCodeHandlers.Where(e => e.HandlesStatusCode(context.Response.StatusCode, context)))
+            foreach (var statusCodeHandler in this.statusCodeHandlers)
             {
-                statusCodeHandler.Handle(context.Response.StatusCode, context);
+                if (statusCodeHandler.HandlesStatusCode(context.Response.StatusCode, context))
+                {
+                    statusCodeHandler.Handle(context.Response.StatusCode, context);
+                }
             }
         }
 

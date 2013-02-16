@@ -9,6 +9,7 @@ namespace Nancy.Bootstrapper
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
+    using Nancy.Routing.Trie;
     using Nancy.ViewEngines;
     using Responses;
     using Responses.Negotiation;
@@ -95,7 +96,9 @@ namespace Nancy.Bootstrapper
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
                     ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
-                    StaticContentProvider = typeof(DefaultStaticContentProvider)
+                    StaticContentProvider = typeof(DefaultStaticContentProvider),
+                    RouteResolverTrie = typeof(RouteResolverTrie),
+                    TrieNodeFactory = typeof(TrieNodeFactory),
                 };
             }
         }
@@ -171,6 +174,10 @@ namespace Nancy.Bootstrapper
         public Type ResourceAssemblyProvider { get; set; }
 
         public Type StaticContentProvider { get; set; }
+
+        public Type RouteResolverTrie { get; set; }
+
+        public Type TrieNodeFactory { get; set; }
 
         public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
         {
@@ -268,6 +275,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
                 new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
                 new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
+                new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
+                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
             };
         }
 

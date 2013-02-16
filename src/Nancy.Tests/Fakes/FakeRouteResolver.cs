@@ -1,7 +1,6 @@
 namespace Nancy.Tests.Fakes
 {
     using Nancy.Routing;
-    using ResolveResult = System.Tuple<Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     public class FakeRouteResolver : IRouteResolver
     {
@@ -11,7 +10,14 @@ namespace Nancy.Tests.Fakes
 
         ResolveResult IRouteResolver.Resolve(NancyContext context)
         {
-            return new ResolveResult(new FakeRoute(), new DynamicDictionary(), null, null, null);
+            return new ResolveResult
+            {
+                Route = new FakeRoute(), 
+                Parameters = new DynamicDictionary(), 
+                Before = null, 
+                After = null, 
+                OnError = null
+            };
         }
     }
 }

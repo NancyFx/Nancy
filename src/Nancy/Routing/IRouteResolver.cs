@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Routing
 {
     using System;
-    using ResolveResult = System.Tuple<Nancy.Routing.Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Returns a route that matches the request
