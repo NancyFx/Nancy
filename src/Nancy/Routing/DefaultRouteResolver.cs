@@ -35,7 +35,12 @@
 
         public ResolveResult Resolve(NancyContext context)
         {
-            var results = this.trie.GetMatches(context.Request.Method, context.Request.Path, context);
+            if (this.IsOptionsRequest(context))
+            {
+                return this.BuildOptionsResult(context);
+            }
+
+            var results = this.trie.GetMatches(GetMethod(context), context.Request.Path, context);
 
             if (!results.Any())
             {
@@ -55,6 +60,27 @@
             }
 
             return this.GetNotFoundResult(context);
+        }
+
+        private ResolveResult BuildOptionsResult(NancyContext context)
+        {
+            var path = context.Request.Path;
+
+            var options = this.trie.GetOptions(path, context);
+
+            var optionsResult = new OptionsRoute(path, options);
+
+            return new ResolveResult(
+                            optionsResult,
+                            new DynamicDictionary(), 
+                            null,
+                            null,
+                            null);                        
+        }
+
+        private bool IsOptionsRequest(NancyContext context)
+        {
+            return context.Request.Method.Equals("OPTIONS", StringComparison.Ordinal);
         }
 
         private ResolveResult BuildResult(NancyContext context, MatchResult result)
@@ -91,6 +117,13 @@
                 After = null,
                 OnError = null
             };
+        }
+
+        private static string GetMethod(NancyContext context)
+        {
+            var requestedMethod = context.Request.Method;
+            
+            return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ? "GET" : requestedMethod;
         }
     }
 }

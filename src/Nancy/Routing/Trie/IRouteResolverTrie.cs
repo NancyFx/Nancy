@@ -1,5 +1,7 @@
 namespace Nancy.Routing.Trie
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Trie structure for resolving routes
     /// </summary>
@@ -19,5 +21,13 @@ namespace Nancy.Routing.Trie
         /// <param name="context">Current Nancy context</param>
         /// <returns>An array of <see cref="MatchResult"/> elements</returns>
         MatchResult[] GetMatches(string method, string path, NancyContext context);
+
+        /// <summary>
+        /// Get all method options for the given path
+        /// </summary>
+        /// <param name="path">Reqeusted path</param>
+        /// <param name="context">Current Nancy context</param>
+        /// <returns>A collection of strings, each representing an allowed method</returns>
+        IEnumerable<string> GetOptions(string path, NancyContext context);
     }
 }

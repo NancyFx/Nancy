@@ -22,6 +22,14 @@
         }
 
         [Fact]
+        public void Should_resolve_correct_route_based_on_method()
+        {
+            var result = this.browser.Post("/");
+
+            result.Body.AsString().ShouldEqual("PostRoot");
+        }
+
+        [Fact]
         public void Should_resolve_single_literal()
         {
             var result = this.browser.Get("/foo");
@@ -109,11 +117,32 @@
             result.Body.AsString().ShouldEqual("RegEx 123 moo");
         }
 
-        public class TestModule : NancyModule
+        [Fact]
+        public void Should_handle_head_requests()
+        {
+            var result = this.browser.Head("/");
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.OK);
+            result.Body.AsString().ShouldEqual(string.Empty);
+        }
+
+        [Fact]
+        public void Should_handle_options_requests()
+        {
+            var result = this.browser.Options("/");
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.OK);
+            result.Headers["Allow"].ShouldContain("GET");
+            result.Headers["Allow"].ShouldContain("POST");
+        }
+
+        private class TestModule : NancyModule
         {
             public TestModule()
             {
                 Get["/"] = _ => "Root";
+
+                Post["/"] = _ => "PostRoot";
 
                 Get["/foo"] = _ => "SingleLiteral";
 

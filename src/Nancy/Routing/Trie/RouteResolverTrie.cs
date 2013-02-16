@@ -79,6 +79,23 @@ namespace Nancy.Routing.Trie
         }
 
         /// <summary>
+        /// Get all method options for the given path
+        /// </summary>
+        /// <param name="path">Reqeusted path</param>
+        /// <param name="context">Current Nancy context</param>
+        /// <returns>A collection of strings, each representing an allowed method</returns>
+        public IEnumerable<string> GetOptions(string path, NancyContext context)
+        {
+            foreach (var method in this.routeTries.Keys)
+            {
+                if (this.GetMatches(method, path, context).Any())
+                {
+                    yield return method;
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
         /// <returns>
