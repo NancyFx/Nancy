@@ -679,6 +679,22 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_list_model_from_body()
+        {
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, new BindingConfig());
+            // Then
+
+            result.First().StringProperty.ShouldEqual("Test");
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+        }
+
+        [Fact]
         public void Form_request_and_context_properties_should_take_precedence_over_body_properties()
         {
 
