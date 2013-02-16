@@ -124,7 +124,7 @@ namespace Nancy.Diagnostics
             if (ctx.Response == null)
             {
                 // Don't care about async here, so just get the result
-                var task = resolveResult.Route.Invoke(resolveResult.Item2);
+                var task = resolveResult.Route.Invoke(resolveResult.Parameters);
                 task.Wait();
                 ctx.Response = task.Result;
             }

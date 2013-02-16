@@ -145,7 +145,8 @@
             if (staticContentResponse != null)
             {
                 context.Response = staticContentResponse;
-                return context;
+                tcs.SetResult(context);
+                return tcs.Task;
             }
 
             // TODO - async the pipelines from the other spike

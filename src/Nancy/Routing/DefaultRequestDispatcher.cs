@@ -9,7 +9,6 @@ namespace Nancy.Routing
     using Nancy.Helpers;
 
     using Responses.Negotiation;
-    using ResolveResult = System.Tuple<Route, DynamicDictionary, System.Func<NancyContext, Response>, System.Action<NancyContext>, System.Func<NancyContext, System.Exception, Response>>;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
@@ -167,7 +166,7 @@ namespace Nancy.Routing
                     var match =
                         this.InvokeRouteResolver(context, modifiedRequestPath, newMediaRanges);
 
-                    if (!(match.Item1 is NotFoundRoute))
+                    if (!(match.Route is NotFoundRoute))
                     {
                         return match;
                     }

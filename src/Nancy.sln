@@ -111,8 +111,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Async", "Nancy.D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Encryption.MachineKey.Tests", "Nancy.Encryption.MachineKey.Tests\Nancy.Encryption.MachineKey.Tests.csproj", "{429873F5-1E53-4ECC-A9EC-7950C789C6DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin", "Nancy.Owin\Nancy.Owin.csproj", "{D6B2480C-2A52-4D02-9477-D387D7A486E5}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.CustomModule", "Nancy.Demo.CustomModule\Nancy.Demo.CustomModule.csproj", "{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin", "Nancy.Owin\Nancy.Owin.csproj", "{D6B2480C-2A52-4D02-9477-D387D7A486E5}"
