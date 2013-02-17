@@ -12,7 +12,7 @@
 
     using Xunit;
 
-    public class CsrfStartupFixture
+    public class CsrfFixture
     {
         private readonly IPipelines pipelines;
                  
@@ -24,7 +24,7 @@
 
         private readonly DefaultObjectSerializer objectSerializer;
 
-        public CsrfStartupFixture()
+        public CsrfFixture()
         {
             this.pipelines = new MockPipelines();
 
@@ -37,6 +37,7 @@
                 new DefaultCsrfTokenValidator(this.cryptographyConfiguration));
 
             csrfStartup.Initialize(this.pipelines);
+            Csrf.Enable(this.pipelines);
 
             this.request = new FakeRequest("GET", "/");
             this.response = new Response();

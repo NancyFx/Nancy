@@ -220,7 +220,7 @@
     <Compile Include="Unit\Routing\RouteFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteResolverFixture.cs" />
-    <Compile Include="Unit\Security\CsrfStartupFixture.cs" />
+    <Compile Include="Unit\Security\CsrfFixture.cs" />
     <Compile Include="Unit\Security\DefaultCsrfTokenValidatorFixture.cs" />
     <Compile Include="Unit\Security\ModuleSecurityFixture.cs" />
     <Compile Include="Unit\Sessions\CookieBasedSessionsFixture.cs" />
