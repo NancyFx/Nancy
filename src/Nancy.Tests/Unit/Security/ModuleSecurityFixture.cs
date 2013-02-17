@@ -502,7 +502,7 @@ namespace Nancy.Tests.Unit.Security
 
         private static IUserIdentity GetFakeUser(string userName, IEnumerable<string> claims = null)
         {
-            var ret = A.Fake<IUserIdentity>();
+            var ret = new FakeUserIdentity();
             ret.UserName = userName;
             ret.Claims = claims;
 
