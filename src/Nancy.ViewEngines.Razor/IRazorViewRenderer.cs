@@ -1,8 +1,10 @@
 ﻿namespace Nancy.ViewEngines.Razor
 {
+    using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
     using System.Web.Razor;
+    using System.Web.Razor.Generator;
 
     /// <summary>
     /// Renders a view.
@@ -13,6 +15,11 @@
         /// Gets the assemblies.
         /// </summary>
         IEnumerable<string> Assemblies { get; }
+
+        /// <summary>
+        /// Gets the <see cref="SetBaseTypeCodeGenerator"/> that should be used with the renderer.
+        /// </summary>
+        Type ModelCodeGenerator { get; }
 
         /// <summary>
         /// Gets the extension this view renderer supports.
