@@ -43,7 +43,6 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            Csrf.Enable(pipelines);
         }
     }
 }
