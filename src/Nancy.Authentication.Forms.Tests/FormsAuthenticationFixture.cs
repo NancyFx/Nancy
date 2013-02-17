@@ -5,6 +5,7 @@ namespace Nancy.Authentication.Forms.Tests
     using Bootstrapper;
     using Cryptography;
     using FakeItEasy;
+    using Fakes;
     using Helpers;
     using Nancy.Security;
     using Nancy.Tests;
@@ -386,8 +387,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = A.Fake<IUserIdentity>();
-            fakeUser.UserName = "Bob";
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -403,8 +403,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = A.Fake<IUserIdentity>();
-            fakeUser.UserName = "Bob";
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -420,8 +419,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = A.Fake<IUserIdentity>();
-            fakeUser.UserName = "Bob";
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -437,8 +435,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = A.Fake<IUserIdentity>();
-            fakeUser.UserName = "Bob";
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -454,8 +451,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = A.Fake<IUserIdentity>();
-            fakeUser.UserName = "Bob";
+            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
