@@ -65,7 +65,7 @@ namespace Nancy.Diagnostics
                             var path = Path.GetDirectoryName(ctx.Request.Url.Path.Replace(resourcePrefix, string.Empty)) ?? string.Empty;
                             if (!string.IsNullOrEmpty(path))
                             {
-                                resourceNamespace += string.Format(".{0}", path.Replace('\\', '.'));
+                                resourceNamespace += string.Format(".{0}", path.Replace(Path.DirectorySeparatorChar, '.'));
                             }
 
                             return new EmbeddedFileResponse(
