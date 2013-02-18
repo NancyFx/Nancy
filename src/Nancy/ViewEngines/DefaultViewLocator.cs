@@ -19,10 +19,14 @@
 
         private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
 
+        private readonly char[] invalidCharacters;
+
         public DefaultViewLocator(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
             this.viewLocationProvider = viewLocationProvider;
             this.viewEngines = viewEngines;
+
+            this.invalidCharacters = Path.GetInvalidFileNameChars().Where(c => c != '/').ToArray();
 
             // No need to lock here, we get constructed on app startup
             this.viewLocationResults = new List<ViewLocationResult>(this.GetInititialViewLocations());
@@ -37,6 +41,11 @@
         public ViewLocationResult LocateView(string viewName, NancyContext context)
         {
             if (string.IsNullOrEmpty(viewName))
+            {
+                return null;
+            }
+
+            if (!this.IsValidViewName(viewName))
             {
                 return null;
             }
@@ -230,6 +239,11 @@
             var extension = Path.GetExtension(viewName);
 
             return !String.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
+        }
+
+        private bool IsValidViewName(string viewName)
+        {
+            return !this.invalidCharacters.Any(viewName.Contains);
         }
     }
 }
