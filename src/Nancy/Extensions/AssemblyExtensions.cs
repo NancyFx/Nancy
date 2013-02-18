@@ -23,11 +23,7 @@ namespace Nancy.Extensions
             {
                 types = assembly.GetExportedTypes();
             }
-            catch (FileNotFoundException)
-            {
-                types = new Type[] { };
-            }
-            catch (NotSupportedException)
+            catch (Exception)
             {
                 types = new Type[] { };
             }
