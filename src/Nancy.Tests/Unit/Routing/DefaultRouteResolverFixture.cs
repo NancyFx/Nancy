@@ -136,6 +136,24 @@
             result.Headers["Allow"].ShouldContain("POST");
         }
 
+        [Fact]
+        public void Should_return_404_if_no_root_found_when_requesting_it()
+        {
+            var localBrowser = new Browser(with => with.Module<NoRootModule>());
+
+            var result = localBrowser.Get("/");
+
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
+        }
+
+        private class NoRootModule : NancyModule
+        {
+            public NoRootModule()
+            {
+                Get["/notroot"] = _ => "foo";
+            }        
+        }
+
         private class TestModule : NancyModule
         {
             public TestModule()
