@@ -1,5 +1,6 @@
 namespace Nancy.Diagnostics
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using ModelBinding;
@@ -27,14 +28,16 @@ namespace Nancy.Diagnostics
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be per-request lifetime
+        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        public INancyModule GetModule(Type moduleType, NancyContext context)
         {
-            return this.container.Resolve<INancyModule>(moduleKey);
+            this.container.Register(typeof(INancyModule), moduleType);
+
+            return this.container.Resolve<INancyModule>();
         }
 
         private static TinyIoCContainer ConfigureContainer(IModuleKeyGenerator moduleKeyGenerator, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)

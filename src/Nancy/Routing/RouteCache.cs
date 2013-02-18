@@ -9,9 +9,8 @@
     /// <summary>
     /// Caches information about all the available routes that was discovered by the bootstrapper.
     /// </summary>
-    public class RouteCache : Dictionary<string, List<Tuple<int, RouteDescription>>>, IRouteCache
+    public class RouteCache : Dictionary<Type, List<Tuple<int, RouteDescription>>>, IRouteCache
     {
-        private readonly IModuleKeyGenerator moduleKeyGenerator;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
 
@@ -22,9 +21,8 @@
         /// <param name="moduleKeyGenerator">The <see cref="IModuleKeyGenerator"/> used to generate module keys.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, IModuleKeyGenerator moduleKeyGenerator, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
+        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
         {
-            this.moduleKeyGenerator = moduleKeyGenerator;
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
 
@@ -50,7 +48,6 @@
             foreach (var module in modules)
             {
                 var moduleType = module.GetType();
-                var moduleKey = this.moduleKeyGenerator.GetKeyForModuleType(moduleType);
 
                 var routes =
                     module.Routes.Select(r => r.Description).ToArray();
@@ -61,11 +58,11 @@
                     routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
                 }
 
-                this.AddRoutesToCache(routes, moduleKey);
+                this.AddRoutesToCache(routes, moduleType);
             }
         }
 
-        private void AddRoutesToCache(IEnumerable<RouteDescription> routes, string moduleKey)
+        private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleKey)
         {
             if (!this.ContainsKey(moduleKey))
             {

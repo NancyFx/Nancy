@@ -1,5 +1,6 @@
 namespace Nancy
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -15,11 +16,11 @@ namespace Nancy
         IEnumerable<INancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be per-request lifetime
+        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        INancyModule GetModuleByKey(string moduleKey, NancyContext context);
+        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        INancyModule GetModule(Type moduleType, NancyContext context);
     }
 }

@@ -1,5 +1,6 @@
 namespace Nancy.Bootstrapper
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -42,20 +43,22 @@ namespace Nancy.Bootstrapper
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
+            this.RegisterRequestContainerModules(requestContainer, this.moduleRegistrationTypeCache);
+
             return this.GetAllModules(requestContainer);
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override sealed INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        public override sealed INancyModule GetModule(Type moduleType, NancyContext context)
         {
             var requestContainer = this.GetConfiguredRequestContainer(context);
 
-            return this.GetModuleByKey(requestContainer, moduleKey);
+            return this.GetModule(requestContainer, moduleType);
         }
 
         /// <summary>
@@ -90,8 +93,6 @@ namespace Nancy.Bootstrapper
             if (requestContainer == null)
             {
                 requestContainer = this.CreateRequestContainer();
-
-                this.RegisterRequestContainerModules(requestContainer, this.moduleRegistrationTypeCache);
 
                 context.Items[this.ContextKey] = requestContainer;
 
@@ -141,11 +142,11 @@ namespace Nancy.Bootstrapper
         protected abstract IEnumerable<INancyModule> GetAllModules(TContainer container);
 
         /// <summary>
-        /// Retreive a specific module instance from the container by its key
+        /// Retreive a specific module instance from the container
         /// </summary>
         /// <param name="container">Container to use</param>
-        /// <param name="moduleKey">Module key of the module</param>
+        /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected abstract INancyModule GetModuleByKey(TContainer container, string moduleKey);
+        protected abstract INancyModule GetModule(TContainer container, Type moduleType);
     }
 }

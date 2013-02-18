@@ -14,7 +14,7 @@ namespace Nancy.Routing.Trie
         /// <summary>
         /// Gets or sets the module key from the matching module
         /// </summary>
-        public string ModuleKey { get; set; }
+        public Type ModuleType { get; set; }
 
         /// <summary>
         /// Gets or sets the route method

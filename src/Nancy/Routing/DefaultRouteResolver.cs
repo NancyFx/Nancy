@@ -102,7 +102,7 @@
         private INancyModule GetModuleFromMatchResult(NancyContext context, MatchResult result)
         {
             var module =
-                this.catalog.GetModuleByKey(result.ModuleKey, context);
+                this.catalog.GetModule(result.ModuleType, context);
 
             return this.moduleBuilder.BuildModule(module, context);
         }

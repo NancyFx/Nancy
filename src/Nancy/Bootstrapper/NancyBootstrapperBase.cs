@@ -342,12 +342,12 @@
         public abstract IEnumerable<INancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public abstract INancyModule GetModuleByKey(string moduleKey, NancyContext context);
+        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        public abstract INancyModule GetModule(Type moduleType, NancyContext context);
 
         /// <summary>
         /// Gets the configured INancyEngine

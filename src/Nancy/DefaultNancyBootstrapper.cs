@@ -171,14 +171,16 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Retreive a specific module instance from the container by its key
+        /// Retreive a specific module instance from the container
         /// </summary>
         /// <param name="container">Container to use</param>
-        /// <param name="moduleKey">Module key of the module</param>
+        /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected override sealed INancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
+        protected override sealed INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
-            return container.Resolve<INancyModule>(moduleKey);
+            container.Register(typeof(INancyModule), moduleType);
+
+            return container.Resolve<INancyModule>();
         }
 
         /// <summary>
