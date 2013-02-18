@@ -202,7 +202,7 @@ namespace Nancy.Routing.Trie.Nodes
         {
             if (!this.NodeData.Any())
             {
-                return null;
+                return MatchResult.NoMatches;
             }
 
             var parameters = new Dictionary<string, object>(capturedParameters);
