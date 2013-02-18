@@ -102,7 +102,7 @@
                     (this.modules = AppDomainAssemblyTypeScanner
                                         .TypesOf<INancyModule>(true)
                                         .NotOfType<DiagnosticModule>()
-                                        .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
+                                        .Select(t => new ModuleRegistration(t))
                                         .ToArray());
             }
         }
@@ -453,12 +453,6 @@
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
         protected abstract INancyEngine GetEngineInternal();
-
-        /// <summary>
-        /// Get the moduleKey generator
-        /// </summary>
-        /// <returns>IModuleKeyGenerator instance</returns>
-        protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
 
         /// <summary>
         /// Gets the application level container

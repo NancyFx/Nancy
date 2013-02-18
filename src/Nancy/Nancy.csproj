@@ -244,8 +244,6 @@
     <Compile Include="IStatusHandler.cs" />
     <Compile Include="ErrorPipeline.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
-    <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
-    <Compile Include="Bootstrapper\IModuleKeyGenerator.cs" />
     <Compile Include="Bootstrapper\INancyBootstrapper.cs" />
     <Compile Include="Bootstrapper\ModuleRegistrationType.cs" />
     <Compile Include="Bootstrapper\NancyBootstrapperBase.cs" />

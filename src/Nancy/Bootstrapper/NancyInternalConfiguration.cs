@@ -65,7 +65,6 @@ namespace Nancy.Bootstrapper
                     RoutePatternMatcher = typeof(DefaultRoutePatternMatcher),
                     ContextFactory = typeof(DefaultNancyContextFactory),
                     NancyEngine = typeof(NancyEngine),
-                    ModuleKeyGenerator = typeof(DefaultModuleKeyGenerator),
                     RouteCache = typeof(RouteCache),
                     RouteCacheProvider = typeof(DefaultRouteCacheProvider),
                     ViewLocator = typeof(DefaultViewLocator),
@@ -110,8 +109,6 @@ namespace Nancy.Bootstrapper
         public Type ContextFactory { get; set; }
 
         public Type NancyEngine { get; set; }
-
-        public Type ModuleKeyGenerator { get; set; }
 
         public Type RouteCache { get; set; }
 
@@ -245,7 +242,6 @@ namespace Nancy.Bootstrapper
             {
                 new TypeRegistration(typeof(IRouteResolver), this.RouteResolver),
                 new TypeRegistration(typeof(INancyEngine), this.NancyEngine),
-                new TypeRegistration(typeof(IModuleKeyGenerator), this.ModuleKeyGenerator),
                 new TypeRegistration(typeof(IRouteCache), this.RouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), this.RouteCacheProvider),
                 new TypeRegistration(typeof(IRoutePatternMatcher), this.RoutePatternMatcher),

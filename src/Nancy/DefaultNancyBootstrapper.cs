@@ -36,15 +36,6 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Get the moduleKey generator
-        /// </summary>
-        /// <returns>IModuleKeyGenerator instance</returns>
-        protected override sealed IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return this.ApplicationContainer.Resolve<IModuleKeyGenerator>();
-        }
-
-        /// <summary>
         /// Create a default, unconfigured, container
         /// </summary>
         /// <returns>Container instance</returns>
@@ -102,8 +93,8 @@ namespace Nancy
             {
                 container.Register(
                     typeof(INancyModule), 
-                    moduleRegistrationType.ModuleType, 
-                    moduleRegistrationType.ModuleKey).
+                    moduleRegistrationType.ModuleType,
+                    moduleRegistrationType.ModuleType.FullName).
                     AsSingleton();
             }
         }
