@@ -576,6 +576,16 @@ namespace Nancy.Tests.Functional.Tests
             Assert.Equal((HttpStatusCode)200, response.StatusCode);
         }
 
+        [Fact]
+        public void Should_not_try_and_serve_view_with_invalid_name()
+        {
+            var browser = new Browser(with => with.Module<NegotiationModule>());
+
+            var result = Record.Exception(() => browser.Get("/invalid-view-name"));
+
+            Assert.True(result.ToString().Contains("Unable to locate view"));
+        }
+
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
@@ -677,5 +687,23 @@ namespace Nancy.Tests.Functional.Tests
                 return (string) model;
             }
         }
+
+        private class NegotiationModule : NancyModule
+        {
+            public NegotiationModule()
+            {
+                Get["/invalid-view-name"] = _ => this.GetModel();
+            }
+
+            private IEnumerable<Foo> GetModel()
+            {
+                yield return new Foo();
+            }
+
+            private class Foo
+            {
+            }
+        }
     }
+
 }
