@@ -194,7 +194,6 @@
     <Compile Include="Unit\AfterPipelineFixture.cs" />
     <Compile Include="Unit\BeforePipelineFixture.cs" />
     <Compile Include="Unit\RequestFixture.cs" />
-    <Compile Include="Fakes\FakeModuleKeyGenerator.cs" />
     <Compile Include="Fakes\FakeModuleCatalog.cs" />
     <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
     <Compile Include="Unit\RequestHeadersFixture.cs" />

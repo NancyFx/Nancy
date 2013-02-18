@@ -280,7 +280,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public INancyEngine FakeNancyEngine { get; set; }
         public object FakeContainer { get; set; }
         public object AppContainer { get; set; }
-        public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; set; }
         public IEnumerable<InstanceRegistration> InstanceRegistrations { get; set; }
@@ -289,20 +288,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public IApplicationRegistrations[] OverriddenApplicationRegistrationTasks { get; set; }
         public bool ShouldThrowWhenGettingEngine { get; set; }
 
-        protected override NancyInternalConfiguration InternalConfiguration
-        {
-            get
-            {
-                return NancyInternalConfiguration.WithOverrides(c => c.ModuleKeyGenerator = typeof(FakeModuleKeyGenerator));
-            }
-        }
-
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
             FakeContainer = new object();
-
-            Generator = new Fakes.FakeModuleKeyGenerator();
         }
 
         protected override INancyEngine GetEngineInternal()
@@ -313,11 +302,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
             }
 
             return this.FakeNancyEngine;
-        }
-
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return this.Generator;
         }
 
         /// <summary>
@@ -487,12 +471,12 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             throw new NotImplementedException();
         }
@@ -500,11 +484,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override INancyEngine GetEngineInternal()
         {
             return A.Fake<INancyEngine>();
-        }
-
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return new Fakes.FakeModuleKeyGenerator();
         }
 
         protected override object GetApplicationContainer()

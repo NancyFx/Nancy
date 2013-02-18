@@ -346,14 +346,6 @@ namespace Nancy.Testing
             return container.Resolve<INancyModule>(moduleKey);
         }
 
-        /// <summary>
-        /// Get the moduleKey generator
-        /// </summary>
-        /// <returns>IModuleKeyGenerator instance</returns>
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return this.ApplicationContainer.Resolve<IModuleKeyGenerator>();
-        }
 
         /// <summary>
         /// Gets the diagnostics for intialisation
