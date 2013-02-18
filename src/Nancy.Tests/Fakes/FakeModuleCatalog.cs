@@ -21,6 +21,11 @@ namespace Nancy.Tests.Fakes
             return _Modules.Values.AsEnumerable();
         }
 
+        public INancyModule GetModule(Type moduleType, NancyContext context)
+        {
+            throw new NotImplementedException();
+        }
+
         public INancyModule GetModuleByKey(string moduleKey, NancyContext context)
         {
             return _Modules[moduleKey];

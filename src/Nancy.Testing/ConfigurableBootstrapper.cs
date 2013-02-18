@@ -113,18 +113,18 @@ namespace Nancy.Testing
             return base.GetAllModules(context).Union(this.catalog.GetAllModules(context));
         }
 
-        /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
-        /// </summary>
-        /// <param name="moduleKey">Module key</param>
-        /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public new INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        protected override INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
             var module =
-                this.catalog.GetModuleByKey(moduleKey, context);
+                this.catalog.GetModule(moduleType, null);
 
-            return module ?? base.GetModuleByKey(moduleKey, context);
+            if (module != null)
+            {
+                return module;
+            }
+
+            container.Register(typeof(INancyModule), moduleType);
+            return container.Resolve<INancyModule>();
         }
 
         private IEnumerable<ModuleRegistration> GetModuleRegistrations()
@@ -335,17 +335,6 @@ namespace Nancy.Testing
             return this.ApplicationContainer.Resolve<INancyEngine>();
         }
 
-        /// <summary>
-        /// Retreive a specific module instance from the container by its key
-        /// </summary>
-        /// <param name="container">Container to use</param>
-        /// <param name="moduleKey">Module key of the module</param>
-        /// <returns>NancyModule instance</returns>
-        protected override INancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
-        {
-            return container.Resolve<INancyModule>(moduleKey);
-        }
-
 
         /// <summary>
         /// Gets the diagnostics for intialisation
@@ -460,7 +449,7 @@ namespace Nancy.Testing
                 container.Register(
                     typeof(INancyModule),
                     moduleRegistrationType.ModuleType,
-                    moduleRegistrationType.ModuleKey).
+                    moduleRegistrationType.ModuleType.FullName).
                     AsSingleton();
             }
         }
@@ -799,19 +788,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Module(INancyModule module)
             {
-                this.bootstrapper.catalog.RegisterModuleInstance(module, module.GetType().FullName);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to register the provided <see cref="NancyModule"/> instance.
-            /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
-            /// <param name="moduleKey">The module key of the module that is being registered.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Module(INancyModule module, string moduleKey)
-            {
-                this.bootstrapper.catalog.RegisterModuleInstance(module, moduleKey);
+                this.bootstrapper.catalog.RegisterModuleInstance(module);
                 return this;
             }
 
@@ -822,11 +799,9 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Modules(params Type[] modules)
             {
-                var keyGenerator = new DefaultModuleKeyGenerator();
-
                 var moduleRegistrations =
                     from module in modules
-                    select new ModuleRegistration(module, keyGenerator.GetKeyForModuleType(module));
+                    select new ModuleRegistration(module);
 
                 this.bootstrapper.registeredTypes.AddRange(moduleRegistrations);
 
@@ -1661,15 +1636,9 @@ namespace Nancy.Testing
                 return this.moduleInstances.Values;
             }
 
-            /// <summary>
-            /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key - should be per-request lifetime
-            /// </summary>
-            /// <param name="moduleKey">Module key</param>
-            /// <param name="context">The current context</param>
-            /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-            public INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+            public INancyModule GetModule(Type moduleType, NancyContext context)
             {
-                return this.moduleInstances.ContainsKey(moduleKey) ? this.moduleInstances[moduleKey] : null;
+                return this.moduleInstances.ContainsKey(moduleType.FullName) ? this.moduleInstances[moduleType.FullName] : null;
             }
 
             /// <summary>
@@ -1677,9 +1646,9 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
             /// <param name="moduleKey">The module key of the module that is being registered.</param>
-            public void RegisterModuleInstance(INancyModule module, string moduleKey)
+            public void RegisterModuleInstance(INancyModule module)
             {
-                this.moduleInstances.Add(moduleKey, module);
+                this.moduleInstances.Add(module.GetType().FullName, module);
             }
         }
     }

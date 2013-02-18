@@ -341,16 +341,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return this.PassedModules.Select(m => (INancyModule)Activator.CreateInstance(m.ModuleType));
         }
 
-        /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
-        /// </summary>
-        /// <param name="moduleKey">Module key</param>
-        /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             return
-                this.PassedModules.Where(m => String.Equals(m.ModuleKey, moduleKey, StringComparison.InvariantCulture))
+                this.PassedModules.Where(m => m.ModuleType == moduleType)
                     .Select(m => (INancyModule)Activator.CreateInstance(m.ModuleType))
                     .FirstOrDefault();
         }
