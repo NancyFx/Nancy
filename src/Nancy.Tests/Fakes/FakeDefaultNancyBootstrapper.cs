@@ -27,10 +27,16 @@
             
         }
 
+        protected override IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
+        {
+            get
+            {
+                return base.AutoRegisterIgnoredAssemblies.Union(new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") });
+            }
+        }
         public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
         {
-            this.configuration = configuration.WithIgnoredAssembly(asm => asm.FullName.StartsWith("TestAssembly"));
-
+            this.configuration = configuration;
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
         }
 

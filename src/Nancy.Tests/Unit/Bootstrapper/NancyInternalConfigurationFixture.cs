@@ -66,27 +66,5 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
             result.ShouldBeFalse();
         }
-
-        [Fact]
-        public void Should_allow_additional_ignored_assemblies()
-        {
-            Func<Assembly, bool> predicate = asm => asm.FullName.StartsWith("moo");
-            var config = NancyInternalConfiguration.Default.WithIgnoredAssembly(predicate);
-
-            var result = config.IgnoredAssemblies;
-
-            result.Any(p => p.Equals(predicate)).ShouldBeTrue();
-        }
-
-        [Fact]
-        public void Should_append_ignored_assembly_to_default()
-        {
-            Func<Assembly, bool> predicate = asm => asm.FullName.StartsWith("moo");
-            var config = NancyInternalConfiguration.Default.WithIgnoredAssembly(predicate);
-
-            var result = config.IgnoredAssemblies.Count();
-
-            result.ShouldEqual(NancyInternalConfiguration.DefaultIgnoredAssemblies.Count() + 1);
-        }
     }
 }
