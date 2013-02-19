@@ -155,15 +155,13 @@
                 GetAssemblyPath(modelType)
             };
 
+            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
+
             if (referencingAssembly != null)
             {
                 assemblies.Add(GetAssemblyPath(referencingAssembly));
             }
-
-            assemblies = assemblies
-                .Union(viewRenderer.Assemblies)
-                .ToList();
-
+            
             if (this.razorConfiguration != null)
             {
                 var assemblyNames = this.razorConfiguration.GetAssemblyNames();
@@ -178,7 +176,12 @@
                 }
             }
 
-            var compilerParameters = new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
+            assemblies = assemblies
+                .Union(viewRenderer.Assemblies)
+                .ToList();
+
+            var compilerParameters = 
+                new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
 
             CompilerResults results;
             lock (this.compileLock)
