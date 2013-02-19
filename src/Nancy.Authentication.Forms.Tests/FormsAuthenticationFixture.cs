@@ -15,6 +15,7 @@ namespace Nancy.Authentication.Forms.Tests
     {
         private FormsAuthenticationConfiguration config;
         private FormsAuthenticationConfiguration secureConfig;
+        private FormsAuthenticationConfiguration domainPathConfig;
         private NancyContext context;
         private Guid userGuid;
 
@@ -34,6 +35,10 @@ namespace Nancy.Authentication.Forms.Tests
             HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3spwI0jB0KeVY9");
 
         private CryptographyConfiguration cryptographyConfiguration;
+
+        private string domain = ".nancyfx.org";
+
+        private string path = "/";
 
         public FormsAuthenticationFixture()
         {
@@ -55,6 +60,16 @@ namespace Nancy.Authentication.Forms.Tests
                 RedirectUrl = "/login",
                 UserMapper = A.Fake<IUserMapper>(),
                 RequiresSSL = true
+            };
+
+            this.domainPathConfig = new FormsAuthenticationConfiguration()
+            {
+                CryptographyConfiguration = this.cryptographyConfiguration,
+                RedirectUrl = "/login",
+                UserMapper = A.Fake<IUserMapper>(),
+                RequiresSSL = false,
+                Domain = domain,
+                Path = path
             };
 
             this.context = new NancyContext
@@ -665,6 +680,28 @@ namespace Nancy.Authentication.Forms.Tests
             result.ShouldBeOfType(typeof(Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
             result.Headers["Location"].ShouldEqual("/testing/login");
+        }
+
+        [Fact]
+        public void Should_set_Domain_when_config_provides_domain_value()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.domainPathConfig);
+
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            cookie.Domain.ShouldEqual(domain);
+        }
+
+        [Fact]
+        public void Should_set_Path_when_config_provides_path_value()
+        {
+            FormsAuthentication.Enable(A.Fake<IPipelines>(), this.domainPathConfig);
+
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
+
+            var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
+            cookie.Path.ShouldEqual(path);
         }
     }
 }
