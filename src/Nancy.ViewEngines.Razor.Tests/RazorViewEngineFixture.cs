@@ -1,19 +1,20 @@
-﻿using System.Reflection;
-using Nancy.Bootstrapper;
-
-namespace Nancy.ViewEngines.Razor.Tests
+﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
     using System.Dynamic;
     using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Text;
+    using System.Threading;
+
     using FakeItEasy;
-    using Xunit;
+
+    using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.ViewEngines.Razor.Tests.Models;
-    using System.Threading;
-    using Nancy.Localization;
+
+    using Xunit;
 
     public class RazorViewEngineFixture
     {
