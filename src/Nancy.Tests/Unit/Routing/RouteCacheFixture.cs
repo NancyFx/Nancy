@@ -24,7 +24,7 @@
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
             this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, new FakeModuleKeyGenerator(), A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
+                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
         }
 
         [Fact]
@@ -35,8 +35,8 @@
                          select cacheEntry).ToList();
 
             // Then
-            routes.Contains("1").ShouldBeTrue();
-            routes.Contains("2").ShouldBeTrue();
+            routes.Contains(typeof(FakeNancyModuleWithBasePath)).ShouldBeTrue();
+            routes.Contains(typeof(FakeNancyModuleWithoutBasePath)).ShouldBeTrue();
         }
 
         [Fact]
@@ -101,11 +101,11 @@
         {
             // Given
             var routes = this.fakeModuleCatalog
-                .GetModuleByKey("1", new NancyContext()).Routes.Select(r => r.Description)
+                .GetModule(typeof(FakeNancyModuleWithBasePath), new NancyContext()).Routes.Select(r => r.Description)
                 .ToList();
 
             // When
-            var cachedRoutes = this.routeCache["1"];
+            var cachedRoutes = this.routeCache[typeof(FakeNancyModuleWithBasePath)];
 
             // Then
             foreach (var cachedRoute in cachedRoutes)
@@ -133,7 +133,6 @@
             // When
             var cache = new RouteCache(
                 catalog,
-                new FakeModuleKeyGenerator(),
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,
@@ -163,7 +162,6 @@
             // When
             var cache = new RouteCache(
                 catalog,
-                new FakeModuleKeyGenerator(),
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,

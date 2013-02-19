@@ -76,20 +76,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void GetEngine_Gets_ModuleRegistration_Keys_For_Each_Module_From_IModuleKeyGenerator_From_GetModuleKeyGenerator()
-        {
-            // Given
-            // When
-            this.bootstrapper.GetEngine();
-
-            // Then
-            var totalKeyEntries = bootstrapper.PassedModules.Count();
-            var called = ((FakeModuleKeyGenerator) bootstrapper.Generator).CallCount;
-
-            called.ShouldEqual(totalKeyEntries);
-        }
-
-        [Fact]
         public void Overridden_Modules_Is_Used_For_Getting_ModuleTypes()
         {
             // Given
@@ -110,10 +96,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
             this.bootstrapper.GetEngine();
 
             // When
-            var moduleKeyGeneratorEntry = this.bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
+            var objectSerializer = this.bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IObjectSerializer)).FirstOrDefault();
 
             // Then
-            moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
+            objectSerializer.ImplementationType.ShouldEqual(typeof(Fakes.FakeObjectSerializer));
         }
 
         [Fact]
@@ -424,7 +410,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
         public FakeBootstrapperBaseGetModulesOverride()
         {
-            ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+            ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType()) };
         }
 
         /// <summary>
