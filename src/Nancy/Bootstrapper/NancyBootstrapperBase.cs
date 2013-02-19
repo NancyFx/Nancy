@@ -209,7 +209,7 @@
         /// </summary>
         public void Initialise()
         {
-            AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
+            AppDomainAssemblyTypeScanner.LoadAssembliesWithNancyReferences();
 
             if (this.InternalConfiguration == null)
             {

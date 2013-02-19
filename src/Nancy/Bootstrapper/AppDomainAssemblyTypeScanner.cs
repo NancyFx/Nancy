@@ -2,6 +2,7 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -15,7 +16,7 @@ namespace Nancy.Bootstrapper
     {
         static AppDomainAssemblyTypeScanner()
         {
-            LoadNancyAssemblies();
+            LoadAssembliesWithNancyReferences();
         }
 
         /// <summary>
@@ -206,16 +207,48 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Loads any Nancy*.dll assemblies in the app domain base directory
+        /// Loads any assembly that references a Nancy assembly.
         /// </summary>
-        public static void LoadNancyAssemblies()
+        public static void LoadAssembliesWithNancyReferences()
         {
             if (nancyAssembliesLoaded)
             {
                 return;
             }
 
-            LoadAssemblies(@"Nancy*.dll");
+            UpdateAssemblies();
+
+            foreach (var directory in GetAssemblyDirectories())
+            {
+                var existingAssemblyPaths =
+                    assemblies.Select(a => a.Location).ToArray();
+
+                var unloadedAssemblies = Directory
+                    .GetFiles(directory, "*.dll")
+                    .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+
+                foreach (var unloadedAssembly in unloadedAssemblies)
+                {
+                    Debug.WriteLine(unloadedAssembly);
+
+                    var inspectedAssembly =
+                        Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
+
+                    if (inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        try
+                        {
+                            Debug.WriteLine(" - Adding it");
+                            Assembly.Load(AssemblyName.GetAssemblyName(unloadedAssembly));
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+
+            UpdateTypes();
 
             nancyAssembliesLoaded = true;
         }
