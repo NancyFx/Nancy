@@ -229,8 +229,6 @@ namespace Nancy.Bootstrapper
 
                 foreach (var unloadedAssembly in unloadedAssemblies)
                 {
-                    Debug.WriteLine(unloadedAssembly);
-
                     var inspectedAssembly =
                         Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
 
@@ -238,8 +236,7 @@ namespace Nancy.Bootstrapper
                     {
                         try
                         {
-                            Debug.WriteLine(" - Adding it");
-                            Assembly.Load(AssemblyName.GetAssemblyName(unloadedAssembly));
+                            Assembly.Load(inspectedAssembly.GetName());
                         }
                         catch
                         {
