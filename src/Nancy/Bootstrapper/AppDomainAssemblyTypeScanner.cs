@@ -94,6 +94,54 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
+        /// Add assemblies to the list of assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="assemblyNames">One or more assembly names</param>
+        public static void AddAssembliesToScan(params string[] assemblyNames)
+        {
+            var normalisedNames = GetNormalisedAssemblyNames(assemblyNames).ToArray();
+
+            foreach (var assemblyName in normalisedNames)
+            {
+                LoadAssemblies(assemblyName + ".dll");
+                LoadAssemblies(assemblyName + ".exe");
+            }
+
+            var scanningPredicates = normalisedNames.Select(s =>
+                {
+                    return (Func<Assembly, bool>)(a => a.GetName().Name == s);
+                });
+
+            AssembliesToScan = AssembliesToScan.Union(scanningPredicates);
+        }
+
+        /// <summary>
+        /// Add assemblies to the list of assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="assemblies">One of more assemblies</param>
+        public static void AddAssembliesToScan(params Assembly[] assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                LoadAssemblies(assembly.GetName() + ".dll");
+                LoadAssemblies(assembly.GetName() + ".exe");
+            }
+
+            var scanningPredicates = assemblies.Select(an => (Func<Assembly, bool>)(a => a == an));
+
+            AssembliesToScan = AssembliesToScan.Union(scanningPredicates);
+        }
+
+        /// <summary>
+        /// Add predicates for determining which assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="predicates">One or more predicates</param>
+        public static void AddAssembliesToScan(params Func<Assembly, bool>[] predicates)
+        {
+            AssembliesToScan = AssembliesToScan.Union(predicates);
+        }
+
+        /// <summary>
         /// Load assemblies from a the app domain base directory matching a given wildcard.
         /// Assemblies will only be loaded if they aren't already in the appdomain.
         /// </summary>
@@ -266,6 +314,21 @@ namespace Nancy.Bootstrapper
             if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
             {
                 yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            }
+        }
+
+        private static IEnumerable<string> GetNormalisedAssemblyNames(string[] assemblyNames)
+        {
+            foreach (var assemblyName in assemblyNames)
+            {
+                if (assemblyName.EndsWith(".dll") || assemblyName.EndsWith(".exe"))
+                {
+                    yield return Path.GetFileNameWithoutExtension(assemblyName);
+                }
+                else
+                {
+                    yield return assemblyName;
+                }
             }
         }
     }

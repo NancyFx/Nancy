@@ -132,8 +132,6 @@
         {
             var date = new DateTime(2112,10,31);
 
-            var types = AppDomainAssemblyTypeScanner.Types.Where(t => t.FullName.StartsWith("Nancy.Testing.Tests"));
-
             var bootstrapper = new ConfigurableBootstrapper(with => 
             {
                 with.ApplicationStartup((container, pipelines) =>

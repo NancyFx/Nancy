@@ -159,6 +159,8 @@ namespace Nancy.ViewEngines.Razor.Tests
         [Fact]
         public void RenderView_csharp_should_be_able_to_use_a_model_from_another_assembly()
         {
+            AppDomainAssemblyTypeScanner.AddAssembliesToScan("Nancy.ViewEngines.Razor.Tests.Models.dll");
+
             // Given
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
@@ -186,6 +188,8 @@ namespace Nancy.ViewEngines.Razor.Tests
         [Fact]
         public void RenderView_csharp_should_be_able_to_use_a_using_statement()
         {
+            AppDomainAssemblyTypeScanner.AddAssembliesToScan("Nancy.ViewEngines.Razor.Tests.Models");
+
             // Given
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
