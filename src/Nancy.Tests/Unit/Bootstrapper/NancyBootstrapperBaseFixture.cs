@@ -90,19 +90,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void RegisterTypes_Passes_In_User_Types_If_Custom_Config_Set()
-        {
-            // Given
-            this.bootstrapper.GetEngine();
-
-            // When
-            var objectSerializer = this.bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IObjectSerializer)).FirstOrDefault();
-
-            // Then
-            objectSerializer.ImplementationType.ShouldEqual(typeof(Fakes.FakeObjectSerializer));
-        }
-
-        [Fact]
         public void GetEngine_sets_request_pipelines_factory()
         {
             // Given

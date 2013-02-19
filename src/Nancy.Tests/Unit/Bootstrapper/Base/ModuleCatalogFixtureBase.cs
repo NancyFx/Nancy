@@ -25,18 +25,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         }
 
         [Fact]
-        public void GetModule_returns_same_instance_with_same_context()
-        {
-            var context = new NancyContext();
-            var output1 = this.Catalog.GetModule(typeof(FakeModule), context);
-            var output2 = this.Catalog.GetModule(typeof(FakeModule), context);
-
-            output1.ShouldNotBeNull();
-            output2.ShouldNotBeNull();
-            output1.ShouldBeSameAs(output2);
-        }
-
-        [Fact]
         public void GetModule_returns_different_instance_with_different_context()
         {
             var context1 = new NancyContext();
@@ -47,18 +35,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
             output1.ShouldNotBeSameAs(output2);
-        }
-
-        [Fact]
-        public void GetAllModules_returns_same_instances_with_same_context()
-        {
-            var context = new NancyContext();
-            var output1 = this.Catalog.GetAllModules(context).FirstOrDefault();
-            var output2 = this.Catalog.GetAllModules(context).FirstOrDefault();
-
-            output1.ShouldNotBeNull();
-            output2.ShouldNotBeNull();
-            output1.ShouldBeSameAs(output2);
         }
 
         [Fact]
