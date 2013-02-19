@@ -209,8 +209,6 @@
         /// </summary>
         public void Initialise()
         {
-            AppDomainAssemblyTypeScanner.LoadAssembliesWithNancyReferences();
-
             if (this.InternalConfiguration == null)
             {
                 throw new InvalidOperationException("Configuration cannot be null");
