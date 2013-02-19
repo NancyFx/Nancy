@@ -243,6 +243,12 @@ namespace Nancy.Authentication.Forms
 
             var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL) { Expires = cookieExpiry };
 
+            if(!string.IsNullOrEmpty(configuration.Domain))
+                cookie.Domain = configuration.Domain;
+
+            if(!string.IsNullOrEmpty(configuration.Path))
+                cookie.Path = configuration.Path;
+
             return cookie;
         }
 
@@ -253,7 +259,15 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            return new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
+
+            if(!string.IsNullOrEmpty(configuration.Domain))
+                cookie.Domain = configuration.Domain;
+
+            if(!string.IsNullOrEmpty(configuration.Path))
+                cookie.Path = configuration.Path;
+
+            return cookie;
         }
 
         /// <summary>
