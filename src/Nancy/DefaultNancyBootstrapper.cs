@@ -17,13 +17,46 @@ namespace Nancy
     public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
         /// <summary>
+        /// Default assemblies that are ignored for autoregister
+        /// </summary>
+        public static IEnumerable<Func<Assembly, bool>> DefaultAutoRegisterIgnoredAssemblies = new Func<Assembly, bool>[]
+            {
+                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
+            };
+
+        /// <summary>
+        /// Gets the assemblies to ignore when autoregistering the application container
+        /// Return true from the delegate to ignore that particular assembly, returning true
+        /// does not mean the assembly *will* be included, a false from another delegate will
+        /// take precedence.
+        /// </summary>
+        protected virtual IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
+        {
+            get { return DefaultAutoRegisterIgnoredAssemblies; }
+        }
+
+        /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            AutoRegister(container, this.InternalConfiguration.IgnoredAssemblies);
+            AutoRegister(container, this.AutoRegisterIgnoredAssemblies);
         }
 
         /// <summary>

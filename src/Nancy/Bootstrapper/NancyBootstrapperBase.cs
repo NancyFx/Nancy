@@ -209,7 +209,6 @@
         /// </summary>
         public void Initialise()
         {
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = this.InternalConfiguration.IgnoredAssemblies;
             AppDomainAssemblyTypeScanner.LoadNancyAssemblies();
 
             if (this.InternalConfiguration == null)

@@ -41,6 +41,8 @@ namespace Nancy.Testing
         /// </summary>
         public static IList<string> TestAssemblySuffixes = new[] { "test", "tests", "unittests", "specs", "specifications" };
 
+        private bool allDiscoveredModules;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
         /// </summary>
@@ -223,7 +225,12 @@ namespace Nancy.Testing
                 var moduleRegistrations =
                     this.GetModuleRegistrations().ToList();
 
-                return (moduleRegistrations.Any()) ? moduleRegistrations : base.Modules;
+                if (moduleRegistrations.Any())
+                {
+                    return moduleRegistrations;
+                }
+
+                return this.allDiscoveredModules ? base.Modules : new ModuleRegistration[] { };
             }
         }
 
@@ -332,7 +339,16 @@ namespace Nancy.Testing
         /// <returns>INancyEngine implementation</returns>
         protected override INancyEngine GetEngineInternal()
         {
-            return this.ApplicationContainer.Resolve<INancyEngine>();
+            try
+            {
+                return this.ApplicationContainer.Resolve<INancyEngine>();
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new InvalidOperationException(
+                    "Something went wrong when trying to satisfy one of the dependencies during composition, make sure that you've registered all new dependencies in the container and specified either a module to test, or set AllDiscoveredModules in the ConfigurableBootstrapper. Inspect the innerexception for more details.",
+                    ex.InnerException);
+            }
         }
 
         /// <summary>
@@ -534,6 +550,13 @@ namespace Nancy.Testing
             {
                 this.bootstrapper = bootstrapper;
                 this.Diagnostics<DisabledDiagnostics>();
+            }
+
+            public ConfigurableBootstrapperConfigurator AllDiscoveredModules()
+            {
+                this.bootstrapper.allDiscoveredModules = true;
+
+                return this;
             }
 
             public ConfigurableBootstrapperConfigurator Binder(IBinder binder)
@@ -1617,17 +1640,6 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator TrieNodeFactory<T>() where T : ITrieNodeFactory
             {
                 this.bootstrapper.configuration.TrieNodeFactory = typeof(T);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to add an assembly ignore predicate to the list
-            /// </summary>
-            /// <param name="ignoredPredicate">Ignore predicate</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator IgnoredAssembly(Func<Assembly, bool> ignoredPredicate)
-            {
-                this.bootstrapper.configuration.WithIgnoredAssembly(ignoredPredicate);
                 return this;
             }
 

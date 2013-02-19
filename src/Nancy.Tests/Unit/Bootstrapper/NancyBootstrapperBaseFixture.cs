@@ -218,21 +218,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_ingore_assemblies_specified_in_AppDomainAssemblyTypeScanner()
-        {
-            // Given
-            // When
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = 
-                new Func<Assembly, bool>[]
-                {
-                    asm => asm.FullName.StartsWith("mscorlib")
-                };
-
-            // Then
-            AppDomainAssemblyTypeScanner.TypesOf<IEnumerable>().Where(t => t.Assembly.FullName.StartsWith("mscorlib")).Count().ShouldEqual(0);
-        }
-
-        [Fact]
         public void Should_allow_favicon_override()
         {
             // Given

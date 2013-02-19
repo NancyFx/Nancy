@@ -26,33 +26,6 @@ namespace Nancy.Bootstrapper
     public sealed class NancyInternalConfiguration
     {
         /// <summary>
-        /// Private collection of ignored assemblies
-        /// </summary>
-        private IList<Func<Assembly, bool>> ignoredAssemblies = new List<Func<Assembly, bool>>(DefaultIgnoredAssemblies);
-
-        /// <summary>
-        /// Default assembly ignore list
-        /// </summary>
-        public static IEnumerable<Func<Assembly, bool>> DefaultIgnoredAssemblies = new Func<Assembly, bool>[]
-            {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
-            };
-
-        /// <summary>
         /// Gets the Nancy default configuration
         /// </summary>
         public static NancyInternalConfiguration Default
@@ -179,30 +152,6 @@ namespace Nancy.Bootstrapper
 
         public Type TrieNodeFactory { get; set; }
 
-        public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
-        {
-            get
-            {
-                return this.ignoredAssemblies;
-            }
-
-            set
-            {
-                this.ignoredAssemblies = new List<Func<Assembly, bool>>(value);
-
-                UpdateIgnoredAssemblies(value);
-            }
-        }
-
-        /// <summary>
-        /// Updates the ignored assemblies in the type scanner to keep them in sync
-        /// </summary>
-        /// <param name="assemblies">Assemblies ignore predicates</param>
-        private static void UpdateIgnoredAssemblies(IEnumerable<Func<Assembly, bool>> assemblies)
-        {
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = assemblies;
-        }
-
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
         /// </summary>
@@ -293,18 +242,6 @@ namespace Nancy.Bootstrapper
                 new CollectionTypeRegistration(typeof(IStatusCodeHandler), this.StatusCodeHandlers), 
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders)
             };
-        }
-
-        /// <summary>
-        /// Adds an ignore predicate to the assembly ignore list
-        /// </summary>
-        /// <param name="ignorePredicate">Ignore predicate to add</param>
-        /// <returns>Configuration object</returns>
-        public NancyInternalConfiguration WithIgnoredAssembly(Func<Assembly, bool> ignorePredicate)
-        {
-            this.ignoredAssemblies.Add(ignorePredicate);
-
-            return this;
         }
     }
 }

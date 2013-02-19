@@ -38,23 +38,35 @@ namespace Nancy.Bootstrapper
         /// </summary>
         private static bool nancyAssembliesLoaded;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        private static IEnumerable<Func<Assembly, bool>> ignoredAssemblies;
+        private static IEnumerable<Func<Assembly, bool>> assembliesToScan;
 
         /// <summary>
-        /// Gets or sets a set of rules for ignoring assemblies while scanning through them.
+        /// The default assemblies for scanning.
+        /// Includes the nancy assembly and anythign referencing a nancy assembly
         /// </summary>
-        public static IEnumerable<Func<Assembly, bool>> IgnoredAssemblies 
+        public static Func<Assembly, bool>[] DefaultAssembliesToScan = new Func<Assembly, bool>[]
+                                          {
+                                              x => x == nancyAssembly,
+                                              x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase))
+                                          };
+
+        /// <summary>
+        /// Gets or sets a set of rules for which assemblies are scanned
+        /// Defaults to just assemblies that have references to nancy, and nancy
+        /// itself.
+        /// Each item in the enumerable is a delegate that takes the assembly and 
+        /// returns true if it is to be included. Returning false doesn't mean it won't
+        /// be included as a true from another delegate will take precedence.
+        /// </summary>
+        public static IEnumerable<Func<Assembly, bool>> AssembliesToScan
         { 
             private get 
             {
-                return ignoredAssemblies;
+                return assembliesToScan ?? (assembliesToScan = DefaultAssembliesToScan);
             } 
             set 
             {
-                ignoredAssemblies = value;
+                assembliesToScan = value;
                 UpdateTypes ();
             }
         }
@@ -79,6 +91,54 @@ namespace Nancy.Bootstrapper
             {
                 return assemblies;
             }
+        }
+
+        /// <summary>
+        /// Add assemblies to the list of assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="assemblyNames">One or more assembly names</param>
+        public static void AddAssembliesToScan(params string[] assemblyNames)
+        {
+            var normalisedNames = GetNormalisedAssemblyNames(assemblyNames).ToArray();
+
+            foreach (var assemblyName in normalisedNames)
+            {
+                LoadAssemblies(assemblyName + ".dll");
+                LoadAssemblies(assemblyName + ".exe");
+            }
+
+            var scanningPredicates = normalisedNames.Select(s =>
+                {
+                    return (Func<Assembly, bool>)(a => a.GetName().Name == s);
+                });
+
+            AssembliesToScan = AssembliesToScan.Union(scanningPredicates);
+        }
+
+        /// <summary>
+        /// Add assemblies to the list of assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="assemblies">One of more assemblies</param>
+        public static void AddAssembliesToScan(params Assembly[] assemblies)
+        {
+            foreach (var assembly in assemblies)
+            {
+                LoadAssemblies(assembly.GetName() + ".dll");
+                LoadAssemblies(assembly.GetName() + ".exe");
+            }
+
+            var scanningPredicates = assemblies.Select(an => (Func<Assembly, bool>)(a => a == an));
+
+            AssembliesToScan = AssembliesToScan.Union(scanningPredicates);
+        }
+
+        /// <summary>
+        /// Add predicates for determining which assemblies to scan for Nancy types
+        /// </summary>
+        /// <param name="predicates">One or more predicates</param>
+        public static void AddAssembliesToScan(params Func<Assembly, bool>[] predicates)
+        {
+            AssembliesToScan = AssembliesToScan.Union(predicates);
         }
 
         /// <summary>
@@ -108,7 +168,8 @@ namespace Nancy.Bootstrapper
 
             var unloadedAssemblies =
                 Directory.GetFiles(containingDirectory, wildcardFilename).Where(
-                    f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase));
+                    f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+
 
             foreach (var unloadedAssembly in unloadedAssemblies)
             {
@@ -138,7 +199,7 @@ namespace Nancy.Bootstrapper
         private static void UpdateAssemblies()
         {
             assemblies = (from assembly in AppDomain.CurrentDomain.GetAssemblies()
-                          where IgnoredAssemblies != null ? !IgnoredAssemblies.Any(asm => asm(assembly)) : true
+                          where AssembliesToScan.Any(asm => asm(assembly))
                           where !assembly.IsDynamic
                           where !assembly.ReflectionOnly
                           select assembly).ToArray();
@@ -253,6 +314,21 @@ namespace Nancy.Bootstrapper
             if (AppDomain.CurrentDomain.SetupInformation.PrivateBinPathProbe == null)
             {
                 yield return AppDomain.CurrentDomain.SetupInformation.ApplicationBase;
+            }
+        }
+
+        private static IEnumerable<string> GetNormalisedAssemblyNames(string[] assemblyNames)
+        {
+            foreach (var assemblyName in assemblyNames)
+            {
+                if (assemblyName.EndsWith(".dll") || assemblyName.EndsWith(".exe"))
+                {
+                    yield return Path.GetFileNameWithoutExtension(assemblyName);
+                }
+                else
+                {
+                    yield return assemblyName;
+                }
             }
         }
     }
