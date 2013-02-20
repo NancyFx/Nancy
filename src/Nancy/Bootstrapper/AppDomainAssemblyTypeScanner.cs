@@ -34,9 +34,9 @@ namespace Nancy.Bootstrapper
         private static IEnumerable<Assembly> assemblies;
 
         /// <summary>
-        /// Indicates whether the nancy assemblies have already been loaded
+        /// Indicates whether the all Assemblies, that references a Nancy assembly, have already been loaded
         /// </summary>
-        private static bool nancyAssembliesLoaded;
+        private static bool nancyReferencingAssembliesLoaded;
 
         private static IEnumerable<Func<Assembly, bool>> assembliesToScan;
 
@@ -210,7 +210,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public static void LoadAssembliesWithNancyReferences()
         {
-            if (nancyAssembliesLoaded)
+            if (nancyReferencingAssembliesLoaded)
             {
                 return;
             }
@@ -246,7 +246,7 @@ namespace Nancy.Bootstrapper
 
             UpdateTypes();
 
-            nancyAssembliesLoaded = true;
+            nancyReferencingAssembliesLoaded = true;
         }
 
         /// <summary>
