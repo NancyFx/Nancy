@@ -107,12 +107,18 @@ namespace Nancy.Testing
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public new IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return base.GetAllModules(context).Union(this.catalog.GetAllModules(context));
         }
 
+        /// <summary>
+        /// Retreive a specific module instance from the container
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="moduleType">Type of the module</param>
+        /// <returns>INancyModule instance</returns>
         protected override INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
             var module =
@@ -311,7 +317,7 @@ namespace Nancy.Testing
         /// Retrieve all module instances from the container
         /// </summary>
         /// <param name="container">Container to use</param>
-        /// <returns>Collection of NancyModule instances</returns>
+        /// <returns>Collection of INancyModule instances</returns>
         protected override IEnumerable<INancyModule> GetAllModules(TinyIoCContainer container)
         {
             return container.ResolveAll<INancyModule>(false);
@@ -1630,12 +1636,18 @@ namespace Nancy.Testing
             /// Get all NancyModule implementation instances - should be per-request lifetime
             /// </summary>
             /// <param name="context">The current context</param>
-            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
             public IEnumerable<INancyModule> GetAllModules(NancyContext context)
             {
                 return this.moduleInstances.Values;
             }
 
+            /// <summary>
+            /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+            /// </summary>
+            /// <param name="moduleType">Module type</param>
+            /// <param name="context">The current context</param>
+            /// <returns>The <see cref="INancyModule"/> instance</returns>
             public INancyModule GetModule(Type moduleType, NancyContext context)
             {
                 return this.moduleInstances.ContainsKey(moduleType.FullName) ? this.moduleInstances[moduleType.FullName] : null;
@@ -1645,7 +1657,6 @@ namespace Nancy.Testing
             /// Registers a <see cref="NancyModule"/> instance, with the specified <paramref name="moduleKey"/> value.
             /// </summary>
             /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
-            /// <param name="moduleKey">The module key of the module that is being registered.</param>
             public void RegisterModuleInstance(INancyModule module)
             {
                 this.moduleInstances.Add(module.GetType().FullName, module);

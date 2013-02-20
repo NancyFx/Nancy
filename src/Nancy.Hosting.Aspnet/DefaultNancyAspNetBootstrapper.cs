@@ -44,7 +44,7 @@ namespace Nancy.Hosting.Aspnet
         /// Get all NancyModule implementation instances - should be multi-instance
         /// </summary>
         /// <param name="context">Current request context</param>
-        /// <returns>IEnumerable of NancyModule</returns>
+        /// <returns>IEnumerable of INancyModule</returns>
         public override sealed IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return this.ApplicationContainer.ResolveAll<INancyModule>(false);
@@ -55,7 +55,7 @@ namespace Nancy.Hosting.Aspnet
         /// </summary>
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        /// <returns>The <see cref="INancyModule"/> instance</returns>
         public override INancyModule GetModule(System.Type moduleType, NancyContext context)
         {
             return this.ApplicationContainer.Resolve<INancyModule>(moduleType.FullName);
