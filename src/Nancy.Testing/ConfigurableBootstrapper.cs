@@ -778,9 +778,9 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create a <see cref="NancyModule"/> instance of the specified type.
+            /// Configures the bootstrapper to create a <see cref="INancyModule"/> instance of the specified type.
             /// </summary>
-            /// <typeparam name="T">The type of the <see cref="NancyModule"/> that the bootstrapper should use.</typeparam>
+            /// <typeparam name="T">The type of the <see cref="INancyModule"/> that the bootstrapper should use.</typeparam>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Module<T>() where T : INancyModule
             {
@@ -788,9 +788,9 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to register the provided <see cref="NancyModule"/> instance.
+            /// Configures the bootstrapper to register the provided <see cref="INancyModule"/> instance.
             /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
+            /// <param name="module">The <see cref="INancyModule"/> instance to register.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Module(INancyModule module)
             {
@@ -799,9 +799,9 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to create <see cref="NancyModule"/> instances of the specified types.
+            /// Configures the bootstrapper to create <see cref="INancyModule"/> instances of the specified types.
             /// </summary>
-            /// <param name="modules">The types of the <see cref="NancyModule"/> that the bootstrapper should use.</param>
+            /// <param name="modules">The types of the <see cref="INancyModule"/> that the bootstrapper should use.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Modules(params Type[] modules)
             {
@@ -1618,7 +1618,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Provides the functionality to register <see cref="NancyModule"/> instances in a <see cref="INancyModuleCatalog"/>.
+        /// Provides the functionality to register <see cref="INancyModule"/> instances in a <see cref="INancyModuleCatalog"/>.
         /// </summary>
         public class ConfigurableModuleCatalog : INancyModuleCatalog
         {
@@ -1643,7 +1643,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+            /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
             /// </summary>
             /// <param name="moduleType">Module type</param>
             /// <param name="context">The current context</param>
@@ -1654,9 +1654,9 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Registers a <see cref="NancyModule"/> instance, with the specified <paramref name="moduleKey"/> value.
+            /// Registers a <see cref="INancyModule"/> instance, with the specified <paramref name="moduleKey"/> value.
             /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance to register.</param>
+            /// <param name="module">The <see cref="INancyModule"/> instance to register.</param>
             public void RegisterModuleInstance(INancyModule module)
             {
                 this.moduleInstances.Add(module.GetType().FullName, module);

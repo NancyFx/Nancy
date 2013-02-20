@@ -51,7 +51,7 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>

@@ -55,7 +55,7 @@ namespace Nancy.Security
         /// <summary>
         /// This module requires https.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that requires HTTPS.</param>
         public static void RequiresHttps(this INancyModule module)
         {
             module.RequiresHttps(true);
@@ -64,7 +64,7 @@ namespace Nancy.Security
         /// <summary>
         /// This module requires https.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that requires HTTPS.</param>
         /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
         public static void RequiresHttps(this INancyModule module, bool redirect)
         {

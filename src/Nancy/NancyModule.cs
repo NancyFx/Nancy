@@ -21,7 +21,7 @@ namespace Nancy
         private readonly List<Route> routes;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyModule"/> class.
+        /// Initializes a new instance of the <see cref="INancyModule"/> class.
         /// </summary>
         protected NancyModule()
             : this(String.Empty)
@@ -29,7 +29,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="NancyModule"/> class.
+        /// Initializes a new instance of the <see cref="INancyModule"/> class.
         /// </summary>
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
         protected NancyModule(string modulePath)
@@ -246,7 +246,7 @@ namespace Nancy
             /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
             /// </summary>
             /// <param name="method">The HTTP request method that the route should be available for.</param>
-            /// <param name="parentModule">The <see cref="NancyModule"/> that the route is being configured for.</param>
+            /// <param name="parentModule">The <see cref="INancyModule"/> that the route is being configured for.</param>
             public RouteBuilder(string method, NancyModule parentModule)
             {
                 this.method = method;
@@ -289,7 +289,7 @@ namespace Nancy
             /// <summary>
             /// Initializes a new instance of the <see cref="ViewRenderer"/> class.
             /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance that is rendering the view.</param>
+            /// <param name="module">The <see cref="INancyModule"/> instance that is rendering the view.</param>
             public ViewRenderer(INancyModule module)
             {
                 this.module = module;

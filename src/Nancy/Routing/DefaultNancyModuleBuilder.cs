@@ -8,7 +8,7 @@ namespace Nancy.Routing
     using Nancy.Validation;
 
     /// <summary>
-    /// Default implementation for building a full configured <see cref="NancyModule"/> instance.
+    /// Default implementation for building a full configured <see cref="INancyModule"/> instance.
     /// </summary>
     public class DefaultNancyModuleBuilder : INancyModuleBuilder
     {
@@ -33,11 +33,11 @@ namespace Nancy.Routing
         }
 
         /// <summary>
-        /// Builds a fully configured <see cref="NancyModule"/> instance, based upon the provided <paramref name="module"/>.
+        /// Builds a fully configured <see cref="INancyModule"/> instance, based upon the provided <paramref name="module"/>.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> that shoule be configured.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that shoule be configured.</param>
         /// <param name="context">The current request context.</param>
-        /// <returns>A fully configured <see cref="NancyModule"/> instance.</returns>
+        /// <returns>A fully configured <see cref="INancyModule"/> instance.</returns>
         public INancyModule BuildModule(INancyModule module, NancyContext context)
         {
             CreateNegotiationContext(module, context);

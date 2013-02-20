@@ -21,18 +21,18 @@ namespace Nancy.Diagnostics
         /// Get all NancyModule implementation instances - should be per-request lifetime
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return this.container.ResolveAll<INancyModule>(false);
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        /// <returns>The <see cref="INancyModule"/> instance</returns>
         public INancyModule GetModule(Type moduleType, NancyContext context)
         {
             return this.container.Resolve<INancyModule>(moduleType.FullName);

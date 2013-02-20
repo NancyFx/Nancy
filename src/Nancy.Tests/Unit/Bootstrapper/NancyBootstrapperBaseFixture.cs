@@ -308,7 +308,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public override IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return this.PassedModules.Select(m => (INancyModule)Activator.CreateInstance(m.ModuleType));
@@ -431,18 +431,18 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public override IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance</returns>
+        /// <returns>The <see cref="INancyModule"/> instance</returns>
         public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             throw new NotImplementedException();

@@ -4,7 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
 
     /// <summary>
-    /// Catalog of <see cref="NancyModule"/> instances.
+    /// Catalog of <see cref="INancyModule"/> instances.
     /// </summary>
     public interface INancyModuleCatalog
     {
@@ -16,7 +16,7 @@ namespace Nancy
         IEnumerable<INancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation - should be per-request lifetime
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
