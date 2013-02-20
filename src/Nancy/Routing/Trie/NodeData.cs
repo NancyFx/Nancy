@@ -12,7 +12,7 @@ namespace Nancy.Routing.Trie
     public class NodeData
     {
         /// <summary>
-        /// Gets or sets the module key from the matching module
+        /// Gets or sets the module type from the matching module
         /// </summary>
         public Type ModuleType { get; set; }
 

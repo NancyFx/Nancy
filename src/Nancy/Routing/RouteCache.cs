@@ -18,7 +18,6 @@
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
         /// </summary>
         /// <param name="moduleCatalog">The <see cref="INancyModuleCatalog"/> that should be used by the cache.</param>
-        /// <param name="moduleKeyGenerator">The <see cref="IModuleKeyGenerator"/> used to generate module keys.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
         public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
@@ -62,14 +61,14 @@
             }
         }
 
-        private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleKey)
+        private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleType)
         {
-            if (!this.ContainsKey(moduleKey))
+            if (!this.ContainsKey(moduleType))
             {
-                this[moduleKey] = new List<Tuple<int, RouteDescription>>();
+                this[moduleType] = new List<Tuple<int, RouteDescription>>();
             }
 
-            this[moduleKey].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
+            this[moduleType].AddRange(routes.Select((r, i) => new Tuple<int, RouteDescription>(i, r)));
         }
     }
 }
