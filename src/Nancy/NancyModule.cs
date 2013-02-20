@@ -13,15 +13,14 @@ namespace Nancy
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// Contains the functionality for defining routes and actions in Nancy. 
+    /// Basic class containing the functionality for defining routes and actions in Nancy. 
     /// </summary>
-    /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
     public abstract class NancyModule : INancyModule, IHideObjectMembers
     {
         private readonly List<Route> routes;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="INancyModule"/> class.
+        /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
         protected NancyModule()
             : this(String.Empty)
@@ -29,7 +28,7 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="INancyModule"/> class.
+        /// Initializes a new instance of the <see cref="NancyModule"/> class.
         /// </summary>
         /// <param name="modulePath">A <see cref="string"/> containing the root relative path that all paths in the module will be a subset of.</param>
         protected NancyModule(string modulePath)
