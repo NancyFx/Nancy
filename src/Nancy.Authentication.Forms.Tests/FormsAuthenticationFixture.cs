@@ -681,10 +681,13 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_set_Domain_when_config_provides_domain_value()
         {
+            //Given
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.domainPathConfig);
 
+            //When
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
+            //Then
             var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
             cookie.Domain.ShouldEqual(domain);
         }
@@ -692,10 +695,13 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_set_Path_when_config_provides_path_value()
         {
+            //Given
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.domainPathConfig);
 
+            //When
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
+            //Then
             var cookie = result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First();
             cookie.Path.ShouldEqual(path);
         }

@@ -55,12 +55,12 @@ namespace Nancy.Authentication.Forms
         /// <summary>
         /// Gets or sets the domain of the auth cookie
         /// </summary>
-        public string Domain {get;set;}
+        public string Domain { get; set; }
 
         /// <summary>
         /// Gets or sets the path of the auth cookie
         /// </summary>
-        public string Path {get;set;}
+        public string Path { get; set; }
 
         /// <summary>
         /// Gets or sets the cryptography configuration
