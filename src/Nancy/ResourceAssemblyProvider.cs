@@ -26,7 +26,7 @@
 
         private static IEnumerable<Assembly> GetFilteredAssemblies()
         {
-            return AppDomainAssemblyTypeScanner.Assemblies.Where(x => !x.IsDynamic);
+            return AppDomainAssemblyTypeScanner.Assemblies.Where(x => !x.IsDynamic || !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
         }
     }
 }
