@@ -17,7 +17,7 @@
         {
             return new MatchResult(parameters)
             {
-                ModuleKey = data.ModuleKey,
+                ModuleType = data.ModuleType,
                 Method = data.Method,
                 RouteIndex = data.RouteIndex,
                 RouteLength = data.RouteLength,

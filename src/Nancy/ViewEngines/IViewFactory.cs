@@ -4,7 +4,7 @@
     using System.IO;
 
     /// <summary>
-    /// Defines the functionality used by a <see cref="NancyModule"/> to render a view to the response.
+    /// Defines the functionality used by a <see cref="INancyModule"/> to render a view to the response.
     /// </summary>
     public interface IViewFactory : IHideObjectMembers
     {

@@ -35,17 +35,17 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="currentIndex">Current index in the segments array</param>
         /// <param name="currentScore">Current score for this route</param>
         /// <param name="nodeCount">Number of nodes added for this route</param>
-        /// <param name="moduleKey">The module key the route comes from</param>
+        /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
-        public override void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, string moduleKey, int routeIndex, RouteDescription routeDescription)
+        public override void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex, RouteDescription routeDescription)
         {
-            base.Add(segments, currentIndex, currentScore, nodeCount, moduleKey, routeIndex, routeDescription);
+            base.Add(segments, currentIndex, currentScore, nodeCount, moduleType, routeIndex, routeDescription);
 
             this.Parent.AdditionalParameters[this.parameterName] = this.defaultValue;
 
             // Keep the same index, reduce the node count and the score
-            this.Parent.Add(segments, currentIndex, currentScore - this.Parent.Score, nodeCount - 1, moduleKey, routeIndex, routeDescription);
+            this.Parent.Add(segments, currentIndex, currentScore - this.Parent.Score, nodeCount - 1, moduleType, routeIndex, routeDescription);
         }
 
         /// <summary>

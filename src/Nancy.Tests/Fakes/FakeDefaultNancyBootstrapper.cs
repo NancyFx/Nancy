@@ -18,7 +18,7 @@
         {
             get
             {
-                return new[] { new ModuleRegistration(typeof(FakeNancyModuleWithoutBasePath), "Module") };
+                return new[] { new ModuleRegistration(typeof(FakeNancyModuleWithoutBasePath)) };
             }
         }
         public FakeDefaultNancyBootstrapper()

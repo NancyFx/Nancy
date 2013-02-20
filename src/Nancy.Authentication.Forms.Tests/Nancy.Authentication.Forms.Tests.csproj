@@ -119,9 +119,6 @@
     <Compile Include="..\Nancy.Tests\Fakes\FakeModuleCatalog.cs">
       <Link>Fakes\FakeModuleCatalog.cs</Link>
     </Compile>
-    <Compile Include="..\Nancy.Tests\Fakes\FakeModuleKeyGenerator.cs">
-      <Link>Fakes\FakeModuleKeyGenerator.cs</Link>
-    </Compile>
     <Compile Include="..\Nancy.Tests\Fakes\FakeNancyModule.cs">
       <Link>Fakes\FakeNancyModule.cs</Link>
     </Compile>

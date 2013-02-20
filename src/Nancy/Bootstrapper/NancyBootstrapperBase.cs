@@ -102,7 +102,7 @@
                     (this.modules = AppDomainAssemblyTypeScanner
                                         .TypesOf<INancyModule>(true)
                                         .NotOfType<DiagnosticModule>()
-                                        .Select(t => new ModuleRegistration(t, this.GetModuleKeyGenerator().GetKeyForModuleType(t)))
+                                        .Select(t => new ModuleRegistration(t))
                                         .ToArray());
             }
         }
@@ -337,16 +337,16 @@
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public abstract IEnumerable<INancyModule> GetAllModules(NancyContext context);
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public abstract INancyModule GetModuleByKey(string moduleKey, NancyContext context);
+        /// <returns>The <see cref="INancyModule"/> instance</returns>
+        public abstract INancyModule GetModule(Type moduleType, NancyContext context);
 
         /// <summary>
         /// Gets the configured INancyEngine
@@ -452,12 +452,6 @@
         /// </summary>
         /// <returns>INancyEngine implementation</returns>
         protected abstract INancyEngine GetEngineInternal();
-
-        /// <summary>
-        /// Get the moduleKey generator
-        /// </summary>
-        /// <returns>IModuleKeyGenerator instance</returns>
-        protected abstract IModuleKeyGenerator GetModuleKeyGenerator();
 
         /// <summary>
         /// Gets the application level container

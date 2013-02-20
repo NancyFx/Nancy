@@ -1,5 +1,6 @@
 namespace Nancy.Routing.Trie.Nodes
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -62,12 +63,12 @@ namespace Nancy.Routing.Trie.Nodes
         /// Add a new route to the trie
         /// </summary>
         /// <param name="segments">The segments of the route definition</param>
-        /// <param name="moduleKey">The module key the route comes from</param>
+        /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
-        public void Add(string[] segments, string moduleKey, int routeIndex, RouteDescription routeDescription)
+        public void Add(string[] segments, Type moduleType, int routeIndex, RouteDescription routeDescription)
         {
-            this.Add(segments, -1, 0, 0, moduleKey, routeIndex, routeDescription);
+            this.Add(segments, -1, 0, 0, moduleType, routeIndex, routeDescription);
         }
 
         /// <summary>
@@ -77,14 +78,14 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="currentIndex">Current index in the segments array</param>
         /// <param name="currentScore">Current score for this route</param>
         /// <param name="nodeCount">Number of nodes added for this route</param>
-        /// <param name="moduleKey">The module key the route comes from</param>
+        /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
-        public virtual void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, string moduleKey, int routeIndex, RouteDescription routeDescription)
+        public virtual void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex, RouteDescription routeDescription)
         {
             if (this.NoMoreSegments(segments, currentIndex))
             {
-                this.NodeData.Add(this.BuildNodeData(nodeCount, currentScore + this.Score, moduleKey, routeIndex, routeDescription));
+                this.NodeData.Add(this.BuildNodeData(nodeCount, currentScore + this.Score, moduleType, routeIndex, routeDescription));
                 return;
             }
 
@@ -98,7 +99,7 @@ namespace Nancy.Routing.Trie.Nodes
                 this.Children.Add(segments[currentIndex], child);
             }
 
-            child.Add(segments, currentIndex, currentScore + this.Score, nodeCount, moduleKey, routeIndex, routeDescription);
+            child.Add(segments, currentIndex, currentScore + this.Score, nodeCount, moduleType, routeIndex, routeDescription);
         }
 
         /// <summary>
@@ -163,11 +164,11 @@ namespace Nancy.Routing.Trie.Nodes
         /// </summary>
         /// <param name="nodeCount">Number of nodes in the route</param>
         /// <param name="score">Score for the route</param>
-        /// <param name="moduleKey">The module key the route comes from</param>
+        /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
         /// <returns>A NodeData instance</returns>
-        protected virtual NodeData BuildNodeData(int nodeCount, int score, string moduleKey, int routeIndex, RouteDescription routeDescription)
+        protected virtual NodeData BuildNodeData(int nodeCount, int score, Type moduleType, int routeIndex, RouteDescription routeDescription)
         {
             return new NodeData
                        {
@@ -176,7 +177,7 @@ namespace Nancy.Routing.Trie.Nodes
                            RouteLength = nodeCount,
                            Score = score,
                            Condition = routeDescription.Condition,
-                           ModuleKey = moduleKey,
+                           ModuleType = moduleType,
                        };
         }
 

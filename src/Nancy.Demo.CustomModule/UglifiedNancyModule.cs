@@ -130,7 +130,7 @@
             /// <summary>
             /// Initializes a new instance of the <see cref="ViewRenderer"/> class.
             /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance that is rendering the view.</param>
+            /// <param name="module">The <see cref="INancyModule"/> instance that is rendering the view.</param>
             public ViewRenderer(INancyModule module)
             {
                 this.module = module;

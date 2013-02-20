@@ -46,13 +46,13 @@
         public IDictionary<MediaRange, Func<dynamic>> MediaRangeModelMappings { get; set; }
 
         /// <summary>
-        /// The name of the <see cref="NancyModule"/> that is locating a view.
+        /// The name of the <see cref="INancyModule"/> that is locating a view.
         /// </summary>
         /// <value>A <see cref="string"/> containing the name of the module.</value>
         public string ModuleName { get; set; }
 
         /// <summary>
-        /// The module path of the <see cref="NancyModule"/> that is locating a view.
+        /// The module path of the <see cref="INancyModule"/> that is locating a view.
         /// </summary>
         /// <value>A <see cref="string"/> containing the module path.</value>
         public string ModulePath { get; set; }
