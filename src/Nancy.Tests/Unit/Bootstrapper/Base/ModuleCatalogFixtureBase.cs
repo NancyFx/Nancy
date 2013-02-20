@@ -19,46 +19,22 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             {
                 return new[]
                 {
-                    new ModuleRegistration(typeof(FakeModule), typeof(FakeModule).FullName), 
+                    new ModuleRegistration(typeof(FakeModule)), 
                 };
             }
         }
 
         [Fact]
-        public void GetModuleByKey_returns_same_instance_with_same_context()
-        {
-            var context = new NancyContext();
-            var output1 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context);
-            var output2 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context);
-
-            output1.ShouldNotBeNull();
-            output2.ShouldNotBeNull();
-            output1.ShouldBeSameAs(output2);
-        }
-
-        [Fact]
-        public void GetModuleByKey_returns_different_instance_with_different_context()
+        public void GetModule_returns_different_instance_with_different_context()
         {
             var context1 = new NancyContext();
             var context2 = new NancyContext();
-            var output1 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context1);
-            var output2 = this.Catalog.GetModuleByKey(typeof(FakeModule).FullName, context2);
+            var output1 = this.Catalog.GetModule(typeof(FakeModule), context1);
+            var output2 = this.Catalog.GetModule(typeof(FakeModule), context2);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
             output1.ShouldNotBeSameAs(output2);
-        }
-
-        [Fact]
-        public void GetAllModules_returns_same_instances_with_same_context()
-        {
-            var context = new NancyContext();
-            var output1 = this.Catalog.GetAllModules(context).FirstOrDefault();
-            var output2 = this.Catalog.GetAllModules(context).FirstOrDefault();
-
-            output1.ShouldNotBeNull();
-            output2.ShouldNotBeNull();
-            output1.ShouldBeSameAs(output2);
         }
 
         [Fact]

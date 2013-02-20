@@ -13,9 +13,8 @@ namespace Nancy
     using Nancy.ViewEngines;
 
     /// <summary>
-    /// Contains the functionality for defining routes and actions in Nancy. 
+    /// Basic class containing the functionality for defining routes and actions in Nancy. 
     /// </summary>
-    /// <value>This is the core type in the entire framework and changes to this class should not be very frequent because it represents a change to the core API of the framework.</value>
     public abstract class NancyModule : INancyModule, IHideObjectMembers
     {
         private readonly List<Route> routes;
@@ -246,7 +245,7 @@ namespace Nancy
             /// Initializes a new instance of the <see cref="RouteBuilder"/> class.
             /// </summary>
             /// <param name="method">The HTTP request method that the route should be available for.</param>
-            /// <param name="parentModule">The <see cref="NancyModule"/> that the route is being configured for.</param>
+            /// <param name="parentModule">The <see cref="INancyModule"/> that the route is being configured for.</param>
             public RouteBuilder(string method, NancyModule parentModule)
             {
                 this.method = method;
@@ -289,7 +288,7 @@ namespace Nancy
             /// <summary>
             /// Initializes a new instance of the <see cref="ViewRenderer"/> class.
             /// </summary>
-            /// <param name="module">The <see cref="NancyModule"/> instance that is rendering the view.</param>
+            /// <param name="module">The <see cref="INancyModule"/> instance that is rendering the view.</param>
             public ViewRenderer(INancyModule module)
             {
                 this.module = module;
