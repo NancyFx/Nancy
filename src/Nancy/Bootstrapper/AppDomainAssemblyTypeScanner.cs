@@ -15,7 +15,7 @@ namespace Nancy.Bootstrapper
     {
         static AppDomainAssemblyTypeScanner()
         {
-            LoadNancyAssemblies();
+            LoadAssembliesWithNancyReferences();
         }
 
         /// <summary>
@@ -34,9 +34,9 @@ namespace Nancy.Bootstrapper
         private static IEnumerable<Assembly> assemblies;
 
         /// <summary>
-        /// Indicates whether the nancy assemblies have already been loaded
+        /// Indicates whether the all Assemblies, that references a Nancy assembly, have already been loaded
         /// </summary>
-        private static bool nancyAssembliesLoaded;
+        private static bool nancyReferencingAssembliesLoaded;
 
         private static IEnumerable<Func<Assembly, bool>> assembliesToScan;
 
@@ -206,18 +206,47 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Loads any Nancy*.dll assemblies in the app domain base directory
+        /// Loads any assembly that references a Nancy assembly.
         /// </summary>
-        public static void LoadNancyAssemblies()
+        public static void LoadAssembliesWithNancyReferences()
         {
-            if (nancyAssembliesLoaded)
+            if (nancyReferencingAssembliesLoaded)
             {
                 return;
             }
 
-            LoadAssemblies(@"Nancy*.dll");
+            UpdateAssemblies();
 
-            nancyAssembliesLoaded = true;
+            foreach (var directory in GetAssemblyDirectories())
+            {
+                var existingAssemblyPaths =
+                    assemblies.Select(a => a.Location).ToArray();
+
+                var unloadedAssemblies = Directory
+                    .GetFiles(directory, "*.dll")
+                    .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
+
+                foreach (var unloadedAssembly in unloadedAssemblies)
+                {
+                    var inspectedAssembly =
+                        Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
+
+                    if (inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    {
+                        try
+                        {
+                            Assembly.Load(inspectedAssembly.GetName());
+                        }
+                        catch
+                        {
+                        }
+                    }
+                }
+            }
+
+            UpdateTypes();
+
+            nancyReferencingAssembliesLoaded = true;
         }
 
         /// <summary>
