@@ -21,6 +21,11 @@ namespace Nancy.Responses
         /// will fail with a 404.
         /// </summary>
         public static IList<string> SafePaths { get; set; }
+
+        /// <summary>
+        ///  Size of buffer for transmitting file. Default size 4 Mb
+        /// </summary>
+        public static int BufferSize = 4 * 1024 * 1024;
                 
         static GenericFileResponse()
         {
@@ -72,10 +77,9 @@ namespace Nancy.Responses
         {
             return stream =>
             {
-                const int bufferSize = 4096 * 1024;
                 using (var file = File.OpenRead(filePath))
                 {
-                    file.CopyTo(stream, (int)(length < bufferSize ? length : bufferSize));
+                    file.CopyTo(stream, (int)(length < BufferSize ? length : BufferSize));
                 }
             };
         }
