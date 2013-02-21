@@ -53,6 +53,16 @@ namespace Nancy.Authentication.Forms
         public bool DisableRedirect { get; set; }
 
         /// <summary>
+        /// Gets or sets the domain of the auth cookie
+        /// </summary>
+        public string Domain { get; set; }
+
+        /// <summary>
+        /// Gets or sets the path of the auth cookie
+        /// </summary>
+        public string Path { get; set; }
+
+        /// <summary>
         /// Gets or sets the cryptography configuration
         /// </summary>
         public CryptographyConfiguration CryptographyConfiguration { get; set; }
