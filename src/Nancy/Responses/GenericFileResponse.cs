@@ -68,13 +68,14 @@ namespace Nancy.Responses
         /// <value>A string containing the name of the file.</value>
         public string Filename { get; protected set; }
 
-        private static Action<Stream> GetFileContent(string filePath)
+        private static Action<Stream> GetFileContent(string filePath, long length)
         {
             return stream =>
             {
+                const int bufferSize = 4096 * 1024;
                 using (var file = File.OpenRead(filePath))
                 {
-                    file.CopyTo(stream);
+                    file.CopyTo(stream, (int)(length < bufferSize ? length : bufferSize));
                 }
             };
         }
@@ -152,7 +153,7 @@ namespace Nancy.Responses
 
             this.Headers["ETag"] = etag;
             this.Headers["Last-Modified"] = lastModified;
-            this.Contents = GetFileContent(fullPath);
+            this.Contents = GetFileContent(fullPath, fi.Length);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
