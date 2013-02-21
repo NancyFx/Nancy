@@ -202,12 +202,18 @@ namespace Nancy.Routing
 
         private static void AddLinkHeaders(NancyContext context, IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Response response)
         {
-            var linkProcessors = compatibleHeaders
-                .SelectMany(m => m.Item2)
-                .SelectMany(p => p.Item1.ExtensionMappings)
-                .Where(map => !map.Item2.Matches(response.ContentType))
-                .DistinctBy(x => x.Item1)
-                .ToArray();
+            var linkProcessors = new Dictionary<string, MediaRange>();
+
+            var compatibleHeaderMappings =
+                compatibleHeaders.SelectMany(m => m.Item2).SelectMany(p => p.Item1.ExtensionMappings);
+
+            foreach (var compatibleHeaderMapping in compatibleHeaderMappings)
+            {
+                if (!compatibleHeaderMapping.Item2.Matches(response.ContentType))
+                {
+                    linkProcessors[compatibleHeaderMapping.Item1] = compatibleHeaderMapping.Item2;
+                }
+            }
 
             if (!linkProcessors.Any())
             {
@@ -217,8 +223,8 @@ namespace Nancy.Routing
             var baseUrl =
                 context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
 
-            var links = linkProcessors
-                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp.Item1, lp.Item2))
+            var links = linkProcessors.Keys
+                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp, linkProcessors[lp]))
                 .Aggregate((lp1, lp2) => lp1 + "," + lp2);
 
             response.Headers["Link"] = links;
