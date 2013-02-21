@@ -373,6 +373,32 @@ namespace Nancy.Tests.Unit.Security
             result.ShouldBeOfType<RedirectResponse>();
 
             url.Scheme = "https";
+            url.Port = null;
+            result.Headers["Location"].ShouldEqual(url.ToString());
+        }
+
+        [Fact]
+        public void Should_return_redirect_response_with_specific_port_number_when_request_url_is_non_secure_method_is_get_and_requires_https()
+        {
+            // Given
+            var module = new FakeHookedModule(new BeforePipeline());
+            var url = GetFakeUrl(false);
+            var context = new NancyContext
+            {
+                Request = new Request("GET", url)
+            };
+
+            module.RequiresHttps(true, 999);
+
+            // When
+            var result = module.Before.Invoke(context);
+
+            // Then
+            result.ShouldNotBeNull();
+            result.ShouldBeOfType<RedirectResponse>();
+
+            url.Scheme = "https";
+            url.Port = 999;
             result.Headers["Location"].ShouldEqual(url.ToString());
         }
 
