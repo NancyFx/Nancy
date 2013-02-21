@@ -39,8 +39,10 @@ namespace Nancy.Hosting.Aspnet
 
         private static Request CreateNancyRequest(HttpContextBase context)
         {
+            var incomingHeaders = context.Request.Headers.ToDictionary();
+
             var expectedRequestLength =
-                GetExpectedRequestLength(context.Request.Headers.ToDictionary());
+                GetExpectedRequestLength(incomingHeaders);
 
             var basePath = context.Request.ApplicationPath.TrimEnd('/');
 
@@ -62,7 +64,7 @@ namespace Nancy.Hosting.Aspnet
                 context.Request.HttpMethod.ToUpperInvariant(),
                 nancyUrl,
                 RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
-                context.Request.Headers.ToDictionary(),
+                incomingHeaders,
                 context.Request.UserHostAddress);
         }
 
