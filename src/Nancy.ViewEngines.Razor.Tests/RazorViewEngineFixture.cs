@@ -539,6 +539,37 @@
             output.ShouldContain("<a href=\"BobSlug\">Bob</a>");
         }
 
+        [Fact]
+        public void Should_render_attributes_with_dynamic_null_inside()
+        {
+            var location = FindView("ViewThatUsesAttributeWithDynamicNullInside");
+            var stream = new MemoryStream();
+
+            //When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain("<input value=\"\" />");
+        }
+
+        [Fact]
+        public void Should_render_attributes_with_NonEncodedHtmlString_inside()
+        {
+            var location = FindView("ViewThatUsesAttributeWithNonEncodedHtmlStringInside");
+            var stream = new MemoryStream();
+            const string PHRASE = "Slugs are secret spies on gardeners, but no ones who they spy for";
+
+            //When
+            var response = this.engine.RenderView(location, new NonEncodedHtmlString(PHRASE), this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain(string.Format("<input value=\"{0}\" />", PHRASE));
+        }
+
         private static string ReadAll(Stream stream)
         {
             stream.Position = 0;
