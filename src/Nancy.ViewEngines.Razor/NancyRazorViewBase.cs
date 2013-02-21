@@ -199,6 +199,17 @@
                 return (string)value.Value.Item1;
             }
 
+            if (value.Value.Item1 is IHtmlString)
+            {
+                return ((IHtmlString)value.Value.Item1).ToHtmlString();
+            }
+
+            if (value.Value.Item1 is DynamicDictionaryValue)
+            {
+                var dynamicValue = (DynamicDictionaryValue)value.Value.Item1;
+                return dynamicValue.HasValue ? dynamicValue.Value.ToString() : string.Empty;
+            }
+
             return value.Value.Item1.ToString();
         }
 
