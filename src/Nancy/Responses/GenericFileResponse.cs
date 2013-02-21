@@ -21,6 +21,11 @@ namespace Nancy.Responses
         /// will fail with a 404.
         /// </summary>
         public static IList<string> SafePaths { get; set; }
+
+        /// <summary>
+        ///  Size of buffer for transmitting file. Default size 4 Mb
+        /// </summary>
+        public static int BufferSize = 4 * 1024 * 1024;
                 
         static GenericFileResponse()
         {
@@ -68,13 +73,13 @@ namespace Nancy.Responses
         /// <value>A string containing the name of the file.</value>
         public string Filename { get; protected set; }
 
-        private static Action<Stream> GetFileContent(string filePath)
+        private static Action<Stream> GetFileContent(string filePath, long length)
         {
             return stream =>
             {
                 using (var file = File.OpenRead(filePath))
                 {
-                    file.CopyTo(stream);
+                    file.CopyTo(stream, (int)(length < BufferSize ? length : BufferSize));
                 }
             };
         }
@@ -152,7 +157,7 @@ namespace Nancy.Responses
 
             this.Headers["ETag"] = etag;
             this.Headers["Last-Modified"] = lastModified;
-            this.Contents = GetFileContent(fullPath);
+            this.Contents = GetFileContent(fullPath, fi.Length);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
