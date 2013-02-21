@@ -139,6 +139,12 @@
     <None Include="TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestViews\ViewThatUsesAttributeWithDynamicNullInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestViews\ViewThatUsesAttributeWithNonEncodedHtmlStringInside.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\ViewThatUsesModelVB.vbhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
