@@ -68,15 +68,15 @@ namespace Nancy.Routing
 
         private IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>> GetCompatibleProcessorsByHeader(string acceptHeader, dynamic model, NancyContext context)
         {
-            var compatibleProcessors = this.processors
-                .Select(processor => Tuple.Create(processor, (ProcessorMatch)processor.CanProcess(acceptHeader, model, context)))
-                .Where(x => x.Item2.ModelResult != MatchResult.NoMatch)
-                .Where(x => x.Item2.RequestedContentTypeResult != MatchResult.NoMatch)
-                .ToList();
+            foreach (var processor in this.processors)
+            {
+                var result = (ProcessorMatch)processor.CanProcess(acceptHeader, model, context);
 
-            return compatibleProcessors.Any() ?
-                compatibleProcessors :
-                null;
+                if (result.ModelResult != MatchResult.NoMatch && result.RequestedContentTypeResult != MatchResult.NoMatch)
+                {
+                    yield return new Tuple<IResponseProcessor, ProcessorMatch>(processor, result);
+                }
+            }
         }
 
         private static Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
@@ -243,13 +243,24 @@ namespace Nancy.Routing
                     .ToList();
             }
 
-            return (from header in acceptHeaders
-                    let compatibleProcessors = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)GetCompatibleProcessorsByHeader(header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context)
-                    where compatibleProcessors != null
-                    select new Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>(
+            return this.GetCompatibleProcessors(acceptHeaders, negotiator, context).ToArray();
+        }
+
+        private IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> GetCompatibleProcessors(IEnumerable<Tuple<string, decimal>> acceptHeaders, Negotiator negotiator, NancyContext context)
+        {
+            foreach (var header in acceptHeaders)
+            {
+                var compatibleProcessors = (IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>)this.GetCompatibleProcessorsByHeader(
+                    header.Item1, negotiator.NegotiationContext.GetModelForMediaRange(header.Item1), context);
+
+                if (compatibleProcessors.Any())
+                {
+                    yield return new Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>(
                         header.Item1,
                         compatibleProcessors
-                    )).ToArray();
+                    );
+                }
+            }
         }
 
         private IEnumerable<Tuple<string, decimal>> GetCoercedAcceptHeaders(NancyContext context)
