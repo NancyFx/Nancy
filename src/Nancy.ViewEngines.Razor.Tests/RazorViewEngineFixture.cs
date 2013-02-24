@@ -434,6 +434,23 @@
         }
 
         [Fact]
+        public void Should_be_able_to_render_view_with_helper_to_steam()
+        {
+            // Given
+            var location = FindView("ViewThatUsesHelper");
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            var output = ReadAll(stream);
+            output.ShouldContainInOrder("<h1>SimplyLayout</h1>", "<div>ViewThatUsesHelper</div>", "<p class=\"className\"></p>");
+        }
+
+        [Fact]
         public void Should_use_custom_view_base_with_csharp_views()
         {
             // Given

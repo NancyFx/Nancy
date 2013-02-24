@@ -136,6 +136,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="TestViews\ViewThatUsesHelper.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\ViewThatUsesAttributeWithCodeInside.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
