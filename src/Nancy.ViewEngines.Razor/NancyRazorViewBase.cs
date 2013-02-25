@@ -162,6 +162,19 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
         {
+            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            this.WriteLiteral(attributeValue);
+        }
+
+        public virtual void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
+        {
+            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            this.WriteLiteralTo(writer, attributeValue);
+        }
+
+        private string BuildAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix,
+                                      params AttributeValue[] values)
+        {
             var writtenAttribute = false;
             var attributeBuilder = new StringBuilder(prefix.Item1);
 
@@ -188,8 +201,10 @@
 
             if (renderAttribute)
             {
-                this.WriteLiteral(attributeBuilder);
+                return attributeBuilder.ToString();
             }
+
+            return string.Empty;
         }
 
         private string GetStringValue(AttributeValue value)
