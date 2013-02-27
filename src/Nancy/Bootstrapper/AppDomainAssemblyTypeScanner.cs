@@ -222,6 +222,9 @@ namespace Nancy.Bootstrapper
 
             foreach (var directory in GetAssemblyDirectories())
             {
+                var existingAssemblyPaths =
+                    assemblies.Select(a => a.Location).ToArray();
+
                 var unloadedAssemblies = Directory
                     .GetFiles(directory, "*.dll")
                     .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
@@ -251,6 +254,10 @@ namespace Nancy.Bootstrapper
                 }
             }
 
+
+            UpdateTypes();
+
+           
             UpdateTypes();
 
             nancyReferencingAssembliesLoaded = true;
