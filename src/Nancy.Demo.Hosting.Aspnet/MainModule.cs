@@ -24,6 +24,11 @@ namespace Nancy.Demo.Hosting.Aspnet
                     .WithHeader("X-Custom", "SomeValue");
             };
 
+            Get["/foobar"] = parameters =>
+            {
+                return View["test"];
+            };
+
             Get["/user/{name}"] = parameters =>
             {
                 return (string)parameters.name;

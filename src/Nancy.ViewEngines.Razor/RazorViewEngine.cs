@@ -82,13 +82,21 @@
 
             response.Contents = stream =>
             {
+                var x =
+                   GetViewInstance(renderContext.LocateView("_ViewStart", model), renderContext, referencingAssembly, model);
+                x.ExecuteView(null, null);
+
+                var z = x.Layout ?? string.Empty;
+
                 var writer = new StreamWriter(stream);
                 var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
                 view.ExecuteView(null, null);
                 var body = view.Body;
                 var sectionContents = view.SectionContents;
-                var root = !view.HasLayout;
-                var layout = view.Layout;
+
+                var layout = view.HasLayout ? view.Layout : z;
+                var root = string.IsNullOrWhiteSpace(layout);
+
 
                 while (!root)
                 {
