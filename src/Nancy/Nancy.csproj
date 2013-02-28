@@ -107,7 +107,9 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
+    <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
+    <Compile Include="Bootstrapper\ContainerRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
     <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
@@ -131,11 +133,13 @@
     <Compile Include="Culture\DefaultCultureService.cs" />
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
@@ -146,6 +150,9 @@
     <Compile Include="Diagnostics\DiagnosticsModuleCatalog.cs" />
     <Compile Include="Diagnostics\DefaultDiagnostics.cs" />
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
+    <Compile Include="Helpers\CacheHelpers.cs" />
+    <Compile Include="IStaticContentProvider.cs" />
+    <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
@@ -198,9 +205,25 @@
     <Compile Include="Routing\IRouteInvoker.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
-    <Compile Include="Routing\RouteCandidateExtensions.cs" />
+    <Compile Include="Routing\ResolveResult.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
-    <Compile Include="StaticContentApplicationStartup.cs" />
+    <Compile Include="Routing\Trie\IRouteResolverTrie.cs" />
+    <Compile Include="Routing\Trie\ITrieNodeFactory.cs" />
+    <Compile Include="Routing\Trie\MatchResult.cs" />
+    <Compile Include="Routing\Trie\NodeData.cs" />
+    <Compile Include="Routing\Trie\NodeDataExtensions.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithDefaultValue.cs" />
+    <Compile Include="Routing\Trie\Nodes\GreedyCaptureNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\LiteralNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\OptionalCaptureNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\RegExNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\RootNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\TrieNode.cs" />
+    <Compile Include="Routing\Trie\RouteResolverTrie.cs" />
+    <Compile Include="Routing\Trie\SegmentMatch.cs" />
+    <Compile Include="Routing\Trie\TrieNodeFactory.cs" />
+    <Compile Include="StaticContent.cs" />
     <Compile Include="Conventions\ViewLocationConventions.cs" />
     <Compile Include="Cryptography\Base64Helpers.cs" />
     <Compile Include="Cryptography\CryptographyConfiguration.cs" />
@@ -221,8 +244,6 @@
     <Compile Include="IStatusHandler.cs" />
     <Compile Include="ErrorPipeline.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
-    <Compile Include="Bootstrapper\DefaultModuleKeyGenerator.cs" />
-    <Compile Include="Bootstrapper\IModuleKeyGenerator.cs" />
     <Compile Include="Bootstrapper\INancyBootstrapper.cs" />
     <Compile Include="Bootstrapper\ModuleRegistrationType.cs" />
     <Compile Include="Bootstrapper\NancyBootstrapperBase.cs" />
@@ -275,9 +296,8 @@
     <Compile Include="ResourceAssemblyProvider.cs" />
     <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="Localization\ResourceBasedTextResource.cs" />
-    <Compile Include="ViewEngines\DefaultViewCache.cs" />
-    <Compile Include="ViewEngines\DefaultViewLocationCache.cs" />
     <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
+    <Compile Include="ViewEngines\DefaultViewCache.cs" />
     <Compile Include="ViewEngines\Extensions.cs" />
     <Compile Include="ViewEngines\FileSystemViewLocationProvider.cs" />
     <Compile Include="FormatterExtensions.cs" />
@@ -346,6 +366,8 @@
     <Compile Include="Routing\RouteDescription.cs" />
     <Compile Include="Routing\RoutePatternMatchResult.cs" />
     <Compile Include="Security\ModuleSecurity.cs" />
+    <Compile Include="Security\SecurityHooks.cs" />
+    <Compile Include="Security\UserIdentityExtensions.cs" />
     <Compile Include="Session\CookieBasedSessions.cs" />
     <Compile Include="Cryptography\RijndaelEncryptionProvider.cs" />
     <Compile Include="DefaultObjectSerializer.cs" />
@@ -372,6 +394,7 @@
     <Compile Include="ViewEngines\DefaultViewFactory.cs" />
     <Compile Include="ViewEngines\DefaultViewLocator.cs" />
     <Compile Include="ViewEngines\DefaultViewResolver.cs" />
+    <Compile Include="ViewEngines\FileSystemViewLocationResult.cs" />
     <Compile Include="ViewEngines\IFileSystemReader.cs" />
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
@@ -380,7 +403,6 @@
     <Compile Include="Localization\ITextResource.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
-    <Compile Include="ViewEngines\IViewLocationCache.cs" />
     <Compile Include="ViewEngines\IViewLocationProvider.cs" />
     <Compile Include="ViewEngines\IViewLocator.cs" />
     <Compile Include="ViewEngines\IViewFactory.cs" />

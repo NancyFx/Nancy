@@ -17,13 +17,46 @@ namespace Nancy
     public class DefaultNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>
     {
         /// <summary>
+        /// Default assemblies that are ignored for autoregister
+        /// </summary>
+        public static IEnumerable<Func<Assembly, bool>> DefaultAutoRegisterIgnoredAssemblies = new Func<Assembly, bool>[]
+            {
+                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
+                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
+            };
+
+        /// <summary>
+        /// Gets the assemblies to ignore when autoregistering the application container
+        /// Return true from the delegate to ignore that particular assembly, returning true
+        /// does not mean the assembly *will* be included, a false from another delegate will
+        /// take precedence.
+        /// </summary>
+        protected virtual IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
+        {
+            get { return DefaultAutoRegisterIgnoredAssemblies; }
+        }
+
+        /// <summary>
         /// Configures the container using AutoRegister followed by registration
         /// of default INancyModuleCatalog and IRouteResolver.
         /// </summary>
         /// <param name="container">Container instance</param>
         protected override void ConfigureApplicationContainer(TinyIoCContainer container)
         {
-            AutoRegister(container, this.InternalConfiguration.IgnoredAssemblies);
+            AutoRegister(container, this.AutoRegisterIgnoredAssemblies);
         }
 
         /// <summary>
@@ -33,15 +66,6 @@ namespace Nancy
         protected override sealed INancyEngine GetEngineInternal()
         {
             return this.ApplicationContainer.Resolve<INancyEngine>();
-        }
-
-        /// <summary>
-        /// Get the moduleKey generator
-        /// </summary>
-        /// <returns>IModuleKeyGenerator instance</returns>
-        protected override sealed IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return this.ApplicationContainer.Resolve<IModuleKeyGenerator>();
         }
 
         /// <summary>
@@ -102,8 +126,8 @@ namespace Nancy
             {
                 container.Register(
                     typeof(INancyModule), 
-                    moduleRegistrationType.ModuleType, 
-                    moduleRegistrationType.ModuleKey).
+                    moduleRegistrationType.ModuleType,
+                    moduleRegistrationType.ModuleType.FullName).
                     AsSingleton();
             }
         }
@@ -171,14 +195,16 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Retreive a specific module instance from the container by its key
+        /// Retreive a specific module instance from the container
         /// </summary>
         /// <param name="container">Container to use</param>
-        /// <param name="moduleKey">Module key of the module</param>
+        /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
-        protected override sealed INancyModule GetModuleByKey(TinyIoCContainer container, string moduleKey)
+        protected override sealed INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
-            return container.Resolve<INancyModule>(moduleKey);
+            container.Register(typeof(INancyModule), moduleType);
+
+            return container.Resolve<INancyModule>();
         }
 
         /// <summary>

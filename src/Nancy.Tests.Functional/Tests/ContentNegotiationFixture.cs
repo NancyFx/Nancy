@@ -11,6 +11,7 @@ namespace Nancy.Tests.Functional.Tests
     using Nancy.Testing;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class ContentNegotiationFixture
     {
@@ -549,6 +550,42 @@ namespace Nancy.Tests.Functional.Tests
             Assert.True(bodyResult.StartsWith("application/xml"), string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
         }
 
+        [Theory]
+        [InlineData("application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"")]
+        [InlineData("application/xhtml+xml; q=1; profile=\"http://www.wapforum. org/xhtml\"")]
+        public void Should_not_throw_exception_because_of_uncommon_accept_header(string header)
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+
+                with.Module(new ConfigurableNancyModule(x =>
+                {
+                    x.Get("/", CreateNegotiatedResponse());
+                }));
+            });
+
+            // When
+            var response = browser.Get("/", with =>
+            {
+                with.Header("Accept", header);
+            });
+
+            // Then
+            Assert.Equal((HttpStatusCode)200, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_not_try_and_serve_view_with_invalid_name()
+        {
+            var browser = new Browser(with => with.Module<NegotiationModule>());
+
+            var result = Record.Exception(() => browser.Get("/invalid-view-name"));
+
+            Assert.True(result.ToString().Contains("Unable to locate view"));
+        }
+
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
@@ -650,5 +687,23 @@ namespace Nancy.Tests.Functional.Tests
                 return (string) model;
             }
         }
+
+        private class NegotiationModule : NancyModule
+        {
+            public NegotiationModule()
+            {
+                Get["/invalid-view-name"] = _ => this.GetModel();
+            }
+
+            private IEnumerable<Foo> GetModel()
+            {
+                yield return new Foo();
+            }
+
+            private class Foo
+            {
+            }
+        }
     }
+
 }

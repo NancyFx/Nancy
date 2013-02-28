@@ -16,7 +16,7 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this INancyModule module)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
         }
 
         /// <summary>
@@ -26,8 +26,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresClaims(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
-            module.Before.AddItemToEndOfPipeline(RequiresClaims(requiredClaims));
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresClaims(requiredClaims));
         }
 
         /// <summary>
@@ -37,8 +37,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresAnyClaim(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresAuthentication);
-            module.Before.AddItemToEndOfPipeline(RequiresAnyClaim(requiredClaims));
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
+            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAnyClaim(requiredClaims));
         }
 
         /// <summary>
@@ -48,14 +48,14 @@ namespace Nancy.Security
         /// <param name="isValid">Claims validator</param>
         public static void RequiresValidatedClaims(this INancyModule module, Func<IEnumerable<string>, bool> isValid)
         {
-            module.Before.AddItemToStartOfPipeline(RequiresValidatedClaims(isValid));
-            module.Before.AddItemToStartOfPipeline(RequiresAuthentication);
+            module.Before.AddItemToStartOfPipeline(SecurityHooks.RequiresValidatedClaims(isValid));
+            module.Before.AddItemToStartOfPipeline(SecurityHooks.RequiresAuthentication());
         }
 
         /// <summary>
         /// This module requires https.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that requires HTTPS.</param>
         public static void RequiresHttps(this INancyModule module)
         {
             module.RequiresHttps(true);
@@ -64,94 +64,25 @@ namespace Nancy.Security
         /// <summary>
         /// This module requires https.
         /// </summary>
-        /// <param name="module">The <see cref="NancyModule"/> that requires HTTPS.</param>
-        /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
+        /// <param name="module">The <see cref="INancyModule"/> that requires HTTPS.</param>
+        /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS (no port number) if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
         public static void RequiresHttps(this INancyModule module, bool redirect)
         {
-            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect));
+            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect, null));
         }
 
         /// <summary>
-        /// Ensure that the module requires authentication.
+        /// This module requires https.
         /// </summary>
-        /// <param name="context">Current context</param>
-        /// <returns>Unauthorized response if not logged in, null otherwise</returns>
-        private static Response RequiresAuthentication(NancyContext context)
+        /// <param name="module">The <see cref="INancyModule"/> that requires HTTPS.</param>
+        /// <param name="redirect"><see langword="true"/> if the user should be redirected to HTTPS if the incoming request was made using HTTP, otherwise <see langword="false"/> if <see cref="HttpStatusCode.Forbidden"/> should be returned.</param>
+        /// <param name="httpsPort">The HTTPS port number to use</param>
+        public static void RequiresHttps(this INancyModule module, bool redirect, int httpsPort)
         {
-            Response response = null;
-            if ((context.CurrentUser == null) ||
-                String.IsNullOrWhiteSpace(context.CurrentUser.UserName))
-            {
-                response = new Response { StatusCode = HttpStatusCode.Unauthorized };
-            }
-
-            return response;
+            module.Before.AddItemToEndOfPipeline(RequiresHttps(redirect, httpsPort));
         }
 
-        /// <summary>
-        /// Gets a request hook for checking claims
-        /// </summary>
-        /// <param name="claims">Required claims</param>
-        /// <returns>Before hook delegate</returns>
-        private static Func<NancyContext, Response> RequiresClaims(IEnumerable<string> claims)
-        {
-            return (ctx) =>
-                       {
-                           Response response = null;
-                           if (ctx.CurrentUser == null
-                               || ctx.CurrentUser.Claims == null
-                               || claims.Any(c => !ctx.CurrentUser.Claims.Contains(c)))
-                           {
-                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
-                           }
-
-                           return response;
-                       };
-        }
-
-        /// <summary>
-        /// Gets a request hook for checking claims
-        /// </summary>
-        /// <param name="claims">Required claims</param>
-        /// <returns>Before hook delegate</returns>
-        private static Func<NancyContext, Response> RequiresAnyClaim(IEnumerable<string> claims)
-        {
-            return (ctx) =>
-                        {
-                            Response response = null;
-                            if (ctx.CurrentUser == null
-                                || ctx.CurrentUser.Claims == null
-                                || !claims.Any(c => ctx.CurrentUser.Claims.Contains(c)))
-                            {
-                                response = new Response { StatusCode = HttpStatusCode.Forbidden };
-                            }
-
-                            return response;
-                        };
-        }
-
-        /// <summary>
-        /// Gets a pipeline item for validating user claims
-        /// </summary>
-        /// <param name="isValid">Is valid delegate</param>
-        /// <returns>Pipeline item delegate</returns>
-        private static Func<NancyContext, Response> RequiresValidatedClaims(Func<IEnumerable<string>, bool> isValid)
-        {
-            return (ctx) =>
-                       {
-                           Response response = null;
-                           if (ctx.CurrentUser == null
-                               || ctx.CurrentUser.Claims == null
-                               || !isValid(ctx.CurrentUser.Claims))
-                           {
-                               response = new Response { StatusCode = HttpStatusCode.Forbidden };
-                           }
-
-                           return response;
-                       };
-        }
-
-        private static Func<NancyContext, Response> RequiresHttps(bool redirect)
+        private static Func<NancyContext, Response> RequiresHttps(bool redirect, int? httpsPort)
         {
             return (ctx) =>
                    {
@@ -162,6 +93,7 @@ namespace Nancy.Security
                            if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
                            {
                                var redirectUrl = request.Url.Clone();
+                               redirectUrl.Port = httpsPort;
                                redirectUrl.Scheme = "https";
                                response = new RedirectResponse(redirectUrl.ToString());
                            }

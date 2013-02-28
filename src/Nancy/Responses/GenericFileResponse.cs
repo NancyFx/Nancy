@@ -4,6 +4,9 @@ namespace Nancy.Responses
 {
     using System;
     using System.IO;
+    using System.Linq;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// A response representing a file. 
@@ -18,6 +21,11 @@ namespace Nancy.Responses
         /// will fail with a 404.
         /// </summary>
         public static IList<string> SafePaths { get; set; }
+
+        /// <summary>
+        ///  Size of buffer for transmitting file. Default size 4 Mb
+        /// </summary>
+        public static int BufferSize = 4 * 1024 * 1024;
                 
         static GenericFileResponse()
         {
@@ -37,13 +45,26 @@ namespace Nancy.Responses
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
+        /// by the <param name="filePath" /> parameter.
+        /// </summary>
+        /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
+        /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
+        /// <param name="context">Current context</param>
+        public GenericFileResponse(string filePath, NancyContext context)
+            : this(filePath, MimeTypes.GetMimeType(filePath), context)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
         /// by the <param name="filePath" /> parameter and the content-type specified by the <param name="contentType" /> parameter.
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <param name="contentType">The content-type of the response.</param>
-        public GenericFileResponse(string filePath, string contentType)
+        /// <param name="context">Current context</param>
+        public GenericFileResponse(string filePath, string contentType, NancyContext context = null)
         {
-            InitializeGenericFileResonse(filePath, contentType);
+            InitializeGenericFileResonse(filePath, contentType, context);
         }
 
         /// <summary>
@@ -52,13 +73,13 @@ namespace Nancy.Responses
         /// <value>A string containing the name of the file.</value>
         public string Filename { get; protected set; }
 
-        private static Action<Stream> GetFileContent(string filePath)
+        private static Action<Stream> GetFileContent(string filePath, long length)
         {
             return stream =>
             {
                 using (var file = File.OpenRead(filePath))
                 {
-                    file.CopyTo(stream);
+                    file.CopyTo(stream, (int)(length < BufferSize ? length : BufferSize));
                 }
             };
         }
@@ -80,7 +101,7 @@ namespace Nancy.Responses
             return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
-        private void InitializeGenericFileResonse(string filePath, string contentType)
+        private void InitializeGenericFileResonse(string filePath, string contentType, NancyContext context)
         {
             if (string.IsNullOrEmpty(filePath))
             {
@@ -105,20 +126,40 @@ namespace Nancy.Responses
 
                 if (IsSafeFilePath(rootPath, fullPath))
                 {
-                    Filename = Path.GetFileName(fullPath);
+                    this.Filename = Path.GetFileName(fullPath);
 
-                    var fi = new FileInfo(fullPath);
-                    // TODO - set a standard caching time and/or public?
-                    Headers["ETag"] = fi.LastWriteTimeUtc.Ticks.ToString("x");
-                    Headers["Last-Modified"] = fi.LastWriteTimeUtc.ToString("R");
-                    Contents = GetFileContent(fullPath);
-                    ContentType = contentType;
-                    StatusCode = HttpStatusCode.OK;
+                    this.SetResponseValues(contentType, fullPath, context);
+
                     return;
                 }
             }
 
             StatusCode = HttpStatusCode.NotFound;
+        }
+
+        private void SetResponseValues(string contentType, string fullPath, NancyContext context)
+        {
+            // TODO - set a standard caching time and/or public?
+            var fi = new FileInfo(fullPath);
+
+            var lastWriteTimeUtc = fi.LastWriteTimeUtc;
+            var etag = lastWriteTimeUtc.Ticks.ToString("x");
+            var lastModified = lastWriteTimeUtc.ToString("R");
+
+            if (CacheHelpers.ReturnNotModified(etag, lastWriteTimeUtc, context))
+            {
+                this.StatusCode = HttpStatusCode.NotModified;
+                this.ContentType = null;
+                this.Contents = Response.NoBody;
+
+                return;
+            }
+
+            this.Headers["ETag"] = etag;
+            this.Headers["Last-Modified"] = lastModified;
+            this.Contents = GetFileContent(fullPath, fi.Length);
+            this.ContentType = contentType;
+            this.StatusCode = HttpStatusCode.OK;
         }
     }
 }

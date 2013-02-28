@@ -76,20 +76,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void GetEngine_Gets_ModuleRegistration_Keys_For_Each_Module_From_IModuleKeyGenerator_From_GetModuleKeyGenerator()
-        {
-            // Given
-            // When
-            this.bootstrapper.GetEngine();
-
-            // Then
-            var totalKeyEntries = bootstrapper.PassedModules.Count();
-            var called = ((FakeModuleKeyGenerator) bootstrapper.Generator).CallCount;
-
-            called.ShouldEqual(totalKeyEntries);
-        }
-
-        [Fact]
         public void Overridden_Modules_Is_Used_For_Getting_ModuleTypes()
         {
             // Given
@@ -101,19 +87,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
             // Then
             localBootstrapper.RegisterModulesRegistrationTypes.ShouldBeSameAs(localBootstrapper.ModuleRegistrations);
-        }
-
-        [Fact]
-        public void RegisterTypes_Passes_In_User_Types_If_Custom_Config_Set()
-        {
-            // Given
-            this.bootstrapper.GetEngine();
-
-            // When
-            var moduleKeyGeneratorEntry = this.bootstrapper.TypeRegistrations.Where(tr => tr.RegistrationType == typeof(IModuleKeyGenerator)).FirstOrDefault();
-
-            // Then
-            moduleKeyGeneratorEntry.ImplementationType.ShouldEqual(typeof(Fakes.FakeModuleKeyGenerator));
         }
 
         [Fact]
@@ -218,21 +191,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_ingore_assemblies_specified_in_AppDomainAssemblyTypeScanner()
-        {
-            // Given
-            // When
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = 
-                new Func<Assembly, bool>[]
-                {
-                    asm => asm.FullName.StartsWith("mscorlib")
-                };
-
-            // Then
-            AppDomainAssemblyTypeScanner.TypesOf<IEnumerable>().Where(t => t.Assembly.FullName.StartsWith("mscorlib")).Count().ShouldEqual(0);
-        }
-
-        [Fact]
         public void Should_allow_favicon_override()
         {
             // Given
@@ -280,7 +238,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public INancyEngine FakeNancyEngine { get; set; }
         public object FakeContainer { get; set; }
         public object AppContainer { get; set; }
-        public IModuleKeyGenerator Generator { get; set; }
         public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; set; }
         public IEnumerable<InstanceRegistration> InstanceRegistrations { get; set; }
@@ -289,20 +246,10 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public IApplicationRegistrations[] OverriddenApplicationRegistrationTasks { get; set; }
         public bool ShouldThrowWhenGettingEngine { get; set; }
 
-        protected override NancyInternalConfiguration InternalConfiguration
-        {
-            get
-            {
-                return NancyInternalConfiguration.WithOverrides(c => c.ModuleKeyGenerator = typeof(FakeModuleKeyGenerator));
-            }
-        }
-
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
             FakeContainer = new object();
-
-            Generator = new Fakes.FakeModuleKeyGenerator();
         }
 
         protected override INancyEngine GetEngineInternal()
@@ -313,11 +260,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
             }
 
             return this.FakeNancyEngine;
-        }
-
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return this.Generator;
         }
 
         /// <summary>
@@ -351,22 +293,16 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public override IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             return this.PassedModules.Select(m => (INancyModule)Activator.CreateInstance(m.ModuleType));
         }
 
-        /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
-        /// </summary>
-        /// <param name="moduleKey">Module key</param>
-        /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             return
-                this.PassedModules.Where(m => String.Equals(m.ModuleKey, moduleKey, StringComparison.InvariantCulture))
+                this.PassedModules.Where(m => m.ModuleType == moduleType)
                     .Select(m => (INancyModule)Activator.CreateInstance(m.ModuleType))
                     .FirstOrDefault();
         }
@@ -446,7 +382,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
         public FakeBootstrapperBaseGetModulesOverride()
         {
-            ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType(), "FakeBootstrapperBaseGetModulesOverride") };
+            ModuleRegistrations = new List<ModuleRegistration>() { new ModuleRegistration(this.GetType()) };
         }
 
         /// <summary>
@@ -480,19 +416,19 @@ namespace Nancy.Tests.Unit.Bootstrapper
         /// Get all NancyModule implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="NancyModule"/> instances.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
         public override IEnumerable<INancyModule> GetAllModules(NancyContext context)
         {
             throw new NotImplementedException();
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="NancyModule"/> implementation based on its key
+        /// Retrieves a specific <see cref="INancyModule"/> implementation - should be per-request lifetime
         /// </summary>
-        /// <param name="moduleKey">Module key</param>
+        /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
-        /// <returns>The <see cref="NancyModule"/> instance that was retrived by the <paramref name="moduleKey"/> parameter.</returns>
-        public override INancyModule GetModuleByKey(string moduleKey, NancyContext context)
+        /// <returns>The <see cref="INancyModule"/> instance</returns>
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             throw new NotImplementedException();
         }
@@ -500,11 +436,6 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override INancyEngine GetEngineInternal()
         {
             return A.Fake<INancyEngine>();
-        }
-
-        protected override IModuleKeyGenerator GetModuleKeyGenerator()
-        {
-            return new Fakes.FakeModuleKeyGenerator();
         }
 
         protected override object GetApplicationContainer()

@@ -6,7 +6,7 @@ namespace Nancy.Routing
     /// <summary>
     /// Contains a cache of all routes registered in the system
     /// </summary>
-    public interface IRouteCache : IDictionary<string, List<Tuple<int, RouteDescription>>>
+    public interface IRouteCache : IDictionary<Type, List<Tuple<int, RouteDescription>>>
     {
         /// <summary>
         /// Gets a boolean value that indicates of the cache is empty or not.

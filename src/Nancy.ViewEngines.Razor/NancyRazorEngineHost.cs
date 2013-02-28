@@ -22,27 +22,10 @@
             this.DefaultNamespace = "RazorOutput";
             this.DefaultClassName = "RazorView";
 
-            this.GeneratedClassContext = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
-		}
+            var context = new GeneratedClassContext("Execute", "Write", "WriteLiteral", "WriteTo", "WriteLiteralTo", typeof(HelperResult).FullName, "DefineSection");
+            context.ResolveUrlMethodName = "ResolveUrl";
 
-        /// <summary>
-        /// Decorates the code generator.
-        /// </summary>
-        /// <param name="incomingCodeGenerator">The incoming code generator.</param>
-        /// <returns></returns>
-		public override RazorCodeGenerator DecorateCodeGenerator(RazorCodeGenerator incomingCodeGenerator)
-		{
-			if (incomingCodeGenerator is CSharpRazorCodeGenerator)
-			{
-			    return new NancyCSharpRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
-			}
-
-            if (incomingCodeGenerator is VBRazorCodeGenerator)
-            {
-                return new NancyVisualBasicRazorCodeGenerator(incomingCodeGenerator.ClassName, incomingCodeGenerator.RootNamespaceName, incomingCodeGenerator.SourceFileName, incomingCodeGenerator.Host);
-            }
-
-            return base.DecorateCodeGenerator(incomingCodeGenerator);
+            this.GeneratedClassContext = context;
 		}
 
         /// <summary>

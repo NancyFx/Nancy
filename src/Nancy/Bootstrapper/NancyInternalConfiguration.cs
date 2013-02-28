@@ -9,6 +9,7 @@ namespace Nancy.Bootstrapper
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
+    using Nancy.Routing.Trie;
     using Nancy.ViewEngines;
     using Responses;
     using Responses.Negotiation;
@@ -25,33 +26,6 @@ namespace Nancy.Bootstrapper
     public sealed class NancyInternalConfiguration
     {
         /// <summary>
-        /// Private collection of ignored assemblies
-        /// </summary>
-        private IList<Func<Assembly, bool>> ignoredAssemblies = new List<Func<Assembly, bool>>(DefaultIgnoredAssemblies);
-
-        /// <summary>
-        /// Default assembly ignore list
-        /// </summary>
-        public static IEnumerable<Func<Assembly, bool>> DefaultIgnoredAssemblies = new Func<Assembly, bool>[]
-            {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("WebDeb.DebHost40", StringComparison.InvariantCulture),
-            };
-
-        /// <summary>
         /// Gets the Nancy default configuration
         /// </summary>
         public static NancyInternalConfiguration Default
@@ -64,7 +38,6 @@ namespace Nancy.Bootstrapper
                     RoutePatternMatcher = typeof(DefaultRoutePatternMatcher),
                     ContextFactory = typeof(DefaultNancyContextFactory),
                     NancyEngine = typeof(NancyEngine),
-                    ModuleKeyGenerator = typeof(DefaultModuleKeyGenerator),
                     RouteCache = typeof(RouteCache),
                     RouteCacheProvider = typeof(DefaultRouteCacheProvider),
                     ViewLocator = typeof(DefaultViewLocator),
@@ -79,9 +52,8 @@ namespace Nancy.Bootstrapper
                     ViewCache = typeof(DefaultViewCache),
                     RenderContextFactory = typeof(DefaultRenderContextFactory),
                     ModelValidatorLocator = typeof(DefaultValidatorLocator),
-                    ViewLocationCache = typeof(DefaultViewLocationCache),
                     ViewLocationProvider = typeof(FileSystemViewLocationProvider),
-                    StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) }.Concat(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(true))),
+                    StatusCodeHandlers = new List<Type>(AppDomainAssemblyTypeScanner.TypesOf<IStatusCodeHandler>(ScanMode.ExcludeNancy).Concat(new[] { typeof(DefaultStatusCodeHandler) })),
                     CsrfTokenValidator = typeof(DefaultCsrfTokenValidator),
                     ObjectSerializer = typeof(DefaultObjectSerializer),
                     Serializers = AppDomainAssemblyTypeScanner.TypesOf<ISerializer>(ScanMode.ExcludeNancy).Union(new List<Type>(new[] { typeof(DefaultJsonSerializer), typeof(DefaultXmlSerializer) })).ToList(),
@@ -96,6 +68,9 @@ namespace Nancy.Bootstrapper
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
                     ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
+                    StaticContentProvider = typeof(DefaultStaticContentProvider),
+                    RouteResolverTrie = typeof(RouteResolverTrie),
+                    TrieNodeFactory = typeof(TrieNodeFactory),
                 };
             }
         }
@@ -107,8 +82,6 @@ namespace Nancy.Bootstrapper
         public Type ContextFactory { get; set; }
 
         public Type NancyEngine { get; set; }
-
-        public Type ModuleKeyGenerator { get; set; }
 
         public Type RouteCache { get; set; }
 
@@ -137,8 +110,6 @@ namespace Nancy.Bootstrapper
         public Type ViewCache { get; set; }
 
         public Type RenderContextFactory { get; set; }
-
-        public Type ViewLocationCache { get; set; }
 
         public Type ViewLocationProvider { get; set; }
 
@@ -172,29 +143,11 @@ namespace Nancy.Bootstrapper
 
         public Type ResourceAssemblyProvider { get; set; }
 
-        public IEnumerable<Func<Assembly, bool>> IgnoredAssemblies
-        {
-            get
-            {
-                return this.ignoredAssemblies;
-            }
+        public Type StaticContentProvider { get; set; }
 
-            set
-            {
-                this.ignoredAssemblies = new List<Func<Assembly, bool>>(value);
+        public Type RouteResolverTrie { get; set; }
 
-                UpdateIgnoredAssemblies(value);
-            }
-        }
-
-        /// <summary>
-        /// Updates the ignored assemblies in the type scanner to keep them in sync
-        /// </summary>
-        /// <param name="assemblies">Assemblies ignore predicates</param>
-        private static void UpdateIgnoredAssemblies(IEnumerable<Func<Assembly, bool>> assemblies)
-        {
-            AppDomainAssemblyTypeScanner.IgnoredAssemblies = assemblies;
-        }
+        public Type TrieNodeFactory { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -238,7 +191,6 @@ namespace Nancy.Bootstrapper
             {
                 new TypeRegistration(typeof(IRouteResolver), this.RouteResolver),
                 new TypeRegistration(typeof(INancyEngine), this.NancyEngine),
-                new TypeRegistration(typeof(IModuleKeyGenerator), this.ModuleKeyGenerator),
                 new TypeRegistration(typeof(IRouteCache), this.RouteCache),
                 new TypeRegistration(typeof(IRouteCacheProvider), this.RouteCacheProvider),
                 new TypeRegistration(typeof(IRoutePatternMatcher), this.RoutePatternMatcher),
@@ -254,7 +206,6 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IViewResolver), this.ViewResolver),
                 new TypeRegistration(typeof(IViewCache), this.ViewCache),
                 new TypeRegistration(typeof(IRenderContextFactory), this.RenderContextFactory),
-                new TypeRegistration(typeof(IViewLocationCache), this.ViewLocationCache),
                 new TypeRegistration(typeof(IViewLocationProvider), this.ViewLocationProvider),
                 new TypeRegistration(typeof(ICsrfTokenValidator), this.CsrfTokenValidator), 
                 new TypeRegistration(typeof(IObjectSerializer), this.ObjectSerializer), 
@@ -268,6 +219,9 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
                 new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
+                new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
+                new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
+                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
             };
         }
 
@@ -284,18 +238,6 @@ namespace Nancy.Bootstrapper
                 new CollectionTypeRegistration(typeof(IStatusCodeHandler), this.StatusCodeHandlers), 
                 new CollectionTypeRegistration(typeof(IDiagnosticsProvider), this.InteractiveDiagnosticProviders)
             };
-        }
-
-        /// <summary>
-        /// Adds an ignore predicate to the assembly ignore list
-        /// </summary>
-        /// <param name="ignorePredicate">Ignore predicate to add</param>
-        /// <returns>Configuration object</returns>
-        public NancyInternalConfiguration WithIgnoredAssembly(Func<Assembly, bool> ignorePredicate)
-        {
-            this.ignoredAssemblies.Add(ignorePredicate);
-
-            return this;
         }
     }
 }

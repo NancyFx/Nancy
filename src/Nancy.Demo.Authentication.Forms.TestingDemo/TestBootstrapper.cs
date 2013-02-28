@@ -7,7 +7,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
 
     public class TestBootstrapper : FormsAuthBootstrapper
     {
-        protected override Type RootPathProvider
+        protected override IRootPathProvider RootPathProvider
         {
             get
             {
@@ -25,7 +25,7 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
 
                 FakeRootPathProvider.RootPath = rootPath;
 
-                return typeof(FakeRootPathProvider);
+                return new FakeRootPathProvider();
             }
         }
     }

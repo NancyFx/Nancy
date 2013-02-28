@@ -2,7 +2,6 @@
 {
     using System.Globalization;
     using System.Web.Razor.Parser;
-    using System.Web.Razor.Parser.SyntaxTree;
     using System.Web.Razor.Text;
 
     /// <summary>
@@ -18,61 +17,47 @@
         /// </summary>
         public NancyCSharpRazorCodeParser()
         {
-            this.RazorKeywords.Add("model", WrapSimpleBlockParser(BlockType.Directive, this.ParseModelStatement));
+            this.MapDirectives(this.ModelDirective, "model");
         }
 
-        protected override bool ParseInheritsStatement(CodeBlockInfo block)
+        protected virtual void ModelDirective()
         {
+            this.AssertDirective("model");
+
+            this.AcceptAndMoveNext();
+
+            var endModelLocation = CurrentLocation;
+
+            this.BaseTypeDirective("The 'model' keyword must be followed by a type name on the same line.", s => new CSharpModelCodeGenerator(s));
+
+            if (this.modelStatementFound)
+            {
+                this.Context.OnError(endModelLocation, string.Format(CultureInfo.CurrentCulture, "Cannot have more than one @model statement."));
+            }
+
+            modelStatementFound = true;
+
+            CheckForInheritsAndModelStatements();
+        }
+
+        protected override void InheritsDirective()
+        {
+            this.AssertDirective("inherits");
+            this.AcceptAndMoveNext();
+
             this.endInheritsLocation = this.CurrentLocation;
-            var result = base.ParseInheritsStatement(block);
+
+            base.InheritsDirective();
+
             this.CheckForInheritsAndModelStatements();
-            return result;
         }
 
         private void CheckForInheritsAndModelStatements()
         {
             if (this.modelStatementFound && this.endInheritsLocation.HasValue)
             {
-                this.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @inherits statement and an @model statement."));
+                this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @inherits statement and an @model statement."));
             }
-        }
-
-        private bool ParseModelStatement(CodeBlockInfo block)
-        {
-            var currentLocation = this.CurrentLocation;
-            var acceptedCharacters = this.RequireSingleWhiteSpace() ? AcceptedCharacters.None : AcceptedCharacters.Any;
-
-            this.End(MetaCodeSpan.Create(this.Context, false, acceptedCharacters));
-
-            if (this.modelStatementFound)
-            {
-                this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "Only one @model statement is allowed."));
-            }
-            
-            this.modelStatementFound = true;
-            this.Context.AcceptWhiteSpace(false);
-            string modelTypeName = null;
-
-            if (ParserHelpers.IsIdentifierStart(this.CurrentCharacter))
-            {
-                using (this.Context.StartTemporaryBuffer())
-                {
-                    this.Context.AcceptUntil(ParserHelpers.IsNewLine);
-                    modelTypeName = this.Context.ContentBuffer.ToString();
-                    this.Context.AcceptTemporaryBuffer();
-                }
-
-                this.Context.AcceptNewLine();
-            }
-            else
-            {
-                this.OnError(currentLocation, string.Format(CultureInfo.CurrentCulture, "@model must be followed by a type name."));
-            }
-            
-            this.CheckForInheritsAndModelStatements();
-            this.End(new ModelSpan(this.Context, modelTypeName));
-
-            return false;
         }
     }
 }

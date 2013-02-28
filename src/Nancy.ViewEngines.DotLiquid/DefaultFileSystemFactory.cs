@@ -1,5 +1,7 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
+    using System.Collections.Generic;
+
     using global::DotLiquid.FileSystems;
 
     /// <summary>
@@ -19,10 +21,11 @@
         /// Gets a <see cref="IFileSystem"/> instance for the provided <paramref name="context"/>.
         /// </summary>
         /// <param name="context">The context that the filesystem should be created for.</param>
+        /// <param name="extensions"></param>
         /// <returns>An <see cref="IFileSystem"/> instance.</returns>
-        public IFileSystem GetFileSystem(ViewEngineStartupContext context)
+        public IFileSystem GetFileSystem(ViewEngineStartupContext context, IEnumerable<string> extensions)
         {
-            return new LiquidNancyFileSystem(context);
+            return new LiquidNancyFileSystem(context, extensions);
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Validation
 {
     /// <summary>
-    /// Extensions to <see cref="NancyModule"/> for validation.
+    /// Extensions to <see cref="INancyModule"/> for validation.
     /// </summary>
     public static class ModuleExtensions
     {
