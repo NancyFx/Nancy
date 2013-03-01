@@ -106,6 +106,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\BootstrapperException.cs" />
