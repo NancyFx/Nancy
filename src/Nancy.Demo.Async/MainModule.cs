@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Demo.Async
 {
+    using System;
     using System.Net.Http;
     using System.Threading.Tasks;
 
@@ -7,25 +8,60 @@
     {
         public MainModule()
         {
+            Before += async ctx =>
+                {
+                    this.AddToLog("Before Hook Delay\n");
+                    await Task.Delay(5000);
+
+                    return null;
+                };
+
+            After += async ctx =>
+                {
+                    this.AddToLog("After Hook Delay\n");
+                    await Task.Delay(5000);
+                    this.AddToLog("After Hook Complete\n");
+
+                    ctx.Response = this.GetLog();
+                };
+
             Get["/", true] = async x =>
                 {
-                    var result = string.Empty;
-
-                    result += "Delay 1\n";
+                    this.AddToLog("Delay 1\n");
                     await Task.Delay(1000);
 
-                    result += "Delay 2\n";
+                    this.AddToLog("Delay 2\n");
                     await Task.Delay(1000);
 
-                    result += "Executing async http client\n";
+                    this.AddToLog("Executing async http client\n");
                     var client = new HttpClient();
                     var res = await client.GetAsync("http://nancyfx.org");
                     var content = await res.Content.ReadAsStringAsync();
 
-                    result += "Response: " + content.Split('\n')[0];
+                    this.AddToLog("Response: " + content.Split('\n')[0] + "\n");
 
-                    return (Response)result;
+                    return (Response)this.GetLog();
                 };
+        }
+
+        private void AddToLog(string logLine)
+        {
+            if (!this.Context.Items.ContainsKey("Log"))
+            {
+                this.Context.Items["Log"] = string.Empty;
+            }
+
+            this.Context.Items["Log"] = (string)this.Context.Items["Log"] + DateTime.Now.ToLongTimeString() + " : " + logLine;
+        }
+
+        private string GetLog()
+        {
+            if (!this.Context.Items.ContainsKey("Log"))
+            {
+                this.Context.Items["Log"] = string.Empty;
+            }
+
+            return (string)this.Context.Items["Log"];
         }
     }
 }
