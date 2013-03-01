@@ -306,40 +306,17 @@
 
         private static Task<Response> InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
         {
-            // TODO - actually make it async
-            var tcs = new TaskCompletionSource<Response>();
-
-            try
+            if (pipeline == null)
             {
-                var preRequestResponse = pipeline.Invoke(context);
-
-                tcs.SetResult(preRequestResponse);
-            }
-            catch (Exception e)
-            {
-                tcs.SetException(e);
+                return TaskHelpers.GetCompletedTask<Response>(null);
             }
 
-            return tcs.Task;
+            return pipeline.Invoke(context);
         }
 
         private Task InvokePostRequestHook(NancyContext context, AfterPipeline pipeline)
         {
-            // TODO - actually make it async
-            var tcs = new TaskCompletionSource<object>();
-
-            try
-            {
-                pipeline.Invoke(context);
-
-                tcs.SetResult(null);
-            }
-            catch (Exception e)
-            {
-                tcs.SetException(e);
-            }
-
-            return tcs.Task;
+            return pipeline.Invoke(context);
         }
 
         private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)

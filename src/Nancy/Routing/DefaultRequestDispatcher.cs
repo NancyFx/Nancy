@@ -44,7 +44,6 @@ namespace Nancy.Routing
 
             var resolveResult = this.Resolve(context);
 
-
             var preReqTask = ExecuteRoutePreReq(context, resolveResult.Before);
 
             preReqTask.WhenCompleted(
@@ -75,18 +74,12 @@ namespace Nancy.Routing
             return tcs.Task;
         }
 
-        private void ExecutePost(NancyContext context, Action<NancyContext> postHook, TaskCompletionSource<Response> tcs)
+        private void ExecutePost(NancyContext context, AfterPipeline postHook, TaskCompletionSource<Response> tcs)
         {
-            try
-            {
-                postHook.Invoke(context);
-
-                tcs.SetResult(context.Response);
-            }
-            catch (Exception e)
-            {
-                tcs.SetException(e);
-            }
+            postHook.Invoke(context).WhenCompleted(
+                                        t => tcs.SetResult(context.Response),
+                                        t => tcs.SetException(t.Exception),
+                                        false);
         }
 
         private Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
@@ -108,28 +101,14 @@ namespace Nancy.Routing
                 };
         }
 
-        private static Task<Response> ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        private static Task<Response> ExecuteRoutePreReq(NancyContext context, BeforePipeline resolveResultPreReq)
         {
-            // TODO - actually make it async
             if (resolveResultPreReq == null)
             {
-                TaskHelpers.GetCompletedTask<Response>(null);
+                return TaskHelpers.GetCompletedTask<Response>(null);
             }
 
-            var tcs = new TaskCompletionSource<Response>();
-
-            try
-            {
-                var preRequestResponse = resolveResultPreReq.Invoke(context);
-
-                tcs.SetResult(preRequestResponse);
-            }
-            catch (Exception e)
-            {
-                tcs.SetException(e);
-            }
-
-            return tcs.Task;
+            return resolveResultPreReq.Invoke(context);
         }
 
         private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)

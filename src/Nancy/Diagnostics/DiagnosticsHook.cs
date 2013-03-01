@@ -240,14 +240,14 @@ namespace Nancy.Diagnostics
                 context.Request.Url.Path == "/";
         }
 
-        private static void ExecuteRoutePreReq(NancyContext context, Func<NancyContext, Response> resolveResultPreReq)
+        private static void ExecuteRoutePreReq(NancyContext context, BeforePipeline resolveResultPreReq)
         {
             if (resolveResultPreReq == null)
             {
                 return;
             }
 
-            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context);
+            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context).Result;
 
             if (resolveResultPreReqResponse != null)
             {

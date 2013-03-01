@@ -68,6 +68,10 @@
             {
                 ExecuteTasksInternal(context, enumerator, tcs);
             }
+            else
+            {
+                tcs.SetResult(null);
+            }
 
             return tcs.Task;
         }
