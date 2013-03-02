@@ -25,7 +25,7 @@
                     ctx.Response = this.GetLog();
                 };
 
-            Get["/", true] = async x =>
+            Get["/", true] = async (x, ct) =>
                 {
                     this.AddToLog("Delay 1\n");
                     await Task.Delay(1000);

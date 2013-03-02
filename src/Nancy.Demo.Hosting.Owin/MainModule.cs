@@ -14,14 +14,14 @@ namespace Nancy.Demo.Hosting.Owin
         {
             Get["/moo"] = x => "moo";
 
-            Get["/test3", true] = async x =>
+            Get["/test3", true] = async (x,c) =>
                 { 
                     await Task.Delay(500);
 
                     return "done";
                 };
 
-            Get["/test2", true] = async x =>
+            Get["/test2", true] = async (x,c) =>
                 {
                     var client = new HttpClient();
 

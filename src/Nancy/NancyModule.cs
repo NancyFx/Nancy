@@ -4,6 +4,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.IO;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.ModelBinding;
@@ -271,12 +272,12 @@ namespace Nancy
                 set { this.AddRoute(path, condition, value); }
             }
 
-            public Func<dynamic, Task<dynamic>> this[string path, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, bool runAsync]
             {
                 set { this.AddRoute(path, null, value); }
             }
 
-            public Func<dynamic, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
+            public Func<dynamic, CancellationToken, Task<dynamic>> this[string path, Func<NancyContext, bool> condition, bool runAsync]
             {
                 set { this.AddRoute(path, condition, value); }
             }
@@ -288,7 +289,7 @@ namespace Nancy
                 this.parentModule.routes.Add(Route.FromSync(this.method, fullPath, condition, value));
             }
 
-            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, Task<dynamic>> value)
+            protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
             {
                 var fullPath = String.Concat(this.parentModule.ModulePath, path);
 
