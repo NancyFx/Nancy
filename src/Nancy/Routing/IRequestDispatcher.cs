@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Routing
 {
+    using System.Threading;
     using System.Threading.Tasks;
 
     /// <summary>
@@ -11,6 +12,7 @@
         /// Dispatches a requests.
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
-        Task<Response> Dispatch(NancyContext context);
+        /// <param name="cancellationToken">Cancellation token</param>
+        Task<Response> Dispatch(NancyContext context, CancellationToken cancellationToken);
     }
 }

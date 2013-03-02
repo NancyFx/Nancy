@@ -4,6 +4,7 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.Helpers;
@@ -37,14 +38,14 @@ namespace Nancy.Routing
         /// Dispatches a requests.
         /// </summary>
         /// <param name="context">The <see cref="NancyContext"/> for the current request.</param>
-        public Task<Response> Dispatch(NancyContext context)
+        public Task<Response> Dispatch(NancyContext context, CancellationToken cancellationToken)
         {
             // TODO - May need to make this run off context rather than response .. seems a bit icky currently
             var tcs = new TaskCompletionSource<Response>();
 
             var resolveResult = this.Resolve(context);
 
-            var preReqTask = ExecuteRoutePreReq(context, resolveResult.Before);
+            var preReqTask = ExecuteRoutePreReq(context, cancellationToken, resolveResult.Before);
 
             preReqTask.WhenCompleted(
                 completedTask =>
@@ -60,23 +61,23 @@ namespace Nancy.Routing
                                     {
                                         context.Response = completedRouteTask.Result;
 
-                                        ExecutePost(context, resolveResult.After, tcs);
+                                        ExecutePost(context, cancellationToken, resolveResult.After, tcs);
                                     },
                                 HandleFaultedTask(context, resolveResult.OnError, tcs));
                             
                             return;
                         }
 
-                        ExecutePost(context, resolveResult.After, tcs);
+                        ExecutePost(context, cancellationToken, resolveResult.After, tcs);
                     },
                 HandleFaultedTask(context, resolveResult.OnError, tcs));
 
             return tcs.Task;
         }
 
-        private void ExecutePost(NancyContext context, AfterPipeline postHook, TaskCompletionSource<Response> tcs)
+        private void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, TaskCompletionSource<Response> tcs)
         {
-            postHook.Invoke(context).WhenCompleted(
+            postHook.Invoke(context, cancellationToken).WhenCompleted(
                                         t => tcs.SetResult(context.Response),
                                         t => tcs.SetException(t.Exception),
                                         false);
@@ -101,14 +102,14 @@ namespace Nancy.Routing
                 };
         }
 
-        private static Task<Response> ExecuteRoutePreReq(NancyContext context, BeforePipeline resolveResultPreReq)
+        private static Task<Response> ExecuteRoutePreReq(NancyContext context, CancellationToken cancellationToken, BeforePipeline resolveResultPreReq)
         {
             if (resolveResultPreReq == null)
             {
                 return TaskHelpers.GetCompletedTask<Response>(null);
             }
 
-            return resolveResultPreReq.Invoke(context);
+            return resolveResultPreReq.Invoke(context, cancellationToken);
         }
 
         private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)

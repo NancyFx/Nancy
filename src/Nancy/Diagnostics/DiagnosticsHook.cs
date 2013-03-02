@@ -4,6 +4,8 @@ namespace Nancy.Diagnostics
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
+
     using Bootstrapper;
     using Cookies;
     using Cryptography;
@@ -19,6 +21,8 @@ namespace Nancy.Diagnostics
 
     public static class DiagnosticsHook
     {
+        private static readonly CancellationToken CancellationToken = new CancellationToken();
+
         private const string PipelineKey = "__Diagnostics";
 
         internal const string ItemsKey = "DIAGS_REQUEST";
@@ -104,8 +108,6 @@ namespace Nancy.Diagnostics
         {
             var session = GetSession(ctx, diagnosticsConfiguration, serializer);
 
-            
-
             if (session == null)
             {
                 var view = GetDiagnosticsLoginView(ctx);
@@ -119,7 +121,7 @@ namespace Nancy.Diagnostics
             var resolveResult = routeResolver.Resolve(ctx);
 
             ctx.Parameters = resolveResult.Parameters;
-            ExecuteRoutePreReq(ctx, resolveResult.Before);
+            ExecuteRoutePreReq(ctx, CancellationToken, resolveResult.Before);
 
             if (ctx.Response == null)
             {
@@ -136,7 +138,7 @@ namespace Nancy.Diagnostics
 
             if (resolveResult.After != null)
             {
-                resolveResult.After.Invoke(ctx);
+                resolveResult.After.Invoke(ctx, CancellationToken);
             }
 
             AddUpdateSessionCookie(session, ctx, diagnosticsConfiguration, serializer);
@@ -240,14 +242,14 @@ namespace Nancy.Diagnostics
                 context.Request.Url.Path == "/";
         }
 
-        private static void ExecuteRoutePreReq(NancyContext context, BeforePipeline resolveResultPreReq)
+        private static void ExecuteRoutePreReq(NancyContext context, CancellationToken cancellationToken, BeforePipeline resolveResultPreReq)
         {
             if (resolveResultPreReq == null)
             {
                 return;
             }
 
-            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context).Result;
+            var resolveResultPreReqResponse = resolveResultPreReq.Invoke(context, cancellationToken).Result;
 
             if (resolveResultPreReqResponse != null)
             {

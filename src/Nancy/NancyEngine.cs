@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Bootstrapper;
@@ -149,11 +150,14 @@
                 return tcs.Task;
             }
 
-            // TODO - async the pipelines from the other spike
             var pipelines =
                 this.RequestPipelinesFactory.Invoke(context);
 
-            var task = this.InvokeRequestLifeCycle(context, pipelines);
+            // TODO - potentially get this passed in so requests can be cancelled
+            var cancellationToken = new CancellationToken();
+            context.Items["CANCELLATION_TOKEN"] = cancellationToken; // So we get disposed when the request is complete
+
+            var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
             task.WhenCompleted(
                 completeTask =>
@@ -249,11 +253,11 @@
             }
         }
 
-        private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, IPipelines pipelines)
+        private Task<NancyContext> InvokeRequestLifeCycle(NancyContext context, CancellationToken cancellationToken, IPipelines pipelines)
         {
             var tcs = new TaskCompletionSource<NancyContext>();
 
-            var preHookTask = InvokePreRequestHook(context, pipelines.BeforeRequest);
+            var preHookTask = InvokePreRequestHook(context, cancellationToken, pipelines.BeforeRequest);
 
             preHookTask.WhenCompleted(t =>
                 {
@@ -266,14 +270,14 @@
                         return;
                     }
 
-                    var dispatchTask = this.dispatcher.Dispatch(context);
+                    var dispatchTask = this.dispatcher.Dispatch(context, cancellationToken);
 
                     dispatchTask.WhenCompleted(
                         completedTask =>
                         {
                             context.Response = completedTask.Result;
 
-                            var postHookTask = InvokePostRequestHook(context, pipelines.AfterRequest);
+                            var postHookTask = InvokePostRequestHook(context, cancellationToken, pipelines.AfterRequest);
 
                             postHookTask.WhenCompleted(
                                 completedPostHookTask => tcs.SetResult(context),
@@ -304,19 +308,19 @@
                 };
         }
 
-        private static Task<Response> InvokePreRequestHook(NancyContext context, BeforePipeline pipeline)
+        private static Task<Response> InvokePreRequestHook(NancyContext context, CancellationToken cancellationToken, BeforePipeline pipeline)
         {
             if (pipeline == null)
             {
                 return TaskHelpers.GetCompletedTask<Response>(null);
             }
 
-            return pipeline.Invoke(context);
+            return pipeline.Invoke(context, cancellationToken);
         }
 
-        private Task InvokePostRequestHook(NancyContext context, AfterPipeline pipeline)
+        private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)
         {
-            return pipeline.Invoke(context);
+            return pipeline.Invoke(context, cancellationToken);
         }
 
         private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)

@@ -8,7 +8,7 @@
     {
         public MainModule()
         {
-            Before += async ctx =>
+            Before += async (ctx, ct) =>
                 {
                     this.AddToLog("Before Hook Delay\n");
                     await Task.Delay(5000);
@@ -16,7 +16,7 @@
                     return null;
                 };
 
-            After += async ctx =>
+            After += async (ctx, ct) =>
                 {
                     this.AddToLog("After Hook Delay\n");
                     await Task.Delay(5000);
