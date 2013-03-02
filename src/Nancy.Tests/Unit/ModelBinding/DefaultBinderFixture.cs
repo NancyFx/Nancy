@@ -722,7 +722,8 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
 
             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
-            var binder = this.GetBinder(typeConverters);
+            var bodyDeserializers = new IBodyDeserializer[] { new XmlBodyDeserializer() };
+            var binder = this.GetBinder(typeConverters, bodyDeserializers);
             var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 0, StringProperty = "From body" });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
