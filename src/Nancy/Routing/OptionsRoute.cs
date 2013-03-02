@@ -11,7 +11,7 @@
     public class OptionsRoute : Route
     {
         public OptionsRoute(string path, IEnumerable<string> allowedMethods) 
-            : base("OPTIONS", path, null, x => CreateMethodOptionsResponse(allowedMethods))
+            : base("OPTIONS", path, null, (x,c) => CreateMethodOptionsResponse(allowedMethods))
         {            
         }
 

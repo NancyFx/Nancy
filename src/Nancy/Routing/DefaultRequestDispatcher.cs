@@ -54,7 +54,7 @@ namespace Nancy.Routing
 
                         if (context.Response == null)
                         {
-                            var routeTask = this.routeInvoker.Invoke(resolveResult.Route, resolveResult.Parameters, context);
+                            var routeTask = this.routeInvoker.Invoke(resolveResult.Route, cancellationToken, resolveResult.Parameters, context);
 
                             routeTask.WhenCompleted(
                                 completedRouteTask =>

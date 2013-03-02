@@ -4,6 +4,7 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.Conventions;
@@ -33,14 +34,15 @@ namespace Nancy.Routing
         /// Invokes the specified <paramref name="route"/> with the provided <paramref name="parameters"/>.
         /// </summary>
         /// <param name="route">The route that should be invoked.</param>
+        /// <param name="cancellationToken">Cancellation token</param>
         /// <param name="parameters">The parameters that the route should be invoked with.</param>
         /// <param name="context">The context of the route that is being invoked.</param>
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
-        public Task<Response> Invoke(Route route, DynamicDictionary parameters, NancyContext context)
+        public Task<Response> Invoke(Route route, CancellationToken cancellationToken, DynamicDictionary parameters, NancyContext context)
         {
             var tcs = new TaskCompletionSource<Response>();
 
-            var result = route.Invoke(parameters);
+            var result = route.Invoke(parameters, cancellationToken);
 
             result.WhenCompleted(
                 completedTask =>

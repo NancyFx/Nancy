@@ -19,7 +19,7 @@
         /// <param name="method">The HTTP method of the route.</param>
         /// <param name="allowedMethods">The HTTP methods that can be used to invoke the route.</param>
         public MethodNotAllowedRoute(string path, string method, IEnumerable<string> allowedMethods)
-            : base(method, path, null, x => CreateMethodNotAllowedResponse(allowedMethods))
+            : base(method, path, null, (x,c) => CreateMethodNotAllowedResponse(allowedMethods))
         {
         }
 
