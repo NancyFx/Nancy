@@ -2,9 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Threading;
     using System.Threading.Tasks;
 
-    public class BeforePipeline : AsyncNamedPipelineBase<Func<NancyContext, Task<Response>>, Func<NancyContext, Response>>
+    public class BeforePipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task<Response>>, Func<NancyContext, Response>>
     {
         public BeforePipeline()
         {
@@ -15,19 +16,19 @@
         {
         }
 
-        public static implicit operator Func<NancyContext, Task<Response>>(BeforePipeline pipeline)
+        public static implicit operator Func<NancyContext, CancellationToken, Task<Response>>(BeforePipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
-        public static implicit operator BeforePipeline(Func<NancyContext, Task<Response>> func)
+        public static implicit operator BeforePipeline(Func<NancyContext, CancellationToken, Task<Response>> func)
         {
             var pipeline = new BeforePipeline();
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
-        public static BeforePipeline operator +(BeforePipeline pipeline, Func<NancyContext, Task<Response>> func)
+        public static BeforePipeline operator +(BeforePipeline pipeline, Func<NancyContext, CancellationToken, Task<Response>> func)
         {
             pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
@@ -49,7 +50,7 @@
             return pipelineToAddTo;
         }
 
-        public Task<Response> Invoke(NancyContext context)
+        public Task<Response> Invoke(NancyContext context, CancellationToken cancellationToken)
         {
             var tcs = new TaskCompletionSource<Response>();
 
@@ -57,7 +58,7 @@
 
             if (enumerator.MoveNext())
             {
-                ExecuteTasksWithSingleResultInternal(context, enumerator, tcs);
+                ExecuteTasksWithSingleResultInternal(context, cancellationToken, enumerator, tcs);
             }
             else
             {
@@ -67,7 +68,7 @@
             return tcs.Task;
         }
 
-        private static void ExecuteTasksWithSingleResultInternal(NancyContext context, IEnumerator<Func<NancyContext, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
+        private static void ExecuteTasksWithSingleResultInternal(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
         {
             // Endless loop to try and optimise the "main" use case of 
             // our tasks just being delegates wrapped in a task.
@@ -78,7 +79,7 @@
             // then we will bale out and set a continuation.
             while (true)
             {
-                var current = enumerator.Current.Invoke(context);
+                var current = enumerator.Current.Invoke(context, cancellationToken);
 
                 if (current.Status == TaskStatus.Created)
                 {
@@ -106,12 +107,12 @@
                 }
 
                 // Task hasn't finished - set a continuation and bail out of the loop
-                current.ContinueWith(ExecuteTasksWithSingleResultContinuation(context, enumerator, tcs), TaskContinuationOptions.ExecuteSynchronously);
+                current.ContinueWith(ExecuteTasksWithSingleResultContinuation(context, cancellationToken, enumerator, tcs), TaskContinuationOptions.ExecuteSynchronously);
                 break;
             }
         }
 
-        private static Action<Task<Response>> ExecuteTasksWithSingleResultContinuation(NancyContext context, IEnumerator<Func<NancyContext, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
+        private static Action<Task<Response>> ExecuteTasksWithSingleResultContinuation(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task<Response>>> enumerator, TaskCompletionSource<Response> tcs)
         {
             return t =>
             {
@@ -119,7 +120,7 @@
                 {
                     if (enumerator.MoveNext())
                     {
-                        ExecuteTasksWithSingleResultInternal(context, enumerator, tcs);
+                        ExecuteTasksWithSingleResultInternal(context, cancellationToken, enumerator, tcs);
                     }
                     else
                     {
@@ -161,9 +162,9 @@
         /// </summary>
         /// <param name="syncDelegate">Sync delegate instance</param>
         /// <returns>Async delegate instance</returns>
-        protected override Func<NancyContext, Task<Response>> Wrap(Func<NancyContext, Response> syncDelegate)
+        protected override Func<NancyContext, CancellationToken, Task<Response>> Wrap(Func<NancyContext, Response> syncDelegate)
         {
-            return ctx =>
+            return (ctx, ct) =>
             {
                 var tcs = new TaskCompletionSource<Response>();
                 try
