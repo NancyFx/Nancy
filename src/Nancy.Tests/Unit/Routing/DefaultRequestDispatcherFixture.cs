@@ -3,6 +3,9 @@ namespace Nancy.Tests.Unit.Routing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using FakeItEasy;
     using Fakes;
     using Nancy.Responses.Negotiation;
@@ -22,9 +25,16 @@ namespace Nancy.Tests.Unit.Routing
             this.routeResolver = A.Fake<IRouteResolver>();
             this.routeInvoker = A.Fake<IRouteInvoker>();
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
                 {
-                    return (Response)((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[1]);
+                    var tcs = new TaskCompletionSource<Response>();
+
+                    var result =
+                        ((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[1], new CancellationToken()).Result;
+                    
+                    tcs.SetResult(result);
+
+                    return tcs.Task;
                 });
 
             this.requestDispatcher =
