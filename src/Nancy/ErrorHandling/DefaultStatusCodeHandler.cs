@@ -5,7 +5,7 @@ namespace Nancy.ErrorHandling
     using System.IO;
     using System.Linq;
     using System.Text;
-
+    using IO;
     using Nancy.Extensions;
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace Nancy.ErrorHandling
             context.Response.ContentType = "text/html";
             context.Response.Contents = s =>
                 {
-                    using (var writer = new StreamWriter(s, Encoding.UTF8))
+                    using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
                     {
                         writer.Write(errorPage);
                     }
