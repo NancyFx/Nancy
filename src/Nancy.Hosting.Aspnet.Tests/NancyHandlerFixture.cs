@@ -46,7 +46,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
 
             // When
-            this.handler.ProcessRequest(this.context);
+            this.handler.ProcessRequest(this.context, ar => { }, new object());
 
             // Then
             A.CallTo(() => this.engine.HandleRequest(A<Request>.That.Matches(x => x.Method.Equals("POST")))).MustHaveHappened();
@@ -68,7 +68,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             SetupRequestProcess(nancyContext);
 
             // When
-            this.handler.ProcessRequest(context);
+            this.handler.ProcessRequest(context, ar => { }, new object());
 
             // Then
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
@@ -86,7 +86,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);
 
             // When
-            this.handler.ProcessRequest(this.context);
+            this.handler.ProcessRequest(this.context, ar => { }, new object());
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);
