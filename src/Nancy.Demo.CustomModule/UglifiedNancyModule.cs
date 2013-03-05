@@ -6,6 +6,7 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.ModelBinding;
@@ -126,9 +127,9 @@
         /// </summary>
         /// <param name="syncFunc">Sync delegate</param>
         /// <returns>Task wrapped version</returns>
-        private static Func<dynamic, Task<dynamic>> WrapFunc(Func<object, object> syncFunc)
+        private static Func<dynamic, CancellationToken, Task<dynamic>> WrapFunc(Func<object, object> syncFunc)
         {
-            return p =>
+            return (p, ct) =>
             {
                 var tcs = new TaskCompletionSource<dynamic>();
 
