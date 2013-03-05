@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
+    using System.Threading;
     using Nancy.Routing;
     using Xunit;
 
@@ -23,7 +24,7 @@
         public void Should_set_action_that_returns_not_found_when_instantiated()
         {
             //Given, When
-            var response = (Response)route.Invoke(new DynamicDictionary());
+            var response = (Response)route.Invoke(new DynamicDictionary(), new CancellationToken()).Result;
 
             // Then
             response.ShouldBeOfType<NotFoundResponse>();
