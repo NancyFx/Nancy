@@ -122,7 +122,6 @@
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
 
-            //Func<NancyContext, Response> func = pipeline;
             Func<NancyContext, CancellationToken, Task<Response>> func = pipeline;
             func.Invoke(CreateContext(), new CancellationToken());
 
@@ -134,13 +133,12 @@
         [Fact]
         public void When_cast_from_func_creates_a_pipeline_with_one_item()
         {
-            Func<NancyContext, Response> item1 = (r) => null;
             Func <NancyContext, CancellationToken,Task<Response>> item2 = (token, task) => null;
 
             BeforePipeline castPipeline = item2;
 
             Assert.Equal(1, castPipeline.PipelineDelegates.Count());
-            Assert.Same(item1, castPipeline.PipelineDelegates.First());
+            Assert.Same(item2, castPipeline.PipelineDelegates.First());
         }
 
         [Fact]
