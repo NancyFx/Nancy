@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using Nancy.Testing;
-
+	using Nancy.Tests;
     using Xunit;
 
     public class DefaultRouteResolverFixture
