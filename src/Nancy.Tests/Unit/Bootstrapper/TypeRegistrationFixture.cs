@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
     using System;
+    using System.Collections.Generic;
     using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Xunit;
 
     public class TypeRegistrationFixture
@@ -41,6 +43,16 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
             // Given, When
             var result = Record.Exception(() => new TypeRegistration(typeof(INancyBootstrapper), typeof(DefaultNancyBootstrapper)));
+
+            // Then
+            result.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_not_throw_if_open_generic_implementation_type_is_assignable_to_open_generic_registration_type()
+        {
+            // Given, When
+            var result = Record.Exception(() => new TypeRegistration(typeof(IEnumerable<>), typeof(ConcurrentLimitedCollection<>)));
 
             // Then
             result.ShouldBeNull();
