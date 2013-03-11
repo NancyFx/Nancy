@@ -13,12 +13,57 @@ namespace Nancy.Conventions
     /// </summary>
     public class StaticContentConventionBuilder
     {
-        private static readonly ConcurrentDictionary<string, Func<NancyContext, Response>> ResponseFactoryCache;
+        private class ResponseFactoryCacheKey : IEquatable<ResponseFactoryCacheKey>
+        {
+            private readonly string m_Path;
+            private readonly string m_RootPath;
+
+            public ResponseFactoryCacheKey(string path, string rootPath)
+            {
+                m_Path = path;
+                m_RootPath = rootPath;
+            }
+
+            public string Path
+            {
+                get { return m_Path; }
+            }
+
+            public string RootPath
+            {
+                get { return m_RootPath; }
+            }
+
+            public bool Equals(ResponseFactoryCacheKey other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return string.Equals(m_Path, other.m_Path) && string.Equals(m_RootPath, other.m_RootPath);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((ResponseFactoryCacheKey) obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((m_Path != null ? m_Path.GetHashCode() : 0)*397) ^ (m_RootPath != null ? m_RootPath.GetHashCode() : 0);
+                }
+            }
+        }
+
+        private static readonly ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
         static StaticContentConventionBuilder()
         {
-            ResponseFactoryCache = new ConcurrentDictionary<string, Func<NancyContext, Response>>();
+            ResponseFactoryCache = new ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>>();
         }
 
         /// <summary>
@@ -66,7 +111,7 @@ namespace Nancy.Conventions
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
 
                 return responseFactory.Invoke(ctx);
             };
@@ -99,20 +144,18 @@ namespace Nancy.Conventions
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] { }));
 
                 return responseFactory.Invoke(ctx);
             };
         }
 
-        private static Func<string, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
+        private static Func<ResponseFactoryCacheKey, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
-            return requestPath =>
+            return pathAndRootPair =>
             {
-                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", requestPath, "'")));
-                
-                var extension = 
-                    Path.GetExtension(requestPath).Substring(1);
+                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
+                var extension = Path.GetExtension(pathAndRootPair.Path).SubString(1);
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e.TrimStart(new [] {'.'}), extension, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -121,7 +164,7 @@ namespace Nancy.Conventions
                 }
 
                 var transformedRequestPath = 
-                    GetSafeRequestPath(requestPath, requestedPath, contentPath);
+                    GetSafeRequestPath(pathAndRootPair.Path, requestedPath, contentPath);
 
                 transformedRequestPath = 
                     GetEncodedPath(transformedRequestPath);
