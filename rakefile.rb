@@ -61,14 +61,13 @@ end
 
 desc "Gathers output files and copies them to the output folder"
 task :publish => [:compile] do
-    if not File.directory? OUTPUT
-        Dir.mkdir(OUTPUT)
-    end
-    if not File.directory? "#{OUTPUT}/binaries"
-        Dir.mkdir("#{OUTPUT}/binaries")
+
+    output = "#{OUTPUT}/binaries"
+    if not File.directory? output
+        mkpath(output)
     end
 
-    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), "#{OUTPUT}/binaries"
+    FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), output
 end
 
 desc "Executes MSpec tests"
