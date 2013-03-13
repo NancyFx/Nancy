@@ -156,7 +156,7 @@
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "md" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "md", "markdown" }).First(r => r.Name == viewName);
             return location;
         }
     }

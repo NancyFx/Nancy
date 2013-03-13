@@ -11,14 +11,16 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
                            {
                                var model = new MainModel(
                                    "Jimbo",
-                                   new[]
-                                       {new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"),},
+                                   new[] { new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"), },
                                    "<script type=\"text/javascript\">alert('Naughty JavaScript!');</script>");
 
                                return View["Home", model];
                            };
 
-            Get["{viewname}"] = parameters => View[parameters.viewname];
+            Get["/{viewname}"] = parameters =>
+                                     {
+                                         return View[parameters.viewname];
+                                     };
         }
     }
 }

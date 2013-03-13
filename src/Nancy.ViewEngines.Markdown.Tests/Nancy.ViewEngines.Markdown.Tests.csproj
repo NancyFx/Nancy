@@ -61,7 +61,7 @@
     <None Include="Markdown\master.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Markdown\partial.md">
+    <None Include="Markdown\partial.markdown">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />

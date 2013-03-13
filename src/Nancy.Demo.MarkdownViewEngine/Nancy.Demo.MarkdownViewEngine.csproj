@@ -103,7 +103,7 @@
     <Content Include="Views\Home\home.md" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Home\partial.md" />
+    <None Include="Views\Home\partial.markdown" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Home\MySection.md" />

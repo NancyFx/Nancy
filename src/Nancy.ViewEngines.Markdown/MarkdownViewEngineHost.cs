@@ -5,17 +5,14 @@
     using System.Text.RegularExpressions;
     using SuperSimpleViewEngine;
     using System;
-    
 
     public class MarkdownViewEngineHost : IViewEngineHost
     {
         private readonly IViewEngineHost viewEngineHost;
         private readonly IRenderContext renderContext;
         private readonly MarkdownSharp.Markdown parser;
-        private static readonly IEnumerable<string> validExtensions = new[] { "md", "markdown" };
 
         /// <summary>
-        /// 
         ///<p>		- matches the literal string "<p>"
         ///(		- creates a capture group, so that we can get the text back by backreferencing in our replacement string
         ///@		- matches the literal string "@"
@@ -25,7 +22,11 @@
         /// </summary>
         private static readonly Regex ParagraphSubstitution = new Regex("<p>(@[^<]*)</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MarkdownViewEngineHost"/> class.
+        /// </summary>
+        /// <param name="viewEngineHost">A decorator <see cref="IViewEngineHost"/></param>
+        /// <param name="renderContext">The render context.</param>
         public MarkdownViewEngineHost(IViewEngineHost viewEngineHost, IRenderContext renderContext)
         {
             this.viewEngineHost = viewEngineHost;
@@ -34,13 +35,28 @@
             this.parser = new MarkdownSharp.Markdown();
         }
 
+        /// <summary>
+        /// Context object of the host application.
+        /// </summary>
+        /// <value>An instance of the context object from the host.</value>
         public object Context { get; private set; }
 
+        /// <summary>
+        /// Html "safe" encode a string
+        /// </summary>
+        /// <param name="input">Input string</param>
+        /// <returns>Encoded string</returns>
         public string HtmlEncode(string input)
         {
             return this.viewEngineHost.HtmlEncode(input);
         }
 
+        /// <summary>
+        /// Get the contenst of a template
+        /// </summary>
+        /// <param name="templateName">Name/location of the template</param>
+        /// <param name="model">Model to use to locate the template via conventions</param>
+        /// <returns>Contents of the template, or null if not found</returns>
         public string GetTemplate(string templateName, object model)
         {
             var viewLocationResult = this.renderContext.LocateView(templateName, model);
@@ -50,47 +66,69 @@
                 return "[ERR!]";
             }
 
-            var masterpartialContent = viewLocationResult.Contents.Invoke().ReadToEnd();
-
-            if (!validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
-            {
-                return masterpartialContent;
-            }
+            var templateContent = viewLocationResult.Contents.Invoke().ReadToEnd();
 
             if (viewLocationResult.Name.ToLower() == "master")
             {
-                string header = masterpartialContent.Substring(masterpartialContent.IndexOf("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase),
-                                                                masterpartialContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6);
-
-                string toConvert =
-                    masterpartialContent.Substring(
-                        masterpartialContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6,
-                        (masterpartialContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase) - 7) -
-                        (masterpartialContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase)));
-
-                string footer = masterpartialContent.Substring(masterpartialContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase));
-
-                string html = parser.Transform(toConvert);
-
-                var serverHtml = ParagraphSubstitution.Replace(html, "$1");
-
-                return string.Concat(header, serverHtml, footer);
+                return RenderMasterPage(templateContent);
             }
-            
-            return  parser.Transform(masterpartialContent);
+
+            return parser.Transform(templateContent);
         }
 
+        /// <summary>
+        /// Renders the master page
+        /// </summary>
+        /// <param name="templateContent">The content of the master page</param>
+        /// <returns>HTML of master page</returns>
+        private string RenderMasterPage(string templateContent)
+        {
+            var header =
+                templateContent.Substring(
+                    templateContent.IndexOf("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase),
+                    templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6);
 
+            var toConvert =
+                templateContent.Substring(
+                    templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6,
+                    (templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase) - 7) -
+                    (templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase)));
+
+            var footer =
+                templateContent.Substring(templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase));
+
+            var html = parser.Transform(toConvert);
+
+            var serverHtml = ParagraphSubstitution.Replace(html, "$1");
+
+            return string.Concat(header, serverHtml, footer);
+        }
+
+        /// <summary>
+        /// Gets a uri string for a named route
+        /// </summary>
+        /// <param name="name">Named route name</param>
+        /// <param name="parameters">Parameters to use to expand the uri string</param>
+        /// <returns>Expanded uri string, or null if not found</returns>
         public string GetUriString(string name, params string[] parameters)
         {
             return this.viewEngineHost.GetUriString(name, parameters);
         }
 
+        /// <summary>
+        /// Expands a path to include any base paths
+        /// </summary>
+        /// <param name="path">Path to expand</param>
+        /// <returns>Expanded path</returns>
         public string ExpandPath(string path)
         {
             return this.viewEngineHost.ExpandPath(path);
         }
 
+        /// <summary>
+        /// Get the anti forgery token form element
+        /// </summary>
+        /// <returns>String containin the form element</returns>
         public string AntiForgeryToken()
         {
             return this.viewEngineHost.AntiForgeryToken();
