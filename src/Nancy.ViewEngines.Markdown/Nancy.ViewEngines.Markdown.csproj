@@ -43,6 +43,7 @@
     </Compile>
     <Compile Include="MarkDownViewEngine.cs" />
     <Compile Include="MarkdownViewEngineHost.cs" />
+    <Compile Include="MarkdownViewengineRender.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

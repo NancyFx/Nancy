@@ -68,16 +68,12 @@ namespace Nancy.ViewEngines.Markdown
 
             var html = renderContext.ViewCache.GetOrAdd(viewLocationResult, result =>
                                                                                 {
-                                                                                    string markDown =
-                                                                                        viewLocationResult.Contents().ReadToEnd();
-
-                                                                                    var parser = new Markdown();
-                                                                                    return parser.Transform(markDown);
+                                                                                    return ConvertMarkdown(viewLocationResult);
                                                                                 });
 
-            var serverHtml = ParagraphSubstitution.Replace(html, "$1");
 
-            var renderHtml = this.engineWrapper.Render(serverHtml, model, new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext));
+
+            var renderHtml = this.engineWrapper.Render(html, model, new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext));
 
             response.Contents = stream =>
             {
@@ -87,6 +83,21 @@ namespace Nancy.ViewEngines.Markdown
             };
 
             return response;
+        }
+
+        public string ConvertMarkdown(ViewLocationResult viewLocationResult)
+        {
+            string markDown =
+                viewLocationResult.Contents().ReadToEnd();
+
+            if (markDown.StartsWith("<!DOCTYPE html>"))
+            {
+                return MarkdownViewengineRender.RenderMasterPage(markDown);
+            }
+
+            var parser = new Markdown(new MarkdownOptions(){AutoNewLines = false});
+            var html = parser.Transform(markDown);
+            return ParagraphSubstitution.Replace(html, "$1");
         }
     }
 }

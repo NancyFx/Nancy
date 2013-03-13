@@ -35,17 +35,10 @@
         {
             // Given
             const string markdown = @"#Header1
-                                ##Header2
-                                ###Header3
-                                Hi there!
-                                > This is a blockquote.
-                                ";
-
-            const string htmlResult = @"<h1>Header1</h1>
-                              <h2>Header2</h2>
-                              <h3>Header3</h3>
-                              <p>Hi there!</p>
-                              <blockquote>This is a blockquote.</blockquote>";
+##Header2
+###Header3
+Hi there!
+> This is a blockquote.";
 
             var location = new ViewLocationResult(
                 string.Empty,
@@ -54,17 +47,20 @@
                 () => new StringReader(markdown)
             );
 
+            var html = this.viewEngine.ConvertMarkdown(location);
+
             var stream = new MemoryStream();
 
             A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(location, A<Func<ViewLocationResult, string>>.Ignored))
-             .Returns(htmlResult);
+             .Returns(html);
 
             // When
             var response = this.viewEngine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
-            stream.ShouldEqual(htmlResult);
+            var result = ReadAll(stream);
+            result.ShouldEqual(html);
         }
 
         [Fact]
@@ -81,7 +77,7 @@
         public void Should_render_model()
         {
             //Given, When
-            var result = SetupCallAndReadViewWithMasterPage(useModel:true);
+            var result = SetupCallAndReadViewWithMasterPage(useModel: true);
 
             //Then
             result.ShouldContain("My name is Vincent Vega and I come from the model");
@@ -119,6 +115,46 @@
             result.ShouldContain("<h4>This is from a partial</h4>");
         }
 
+        [Fact]
+        public void Should_convert_standalone()
+        {
+            var location = FindView("standalone");
+
+            var result = this.viewEngine.ConvertMarkdown(location);
+
+            Assert.False(result.StartsWith("<p>"));
+        }
+
+        [Fact]
+        public void Should_convert_view()
+        {
+            var location = FindView("home");
+            var result = this.viewEngine.ConvertMarkdown(location);
+
+            result.ShouldStartWith("@Master['master']");
+        }
+
+        [Fact]
+        public void Should_convert_standalone_view_with_no_master()
+        {
+            var location = FindView("standalone");
+
+            var html = this.viewEngine.ConvertMarkdown(location);
+
+            A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(location, A<Func<ViewLocationResult, string>>.Ignored))
+             .Returns(html);
+
+            var stream = new MemoryStream();
+
+            var response = this.viewEngine.RenderView(location, null, this.renderContext);
+
+            response.Contents.Invoke(stream);
+
+            var result = ReadAll(stream);
+
+            Assert.False(result.StartsWith("<p"));
+        }
+
         private string SetupCallAndReadViewWithMasterPage(bool useModel = false)
         {
             var location = FindView("home");
@@ -127,8 +163,10 @@
 
             var partialLocation = FindView("partial");
 
+            var html = this.viewEngine.ConvertMarkdown(location);
+
             A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(location, A<Func<ViewLocationResult, string>>.Ignored))
-             .Returns(location.Contents().ReadToEnd());
+             .Returns(html);
 
             A.CallTo(() => this.renderContext.LocateView("master", A<object>.Ignored)).Returns(masterLocation);
 

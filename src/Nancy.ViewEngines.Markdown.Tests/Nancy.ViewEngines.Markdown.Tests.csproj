@@ -33,6 +33,10 @@
     <Reference Include="FakeItEasy">
       <HintPath>..\Nancy.Tests\bin\Debug\FakeItEasy.dll</HintPath>
     </Reference>
+    <Reference Include="MarkdownSharp, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\MarkdownSharp.1.13.0.0\lib\35\MarkdownSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Nancy">
       <HintPath>..\Nancy.Hosting.Wcf\bin\Debug\Nancy.dll</HintPath>
     </Reference>
@@ -55,6 +59,9 @@
     <Compile Include="UserModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Markdown\standalone.md">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Markdown\home.md">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

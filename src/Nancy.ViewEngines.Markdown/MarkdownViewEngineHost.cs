@@ -13,19 +13,6 @@
         private readonly MarkdownSharp.Markdown parser;
 
         /// <summary>
-        /// A regex for removing paragraph tags that the parser inserts on unknown content such as @Section['Content']
-        /// </summary>
-        /// <remarks>
-        ///  <p>		- matches the literal string "<p>"
-        ///  (		- creates a capture group, so that we can get the text back by backreferencing in our replacement string
-        ///  @		- matches the literal string "@"
-        ///  [^<]*	- matches any character other than the "<" character and does this any amount of times
-        ///  )		- ends the capture group
-        ///  </p>	- matches the literal string "</p>"
-        /// </remarks>
-        private static readonly Regex ParagraphSubstitution = new Regex("<p>(@[^<]*)</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownViewEngineHost"/> class.
         /// </summary>
         /// <param name="viewEngineHost">A decorator <see cref="IViewEngineHost"/></param>
@@ -73,38 +60,10 @@
 
             if (viewLocationResult.Name.ToLower() == "master")
             {
-                return RenderMasterPage(templateContent);
+                return MarkdownViewengineRender.RenderMasterPage(templateContent);
             }
 
             return parser.Transform(templateContent);
-        }
-
-        /// <summary>
-        /// Renders the master page
-        /// </summary>
-        /// <param name="templateContent">The content of the master page</param>
-        /// <returns>HTML of master page</returns>
-        private string RenderMasterPage(string templateContent)
-        {
-            var header =
-                templateContent.Substring(
-                    templateContent.IndexOf("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase),
-                    templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6);
-
-            var toConvert =
-                templateContent.Substring(
-                    templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6,
-                    (templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase) - 7) -
-                    (templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase)));
-
-            var footer =
-                templateContent.Substring(templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase));
-
-            var html = parser.Transform(toConvert);
-
-            var serverHtml = ParagraphSubstitution.Replace(html, "$1");
-
-            return string.Concat(header, serverHtml, footer);
         }
 
         /// <summary>
