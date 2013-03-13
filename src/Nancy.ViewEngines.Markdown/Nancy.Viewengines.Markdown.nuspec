@@ -17,6 +17,7 @@
     <tags>Nancy Viewengine Markdown</tags>
     <dependencies>
       <dependency id="Nancy" />
+      <dependency id="MarkdownSharp" version="1.13.0.0" />
     </dependencies>
   </metadata>
   <files>
