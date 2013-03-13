@@ -34,14 +34,14 @@
         public void Should_return_Markdown()
         {
             // Given
-            string markdown = @"#Header1
+            const string markdown = @"#Header1
                                 ##Header2
                                 ###Header3
                                 Hi there!
                                 > This is a blockquote.
                                 ";
 
-            string htmlResult = @"<h1>Header1</h1>
+            const string htmlResult = @"<h1>Header1</h1>
                               <h2>Header2</h2>
                               <h3>Header3</h3>
                               <p>Hi there!</p>
