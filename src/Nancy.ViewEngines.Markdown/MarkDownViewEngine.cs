@@ -8,21 +8,24 @@ namespace Nancy.ViewEngines.Markdown
     using SuperSimpleViewEngine;
     using System.Text.RegularExpressions;
 
+    /// <summary>
+    /// Viewengine for rendering Markdown
+    /// </summary>
     public class MarkDownViewEngine : IViewEngine
     {
-        /// <summary>
-        /// Viewengine for rendering Markdown
-        /// </summary>
         private readonly SuperSimpleViewEngine engineWrapper;
 
         /// <summary>
-        ///<p>		- matches the literal string "<p>"
-        ///(		- creates a capture group, so that we can get the text back by backreferencing in our replacement string
-        ///@		- matches the literal string "@"
-        ///[^<]*	- matches any character other than the "<" character and does this any amount of times
-        ///)		- ends the capture group
-        ///</p>	- matches the literal string "</p>"
+        /// A regex for removing paragraph tags that the parser inserts on unknown content such as @Section['Content']
         /// </summary>
+        /// <remarks>
+        ///  <p>		- matches the literal string "<p>"
+        ///  (		- creates a capture group, so that we can get the text back by backreferencing in our replacement string
+        ///  @		- matches the literal string "@"
+        ///  [^<]*	- matches any character other than the "<" character and does this any amount of times
+        ///  )		- ends the capture group
+        ///  </p>	- matches the literal string "</p>"
+        /// </remarks>
         private static readonly Regex ParagraphSubstitution = new Regex("<p>(@[^<]*)</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         /// <summary>
