@@ -1,5 +1,6 @@
 namespace Nancy.Demo.MarkdownViewEngine.Modules
 {
+    using System;
     using Model;
 
     public class HomeModule : NancyModule
@@ -16,6 +17,8 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
 
                                return View["Home", model];
                            };
+
+            Get["{viewname}"] = parameters => View[parameters.viewname];
         }
     }
 }

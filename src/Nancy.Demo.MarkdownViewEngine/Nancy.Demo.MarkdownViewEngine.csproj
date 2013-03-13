@@ -43,6 +43,7 @@
     <ConsolePause>False</ConsolePause>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Web" />
@@ -86,6 +87,8 @@
   </ProjectExtensions>
   <ItemGroup>
     <Content Include="Content\main.css" />
+    <Content Include="Views\Home\blogpost.md" />
+    <Content Include="Views\Home\nancy-rocks.md" />
     <None Include="Views\Home\master.md" />
     <Content Include="Views\Home\user.md" />
   </ItemGroup>
