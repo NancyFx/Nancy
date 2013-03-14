@@ -1,5 +1,7 @@
 namespace Nancy.ViewEngines.Markdown
 {
+    using System;
+    using System.Linq;
     using ViewEngines;
     using System.Collections.Generic;
     using Responses;
@@ -73,7 +75,7 @@ namespace Nancy.ViewEngines.Markdown
 
 
 
-            var renderHtml = this.engineWrapper.Render(html, model, new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext));
+            var renderHtml = this.engineWrapper.Render(html, model, new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext, this.Extensions));
 
             response.Contents = stream =>
             {
@@ -87,16 +89,16 @@ namespace Nancy.ViewEngines.Markdown
 
         public string ConvertMarkdown(ViewLocationResult viewLocationResult)
         {
-            string markDown =
+            string content =
                 viewLocationResult.Contents().ReadToEnd();
 
-            if (markDown.StartsWith("<!DOCTYPE html>"))
+            if (content.StartsWith("<!DOCTYPE html>"))
             {
-                return MarkdownViewengineRender.RenderMasterPage(markDown);
+                return MarkdownViewengineRender.RenderMasterPage(content);
             }
 
-            var parser = new Markdown(new MarkdownOptions(){AutoNewLines = false});
-            var html = parser.Transform(markDown);
+            var parser = new Markdown();
+            var html = parser.Transform(content);
             return ParagraphSubstitution.Replace(html, "$1");
         }
     }

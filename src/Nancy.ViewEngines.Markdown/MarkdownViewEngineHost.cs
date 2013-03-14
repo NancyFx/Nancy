@@ -10,6 +10,7 @@
     {
         private readonly IViewEngineHost viewEngineHost;
         private readonly IRenderContext renderContext;
+        private readonly IEnumerable<string> validExtensions;
         private readonly MarkdownSharp.Markdown parser;
 
         /// <summary>
@@ -17,10 +18,12 @@
         /// </summary>
         /// <param name="viewEngineHost">A decorator <see cref="IViewEngineHost"/></param>
         /// <param name="renderContext">The render context.</param>
-        public MarkdownViewEngineHost(IViewEngineHost viewEngineHost, IRenderContext renderContext)
+        /// <param name="viewExtensions">The allowed extensions</param>
+        public MarkdownViewEngineHost(IViewEngineHost viewEngineHost, IRenderContext renderContext, IEnumerable<string> viewExtensions)
         {
             this.viewEngineHost = viewEngineHost;
             this.renderContext = renderContext;
+            this.validExtensions = viewExtensions;
             this.Context = this.renderContext.Context;
             this.parser = new MarkdownSharp.Markdown();
         }
@@ -58,9 +61,14 @@
 
             var templateContent = viewLocationResult.Contents.Invoke().ReadToEnd();
 
-            if (viewLocationResult.Name.ToLower() == "master")
+            if (viewLocationResult.Name.ToLower() == "master" && validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
             {
                 return MarkdownViewengineRender.RenderMasterPage(templateContent);
+            }
+
+            if (!validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
+            {
+                return viewLocationResult.Contents.Invoke().ReadToEnd();
             }
 
             return parser.Transform(templateContent);
