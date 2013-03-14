@@ -14,6 +14,11 @@ This text is in the master page
     
 @Section['OtherSection']
 
+<div id='cover-cloud'>
+	<div id='cloud'>&#160;</div>
+	<div id='cloud2'>&#160;</div>
+	<div id='cloud3'>&#160;</div>
+</div>
 
 **What does Samuel L Jackson think?**
 

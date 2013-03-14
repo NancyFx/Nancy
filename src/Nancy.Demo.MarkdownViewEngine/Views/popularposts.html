@@ -1,0 +1,22 @@
+﻿<div class='widget PopularPosts'>
+    <h2>Popular Posts</h2>
+    <div class='widget-content'>
+        <ul>
+            @Each
+            <li>
+                <div class='item-content'>
+                    <div class='item-thumbnail'>
+                        <a href='/' target='_blank'>
+                            <img alt='' border='0' height='72' src='http://2.bp.blogspot.com/-rb6ucqrN9b4/T4bSGqxvaYI/AAAAAAAADRU/yTMAEyWxcoo/s72-c/Chloe%2BGrace%2BMoretz.jpg' width='72' />
+                        </a>
+                    </div>
+                    <div class='item-title'><a href='/'>@Current.StrippedTitle</a></div>
+                    <div class='item-snippet'>@Current.Abstract...</div>
+                </div>
+                <div style='clear: both;'></div>
+            </li>
+            @EndEach
+        </ul>
+        <div class='clear'></div>
+    </div>
+</div>

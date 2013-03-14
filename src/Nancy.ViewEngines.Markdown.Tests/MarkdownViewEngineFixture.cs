@@ -21,6 +21,7 @@
             this.viewEngine = new MarkDownViewEngine(new SuperSimpleViewEngine());
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
+            
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "Markdown"));
 
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider, new DefaultFileSystemReader());
