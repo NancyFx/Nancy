@@ -21,7 +21,7 @@
         public MarkdownViewEngineFixture()
         {
             this.renderContext = A.Fake<IRenderContext>();
-            this.viewEngineHostHost = new MarkdownViewEngineHost(new NancyViewEngineHost(this.renderContext), this.renderContext);
+            this.viewEngineHostHost = new MarkdownViewEngineHost(new NancyViewEngineHost(this.renderContext), this.renderContext, new[] { "md", "markdown" });
             this.viewEngine = new MarkDownViewEngine(new SuperSimpleViewEngine());
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
