@@ -99,11 +99,8 @@
     <Content Include="Views\blogfooter.html" />
     <Content Include="Views\blogheader.html" />
     <Content Include="Views\blogindex.html" />
-    <Content Include="Views\Home\blogpost.md" />
-    <Content Include="Views\Home\nancy-rocks.md" />
     <Content Include="Views\master.html" />
     <Content Include="packages.config" />
-    <Content Include="Views\Home\user.md" />
     <Content Include="Views\popularposts.html" />
     <Content Include="Views\Posts\nancy-rocks.md" />
     <Content Include="Views\Posts\my-first-blog-post.md" />
@@ -116,15 +113,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="web.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\home.md" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Views\Home\partial.markdown" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Views\Home\MySection.md" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Hosting.Aspnet\Nancy.Hosting.Aspnet.csproj">
