@@ -122,7 +122,7 @@ Hi there!
 
             var result = this.viewEngine.ConvertMarkdown(location);
 
-            Assert.False(result.StartsWith("<p>"));
+            Assert.True(result.StartsWith("<!DOCTYPE html>"));
         }
 
         [Fact]
@@ -152,7 +152,34 @@ Hi there!
 
             var result = ReadAll(stream);
 
-            Assert.False(result.StartsWith("<p"));
+            Assert.True(result.StartsWith("<!DOCTYPE html>"));
+        }
+
+        [Fact]
+        public void Should_be_able_to_use_HTML_MasterPage()
+        {
+            var location = FindView("viewwithhtmlmaster");
+
+            var masterLocation = FindView("htmlmaster");
+
+            var html = this.viewEngine.ConvertMarkdown(location);
+
+            A.CallTo(() => this.renderContext.ViewCache.GetOrAdd(location, A<Func<ViewLocationResult, string>>.Ignored))
+             .Returns(html);
+
+            A.CallTo(() => this.renderContext.LocateView("htmlmaster", A<object>.Ignored)).Returns(masterLocation);
+
+            var stream = new MemoryStream();
+
+
+            var response = this.viewEngine.RenderView(location, null, this.renderContext);
+
+            response.Contents.Invoke(stream);
+
+            var result = ReadAll(stream);
+
+            result.ShouldStartWith("<!DOCTYPE html>");
+            result.ShouldContain("<p>Bacon ipsum dolor");
         }
 
         private string SetupCallAndReadViewWithMasterPage(bool useModel = false)
@@ -194,7 +221,7 @@ Hi there!
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "md", "markdown" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "md", "markdown", "html" }).First(r => r.Name == viewName);
             return location;
         }
     }
