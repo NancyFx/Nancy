@@ -30,10 +30,12 @@
             get
             {
                 CQ data = Title;
-                return data.Text();
+                return data.Html();
             }
         }
 
+      
+      
         private string GetTitle(string content)
         {
             string ssveRemoved = SSVESubstitution.Replace(content, "").Trim();
