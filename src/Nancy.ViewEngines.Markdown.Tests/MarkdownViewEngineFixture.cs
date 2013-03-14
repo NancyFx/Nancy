@@ -11,17 +11,13 @@
     public class MarkdownViewEngineFixture
     {
         private readonly MarkDownViewEngine viewEngine;
-        private readonly MarkdownViewEngineHost viewEngineHostHost;
-        private readonly NancyViewEngineHost nancyViewEngineHost;
         private readonly IRenderContext renderContext;
-        private IRootPathProvider rootPathProvider;
-        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
-
+        private readonly IRootPathProvider rootPathProvider;
+        private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
 
         public MarkdownViewEngineFixture()
         {
             this.renderContext = A.Fake<IRenderContext>();
-            this.viewEngineHostHost = new MarkdownViewEngineHost(new NancyViewEngineHost(this.renderContext), this.renderContext, new[] { "md", "markdown" });
             this.viewEngine = new MarkDownViewEngine(new SuperSimpleViewEngine());
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
