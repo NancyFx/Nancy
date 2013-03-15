@@ -95,7 +95,6 @@
   <ItemGroup>
     <Content Include="Content\blog.css" />
     <Content Include="Content\images\logo.png" />
-    <Content Include="Content\main.css" />
     <Content Include="Views\blogfooter.html" />
     <Content Include="Views\blogheader.html" />
     <Content Include="Views\blogindex.html" />
@@ -127,6 +126,9 @@
       <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
       <Name>Nancy</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Posts\runtime-dropin.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
