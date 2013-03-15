@@ -19,6 +19,26 @@
             return source.BaseType == typeof(Array);
         }
 
+        /// <summary>
+        /// Determines whether the <paramref name="genericType"/> is assignable from
+        /// <paramref name="givenType"/> taking into account generic definitions
+        /// </summary>
+        /// <remarks>
+        /// Borrowed from: http://tmont.com/blargh/2011/3/determining-if-an-open-generic-type-isassignablefrom-a-type
+        /// </remarks>
+        public static bool IsAssignableToGenericType(this Type givenType, Type genericType)
+        {
+            if (givenType == null || genericType == null)
+            {
+                return false;
+            }
+
+            return givenType == genericType
+                || givenType.MapsToGenericTypeDefinition(genericType)
+                || givenType.HasInterfaceThatMapsToGenericTypeDefinition(genericType)
+                || givenType.BaseType.IsAssignableToGenericType(genericType);
+        }
+
         public static bool IsCollection(this Type source)
         {
             var collectionType = typeof(ICollection<>);
@@ -70,6 +90,21 @@
                     return false;
             }
             return false;
+        }
+
+        private static bool HasInterfaceThatMapsToGenericTypeDefinition(this Type givenType, Type genericType)
+        {
+            return givenType
+                .GetInterfaces()
+                .Where(it => it.IsGenericType)
+                .Any(it => it.GetGenericTypeDefinition() == genericType);
+        }
+
+        private static bool MapsToGenericTypeDefinition(this Type givenType, Type genericType)
+        {
+            return genericType.IsGenericTypeDefinition
+                && givenType.IsGenericType
+                && givenType.GetGenericTypeDefinition() == genericType;
         }
     }
 }

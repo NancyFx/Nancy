@@ -105,5 +105,20 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Then
             context.Response.ShouldNotBeNull();
         }
+
+        [Fact]
+        public void Should_leave_reponse_stream_open_if_response_is_InternalServerError()
+        {
+            // Given
+            var context = new NancyContext();
+            var memoryStream = new MemoryStream();
+
+            // When
+            this.statusCodeHandler.Handle(HttpStatusCode.InternalServerError, context);
+            context.Response.Contents(memoryStream);
+
+            // Then
+            memoryStream.CanRead.ShouldBeTrue();
+        }
     }
 }
