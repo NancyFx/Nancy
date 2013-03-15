@@ -87,8 +87,8 @@ namespace Nancy.ViewEngines.Markdown
             return response;
         }
 
-		/// <summary>
-		/// Converts the markdown.
+        /// <summary>
+        /// Converts the markdown.
 		/// </summary>
 		/// <returns>
 		/// HTML converted from markdown
