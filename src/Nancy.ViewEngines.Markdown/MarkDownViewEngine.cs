@@ -89,13 +89,13 @@ namespace Nancy.ViewEngines.Markdown
 
         /// <summary>
         /// Converts the markdown.
-		/// </summary>
-		/// <returns>
-		/// HTML converted from markdown
-		/// </returns>
-		/// <param name='viewLocationResult'>
-		/// View location result.
-		/// </param>
+        /// </summary>
+        /// <returns>
+        /// HTML converted from markdown
+        /// </returns>
+        /// <param name='viewLocationResult'>
+        /// View location result.
+        /// </param>
         public string ConvertMarkdown(ViewLocationResult viewLocationResult)
         {
             string content =
