@@ -720,7 +720,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Form_request_and_context_properties_should_take_precedence_over_body_properties()
         {
-
+            // Given
             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
             var bodyDeserializers = new IBodyDeserializer[] { new XmlBodyDeserializer() };
             var binder = this.GetBinder(typeConverters, bodyDeserializers);
@@ -740,6 +740,52 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.AnotherStringProprety.ShouldEqual("From context");
             result.IntProperty.ShouldEqual(1);
         }
+
+        [Fact]
+        public void Form_request_and_context_properties_should_be_ignored_in_body_only_mode_when_there_is_a_body()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var bodyDeserializers = new IBodyDeserializer[] { new XmlBodyDeserializer() };
+            var binder = GetBinder(typeConverters, bodyDeserializers);
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { IntProperty = 2, StringProperty = "From body" });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+
+            context.Request.Form["StringProperty"] = "From form";
+            context.Request.Query["IntProperty"] = "1";
+            context.Parameters["AnotherStringProprety"] = "From context";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig { BodyOnly = true });
+
+            // Then
+            result.StringProperty.ShouldEqual("From body");
+            result.AnotherStringProprety.ShouldBeNull(); // not in body, so default value
+            result.IntProperty.ShouldEqual(2);
+        }
+
+        [Fact]
+        public void Form_request_and_context_properties_should_NOT_be_used_in_body_only_mode_if_there_is_no_body()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
+            context.Request.Form["StringProperty"] = "From form";
+            context.Request.Query["IntProperty"] = "1";
+            context.Parameters["AnotherStringProprety"] = "From context";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig { BodyOnly = true });
+
+            // Then
+            result.StringProperty.ShouldEqual(null);
+            result.AnotherStringProprety.ShouldEqual(null);
+            result.IntProperty.ShouldEqual(0);
+        }
+
 
         [Fact]
         public void Should_be_able_to_bind_body_request_form_and_context_properties()
