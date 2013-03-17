@@ -76,7 +76,7 @@ namespace Nancy.Localization
 
             if (index == -1)
             {
-                throw new InvalidOperationException("The text key needs to be specified in the format resourcename.resourcekey.");
+                throw new InvalidOperationException("The text key needs to be specified in the format resourcename.resourcekey, where resourcename should at least be the name of the resource file and at most the fully qualified path.");
             }
 
             return new Tuple<string, string>(
