@@ -2,6 +2,7 @@ namespace Nancy.Localization
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Resources;
@@ -26,8 +27,7 @@ namespace Nancy.Localization
                 from assembly in this.resourceAssemblyProvider.GetAssembliesToScan()
                 from resourceName in assembly.GetManifestResourceNames()
                 where resourceName.EndsWith(".resources")
-                let parts = resourceName.Split(new[] { '.' })
-                let name = parts[parts.Length - 2]
+                let name = Path.GetFileNameWithoutExtension(resourceName)
                 let baseName = resourceName.Replace(".resources", string.Empty)
                 select new
                     {
@@ -52,8 +52,17 @@ namespace Nancy.Localization
                 var components =
                     GetKeyComponents(key);
 
-                var manager = this.resourceManagers.ContainsKey(components.Item1) ?
-                    this.resourceManagers[components.Item1] :
+                var candidates =
+                    this.resourceManagers.Where(
+                        x => x.Key.EndsWith(components.Item1, StringComparison.OrdinalIgnoreCase)).ToArray();
+
+                if (candidates.Count() > 1)
+                {
+                    throw new InvalidOperationException("More than one text resources match the " + components.Item1 + " key. Try providing a more specific key.");
+                }
+
+                var manager = candidates.Any() ?
+                    candidates.First().Value :
                     null;
 
                 return (manager == null) ? null : manager.GetString(components.Item2, context.Culture);
@@ -63,7 +72,7 @@ namespace Nancy.Localization
         private static Tuple<string, string> GetKeyComponents(string key)
         {
             var index =
-                key.IndexOf(".", StringComparison.InvariantCulture);
+                key.LastIndexOf(".", StringComparison.InvariantCulture);
 
             if (index == -1)
             {
