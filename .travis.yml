@@ -2,6 +2,9 @@ language: ruby
 rvm:
   - 1.9.3
 install:
+  - sudo bash -c "echo deb http://badgerports.org lucid main >> /etc/apt/sources.list"
+  - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
+  - sudo apt-get update
   - sudo apt-get install mono-devel mono-gmcs mono-vbnc
   - gem install rake
   - gem install albacore
