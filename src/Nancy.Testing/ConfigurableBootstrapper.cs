@@ -631,9 +631,9 @@ namespace Nancy.Testing
             /// <param name="instance">The dependency instance that should be used registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             /// <remarks>This method will register the instance for all the interfaces it implements and the type itself.</remarks>
-            public ConfigurableBootstrapperConfigurator Dependency(object instance)
+            public ConfigurableBootstrapperConfigurator Dependency<T>(T instance)
             {
-                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(instance.GetType(), instance));
+                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
 
                 foreach (var interfaceType in instance.GetType().GetInterfaces())
                 {
