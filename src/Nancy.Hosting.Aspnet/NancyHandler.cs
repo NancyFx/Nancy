@@ -62,8 +62,10 @@ namespace Nancy.Hosting.Aspnet
             byte[] certificate = null;
 
             if (context.Request.ClientCertificate != null && context.Request.ClientCertificate.Certificate.Length != 0)
+            {
                 certificate = context.Request.ClientCertificate.Certificate;
-
+            }
+                
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
                 nancyUrl,

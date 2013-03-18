@@ -95,8 +95,10 @@
                 var claimset =
                     context.ServiceSecurityContext.AuthorizationContext.ClaimSets[0] as X509CertificateClaimSet;
 
-                if (claimset != null) 
+                if (claimset != null)
+                {
                     certifateBytes = claimset.X509Certificate.RawData;
+                }
             }
 
             return new Request(

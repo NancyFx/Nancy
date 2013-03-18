@@ -83,7 +83,10 @@ namespace Nancy
 
             this.Session = new NullSessionProvider();
 
-            if (certificate != null && certificate.Length != 0) this.ClientCertificate = new X509Certificate2(certificate);
+            if (certificate != null && certificate.Length != 0)
+            {
+                this.ClientCertificate = new X509Certificate2(certificate);
+            }
 
             if (String.IsNullOrEmpty(this.Url.Path))
             {

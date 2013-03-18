@@ -47,7 +47,7 @@
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
 
-            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate") ;
+            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
             var clientCertificateBytes = clientCertificate == null ? null : clientCertificate.GetRawCertData();
             
             var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
