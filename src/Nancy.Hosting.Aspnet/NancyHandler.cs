@@ -60,12 +60,17 @@ namespace Nancy.Hosting.Aspnet
                                    Fragment = context.Request.Url.Fragment,
                                };
 
+            var certificate = context.Request.ClientCertificate.Certificate.Length == 0
+                                  ? null
+                                  : context.Request.ClientCertificate.Certificate;
+
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
                 nancyUrl,
                 RequestStream.FromStream(context.Request.InputStream, expectedRequestLength, true),
                 incomingHeaders,
-                context.Request.UserHostAddress);
+                context.Request.UserHostAddress,
+                certificate);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)

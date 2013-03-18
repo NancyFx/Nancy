@@ -6,6 +6,8 @@ namespace Nancy
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Security.Cryptography.X509Certificates;
+
     using IO;
     using Nancy.Extensions;
     using Session;
@@ -45,7 +47,7 @@ namespace Nancy
         {
         }
 
-        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null)
+        public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -81,6 +83,8 @@ namespace Nancy
 
             this.Session = new NullSessionProvider();
 
+            if (certificate != null && certificate.Length != 0) this.ClientCertificate = new X509Certificate2(certificate);
+
             if (String.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
@@ -89,6 +93,11 @@ namespace Nancy
             this.ParseFormData();
             this.RewriteMethod();
         }
+
+        /// <summary>
+        /// Gets the certificate sent by the client.
+        /// </summary>
+        public X509Certificate ClientCertificate { get; private set; }
 
         /// <summary>
         /// Gets the IP address of the client

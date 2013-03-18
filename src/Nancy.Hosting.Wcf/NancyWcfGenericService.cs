@@ -2,14 +2,14 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
-    using System.Xml;
+    using System.IdentityModel.Claims;
+    
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
@@ -52,7 +52,7 @@
             var webContext = WebOperationContext.Current;
             
             var nancyRequest = 
-                CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody);
+                CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody, OperationContext.Current);
 
             var nancyContext = 
                 engine.HandleRequest(nancyRequest);
@@ -68,7 +68,7 @@
                     nancyContext.Response.ContentType ?? "none/none"); // Stupid WCF forces us to specify a content type
         }
 
-        private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody)
+        private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody, OperationContext context)
         {
             var address =
                 ((RemoteEndpointMessageProperty)
@@ -88,12 +88,23 @@
                 Query = webRequest.UriTemplateMatch.RequestUri.Query
             };
 
+            byte[] certifateBytes = null;
+
+            if (context.ServiceSecurityContext != null && context.ServiceSecurityContext.AuthorizationContext.ClaimSets.Count > 0)
+            {
+                var claimset =
+                    context.ServiceSecurityContext.AuthorizationContext.ClaimSets[0] as X509CertificateClaimSet;
+
+                if (claimset != null) 
+                    certifateBytes = claimset.X509Certificate.RawData;
+            }
+
             return new Request(
                 webRequest.Method,
                 nancyUrl,
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.Headers.ToDictionary(),
-                address.Address);
+                address.Address, certifateBytes);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
