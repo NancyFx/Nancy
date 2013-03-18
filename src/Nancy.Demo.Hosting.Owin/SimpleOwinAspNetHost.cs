@@ -2,8 +2,6 @@
 
 // https://github.com/prabirshrestha/simple-owin
 
-using System.Security.Cryptography.X509Certificates;
-
 namespace Nancy.Demo.Hosting.Owin
 {
     using System;
@@ -18,6 +16,7 @@ namespace Nancy.Demo.Hosting.Owin
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Routing;
+    using System.Security.Cryptography.X509Certificates;
 
     using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
