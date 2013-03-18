@@ -59,10 +59,10 @@ namespace Nancy.Hosting.Aspnet
                                    Query = context.Request.Url.Query,
                                    Fragment = context.Request.Url.Fragment,
                                };
+            byte[] certificate = null;
 
-            var certificate = context.Request.ClientCertificate.Certificate.Length == 0
-                                  ? null
-                                  : context.Request.ClientCertificate.Certificate;
+            if (context.Request.ClientCertificate != null && context.Request.ClientCertificate.Certificate.Length != 0)
+                certificate = context.Request.ClientCertificate.Certificate;
 
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
