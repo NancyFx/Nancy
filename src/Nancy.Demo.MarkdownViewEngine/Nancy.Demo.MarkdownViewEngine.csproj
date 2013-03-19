@@ -102,7 +102,7 @@
     <Content Include="Views\master.html" />
     <Content Include="packages.config" />
     <Content Include="Views\popularposts.html" />
-    <Content Include="Views\Posts\nancy-rocks.md" />
+    <Content Include="Views\Posts\why-use-nancy.md" />
     <Content Include="Views\Posts\my-first-blog-post.md" />
   </ItemGroup>
   <ItemGroup>
@@ -129,7 +129,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Views\Posts\runtime-dropin.md" />
+    <Content Include="Views\Posts\readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Posts\future-post.md" />

@@ -52,8 +52,8 @@
 
             BlogDate = GetBlogDate();
             Title = GetTitle();
-            Abstract = GetAbstract(markdown);
             Slug = GenerateSlug();
+            Abstract = GetAbstract(markdown);
             Tags = GetTags();
         }
 
@@ -64,7 +64,7 @@
 
             var csv = metaData.FirstOrDefault(x => x.Key == "Tags").Value;
 
-            return csv.Split(new char[] {','}, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim());
+            return csv.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries).Select(x => x.Trim());
         }
 
         private DateTime GetBlogDate()
@@ -100,6 +100,7 @@
             string ssveRemoved = SSVESubstitution.Replace(content, "").Trim();
             var abstractpost = ssveRemoved.Substring(0, 175).Trim();
             var html = parser.Transform(abstractpost);
+            html = html + "<p><a href='" + this.Slug + "'>Read More...</a>";
             return html.Substring(html.IndexOf("<p>", System.StringComparison.Ordinal));
         }
 
