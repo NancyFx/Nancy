@@ -148,5 +148,4 @@
   <ItemGroup>
     <Content Include="Views\Posts\future-post.md" />
   </ItemGroup>
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
