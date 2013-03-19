@@ -249,7 +249,7 @@
             foreach (var compilerError in errors)
             {
                 var lineIndex = compilerError.Line - 1;
-                if (lineIndex <= templateLines.Count - 1)
+                if ((lineIndex <= templateLines.Count - 1) && (lineIndex >= 0))
                 {
                     templateLines[lineIndex] = string.Format("<span class='error'><a name='{0}' />{1}</span>", compilerError.Line, templateLines[lineIndex]);
                 }
