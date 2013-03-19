@@ -95,6 +95,7 @@
   <ItemGroup>
     <Content Include="Content\blog.css" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\nancy-nuget.png" />
     <Content Include="Views\blogfooter.html" />
     <Content Include="Views\blogheader.html" />
     <Content Include="Views\blogindex.html" />
@@ -129,6 +130,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\Posts\runtime-dropin.md" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Views\Posts\future-post.md" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>
