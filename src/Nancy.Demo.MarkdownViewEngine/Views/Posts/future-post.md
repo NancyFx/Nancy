@@ -2,7 +2,7 @@
 
 @Tags
 Date: 21/02/2099
-Title: Future Blog Post
+Title: Future Post
 Tags: Blogging,Internet
 @EndTags
 
