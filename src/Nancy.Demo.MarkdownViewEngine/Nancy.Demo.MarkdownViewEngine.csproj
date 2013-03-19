@@ -106,9 +106,7 @@
     <Content Include="Views\Posts\my-first-blog-post.md" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BlogModel.cs" />
-    <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Model\MainModel.cs" />
+    <Compile Include="Model\BlogModel.cs" />
     <Compile Include="Modules\HomeModule.cs" />
   </ItemGroup>
   <ItemGroup>
