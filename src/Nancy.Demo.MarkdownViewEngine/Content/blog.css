@@ -132,7 +132,7 @@ Outer-Wrapper
 Set cloud
 =================== */
 #mountain {
-    background: url(http://4.bp.blogspot.com/-7bkvrmadkpc/T4atXT5y7KI/AAAAAAAADP0/NMLjSv0s_cU/s1600/mountain.png) no-repeat 205px bottom;
+    background: url('/content/images/mountain.png') no-repeat 205px bottom;
     height: 200px;
     width: 100%;
     margin: 0 auto -1px auto;
@@ -148,7 +148,7 @@ Set cloud
 }
 
 #cloud {
-    background: url(http://2.bp.blogspot.com/-pIdaj5t_YMg/T4asjeHwrJI/AAAAAAAADPo/1jFK0WRW4Z0/s1600/cloud1.png) repeat-x 0 0;
+    background: url('/content/images/cloud1.png') repeat-x 0 0;
     position: absolute;
     width: 100%;
     height: 188px;
@@ -156,7 +156,7 @@ Set cloud
 }
 
 #cloud2 {
-    background: url(http://4.bp.blogspot.com/-1LiwOdGfsag/T4afsRPasQI/AAAAAAAADPI/rP6G5TP0ky8/s1600/cloud2.png) repeat-x 0 0;
+    background: url('/content/images/cloud2.png') repeat-x 0 0;
     position: absolute;
     width: 100%;
     height: 125px;
@@ -164,7 +164,7 @@ Set cloud
 }
 
 #cloud3 {
-    background: url(http://3.bp.blogspot.com/-D1UZFZTfMMo/T4afst6IauI/AAAAAAAADPU/zzTOtV0P-40/s1600/cloud3.png) repeat-x 0 0;
+    background: url('/content/images/cloud3.png') repeat-x 0 0;
     position: absolute;
     width: 100%;
     height: 46px;
@@ -204,16 +204,16 @@ Primary Content
 #main-wrapper {
     float: left;
     width: 604px;
-    background: url(http://1.bp.blogspot.com/-nPCXJxsaKqU/T4bAx_HNYpI/AAAAAAAADRE/gutEYez4qfU/s1600/post-head.png) no-repeat center top;
+    background: url('/content/images/post-head.png') no-repeat center top;
 }
 
 #main {
-    background: url(http://3.bp.blogspot.com/-VLNtFXlH4M4/T4a_gipkAWI/AAAAAAAADQs/sAHc-vxFNSY/s1600/post-midd.png) repeat-y center top;
+    background: url('/content/images/post-midd.png') repeat-y center top;
     .background-position:left top;
 }
 
     #main .widget {
-        background: url(http://2.bp.blogspot.com/-wGTTPyrcDGE/T4aZCuSLRaI/AAAAAAAADOw/aMckUW9wOL4/s1600/post-foot.png) no-repeat center bottom;
+        background: url('/content/images/post-foot.png') no-repeat center bottom;
         background-position: left bottom;
         margin: 30px 0;
         padding: 0 20px 20px 20px;

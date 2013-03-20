@@ -111,8 +111,16 @@
   <ItemGroup>
     <Content Include="Content\blog.css" />
     <Content Include="Content\images\body.png" />
+    <Content Include="Content\images\cloud1.png" />
+    <Content Include="Content\images\cloud2.png" />
+    <Content Include="Content\images\cloud3.png" />
     <Content Include="Content\images\logo.png" />
+    <Content Include="Content\images\mountain.png" />
     <Content Include="Content\images\nancy-nuget.png" />
+    <Content Include="Content\images\post-foot.png" />
+    <Content Include="Content\images\post-head.png" />
+    <Content Include="Content\images\post-midd.png" />
+    <Content Include="Content\js\jquery.spritely-0.6.js" />
     <Content Include="Views\blogfooter.html" />
     <Content Include="Views\blogheader.html" />
     <Content Include="Views\blogindex.html" />
