@@ -25,27 +25,31 @@
         /// <returns>HTML converted to markdown</returns>
         public static string RenderMasterPage(string templateContent)
         {
-            var header =
+            var second =
                templateContent.Substring(
                    templateContent.IndexOf("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase),
-                   templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6);
+                   templateContent.IndexOf("body", StringComparison.OrdinalIgnoreCase));
 
-            var toConvert =
-                templateContent.Substring(
-                    templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase) + 6,
-                    (templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase) - 7) -
-                    (templateContent.IndexOf("<body>", StringComparison.OrdinalIgnoreCase)));
+            var third = templateContent.Substring(second.Length);
+
+            var forth = templateContent.Substring(second.Length, third.IndexOf(">", StringComparison.Ordinal) + 1);
+
+            var header = second + forth;
+
+            var toConvert = templateContent.Substring(header.Length,
+                                                      (templateContent.IndexOf("</body>", StringComparison.Ordinal) -
+                                                       (templateContent.IndexOf(forth, StringComparison.Ordinal) + forth.Length)));
 
             var footer =
                 templateContent.Substring(templateContent.IndexOf("</body>", StringComparison.OrdinalIgnoreCase));
 
             var parser = new MarkdownSharp.Markdown();
 
-            var html = parser.Transform(toConvert);
+            var html = parser.Transform(toConvert.Trim());
 
             var serverHtml = ParagraphSubstitution.Replace(html, "$1");
 
-            return string.Concat(header, serverHtml, footer);
+            return string.Concat(header, serverHtml, footer).Replace("\r\n", "").Replace("\n", "").Replace("\r", "");
         }
     }
 }
