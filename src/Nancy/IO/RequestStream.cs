@@ -62,11 +62,19 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            this.EnsureStreamIsSeekable();
             if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength))
             {
                 this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
             }
+
+            if (!this.stream.CanSeek)
+            {
+                this.stream =
+                    this.CreateDefaultMemoryStream(expectedLength);
+
+                this.stream.CopyTo(this.stream);
+            }
+
             this.stream.Position = 0;
         }
 
