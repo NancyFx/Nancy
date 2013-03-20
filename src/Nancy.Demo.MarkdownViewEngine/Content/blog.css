@@ -1,5 +1,5 @@
 ﻿body {
-    background: #f2f2f2 url(http://4.bp.blogspot.com/-NrCzIWTj7eM/T4ayX8Hg_sI/AAAAAAAADQE/naVsDGXDdsE/s1600/body.png) repeat scroll top center /* Credit: Pixel Oplosan (http://www.pixeloplosan.com) */;
+    background: #f2f2f2 url('/content/images/body.png') repeat scroll top center /* Credit: Pixel Oplosan (http://www.pixeloplosan.com) */;
     margin: 0;
     color: #777777;
 }

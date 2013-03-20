@@ -110,6 +110,7 @@
   </ProjectExtensions>
   <ItemGroup>
     <Content Include="Content\blog.css" />
+    <Content Include="Content\images\body.png" />
     <Content Include="Content\images\logo.png" />
     <Content Include="Content\images\nancy-nuget.png" />
     <Content Include="Views\blogfooter.html" />
