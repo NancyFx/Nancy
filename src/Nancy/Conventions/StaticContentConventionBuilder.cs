@@ -13,51 +13,6 @@ namespace Nancy.Conventions
     /// </summary>
     public class StaticContentConventionBuilder
     {
-        private class ResponseFactoryCacheKey : IEquatable<ResponseFactoryCacheKey>
-        {
-            private readonly string m_Path;
-            private readonly string m_RootPath;
-
-            public ResponseFactoryCacheKey(string path, string rootPath)
-            {
-                m_Path = path;
-                m_RootPath = rootPath;
-            }
-
-            public string Path
-            {
-                get { return m_Path; }
-            }
-
-            public string RootPath
-            {
-                get { return m_RootPath; }
-            }
-
-            public bool Equals(ResponseFactoryCacheKey other)
-            {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return string.Equals(m_Path, other.m_Path) && string.Equals(m_RootPath, other.m_RootPath);
-            }
-
-            public override bool Equals(object obj)
-            {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
-                return Equals((ResponseFactoryCacheKey) obj);
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return ((m_Path != null ? m_Path.GetHashCode() : 0)*397) ^ (m_RootPath != null ? m_RootPath.GetHashCode() : 0);
-                }
-            }
-        }
-
         private static readonly ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
@@ -232,6 +187,51 @@ namespace Nancy.Conventions
         private static bool IsWithinContentFolder(string contentRootPath, string fileName)
         {
             return fileName.StartsWith(contentRootPath, StringComparison.Ordinal);
+        }
+
+        private class ResponseFactoryCacheKey : IEquatable<ResponseFactoryCacheKey>
+        {
+            private readonly string m_Path;
+            private readonly string m_RootPath;
+
+            public ResponseFactoryCacheKey(string path, string rootPath)
+            {
+                m_Path = path;
+                m_RootPath = rootPath;
+            }
+
+            public string Path
+            {
+                get { return m_Path; }
+            }
+
+            public string RootPath
+            {
+                get { return m_RootPath; }
+            }
+
+            public bool Equals(ResponseFactoryCacheKey other)
+            {
+                if (ReferenceEquals(null, other)) return false;
+                if (ReferenceEquals(this, other)) return true;
+                return string.Equals(m_Path, other.m_Path) && string.Equals(m_RootPath, other.m_RootPath);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj)) return false;
+                if (ReferenceEquals(this, obj)) return true;
+                if (obj.GetType() != this.GetType()) return false;
+                return Equals((ResponseFactoryCacheKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((m_Path != null ? m_Path.GetHashCode() : 0) * 397) ^ (m_RootPath != null ? m_RootPath.GetHashCode() : 0);
+                }
+            }
         }
     }
 }
