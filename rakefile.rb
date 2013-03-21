@@ -47,7 +47,7 @@ end
 
 desc "Compile solution file"
 msbuild :compile => [:assembly_info] do |msb|
-    msb.properties :configuration => CONFIGURATION
+    msb.properties = { :configuration => CONFIGURATION, "VisualStudioVersion" => "10.0" }
     msb.targets :Clean, :Build
     msb.solution = SOLUTION_FILE
 end
