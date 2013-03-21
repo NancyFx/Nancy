@@ -65,6 +65,37 @@ namespace Nancy.Hosting.Wcf.Tests
         }
 
         [SkippableFact]
+        public void Should_set_path_and_url_correctly_without_trailing_slash()
+        {
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes((f) => nancyRequest = (Request) f.Arguments[0]);
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            var baseUriWithoutTrailingSlash = new Uri("http://localhost:1234/base");
+
+            using(CreateAndOpenWebServiceHost(fakeBootstrapper, baseUriWithoutTrailingSlash))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "test/stuff"));
+                request.Method = "GET";
+
+                try
+                {
+                    request.GetResponse();
+                }
+                catch(WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
+
+            nancyRequest.Path.ShouldEqual("/test/stuff");
+            nancyRequest.Url.ToString().ShouldEqual("http://localhost:1234/base/test/stuff");
+        }
+
+        [SkippableFact]
         public void Should_be_able_to_get_from_selfhost()
         {
             using (CreateAndOpenWebServiceHost())
@@ -134,23 +165,23 @@ namespace Nancy.Hosting.Wcf.Tests
             Assert.Equal("http", nancyRequest.Url.Scheme);
         }
 
-        private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null)
+        private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
         {
-            if (nancyBootstrapper == null)
+            if(nancyBootstrapper == null)
             {
                 nancyBootstrapper = new DefaultNancyBootstrapper();
             }
 
             var host = new WebServiceHost(
                 new NancyWcfGenericService(nancyBootstrapper),
-                BaseUri);
+                baseUri ?? BaseUri);
 
-            host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
+            host.AddServiceEndpoint(typeof(NancyWcfGenericService), new WebHttpBinding(), "");
             try
             {
                 host.Open();
             }
-            catch (System.ServiceModel.AddressAccessDeniedException)
+            catch(System.ServiceModel.AddressAccessDeniedException)
             {
                 throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
             }
