@@ -88,16 +88,17 @@
                 Query = webRequest.UriTemplateMatch.RequestUri.Query
             };
 
-            byte[] certifateBytes = null;
+            byte[] certifate = null;
 
             if (context.ServiceSecurityContext != null && context.ServiceSecurityContext.AuthorizationContext.ClaimSets.Count > 0)
             {
                 var claimset =
-                    context.ServiceSecurityContext.AuthorizationContext.ClaimSets[0] as X509CertificateClaimSet;
+                    context.ServiceSecurityContext.AuthorizationContext.ClaimSets.FirstOrDefault(
+                        c => c is X509CertificateClaimSet) as X509CertificateClaimSet;
 
                 if (claimset != null)
                 {
-                    certifateBytes = claimset.X509Certificate.RawData;
+                    certifate = claimset.X509Certificate.RawData;
                 }
             }
 
@@ -106,7 +107,8 @@
                 nancyUrl,
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.Headers.ToDictionary(),
-                address.Address, certifateBytes);
+                address.Address, 
+                certifate);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)

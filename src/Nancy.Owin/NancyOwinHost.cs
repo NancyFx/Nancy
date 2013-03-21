@@ -48,8 +48,8 @@
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
 
             var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-            var clientCertificateBytes = clientCertificate == null ? null : clientCertificate.GetRawCertData();
-            
+            var certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+
             var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
 
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
@@ -72,7 +72,7 @@
                     nancyRequestStream,
                     owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
                     serverClientIp,
-                    clientCertificateBytes);
+                    certificate);
 
             var tcs = new TaskCompletionSource<int>();
 
