@@ -228,18 +228,17 @@ namespace Nancy.Bootstrapper
 
                 foreach (var unloadedAssembly in unloadedAssemblies)
                 {
-                    var inspectedAssembly =
-                        Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
-
-                    if (inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    try
                     {
-                        try
+                        var inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
+
+                        if (inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
                         {
                             Assembly.Load(inspectedAssembly.GetName());
                         }
-                        catch
-                        {
-                        }
+                    }
+                    catch
+                    {
                     }
                 }
             }
