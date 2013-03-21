@@ -189,39 +189,69 @@ namespace Nancy.Conventions
             return fileName.StartsWith(contentRootPath, StringComparison.Ordinal);
         }
 
+        /// <summary>
+        /// Used to uniquely identify a request. Needed for when two Nancy applications want to serve up static content of the same
+        /// name from within the same AppDomain.
+        /// </summary>
         private class ResponseFactoryCacheKey : IEquatable<ResponseFactoryCacheKey>
         {
-            private readonly string m_Path;
-            private readonly string m_RootPath;
+            private readonly string path;
+            private readonly string rootPath;
 
             public ResponseFactoryCacheKey(string path, string rootPath)
             {
-                m_Path = path;
-                m_RootPath = rootPath;
+                this.path = path;
+                this.rootPath = rootPath;
             }
 
+            /// <summary>
+            /// The path of the static content for which this response is being issued
+            /// </summary>
             public string Path
             {
-                get { return m_Path; }
+                get { return this.path; }
             }
 
+            /// <summary>
+            /// The root folder path of the Nancy application for which this response will be issued
+            /// </summary>
             public string RootPath
             {
-                get { return m_RootPath; }
+                get { return this.rootPath; }
             }
 
             public bool Equals(ResponseFactoryCacheKey other)
             {
-                if (ReferenceEquals(null, other)) return false;
-                if (ReferenceEquals(this, other)) return true;
-                return string.Equals(m_Path, other.m_Path) && string.Equals(m_RootPath, other.m_RootPath);
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return string.Equals(this.path, other.path) && string.Equals(this.rootPath, other.rootPath);
             }
 
             public override bool Equals(object obj)
             {
-                if (ReferenceEquals(null, obj)) return false;
-                if (ReferenceEquals(this, obj)) return true;
-                if (obj.GetType() != this.GetType()) return false;
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+                
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+
                 return Equals((ResponseFactoryCacheKey)obj);
             }
 
@@ -229,7 +259,7 @@ namespace Nancy.Conventions
             {
                 unchecked
                 {
-                    return ((m_Path != null ? m_Path.GetHashCode() : 0) * 397) ^ (m_RootPath != null ? m_RootPath.GetHashCode() : 0);
+                    return ((this.path != null ? this.path.GetHashCode() : 0) * 397) ^ (this.rootPath != null ? this.rootPath.GetHashCode() : 0);
                 }
             }
         }
