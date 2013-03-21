@@ -167,7 +167,7 @@ namespace Nancy.Hosting.Wcf.Tests
 
         private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
         {
-            if(nancyBootstrapper == null)
+            if (nancyBootstrapper == null)
             {
                 nancyBootstrapper = new DefaultNancyBootstrapper();
             }
@@ -176,12 +176,12 @@ namespace Nancy.Hosting.Wcf.Tests
                 new NancyWcfGenericService(nancyBootstrapper),
                 baseUri ?? BaseUri);
 
-            host.AddServiceEndpoint(typeof(NancyWcfGenericService), new WebHttpBinding(), "");
+            host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
             try
             {
                 host.Open();
             }
-            catch(System.ServiceModel.AddressAccessDeniedException)
+            catch (System.ServiceModel.AddressAccessDeniedException)
             {
                 throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
             }
