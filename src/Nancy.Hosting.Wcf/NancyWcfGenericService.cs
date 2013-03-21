@@ -74,7 +74,16 @@
                 ((RemoteEndpointMessageProperty)
                  OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
 
-            var relativeUri = GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri).MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
+            var baseUri =
+                GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri);
+
+            if(!baseUri.OriginalString.EndsWith("/"))
+            {
+                baseUri = new Uri(string.Concat(baseUri.OriginalString, "/"));
+            }
+
+            var relativeUri =
+                baseUri.MakeRelativeUri(GetUrlAndPathComponents(webRequest.UriTemplateMatch.RequestUri));
 
             var expectedRequestLength =
                 GetExpectedRequestLength(webRequest.Headers.ToDictionary());
