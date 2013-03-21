@@ -28,7 +28,7 @@
             var second =
                templateContent.Substring(
                    templateContent.IndexOf("<!DOCTYPE html>", StringComparison.OrdinalIgnoreCase),
-                   templateContent.IndexOf("body", StringComparison.OrdinalIgnoreCase));
+                   templateContent.IndexOf("<body", StringComparison.OrdinalIgnoreCase));
 
             var third = templateContent.Substring(second.Length);
 
