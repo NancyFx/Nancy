@@ -79,7 +79,7 @@
 
             if(!baseUri.OriginalString.EndsWith("/"))
             {
-                baseUri = new Uri(baseUri.OriginalString + "/");
+                baseUri = new Uri(string.Concat(baseUri.OriginalString, "/"));
             }
 
             var relativeUri =
