@@ -25,18 +25,24 @@ namespace Nancy.Hosting.Wcf.Tests
         [SkippableFact]
         public void Should_be_able_to_get_any_header_from_selfhost()
         {
+            // Given
             using (CreateAndOpenWebServiceHost())
             {
                 var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
                 request.Method = "GET";
 
-                request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
+                // When
+                var header = request.GetResponse().Headers["X-Some-Header"];
+
+                // Then
+                header.ShouldEqual("Some value");
             }
         }
 
         [SkippableFact]
         public void Should_set_query_string_and_uri_correctly()
         {
+            // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
@@ -44,6 +50,7 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
+            // When
             using (CreateAndOpenWebServiceHost(fakeBootstrapper))
             {
                 var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
@@ -59,21 +66,59 @@ namespace Nancy.Hosting.Wcf.Tests
                 }
             }
 
+            // Then
             nancyRequest.Path.ShouldEqual("/test/stuff");
             Assert.True(nancyRequest.Query.query.HasValue);
             Assert.True(nancyRequest.Query.query2.HasValue);
         }
 
         [SkippableFact]
+        public void Should_set_path_and_url_correctly_without_trailing_slash()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes((f) => nancyRequest = (Request) f.Arguments[0]);
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            var baseUriWithoutTrailingSlash = new Uri("http://localhost:1234/base");
+
+            // When
+            using(CreateAndOpenWebServiceHost(fakeBootstrapper, baseUriWithoutTrailingSlash))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "test/stuff"));
+                request.Method = "GET";
+
+                try
+                {
+                    request.GetResponse();
+                }
+                catch(WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
+
+            // Then
+            nancyRequest.Path.ShouldEqual("/test/stuff");
+            nancyRequest.Url.ToString().ShouldEqual("http://localhost:1234/base/test/stuff");
+        }
+
+        [SkippableFact]
         public void Should_be_able_to_get_from_selfhost()
         {
+            // Given
             using (CreateAndOpenWebServiceHost())
             {
                 var reader =
                     new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
 
+                // When
                 var response = reader.ReadToEnd();
 
+                // Then
                 response.ShouldEqual("This is the site route");
             }
         }
@@ -81,6 +126,7 @@ namespace Nancy.Hosting.Wcf.Tests
         [SkippableFact]
         public void Should_be_able_to_post_body_to_selfhost()
         {
+            // Given
             using (CreateAndOpenWebServiceHost())
             {
                 const string testBody = "This is the body of the request";
@@ -93,9 +139,11 @@ namespace Nancy.Hosting.Wcf.Tests
                     new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
                 writer.Write(testBody);
 
+                // When
                 var responseBody = 
                     new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
+                // Then
                 responseBody.ShouldEqual(testBody);
             }
         }
@@ -134,7 +182,7 @@ namespace Nancy.Hosting.Wcf.Tests
             Assert.Equal("http", nancyRequest.Url.Scheme);
         }
 
-        private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null)
+        private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
         {
             if (nancyBootstrapper == null)
             {
@@ -143,7 +191,7 @@ namespace Nancy.Hosting.Wcf.Tests
 
             var host = new WebServiceHost(
                 new NancyWcfGenericService(nancyBootstrapper),
-                BaseUri);
+                baseUri ?? BaseUri);
 
             host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
             try
