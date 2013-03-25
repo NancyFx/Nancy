@@ -32,7 +32,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.
         /// </summary>
-        /// <param name="bootstrapper">A <see cref="INancyBootstrapper"/> instance that determins the Nancy configuration that should be used by the browser.</param>
+        /// <param name="bootstrapper">A <see cref="INancyBootstrapper"/> instance that determines the Nancy configuration that should be used by the browser.</param>
         public Browser(INancyBootstrapper bootstrapper)
         {
             this.bootstrapper = bootstrapper;
