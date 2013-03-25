@@ -1,0 +1,22 @@
+﻿<div class='widget PopularPosts'>
+    <h2>Popular Posts</h2>
+    <div class='widget-content'>
+        <ul>
+            @Each
+            <li>
+                <div class='item-content'>
+                    <div class='item-thumbnail'>
+                        <a href='/' target='_blank'>
+                            <img alt='' border='0' src='/Content/images/nancy-nuget.png'  />
+                        </a>
+                    </div>
+                    <div class='item-title'><a href="@Current.Slug">@Current.Title</a></div>
+                    <div class='item-snippet'>@Current.Abstract...</div>
+                </div>
+                <div style='clear: both;'></div>
+            </li>
+            @EndEach
+        </ul>
+        <div class='clear'></div>
+    </div>
+</div>
