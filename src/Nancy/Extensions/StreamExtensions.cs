@@ -5,6 +5,12 @@
 
     public static class StreamExtensions
     {
+        /// <summary>
+        /// Copies the contents between two <see cref="Stream"/> instances in an async fashion.
+        /// </summary>
+        /// <param name="source">The source stream to copy from.</param>
+        /// <param name="destination">The destination stream to copy to.</param>
+        /// <param name="onComplete">Delegate that should be invoked when the operation has completed. Will pass the source, destination and exception (if one was thrown) to the function. Can pass in <see langword="null" />.</param>
         public static void CopyTo(this Stream source, Stream destination, Action<Stream, Stream, Exception> onComplete)
         {
             var buffer = 
