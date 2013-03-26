@@ -2,6 +2,8 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
+    using Nancy.Extensions;
 
     /// <summary>
     /// A <see cref="Stream"/> decorator that can handle moving the stream out from memory and on to disk when the contents reaches a certain length.
@@ -69,13 +71,42 @@
 
             if (!this.stream.CanSeek)
             {
-                this.stream =
-                    this.CreateDefaultMemoryStream(expectedLength);
+                var task =
+                    MoveToWritableStream();
+ 
+                task.Wait();
+  
+                if (task.IsFaulted)
+                {
+                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                }
 
-                this.stream.CopyTo(this.stream);
+                this.stream = task.Result;
             }
 
             this.stream.Position = 0;
+        }
+
+        private Task<Stream> MoveToWritableStream()
+        {
+            var tcs = new TaskCompletionSource<Stream>();
+
+            var buffer =
+                new MemoryStream((int)this.stream.Length);
+
+            this.stream.CopyTo(buffer, (source, destination, ex) =>
+            {
+                if (ex != null)
+                {
+                    tcs.SetException(ex);
+                }
+                else
+                {
+                    tcs.SetResult(destination);
+                }
+            });
+
+            return tcs.Task;
         }
 
         /// <summary>
