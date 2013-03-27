@@ -157,6 +157,7 @@
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />
+    <Compile Include="ModelBinding\ExpressionExtensions.cs" />
     <Compile Include="ModelBinding\PropertyBindingException.cs" />
     <Compile Include="INancyModule.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
