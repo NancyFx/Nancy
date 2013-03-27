@@ -88,7 +88,7 @@
                 Query = webRequest.UriTemplateMatch.RequestUri.Query
             };
 
-            byte[] certifate = null;
+            byte[] certificate = null;
 
             if (context.ServiceSecurityContext != null && context.ServiceSecurityContext.AuthorizationContext.ClaimSets.Count > 0)
             {
@@ -98,7 +98,7 @@
 
                 if (claimset != null)
                 {
-                    certifate = claimset.X509Certificate.RawData;
+                    certificate = claimset.X509Certificate.RawData;
                 }
             }
 
@@ -108,7 +108,7 @@
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.Headers.ToDictionary(),
                 address.Address, 
-                certifate);
+                certificate);
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)

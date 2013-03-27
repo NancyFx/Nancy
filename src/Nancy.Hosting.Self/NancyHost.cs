@@ -69,7 +69,7 @@
         {
             this.configuration = configuration ?? new HostConfiguration();
             this.baseUriList = baseUris;
-            this.listener = new HttpListener( );
+            this.listener = new HttpListener();
 
             bootstrapper.Initialise();
             this.engine = bootstrapper.GetEngine();
