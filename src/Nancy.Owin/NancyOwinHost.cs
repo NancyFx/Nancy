@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Security.Cryptography.X509Certificates;
 
     using Nancy.Bootstrapper;
     using Nancy.IO;
@@ -45,7 +46,12 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+
+            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
+            var certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+
             var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
+
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
             var url = new Url
@@ -65,7 +71,8 @@
                     url,
                     nancyRequestStream,
                     owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
-                    serverClientIp);
+                    serverClientIp,
+                    certificate);
 
             var tcs = new TaskCompletionSource<int>();
 

@@ -17,7 +17,7 @@
     /// NancyHost uses <see cref="System.Net.HttpListener"/> internally. Therefore, it requires full .net 4.0 profile (not client profile)
     /// to run. <see cref="Start"/> will launch a thread that will listen for requests and then process them. All processing is done
     /// within a single thread - self hosting is not intended for production use, but rather as a development server.
-    ///NancyHost needs <see cref="SerializableAttribute"/> in order to be used from another appdomain under mono. Working with 
+    /// NancyHost needs <see cref="SerializableAttribute"/> in order to be used from another appdomain under mono. Working with 
     /// AppDomains is necessary if you want to unload the dependencies that come with NancyHost.
     /// </remarks>
     [Serializable]
@@ -145,6 +145,8 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
+            var asyncResult = request.BeginGetClientCertificate(null, null);
+
             var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
@@ -167,12 +169,21 @@
                 Fragment = request.Url.Fragment,
             };
 
+            byte[] certificate = null;
+            var x509Certificate = request.EndGetClientCertificate(asyncResult);
+
+            if (x509Certificate != null)
+            {
+                certificate = x509Certificate.RawData;
+            }
+
             return new Request(
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
                 request.Headers.ToDictionary(), 
-                (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null);
+                (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
+                certificate);
         }
 
         private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)

@@ -87,6 +87,7 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
+    <Reference Include="System.IdentityModel" />
     <Reference Include="System.Runtime.Serialization">
     </Reference>
     <Reference Include="System.ServiceModel">

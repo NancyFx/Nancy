@@ -16,6 +16,7 @@ namespace Nancy.Demo.Hosting.Owin
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Routing;
+    using System.Security.Cryptography.X509Certificates;
 
     using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
@@ -208,6 +209,11 @@ namespace Nancy.Demo.Hosting.Owin
             env[OwinConstants.RequestBody] = request.InputStream;
             env[OwinConstants.RequestHeaders] = request.Headers.AllKeys
                     .ToDictionary(x => x, x => request.Headers.GetValues(x), StringComparer.OrdinalIgnoreCase);
+
+            if (request.ClientCertificate != null && request.ClientCertificate.Certificate.Length != 0)
+            {
+                env[OwinConstants.ClientCertificate] = new X509Certificate(request.ClientCertificate.Certificate);
+            }
 
             env[OwinConstants.CallCancelled] = CancellationToken.None;
 
@@ -610,6 +616,8 @@ namespace Nancy.Demo.Hosting.Owin
             public const string WebSocketCallCancelled = "websocket.CallCancelled";
 
             public const string AspNetWebSocketContext = "System.Web.WebSockets.AspNetWebSocketContext";
+
+            public const string ClientCertificate = "ssl.ClientCertificate";
         }
     }
 }
