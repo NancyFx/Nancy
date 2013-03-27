@@ -329,6 +329,29 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_not_bind_anything_on_blacklist_when_the_blacklist_is_specified_by_expressions()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "12";
+            
+            var fakeModule = A.Fake<INancyModule>();
+            var fakeModelBinderLocator = A.Fake<IModelBinderLocator>();
+            A.CallTo(() => fakeModule.Context).Returns(context);
+            A.CallTo(() => fakeModule.ModelBinderLocator).Returns(fakeModelBinderLocator);
+            A.CallTo(() => fakeModelBinderLocator.GetBinderForType(typeof (TestModel), context)).Returns(binder);
+
+            // When
+            var result = fakeModule.Bind<TestModel>(tm => tm.IntProperty);
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(0);
+        }
+
+        [Fact]
         public void Should_use_default_body_deserializer_if_one_found()
         {
             // Given

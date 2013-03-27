@@ -15,14 +15,14 @@ namespace Nancy.Demo.ModelBinding
 
             Post["/bindxml"] = x =>
             {
-                User model = this.Bind();
+                var model = this.Bind<User>(u => u.Name);
 
                 var sb = new StringBuilder();
 
                 sb.AppendLine("Bound Model:");
                 sb.Append("Type: ");
                 sb.AppendLine(model.GetType().FullName);
-                sb.Append("Name: ");
+                sb.Append("Name: (which will be empty because it's ignored)");
                 sb.AppendLine(model.Name);
                 sb.Append("Address: ");
                 sb.AppendLine(model.Address);
