@@ -33,7 +33,7 @@ namespace Nancy.Diagnostics
                 diagnosticsModuleCatalog,
                 new DiagnosticsModuleBuilder(rootPathProvider, serializers, modelBinderLocator),
                 diagnosticsRouteCache,
-                new RouteResolverTrie(new TrieNodeFactory()));
+                new RouteResolverTrie(new TrieNodeFactory(), new DefaultRouteSegmentExtractor()));
 
             var serializer = new DefaultObjectSerializer();
 
