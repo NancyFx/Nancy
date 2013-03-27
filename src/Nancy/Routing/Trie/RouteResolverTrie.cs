@@ -1,11 +1,9 @@
 namespace Nancy.Routing.Trie
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-
-    using Nancy.Routing.Trie.Nodes;
+    using Nodes;
 
     /// <summary>
     /// The default route resolution trie
@@ -13,14 +11,14 @@ namespace Nancy.Routing.Trie
     public class RouteResolverTrie : IRouteResolverTrie
     {
         private readonly ITrieNodeFactory nodeFactory;
+        private readonly IRouteSegmentExtractor extractor;
 
         private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>();
 
-        private static char[] splitSeparators = new[] {'/'};
-
-        public RouteResolverTrie(ITrieNodeFactory nodeFactory)
+        public RouteResolverTrie(ITrieNodeFactory nodeFactory, IRouteSegmentExtractor extractor)
         {
             this.nodeFactory = nodeFactory;
+            this.extractor = extractor;
         }
 
         /// <summary>
@@ -74,7 +72,9 @@ namespace Nancy.Routing.Trie
                 return MatchResult.NoMatches;
             }
 
-            return this.routeTries[method].GetMatches(path.Split(splitSeparators, StringSplitOptions.RemoveEmptyEntries), context)
+            var segments = extractor.Extract(path);
+
+            return this.routeTries[method].GetMatches(segments.ToArray(), context)
                                           .ToArray();
         }
 
