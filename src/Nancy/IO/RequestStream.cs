@@ -2,6 +2,8 @@
 {
     using System;
     using System.IO;
+    using System.Threading.Tasks;
+    using Nancy.Extensions;
 
     /// <summary>
     /// A <see cref="Stream"/> decorator that can handle moving the stream out from memory and on to disk when the contents reaches a certain length.
@@ -62,11 +64,49 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            this.EnsureStreamIsSeekable();
-            this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength);
-            this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
+            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength))
+            {
+                this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
+            }
+
+            if (!this.stream.CanSeek)
+            {
+                var task =
+                    MoveToWritableStream();
+ 
+                task.Wait();
+  
+                if (task.IsFaulted)
+                {
+                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                }
+
+                this.stream = task.Result;
+            }
 
             this.stream.Position = 0;
+        }
+
+        private Task<Stream> MoveToWritableStream()
+        {
+            var tcs = new TaskCompletionSource<Stream>();
+
+            var buffer =
+                new MemoryStream((int)this.stream.Length);
+
+            this.stream.CopyTo(buffer, (source, destination, ex) =>
+            {
+                if (ex != null)
+                {
+                    tcs.SetException(ex);
+                }
+                else
+                {
+                    tcs.SetResult(destination);
+                }
+            });
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -239,7 +279,7 @@
         public static RequestStream FromStream(Stream stream, long expectedLength, long thresholdLength, bool disableStreamSwitching)
         {
             return new RequestStream(stream, expectedLength, thresholdLength, disableStreamSwitching);
-        }        
+        }
 
         /// <summary>
         /// Reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -306,7 +346,7 @@
                 // in NancyWcfGenericService - webRequest.UriTemplateMatch
                 var old = this.stream;
                 this.MoveStreamContentsToFileStream();
-                old.Close();                
+                old.Close();
             }
         }
 
@@ -363,18 +403,20 @@
             }
         }
 
-        private void MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(long expectedLength)
+        private bool MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(long expectedLength)
         {
             if (expectedLength >= this.thresholdLength)
             {
                 this.MoveStreamContentsToFileStream();
+                return true;
             }
+            return false;
         }
 
         private void MoveStreamContentsToFileStream()
-        {            
+        {
             MoveStreamContentsInto(CreateTemporaryFileStream);
-        }        
+        }
 
         private void MoveStreamContentsToMemoryStream()
         {
@@ -404,11 +446,11 @@
             }
 
             this.stream.CopyTo(targetStream, 8196);
-            if (this.stream.CanSeek) 
+            if (this.stream.CanSeek)
             {
                 this.stream.Flush();
             }
-            
+
             targetStream.Position = 0;
             this.stream = targetStream;
         }
