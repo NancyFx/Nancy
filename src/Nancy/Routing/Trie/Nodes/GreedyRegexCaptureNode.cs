@@ -6,10 +6,11 @@
     using System.Text.RegularExpressions;
 
     /// <summary>
-    /// A greedy capture node e.g. {greedy*}
-    /// e.g. /foo/bar/{greedy*} - this node will be hit for /foo/bar/[anything that doesn't match another route], but
-    /// not for just /foo/bar
-    /// e.g. /foo/{greedy*}/bar - this node will be hit for /foo/[anything that doesn't match another route]/bar
+    /// A greedy regular expression capture node e.g. ^(?<id>\d{0,100})
+    /// For use on an entire route path, regular expression must be surrounded by ^( )
+    /// e.g. @"^(?:(?<id>videos/\d{1,10})(?:/{0,1}(?<slug>.*)))"
+    /// This will match for a Url like /videos/123/some-random-slug 
+    /// and capture 'videos/123' and 'some-random-slug'
     /// </summary>
     public class GreedyRegExCaptureNode : TrieNode
     {
