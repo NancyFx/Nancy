@@ -4,9 +4,9 @@
     using System.Linq;
 
     using Nancy;
-    using Nancy.Routing.Trie;
+    using Trie;
 
-    using MatchResult = Nancy.Routing.Trie.MatchResult;
+    using MatchResult = Trie.MatchResult;
 
     public class DefaultRouteResolver : IRouteResolver
     {
@@ -90,19 +90,18 @@
             var parameters = DynamicDictionary.Create(result.Parameters);
 
             return new ResolveResult
-                       {
-                           Route = route,
-                           Parameters = parameters,
-                           Before = associatedModule.Before,
-                           After = associatedModule.After,
-                           OnError = associatedModule.OnError
-                       };
+            {
+                Route = route,
+                Parameters = parameters,
+                Before = associatedModule.Before,
+                After = associatedModule.After,
+                OnError = associatedModule.OnError
+            };
         }
 
         private INancyModule GetModuleFromMatchResult(NancyContext context, MatchResult result)
         {
-            var module =
-                this.catalog.GetModule(result.ModuleType, context);
+            var module = this.catalog.GetModule(result.ModuleType, context);
 
             return this.moduleBuilder.BuildModule(module, context);
         }
