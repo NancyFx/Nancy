@@ -77,6 +77,12 @@ namespace Nancy.Routing
 
         private void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, TaskCompletionSource<Response> tcs)
         {
+            if (postHook == null)
+            {
+                tcs.SetResult(context.Response);
+                return;
+            }
+
             postHook.Invoke(context, cancellationToken).WhenCompleted(
                                         t => tcs.SetResult(context.Response),
                                         t => tcs.SetException(t.Exception),
