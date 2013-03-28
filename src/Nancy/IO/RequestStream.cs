@@ -64,7 +64,7 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength))
+            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
             {
                 this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
             }
@@ -80,21 +80,19 @@
                 {
                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
-
-                this.stream = task.Result;
             }
 
             this.stream.Position = 0;
         }
 
-        private Task<Stream> MoveToWritableStream()
+        private Task<object> MoveToWritableStream()
         {
-            var tcs = new TaskCompletionSource<Stream>();
+            var tcs = new TaskCompletionSource<object>();
 
-            var buffer =
-                new MemoryStream((int)this.stream.Length);
+            var sourceStream = this.stream;
+            this.stream = new MemoryStream(StreamExtensions.BufferSize);
 
-            this.stream.CopyTo(buffer, (source, destination, ex) =>
+            sourceStream.CopyTo(this, (source, destination, ex) =>
             {
                 if (ex != null)
                 {
@@ -102,7 +100,7 @@
                 }
                 else
                 {
-                    tcs.SetResult(destination);
+                    tcs.SetResult(null);
                 }
             });
 
@@ -246,6 +244,8 @@
         public override void EndWrite(IAsyncResult asyncResult)
         {
             this.stream.EndWrite(asyncResult);
+
+            this.ShiftStreamToFileStreamIfNecessary();
         }
 
         /// <summary>
@@ -334,6 +334,11 @@
         {
             this.stream.Write(buffer, offset, count);
 
+            this.ShiftStreamToFileStreamIfNecessary();
+        }
+
+        private void ShiftStreamToFileStreamIfNecessary()
+        {
             if (this.disableStreamSwitching)
             {
                 return;
@@ -387,23 +392,26 @@
             }
         }
 
-        private void EnsureStreamIsSeekable()
+        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
         {
             if (!this.stream.CanSeek)
             {
-                this.MoveStreamContentsToMemoryStream();
+                return;
             }
-        }
 
-        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
-        {
-            if ((this.stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+            try
             {
-                this.MoveStreamContentsToFileStream();
+                if ((this.stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+                {
+                    this.MoveStreamContentsToFileStream();
+                }
+            }
+            catch (NotSupportedException)
+            {
             }
         }
 
-        private bool MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(long expectedLength)
+        private bool MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(long expectedLength)
         {
             if (expectedLength >= this.thresholdLength)
             {
@@ -415,27 +423,7 @@
 
         private void MoveStreamContentsToFileStream()
         {
-            MoveStreamContentsInto(CreateTemporaryFileStream);
-        }
-
-        private void MoveStreamContentsToMemoryStream()
-        {
-            MoveStreamContentsInto(() => new MemoryStream());
-        }
-
-        private bool IsStreamSeekableAndSwitchingDisabled()
-        {
-            return this.disableStreamSwitching && this.stream.CanSeek;
-        }
-
-        private void MoveStreamContentsInto(Func<Stream> target)
-        {
-            if (IsStreamSeekableAndSwitchingDisabled())
-            {
-                return;
-            }
-
-            var targetStream = target.Invoke();
+            var targetStream = CreateTemporaryFileStream();
             this.isSafeToDisposeStream = true;
 
             if (this.stream.CanSeek && this.stream.Length == 0)
@@ -445,14 +433,16 @@
                 return;
             }
 
+            this.stream.Position = 0;
             this.stream.CopyTo(targetStream, 8196);
             if (this.stream.CanSeek)
             {
                 this.stream.Flush();
             }
 
-            targetStream.Position = 0;
             this.stream = targetStream;
+
+            this.disableStreamSwitching = true;
         }
 
         private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)

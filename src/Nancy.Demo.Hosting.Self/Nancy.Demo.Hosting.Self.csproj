@@ -107,6 +107,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Models\Index.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="TestModule.cs" />
   </ItemGroup>
@@ -114,6 +115,10 @@
     <ProjectReference Include="..\Nancy.Hosting.Self\Nancy.Hosting.Self.csproj">
       <Project>{AA7F66EB-EC2C-47DE-855F-30B3E6EF2134}</Project>
       <Name>Nancy.Hosting.Self</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
+      <Project>{4b7e35df-1569-4346-b180-a09615723095}</Project>
+      <Name>Nancy.ViewEngines.Spark</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
@@ -124,6 +129,10 @@
     <None Include="app.config">
       <SubType>Designer</SubType>
     </None>
+    <Content Include="Views\FileUpload.spark">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\staticview.html">

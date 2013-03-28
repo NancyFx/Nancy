@@ -1,0 +1,17 @@
+﻿<viewdata model="Nancy.Demo.Hosting.Self.Models.Index" />
+<html>
+  <head>
+    <title>Nancy Self Host Demo</title>
+  </head>
+  <body>
+    <h1>Hello ${Model.Name}!</h1>
+    <p>This is a Spark view rendered via the self hosting.</p>
+    <p>You uploaded: ${Model.Posted}</p>
+    <p>
+      <form action="~/fileupload" method="POST" enctype="multipart/form-data">
+        <input name="upload" type="file" size="40"/>
+        <input type="submit" value="Post!"/>
+      </form>
+    </p>
+  </body>
+</html>

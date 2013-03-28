@@ -180,7 +180,7 @@
             return new Request(
                 request.HttpMethod,
                 nancyUrl,
-                RequestStream.FromStream(request.InputStream, expectedRequestLength, true),
+                RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
                 request.Headers.ToDictionary(), 
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
                 certificate);

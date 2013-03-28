@@ -6,6 +6,11 @@
     public static class StreamExtensions
     {
         /// <summary>
+        /// Buffer size for copy operations
+        /// </summary>
+        internal const int BufferSize = 4096;
+
+        /// <summary>
         /// Copies the contents between two <see cref="Stream"/> instances in an async fashion.
         /// </summary>
         /// <param name="source">The source stream to copy from.</param>
@@ -14,7 +19,7 @@
         public static void CopyTo(this Stream source, Stream destination, Action<Stream, Stream, Exception> onComplete)
         {
             var buffer = 
-                new byte[4096];
+                new byte[BufferSize];
 
             Action<Exception> done = e =>
             {
