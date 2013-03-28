@@ -64,10 +64,10 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            //if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
-            //{
-            //    this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
-            //}
+            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
+            {
+                this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
+            }
 
             if (!this.stream.CanSeek)
             {
