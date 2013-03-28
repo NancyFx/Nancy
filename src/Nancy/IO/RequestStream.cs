@@ -64,7 +64,7 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(expectedLength))
+            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
             {
                 this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
             }
@@ -80,21 +80,19 @@
                 {
                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
-
-                this.stream = task.Result;
             }
 
             this.stream.Position = 0;
         }
 
-        private Task<Stream> MoveToWritableStream()
+        private Task<object> MoveToWritableStream()
         {
-            var tcs = new TaskCompletionSource<Stream>();
+            var tcs = new TaskCompletionSource<object>();
 
-            var buffer =
-                new MemoryStream((int)this.stream.Length);
+            var sourceStream = this.stream;
+            this.stream = new MemoryStream(StreamExtensions.BufferSize);
 
-            this.stream.CopyTo(buffer, (source, destination, ex) =>
+            sourceStream.CopyTo(this, (source, destination, ex) =>
             {
                 if (ex != null)
                 {
@@ -102,7 +100,7 @@
                 }
                 else
                 {
-                    tcs.SetResult(destination);
+                    tcs.SetResult(null);
                 }
             });
 
@@ -246,6 +244,21 @@
         public override void EndWrite(IAsyncResult asyncResult)
         {
             this.stream.EndWrite(asyncResult);
+
+            if (this.disableStreamSwitching)
+            {
+                return;
+            }
+
+            if (this.stream.Length >= this.thresholdLength)
+            {
+                // Close the stream here as closing it every time we call 
+                // MoveStreamContentsToFileStream causes an (ObjectDisposedException) 
+                // in NancyWcfGenericService - webRequest.UriTemplateMatch
+                var old = this.stream;
+                this.MoveStreamContentsToFileStream();
+                old.Close();
+            }
         }
 
         /// <summary>
@@ -387,23 +400,26 @@
             }
         }
 
-        private void EnsureStreamIsSeekable()
+        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
         {
             if (!this.stream.CanSeek)
             {
-                this.MoveStreamContentsToMemoryStream();
+                return;
             }
-        }
 
-        private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
-        {
-            if ((this.stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+            try
             {
-                this.MoveStreamContentsToFileStream();
+                if ((this.stream.Length > this.thresholdLength) && !this.disableStreamSwitching)
+                {
+                    this.MoveStreamContentsToFileStream();
+                }
+            }
+            catch (NotSupportedException)
+            {
             }
         }
 
-        private bool MoveStreamOutOfMemoryIfExpectedLengthExceedExpectedLength(long expectedLength)
+        private bool MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(long expectedLength)
         {
             if (expectedLength >= this.thresholdLength)
             {
