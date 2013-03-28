@@ -64,10 +64,10 @@
 
             ThrowExceptionIfCtorParametersWereInvalid(this.stream, expectedLength, this.thresholdLength);
 
-            if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
-            {
-                this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
-            }
+            //if (!this.MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(expectedLength))
+            //{
+            //    this.MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled();
+            //}
 
             if (!this.stream.CanSeek)
             {
@@ -250,15 +250,7 @@
                 return;
             }
 
-            if (this.stream.Length >= this.thresholdLength)
-            {
-                // Close the stream here as closing it every time we call 
-                // MoveStreamContentsToFileStream causes an (ObjectDisposedException) 
-                // in NancyWcfGenericService - webRequest.UriTemplateMatch
-                var old = this.stream;
-                this.MoveStreamContentsToFileStream();
-                old.Close();
-            }
+            this.ShiftStreamToFileStreamIfNecessary();
         }
 
         /// <summary>
@@ -352,6 +344,11 @@
                 return;
             }
 
+            this.ShiftStreamToFileStreamIfNecessary();
+        }
+
+        private void ShiftStreamToFileStreamIfNecessary()
+        {
             if (this.stream.Length >= this.thresholdLength)
             {
                 // Close the stream here as closing it every time we call 
@@ -431,27 +428,7 @@
 
         private void MoveStreamContentsToFileStream()
         {
-            MoveStreamContentsInto(CreateTemporaryFileStream);
-        }
-
-        private void MoveStreamContentsToMemoryStream()
-        {
-            MoveStreamContentsInto(() => new MemoryStream());
-        }
-
-        private bool IsStreamSeekableAndSwitchingDisabled()
-        {
-            return this.disableStreamSwitching && this.stream.CanSeek;
-        }
-
-        private void MoveStreamContentsInto(Func<Stream> target)
-        {
-            if (IsStreamSeekableAndSwitchingDisabled())
-            {
-                return;
-            }
-
-            var targetStream = target.Invoke();
+            var targetStream = CreateTemporaryFileStream();
             this.isSafeToDisposeStream = true;
 
             if (this.stream.CanSeek && this.stream.Length == 0)
@@ -461,14 +438,16 @@
                 return;
             }
 
+            this.stream.Position = 0;
             this.stream.CopyTo(targetStream, 8196);
             if (this.stream.CanSeek)
             {
                 this.stream.Flush();
             }
 
-            targetStream.Position = 0;
             this.stream = targetStream;
+
+            this.disableStreamSwitching = true;
         }
 
         private static void ThrowExceptionIfCtorParametersWereInvalid(Stream stream, long expectedLength, long thresholdLength)
