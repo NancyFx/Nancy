@@ -245,11 +245,6 @@
         {
             this.stream.EndWrite(asyncResult);
 
-            if (this.disableStreamSwitching)
-            {
-                return;
-            }
-
             this.ShiftStreamToFileStreamIfNecessary();
         }
 
@@ -339,16 +334,16 @@
         {
             this.stream.Write(buffer, offset, count);
 
-            if (this.disableStreamSwitching)
-            {
-                return;
-            }
-
             this.ShiftStreamToFileStreamIfNecessary();
         }
 
         private void ShiftStreamToFileStreamIfNecessary()
         {
+            if (this.disableStreamSwitching)
+            {
+                return;
+            }
+
             if (this.stream.Length >= this.thresholdLength)
             {
                 // Close the stream here as closing it every time we call 
