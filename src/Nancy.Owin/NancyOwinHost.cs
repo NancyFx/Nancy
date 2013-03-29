@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
-    using Nancy.Bootstrapper;
     using Nancy.IO;
 
     /// <summary>
@@ -24,12 +23,12 @@
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
         /// <param name="next">Next middleware to run if necessary</param>
-        /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
-        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper)
+        /// <param name="options">The nancy options that should be used by the host.</param>
+        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, NancyOptions options)
         {
-            bootstrapper.Initialise();
+            options.Bootstrapper.Initialise();
 
-            this.engine = bootstrapper.GetEngine();
+            this.engine = options.Bootstrapper.GetEngine();
         }
 
         /// <summary>
