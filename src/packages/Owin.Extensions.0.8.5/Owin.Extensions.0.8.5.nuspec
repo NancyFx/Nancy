@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Owin.Extensions</id>
+    <version>0.8.5</version>
+    <authors>Microsoft Open Technologies,  Inc.</authors>
+    <owners>Microsoft Open Technologies,  Inc.</owners>
+    <licenseUrl>https://github.com/owin-contrib/owin-hosting/blob/master/LICENSE.txt</licenseUrl>
+    <projectUrl>https://github.com/owin-contrib/owin-hosting/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>OWIN common extensions</description>
+    <tags>OWIN</tags>
+    <dependencies>
+      <dependency id="Owin" version="1.0" />
+      <dependency id="Owin.Types" version="0.8.5" />
+    </dependencies>
+    <references>
+      <reference file="Owin.Extensions.dll" />
+    </references>
+  </metadata>
+</package>

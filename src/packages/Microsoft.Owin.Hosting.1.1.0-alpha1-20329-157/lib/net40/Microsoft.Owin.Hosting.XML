@@ -1,0 +1,78 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Owin.Hosting</name>
+    </assembly>
+    <members>
+        <member name="T:Microsoft.Owin.Hosting.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_MissingApplicationEntryPoint">
+            <summary>
+              Looks up a localized string similar to No application entry point found..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterCount">
+            <summary>
+              Looks up a localized string similar to ServerFactory Create method must take two parameters..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterType">
+            <summary>
+              Looks up a localized string similar to ServerFactory Create second parameter must be of type IDictionary&lt;string,object&gt;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.App">
+            <summary>
+            Parameter to locate and load web application startup routine
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Server">
+            <summary>
+            Name of the assembly containing the http server implementation
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Boot">
+            <summary>
+            Name of the assembly providing custom domain startup logic
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.OutputFile">
+            <summary>
+            Optional file name used to capture text-oriented trace messages
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Verbosity">
+            <summary>
+            Optional level of text-oriented trace message verbosity
+            0 can be interpreted as default (warning, error, or fatal)
+            1 can be interpreted as informational (message or info)
+            2 or more can be interpreted as all information (verbose or debug)
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Settings">
+            <summary>
+            Optional settings used to override service types and other defaults
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Directory">
+            <summary>
+            Optional directory containing web application. Defaults to the
+            current directory.
+            </summary>
+        </member>
+    </members>
+</doc>
