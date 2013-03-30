@@ -105,6 +105,27 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void Should_be_able_to_send_xml_in_body()
+        {
+            // Given
+            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+
+            // When
+            var result = browser.Post("/", with =>
+            {
+                with.XMLBody(model);
+            });
+
+            // Then
+            var actualModel = result.Body.DeserializeXml<EchoModel>();
+
+            actualModel.ShouldNotBeNull();
+            actualModel.SomeString.ShouldEqual(model.SomeString);
+            actualModel.SomeInt.ShouldEqual(model.SomeInt);
+            actualModel.SomeBoolean.ShouldEqual(model.SomeBoolean);
+        }
+
+        [Fact]
         public void Should_add_basic_authentication_credentials_to_the_headers_of_the_request()
         {
             // Given
