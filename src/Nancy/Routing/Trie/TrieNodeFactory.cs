@@ -30,7 +30,7 @@ namespace Nancy.Routing.Trie
                 return this.GetCaptureNode(parent, segment);
             }
 
-            if (segment.StartsWith("^(") && segment.EndsWith(")"))
+            if (segment.StartsWith("^(") && (segment.EndsWith(")") || segment.EndsWith(")$")))
             {
                 return new GreedyRegExCaptureNode(parent, segment, this);
             }
