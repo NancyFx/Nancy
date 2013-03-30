@@ -67,6 +67,28 @@ namespace Nancy.Testing
         }
 
         /// <summary>
+        /// Adds a application/xml request body to the <see cref="Browser"/>.
+        /// </summary>
+        /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
+        /// <param name="model">The model to be serialized to xml.</param>
+        /// <param name="serializer">Optionally opt in to using a different XML serializer.</param>
+        public static void XMLBody<TModel>(this BrowserContext browserContext, TModel model, ISerializer serializer = null)
+        {
+            if (serializer == null)
+            {
+                serializer = new DefaultXmlSerializer();
+            }
+
+            var contextValues =
+                (IBrowserContextValues)browserContext;
+
+            contextValues.Body = new MemoryStream();
+
+            serializer.Serialize("application/xml", model, contextValues.Body);
+            browserContext.Header("Content-Type", "application/xml");
+        }
+
+        /// <summary>
         /// Adds basic authorization credentials to the headers of the <see cref="Browser"/>.
         /// </summary>
         /// <param name="browserContext">The <see cref="BrowserContext"/> that the data should be added to.</param>
