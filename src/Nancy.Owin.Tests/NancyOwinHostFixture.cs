@@ -33,7 +33,7 @@
         [Fact]
         public void Should_pass_through_and_get_OK_when_nancy_returns_NotFound()
         {
-            HttpResponseMessage httpResponseMessage = testServer.HttpClient.GetAsync("http://localhost/404.html").Result;
+            var httpResponseMessage = testServer.HttpClient.GetAsync("http://localhost/404.html").Result;
             httpResponseMessage.StatusCode.ShouldEqual(NetHttpStatusCode.OK);
         }
 
