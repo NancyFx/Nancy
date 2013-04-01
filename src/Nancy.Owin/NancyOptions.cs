@@ -5,6 +5,9 @@
 
     using Nancy.Bootstrapper;
 
+    /// <summary>
+    /// Encapsulates a set of options used to configure a NancyOwinHost.
+    /// </summary>
     public class NancyOptions
     {
         private INancyBootstrapper bootstrapper;
