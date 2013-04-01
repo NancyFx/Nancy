@@ -2,6 +2,8 @@
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
+    using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.Routing;
     using Xunit;
@@ -147,6 +149,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             }
 
             public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<NancyContext> HandleRequestAsync(Request request, Func<NancyContext, NancyContext> preRequest)
             {
                 throw new NotImplementedException();
             }

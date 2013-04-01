@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Owin.Hosting</id>
+    <version>0.21.0-pre</version>
+    <title>Microsoft.Owin.Hosting (85db6533ceca403f3d7e2d8e3ef0d41de209ec0c)</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/aspnet_and_web_tools_2012_2_rtw_eula_enu.htm</licenseUrl>
+    <projectUrl>http://katanaproject.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Microsoft.Owin.Hosting</description>
+    <tags>Microsoft OWIN</tags>
+    <dependencies>
+      <dependency id="Owin" version="1.0" />
+    </dependencies>
+    <references>
+      <reference file="Microsoft.Owin.Hosting.dll" />
+    </references>
+  </metadata>
+</package>

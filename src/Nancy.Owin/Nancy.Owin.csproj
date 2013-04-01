@@ -63,7 +63,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpers.cs" />
+    <Compile Include="App_Packages\TaskHelpers.Sources.0.2\TaskHelpersExtensions.cs" />
     <Compile Include="Extensions.cs" />
+    <Compile Include="NancyOptions.cs" />
     <Compile Include="NancyOwinHost.cs" />
   </ItemGroup>
   <ItemGroup>

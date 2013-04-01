@@ -1,6 +1,8 @@
 namespace Nancy
 {
     using System;
+    using System.Threading.Tasks;
+
     using Bootstrapper;
 
     /// <summary>
@@ -26,7 +28,8 @@ namespace Nancy
         /// </summary>
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
         /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
+        /// <param name="onError">Delegate to call when any errors occur</param>
+        [Obsolete("Use HandleRequestAsync instead", false)]
         void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError);
 
         /// <summary>
@@ -35,7 +38,16 @@ namespace Nancy
         /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
         /// <param name="preRequest">Delegate to call before the request is processed</param>
         /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
+        /// <param name="onError">Delegate to call when any errors occur</param>
+        [Obsolete("Use HandleRequestAsync instead", false)]
         void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError);
+
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/> asyncronously.
+        /// </summary>
+        /// <param name="request">The incoming request</param>
+        /// <param name="preRequest">Delegate to call before the request is processed</param>
+        /// <returns>A task that represents the asynchronouse operation</returns>
+        Task<NancyContext> HandleRequestAsync(Request request, Func<NancyContext, NancyContext> preRequest);
     }
 }

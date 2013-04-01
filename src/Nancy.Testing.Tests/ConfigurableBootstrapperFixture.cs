@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading.Tasks;
 
     using FakeItEasy;
     using Nancy.Bootstrapper;
@@ -209,6 +210,11 @@
             }
 
             public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+            {
+                throw new NotImplementedException();
+            }
+
+            public Task<NancyContext> HandleRequestAsync(Request request, Func<NancyContext, NancyContext> preRequest)
             {
                 throw new NotImplementedException();
             }

@@ -4,13 +4,14 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
+
     using Bootstrapper;
 
     using Nancy.Cookies;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
-    using Nancy.Culture;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -187,22 +188,38 @@
             this.HandleRequest(request, context => context, onComplete, onError);
         }
 
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/> async.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <param name="preRequest">Delegate to call before the request is processed</param>
+        /// <param name="onComplete">Delegate to call when the request is complete</param>
+        /// <param name="onError">Delegate to call when any errors occur</param>
         public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
         {
-            // TODO - potentially do some things sync like the pre-req hooks?
-            // Possibly not worth it as the thread pool is quite clever
-            // when it comes to fast running tasks such as ones where the prehook returns a redirect.
-            ThreadPool.QueueUserWorkItem(s =>
-            {
-                try
-                {
-                    onComplete.Invoke(this.HandleRequest(request, preRequest));
-                }
-                catch (Exception e)
-                {
-                    onError.Invoke(e);
-                }
-            });
+            HandleRequestAsync(request, preRequest)
+                .ContinueWith(t =>
+                              {
+                                  if (t.IsFaulted)
+                                  {
+                                      onError(t.Exception);
+                                  }
+                                  else
+                                  {
+                                      onComplete(t.Result);
+                                  }
+                              });
+        }
+
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/> asyncronously.
+        /// </summary>
+        /// <param name="request">The incoming request</param>
+        /// <param name="preRequest">Delegate to call before the request is processed</param>
+        /// <returns>A task that represents the asynchronouse operation</returns>
+        public Task<NancyContext> HandleRequestAsync(Request request, Func<NancyContext, NancyContext> preRequest)
+        {
+            return Task.Factory.StartNew(() => this.HandleRequest(request, preRequest));
         }
 
         private void CheckStatusCodeHandler(NancyContext context)

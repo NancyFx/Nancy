@@ -8,7 +8,6 @@
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
-    using Nancy.Bootstrapper;
     using Nancy.IO;
 
     /// <summary>
@@ -16,26 +15,27 @@
     /// </summary>
     public class NancyOwinHost
     {
+        private readonly Func<IDictionary<string, object>, Task> next;
         private readonly INancyEngine engine;
-
-        public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
+        private readonly HashSet<HttpStatusCode> passThroughStatusCodes;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
         /// </summary>
         /// <param name="next">Next middleware to run if necessary</param>
-        /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
-        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper)
+        /// <param name="options">The nancy options that should be used by the host.</param>
+        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, NancyOptions options)
         {
-            bootstrapper.Initialise();
-
-            this.engine = bootstrapper.GetEngine();
+            this.next = next;
+            this.passThroughStatusCodes = new HashSet<HttpStatusCode>(options.PassThroughStatusCodes);
+            options.Bootstrapper.Initialise();
+            this.engine = options.Bootstrapper.GetEngine();
         }
 
         /// <summary>
-        /// OWIN App Action
+        /// The Entry point when hosting Nancy in an OWIN application
         /// </summary>
-        /// <param name="environment">Application environment</param>
+        /// <param name="environment">OWIN environment dictionary</param>
         /// <returns>Returns result</returns>
         public Task Invoke(IDictionary<string, object> environment)
         {
@@ -74,82 +74,49 @@
                     serverClientIp,
                     certificate);
 
-            var tcs = new TaskCompletionSource<int>();
-
-            this.engine.HandleRequest(
-                nancyRequest,
-                StoreEnvironment(environment),
-                RequestComplete(environment, tcs), 
-                RequestErrored(tcs));
-
-            return tcs.Task;
+            return this.engine.HandleRequestAsync(nancyRequest)
+                .ContinueWith(t =>
+                              {
+                                  if (t.IsFaulted)
+                                  {
+                                      return TaskHelpers.FromError(t.Exception);
+                                  }
+                                  return RequestComplete(t.Result, environment);
+                              });
         }
 
-        /// <summary>
-        /// Gets a delegate to store the OWIN environment into the NancyContext
-        /// </summary>
-        /// <param name="environment">OWIN Environment</param>
-        /// <returns>Delegate</returns>
-        private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment)
+        private Task RequestComplete(
+            NancyContext context,
+            IDictionary<string, object> environment)
         {
-            return context =>
-                {
-                    environment["nancy.NancyContext"] = context;
-                    context.Items[RequestEnvironmentKey] = environment;
-                    return context;
-                };
-        }
+            var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+            var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
 
-        /// <summary>
-        /// Gets a delegate to handle converting a nancy response
-        /// to the format required by OWIN and signals that the we are
-        /// now complete.
-        /// </summary>
-        /// <param name="environment">OWIN environment</param>
-        /// <param name="tcs">The task completion source to signal</param>
-        /// <returns>Delegate</returns>
-        private static Action<NancyContext> RequestComplete(IDictionary<string, object> environment, TaskCompletionSource<int> tcs)
-        {
-            return context =>
-                {
-                    var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
-                    var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+            var nancyResponse = context.Response;
+            environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
 
-                    var nancyResponse = context.Response;
-                    environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
+            foreach (var responseHeader in nancyResponse.Headers)
+            {
+                owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
+            }
 
-                    foreach (var responseHeader in nancyResponse.Headers)
-                    {
-                        owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
-                    }
+            if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
+            {
+                owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
+            }
 
-                    if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
-                    {
-                        owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
-                    }
-
-                    if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
-                    {
-                        owinResponseHeaders["Set-Cookie"] =
-                            nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
-                    }
-
-                    nancyResponse.Contents(owinResponseBody);
-
-                    context.Dispose();
-
-                    tcs.TrySetResult(0);
-                };
-        }
-
-        /// <summary>
-        /// Gets a delegate to handle request errors
-        /// </summary>
-        /// <param name="tcs">Completion source to signal</param>
-        /// <returns>Delegate</returns>
-        private Action<Exception> RequestErrored(TaskCompletionSource<int> tcs)
-        {
-            return tcs.SetException;
+            if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
+            {
+                owinResponseHeaders["Set-Cookie"] =
+                    nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+            }
+            if (passThroughStatusCodes.Contains(nancyResponse.StatusCode))
+            {
+                return next(environment);
+            }
+            nancyResponse.Contents(owinResponseBody);
+            context.Dispose();
+            return TaskHelpers.Completed();
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
