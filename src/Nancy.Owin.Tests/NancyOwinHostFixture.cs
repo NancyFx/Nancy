@@ -24,7 +24,7 @@
                 builder.UseNancy(options =>
                                  {
                                      options.Bootstrapper = new DefaultNancyBootstrapper();
-                                     options.PassThroughStatusCodes = new[] {NancyHttpStatusCode.NotFound};
+                                     options.PassThroughWhenStatusCodesAre(NancyHttpStatusCode.NotFound);
                                  })
                        .UseHandler((request, response) => response.StatusCode = 200));
         }

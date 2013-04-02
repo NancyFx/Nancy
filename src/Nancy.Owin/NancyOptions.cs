@@ -1,14 +1,12 @@
 ﻿namespace Nancy.Owin
 {
-    using System.Collections.Generic;
-    using System.Linq;
-
+    using System;
     using Nancy.Bootstrapper;
 
     public class NancyOptions
     {
         private INancyBootstrapper bootstrapper;
-        private IEnumerable<HttpStatusCode> passThroughStatusCodes;
+        private Func<NancyContext, bool> performPassThrough;
 
         /// <summary>
         /// Gets or sets the bootstrapper. If none is set, NancyBootstrapperLocator.Bootstrapper is used.
@@ -20,12 +18,12 @@
         }
 
         /// <summary>
-        /// Gets or sets the collection of pass through status codes.
+        /// Gets or sets the delegate that determines if NancyOwinHost performs pass through.
         /// </summary>
-        public IEnumerable<HttpStatusCode> PassThroughStatusCodes
+        public Func<NancyContext, bool> PerformPassThrough
         {
-            get { return this.passThroughStatusCodes ?? Enumerable.Empty<HttpStatusCode>(); }
-            set { this.passThroughStatusCodes = value; }
+            get { return this.performPassThrough ?? (context => false); }
+            set { this.performPassThrough = value; }
         }
 
         /// <summary>
