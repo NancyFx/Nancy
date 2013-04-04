@@ -501,7 +501,9 @@
         /// <returns>Collection of TypeRegistration types</returns>
         private IEnumerable<TypeRegistration> GetAdditionalTypes()
         {
-            return Enumerable.Empty<TypeRegistration>();
+            return new[] {
+                new TypeRegistration(typeof(IViewRenderer), typeof(DefaultViewRenderer)),            
+            };
         }
 
         /// <summary>
