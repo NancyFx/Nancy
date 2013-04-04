@@ -217,11 +217,11 @@ namespace Nancy.Bootstrapper
 
             UpdateAssemblies();
 
-            foreach (var directory in GetAssemblyDirectories())
-            {
-                var existingAssemblyPaths =
+            var existingAssemblyPaths =
                     assemblies.Select(a => a.Location).ToArray();
 
+            foreach (var directory in GetAssemblyDirectories())
+            {
                 var unloadedAssemblies = Directory
                     .GetFiles(directory, "*.dll")
                     .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
