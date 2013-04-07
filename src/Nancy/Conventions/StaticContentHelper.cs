@@ -19,7 +19,7 @@
         /// <param name="staticConventions">The callback method allows you to describe the static content</param>
         public static void Static(this NancyConventions conventions, Action<StaticFileContent, StaticDirectoryContent> staticConventions)
         {
-            this.staticConventions(new StaticFileContent(conventions), new StaticDirectoryContent(conventions));
+            staticConventions(new StaticFileContent(conventions), new StaticDirectoryContent(conventions));
         }
     }
 }
