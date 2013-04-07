@@ -15,7 +15,7 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 1000; }
         }
 
-        public CaptureNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        public CaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {
             this.ExtractParameterName();
