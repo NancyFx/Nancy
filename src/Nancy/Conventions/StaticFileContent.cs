@@ -5,7 +5,7 @@
     /// </summary>
     public class StaticFileContent
     {
-        NancyConventions conventions;
+        private readonly NancyConventions conventions;
 
         /// <summary>
         /// Creates a new instance of StaticFileContent
@@ -24,7 +24,7 @@
         {
             set
             {
-                conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddFile(requestFile, value));
+                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddFile(requestFile, value));
             }
         }
     }
