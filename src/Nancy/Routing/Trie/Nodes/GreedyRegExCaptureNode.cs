@@ -25,7 +25,7 @@
             get { return 100; }
         }
 
-        public GreedyRegExCaptureNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        public GreedyRegExCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {
             this.BuildRegEx();

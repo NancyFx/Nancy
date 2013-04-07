@@ -19,7 +19,7 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 1000; }
         }
 
-        public RegExNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        public RegExNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {
             this.BuildRegEx();

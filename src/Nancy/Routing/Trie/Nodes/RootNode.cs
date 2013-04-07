@@ -19,7 +19,7 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 0; }
         }
 
-        public RootNode(TrieNodeFactory nodeFactory)
+        public RootNode(ITrieNodeFactory nodeFactory)
             : base(null, null, nodeFactory)
         {
         }

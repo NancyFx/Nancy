@@ -9,7 +9,7 @@ namespace Nancy.Routing.Trie.Nodes
     /// </summary>
     public abstract class TrieNode
     {
-        private readonly TrieNodeFactory nodeFactory;
+        private readonly ITrieNodeFactory nodeFactory;
 
         /// <summary>
         /// Gets or sets the parent node
@@ -48,7 +48,7 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="parent">Parent node</param>
         /// <param name="segment">Segment of the route definition</param>
         /// <param name="nodeFactory">Factory for creating new nodes</param>
-        protected TrieNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        protected TrieNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
         {
             this.nodeFactory = nodeFactory;
             this.Parent = parent;
