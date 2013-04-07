@@ -69,30 +69,33 @@ namespace Nancy.ModelBinding
                 UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
-            var bindingExceptions = new List<PropertyBindingException>();
-            foreach (var modelProperty in bindingContext.ValidModelProperties)
+            if (!configuration.BodyOnly)
             {
-                var existingValue =
-                    modelProperty.GetValue(bindingContext.Model, null);
-
-                var stringValue = GetValue(modelProperty.Name, bindingContext);
-
-                if (!String.IsNullOrEmpty(stringValue) &&  (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite ))
+                var bindingExceptions = new List<PropertyBindingException>();
+                foreach (var modelProperty in bindingContext.ValidModelProperties)
                 {
-                    try
+                    var existingValue =
+                        modelProperty.GetValue(bindingContext.Model, null);
+
+                    var stringValue = GetValue(modelProperty.Name, bindingContext);
+
+                    if (!String.IsNullOrEmpty(stringValue) && (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite))
                     {
-                        BindProperty(modelProperty, stringValue, bindingContext);
-                    }
-                    catch(PropertyBindingException ex)
-                    {
-                        bindingExceptions.Add(ex);
+                        try
+                        {
+                            BindProperty(modelProperty, stringValue, bindingContext);
+                        }
+                        catch (PropertyBindingException ex)
+                        {
+                            bindingExceptions.Add(ex);
+                        }
                     }
                 }
-            }
 
-            if (bindingExceptions.Any())
-            {
-                throw new ModelBindingException(modelType, bindingExceptions);
+                if (bindingExceptions.Any())
+                {
+                    throw new ModelBindingException(modelType, bindingExceptions);
+                }
             }
 
             return bindingContext.Model;
