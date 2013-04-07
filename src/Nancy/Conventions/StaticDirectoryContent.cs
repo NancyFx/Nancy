@@ -5,7 +5,7 @@
     /// </summary>
     public class StaticDirectoryContent
     {
-        NancyConventions conventions;
+        private readonly NancyConventions conventions;
 
         /// <summary>
         /// Creates a new instance of StaticDirectoryContent
@@ -19,12 +19,12 @@
         /// <summary>
         /// Adds a new static directory to the nancy conventions
         /// </summary>
-        /// <param name="requestFile">The route of the file</param>
+        /// <param name="requestDirectory">The route of the file</param>
         public string this[string requestDirectory]
         {
             set
             {
-                conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value));
+                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value));
             }
         }
     }
