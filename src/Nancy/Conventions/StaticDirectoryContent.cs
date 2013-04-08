@@ -20,11 +20,11 @@
         /// Adds a new static directory to the nancy conventions
         /// </summary>
         /// <param name="requestDirectory">The route of the file</param>
-        public string this[string requestDirectory]
+        public string this[string requestDirectory, params string[] allowedExtensions]
         {
             set
             {
-                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value));
+                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value, allowedExtensions));
             }
         }
     }
