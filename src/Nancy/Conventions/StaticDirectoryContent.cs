@@ -20,6 +20,7 @@
         /// Adds a new static directory to the nancy conventions
         /// </summary>
         /// <param name="requestDirectory">The route of the file</param>
+        /// <param name="allowedExtensions">A list of extensions that is valid for the conventions. If not supplied, all extensions are valid</param>
         public string this[string requestDirectory, params string[] allowedExtensions]
         {
             set
