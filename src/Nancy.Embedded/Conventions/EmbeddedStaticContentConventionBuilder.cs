@@ -99,7 +99,7 @@
                 }
 
                 var resourceName =
-                    Path.GetDirectoryName(assembly.GetName().Name + fileName.Substring(2)).Replace('\\', '.');
+                    Path.GetDirectoryName(assembly.GetName().Name + fileName.Substring(2)).Replace('\\', '.').Replace('-', '_');
 
                 fileName =
                     Path.GetFileName(fileName);

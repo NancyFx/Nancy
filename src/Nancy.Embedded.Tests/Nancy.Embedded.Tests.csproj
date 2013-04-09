@@ -74,7 +74,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Subfolder-with-hyphen\embedded3.txt" />
+  </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Subfolder\embedded2.txt" />
   </ItemGroup>

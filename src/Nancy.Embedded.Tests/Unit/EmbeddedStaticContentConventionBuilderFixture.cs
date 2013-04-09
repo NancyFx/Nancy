@@ -35,6 +35,17 @@
         }
 
         [Fact]
+        public void Should_retrieve_static_content_with_hyphens_in_subfolder()
+        {
+            // Given
+            // When
+            var result = GetEmbeddedStaticContent("Foo", "Subfolder-with-hyphen/embedded3.txt");
+
+            // Then
+            result.ShouldEqual("Embedded3 Text");
+        }
+
+        [Fact]
         public void Should_retrieve_static_content_with_relative_path()
         {
             // Given
