@@ -1,7 +1,7 @@
 namespace Nancy.Diagnostics
 {
     using System.IO;
-
+    using System.Linq;
     using Nancy.Localization;
 
     using Responses;
@@ -14,7 +14,7 @@ namespace Nancy.Diagnostics
         private readonly NancyContext context;
         private static readonly IViewResolver ViewResolver = new DiagnosticsViewResolver();
 
-        private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper();
+        private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
 
         public DiagnosticsViewRenderer(NancyContext context)
         {
