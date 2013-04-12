@@ -21,7 +21,7 @@
     /// AppDomains is necessary if you want to unload the dependencies that come with NancyHost.
     /// </remarks>
     [Serializable]
-    public class NancyHost  
+    public class NancyHost : IDisposable
     {
         private readonly IList<Uri> baseUriList;
         private readonly HttpListener listener;
@@ -98,6 +98,14 @@
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, HostConfiguration configuration)
             : this (bootstrapper, configuration, baseUri)
         {
+        }
+
+        /// <summary>
+        /// Stops the host if it is running.
+        /// </summary>
+        public void Dispose()
+        {
+            this.Stop();
         }
 
         /// <summary>
