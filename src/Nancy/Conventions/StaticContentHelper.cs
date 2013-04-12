@@ -10,14 +10,14 @@
         /// <summary>
         /// Extension method for NancyConventions
         /// 
-        /// conventions.Static((File, Directory) =>
+        /// conventions.MapStaticContent((File, Directory) =>
         /// {
         ///     File["/page.js"] = "page.js";
         ///     Directory["/images"] = "images";
         /// });
         /// </summary>
         /// <param name="staticConventions">The callback method allows you to describe the static content</param>
-        public static void Static(this NancyConventions conventions, Action<StaticFileContent, StaticDirectoryContent> staticConventions)
+        public static void MapStaticContent(this NancyConventions conventions, Action<StaticFileContent, StaticDirectoryContent> staticConventions)
         {
             staticConventions(new StaticFileContent(conventions), new StaticDirectoryContent(conventions));
         }
