@@ -18,6 +18,12 @@
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
+        /// Gets or sets a property that determines if namespace
+        /// reservations are created, when necessary
+        /// </summary>
+        public bool CreateNamespaceReservations { get; set; }
+
+        /// <summary>
         /// Gets or sets a property that provides a callback to be called
         /// if there's an unhandled exception in the self host.
         /// Note: this will *not* be called for normal nancy Exceptions

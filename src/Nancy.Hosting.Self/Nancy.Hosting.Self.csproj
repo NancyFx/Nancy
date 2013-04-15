@@ -100,10 +100,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NetShCommand.cs" />
+    <Compile Include="Uac.cs" />
     <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="HostConfiguration.cs" />
     <Compile Include="NancyHost.cs" />
     <Compile Include="NetSh.cs" />
+    <Compile Include="UnableToCreateNamespaceReservationsException.cs" />
     <Compile Include="UriExtensions.cs">
       <SubType>Code</SubType>
     </Compile>

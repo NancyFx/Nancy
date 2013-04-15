@@ -134,6 +134,11 @@
                 return;
             }
 
+            if (!this.configuration.CreateNamespaceReservations)
+            {
+                throw new UnableToCreateNamespaceReservationsException(this.GetPrefixes(), GetUser());
+            }
+
             if (!TryAddNamespaceReservation())
             {
                 throw new InvalidOperationException("Unable to configure namespace reservation");
@@ -174,7 +179,7 @@
 
         private bool TryAddNamespaceReservation()
         {
-            var user = WindowsIdentity.GetCurrent().Name;
+            var user = GetUser();
 
             foreach (var prefix in GetPrefixes())
             {
@@ -185,6 +190,11 @@
             }
 
             return true;
+        }
+
+        private static string GetUser()
+        {
+            return WindowsIdentity.GetCurrent().Name;
         }
 
         /// <summary>
