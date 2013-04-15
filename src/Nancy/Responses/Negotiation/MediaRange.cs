@@ -50,11 +50,18 @@ namespace Nancy.Responses.Negotiation
                 throw new ArgumentException("inputString cannot be null or empty", contentType);
             }
 
+            if (contentType.Equals("*"))
+            {
+                contentType = "*/*";
+            }
+
             var parts = contentType.Split('/');
 
             if (parts.Length != 2)
             {
-                throw new ArgumentException("inputString not in correct Type/SubType format", contentType);
+                {
+                    throw new ArgumentException("inputString not in correct Type/SubType format", contentType);
+                }
             }
 
             return new MediaRange { Type = parts[0], Subtype = parts[1] };
