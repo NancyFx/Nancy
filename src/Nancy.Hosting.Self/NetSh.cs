@@ -1,9 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-
-namespace Nancy.Hosting.Self
+﻿namespace Nancy.Hosting.Self
 {
-    public class NetSh
+    using System;
+    using System.Diagnostics;
+
+    internal class NetSh
     {
         public static bool AddUrlAcl(string url, string user)
         {
@@ -31,7 +31,9 @@ namespace Nancy.Hosting.Self
 
             var exitCode = process.ExitCode;
             if (exitCode == 0)
+            {
                 return true;
+            }
 
             Console.WriteLine("Failed to add reservation. Exit code: {0}", exitCode);
             return false;

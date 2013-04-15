@@ -130,7 +130,9 @@
         private void StartListener()
         {
             if (TryStartListener())
+            {
                 return;
+            }
 
             if (!TryAddNamespaceReservation())
             {
@@ -160,8 +162,11 @@
             }
             catch (HttpListenerException e)
             {
-                if (e.ErrorCode == 5) // access denied
+                if (e.ErrorCode == 5)
+                {
+                    // access denied
                     return false;
+                }
 
                 throw;
             }
@@ -174,7 +179,9 @@
             foreach (var prefix in GetPrefixes())
             {
                 if (!NetSh.AddUrlAcl(prefix, user))
+                {
                     return false;
+                }
             }
 
             return true;
