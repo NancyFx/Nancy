@@ -5,6 +5,8 @@ namespace Nancy.ModelBinding
     using System.Collections.ObjectModel;
     using System.Linq;
     using System.Reflection;
+    using System.Text.RegularExpressions;
+
     using Nancy.Extensions;
     using System.Collections;
 
@@ -24,6 +26,8 @@ namespace Nancy.ModelBinding
 
         private readonly static MethodInfo toListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
         private readonly static MethodInfo toArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+        private readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
+        private readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
@@ -96,25 +100,36 @@ namespace Nancy.ModelBinding
                 UpdateModelWithDeserializedModel(bodyDeserializedModel, bindingContext);
             }
 
-            if (!configuration.BodyOnly)
-            {
-                var bindingExceptions = new List<PropertyBindingException>();
+            var bindingExceptions = new List<PropertyBindingException>();
 
-                if (bindingContext.Model.GetType().IsCollection())
+            if (!bindingContext.Configuration.BodyOnly)
+            {
+                if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||
+                    bindingContext.DestinationType.IsEnumerable())
                 {
                     var loopCount = GetBindingListInstanceCount(context);
-
-                    for (var i = 1; i <= loopCount; i++)
+                    var model = (IList)bindingContext.Model;
+                    for (var i = 0; i < loopCount; i++)
                     {
-                        var genericinstance = Activator.CreateInstance(genericType);
+                        object genericinstance;
+                        if (model.Count > i)
+                        {
+                            genericinstance = model[i];
+                        }
+                        else
+                        {
+                            genericinstance = Activator.CreateInstance(bindingContext.GenericType);
+                            model.Add(genericinstance);
+                        }
 
                         foreach (var modelProperty in bindingContext.ValidModelProperties)
                         {
                             var existingCollectionValue = modelProperty.GetValue(genericinstance, null);
 
-                            var collectionStringValue = GetValue(modelProperty.Name + "_" + i, bindingContext);
+                            var collectionStringValue = GetValue(modelProperty.Name, bindingContext, i);
 
-                            if (BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty, bindingContext))
+                            if (BindingValueIsValid(collectionStringValue, existingCollectionValue, modelProperty,
+                                                    bindingContext))
                             {
                                 try
                                 {
@@ -126,9 +141,6 @@ namespace Nancy.ModelBinding
                                 }
                             }
                         }
-
-                        var list = (IList)bindingContext.Model;
-                        list.Add(genericinstance);
                     }
                 }
                 else
@@ -182,7 +194,7 @@ namespace Nancy.ModelBinding
                 return 0;
             }
 
-            var matches = dictionary.Keys.Where(x => IsMatch(x)).ToArray();
+            var matches = dictionary.Keys.Where(x => IsMatch(x) != -1).ToArray();
 
             if (!matches.Any())
             {
@@ -191,14 +203,28 @@ namespace Nancy.ModelBinding
 
             var orderedFormParam = matches.OrderByDescending(y => y).First();
 
-            var value = int.Parse(orderedFormParam[orderedFormParam.Length - 1].ToString());
+            //because the index does not equal the length
+            var value = this.IsMatch(orderedFormParam) + 1;
 
             return value;
         }
 
-        private bool IsMatch(string item)
+        private int IsMatch(string item)
         {
-            return item.Length >= 2 && item[item.Length - 2] == '_' && Char.IsDigit(item[item.Length - 1]);
+            var bracketMatch = bracketRegex.Match(item);
+            if (bracketMatch.Success)
+            {
+                return int.Parse(bracketMatch.Groups[1].Value);
+            }
+
+            var underscoreMatch = underscoreRegex.Match(item);
+
+            if (underscoreMatch.Success)
+            {
+                return int.Parse(underscoreMatch.Groups[1].Value);
+            }
+
+            return -1;
         }
 
         private static void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
@@ -211,6 +237,7 @@ namespace Nancy.ModelBinding
                 foreach (var o in (IEnumerable)bodyDeserializedModel)
                 {
                     var model = (IList)bindingContext.Model;
+
                     //if the instance specified in the binder contains the n-th element use that otherwise make a new one.
                     object genericTypeInstance;
                     if (model.Count > count)
@@ -406,8 +433,22 @@ namespace Nancy.ModelBinding
                 instance;
         }
 
-        private static string GetValue(string propertyName, BindingContext context)
+        private static string GetValue(string propertyName, BindingContext context, int index = -1)
         {
+            if (index != -1)
+            {
+                if (context.RequestData.ContainsKey(propertyName + '_' + index))
+                {
+                    return context.RequestData[propertyName + '_' + index];
+                }
+
+                if (context.RequestData.ContainsKey(propertyName + '[' + index + ']'))
+                {
+                    return context.RequestData[propertyName + '[' + index + ']'];
+                }
+
+                return String.Empty;
+            }
             return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
         }
 

@@ -509,10 +509,10 @@ namespace Nancy.Tests.Unit.ModelBinding
 
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
-            context.Request.Form["StringProperty_1"] = "Test";
-            context.Request.Form["IntProperty_1"] = "1";
-            context.Request.Form["StringProperty_2"] = "Test2";
-            context.Request.Form["IntProperty_2"] = "2";
+            context.Request.Form["StringProperty_0"] = "Test";
+            context.Request.Form["IntProperty_0"] = "1";
+            context.Request.Form["StringProperty_1"] = "Test2";
+            context.Request.Form["IntProperty_1"] = "2";
 
             // When
             var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
@@ -550,8 +550,8 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
 
-            context.Request.Form["IntValues_1"] = "1,2,3,4";
-            context.Request.Form["IntValues_2"] = "5,6,7,8";
+            context.Request.Form["IntValues_0"] = "1,2,3,4";
+            context.Request.Form["IntValues_1"] = "5,6,7,8";
 
             // When
             var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
@@ -565,6 +565,28 @@ namespace Nancy.Tests.Unit.ModelBinding
 
 
         [Fact]
+        public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs_using_brackets_and_specifying_an_instance()
+        {
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues[0]"] = "1,2,3,4";
+            context.Request.Form["IntValues[1]"] = "5,6,7,8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), new List<TestModel> { new TestModel {AnotherStringProprety = "Test"} }, new BindingConfig { Overwrite = false});
+
+            // Then
+            result.First().AnotherStringProprety.ShouldEqual("Test");
+            result.First().IntValues.ShouldHaveCount(4);
+            result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
+            result.Last().IntValues.ShouldHaveCount(4);
+            result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
+        [Fact]
         public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs_using_brackets()
         {
             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
@@ -572,8 +594,8 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
 
-            context.Request.Form["IntValues[1]"] = "1,2,3,4";
-            context.Request.Form["IntValues[2]"] = "5,6,7,8";
+            context.Request.Form["IntValues[0]"] = "1,2,3,4";
+            context.Request.Form["IntValues[1]"] = "5,6,7,8";
 
             // When
             var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
@@ -584,6 +606,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.Last().IntValues.ShouldHaveCount(4);
             result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
         }
+
 
         [Fact]
         public void Form_properties_should_take_precendence_over_request_properties_and_context_properties()
