@@ -6,18 +6,20 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.Linq;
     using System.Text;
     using System.Globalization;
-    using FakeItEasy;
+    using System.Xml.Serialization;
 
+    using FakeItEasy;
+    using Fakes;
+    
     using Nancy.IO;
     using Nancy.Json;
     using Nancy.ModelBinding;
-    using Fakes;
-
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
+    
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
+    
     using Xunit.Extensions;
-
     using Xunit;
 
     public class DefaultBinderFixture
@@ -296,7 +298,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(7);
+            validProperties.ShouldEqual(9);
         }
 
         [Fact]
@@ -804,16 +806,34 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_ienumerable_model_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (IEnumerable<TestModel>)binder.Bind(context, typeof(IEnumerable<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+        }
+
+        [Fact]
         public void Should_bind_model_from_body_that_contains_an_array()
         {
             //Given
-            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
-            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel {StringProperty = "Test", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}});
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new TestModel {StringProperty = "Test", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}});
             
-            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default);
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.SomeStrings.ShouldHaveCount(6);
@@ -825,7 +845,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_bind_array_model_from_body_that_contains_an_array()
         {
             //Given
-            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
             var body =
                 serializer.Serialize(new[]
                 {
@@ -833,11 +853,11 @@ namespace Nancy.Tests.Unit.ModelBinding
                     new TestModel {StringProperty = "AnotherTest", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}}
                 });
 
-            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/js" }, body);
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
 
             // When
             var result = (TestModel[])binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default, "SomeStrings");
-
+            
             // Then
             result.First().SomeStrings.ShouldBeNull();
             result.Last().SomeStrings.ShouldBeNull();
@@ -851,7 +871,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
             var bodyDeserializers = new IBodyDeserializer[] { new XmlBodyDeserializer() };
             var binder = this.GetBinder(typeConverters, bodyDeserializers);
-            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 0, StringProperty = "From body" });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { IntProperty = 0, StringProperty = "From body" });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
 
@@ -1013,7 +1033,8 @@ namespace Nancy.Tests.Unit.ModelBinding
             public string StringPropertyWithDefaultValue { get; set; }
 
             public double DoubleProperty { get; set; }
-            
+
+            [XmlIgnore]
             public IEnumerable<int> IntValues { get; set; }
 
             public string[] SomeStrings { get; set; }
