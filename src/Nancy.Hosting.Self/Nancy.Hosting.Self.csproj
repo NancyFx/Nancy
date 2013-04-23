@@ -100,6 +100,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="NamespaceReservationsConfiguration.cs" />
     <Compile Include="NetShCommand.cs" />
     <Compile Include="Uac.cs" />
     <Compile Include="FileSystemRootPathProvider.cs" />

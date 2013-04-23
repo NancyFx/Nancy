@@ -18,10 +18,9 @@
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
-        /// Gets or sets a property that determines if namespace
-        /// reservations are created, when necessary
+        /// Configuration around creating namespace reservations
         /// </summary>
-        public bool CreateNamespaceReservations { get; set; }
+        public NamespaceReservationsConfiguration NamespaceReservationsConfiguration { get; set; }
 
         /// <summary>
         /// Gets or sets a property that provides a callback to be called
@@ -44,6 +43,7 @@
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
+            this.NamespaceReservationsConfiguration = new NamespaceReservationsConfiguration();
             this.UnhandledExceptionCallback = e =>
                 {
                     var message = string.Format("---\n{0}\n---\n", e);
