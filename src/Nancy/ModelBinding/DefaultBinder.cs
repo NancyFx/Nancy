@@ -206,10 +206,23 @@ namespace Nancy.ModelBinding
             if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable() ||
                 bodyDeserializedModel.GetType().IsArray())
             {
-                var enumerabe = (IEnumerable)bodyDeserializedModel;
-                foreach (var o in enumerabe)
+                var count = 0;
+
+                foreach (var o in (IEnumerable)bodyDeserializedModel)
                 {
-                    var genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
+                    var model = (IList)bindingContext.Model;
+                    //if the instance specified in the binder contains the n-th element use that otherwise make a new one.
+                    object genericTypeInstance;
+                    if (model.Count > count)
+                    {
+                        genericTypeInstance = model[count];
+                    }
+                    else
+                    {
+                        genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
+                        model.Add(genericTypeInstance);
+                    }
+
                     foreach (var modelProperty in bindingContext.ValidModelProperties)
                     {
                         var existingValue =
@@ -221,7 +234,7 @@ namespace Nancy.ModelBinding
                             CopyValue(modelProperty, o, genericTypeInstance);
                         }
                     }
-                    ((IList)bindingContext.Model).Add(genericTypeInstance);
+                    count++;
                 }
             }
             else
@@ -374,7 +387,8 @@ namespace Nancy.ModelBinding
                     {
                         return instance;
                     }
-                    return toListMethodInfo.Invoke(null, new[] { instance });
+                    var genericMethod = toListMethodInfo.MakeGenericMethod(genericType);
+                    return genericMethod.Invoke(null, new[] { instance });
                 }
 
                 //else just make a list

@@ -822,6 +822,52 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.Last().StringProperty.ShouldEqual("AnotherTest");
         }
 
+
+        [Fact]
+        public void Should_bind_ienumerable_model_with_instance_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            var then = DateTime.Now;
+            var instance = new List<TestModel> { new TestModel{ DateProperty = then }, new TestModel { IntProperty = 9, AnotherStringProprety = "Bananas" } };
+
+            // When
+            var result = (IEnumerable<TestModel>)binder.Bind(context, typeof(IEnumerable<TestModel>), instance, new BindingConfig{Overwrite = false});
+
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.First().DateProperty.ShouldEqual(then);
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+            result.Last().IntProperty.ShouldEqual(9);
+            result.Last().AnotherStringProprety.ShouldEqual("Bananas");
+        }
+        
+        [Fact]
+        public void Should_bind_model_with_instance_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { StringProperty = "Test" });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+
+            var then = DateTime.Now;
+            var instance = new TestModel { DateProperty = then, IntProperty = 6, AnotherStringProprety = "Beers" };
+
+            // Wham
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), instance, new BindingConfig { Overwrite = false });
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.DateProperty.ShouldEqual(then);
+            result.IntProperty.ShouldEqual(6);
+            result.AnotherStringProprety.ShouldEqual("Beers");
+        }
+        
         [Fact]
         public void Should_bind_model_from_body_that_contains_an_array()
         {
