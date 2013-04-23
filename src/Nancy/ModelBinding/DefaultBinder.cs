@@ -104,7 +104,7 @@ namespace Nancy.ModelBinding
                 {
                     var loopCount = GetBindingListInstanceCount(context);
 
-                    for (int i = 1; i <= loopCount; i++)
+                    for (var i = 1; i <= loopCount; i++)
                     {
                         var genericinstance = Activator.CreateInstance(genericType);
 
@@ -127,7 +127,7 @@ namespace Nancy.ModelBinding
                             }
                         }
 
-                        var list = bindingContext.Model as IList;
+                        var list = (IList)bindingContext.Model;
                         list.Add(genericinstance);
                     }
                 }

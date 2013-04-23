@@ -563,6 +563,28 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
         }
 
+
+        [Fact]
+        public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs_using_brackets()
+        {
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues[1]"] = "1,2,3,4";
+            context.Request.Form["IntValues[2]"] = "5,6,7,8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().IntValues.ShouldHaveCount(4);
+            result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
+            result.Last().IntValues.ShouldHaveCount(4);
+            result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
         [Fact]
         public void Form_properties_should_take_precendence_over_request_properties_and_context_properties()
         {
