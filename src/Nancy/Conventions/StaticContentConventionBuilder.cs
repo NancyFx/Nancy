@@ -110,7 +110,14 @@ namespace Nancy.Conventions
             return pathAndRootPair =>
             {
                 context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
-                var extension = Path.GetExtension(pathAndRootPair.Path).Substring(1);
+
+                var extension = 
+                    Path.GetExtension(pathAndRootPair.Path);
+
+                if (!string.IsNullOrEmpty(extension))
+                {
+                    extension = extension.Substring(1);
+                }
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e.TrimStart(new [] {'.'}), extension, StringComparison.OrdinalIgnoreCase)))
                 {
