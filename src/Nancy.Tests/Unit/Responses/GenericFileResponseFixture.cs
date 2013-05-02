@@ -123,7 +123,6 @@
                 new GenericFileResponse(this.imagePath, imageContentType);
 
             // Then
-            response.Headers["ETag"].ShouldNotBeEmpty();
             response.Headers["ETag"].ShouldStartWith("\"");
             response.Headers["ETag"].ShouldEndWith("\"");
         }
