@@ -451,6 +451,63 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_split_cookie_in_two_parts_with_secure_attribute()
+        {
+            // Given, when
+            const string cookieName = "path";
+            const string cookieData = "/";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string> { string.Format("{0}={1}; Secure", cookieName, cookieData)} ;
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
+
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);            
+        }
+
+        [Fact]
+        public void Should_split_cookie_in_two_parts_with_httponly_and_secure_attribute()
+        {
+            // Given, when
+            const string cookieName = "path";
+            const string cookieData = "/";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string> { string.Format("{0}={1}; HttpOnly; Secure", cookieName, cookieData) };
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
+
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);
+        }
+
+        [Fact]
+        public void Should_split_cookie_in_two_parts_with_httponly_attribute()
+        {
+            // Given, when
+            const string cookieName = "path";
+            const string cookieData = "/";
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            var cookies = new List<string> { string.Format("{0}={1}; HttpOnly", cookieName, cookieData) };
+            headers.Add("cookie", cookies);
+            var newUrl = new Url
+            {
+                Path = "/"
+            };
+            var request = new Request("GET", newUrl, null, headers);
+
+            // Then
+            request.Cookies[cookieName].ShouldEqual(cookieData);
+        }
+
+        [Fact]
         public void Should_move_request_body_position_to_zero_after_parsing_url_encoded_data()
         {
             // Given
