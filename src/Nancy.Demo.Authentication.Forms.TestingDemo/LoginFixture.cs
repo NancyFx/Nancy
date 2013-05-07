@@ -1,7 +1,9 @@
 namespace Nancy.Demo.Authentication.Forms.TestingDemo
 {
     using System;
-    using Testing;
+
+    using Nancy.Testing;
+
     using Xunit;
 
     public class LoginFixture
@@ -33,10 +35,10 @@ namespace Nancy.Demo.Authentication.Forms.TestingDemo
         {
             // Given, When
             var response = browser.Get("/login", (with) =>
-                {
-                    with.HttpRequest();
-                    with.Query("error", "true");
-                });
+            {
+                with.HttpRequest();
+                with.Query("error", "true");
+            });
 
             response.Body["#errorBox"]
                 .ShouldExistOnce()

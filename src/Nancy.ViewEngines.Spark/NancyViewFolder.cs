@@ -17,13 +17,11 @@ namespace Nancy.ViewEngines.Spark
     /// </summary>
     public class NancyViewFolder : IViewFolder
     {
-        private readonly ViewEngineStartupContext viewEngineStartupContext;
-
-        private List<ViewLocationResult> currentlyLocatedViews;
-
-        private ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
-
         private readonly ConcurrentDictionary<string, IViewFile> cachedFiles = new ConcurrentDictionary<string, IViewFile>();
+        private readonly List<ViewLocationResult> currentlyLocatedViews;
+
+        private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
+        private readonly ViewEngineStartupContext viewEngineStartupContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyViewFolder"/> class, using the provided
@@ -108,15 +106,14 @@ namespace Nancy.ViewEngines.Spark
                 return currentlyLocatedViews.
                     Where(v => v.Location.StartsWith(path, StringComparison.OrdinalIgnoreCase)).
                     Select(v =>
-                        v.Location.Length == path.Length ?
-                            v.Name + "." + v.Extension :
-                            v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
+                        v.Location.Length == path.Length
+                            ? v.Name + "." + v.Extension
+                            : v.Location.Substring(path.Length) + "/" + v.Name + "." + v.Extension).
                     ToList();
-
             }
             finally
             {
-                this.padlock.ExitReadLock();                
+                this.padlock.ExitReadLock();
             }
         }
 
@@ -177,9 +174,9 @@ namespace Nancy.ViewEngines.Spark
 
         private static string GetSafeViewPath(ViewLocationResult result)
         {
-            return string.IsNullOrEmpty(result.Location) ? 
-                string.Concat(result.Name, ".", result.Extension) : 
-                string.Concat(result.Location, "/", result.Name, ".", result.Extension);
+            return string.IsNullOrEmpty(result.Location)
+                ? string.Concat(result.Name, ".", result.Extension)
+                : string.Concat(result.Location, "/", result.Name, ".", result.Extension);
         }
 
         // Horrible hack, but we have no way to get a context
@@ -239,9 +236,7 @@ namespace Nancy.ViewEngines.Spark
                 lock (this.updateLock)
                 {
                     using (var reader = this.viewLocationResult.Contents.Invoke())
-                    {
                         this.contents = reader.ReadToEnd();
-                    }
 
                     this.lastUpdated = DateTime.Now.Ticks;
                 }

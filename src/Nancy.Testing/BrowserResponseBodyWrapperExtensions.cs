@@ -1,11 +1,11 @@
 namespace Nancy.Testing
 {
-    using System;
     using System.IO;
     using System.Linq;
     using System.Text;
     using System.Xml;
     using System.Xml.Serialization;
+
     using Nancy.Json;
 
     /// <summary>
@@ -55,7 +55,7 @@ namespace Nancy.Testing
         /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
         public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
         {
-            var serializer = 
+            var serializer =
                 new JavaScriptSerializer();
 
             return serializer.Deserialize<TModel>(bodyWrapper.AsString());
@@ -70,7 +70,7 @@ namespace Nancy.Testing
         public static TModel DeserializeXml<TModel>(this BrowserResponseBodyWrapper bodyWrapper)
         {
             var serializer =
-                new XmlSerializer(typeof(TModel));
+                new XmlSerializer(typeof (TModel));
 
             return (TModel)serializer.Deserialize(bodyWrapper.AsStream());
         }

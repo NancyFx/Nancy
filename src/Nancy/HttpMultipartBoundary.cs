@@ -50,7 +50,7 @@ namespace Nancy
 
         private void ExtractHeaders()
         {
-            while(true)
+            while (true)
             {
                 var header =
                     this.ReadLineFromStream();
@@ -68,7 +68,7 @@ namespace Nancy
 
                 if (header.StartsWith("Content-Type", StringComparison.InvariantCultureIgnoreCase))
                 {
-                    this.ContentType = header.Split(new[] { ' ' }).Last().Trim();
+                    this.ContentType = header.Split(new[] {' '}).Last().Trim();
                 }
             }
 
@@ -97,7 +97,7 @@ namespace Nancy
             }
 
             var lineReadFromStream =
-                readBuffer.ToString().Trim(new[] { (char)CR });
+                readBuffer.ToString().Trim(new[] {(char)CR});
 
             return lineReadFromStream;
         }

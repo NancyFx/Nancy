@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Validation
 {
     using System;
-    using System.Collections.Generic;
     using System.Collections.Concurrent;
+    using System.Collections.Generic;
     using System.Linq;
 
     /// <summary>
@@ -19,7 +19,7 @@
         /// <param name="factories">The factories.</param>
         public DefaultValidatorLocator(IEnumerable<IModelValidatorFactory> factories)
         {
-            this.cachedValidators = 
+            this.cachedValidators =
                 new ConcurrentDictionary<Type, IModelValidator>();
 
             this.factories = factories ?? Enumerable.Empty<IModelValidatorFactory>();
@@ -47,14 +47,14 @@
                 .Where(v => v != null)
                 .ToList();
 
-            if(validators.Count == 0)
+            if (validators.Count == 0)
             {
                 return null;
             }
 
-            return validators.Count == 1 ? 
-                validators[0] : 
-                new CompositeValidator(validators);
+            return validators.Count == 1
+                ? validators[0]
+                : new CompositeValidator(validators);
         }
     }
 }

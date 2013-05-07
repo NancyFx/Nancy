@@ -1,8 +1,8 @@
 ﻿namespace Nancy.Validation.DataAnnotations
 {
     using System.Collections.Generic;
-    using System.Linq;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     /// <summary>
     /// An adapter for an <see cref="IValidatableObject"/>.
@@ -25,10 +25,10 @@
         /// <returns></returns>
         public IEnumerable<ModelValidationError> Validate(object instance)
         {
-            var context = 
+            var context =
                 new ValidationContext(instance, null, null);
 
-            var result = 
+            var result =
                 ((IValidatableObject)instance).Validate(context);
 
             return result.Select(r => new ModelValidationError(r.MemberNames, s => r.ErrorMessage));

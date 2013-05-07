@@ -2,7 +2,9 @@ namespace Nancy.Tests.Unit.ErrorHandling
 {
     using System;
     using System.IO;
+
     using Nancy.ErrorHandling;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -66,7 +68,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Given
             var context = new NancyContext();
             Action<Stream> contents = stream => { };
-            context.Response = new Response() { StatusCode = HttpStatusCode.NotFound, Contents = contents };
+            context.Response = new Response() {StatusCode = HttpStatusCode.NotFound, Contents = contents};
 
             // When
             this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);
@@ -80,7 +82,7 @@ namespace Nancy.Tests.Unit.ErrorHandling
         {
             // Given
             var context = new NancyContext();
-            context.Response = new Response { StatusCode = HttpStatusCode.NotFound };
+            context.Response = new Response {StatusCode = HttpStatusCode.NotFound};
 
             // When
             this.statusCodeHandler.Handle(HttpStatusCode.NotFound, context);

@@ -11,26 +11,25 @@
     /// </summary>
     public class ResourceViewLocationProvider : IViewLocationProvider
     {
-        private readonly IResourceReader resourceReader;
-        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
-        
         /// <summary>
         /// User-configured root namespaces for assemblies.
         /// </summary>
-        public readonly static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
-        
+        public static readonly IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
+
         /// <summary>
         /// A list of assemblies to ignore when scanning for embedded views.
         /// </summary>
-        public readonly static IList<Assembly> Ignore = new List<Assembly>();
+        public static readonly IList<Assembly> Ignore = new List<Assembly>();
+
+        private readonly IResourceAssemblyProvider resourceAssemblyProvider;
+        private readonly IResourceReader resourceReader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
         /// </summary>
         public ResourceViewLocationProvider()
             : this(new DefaultResourceReader(), new ResourceAssemblyProvider())
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ResourceViewLocationProvider"/> class.
@@ -57,9 +56,9 @@
             }
 
             return this.resourceAssemblyProvider
-                .GetAssembliesToScan()
-                .Where(x => !Ignore.Contains(x))
-                .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
+                       .GetAssembliesToScan()
+                       .Where(x => !Ignore.Contains(x))
+                       .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
         }
 
         /// <summary>
@@ -74,12 +73,12 @@
             var allResults = this.GetLocatedViews(supportedViewExtensions);
 
             return allResults.Where(vlr => vlr.Location.Equals(location, StringComparison.OrdinalIgnoreCase) &&
-                                           vlr.Name.Equals(viewName, StringComparison.OrdinalIgnoreCase));
+                vlr.Name.Equals(viewName, StringComparison.OrdinalIgnoreCase));
         }
 
         private IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)
         {
-            var resourceStreams = 
+            var resourceStreams =
                 this.resourceReader.GetResourceStreamMatches(assembly, supportedViewExtensions);
 
             if (!resourceStreams.Any())
@@ -122,7 +121,7 @@
             return resource
                 .Replace(commonNamespace, string.Empty)
                 .Replace(resourceName, string.Empty)
-                .Trim(new[] { '.' })
+                .Trim(new[] {'.'})
                 .Replace(".", "/");
         }
 
@@ -134,11 +133,18 @@
 
                 return resource
                     .Replace(GetResourceFileName(resource), string.Empty)
-                    .TrimEnd(new[] { '.' });
+                    .TrimEnd(new[] {'.'});
             }
 
-            var commonPathSegments = resources.Select(s => new { parts = s.Split('.') })
-                .Aggregate((previous, current) => new { parts = current.parts.TakeWhile((step, index) => step == previous.parts.ElementAtOrDefault(index)).ToArray() });
+            var commonPathSegments = resources.Select(s => new {parts = s.Split('.')})
+                                              .Aggregate(
+                                                  (previous, current) =>
+                                                      new
+                                                      {
+                                                          parts =
+                                                              current.parts.TakeWhile((step, index) => step == previous.parts.ElementAtOrDefault(index))
+                                                                     .ToArray()
+                                                      });
 
             var commonResourceNamespace =
                 string.Join(".", commonPathSegments.parts);
@@ -160,14 +166,14 @@
         private static string GetResourceFileName(string resourceName)
         {
             var nameSegments =
-                resourceName.Split(new[] { "." }, StringSplitOptions.RemoveEmptyEntries);
+                resourceName.Split(new[] {"."}, StringSplitOptions.RemoveEmptyEntries);
 
             var segmentCount =
                 nameSegments.Count();
 
-            return (segmentCount < 2) ?
-                string.Empty :
-                string.Concat(nameSegments[segmentCount - 2], ".", nameSegments[segmentCount - 1]);
+            return (segmentCount < 2)
+                ? string.Empty
+                : string.Concat(nameSegments[segmentCount - 2], ".", nameSegments[segmentCount - 1]);
         }
 
         private static string GetResourceExtension(string resourceName)

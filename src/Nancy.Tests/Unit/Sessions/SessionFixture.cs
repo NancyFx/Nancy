@@ -1,7 +1,9 @@
 namespace Nancy.Tests
 {
     using System.Collections.Generic;
-    using Session;
+
+    using Nancy.Session;
+
     using Xunit;
 
     public class SessionFixture
@@ -23,7 +25,7 @@ namespace Nancy.Tests
         public void Clearing_the_session_should_mark_it_as_changed_if_it_was_not_empty()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new Session(new Dictionary<string, object> {{"key", 1}});
 
             // When
             session.DeleteAll();
@@ -36,7 +38,7 @@ namespace Nancy.Tests
         public void Deleting_an_invalid_key_should_not_mark_it_as_changed()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new Session(new Dictionary<string, object> {{"key", 1}});
 
             // When
             session.Delete("something");
@@ -49,7 +51,7 @@ namespace Nancy.Tests
         public void Deleting_an_key_should_mark_it_as_changed()
         {
             // Given
-            var session = new Session(new Dictionary<string, object> { { "key", 1 } });
+            var session = new Session(new Dictionary<string, object> {{"key", 1}});
 
             // When
             session.Delete("key");

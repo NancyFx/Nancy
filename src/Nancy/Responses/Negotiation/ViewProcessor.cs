@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Nancy.ViewEngines;
 
     /// <summary>
@@ -39,11 +40,11 @@
         /// <returns>A <see cref="ProcessorMatch"/> result that determines the priority of the processor.</returns>
         public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
         {
-            var matchingContentType = 
+            var matchingContentType =
                 requestedMediaRange.Matches("text/html");
 
-            return matchingContentType 
-                ? new ProcessorMatch { ModelResult = MatchResult.DontCare, RequestedContentTypeResult = MatchResult.ExactMatch } 
+            return matchingContentType
+                ? new ProcessorMatch {ModelResult = MatchResult.DontCare, RequestedContentTypeResult = MatchResult.ExactMatch}
                 : new ProcessorMatch();
         }
 

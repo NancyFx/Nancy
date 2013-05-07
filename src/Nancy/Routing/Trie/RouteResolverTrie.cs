@@ -4,18 +4,18 @@ namespace Nancy.Routing.Trie
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Nodes;
+
+    using Nancy.Routing.Trie.Nodes;
 
     /// <summary>
     /// The default route resolution trie
     /// </summary>
     public class RouteResolverTrie : IRouteResolverTrie
     {
+        private static readonly char[] splitSeparators = new[] {'/'};
         private readonly ITrieNodeFactory nodeFactory;
 
         private readonly IDictionary<string, TrieNode> routeTries = new Dictionary<string, TrieNode>();
-
-        private static char[] splitSeparators = new[] {'/'};
 
         public RouteResolverTrie(ITrieNodeFactory nodeFactory)
         {
@@ -110,7 +110,7 @@ namespace Nancy.Routing.Trie
                 var method = kvp.Key;
                 sb.Append(
                     kvp.Value.GetRoutes().Select(s => method + " " + s)
-                             .Aggregate((r1, r2) => r1 + "\n" + r2));
+                       .Aggregate((r1, r2) => r1 + "\n" + r2));
             }
 
             return sb.ToString();

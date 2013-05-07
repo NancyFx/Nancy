@@ -22,10 +22,7 @@
         /// <param name="requestFile">The route of the file</param>
         public string this[string requestFile]
         {
-            set
-            {
-                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddFile(requestFile, value));
-            }
+            set { this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddFile(requestFile, value)); }
         }
     }
 }

@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.Text;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Represents a text (text/plain) response
@@ -28,10 +29,10 @@
             if (contents != null)
             {
                 this.Contents = stream =>
-                                {
-                                    var data = encoding.GetBytes(contents);
-                                    stream.Write(data, 0, data.Length);
-                                };
+                {
+                    var data = encoding.GetBytes(contents);
+                    stream.Write(data, 0, data.Length);
+                };
             }
         }
 
@@ -43,7 +44,8 @@
         /// <param name="encoding">String encoding - UTF8 if null</param>
         /// <param name="headers">Headers if required</param>
         /// <param name="cookies">Cookies if required</param>
-        public TextResponse(HttpStatusCode statusCode = HttpStatusCode.OK, string contents = null, Encoding encoding = null, IDictionary<string, string> headers = null, IEnumerable<INancyCookie> cookies = null)
+        public TextResponse(HttpStatusCode statusCode = HttpStatusCode.OK, string contents = null, Encoding encoding = null,
+            IDictionary<string, string> headers = null, IEnumerable<INancyCookie> cookies = null)
         {
             if (encoding == null)
             {
@@ -70,9 +72,7 @@
             if (cookies != null)
             {
                 foreach (var nancyCookie in cookies)
-                {
                     this.Cookies.Add(nancyCookie);
-                }
             }
         }
     }

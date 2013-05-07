@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.Diagnostics;
 
     /// <summary>
@@ -14,6 +15,17 @@
     public class DefaultRouteCacheProvider : IRouteCacheProvider, IDiagnosticsProvider
     {
         protected readonly Func<IRouteCache> RouteCacheFactory;
+
+        /// <summary>
+        /// Initializes a new instance of the DefaultRouteCacheProvider class.
+        /// </summary>
+        /// <param name="routeCacheFactory"></param>
+        public DefaultRouteCacheProvider(Func<IRouteCache> routeCacheFactory)
+        {
+            this.RouteCacheFactory = routeCacheFactory;
+
+            this.DiagnosticObject = new RouteCacheDiagnostics(this);
+        }
 
         /// <summary>
         /// Gets the name of the provider.
@@ -38,17 +50,6 @@
         /// </summary>
         /// <value>An instance of the interactive diagnostics object.</value>
         public object DiagnosticObject { get; private set; }
-
-        /// <summary>
-        /// Initializes a new instance of the DefaultRouteCacheProvider class.
-        /// </summary>
-        /// <param name="routeCacheFactory"></param>
-        public DefaultRouteCacheProvider(Func<IRouteCache> routeCacheFactory)
-        {
-            this.RouteCacheFactory = routeCacheFactory;
-
-            this.DiagnosticObject = new RouteCacheDiagnostics(this);
-        }
 
         /// <summary>
         /// Gets an instance of the route cache.

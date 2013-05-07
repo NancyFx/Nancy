@@ -7,14 +7,11 @@ namespace Nancy.Demo.SparkViewEngine
         /// </summary>
         public MainModule()
         {
-            Get["/"] = (x) =>
-                {
-                    return View["Index.spark"];
-                };
+            Get["/"] = (x) => { return View["Index.spark"]; };
 
-           Get[ "/test" ] = _ => View[ "test" ];
+            Get["/test"] = _ => View["test"];
 
-           Get[ "/test2" ] = _ => View[ "test2" ];
+            Get["/test2"] = _ => View["test2"];
         }
     }
 }

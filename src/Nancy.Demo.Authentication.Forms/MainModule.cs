@@ -2,7 +2,7 @@ namespace Nancy.Demo.Authentication.Forms
 {
     using System;
     using System.Dynamic;
-    using Nancy;
+
     using Nancy.Authentication.Forms;
     using Nancy.Extensions;
 
@@ -10,19 +10,18 @@ namespace Nancy.Demo.Authentication.Forms
     {
         public MainModule()
         {
-            Get["/"] = x => {
-                return View["index"];
-            };
+            Get["/"] = x => { return View["index"]; };
 
             Get["/login"] = x =>
-                {
-                    dynamic model = new ExpandoObject();
-                    model.Errored = this.Request.Query.error.HasValue;
+            {
+                dynamic model = new ExpandoObject();
+                model.Errored = this.Request.Query.error.HasValue;
 
-                    return View["login", model];
-                };
+                return View["login", model];
+            };
 
-            Post["/login"] = x => {
+            Post["/login"] = x =>
+            {
                 var userGuid = UserDatabase.ValidateUser((string)this.Request.Form.Username, (string)this.Request.Form.Password);
 
                 if (userGuid == null)
@@ -39,9 +38,7 @@ namespace Nancy.Demo.Authentication.Forms
                 return this.LoginAndRedirect(userGuid.Value, expiry);
             };
 
-            Get["/logout"] = x => {
-                return this.LogoutAndRedirect("~/");
-            };
+            Get["/logout"] = x => { return this.LogoutAndRedirect("~/"); };
         }
     }
 }

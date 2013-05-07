@@ -1,8 +1,8 @@
 namespace Nancy.Bootstrapper
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Represents a type to be registered multiple times into the

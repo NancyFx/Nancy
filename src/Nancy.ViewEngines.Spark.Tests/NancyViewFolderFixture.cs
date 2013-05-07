@@ -1,11 +1,13 @@
 namespace Nancy.ViewEngines.Spark.Tests
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
+
     using FakeItEasy;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class NancyViewFolderFixture
     {
@@ -115,12 +117,12 @@ namespace Nancy.ViewEngines.Spark.Tests
         {
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
-                                               .Returns(results);
+             .Returns(results);
 
             var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] {"liquid"});
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             var startupContext = new ViewEngineStartupContext(
                 this.cache,

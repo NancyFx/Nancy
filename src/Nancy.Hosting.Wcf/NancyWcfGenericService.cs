@@ -4,15 +4,16 @@
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.IdentityModel.Claims;
     using System.Linq;
+    using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Channels;
     using System.ServiceModel.Web;
-    using System.IdentityModel.Claims;
-    
-    using IO;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
+    using Nancy.IO;
 
     /// <summary>
     /// Host for running Nancy ontop of WCF.
@@ -28,8 +29,7 @@
         /// </summary>
         public NancyWcfGenericService()
             : this(NancyBootstrapperLocator.Bootstrapper)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class, with the provided <paramref name="bootstrapper"/>.
@@ -40,7 +40,7 @@
             bootstrapper.Initialise();
             this.engine = bootstrapper.GetEngine();
         }
-        
+
         /// <summary>
         /// Handels an incoming request with Nancy.
         /// </summary>
@@ -50,34 +50,34 @@
         public Message HandleRequests(Stream requestBody)
         {
             var webContext = WebOperationContext.Current;
-            
-            var nancyRequest = 
+
+            var nancyRequest =
                 CreateNancyRequestFromIncomingWebRequest(webContext.IncomingRequest, requestBody, OperationContext.Current);
 
-            var nancyContext = 
+            var nancyContext =
                 engine.HandleRequest(nancyRequest);
 
             SetNancyResponseToOutgoingWebResponse(webContext.OutgoingResponse, nancyContext.Response);
 
             return webContext.CreateStreamResponse(
                 stream =>
-                    {
-                        nancyContext.Response.Contents(stream);
-                        nancyContext.Dispose();
-                    }, 
-                    nancyContext.Response.ContentType ?? "none/none"); // Stupid WCF forces us to specify a content type
+                {
+                    nancyContext.Response.Contents(stream);
+                    nancyContext.Dispose();
+                },
+                nancyContext.Response.ContentType ?? "none/none"); // Stupid WCF forces us to specify a content type
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody, OperationContext context)
         {
             var address =
                 ((RemoteEndpointMessageProperty)
-                 OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
+                    OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
 
             var baseUri =
                 GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri);
 
-            if(!baseUri.OriginalString.EndsWith("/"))
+            if (!baseUri.OriginalString.EndsWith("/"))
             {
                 baseUri = new Uri(string.Concat(baseUri.OriginalString, "/"));
             }
@@ -88,11 +88,12 @@
             var expectedRequestLength =
                 GetExpectedRequestLength(webRequest.Headers.ToDictionary());
 
-            var nancyUrl = new Url {
+            var nancyUrl = new Url
+            {
                 BasePath = webRequest.UriTemplateMatch.BaseUri.AbsolutePath,
                 Scheme = webRequest.UriTemplateMatch.RequestUri.Scheme,
                 HostName = webRequest.UriTemplateMatch.BaseUri.Host,
-                Port = webRequest.UriTemplateMatch.RequestUri.IsDefaultPort ? null : (int?)webRequest.UriTemplateMatch.RequestUri.Port,                    
+                Port = webRequest.UriTemplateMatch.RequestUri.IsDefaultPort ? null : (int?)webRequest.UriTemplateMatch.RequestUri.Port,
                 Path = string.Concat("/", relativeUri),
                 Query = webRequest.UriTemplateMatch.RequestUri.Query
             };
@@ -116,7 +117,7 @@
                 nancyUrl,
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.Headers.ToDictionary(),
-                address.Address, 
+                address.Address,
                 certificate);
         }
 
@@ -142,12 +143,12 @@
 
             long contentLength;
 
-            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ?
-                0 :
-                contentLength;
+            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength)
+                ? 0
+                : contentLength;
         }
 
-        private static Uri GetUrlAndPathComponents(Uri uri) 
+        private static Uri GetUrlAndPathComponents(Uri uri)
         {
             // ensures that for a given url only the
             // scheme://host:port/paths/somepath
@@ -162,19 +163,15 @@
             {
                 webResponse.ContentType = nancyResponse.ContentType;
             }
-            webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
+            webResponse.StatusCode = (HttpStatusCode)nancyResponse.StatusCode;
         }
 
         private static void SetHttpResponseHeaders(OutgoingWebResponseContext context, Response response)
         {
             foreach (var kvp in response.Headers)
-            {
                 context.Headers.Add(kvp.Key, kvp.Value);
-            }
             foreach (var cookie in response.Cookies)
-            {
                 context.Headers.Add("Set-Cookie", cookie.ToString());
-            }
         }
     }
 }

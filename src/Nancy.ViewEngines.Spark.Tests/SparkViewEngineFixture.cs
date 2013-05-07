@@ -4,35 +4,39 @@
     using System.Globalization;
     using System.IO;
     using System.Threading;
+
     using FakeItEasy;
-    using global::Spark;
+
     using Nancy.Tests;
     using Nancy.ViewEngines.Spark.Tests.ViewModels;
+
     using Xunit;
-    using SparkViewEngine = Spark.SparkViewEngine;
+
+    using global::Spark;
 
     public class SparkViewEngineFixture
     {
         private readonly IRenderContext renderContext;
-        private string output;
-        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRootPathProvider rootPathProvider;
+        private FileSystemViewLocationProvider fileSystemViewLocationProvider;
+        private string output;
 
         public SparkViewEngineFixture()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "TestViews"));
-						
+
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider, new DefaultFileSystemReader());
-            
+
             this.renderContext = A.Fake<IRenderContext>();
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, ISparkViewEntry>>.Ignored))
-                .ReturnsLazily(x => {
-                    var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, ISparkViewEntry>>(1).Invoke(result);
-                });
+             .ReturnsLazily(x =>
+             {
+                 var result = x.GetArgument<ViewLocationResult>(0);
+                 return x.GetArgument<Func<ViewLocationResult, ISparkViewEntry>>(1).Invoke(result);
+             });
 
             A.CallTo(() => this.renderContext.ViewCache).Returns(cache);
         }
@@ -72,7 +76,7 @@
             this.output.ShouldEqual("<div></div>");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_be_able_to_provide_global_setting_for_views()
         {
             //Given, When
@@ -84,7 +88,7 @@
                 "<div>7==7</div>");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_be_able_to_render_a_child_view_with_a_master_layout()
         {
             //Given, When
@@ -265,8 +269,8 @@
         {
             //Given
             A.CallTo(() => this.renderContext.ParsePath(A<string>.Ignored))
-                .Returns("/mysensationalrootfolder/scripts/test.js");
-            
+             .Returns("/mysensationalrootfolder/scripts/test.js");
+
             //When
             this.FindViewAndRender("ViewThatUsesTildeSubstitution");
 
@@ -278,14 +282,14 @@
         public void Should_support_files_with_the_spark_extensions()
         {
             // Given
-            var engine = new SparkViewEngine();
+            var engine = new global::Nancy.ViewEngines.Spark.SparkViewEngine();
 
             //When
             var extensions = engine.Extensions;
 
             // Then
             extensions.ShouldHaveCount(2);
-            extensions.ShouldEqualSequence(new[] { "spark", "shade" });
+            extensions.ShouldEqualSequence(new[] {"spark", "shade"});
         }
 
         [Fact]
@@ -461,13 +465,13 @@
             }
 
             var stream = new MemoryStream();
-            var engine = new SparkViewEngine();
+            var engine = new global::Nancy.ViewEngines.Spark.SparkViewEngine();
 
-            var locator = new DefaultViewLocator(this.fileSystemViewLocationProvider, new[] { engine });
-            
+            var locator = new DefaultViewLocator(this.fileSystemViewLocationProvider, new[] {engine});
+
             var context = new ViewEngineStartupContext(
-                                    A.Fake<IViewCache>(),
-                                    locator);
+                A.Fake<IViewCache>(),
+                locator);
 
             engine.Initialize(context);
 
@@ -476,9 +480,7 @@
             response.Contents.Invoke(stream);
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
-            {
                 this.output = reader.ReadToEnd();
-            }
         }
 
         private void FindViewAndRender(string viewName)

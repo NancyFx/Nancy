@@ -2,7 +2,9 @@
 {
     using System;
     using System.Linq;
+
     using Nancy.Bootstrapper;
+
     using global::FluentValidation;
 
     /// <summary>
@@ -63,7 +65,7 @@
 
         private static Type CreateValidatorType(Type type)
         {
-            return typeof(AbstractValidator<>).MakeGenericType(type);
+            return typeof (AbstractValidator<>).MakeGenericType(type);
         }
     }
 }

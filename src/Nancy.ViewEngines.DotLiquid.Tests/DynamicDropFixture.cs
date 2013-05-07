@@ -1,7 +1,9 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System.Dynamic;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class DynamicDropFixture
@@ -145,7 +147,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_return_null_when_called_with_invalid_property_name_and_model_is_object()
         {
             // Given
-            var model = new FakeModel { Name = "Nancy" };
+            var model = new FakeModel {Name = "Nancy"};
             var drop = new DynamicDrop(model);
 
             // When
@@ -158,7 +160,7 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         public void Should_return_model_value_when_property_name_is_valid_and_model_is_object()
         {
             // Given
-            var model = new FakeModel { Name = "Nancy" };
+            var model = new FakeModel {Name = "Nancy"};
             var drop = new DynamicDrop(model);
 
             // When

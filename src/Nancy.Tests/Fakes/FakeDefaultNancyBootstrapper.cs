@@ -5,39 +5,32 @@
     using System.Linq;
     using System.Reflection;
 
-    using Bootstrapper;
-
+    using Nancy.Bootstrapper;
     using Nancy.ErrorHandling;
     using Nancy.TinyIoc;
 
     public class FakeDefaultNancyBootstrapper : DefaultNancyBootstrapper
     {
-        private NancyInternalConfiguration configuration;
+        private readonly NancyInternalConfiguration configuration;
 
-        protected override System.Collections.Generic.IEnumerable<ModuleRegistration> Modules
-        {
-            get
-            {
-                return new[] { new ModuleRegistration(typeof(FakeNancyModuleWithoutBasePath)) };
-            }
-        }
         public FakeDefaultNancyBootstrapper()
-            : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] { typeof(DefaultStatusCodeHandler) })))
-        {
-            
-        }
+            : this(NancyInternalConfiguration.WithOverrides(b => b.StatusCodeHandlers = new List<Type>(new[] {typeof (DefaultStatusCodeHandler)})))
+        {}
 
-        protected override IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
-        {
-            get
-            {
-                return base.AutoRegisterIgnoredAssemblies.Union(new Func<Assembly, bool>[] { asm => asm.FullName.StartsWith("TestAssembly") });
-            }
-        }
         public FakeDefaultNancyBootstrapper(NancyInternalConfiguration configuration)
         {
             this.configuration = configuration;
             this.RequestContainerInitialisations = new Dictionary<NancyContext, int>();
+        }
+
+        protected override IEnumerable<ModuleRegistration> Modules
+        {
+            get { return new[] {new ModuleRegistration(typeof (FakeNancyModuleWithoutBasePath))}; }
+        }
+
+        protected override IEnumerable<Func<Assembly, bool>> AutoRegisterIgnoredAssemblies
+        {
+            get { return base.AutoRegisterIgnoredAssemblies.Union(new Func<Assembly, bool>[] {asm => asm.FullName.StartsWith("TestAssembly")}); }
         }
 
         protected override NancyInternalConfiguration InternalConfiguration
@@ -49,7 +42,10 @@
 
         public bool ApplicationContainerConfigured { get; set; }
 
-        public TinyIoCContainer Container { get { return this.ApplicationContainer; } }
+        public TinyIoCContainer Container
+        {
+            get { return this.ApplicationContainer; }
+        }
 
         public Request ConfigureRequestContainerLastRequest { get; set; }
 

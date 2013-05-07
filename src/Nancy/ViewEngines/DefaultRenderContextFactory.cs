@@ -1,19 +1,15 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using Cryptography;
-
     using Nancy.Localization;
-
-    using Session;
 
     /// <summary>
     /// Default render context factory implementation.
     /// </summary>
     public class DefaultRenderContextFactory : IRenderContextFactory
     {
+        private readonly ITextResource textResource;
         private readonly IViewCache viewCache;
         private readonly IViewResolver viewResolver;
-        private readonly ITextResource textResource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRenderContextFactory"/> class.

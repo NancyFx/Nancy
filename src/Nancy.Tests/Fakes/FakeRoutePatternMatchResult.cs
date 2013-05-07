@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Tests.Fakes
 {
     using System;
+
     using Nancy.Routing;
 
     public class FakeRoutePatternMatchResult : IRoutePatternMatchResult
@@ -13,8 +14,7 @@
 
         public FakeRoutePatternMatchResult(Action<FakeRoutePatternMatchResultConfigurator> closure)
             : this(closure, new DynamicDictionary())
-        {
-        }
+        {}
 
         public FakeRoutePatternMatchResult(Action<FakeRoutePatternMatchResultConfigurator> closure, DynamicDictionary parameters)
         {

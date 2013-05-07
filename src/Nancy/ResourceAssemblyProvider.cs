@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+
     using Nancy.Bootstrapper;
 
     /// <summary>
@@ -27,8 +28,8 @@
         private static IEnumerable<Assembly> GetFilteredAssemblies()
         {
             return AppDomainAssemblyTypeScanner.Assemblies
-                .Where(x => !x.IsDynamic)
-                .Where(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+                                               .Where(x => !x.IsDynamic)
+                                               .Where(x => !x.GetName().Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
         }
     }
 }

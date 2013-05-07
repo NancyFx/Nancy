@@ -6,10 +6,7 @@
     {
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
-            get
-            {
-                return new DiagnosticsConfiguration() { Password = "password" };
-            }
+            get { return new DiagnosticsConfiguration() {Password = "password"}; }
         }
     }
 }

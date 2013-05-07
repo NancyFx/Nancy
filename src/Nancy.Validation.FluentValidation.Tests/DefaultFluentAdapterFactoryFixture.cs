@@ -1,15 +1,18 @@
 namespace Nancy.Validation.FluentValidation.Tests
 {
     using FakeItEasy;
+
     using Nancy.Tests;
+
     using Xunit;
+
     using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
 
     public class DefaultFluentAdapterFactoryFixture
     {
-        private PropertyRule rule;
-        private DefaultFluentAdapterFactory factory;
+        private readonly DefaultFluentAdapterFactory factory;
+        private readonly PropertyRule rule;
 
         public DefaultFluentAdapterFactoryFixture()
         {

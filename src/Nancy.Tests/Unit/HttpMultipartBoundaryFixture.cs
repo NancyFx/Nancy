@@ -2,7 +2,7 @@
 {
     using System.IO;
     using System.Text;
-    using Nancy;
+
     using Xunit;
 
     public class HttpMultipartBoundaryFixture
@@ -12,7 +12,7 @@
         {
             // Given
             var stream = BuildStreamForSingleFile(
-                "name", 
+                "name",
                 null,
                 null,
                 null
@@ -141,7 +141,7 @@
 
         private static HttpMultipartSubStream BuildStreamForSingleFile(string name, string filename, string contentType, string content)
         {
-            var memory =  
+            var memory =
                 new MemoryStream(BuildBoundaryWithSingleFile(name, filename, contentType, content));
 
             return new HttpMultipartSubStream(memory, 0, memory.Length);
@@ -157,15 +157,15 @@
                     : "Content-Disposition: form-data; name=\"{0}\")", name, filename);
 
             boundaryBuilder.Append('\r');
-            boundaryBuilder.Append('\n');    
+            boundaryBuilder.Append('\n');
 
             if (!string.IsNullOrEmpty(contentType))
             {
                 boundaryBuilder.AppendFormat("Content-Type: {0}", contentType);
                 boundaryBuilder.Append('\r');
-                boundaryBuilder.Append('\n');  
+                boundaryBuilder.Append('\n');
             }
-            
+
             if (!string.IsNullOrEmpty(content))
             {
                 boundaryBuilder.Append('\r');

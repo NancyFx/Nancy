@@ -4,6 +4,7 @@ namespace Nancy.ViewEngines.Spark
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
     using global::Spark.Bindings;
 
     /// <summary>
@@ -26,12 +27,12 @@ namespace Nancy.ViewEngines.Spark
 
         public override IEnumerable<Binding> GetBindings(BindingRequest bindingRequest)
         {
-            var locatedFiles = 
+            var locatedFiles =
                 Directory.GetFiles(this.rootPathProvider.GetRootPath(), "bindings.xml", SearchOption.AllDirectories);
 
-            return locatedFiles.Any() ? 
-                locatedFiles.SelectMany(this.LoadBindings) :
-                Enumerable.Empty<Binding>();
+            return locatedFiles.Any()
+                ? locatedFiles.SelectMany(this.LoadBindings)
+                : Enumerable.Empty<Binding>();
         }
 
         private IEnumerable<Binding> LoadBindings(string fileName)
@@ -39,12 +40,8 @@ namespace Nancy.ViewEngines.Spark
             try
             {
                 using (var stream = new FileStream(fileName, FileMode.Open))
-                {
-                    using (var reader = new StreamReader(stream))
-                    {
-                        return this.LoadStandardMarkup(reader);
-                    }
-                }
+                using (var reader = new StreamReader(stream))
+                    return this.LoadStandardMarkup(reader);
             }
             catch (Exception)
             {

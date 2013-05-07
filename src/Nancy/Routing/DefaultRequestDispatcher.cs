@@ -4,16 +4,17 @@ namespace Nancy.Routing
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Responses.Negotiation;
+
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Default implementation of a request dispatcher.
     /// </summary>
     public class DefaultRequestDispatcher : IRequestDispatcher
     {
-        private readonly IRouteResolver routeResolver;
         private readonly IEnumerable<IResponseProcessor> responseProcessors;
         private readonly IRouteInvoker routeInvoker;
+        private readonly IRouteResolver routeResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRequestDispatcher"/> class, with
@@ -109,14 +110,14 @@ namespace Nancy.Routing
             if (!string.IsNullOrEmpty(extension))
             {
                 var mappedMediaRanges = this.GetMediaRangesForExtension(extension.Substring(1))
-                    .ToArray();
+                                            .ToArray();
 
                 if (mappedMediaRanges.Any())
                 {
                     var newMediaRanges =
                         mappedMediaRanges.Where(x => !context.Request.Headers.Accept.Any(header => header.Equals(x)));
 
-                    var modifiedRequestPath = 
+                    var modifiedRequestPath =
                         context.Request.Path.Replace(extension, string.Empty);
 
                     var match =
@@ -135,11 +136,11 @@ namespace Nancy.Routing
         private IEnumerable<Tuple<string, decimal>> GetMediaRangesForExtension(string extension)
         {
             return this.responseProcessors
-                .SelectMany(processor => processor.ExtensionMappings)
-                .Where(mapping => mapping != null)
-                .Where(mapping => mapping.Item1.Equals(extension, StringComparison.OrdinalIgnoreCase))
-                .Select(mapping => new Tuple<string, decimal>(mapping.Item2, Decimal.MaxValue))
-                .Distinct();
+                       .SelectMany(processor => processor.ExtensionMappings)
+                       .Where(mapping => mapping != null)
+                       .Where(mapping => mapping.Item1.Equals(extension, StringComparison.OrdinalIgnoreCase))
+                       .Select(mapping => new Tuple<string, decimal>(mapping.Item2, Decimal.MaxValue))
+                       .Distinct();
         }
 
         private ResolveResult InvokeRouteResolver(NancyContext context, string path, IEnumerable<Tuple<string, decimal>> acceptHeaders)

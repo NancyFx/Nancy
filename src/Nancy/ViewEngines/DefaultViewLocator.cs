@@ -11,15 +11,11 @@
     /// </summary>
     public class DefaultViewLocator : IViewLocator
     {
-        private readonly List<ViewLocationResult> viewLocationResults;
-
-        private readonly IViewLocationProvider viewLocationProvider;
-
-        private readonly IEnumerable<IViewEngine> viewEngines;
-
-        private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
-
         private readonly char[] invalidCharacters;
+        private readonly ReaderWriterLockSlim padlock = new ReaderWriterLockSlim();
+        private readonly IEnumerable<IViewEngine> viewEngines;
+        private readonly IViewLocationProvider viewLocationProvider;
+        private readonly List<ViewLocationResult> viewLocationResults;
 
         public DefaultViewLocator(IViewLocationProvider viewLocationProvider, IEnumerable<IViewEngine> viewEngines)
         {
@@ -76,7 +72,7 @@
             }
             finally
             {
-                this.padlock.ExitUpgradeableReadLock();                    
+                this.padlock.ExitUpgradeableReadLock();
             }
         }
 
@@ -100,7 +96,7 @@
             }
             finally
             {
-                this.padlock.ExitReadLock();                
+                this.padlock.ExitReadLock();
             }
         }
 
@@ -142,7 +138,7 @@
             {
                 throw new AmbiguousViewsException(GetAmgiguousViewExceptionMessage(cachedResults.Length, cachedResults));
             }
-            
+
             return null;
         }
 
@@ -151,14 +147,14 @@
             var viewExtension = GetExtensionFromViewName(viewName);
 
             var supportedViewExtensions = String.IsNullOrEmpty(viewExtension)
-                                              ? GetSupportedViewExtensions()
-                                              : new[] { viewExtension };
+                ? GetSupportedViewExtensions()
+                : new[] {viewExtension};
 
             var location = GetLocationFromViewName(viewName);
             var nameWithoutExtension = GetFilenameWithoutExtensionFromViewName(viewName);
 
             return this.viewLocationProvider.GetLocatedViews(supportedViewExtensions, location, nameWithoutExtension)
-                                            .ToArray();
+                       .ToArray();
         }
 
         private ViewLocationResult[] GetCachedMatchingViews(string viewName)
@@ -183,13 +179,14 @@
         private IEnumerable<string> GetSupportedViewExtensions()
         {
             return this.viewEngines
-                .SelectMany(engine => engine.Extensions)
-                .Distinct();
+                       .SelectMany(engine => engine.Extensions)
+                       .Distinct();
         }
 
         private static string GetAmgiguousViewExceptionMessage(int count, IEnumerable<ViewLocationResult> viewsThatMatchesCritera)
         {
-            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count, string.Join("\r\n\t", viewsThatMatchesCritera.Select(GetFullLocationOfView).ToArray()));
+            return string.Format("This exception was thrown because multiple views were found. {0} view(s):\r\n\t{1}", count,
+                string.Join("\r\n\t", viewsThatMatchesCritera.Select(GetFullLocationOfView).ToArray()));
         }
 
         private static string GetFullLocationOfView(ViewLocationResult viewLocationResult)
@@ -230,7 +227,7 @@
             var filename = Path.GetFileName(viewName);
             var index = viewName.LastIndexOf(filename, StringComparison.OrdinalIgnoreCase);
             var location = index >= 0 ? viewName.Remove(index, filename.Length) : viewName;
-            location = location.TrimEnd(new[] { '/' });
+            location = location.TrimEnd(new[] {'/'});
             return location;
         }
 

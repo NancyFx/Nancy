@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines.Spark.Descriptors
 {
     using System.Collections.Generic;
+
     using global::Spark;
 
     public interface IDescriptorBuilder
@@ -12,6 +13,7 @@
         /// <param name="viewLocationResult">Context information for the current request</param>
         /// <returns>An in-order array of values which are meaningful to BuildDescriptor on the same implementation class</returns>
         IDictionary<string, object> GetExtraParameters(ViewLocationResult viewLocationResult);
+
         //TODO: RobG: Move to lower in the Nancy stack to allow for multi-lingual support in all views
 
         /// <summary>

@@ -1,13 +1,12 @@
-﻿using Nancy.Diagnostics;
-
-namespace Nancy
+﻿namespace Nancy
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -20,23 +19,23 @@ namespace Nancy
         /// Default assemblies that are ignored for autoregister
         /// </summary>
         public static IEnumerable<Func<Assembly, bool>> DefaultAutoRegisterIgnoredAssemblies = new Func<Assembly, bool>[]
-            {
-                asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
-                asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.InvariantCulture),
-            };
+        {
+            asm => asm.FullName.StartsWith("Microsoft.", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("System.", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("System,", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("mscorlib,", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("IronPython", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("IronRuby", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("xunit", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("Nancy.Testing", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("MonoDevelop.NUnit", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("SMDiagnostics", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("CppCodeProvider", StringComparison.InvariantCulture),
+            asm => asm.FullName.StartsWith("WebDev.WebHost40", StringComparison.InvariantCulture),
+        };
 
         /// <summary>
         /// Gets the assemblies to ignore when autoregistering the application container
@@ -96,9 +95,7 @@ namespace Nancy
         protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
-            {
                 container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
-            }
         }
 
         /// <summary>
@@ -110,9 +107,7 @@ namespace Nancy
         protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
-            {
                 container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
-            }
         }
 
         /// <summary>
@@ -125,10 +120,10 @@ namespace Nancy
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
                 container.Register(
-                    typeof(INancyModule), 
+                    typeof (INancyModule),
                     moduleRegistrationType.ModuleType,
                     moduleRegistrationType.ModuleType.FullName).
-                    AsSingleton();
+                          AsSingleton();
             }
         }
 
@@ -142,7 +137,7 @@ namespace Nancy
             foreach (var instanceRegistration in instanceRegistrations)
             {
                 container.Register(
-                    instanceRegistration.RegistrationType, 
+                    instanceRegistration.RegistrationType,
                     instanceRegistration.Implementation);
             }
         }
@@ -202,7 +197,7 @@ namespace Nancy
         /// <returns>NancyModule instance</returns>
         protected override sealed INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
-            container.Register(typeof(INancyModule), moduleType);
+            container.Register(typeof (INancyModule), moduleType);
 
             return container.Resolve<INancyModule>();
         }
@@ -213,11 +208,12 @@ namespace Nancy
         /// <param name="container">Container instance</param>
         private static void AutoRegister(TinyIoCContainer container, IEnumerable<Func<Assembly, bool>> ignoredAssemblies)
         {
-            var assembly = typeof(NancyEngine).Assembly;
+            var assembly = typeof (NancyEngine).Assembly;
 
-            var whitelist = new Type[] { };
+            var whitelist = new Type[] {};
 
-            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
+            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))),
+                t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
         }
     }
 }

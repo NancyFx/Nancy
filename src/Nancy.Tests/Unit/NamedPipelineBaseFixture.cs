@@ -3,18 +3,11 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Xunit;
 
     public class NamedPipelineBaseFixture
     {
-        private class TestPipeline :  NamedPipelineBase<Action<string>>
-        {
-            public IEnumerable<PipelineItem<Action<string>>> Items
-            {
-                get { return pipelineItems; }
-            }
-        }
-
         private readonly TestPipeline pipeline;
 
         public NamedPipelineBaseFixture()
@@ -233,6 +226,14 @@
 
             Assert.Equal(1, pipeline.Items.Count());
             Assert.Same(item1, pipeline.Items.First());
+        }
+
+        private class TestPipeline : NamedPipelineBase<Action<string>>
+        {
+            public IEnumerable<PipelineItem<Action<string>>> Items
+            {
+                get { return pipelineItems; }
+            }
         }
     }
 }

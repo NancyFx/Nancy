@@ -25,11 +25,12 @@
 
         private void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.AcceptHeaderCoercionConventions = new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>(2)
-                                                              {
-                                                                  BuiltInAcceptHeaderCoercions.BoostHtml,
-                                                                  BuiltInAcceptHeaderCoercions.CoerceBlankAcceptHeader,
-                                                              };
+            conventions.AcceptHeaderCoercionConventions =
+                new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>(2)
+                {
+                    BuiltInAcceptHeaderCoercions.BoostHtml,
+                    BuiltInAcceptHeaderCoercions.CoerceBlankAcceptHeader,
+                };
         }
     }
 }

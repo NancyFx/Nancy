@@ -6,13 +6,13 @@ namespace Nancy.Tests.Fakes
 
     public class FakeViewEngineHost : IViewEngineHost
     {
-        public Func<string, object, string> GetTemplateCallback { get; set; }
-        public Func<string, string> ExpandPathCallBack { get; set; }
-
         public FakeViewEngineHost()
         {
-            this.Context = new FakeContext {Name = "Frank" };
+            this.Context = new FakeContext {Name = "Frank"};
         }
+
+        public Func<string, object, string> GetTemplateCallback { get; set; }
+        public Func<string, string> ExpandPathCallBack { get; set; }
 
         /// <summary>
         /// Html "safe" encode a string
@@ -22,26 +22,9 @@ namespace Nancy.Tests.Fakes
         public string HtmlEncode(string input)
         {
             return input.Replace("&", "&amp;").
-                Replace("<", "&lt;").
-                Replace(">", "&gt;").
-                Replace("\"", "&quot;");
-        }
-
-        private class FakeContext
-        {
-            public FakeContext()
-            {
-                this.User = new FakeUser { Username = "Frank123" };
-            }
-
-            public string Name { get; set; }
-
-            public FakeUser User { get; set; }
-
-            public class FakeUser
-            {
-                public string Username { get; set; }
-            }
+                         Replace("<", "&lt;").
+                         Replace(">", "&gt;").
+                         Replace("\"", "&quot;");
         }
 
         /// <summary>
@@ -89,6 +72,23 @@ namespace Nancy.Tests.Fakes
         public string AntiForgeryToken()
         {
             return "CSRF";
+        }
+
+        private class FakeContext
+        {
+            public FakeContext()
+            {
+                this.User = new FakeUser {Username = "Frank123"};
+            }
+
+            public string Name { get; set; }
+
+            public FakeUser User { get; set; }
+
+            public class FakeUser
+            {
+                public string Username { get; set; }
+            }
         }
     }
 }

@@ -9,13 +9,13 @@
     {
         private static readonly Lazy<CryptographyConfiguration> DefaultConfiguration =
             new Lazy<CryptographyConfiguration>(() => new CryptographyConfiguration(
-                                                          new RijndaelEncryptionProvider(new RandomKeyGenerator()),
-                                                          new DefaultHmacProvider(new RandomKeyGenerator())));
+                new RijndaelEncryptionProvider(new RandomKeyGenerator()),
+                new DefaultHmacProvider(new RandomKeyGenerator())));
 
         private static readonly Lazy<CryptographyConfiguration> NoEncryptionConfiguration =
             new Lazy<CryptographyConfiguration>(() => new CryptographyConfiguration(
-                                                          new NoEncryptionProvider(),
-                                                          new DefaultHmacProvider(new RandomKeyGenerator())));
+                new NoEncryptionProvider(),
+                new DefaultHmacProvider(new RandomKeyGenerator())));
 
         /// <summary>
         /// Creates a new instance of the CryptographyConfiguration class

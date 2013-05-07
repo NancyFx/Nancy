@@ -4,10 +4,12 @@
     using System.Configuration;
     using System.Dynamic;
     using System.IO;
-    using Responses;
+
+    using Nancy.Responses;
+    using Nancy.ViewEngines.Spark.Descriptors;
+
     using global::Spark;
     using global::Spark.FileSystem;
-    using Nancy.ViewEngines.Spark.Descriptors;
 
     /// <summary>
     /// View engine for rendering spark views.
@@ -16,22 +18,21 @@
     {
         private readonly IDescriptorBuilder descriptorBuilder;
         private readonly global::Spark.SparkViewEngine engine;
+        private readonly string[] extensions = new[] {"spark", "shade"};
         private readonly ISparkSettings settings;
-        private readonly string[] extensions = new[] { "spark", "shade" };
 
         public SparkViewEngine()
             : this(new DefaultRootPathProvider())
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SparkViewEngine"/> class.
         /// </summary>
         public SparkViewEngine(IRootPathProvider rootPathProvider)
         {
-            this.settings = (ISparkSettings) ConfigurationManager.GetSection("spark") ?? new SparkSettings();
-            
-            this.engine = 
+            this.settings = (ISparkSettings)ConfigurationManager.GetSection("spark") ?? new SparkSettings();
+
+            this.engine =
                 new global::Spark.SparkViewEngine(this.settings)
                 {
                     DefaultPageBaseType = typeof (NancySparkView).FullName,
@@ -51,10 +52,33 @@
             get { return this.extensions; }
         }
 
+        public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
+        {
+            this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext);
+        }
+
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
+        {
+            return new HtmlResponse(contents: stream =>
+            {
+                SparkViewEngineResult sparkViewEngineResult =
+                    this.CreateView(viewLocationResult, model ?? new ExpandoObject(), renderContext);
+
+                var writer =
+                    new StreamWriter(stream);
+
+                sparkViewEngineResult.View.Writer = writer;
+                sparkViewEngineResult.View.Model = model;
+                sparkViewEngineResult.View.Execute();
+
+                writer.Flush();
+            });
+        }
+
         private SparkViewEngineResult CreateView<TModel>(ViewLocationResult viewLocationResult, TModel model, IRenderContext renderContext)
         {
             var result = this.LocateView(
-                viewLocationResult.Location, 
+                viewLocationResult.Location,
                 viewLocationResult.Name,
                 viewLocationResult,
                 renderContext);
@@ -100,7 +124,7 @@
             }
 
             var entry = renderContext.ViewCache.GetOrAdd(
-                viewLocationResult, 
+                viewLocationResult,
                 x => this.engine.CreateEntry(descriptor));
 
             var nancySparkView = entry.CreateInstance() as NancySparkView;
@@ -110,29 +134,6 @@
             }
 
             return new SparkViewEngineResult(nancySparkView);
-        }
-
-        public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-            this.engine.ViewFolder = GetViewFolder(viewEngineStartupContext);
-        }
-
-        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
-        {
-            return new HtmlResponse(contents: stream =>
-            {
-                SparkViewEngineResult sparkViewEngineResult =
-                    this.CreateView(viewLocationResult, model ?? new ExpandoObject(), renderContext);
-
-                var writer =
-                    new StreamWriter(stream);
-
-                sparkViewEngineResult.View.Writer = writer;
-                sparkViewEngineResult.View.Model = model;
-                sparkViewEngineResult.View.Execute();
-
-                writer.Flush();
-            });
         }
     }
 }

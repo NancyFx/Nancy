@@ -1,14 +1,13 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
     using System.Collections.Generic;
-    using Bootstrapper;
-    using Conventions;
 
+    using Nancy.Bootstrapper;
+    using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.Security;
     using Nancy.Session;
     using Nancy.TinyIoc;
-    using Nancy.ViewEngines;
     using Nancy.ViewEngines.Razor;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
@@ -17,7 +16,7 @@
         // to enable the diagnostics dashboard
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
-            get { return new DiagnosticsConfiguration { Password = "password"}; }
+            get { return new DiagnosticsConfiguration {Password = "password"}; }
         }
 
         // Overriding this just to show how it works, not actually necessary as autoregister
@@ -64,20 +63,17 @@
     {
         public bool AutoIncludeModelNamespace
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
 
         public IEnumerable<string> GetAssemblyNames()
         {
-            return new string[] { };
+            return new string[] {};
         }
 
         public IEnumerable<string> GetDefaultNamespaces()
         {
-            return new string[] { };
+            return new string[] {};
         }
     }
 }

@@ -1,18 +1,19 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class ViewEngineStartupFixture
     {
-        private IList<ViewLocationResult> views;
         private readonly IViewCache viewCache;
 
         private readonly IViewLocator viewLocator;
+        private readonly IList<ViewLocationResult> views;
 
         public ViewEngineStartupFixture()
         {
@@ -24,12 +25,12 @@ namespace Nancy.Tests.Unit.ViewEngines
 
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
-                                               .Returns(views);
+             .Returns(views);
 
             var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] {"liquid"});
 
-            this.viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            this.viewLocator = new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             this.viewCache = A.Fake<IViewCache>();
         }
@@ -38,7 +39,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_invoke_initialize_on_each_view_engine()
         {
             // Given
-            var engines = new[] { A.Fake<IViewEngine>(), A.Fake<IViewEngine>() };
+            var engines = new[] {A.Fake<IViewEngine>(), A.Fake<IViewEngine>()};
             var startup = new ViewEngineApplicationStartup(engines, this.viewCache, this.viewLocator);
 
             // When
@@ -53,7 +54,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_invoke_intialize_on_engine_with_view_cache_set_on_context()
         {
             // Given
-            var engines = new[] { A.Fake<IViewEngine>() };
+            var engines = new[] {A.Fake<IViewEngine>()};
             var startup = new ViewEngineApplicationStartup(engines, this.viewCache, this.viewLocator);
 
             // When

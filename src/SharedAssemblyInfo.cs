@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using System.Reflection;
 
 [assembly: AssemblyTitle("Nancy")]

@@ -46,33 +46,30 @@ namespace Nancy.Hosting.Self
         private static bool ZipCompare(this IEnumerable<string> source1, IEnumerable<string> source2, Func<string, string, bool> comparison)
         {
             using (var enumerator1 = source1.GetEnumerator())
+            using (var enumerator2 = source2.GetEnumerator())
             {
-                using (var enumerator2 = source2.GetEnumerator())
+                var has1 = enumerator1.MoveNext();
+                var has2 = enumerator2.MoveNext();
+
+                while (has1 || has2)
                 {
-                    var has1 = enumerator1.MoveNext();
-                    var has2 = enumerator2.MoveNext();
+                    var current1 = has1 ? enumerator1.Current : "";
+                    var current2 = has2 ? enumerator2.Current : "";
 
-                    while (has1 || has2)
+                    if (!comparison(current1, current2))
                     {
-                        var current1 = has1 ? enumerator1.Current : "";
-                        var current2 = has2 ? enumerator2.Current : "";
-
-                        if (!comparison(current1, current2))
-                        {
-                            return false;
-                        }
-
-                        if (has1)
-                        {
-                            has1 = enumerator1.MoveNext();
-                        }
-
-                        if (has2)
-                        {
-                            has2 = enumerator2.MoveNext();
-                        }
+                        return false;
                     }
 
+                    if (has1)
+                    {
+                        has1 = enumerator1.MoveNext();
+                    }
+
+                    if (has2)
+                    {
+                        has2 = enumerator2.MoveNext();
+                    }
                 }
             }
 
@@ -82,34 +79,31 @@ namespace Nancy.Hosting.Self
         private static IEnumerable<string> ZipFill(this IEnumerable<string> source1, IEnumerable<string> source2, Func<string, string, string> selector)
         {
             using (var enumerator1 = source1.GetEnumerator())
+            using (var enumerator2 = source2.GetEnumerator())
             {
-                using (var enumerator2 = source2.GetEnumerator())
+                var has1 = enumerator1.MoveNext();
+                var has2 = enumerator2.MoveNext();
+
+                while (has1 || has2)
                 {
-                    var has1 = enumerator1.MoveNext();
-                    var has2 = enumerator2.MoveNext();
+                    var value1 = has1 ? enumerator1.Current : null;
+                    var value2 = has2 ? enumerator2.Current : null;
+                    var value = selector(value1, value2);
 
-                    while (has1 || has2)
+                    if (value != null)
                     {
-                        var value1 = has1 ? enumerator1.Current : null;
-                        var value2 = has2 ? enumerator2.Current : null;
-                        var value = selector(value1, value2);
-
-                        if (value != null)
-                        {
-                            yield return value;
-                        }
-
-                        if (has1)
-                        {
-                            has1 = enumerator1.MoveNext();
-                        }
-
-                        if (has2)
-                        {
-                            has2 = enumerator2.MoveNext();
-                        }
+                        yield return value;
                     }
 
+                    if (has1)
+                    {
+                        has1 = enumerator1.MoveNext();
+                    }
+
+                    if (has2)
+                    {
+                        has2 = enumerator2.MoveNext();
+                    }
                 }
             }
         }
@@ -119,9 +113,7 @@ namespace Nancy.Hosting.Self
             var builder = new StringBuilder();
 
             foreach (var value in source)
-            {
                 builder.Append(value);
-            }
 
             return builder.ToString();
         }

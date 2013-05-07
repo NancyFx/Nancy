@@ -1,7 +1,7 @@
 namespace Nancy.Demo.Authentication
 {
     using System.Linq;
-    using Nancy;
+
     using Nancy.Demo.Authentication.Models;
     using Nancy.Security;
 
@@ -14,7 +14,8 @@ namespace Nancy.Demo.Authentication
         {
             this.RequiresValidatedClaims(c => c.Contains("SuperSecure"));
 
-            Get["/"] = x => {
+            Get["/"] = x =>
+            {
                 var model = new UserModel(this.Context.CurrentUser.UserName);
                 return View["superSecure.cshtml", model];
             };

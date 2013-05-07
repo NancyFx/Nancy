@@ -3,16 +3,18 @@ namespace Nancy.Diagnostics
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using ModelBinding;
+
     using Nancy.Bootstrapper;
+    using Nancy.ModelBinding;
+    using Nancy.Responses;
     using Nancy.TinyIoc;
-    using Responses;
 
     internal class DiagnosticsModuleCatalog : INancyModuleCatalog
     {
         private readonly TinyIoCContainer container;
 
-        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        public DiagnosticsModuleCatalog(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing,
+            NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             this.container = ConfigureContainer(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
         }
@@ -38,7 +40,8 @@ namespace Nancy.Diagnostics
             return this.container.Resolve<INancyModule>(moduleType.FullName);
         }
 
-        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider,
+            IRequestTracing requestTracing, NancyInternalConfiguration configuration, DiagnosticsConfiguration diagnosticsConfiguration)
         {
             var diagContainer = new TinyIoCContainer();
 
@@ -54,14 +57,10 @@ namespace Nancy.Diagnostics
             diagContainer.Register<DiagnosticsConfiguration>(diagnosticsConfiguration);
 
             foreach (var diagnosticsProvider in providers)
-            {
                 diagContainer.Register<IDiagnosticsProvider>(diagnosticsProvider, diagnosticsProvider.GetType().FullName);
-            }
 
             foreach (var moduleType in AppDomainAssemblyTypeScanner.TypesOf<DiagnosticModule>().ToArray())
-            {
-                diagContainer.Register(typeof(INancyModule), moduleType, moduleType.FullName).AsMultiInstance();
-            }
+                diagContainer.Register(typeof (INancyModule), moduleType, moduleType.FullName).AsMultiInstance();
 
             return diagContainer;
         }

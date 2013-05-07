@@ -30,7 +30,7 @@ namespace Nancy.Cryptography
             }
 
             var isValid = true;
-            for (int i = 0; i < hashLength; i++)
+            for (var i = 0; i < hashLength; i++)
             {
                 if (hmac1[i] != hmac2[i])
                 {

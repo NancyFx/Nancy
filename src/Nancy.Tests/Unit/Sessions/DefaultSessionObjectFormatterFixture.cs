@@ -2,13 +2,11 @@ namespace Nancy.Tests.Unit.Sessions
 {
     using System;
 
-    using Nancy.Session;
-
     using Xunit;
 
     public class DefaultSessionObjectFormatterFixture
     {
-        private DefaultObjectSerializer serializer;
+        private readonly DefaultObjectSerializer serializer;
 
         public DefaultSessionObjectFormatterFixture()
         {
@@ -41,7 +39,7 @@ namespace Nancy.Tests.Unit.Sessions
         public void Should_return_empty_string_when_serializing_null()
         {
             object input = null;
-            
+
             var output = this.serializer.Serialize(input);
 
             output.ShouldEqual(string.Empty);
@@ -70,12 +68,6 @@ namespace Nancy.Tests.Unit.Sessions
         [Serializable]
         public class Payload : IEquatable<Payload>
         {
-            public int IntValue { get; private set; }
-
-            public bool BoolValue { get; private set; }
-
-            public string StringValue { get; private set; }
-
             /// <summary>
             /// Initializes a new instance of the <see cref="T:System.Object"/> class.
             /// </summary>
@@ -85,6 +77,12 @@ namespace Nancy.Tests.Unit.Sessions
                 this.BoolValue = boolValue;
                 this.StringValue = stringValue;
             }
+
+            public int IntValue { get; private set; }
+
+            public bool BoolValue { get; private set; }
+
+            public string StringValue { get; private set; }
 
             public bool Equals(Payload other)
             {
@@ -113,7 +111,7 @@ namespace Nancy.Tests.Unit.Sessions
                     return true;
                 }
 
-                if (obj.GetType() != typeof(Payload))
+                if (obj.GetType() != typeof (Payload))
                 {
                     return false;
                 }
@@ -125,9 +123,9 @@ namespace Nancy.Tests.Unit.Sessions
             {
                 unchecked
                 {
-                    int result = this.IntValue;
-                    result = (result * 397) ^ this.BoolValue.GetHashCode();
-                    result = (result * 397) ^ (this.StringValue != null ? this.StringValue.GetHashCode() : 0);
+                    var result = this.IntValue;
+                    result = (result*397) ^ this.BoolValue.GetHashCode();
+                    result = (result*397) ^ (this.StringValue != null ? this.StringValue.GetHashCode() : 0);
                     return result;
                 }
             }

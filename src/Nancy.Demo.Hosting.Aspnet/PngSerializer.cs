@@ -49,7 +49,7 @@
             var path =
                 Path.Combine(this.rootPathProvider.GetRootPath(), "content/face.png");
 
-            var face = 
+            var face =
                 Image.FromFile(path);
 
             face.Save(outputStream, ImageFormat.Png);

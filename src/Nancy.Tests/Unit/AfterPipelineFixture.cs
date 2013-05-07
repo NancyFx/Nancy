@@ -2,20 +2,21 @@
 {
     using System;
     using System.Linq;
+
     using Xunit;
 
     public class AfterPipelineFixture
     {
         private AfterPipeline pipeline;
 
-        private static NancyContext CreateContext()
-        {
-            return new NancyContext();
-        }
-
         public AfterPipelineFixture()
         {
             pipeline = new AfterPipeline();
+        }
+
+        private static NancyContext CreateContext()
+        {
+            return new NancyContext();
         }
 
         [Fact]

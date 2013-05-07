@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Testing.Tests
 {
     using System;
+
     using FakeItEasy;
+
     using Xunit;
 
     public class ConfigurableBootstrapperDependenciesTests
@@ -45,10 +47,10 @@
         {
             // Given
             var browser = new Browser(with =>
-                    {
-                        with.Module<ModuleWithOneDependency>();
-                        with.Dependency<ITestDependency>(GetFakeDependency());
-                    });
+            {
+                with.Module<ModuleWithOneDependency>();
+                with.Dependency<ITestDependency>(GetFakeDependency());
+            });
 
             // When
             var response = browser.Get("/1dependency");
@@ -81,7 +83,7 @@
             var browser = new Browser(with =>
             {
                 with.Module<ModuleWithOneDependency>();
-                with.Dependency<ITestDependency>(typeof(ImplementedTestDependency));
+                with.Dependency<ITestDependency>(typeof (ImplementedTestDependency));
             });
 
             // When
@@ -118,10 +120,11 @@
             var browser = new Browser(with =>
             {
                 with.Module<ModuleWithTwoDependencies>();
-                with.MappedDependencies(new[] {
-                                       new Tuple<Type, object>(typeof(ITestDependency), GetFakeDependency()),
-                                       new Tuple<Type, object>(typeof(ITestDependency2), GetFakeDependency2())
-                                   });
+                with.MappedDependencies(new[]
+                {
+                    new Tuple<Type, object>(typeof (ITestDependency), GetFakeDependency()),
+                    new Tuple<Type, object>(typeof (ITestDependency2), GetFakeDependency2())
+                });
             });
 
             // When
@@ -134,31 +137,12 @@
         }
 
 
-        public class ModuleWithOneDependency : NancyModule
-        {
-            public ModuleWithOneDependency(ITestDependency dependency)
-                : base("/1dependency")
-            {
-                Get["/"] = _ =>
-                {
-                    return string.Format("Data of dependency: {0}", dependency.GetData());
-                };
-            }
-        }
-
-        public class ModuleWithTwoDependencies : NancyModule
-        {
-            public ModuleWithTwoDependencies(ITestDependency dependency, ITestDependency2 dependency2)
-                : base("/2dependencies")
-            {
-                Get["/"] = _ =>
-                {
-                    return string.Format("Data of dependencies: {0}, {1}", dependency.GetData(), dependency2.GetData());
-                };
-            }
-        }
-
         public interface ITestDependency
+        {
+            string GetData();
+        }
+
+        public interface ITestDependency2
         {
             string GetData();
         }
@@ -171,16 +155,29 @@
             }
         }
 
-        public interface ITestDependency2
-        {
-            string GetData();
-        }
-
         public class ImplementedTestDependency2 : ITestDependency2
         {
             public string GetData()
             {
                 return "Implemented ITestDependency2";
+            }
+        }
+
+        public class ModuleWithOneDependency : NancyModule
+        {
+            public ModuleWithOneDependency(ITestDependency dependency)
+                : base("/1dependency")
+            {
+                Get["/"] = _ => { return string.Format("Data of dependency: {0}", dependency.GetData()); };
+            }
+        }
+
+        public class ModuleWithTwoDependencies : NancyModule
+        {
+            public ModuleWithTwoDependencies(ITestDependency dependency, ITestDependency2 dependency2)
+                : base("/2dependencies")
+            {
+                Get["/"] = _ => { return string.Format("Data of dependencies: {0}, {1}", dependency.GetData(), dependency2.GetData()); };
             }
         }
     }

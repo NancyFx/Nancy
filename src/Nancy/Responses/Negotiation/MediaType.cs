@@ -24,10 +24,7 @@ namespace Nancy.Responses.Negotiation
         /// <value><see langword="true" /> if the media type is a wildcard, otherwise <see langword="false" />.</value>
         public bool IsWildcard
         {
-            get
-            {
-                return this.type != null && string.Equals(this.type, "*", StringComparison.Ordinal);
-            }
+            get { return this.type != null && string.Equals(this.type, "*", StringComparison.Ordinal); }
         }
 
         /// <summary>
@@ -38,8 +35,8 @@ namespace Nancy.Responses.Negotiation
         public bool Matches(MediaType other)
         {
             return this.IsWildcard ||
-                   other.IsWildcard ||
-                   this.type.Equals(other.type, StringComparison.InvariantCultureIgnoreCase);
+                other.IsWildcard ||
+                this.type.Equals(other.type, StringComparison.InvariantCultureIgnoreCase);
         }
 
         public static implicit operator MediaType(string inputString)

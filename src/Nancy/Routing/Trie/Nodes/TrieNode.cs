@@ -12,6 +12,23 @@ namespace Nancy.Routing.Trie.Nodes
         private readonly ITrieNodeFactory nodeFactory;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="TrieNode"/> class
+        /// </summary>
+        /// <param name="parent">Parent node</param>
+        /// <param name="segment">Segment of the route definition</param>
+        /// <param name="nodeFactory">Factory for creating new nodes</param>
+        protected TrieNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+        {
+            this.nodeFactory = nodeFactory;
+            this.Parent = parent;
+            this.RouteDefinitionSegment = segment;
+
+            this.Children = new Dictionary<string, TrieNode>();
+            this.AdditionalParameters = new Dictionary<string, object>();
+            this.NodeData = new List<NodeData>();
+        }
+
+        /// <summary>
         /// Gets or sets the parent node
         /// </summary>
         public TrieNode Parent { get; protected set; }
@@ -43,23 +60,6 @@ namespace Nancy.Routing.Trie.Nodes
         public abstract int Score { get; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TrieNode"/> class
-        /// </summary>
-        /// <param name="parent">Parent node</param>
-        /// <param name="segment">Segment of the route definition</param>
-        /// <param name="nodeFactory">Factory for creating new nodes</param>
-        protected TrieNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-        {
-            this.nodeFactory = nodeFactory;
-            this.Parent = parent;
-            this.RouteDefinitionSegment = segment;
-
-            this.Children = new Dictionary<string, TrieNode>();
-            this.AdditionalParameters = new Dictionary<string, object>();
-            this.NodeData = new List<NodeData>();
-        }
-
-        /// <summary>
         /// Add a new route to the trie
         /// </summary>
         /// <param name="segments">The segments of the route definition</param>
@@ -81,7 +81,8 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
-        public virtual void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex, RouteDescription routeDescription)
+        public virtual void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex,
+            RouteDescription routeDescription)
         {
             if (this.NoMoreSegments(segments, currentIndex))
             {
@@ -121,7 +122,8 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="capturedParameters">Currently captured parameters</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
-        public virtual IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
+        public virtual IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters,
+            NancyContext context)
         {
             var segmentMatch = this.Match(segments[currentIndex]);
             if (segmentMatch == SegmentMatch.NoMatch)
@@ -146,7 +148,7 @@ namespace Nancy.Routing.Trie.Nodes
         public virtual IEnumerable<string> GetRoutes()
         {
             var routeList = new List<string>(this.Children.Values.SelectMany(c => c.GetRoutes())
-                             .Select(s => (this.RouteDefinitionSegment ?? string.Empty) + "/" + s));
+                                                 .Select(s => (this.RouteDefinitionSegment ?? string.Empty) + "/" + s));
 
             if (this.NodeData.Any())
             {
@@ -171,14 +173,14 @@ namespace Nancy.Routing.Trie.Nodes
         protected virtual NodeData BuildNodeData(int nodeCount, int score, Type moduleType, int routeIndex, RouteDescription routeDescription)
         {
             return new NodeData
-                       {
-                           Method = routeDescription.Method,
-                           RouteIndex = routeIndex,
-                           RouteLength = nodeCount,
-                           Score = score,
-                           Condition = routeDescription.Condition,
-                           ModuleType = moduleType,
-                       };
+            {
+                Method = routeDescription.Method,
+                RouteIndex = routeIndex,
+                RouteLength = nodeCount,
+                Score = score,
+                Condition = routeDescription.Condition,
+                ModuleType = moduleType,
+            };
         }
 
         /// <summary>
@@ -222,9 +224,7 @@ namespace Nancy.Routing.Trie.Nodes
             if (localCaptures.Any())
             {
                 foreach (var localCapture in localCaptures)
-                {
                     parameters[localCapture.Key] = localCapture.Value;
-                }
             }
 
             return this.NodeData.Select(n => n.ToResult(parameters));
@@ -239,7 +239,8 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="localCaptures">Parameters captured by the local matching</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>Collection of <see cref="MatchResult"/> objects</returns>
-        protected IEnumerable<MatchResult> GetMatchingChildren(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, IDictionary<string, object> localCaptures, NancyContext context)
+        protected IEnumerable<MatchResult> GetMatchingChildren(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters,
+            IDictionary<string, object> localCaptures, NancyContext context)
         {
             var parameters = capturedParameters;
             if (localCaptures.Any() || this.AdditionalParameters.Any())
@@ -247,22 +248,16 @@ namespace Nancy.Routing.Trie.Nodes
                 parameters = new Dictionary<string, object>(parameters);
 
                 foreach (var localParameter in localCaptures)
-                {
                     parameters[localParameter.Key] = localParameter.Value;
-                }
 
                 foreach (var additionalParameter in this.AdditionalParameters)
-                {
                     parameters[additionalParameter.Key] = additionalParameter.Value;
-                }
             }
 
             foreach (var childNode in this.Children.Values)
             {
                 foreach (var match in childNode.GetMatches(segments, currentIndex, parameters, context))
-                {
                     yield return match;
-                }
             }
         }
 

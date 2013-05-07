@@ -30,6 +30,7 @@
 // follows:
 
 #region Original License
+
 /*
 Copyright (c) 2005 JSON.org
 
@@ -53,6 +54,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 */
+
 #endregion
 
 namespace Nancy.Json
@@ -64,178 +66,180 @@ namespace Nancy.Json
     using System.IO;
     using System.Text;
 
-	internal sealed class JsonDeserializer
-	{
-		/* Universal error constant */
-		const int __ = -1;
-		const int UNIVERSAL_ERROR = __;
-		
-		/*
+    internal sealed class JsonDeserializer
+    {
+        /* Universal error constant */
+        private const int __ = -1;
+        private const int UNIVERSAL_ERROR = __;
+
+        /*
 		  Characters are mapped into these 31 character classes. This allows for
 		  a significant reduction in the size of the state transition table.
 		*/
-		const int C_SPACE = 0x00;  /* space */
-		const int C_WHITE = 0x01;  /* other whitespace */
-		const int C_LCURB = 0x02;  /* {  */
-		const int C_RCURB = 0x03;  /* } */
-		const int C_LSQRB = 0x04;  /* [ */
-		const int C_RSQRB = 0x05;  /* ] */
-		const int C_COLON = 0x06;  /* : */
-		const int C_COMMA = 0x07;  /* , */
-		const int C_QUOTE = 0x08;  /* " */
-		const int C_BACKS = 0x09;  /* \ */
-		const int C_SLASH = 0x0A;  /* / */
-		const int C_PLUS  = 0x0B;  /* + */
-		const int C_MINUS = 0x0C;  /* - */
-		const int C_POINT = 0x0D;  /* . */
-		const int C_ZERO  = 0x0E;  /* 0 */
-		const int C_DIGIT = 0x0F;  /* 123456789 */
-		const int C_LOW_A = 0x10;  /* a */
-		const int C_LOW_B = 0x11;  /* b */
-		const int C_LOW_C = 0x12;  /* c */
-		const int C_LOW_D = 0x13;  /* d */
-		const int C_LOW_E = 0x14;  /* e */
-		const int C_LOW_F = 0x15;  /* f */
-		const int C_LOW_L = 0x16;  /* l */
-		const int C_LOW_N = 0x17;  /* n */
-		const int C_LOW_R = 0x18;  /* r */
-		const int C_LOW_S = 0x19;  /* s */
-		const int C_LOW_T = 0x1A;  /* t */
-		const int C_LOW_U = 0x1B;  /* u */
-		const int C_ABCDF = 0x1C;  /* ABCDF */
-		const int C_E     = 0x1D;  /* E */
-		const int C_ETC   = 0x1E;  /* everything else */
-		const int C_STAR  = 0x1F;  /* * */
-		const int C_I     = 0x20;  /* I */
-		const int C_LOW_I = 0x21;  /* i */
-		const int C_LOW_Y = 0x22;  /* y */
-		const int C_N     = 0x23;  /* N */
-		
-		/* The state codes. */
-		const int GO = 0x00;  /* start    */
-		const int OK = 0x01;  /* ok       */
-		const int OB = 0x02;  /* object   */
-		const int KE = 0x03;  /* key      */
-		const int CO = 0x04;  /* colon    */
-		const int VA = 0x05;  /* value    */
-		const int AR = 0x06;  /* array    */
-		const int ST = 0x07;  /* string   */
-		const int ES = 0x08;  /* escape   */
-		const int U1 = 0x09;  /* u1       */
-		const int U2 = 0x0A;  /* u2       */
-		const int U3 = 0x0B;  /* u3       */
-		const int U4 = 0x0C;  /* u4       */
-		const int MI = 0x0D;  /* minus    */
-		const int ZE = 0x0E;  /* zero     */
-		const int IN = 0x0F;  /* integer  */
-		const int FR = 0x10;  /* fraction */
-		const int E1 = 0x11;  /* e        */
-		const int E2 = 0x12;  /* ex       */
-		const int E3 = 0x13;  /* exp      */
-		const int T1 = 0x14;  /* tr       */
-		const int T2 = 0x15;  /* tru      */
-		const int T3 = 0x16;  /* true     */
-		const int F1 = 0x17;  /* fa       */
-		const int F2 = 0x18;  /* fal      */
-		const int F3 = 0x19;  /* fals     */
-		const int F4 = 0x1A;  /* false    */
-		const int N1 = 0x1B;  /* nu       */
-		const int N2 = 0x1C;  /* nul      */
-		const int N3 = 0x1D;  /* null     */
-		const int FX = 0x1E;  /* *.* *eE* */
-		const int IV = 0x1F;  /* invalid input */
-		const int UK = 0x20;  /* unquoted key name */
-		const int UI = 0x21; /* ignore during unquoted key name construction */
-		const int I1 = 0x22;  /* In */
-		const int I2 = 0x23;  /* Inf */
-		const int I3 = 0x24;  /* Infi */
-		const int I4 = 0x25;  /* Infin */
-		const int I5 = 0x26;  /* Infini */
-		const int I6 = 0x27;  /* Infinit */
-		const int I7 = 0x28;  /* Infinity */
-		const int V1 = 0x29;  /* Na */
-		const int V2 = 0x2A;  /* NaN */
-		
-		/* Actions */
-		const int FA = -10; /* false */
-		const int TR = -11; /* false */
-		const int NU = -12; /* null */
-		const int DE = -13; /* double detected by exponent e E */
-		const int DF = -14; /* double detected by fraction . */
-		const int SB = -15; /* string begin */
-		const int MX = -16; /* integer detected by minus */
-		const int ZX = -17; /* integer detected by zero */
-		const int IX = -18; /* integer detected by 1-9 */
-		const int EX = -19; /* next char is escaped */
-		const int UC = -20; /* Unicode character read */
-		const int SE =  -4; /* string end */
-		const int AB =  -5; /* array begin */
-		const int AE =  -7; /* array end */
-		const int OS =  -6; /* object start */
-		const int OE =  -8; /* object end */
-		const int EO =  -9; /* empty object */
-		const int CM =  -3; /* comma */
-		const int CA =  -2; /* colon action */
-		const int PX = -21; /* integer detected by plus */
-		const int KB = -22; /* unquoted key name begin */
-		const int UE = -23; /* unquoted key name end */
-		const int IF = -25; /* Infinity */
-		const int NN = -26; /* NaN */
-		
-		
-		enum JsonMode {
-			NONE,
-			ARRAY,
-			DONE,
-			KEY,
-			OBJECT
-		};
+        private const int C_SPACE = 0x00; /* space */
+        private const int C_WHITE = 0x01; /* other whitespace */
+        private const int C_LCURB = 0x02; /* {  */
+        private const int C_RCURB = 0x03; /* } */
+        private const int C_LSQRB = 0x04; /* [ */
+        private const int C_RSQRB = 0x05; /* ] */
+        private const int C_COLON = 0x06; /* : */
+        private const int C_COMMA = 0x07; /* , */
+        private const int C_QUOTE = 0x08; /* " */
+        private const int C_BACKS = 0x09; /* \ */
+        private const int C_SLASH = 0x0A; /* / */
+        private const int C_PLUS = 0x0B; /* + */
+        private const int C_MINUS = 0x0C; /* - */
+        private const int C_POINT = 0x0D; /* . */
+        private const int C_ZERO = 0x0E; /* 0 */
+        private const int C_DIGIT = 0x0F; /* 123456789 */
+        private const int C_LOW_A = 0x10; /* a */
+        private const int C_LOW_B = 0x11; /* b */
+        private const int C_LOW_C = 0x12; /* c */
+        private const int C_LOW_D = 0x13; /* d */
+        private const int C_LOW_E = 0x14; /* e */
+        private const int C_LOW_F = 0x15; /* f */
+        private const int C_LOW_L = 0x16; /* l */
+        private const int C_LOW_N = 0x17; /* n */
+        private const int C_LOW_R = 0x18; /* r */
+        private const int C_LOW_S = 0x19; /* s */
+        private const int C_LOW_T = 0x1A; /* t */
+        private const int C_LOW_U = 0x1B; /* u */
+        private const int C_ABCDF = 0x1C; /* ABCDF */
+        private const int C_E = 0x1D; /* E */
+        private const int C_ETC = 0x1E; /* everything else */
+        private const int C_STAR = 0x1F; /* * */
+        private const int C_I = 0x20; /* I */
+        private const int C_LOW_I = 0x21; /* i */
+        private const int C_LOW_Y = 0x22; /* y */
+        private const int C_N = 0x23; /* N */
 
-		enum JsonType {
-			NONE = 0,
-			ARRAY_BEGIN,
-			ARRAY_END,
-			OBJECT_BEGIN,
-			OBJECT_END,
-			INTEGER,
-			FLOAT,
-			NULL,
-			TRUE,
-			FALSE,
-			STRING,
-			KEY,
-			MAX
-		};
-		
-		/*
+        /* The state codes. */
+        private const int GO = 0x00; /* start    */
+        private const int OK = 0x01; /* ok       */
+        private const int OB = 0x02; /* object   */
+        private const int KE = 0x03; /* key      */
+        private const int CO = 0x04; /* colon    */
+        private const int VA = 0x05; /* value    */
+        private const int AR = 0x06; /* array    */
+        private const int ST = 0x07; /* string   */
+        private const int ES = 0x08; /* escape   */
+        private const int U1 = 0x09; /* u1       */
+        private const int U2 = 0x0A; /* u2       */
+        private const int U3 = 0x0B; /* u3       */
+        private const int U4 = 0x0C; /* u4       */
+        private const int MI = 0x0D; /* minus    */
+        private const int ZE = 0x0E; /* zero     */
+        private const int IN = 0x0F; /* integer  */
+        private const int FR = 0x10; /* fraction */
+        private const int E1 = 0x11; /* e        */
+        private const int E2 = 0x12; /* ex       */
+        private const int E3 = 0x13; /* exp      */
+        private const int T1 = 0x14; /* tr       */
+        private const int T2 = 0x15; /* tru      */
+        private const int T3 = 0x16; /* true     */
+        private const int F1 = 0x17; /* fa       */
+        private const int F2 = 0x18; /* fal      */
+        private const int F3 = 0x19; /* fals     */
+        private const int F4 = 0x1A; /* false    */
+        private const int N1 = 0x1B; /* nu       */
+        private const int N2 = 0x1C; /* nul      */
+        private const int N3 = 0x1D; /* null     */
+        private const int FX = 0x1E; /* *.* *eE* */
+        private const int IV = 0x1F; /* invalid input */
+        private const int UK = 0x20; /* unquoted key name */
+        private const int UI = 0x21; /* ignore during unquoted key name construction */
+        private const int I1 = 0x22; /* In */
+        private const int I2 = 0x23; /* Inf */
+        private const int I3 = 0x24; /* Infi */
+        private const int I4 = 0x25; /* Infin */
+        private const int I5 = 0x26; /* Infini */
+        private const int I6 = 0x27; /* Infinit */
+        private const int I7 = 0x28; /* Infinity */
+        private const int V1 = 0x29; /* Na */
+        private const int V2 = 0x2A; /* NaN */
+
+        /* Actions */
+        private const int FA = -10; /* false */
+        private const int TR = -11; /* false */
+        private const int NU = -12; /* null */
+        private const int DE = -13; /* double detected by exponent e E */
+        private const int DF = -14; /* double detected by fraction . */
+        private const int SB = -15; /* string begin */
+        private const int MX = -16; /* integer detected by minus */
+        private const int ZX = -17; /* integer detected by zero */
+        private const int IX = -18; /* integer detected by 1-9 */
+        private const int EX = -19; /* next char is escaped */
+        private const int UC = -20; /* Unicode character read */
+        private const int SE = -4; /* string end */
+        private const int AB = -5; /* array begin */
+        private const int AE = -7; /* array end */
+        private const int OS = -6; /* object start */
+        private const int OE = -8; /* object end */
+        private const int EO = -9; /* empty object */
+        private const int CM = -3; /* comma */
+        private const int CA = -2; /* colon action */
+        private const int PX = -21; /* integer detected by plus */
+        private const int KB = -22; /* unquoted key name begin */
+        private const int UE = -23; /* unquoted key name end */
+        private const int IF = -25; /* Infinity */
+        private const int NN = -26; /* NaN */
+
+
+        private enum JsonMode
+        {
+            NONE,
+            ARRAY,
+            DONE,
+            KEY,
+            OBJECT
+        };
+
+        private enum JsonType
+        {
+            NONE = 0,
+            ARRAY_BEGIN,
+            ARRAY_END,
+            OBJECT_BEGIN,
+            OBJECT_END,
+            INTEGER,
+            FLOAT,
+            NULL,
+            TRUE,
+            FALSE,
+            STRING,
+            KEY,
+            MAX
+        };
+
+        /*
 		  This array maps the 128 ASCII characters into character classes.
 		  The remaining Unicode characters should be mapped to C_ETC.
 		  Non-whitespace control characters are errors.
 		*/
-		static readonly int[] ascii_class = {
-			__,      __,      __,      __,      __,      __,      __,      __,
-			__,      C_WHITE, C_WHITE, __,      __,      C_WHITE, __,      __,
-			__,      __,      __,      __,      __,      __,      __,      __,
-			__,      __,      __,      __,      __,      __,      __,      __,
 
-			C_SPACE, C_ETC,   C_QUOTE, C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_QUOTE,
-			C_ETC,   C_ETC,   C_STAR,   C_PLUS,  C_COMMA, C_MINUS, C_POINT, C_SLASH,
-			C_ZERO,  C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT,
-			C_DIGIT, C_DIGIT, C_COLON, C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_ETC,
+        private static readonly int[] ascii_class =
+        {
+            __, __, __, __, __, __, __, __,
+            __, C_WHITE, C_WHITE, __, __, C_WHITE, __, __,
+            __, __, __, __, __, __, __, __,
+            __, __, __, __, __, __, __, __,
+            C_SPACE, C_ETC, C_QUOTE, C_ETC, C_ETC, C_ETC, C_ETC, C_QUOTE,
+            C_ETC, C_ETC, C_STAR, C_PLUS, C_COMMA, C_MINUS, C_POINT, C_SLASH,
+            C_ZERO, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT, C_DIGIT,
+            C_DIGIT, C_DIGIT, C_COLON, C_ETC, C_ETC, C_ETC, C_ETC, C_ETC,
+            C_ETC, C_ABCDF, C_ABCDF, C_ABCDF, C_ABCDF, C_E, C_ABCDF, C_ETC,
+            C_ETC, C_I, C_ETC, C_ETC, C_ETC, C_ETC, C_N, C_ETC,
+            C_ETC, C_ETC, C_ETC, C_ETC, C_ETC, C_ETC, C_ETC, C_ETC,
+            C_ETC, C_ETC, C_ETC, C_LSQRB, C_BACKS, C_RSQRB, C_ETC, C_ETC,
+            C_ETC, C_LOW_A, C_LOW_B, C_LOW_C, C_LOW_D, C_LOW_E, C_LOW_F, C_ETC,
+            C_ETC, C_LOW_I, C_ETC, C_ETC, C_LOW_L, C_ETC, C_LOW_N, C_ETC,
+            C_ETC, C_ETC, C_LOW_R, C_LOW_S, C_LOW_T, C_LOW_U, C_ETC, C_ETC,
+            C_ETC, C_LOW_Y, C_ETC, C_LCURB, C_ETC, C_RCURB, C_ETC, C_ETC
+        };
 
-			C_ETC,   C_ABCDF, C_ABCDF, C_ABCDF, C_ABCDF, C_E,     C_ABCDF, C_ETC,
-			C_ETC,   C_I,   C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_N,   C_ETC,
-			C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_ETC,   C_ETC,
-			C_ETC,   C_ETC,   C_ETC,   C_LSQRB, C_BACKS, C_RSQRB, C_ETC,   C_ETC,
-
-			C_ETC,   C_LOW_A, C_LOW_B, C_LOW_C, C_LOW_D, C_LOW_E, C_LOW_F, C_ETC,
-			C_ETC,   C_LOW_I, C_ETC,   C_ETC,   C_LOW_L, C_ETC,   C_LOW_N, C_ETC,
-			C_ETC,   C_ETC,   C_LOW_R, C_LOW_S, C_LOW_T, C_LOW_U, C_ETC,   C_ETC,
-			C_ETC,   C_LOW_Y,   C_ETC,   C_LCURB, C_ETC,   C_RCURB, C_ETC,   C_ETC
-		};
-
-		static readonly int[,] state_transition_table = {
-		/*
+        private static readonly int[,] state_transition_table =
+        {
+            /*
 		  The state transition table takes the current state and the current symbol,
 		  and returns either a new state or an action. An action is represented as a
 		  negative number. A JSON text is accepted if at the end of the text the
@@ -243,129 +247,175 @@ namespace Nancy.Json
 
 		                           white                  '                   1-9                                   ABCDF  etc
 		                       space |  {  }  [  ]  :  ,  "  \  /  +  -  .  0  |  a  b  c  d  e  f  l  n  r  s  t  u  |  E  |  *  I  i  y  N */
-			/*start    GO*/ {GO,GO,OS,__,AB,__,__,__,SB,__,__,PX,MX,__,ZX,IX,__,__,__,__,__,FA,__,__,__,__,TR,__,__,__,__,__,I1,__,__,V1},
-			/*ok       OK*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*object   OB*/ {OB,OB,__,EO,__,__,__,__,SB,__,__,__,KB,__,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,__,KB,KB,KB,KB},
-			/*key      KE*/ {KE,KE,__,__,__,__,__,__,SB,__,__,__,KB,__,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,KB,__,KB,KB,KB,KB},
-			/*colon    CO*/ {CO,CO,__,__,__,__,CA,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*value    VA*/ {VA,VA,OS,__,AB,__,__,__,SB,__,__,PX,MX,__,ZX,IX,__,__,__,__,__,FA,__,NU,__,__,TR,__,__,__,__,__,I1,__,__,V1},
-			/*array    AR*/ {AR,AR,OS,__,AB,AE,__,__,SB,__,__,PX,MX,__,ZX,IX,__,__,__,__,__,FA,__,NU,__,__,TR,__,__,__,__,__,I1,__,__,V1},
-			/*string   ST*/ {ST,__,ST,ST,ST,ST,ST,ST,SE,EX,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST,ST},
-			/*escape   ES*/ {__,__,__,__,__,__,__,__,ST,ST,ST,__,__,__,__,__,__,ST,__,__,__,ST,__,ST,ST,__,ST,U1,__,__,__,__,__,__,__,__},
-			/*u1       U1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,U2,U2,U2,U2,U2,U2,U2,U2,__,__,__,__,__,__,U2,U2,__,__,__,__,__,__},
-			/*u2       U2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,U3,U3,U3,U3,U3,U3,U3,U3,__,__,__,__,__,__,U3,U3,__,__,__,__,__,__},
-			/*u3       U3*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,U4,U4,U4,U4,U4,U4,U4,U4,__,__,__,__,__,__,U4,U4,__,__,__,__,__,__},
-			/*u4       U4*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,UC,UC,UC,UC,UC,UC,UC,UC,__,__,__,__,__,__,UC,UC,__,__,__,__,__,__},
-			/*minus    MI*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,ZE,IN,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I1,__,__,__},
-			/*zero     ZE*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,DF,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*int      IN*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,DF,IN,IN,__,__,__,__,DE,__,__,__,__,__,__,__,__,DE,__,__,__,__,__,__},
-			/*frac     FR*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,__,FR,FR,__,__,__,__,E1,__,__,__,__,__,__,__,__,E1,__,__,__,__,__,__},
-			/*e        E1*/ {__,__,__,__,__,__,__,__,__,__,__,E2,E2,__,E3,E3,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*ex       E2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,E3,E3,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*exp      E3*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,__,E3,E3,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*tr       T1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,T2,__,__,__,__,__,__,__,__,__,__,__},
-			/*tru      T2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,T3,__,__,__,__,__,__,__,__},
-			/*true     T3*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,OK,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*fa       F1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,F2,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*fal      F2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,F3,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*fals     F3*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,F4,__,__,__,__,__,__,__,__,__,__},
-			/*false    F4*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,OK,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*nu       N1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,N2,__,__,__,__,__,__,__,__},
-			/*nul      N2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,N3,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*null     N3*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,OK,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*_.       FX*/ {OK,OK,__,OE,__,AE,__,CM,__,__,__,__,__,__,FR,FR,__,__,__,__,E1,__,__,__,__,__,__,__,__,E1,__,__,__,__,__,__},
-			/*inval.   IV*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*unq.key  UK*/ {UI,UI,__,__,__,__,UE,__,__,__,__,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,UK,__,UK,UK,UK,UK},
-			/*unq.ign. UI*/ {UI,UI,__,__,__,__,UE,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*i1       I1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I2,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*i2       I2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I3,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*i3       I3*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I4,__,__},
-			/*i4       I4*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I5,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*i5       I5*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I6,__,__},
-			/*i6       I6*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,I7,__,__,__,__,__,__,__,__,__},
-			/*i7       I7*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,IF,__},
-			/*v1       V1*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,V2,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__},
-			/*v2       V2*/ {__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,__,NN},
-		};
+            /*start    GO*/
+            {GO, GO, OS, __, AB, __, __, __, SB, __, __, PX, MX, __, ZX, IX, __, __, __, __, __, FA, __, __, __, __, TR, __, __, __, __, __, I1, __, __, V1},
+            /*ok       OK*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*object   OB*/
+            {OB, OB, __, EO, __, __, __, __, SB, __, __, __, KB, __, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, __, KB, KB, KB, KB},
+            /*key      KE*/
+            {KE, KE, __, __, __, __, __, __, SB, __, __, __, KB, __, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, KB, __, KB, KB, KB, KB},
+            /*colon    CO*/
+            {CO, CO, __, __, __, __, CA, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*value    VA*/
+            {VA, VA, OS, __, AB, __, __, __, SB, __, __, PX, MX, __, ZX, IX, __, __, __, __, __, FA, __, NU, __, __, TR, __, __, __, __, __, I1, __, __, V1},
+            /*array    AR*/
+            {AR, AR, OS, __, AB, AE, __, __, SB, __, __, PX, MX, __, ZX, IX, __, __, __, __, __, FA, __, NU, __, __, TR, __, __, __, __, __, I1, __, __, V1},
+            /*string   ST*/
+            {ST, __, ST, ST, ST, ST, ST, ST, SE, EX, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST, ST},
+            /*escape   ES*/
+            {__, __, __, __, __, __, __, __, ST, ST, ST, __, __, __, __, __, __, ST, __, __, __, ST, __, ST, ST, __, ST, U1, __, __, __, __, __, __, __, __},
+            /*u1       U1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, U2, U2, U2, U2, U2, U2, U2, U2, __, __, __, __, __, __, U2, U2, __, __, __, __, __, __},
+            /*u2       U2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, U3, U3, U3, U3, U3, U3, U3, U3, __, __, __, __, __, __, U3, U3, __, __, __, __, __, __},
+            /*u3       U3*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, U4, U4, U4, U4, U4, U4, U4, U4, __, __, __, __, __, __, U4, U4, __, __, __, __, __, __},
+            /*u4       U4*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, UC, UC, UC, UC, UC, UC, UC, UC, __, __, __, __, __, __, UC, UC, __, __, __, __, __, __},
+            /*minus    MI*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, ZE, IN, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I1, __, __, __},
+            /*zero     ZE*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, DF, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*int      IN*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, DF, IN, IN, __, __, __, __, DE, __, __, __, __, __, __, __, __, DE, __, __, __, __, __, __},
+            /*frac     FR*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, __, FR, FR, __, __, __, __, E1, __, __, __, __, __, __, __, __, E1, __, __, __, __, __, __},
+            /*e        E1*/
+            {__, __, __, __, __, __, __, __, __, __, __, E2, E2, __, E3, E3, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*ex       E2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, E3, E3, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*exp      E3*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, __, E3, E3, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*tr       T1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, T2, __, __, __, __, __, __, __, __, __, __, __},
+            /*tru      T2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, T3, __, __, __, __, __, __, __, __},
+            /*true     T3*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, OK, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*fa       F1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, F2, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*fal      F2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, F3, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*fals     F3*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, F4, __, __, __, __, __, __, __, __, __, __},
+            /*false    F4*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, OK, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*nu       N1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, N2, __, __, __, __, __, __, __, __},
+            /*nul      N2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, N3, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*null     N3*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, OK, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*_.       FX*/
+            {OK, OK, __, OE, __, AE, __, CM, __, __, __, __, __, __, FR, FR, __, __, __, __, E1, __, __, __, __, __, __, __, __, E1, __, __, __, __, __, __},
+            /*inval.   IV*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*unq.key  UK*/
+            {UI, UI, __, __, __, __, UE, __, __, __, __, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, UK, __, UK, UK, UK, UK},
+            /*unq.ign. UI*/
+            {UI, UI, __, __, __, __, UE, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*i1       I1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I2, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*i2       I2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I3, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*i3       I3*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I4, __, __},
+            /*i4       I4*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I5, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*i5       I5*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I6, __, __},
+            /*i6       I6*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, I7, __, __, __, __, __, __, __, __, __},
+            /*i7       I7*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, IF, __},
+            /*v1       V1*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, V2, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __},
+            /*v2       V2*/
+            {__, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, __, NN},
+        };
 
-		JavaScriptSerializer serializer;
-		JavaScriptTypeResolver typeResolver;
-		int maxJsonLength;
-		int currentPosition;
-		int recursionLimit;
-		int recursionDepth;
-		
-		Stack <JsonMode> modes;
-		Stack <object> returnValue;
-		JsonType jsonType;
-		
-		bool escaped;
-		int state;
-		Stack <string> currentKey;
-		StringBuilder buffer;
-		char quoteChar;
-		
-		public JsonDeserializer (JavaScriptSerializer serializer)
-		{
-			this.serializer = serializer;
-			this.maxJsonLength = serializer.MaxJsonLength;
-			this.recursionLimit = serializer.RecursionLimit;
-			this.typeResolver = serializer.TypeResolver;
-			this.modes = new Stack <JsonMode> ();
-			this.currentKey = new Stack <string> ();
-			this.returnValue = new Stack <object> ();
-			this.state = GO;
-			this.currentPosition = 0;
-			this.recursionDepth = 0;
-		}
+        private JavaScriptSerializer serializer;
+        private JavaScriptTypeResolver typeResolver;
+        private readonly int maxJsonLength;
+        private int currentPosition;
+        private readonly int recursionLimit;
+        private int recursionDepth;
 
-		public object Deserialize (string input)
-		{
-			if (input == null)
-				throw new ArgumentNullException ("input");
+        private readonly Stack<JsonMode> modes;
+        private readonly Stack<object> returnValue;
+        private JsonType jsonType;
 
-			return Deserialize (new StringReader (input));
-		}
-		
-		public object Deserialize (TextReader input)
-		{
-			if (input == null)
-				throw new ArgumentNullException ("input");
-			
-			int value;
-			buffer = new StringBuilder ();
-			
-			while (true) {
-				value = input.Read ();
-				if (value < 0)
-					break;
+        private bool escaped;
+        private int state;
+        private readonly Stack<string> currentKey;
+        private StringBuilder buffer;
+        private char quoteChar;
 
-				currentPosition++;
-				if (currentPosition > maxJsonLength)
-					throw new ArgumentException ("Maximum JSON input length has been exceeded.");
+        public JsonDeserializer(JavaScriptSerializer serializer)
+        {
+            this.serializer = serializer;
+            this.maxJsonLength = serializer.MaxJsonLength;
+            this.recursionLimit = serializer.RecursionLimit;
+            this.typeResolver = serializer.TypeResolver;
+            this.modes = new Stack<JsonMode>();
+            this.currentKey = new Stack<string>();
+            this.returnValue = new Stack<object>();
+            this.state = GO;
+            this.currentPosition = 0;
+            this.recursionDepth = 0;
+        }
 
-				if (!ProcessCharacter ((char) value))
-					throw new InvalidOperationException ("JSON syntax error.");
-			}
+        public object Deserialize(string input)
+        {
+            if (input == null)
+                throw new ArgumentNullException("input");
 
-			object topObject = PeekObject ();
-			if (buffer.Length > 0) {
-				object result;
+            return Deserialize(new StringReader(input));
+        }
 
-				if (ParseBuffer (out result)) {
-					if (topObject != null)
-						StoreValue (result);
-					else
-						PushObject (result);
-				}
-			}
+        public object Deserialize(TextReader input)
+        {
+            if (input == null)
+                throw new ArgumentNullException("input");
 
-			if (returnValue.Count > 1)
-				throw new InvalidOperationException ("JSON syntax error.");
+            int value;
+            buffer = new StringBuilder();
 
-			object ret = PopObject ();
-			return ret;
-		}
+            while (true)
+            {
+                value = input.Read();
+                if (value < 0)
+                    break;
+
+                currentPosition++;
+                if (currentPosition > maxJsonLength)
+                    throw new ArgumentException("Maximum JSON input length has been exceeded.");
+
+                if (!ProcessCharacter((char)value))
+                    throw new InvalidOperationException("JSON syntax error.");
+            }
+
+            var topObject = PeekObject();
+            if (buffer.Length > 0)
+            {
+                object result;
+
+                if (ParseBuffer(out result))
+                {
+                    if (topObject != null)
+                        StoreValue(result);
+                    else
+                        PushObject(result);
+                }
+            }
+
+            if (returnValue.Count > 1)
+                throw new InvalidOperationException("JSON syntax error.");
+
+            var ret = PopObject();
+            return ret;
+        }
 
 #if DEBUG
 		void DumpObject (string indent, object obj)
@@ -388,535 +438,550 @@ namespace Nancy.Json
 				Console.WriteLine ("null");
 		}
 #endif
-		
-		void DecodeUnicodeChar ()
-		{
-			int len = buffer.Length;
-			if (len < 6)
-				throw new ArgumentException ("Invalid escaped unicode character specification (" + currentPosition + ")");
 
-			int code = Int32.Parse (buffer.ToString ().Substring (len - 4), NumberStyles.HexNumber);
-			buffer.Length = len - 6;
-			buffer.Append ((char)code);
-		}
+        private void DecodeUnicodeChar()
+        {
+            var len = buffer.Length;
+            if (len < 6)
+                throw new ArgumentException("Invalid escaped unicode character specification (" + currentPosition + ")");
 
-		string GetModeMessage (JsonMode expectedMode)
-		{
-			switch (expectedMode) {
-				case JsonMode.ARRAY:
-					return "Invalid array passed in, ',' or ']' expected (" + currentPosition + ")";
+            var code = Int32.Parse(buffer.ToString().Substring(len - 4), NumberStyles.HexNumber);
+            buffer.Length = len - 6;
+            buffer.Append((char)code);
+        }
 
-				case JsonMode.KEY:
-					return "Invalid object passed in, key name or ':' expected (" + currentPosition + ")";
+        private string GetModeMessage(JsonMode expectedMode)
+        {
+            switch (expectedMode)
+            {
+                case JsonMode.ARRAY:
+                    return "Invalid array passed in, ',' or ']' expected (" + currentPosition + ")";
 
-				case JsonMode.OBJECT:
-					return "Invalid object passed in, key value expected (" + currentPosition + ")";
-					
-				default:
-					return "Invalid JSON string";
-			}
-		}
-		
-		void PopMode (JsonMode expectedMode)
-		{
-			JsonMode mode = PeekMode ();
-			if (mode != expectedMode)
-				throw new ArgumentException (GetModeMessage (mode));
+                case JsonMode.KEY:
+                    return "Invalid object passed in, key name or ':' expected (" + currentPosition + ")";
 
-			modes.Pop ();
-		}
+                case JsonMode.OBJECT:
+                    return "Invalid object passed in, key value expected (" + currentPosition + ")";
 
-		void PushMode (JsonMode newMode)
-		{
-			modes.Push (newMode);
-		}
+                default:
+                    return "Invalid JSON string";
+            }
+        }
 
-		JsonMode PeekMode ()
-		{
-			if (modes.Count == 0)
-				return JsonMode.NONE;
+        private void PopMode(JsonMode expectedMode)
+        {
+            var mode = PeekMode();
+            if (mode != expectedMode)
+                throw new ArgumentException(GetModeMessage(mode));
 
-			return modes.Peek ();
-		}
+            modes.Pop();
+        }
 
-		void PushObject (object o)
-		{
-			returnValue.Push (o);
-		}
+        private void PushMode(JsonMode newMode)
+        {
+            modes.Push(newMode);
+        }
 
-		object PopObject (bool notIfLast)
-		{
-			int count = returnValue.Count;
-			if (count == 0)
-				return null;
+        private JsonMode PeekMode()
+        {
+            if (modes.Count == 0)
+                return JsonMode.NONE;
 
-			if (notIfLast && count == 1)
-				return null;
-			
-			return returnValue.Pop ();
-		}
+            return modes.Peek();
+        }
 
-		object PopObject ()
-		{
-			return PopObject (false);
-		}
-		
-		object PeekObject ()
-		{
-			if (returnValue.Count == 0)
-				return null;
+        private void PushObject(object o)
+        {
+            returnValue.Push(o);
+        }
 
-			return returnValue.Peek ();
-		}
-		
-		void RemoveLastCharFromBuffer ()
-		{
-			int len = buffer.Length;
-			if (len == 0)
-				return;
-			buffer.Length = len - 1;
-		}
+        private object PopObject(bool notIfLast)
+        {
+            var count = returnValue.Count;
+            if (count == 0)
+                return null;
 
-		bool ParseBuffer (out object result)
-		{
-			result = null;
-			
-			if (jsonType == JsonType.NONE) {
-				buffer.Length = 0;
-				return false;
-			}
+            if (notIfLast && count == 1)
+                return null;
 
-			string s = buffer.ToString ();
-			bool converted = true;
-			int intValue;
-			long longValue;
-			decimal decimalValue;
-			double doubleValue;
-			
-			if (jsonType != JsonType.STRING)
-			{
-				s = s.TrimEnd(new[] { '\n', '\r' });
-			}
+            return returnValue.Pop();
+        }
 
-			switch (jsonType) {
-				case JsonType.INTEGER:
-					/* MS AJAX.NET JSON parser promotes big integers to double */
-					
-					if (Int32.TryParse (s, out intValue))
-						result = intValue;
-					else if (Int64.TryParse (s, out longValue))
-						result = longValue;
-					else if (Decimal.TryParse (s, out decimalValue))
-						result = decimalValue;
-					else if (Double.TryParse (s, out doubleValue))
-						result = doubleValue;
-					else
-						converted = false;
-					break;
+        private object PopObject()
+        {
+            return PopObject(false);
+        }
 
-				case JsonType.FLOAT:
-					if (Decimal.TryParse(s,NumberStyles.Any, Json.DefaultNumberFormatInfo, out decimalValue))
-						result = decimalValue;
-					else if (Double.TryParse (s,NumberStyles.Any, Json.DefaultNumberFormatInfo, out doubleValue))
-						result = doubleValue;
-					else
-						converted = false;
-					break;
+        private object PeekObject()
+        {
+            if (returnValue.Count == 0)
+                return null;
 
-				case JsonType.TRUE:
-					if (String.Compare (s, "true", StringComparison.Ordinal) == 0)
-						result = true;
-					else
-						converted = false;
-					break;
+            return returnValue.Peek();
+        }
 
-				case JsonType.FALSE:
-					if (String.Compare (s, "false", StringComparison.Ordinal) == 0)
-						result = false;
-					else
-						converted = false;
-					break;
+        private void RemoveLastCharFromBuffer()
+        {
+            var len = buffer.Length;
+            if (len == 0)
+                return;
+            buffer.Length = len - 1;
+        }
 
-				case JsonType.NULL:
-					if (String.Compare (s, "null", StringComparison.Ordinal) != 0)
-						converted = false;
-					break;
+        private bool ParseBuffer(out object result)
+        {
+            result = null;
 
-				case JsonType.STRING:
-                    if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal)) {
-                        int tzCharIndex = s.IndexOfAny(new char[] { '+', '-' }, 7);
-                        long javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
-                        DateTime time = new DateTime((javaScriptTicks * 10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
-                        if (tzCharIndex > 0) {
+            if (jsonType == JsonType.NONE)
+            {
+                buffer.Length = 0;
+                return false;
+            }
+
+            var s = buffer.ToString();
+            var converted = true;
+            int intValue;
+            long longValue;
+            decimal decimalValue;
+            double doubleValue;
+
+            if (jsonType != JsonType.STRING)
+            {
+                s = s.TrimEnd(new[] {'\n', '\r'});
+            }
+
+            switch (jsonType)
+            {
+                case JsonType.INTEGER:
+                    /* MS AJAX.NET JSON parser promotes big integers to double */
+
+                    if (Int32.TryParse(s, out intValue))
+                        result = intValue;
+                    else if (Int64.TryParse(s, out longValue))
+                        result = longValue;
+                    else if (Decimal.TryParse(s, out decimalValue))
+                        result = decimalValue;
+                    else if (Double.TryParse(s, out doubleValue))
+                        result = doubleValue;
+                    else
+                        converted = false;
+                    break;
+
+                case JsonType.FLOAT:
+                    if (Decimal.TryParse(s, NumberStyles.Any, Json.DefaultNumberFormatInfo, out decimalValue))
+                        result = decimalValue;
+                    else if (Double.TryParse(s, NumberStyles.Any, Json.DefaultNumberFormatInfo, out doubleValue))
+                        result = doubleValue;
+                    else
+                        converted = false;
+                    break;
+
+                case JsonType.TRUE:
+                    if (String.Compare(s, "true", StringComparison.Ordinal) == 0)
+                        result = true;
+                    else
+                        converted = false;
+                    break;
+
+                case JsonType.FALSE:
+                    if (String.Compare(s, "false", StringComparison.Ordinal) == 0)
+                        result = false;
+                    else
+                        converted = false;
+                    break;
+
+                case JsonType.NULL:
+                    if (String.Compare(s, "null", StringComparison.Ordinal) != 0)
+                        converted = false;
+                    break;
+
+                case JsonType.STRING:
+                    if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal))
+                    {
+                        var tzCharIndex = s.IndexOfAny(new char[] {'+', '-'}, 7);
+                        var javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
+                        var time = new DateTime((javaScriptTicks*10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
+                        if (tzCharIndex > 0)
+                        {
                             time = time.ToLocalTime();
                         }
                         result = time;
                     }
                     else
                         result = s;
-					break;
+                    break;
 
-				default:
-					throw new InvalidOperationException (String.Format ("Internal error: unexpected JsonType ({0})", jsonType));
-					
-			}
+                default:
+                    throw new InvalidOperationException(String.Format("Internal error: unexpected JsonType ({0})", jsonType));
+            }
 
-			if (!converted)
-				throw new ArgumentException ("Invalid JSON primitive: " + s);
+            if (!converted)
+                throw new ArgumentException("Invalid JSON primitive: " + s);
 
-			buffer.Length = 0;
-			return true;
-		}
-		
-		bool ProcessCharacter (char ch)
-		{
-			int next_class, next_state;
+            buffer.Length = 0;
+            return true;
+        }
 
-			if (ch >= 128)
-				next_class = C_ETC;
-			else {
-				next_class = ascii_class [ch];
-				if (next_class <= UNIVERSAL_ERROR)
-					return false;
-			}
+        private bool ProcessCharacter(char ch)
+        {
+            int next_class, next_state;
 
-			if (escaped) {
-				escaped = false;
-				RemoveLastCharFromBuffer ();
-				
-				switch (ch) {
-					case 'b':
-						buffer.Append ('\b');
-						break;
-					case 'f':
-						buffer.Append ('\f');
-						break;
-					case 'n':
-						buffer.Append ('\n');
-						break;
-					case 'r':
-						buffer.Append ('\r');
-						break;
-					case 't':
-						buffer.Append ('\t');
-						break;
-					case '"':
-					case '\\':
-					case '/':
-						buffer.Append (ch);
-						break;
-					case 'u':
-						buffer.Append ("\\u");
-						break;
-					default:
-						return false;
-				}
-			} else if (jsonType != JsonType.NONE || !(next_class == C_SPACE || next_class == C_WHITE))
-				buffer.Append (ch);
+            if (ch >= 128)
+                next_class = C_ETC;
+            else
+            {
+                next_class = ascii_class[ch];
+                if (next_class <= UNIVERSAL_ERROR)
+                    return false;
+            }
 
-			next_state = state_transition_table [state, next_class];
-			if (next_state >= 0) {
-				state = next_state;
-				return true;
-			}
+            if (escaped)
+            {
+                escaped = false;
+                RemoveLastCharFromBuffer();
 
-			object result;
-			/* An action to perform */
-			switch (next_state) {
-				case UC: /* Unicode character */
-					DecodeUnicodeChar ();
-					state = ST;
-					break;
-					
-				case EX: /* Escaped character */
-					escaped = true;
-					state = ES;
-					break;
+                switch (ch)
+                {
+                    case 'b':
+                        buffer.Append('\b');
+                        break;
+                    case 'f':
+                        buffer.Append('\f');
+                        break;
+                    case 'n':
+                        buffer.Append('\n');
+                        break;
+                    case 'r':
+                        buffer.Append('\r');
+                        break;
+                    case 't':
+                        buffer.Append('\t');
+                        break;
+                    case '"':
+                    case '\\':
+                    case '/':
+                        buffer.Append(ch);
+                        break;
+                    case 'u':
+                        buffer.Append("\\u");
+                        break;
+                    default:
+                        return false;
+                }
+            }
+            else if (jsonType != JsonType.NONE || !(next_class == C_SPACE || next_class == C_WHITE))
+                buffer.Append(ch);
 
-				case MX: /* integer detected by minus */
-					jsonType = JsonType.INTEGER;
-					state = MI;
-					break;
+            next_state = state_transition_table[state, next_class];
+            if (next_state >= 0)
+            {
+                state = next_state;
+                return true;
+            }
 
-				case PX: /* integer detected by plus */
-					jsonType = JsonType.INTEGER;
-					state = MI;
-					break;
-					
-				case ZX: /* integer detected by zero */
-					jsonType = JsonType.INTEGER;
-					state = ZE;
-					break;
+            object result;
+            /* An action to perform */
+            switch (next_state)
+            {
+                case UC: /* Unicode character */
+                    DecodeUnicodeChar();
+                    state = ST;
+                    break;
 
-				case IX: /* integer detected by 1-9 */
-					jsonType = JsonType.INTEGER;
-					state = IN;
-					break;
+                case EX: /* Escaped character */
+                    escaped = true;
+                    state = ES;
+                    break;
 
-				case DE: /* floating point number detected by exponent*/
-					jsonType = JsonType.FLOAT;
-					state = E1;
-					break;
+                case MX: /* integer detected by minus */
+                    jsonType = JsonType.INTEGER;
+                    state = MI;
+                    break;
 
-				case DF: /* floating point number detected by fraction */
-					jsonType = JsonType.FLOAT;
-					state = FX;
-					break;
+                case PX: /* integer detected by plus */
+                    jsonType = JsonType.INTEGER;
+                    state = MI;
+                    break;
 
-				case SB: /* string begin " or ' */
-					buffer.Length = 0;
-					quoteChar = ch;
-					jsonType = JsonType.STRING;
-					state = ST;
-					break;
+                case ZX: /* integer detected by zero */
+                    jsonType = JsonType.INTEGER;
+                    state = ZE;
+                    break;
 
-				case KB: /* unquoted key name begin */
-					jsonType = JsonType.STRING;
-					state = UK;
-					break;
+                case IX: /* integer detected by 1-9 */
+                    jsonType = JsonType.INTEGER;
+                    state = IN;
+                    break;
 
-				case UE: /* unquoted key name end ':' */
-					RemoveLastCharFromBuffer ();
-					if (ParseBuffer (out result))
-						StoreKey (result);
-					jsonType = JsonType.NONE;
-					
-					PopMode (JsonMode.KEY);
-					PushMode (JsonMode.OBJECT);
-					state = VA;
-					buffer.Length = 0;
-					break;
-					
-				case NU: /* n */
-					jsonType = JsonType.NULL;
-					state = N1;
-					break;
+                case DE: /* floating point number detected by exponent*/
+                    jsonType = JsonType.FLOAT;
+                    state = E1;
+                    break;
 
-				case FA: /* f */
-					jsonType = JsonType.FALSE;
-					state = F1;
-					break;
+                case DF: /* floating point number detected by fraction */
+                    jsonType = JsonType.FLOAT;
+                    state = FX;
+                    break;
 
-				case TR: /* t */
-					jsonType = JsonType.TRUE;
-					state = T1;
-					break;
+                case SB: /* string begin " or ' */
+                    buffer.Length = 0;
+                    quoteChar = ch;
+                    jsonType = JsonType.STRING;
+                    state = ST;
+                    break;
 
-				case EO: /* empty } */
-					result = PopObject (true);
-					if (result != null)
-						StoreValue (result);
-					PopMode (JsonMode.KEY);
-					state = OK;
-					break;
+                case KB: /* unquoted key name begin */
+                    jsonType = JsonType.STRING;
+                    state = UK;
+                    break;
 
-				case OE: /* } */
-					RemoveLastCharFromBuffer ();
+                case UE: /* unquoted key name end ':' */
+                    RemoveLastCharFromBuffer();
+                    if (ParseBuffer(out result))
+                        StoreKey(result);
+                    jsonType = JsonType.NONE;
 
-					if (ParseBuffer (out result))
-						StoreValue (result);
+                    PopMode(JsonMode.KEY);
+                    PushMode(JsonMode.OBJECT);
+                    state = VA;
+                    buffer.Length = 0;
+                    break;
 
-					result = PopObject (true);
-					if (result != null)
-						StoreValue (result);
+                case NU: /* n */
+                    jsonType = JsonType.NULL;
+                    state = N1;
+                    break;
 
-					PopMode (JsonMode.OBJECT);
+                case FA: /* f */
+                    jsonType = JsonType.FALSE;
+                    state = F1;
+                    break;
 
-					jsonType = JsonType.NONE;
-					state = OK;
-					break;
+                case TR: /* t */
+                    jsonType = JsonType.TRUE;
+                    state = T1;
+                    break;
 
-				case AE: /* ] */
-					RemoveLastCharFromBuffer ();
-					if (ParseBuffer (out result))
-						StoreValue (result);
-					PopMode (JsonMode.ARRAY);
-					result = PopObject (true);
-					if (result != null)
-						StoreValue (result);
-					
-					jsonType = JsonType.NONE;
-					state = OK;
-					break;
+                case EO: /* empty } */
+                    result = PopObject(true);
+                    if (result != null)
+                        StoreValue(result);
+                    PopMode(JsonMode.KEY);
+                    state = OK;
+                    break;
 
-				case OS: /* { */
-					RemoveLastCharFromBuffer ();
-					CreateObject ();
-					PushMode (JsonMode.KEY);
-					
-					state = OB;
-					break;
+                case OE: /* } */
+                    RemoveLastCharFromBuffer();
 
-				case AB: /* [ */
-					RemoveLastCharFromBuffer ();
-					CreateArray ();
-					PushMode (JsonMode.ARRAY);
+                    if (ParseBuffer(out result))
+                        StoreValue(result);
 
-					state = AR;
-					break;
+                    result = PopObject(true);
+                    if (result != null)
+                        StoreValue(result);
 
-				case SE: /* string end " or ' */
-					if (ch == quoteChar) {
-						RemoveLastCharFromBuffer ();
+                    PopMode(JsonMode.OBJECT);
 
-						switch (PeekMode ()) {
-							case JsonMode.KEY:
-								if (ParseBuffer (out result))
-									StoreKey (result);
+                    jsonType = JsonType.NONE;
+                    state = OK;
+                    break;
 
-								jsonType = JsonType.NONE;
-								state = CO;
-								buffer.Length = 0;
-								break;
+                case AE: /* ] */
+                    RemoveLastCharFromBuffer();
+                    if (ParseBuffer(out result))
+                        StoreValue(result);
+                    PopMode(JsonMode.ARRAY);
+                    result = PopObject(true);
+                    if (result != null)
+                        StoreValue(result);
 
-							case JsonMode.ARRAY:
-							case JsonMode.OBJECT:
-								if (ParseBuffer (out result))
-									StoreValue (result);
-							
-								jsonType = JsonType.NONE;
-								state = OK;
-								break;
+                    jsonType = JsonType.NONE;
+                    state = OK;
+                    break;
 
-							case JsonMode.NONE: /* A stand-alone string */
-								jsonType = JsonType.STRING;
-								state = IV; /* the rest of input is invalid */
-								if (ParseBuffer (out result))
-									PushObject (result);
-								break;
-							
-							default:
-								throw new ArgumentException ("Syntax error: string in unexpected place.");
-						}
-					}
-					break;
+                case OS: /* { */
+                    RemoveLastCharFromBuffer();
+                    CreateObject();
+                    PushMode(JsonMode.KEY);
 
-				case CM: /* , */
-					RemoveLastCharFromBuffer ();
+                    state = OB;
+                    break;
 
-					// With MS.AJAX, a comma resets the recursion depth
-					recursionDepth = 0;
+                case AB: /* [ */
+                    RemoveLastCharFromBuffer();
+                    CreateArray();
+                    PushMode(JsonMode.ARRAY);
 
-					bool doStore = ParseBuffer (out result);
-					switch (PeekMode ()) {
-						case JsonMode.OBJECT:
-							if (doStore)
-								StoreValue (result);
-							PopMode (JsonMode.OBJECT);
-							PushMode (JsonMode.KEY);
-							jsonType = JsonType.NONE;
-							state = KE;
-							break;
+                    state = AR;
+                    break;
 
-						case JsonMode.ARRAY:
-							jsonType = JsonType.NONE;
-							state = VA;
-							if (doStore)
-								StoreValue (result);
-							break;
+                case SE: /* string end " or ' */
+                    if (ch == quoteChar)
+                    {
+                        RemoveLastCharFromBuffer();
 
-						default:
-							throw new ArgumentException ("Syntax error: unexpected comma.");
-					}
-					
-					break;
+                        switch (PeekMode())
+                        {
+                            case JsonMode.KEY:
+                                if (ParseBuffer(out result))
+                                    StoreKey(result);
 
-				case CA: /* : */
-					RemoveLastCharFromBuffer ();
+                                jsonType = JsonType.NONE;
+                                state = CO;
+                                buffer.Length = 0;
+                                break;
 
-					// With MS.AJAX a colon increases recursion depth
-					if (++recursionDepth >= recursionLimit)
-						throw new ArgumentException ("Recursion limit has been reached on parsing input.");
-					
-					PopMode (JsonMode.KEY);
-					PushMode (JsonMode.OBJECT);
-					state = VA;
-					break;
+                            case JsonMode.ARRAY:
+                            case JsonMode.OBJECT:
+                                if (ParseBuffer(out result))
+                                    StoreValue(result);
 
-				case IF: /* Infinity */
-				case NN: /* NaN */
-					jsonType = JsonType.FLOAT;
-					switch (PeekMode ()) {
-						case JsonMode.ARRAY:
-						case JsonMode.OBJECT:
- 							if (ParseBuffer (out result))
- 								StoreValue (result);
-							
-							jsonType = JsonType.NONE;
-							state = OK;
-							break;
+                                jsonType = JsonType.NONE;
+                                state = OK;
+                                break;
 
-						case JsonMode.NONE: /* A stand-alone NaN/Infinity */
-							jsonType = JsonType.FLOAT;
-							state = IV; /* the rest of input is invalid */
- 							if (ParseBuffer (out result))
- 								PushObject (result);
-							break;
-							
-						default:
-							throw new ArgumentException ("Syntax error: misplaced NaN/Infinity.");
-					}
-					buffer.Length = 0;
-					break;
-					
-				default:
-					throw new ArgumentException (GetModeMessage (PeekMode ()));
-			}
-			
-			return true;
-		}
+                            case JsonMode.NONE: /* A stand-alone string */
+                                jsonType = JsonType.STRING;
+                                state = IV; /* the rest of input is invalid */
+                                if (ParseBuffer(out result))
+                                    PushObject(result);
+                                break;
 
-		void CreateArray ()
-		{
-			var arr = new ArrayList ();
-			PushObject (arr);
-		}
-		
-		void CreateObject ()
-		{
-			var dict = new Dictionary <string, object> ();
-			PushObject (dict);
-		}
+                            default:
+                                throw new ArgumentException("Syntax error: string in unexpected place.");
+                        }
+                    }
+                    break;
 
-		void StoreKey (object o)
-		{
-			string key = o as string;
-			if (key != null)
-				key = key.Trim ();
-			
-			if (String.IsNullOrEmpty (key))
-				throw new InvalidOperationException ("Internal error: key is null, empty or not a string.");
-			
-			currentKey.Push (key);
-			Dictionary <string, object> dict = PeekObject () as Dictionary <string, object>;
-			if (dict == null)
-				throw new InvalidOperationException ("Internal error: current object is not a dictionary.");
+                case CM: /* , */
+                    RemoveLastCharFromBuffer();
 
-			/* MS AJAX.NET silently overwrites existing currentKey value */
-			dict [key] = null;
-		}
+                    // With MS.AJAX, a comma resets the recursion depth
+                    recursionDepth = 0;
 
-		void StoreValue (object o)
-		{
-			Dictionary <string, object> dict = PeekObject () as Dictionary <string, object>;
-			if (dict == null) {
-				ArrayList arr = PeekObject () as ArrayList;
-				if (arr == null)
-					throw new InvalidOperationException ("Internal error: current object is not a dictionary or an array.");
-				arr.Add (o);
-				return;
-			}
+                    var doStore = ParseBuffer(out result);
+                    switch (PeekMode())
+                    {
+                        case JsonMode.OBJECT:
+                            if (doStore)
+                                StoreValue(result);
+                            PopMode(JsonMode.OBJECT);
+                            PushMode(JsonMode.KEY);
+                            jsonType = JsonType.NONE;
+                            state = KE;
+                            break;
 
-			string key;
-			if (currentKey.Count == 0)
-				key = null;
-			else
-				key = currentKey.Pop ();
+                        case JsonMode.ARRAY:
+                            jsonType = JsonType.NONE;
+                            state = VA;
+                            if (doStore)
+                                StoreValue(result);
+                            break;
 
-			if (String.IsNullOrEmpty (key))
-				throw new InvalidOperationException ("Internal error: object is a dictionary, but no key present.");
-			
-			dict [key] = o;
-		}
-	}
+                        default:
+                            throw new ArgumentException("Syntax error: unexpected comma.");
+                    }
+
+                    break;
+
+                case CA: /* : */
+                    RemoveLastCharFromBuffer();
+
+                    // With MS.AJAX a colon increases recursion depth
+                    if (++recursionDepth >= recursionLimit)
+                        throw new ArgumentException("Recursion limit has been reached on parsing input.");
+
+                    PopMode(JsonMode.KEY);
+                    PushMode(JsonMode.OBJECT);
+                    state = VA;
+                    break;
+
+                case IF: /* Infinity */
+                case NN: /* NaN */
+                    jsonType = JsonType.FLOAT;
+                    switch (PeekMode())
+                    {
+                        case JsonMode.ARRAY:
+                        case JsonMode.OBJECT:
+                            if (ParseBuffer(out result))
+                                StoreValue(result);
+
+                            jsonType = JsonType.NONE;
+                            state = OK;
+                            break;
+
+                        case JsonMode.NONE: /* A stand-alone NaN/Infinity */
+                            jsonType = JsonType.FLOAT;
+                            state = IV; /* the rest of input is invalid */
+                            if (ParseBuffer(out result))
+                                PushObject(result);
+                            break;
+
+                        default:
+                            throw new ArgumentException("Syntax error: misplaced NaN/Infinity.");
+                    }
+                    buffer.Length = 0;
+                    break;
+
+                default:
+                    throw new ArgumentException(GetModeMessage(PeekMode()));
+            }
+
+            return true;
+        }
+
+        private void CreateArray()
+        {
+            var arr = new ArrayList();
+            PushObject(arr);
+        }
+
+        private void CreateObject()
+        {
+            var dict = new Dictionary<string, object>();
+            PushObject(dict);
+        }
+
+        private void StoreKey(object o)
+        {
+            var key = o as string;
+            if (key != null)
+                key = key.Trim();
+
+            if (String.IsNullOrEmpty(key))
+                throw new InvalidOperationException("Internal error: key is null, empty or not a string.");
+
+            currentKey.Push(key);
+            var dict = PeekObject() as Dictionary<string, object>;
+            if (dict == null)
+                throw new InvalidOperationException("Internal error: current object is not a dictionary.");
+
+            /* MS AJAX.NET silently overwrites existing currentKey value */
+            dict[key] = null;
+        }
+
+        private void StoreValue(object o)
+        {
+            var dict = PeekObject() as Dictionary<string, object>;
+            if (dict == null)
+            {
+                var arr = PeekObject() as ArrayList;
+                if (arr == null)
+                    throw new InvalidOperationException("Internal error: current object is not a dictionary or an array.");
+                arr.Add(o);
+                return;
+            }
+
+            string key;
+            if (currentKey.Count == 0)
+                key = null;
+            else
+                key = currentKey.Pop();
+
+            if (String.IsNullOrEmpty(key))
+                throw new InvalidOperationException("Internal error: object is a dictionary, but no key present.");
+
+            dict[key] = o;
+        }
+    }
 }

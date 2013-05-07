@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Context for content negotiation.
@@ -16,7 +17,7 @@
         public NegotiationContext()
         {
             this.Cookies = new List<INancyCookie>();
-            this.PermissableMediaRanges = new List<MediaRange>(new[] { (MediaRange)"*/*" });
+            this.PermissableMediaRanges = new List<MediaRange>(new[] {(MediaRange)"*/*"});
             this.MediaRangeModelMappings = new Dictionary<MediaRange, Func<dynamic>>();
             this.Headers = new Dictionary<string, string>();
         }
@@ -38,7 +39,7 @@
         /// </summary>
         /// <value>An <see cref="IDictionary{TKey,TValue}"/> containing the headers.</value>
         public IDictionary<string, string> Headers { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the model mappings for media ranges.
         /// </summary>
@@ -68,7 +69,7 @@
         /// </summary>
         /// <value>A <see cref="HttpStatusCode"/> value.</value>
         public HttpStatusCode? StatusCode { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the view name if one is required.
         /// </summary>
@@ -86,9 +87,9 @@
                 this.MediaRangeModelMappings.Any(
                     m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype));
 
-            return matching ?
-                this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
-                this.DefaultModel;
+            return matching
+                ? this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke()
+                : this.DefaultModel;
         }
     }
 }

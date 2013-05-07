@@ -5,15 +5,10 @@
 
     public class AssertEqualityComparer<T> : IEqualityComparer<T>
     {
-        private static bool IsTypeNullable(Type type)
-        {
-            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof(Nullable<>);
-        }
-
         public bool Equals(T expected, T actual)
         {
             var type =
-                typeof(T);
+                typeof (T);
 
             if (!type.IsValueType || IsTypeNullable(type))
             {
@@ -53,6 +48,11 @@
         public int GetHashCode(T actual)
         {
             throw new NotSupportedException();
+        }
+
+        private static bool IsTypeNullable(Type type)
+        {
+            return type.IsGenericType && type.GetGenericTypeDefinition() == typeof (Nullable<>);
         }
     }
 }

@@ -32,20 +32,20 @@
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Func<INancyRazorView>>>.Ignored))
-                .ReturnsLazily(x =>
-                {
-                    var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, Func<INancyRazorView>>>(1).Invoke(result);
-                });
+             .ReturnsLazily(x =>
+             {
+                 var result = x.GetArgument<ViewLocationResult>(0);
+                 return x.GetArgument<Func<ViewLocationResult, Func<INancyRazorView>>>(1).Invoke(result);
+             });
 
             this.renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => this.renderContext.ViewCache).Returns(cache);
             A.CallTo(() => this.renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
-                .ReturnsLazily(x =>
-                {
-                    var viewName = x.GetArgument<string>(0);
-                    return FindView(viewName);
-                });
+             .ReturnsLazily(x =>
+             {
+                 var viewName = x.GetArgument<string>(0);
+                 return FindView(viewName);
+             });
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "TestViews"));
@@ -64,7 +64,7 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1>")
-            );
+                );
 
             var stream = new MemoryStream();
 
@@ -85,14 +85,14 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(@"@{var x = ""test"";}<h1>Hello Mr. @x</h1> @Html.Partial(""partial.cshtml"")")
-            );
+                );
 
             var partialLocation = new ViewLocationResult(
                 string.Empty,
                 "partial.cshtml",
                 "cshtml",
                 () => new StringReader(@"this is partial")
-            );
+                );
 
             A.CallTo(() => this.renderContext.LocateView("partial.cshtml", null)).Returns(partialLocation);
 
@@ -114,7 +114,7 @@
 
             // Then
             extensions.ShouldHaveCount(2);
-            extensions.ShouldEqualSequence(new[] { "cshtml", "vbhtml" });
+            extensions.ShouldEqualSequence(new[] {"cshtml", "vbhtml"});
         }
 
         [Fact]
@@ -126,7 +126,7 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(@"<h1>Hello Mr. @Model.Name</h1>")
-            );
+                );
 
             var stream = new MemoryStream();
 
@@ -172,11 +172,11 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
-            var model = new Person { Name = "Jeff" };
+            var model = new Person {Name = "Jeff"};
 
             // When
             var response = this.engine.RenderView(location, model, this.renderContext);
@@ -201,11 +201,11 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
-            var model = new Person { Name = "Jeff" };
+            var model = new Person {Name = "Jeff"};
 
             // When
             var response = this.engine.RenderView(location, model, this.renderContext);
@@ -221,10 +221,10 @@
             // Given
             AppDomainAssemblyTypeScanner.AssembliesToScan =
                 AppDomainAssemblyTypeScanner.DefaultAssembliesToScan.Union(new Func<Assembly, bool>[]
-                                                                               {
-                                                                                   x =>
-                                                                                   x.GetName().Name.StartsWith("Nancy")
-                                                                               });
+                {
+                    x =>
+                        x.GetName().Name.StartsWith("Nancy")
+                });
             var view = new StringBuilder()
                 .AppendLine("@model Nancy.ViewEngines.Razor.Tests.Models.Person")
                 .AppendLine(@"@{ var hobby = new Hobby { Name = ""Music"" }; }")
@@ -235,7 +235,7 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
@@ -263,11 +263,11 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
-            var model = new Person { Name = "Jeff" };
+            var model = new Person {Name = "Jeff"};
 
             A.CallTo(() => this.configuration.AutoIncludeModelNamespace).Returns(true);
 
@@ -279,7 +279,7 @@
             stream.ShouldEqual("<h1>Mr. Jeff likes Music!</h1>", true);
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void RenderView_vb_should_use_model_directive_for_strongly_typed_view()
         {
@@ -351,8 +351,8 @@
             // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
-                                        "<div>First section in ViewThatUsesLayoutAndSection</div>",
-                                        "<div>ViewThatUsesLayoutAndSection</div>");
+                "<div>First section in ViewThatUsesLayoutAndSection</div>",
+                "<div>ViewThatUsesLayoutAndSection</div>");
         }
 
 
@@ -371,10 +371,10 @@
             // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
-                                        "<div>First section in ViewThatUsesLayoutAndManySection</div>",
-                                        "<div>Second section in ViewThatUsesLayoutAndManySection</div>",
-                                        "<div>ViewThatUsesLayoutAndManySection</div>",
-                                        "<div>Third section in ViewThatUsesLayoutAndManySection</div>");
+                "<div>First section in ViewThatUsesLayoutAndManySection</div>",
+                "<div>Second section in ViewThatUsesLayoutAndManySection</div>",
+                "<div>ViewThatUsesLayoutAndManySection</div>",
+                "<div>Third section in ViewThatUsesLayoutAndManySection</div>");
         }
 
         [Fact]
@@ -392,7 +392,7 @@
             // Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SimplyLayout</h1>",
-                                        "<div>ViewThatUsesLayoutAndOptionalSection</div>");
+                "<div>ViewThatUsesLayoutAndOptionalSection</div>");
         }
 
         [Fact]
@@ -409,8 +409,8 @@
             //Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
-                                        "<div>OptionalSectionDefault</div>",
-                                        "<div>ViewThatUsesLayoutAndOptionalSectionWithDefaults</div>");
+                "<div>OptionalSectionDefault</div>",
+                "<div>ViewThatUsesLayoutAndOptionalSectionWithDefaults</div>");
         }
 
         [Fact]
@@ -427,8 +427,8 @@
             //Then
             var output = ReadAll(stream);
             output.ShouldContainInOrder("<h1>SectionWithDefaultsLayout</h1>",
-                                        "<div>OptionalSectionOverride</div>",
-                                        "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
+                "<div>OptionalSectionOverride</div>",
+                "<div>ViewThatUsesLayoutAndOptionalSectionOverridingDefaults</div>");
         }
 
         [Fact]
@@ -461,11 +461,11 @@
                 string.Empty,
                 "cshtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
-            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
+            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] {"Nancy.ViewEngines.Razor.Tests"});
 
             // When
             var response = this.engine.RenderView(location, null, this.renderContext);
@@ -476,7 +476,7 @@
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 
-#if !__MonoCS__			
+#if !__MonoCS__
         [Fact]
         public void Should_use_custom_view_base_with_vb_views()
         {
@@ -490,11 +490,11 @@
                 string.Empty,
                 "vbhtml",
                 () => new StringReader(view.ToString())
-            );
+                );
 
             var stream = new MemoryStream();
 
-            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] { "Nancy.ViewEngines.Razor.Tests" });
+            A.CallTo(() => this.configuration.GetAssemblyNames()).Returns(new[] {"Nancy.ViewEngines.Razor.Tests"});
 
             // When
             var response = this.engine.RenderView(location, null, this.renderContext);
@@ -505,6 +505,7 @@
             output.ShouldEqual("<h1>Hi, Nancy!</h1>");
         }
 #endif
+
         [Fact(Skip = "Multi-threading regression test")]
         public void should_work_on_multiple_threads()
         {
@@ -525,11 +526,11 @@
 
             // When
             ThreadPool.QueueUserWorkItem(_ =>
-                {
-                    var response2 = this.engine.RenderView(location, null, this.renderContext);
-                    response2.Contents.Invoke(new MemoryStream());
-                    wait.Set();
-                });
+            {
+                var response2 = this.engine.RenderView(location, null, this.renderContext);
+                response2.Contents.Invoke(new MemoryStream());
+                wait.Set();
+            });
             var response = this.engine.RenderView(location, null, this.renderContext);
             response.Contents.Invoke(stream);
 
@@ -546,7 +547,7 @@
             var stream = new MemoryStream();
 
             //When
-            var response = this.engine.RenderView(location, new TestModel { Name = "Bob", Slug = "BobSlug" }, this.renderContext);
+            var response = this.engine.RenderView(location, new TestModel {Name = "Bob", Slug = "BobSlug"}, this.renderContext);
             response.Contents.Invoke(stream);
 
             //Then
@@ -589,14 +590,12 @@
         {
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
-            {
                 return reader.ReadToEnd();
-            }
         }
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "cshtml", "vbhtml" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"cshtml", "vbhtml"}).First(r => r.Name == viewName);
             return location;
         }
     }

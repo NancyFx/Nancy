@@ -3,9 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Json;
 
     using Nancy.IO;
+    using Nancy.Json;
 
     public class DefaultJsonSerializer : ISerializer
     {
@@ -40,7 +40,7 @@
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
                 var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
-            
+
                 serializer.RegisterConverters(JsonSettings.Converters);
 
                 serializer.Serialize(model, writer);
@@ -67,10 +67,10 @@
             var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/json", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.StartsWith("application/json-", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+                contentMimeType.StartsWith("application/json-", StringComparison.InvariantCultureIgnoreCase) ||
+                contentMimeType.Equals("text/json", StringComparison.InvariantCultureIgnoreCase) ||
+                (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
+                    contentMimeType.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

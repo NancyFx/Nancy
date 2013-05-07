@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Resources.Views
+﻿namespace Nancy.Tests.Resources.Views
 {
     public static class SuperSimpleViewEngineSampleContent
     {
-        public static string testFileInput = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
+        public static string testFileInput =
+            @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 <html xmlns=""http://www.w3.org/1999/xhtml"">
 <head>
     <title>@Model.Title</title>
@@ -48,7 +44,8 @@ namespace Nancy.Tests.Resources.Views
 </html>
 ";
 
-        public static string ExpectedOutput = @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
+        public static string ExpectedOutput =
+            @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">
 <html xmlns=""http://www.w3.org/1999/xhtml"">
 <head>
     <title>Demonstration of Nancy's SuperSimple ViewEngine</title>

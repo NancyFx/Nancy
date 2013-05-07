@@ -3,7 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class ModelBindingExceptionFixture
@@ -24,7 +26,7 @@
         public void Ctor_should_set_empty_property_exceptions_list_if_null_is_provided()
         {
             //When
-            var exception = new ModelBindingException(typeof(string), null);
+            var exception = new ModelBindingException(typeof (string), null);
 
             //Then
             exception.PropertyBindingExceptions.Any().ShouldBeFalse();
@@ -44,7 +46,7 @@
         public void Ctor_should_throw_on_null_type()
         {
             Assert.Throws<ArgumentNullException>(() => new ModelBindingException(null))
-                .ParamName.ShouldEqual("boundType");
+                  .ParamName.ShouldEqual("boundType");
         }
 
         [Fact]
@@ -54,7 +56,7 @@
             var exception = new ModelBindingException(typeof (string));
 
             //then
-            exception.Message.ShouldEqual(String.Format("Unable to bind to type: {0}", typeof(string)));
+            exception.Message.ShouldEqual(String.Format("Unable to bind to type: {0}", typeof (string)));
         }
     }
 }

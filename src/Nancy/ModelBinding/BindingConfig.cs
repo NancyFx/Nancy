@@ -6,22 +6,22 @@
     public class BindingConfig
     {
         /// <summary>
+        /// Binding configuration that permitts that the binder overwrites non-default values.
+        /// </summary>
+        public static BindingConfig NoOverwrite = new BindingConfig {Overwrite = false};
+
+        /// <summary>
+        /// Default binding configuration.
+        /// </summary>
+        public static BindingConfig Default = new BindingConfig();
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BindingConfig"/> class.
         /// </summary>
         public BindingConfig()
         {
             this.Overwrite = true;
         }
-
-        /// <summary>
-        /// Binding configuration that permitts that the binder overwrites non-default values.
-        /// </summary>
-        public static BindingConfig NoOverwrite = new BindingConfig { Overwrite = false };
-
-        /// <summary>
-        /// Default binding configuration.
-        /// </summary>
-        public static BindingConfig Default = new BindingConfig();
 
         /// <summary>
         /// Gets or sets whether the binder is allowed to overwrite properties that does not have a default value.

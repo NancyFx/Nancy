@@ -1,20 +1,22 @@
 ﻿namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class PropertyBindingExceptionFixture
     {
-        const string PROPERTY_NAME = "PropName";
-        const string ATTEMPTED_VALUE = "wrong value";
+        private const string PROPERTY_NAME = "PropName";
+        private const string ATTEMPTED_VALUE = "wrong value";
 
         [Fact]
         public void Ctor_should_set_property_name_and_attempted_value_and_inner_exception()
         {
             //When
             var innerException = new Exception();
-            
+
             var exception = new PropertyBindingException(PROPERTY_NAME, ATTEMPTED_VALUE, innerException);
 
             //Then

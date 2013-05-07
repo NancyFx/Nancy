@@ -2,40 +2,42 @@ namespace Nancy.Authentication.Forms.Tests
 {
     using System;
     using System.Linq;
-    using Bootstrapper;
-    using Cryptography;
+
     using FakeItEasy;
-    using Fakes;
-    using Helpers;
-    using Nancy.Security;
+
+    using Nancy.Authentication.Forms.Tests.Fakes;
+    using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
+    using Nancy.Helpers;
     using Nancy.Tests;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class FormsAuthenticationFixture
     {
-        private FormsAuthenticationConfiguration config;
-        private FormsAuthenticationConfiguration secureConfig;
-        private FormsAuthenticationConfiguration domainPathConfig;
-        private NancyContext context;
-        private Guid userGuid;
+        private readonly FormsAuthenticationConfiguration config;
+        private readonly NancyContext context;
 
-        private string validCookieValue =
-            HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
-
-        private string cookieWithNoHmac =
-            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
-
-        private string cookieWithEmptyHmac =
-            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
-
-        private string cookieWithInvalidHmac =
-            HttpUtility.UrlEncode("C+QzbqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
-
-        private string cookieWithBrokenEncryptedData =
+        private readonly string cookieWithBrokenEncryptedData =
             HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3spwI0jB0KeVY9");
 
-        private CryptographyConfiguration cryptographyConfiguration;
+        private readonly string cookieWithEmptyHmac =
+            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
+
+        private readonly string cookieWithInvalidHmac =
+            HttpUtility.UrlEncode("C+QzbqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
+
+        private readonly string cookieWithNoHmac =
+            HttpUtility.UrlEncode("k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
+
+        private readonly CryptographyConfiguration cryptographyConfiguration;
+        private readonly FormsAuthenticationConfiguration domainPathConfig;
+        private readonly FormsAuthenticationConfiguration secureConfig;
+        private readonly Guid userGuid;
+
+        private readonly string validCookieValue =
+            HttpUtility.UrlEncode("C+QzBqI2qSE6Qk60fmCsoMsQNLbQtCAFd5cpcy1xhu4=k+1IvvzkgKgfOK2/EgIr7Ut15f47a0fnlgH9W+Lzjv/a2Zkfxg3sZwI0jB0KeVY9");
 
         private string domain = ".nancyfx.org";
 
@@ -44,8 +46,8 @@ namespace Nancy.Authentication.Forms.Tests
         public FormsAuthenticationFixture()
         {
             this.cryptographyConfiguration = new CryptographyConfiguration(
-                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000)),
-                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000)));
+                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass", new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, 1000)),
+                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure", new byte[] {1, 2, 3, 4, 5, 6, 7, 8}, 1000)));
 
             this.config = new FormsAuthenticationConfiguration()
             {
@@ -74,11 +76,11 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             this.context = new NancyContext
-                               {
-                                    Request = new Request(
-                                                    "GET",
-                                                    new Url { Scheme = "http", BasePath = "/testing", HostName = "test.com", Path = "test" })
-                               };
+            {
+                Request = new Request(
+                    "GET",
+                    new Url {Scheme = "http", BasePath = "/testing", HostName = "test.com", Path = "test"})
+            };
 
             this.userGuid = new Guid("3D97EB33-824A-4173-A2C1-633AC16C1010");
         }
@@ -88,7 +90,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var result = Record.Exception(() => FormsAuthentication.Enable(null, this.config));
 
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -96,7 +98,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var result = Record.Exception(() => FormsAuthentication.Enable(A.Fake<IPipelines>(), null));
 
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -106,7 +108,7 @@ namespace Nancy.Authentication.Forms.Tests
             A.CallTo(() => fakeConfig.IsValid).Returns(false);
             var result = Record.Exception(() => FormsAuthentication.Enable(A.Fake<IPipelines>(), fakeConfig));
 
-            result.ShouldBeOfType(typeof(ArgumentException));
+            result.ShouldBeOfType(typeof (ArgumentException));
         }
 
         [Fact]
@@ -117,9 +119,9 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(pipelines, this.config);
 
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -131,9 +133,9 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(pipelines, this.config);
 
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
-                .MustNotHaveHappened();
+             .MustNotHaveHappened();
         }
 
         [Fact]
@@ -143,7 +145,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
         }
 
@@ -157,7 +159,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInResponse(userGuid);
 
             // Then
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
@@ -195,7 +197,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             //Then
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .HttpOnly.ShouldBeTrue();
+                  .HttpOnly.ShouldBeTrue();
         }
 
         [Fact]
@@ -209,7 +211,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .HttpOnly.ShouldBeTrue();
+                  .HttpOnly.ShouldBeTrue();
         }
 
         [Fact]
@@ -220,7 +222,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .Expires.ShouldBeNull();
+                  .Expires.ShouldBeNull();
         }
 
         [Fact]
@@ -234,7 +236,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .Expires.ShouldBeNull();
+                  .Expires.ShouldBeNull();
         }
 
         [Fact]
@@ -245,7 +247,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .Expires.ShouldNotBeNull();
+                  .Expires.ShouldNotBeNull();
         }
 
         [Fact]
@@ -259,7 +261,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies.Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName).First()
-                .Expires.ShouldNotBeNull();
+                  .Expires.ShouldNotBeNull();
         }
 
         [Fact]
@@ -272,7 +274,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
             A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -288,7 +290,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             A.CallTo(() => mockEncrypter.Encrypt(A<string>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -297,7 +299,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeEncrypter = A.Fake<IEncryptionProvider>();
             var fakeCryptoText = "FakeText";
             A.CallTo(() => fakeEncrypter.Encrypt(A<string>.Ignored))
-                .Returns(fakeCryptoText);
+             .Returns(fakeCryptoText);
             var mockHmac = A.Fake<IHmacProvider>();
             this.config.CryptographyConfiguration = new CryptographyConfiguration(fakeEncrypter, mockHmac);
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
@@ -305,7 +307,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, DateTime.Now.AddDays(1));
 
             A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -315,7 +317,7 @@ namespace Nancy.Authentication.Forms.Tests
             var fakeEncrypter = A.Fake<IEncryptionProvider>();
             var fakeCryptoText = "FakeText";
             A.CallTo(() => fakeEncrypter.Encrypt(A<string>.Ignored))
-                .Returns(fakeCryptoText);
+             .Returns(fakeCryptoText);
             var mockHmac = A.Fake<IHmacProvider>();
             this.config.CryptographyConfiguration = new CryptographyConfiguration(fakeEncrypter, mockHmac);
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
@@ -325,7 +327,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             A.CallTo(() => mockHmac.GenerateHmac(fakeCryptoText))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -335,7 +337,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.LogOutAndRedirectResponse(context, "/");
 
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
         }
 
@@ -349,7 +351,7 @@ namespace Nancy.Authentication.Forms.Tests
             var result = FormsAuthentication.LogOutResponse();
 
             // Then
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
 
@@ -394,7 +396,7 @@ namespace Nancy.Authentication.Forms.Tests
             fakePipelines.BeforeRequest.Invoke(this.context);
 
             A.CallTo(() => mockMapper.GetUserFromIdentifier(this.userGuid, this.context))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -418,7 +420,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -434,7 +436,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -450,7 +452,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -466,7 +468,7 @@ namespace Nancy.Authentication.Forms.Tests
         {
             var fakePipelines = new Pipelines();
             var fakeMapper = A.Fake<IUserMapper>();
-            var fakeUser = new FakeUserIdentity { UserName = "Bob" };
+            var fakeUser = new FakeUserIdentity {UserName = "Bob"};
             A.CallTo(() => fakeMapper.GetUserFromIdentifier(this.userGuid, this.context)).Returns(fakeUser);
             this.config.UserMapper = fakeMapper;
             FormsAuthentication.Enable(fakePipelines, this.config);
@@ -593,9 +595,9 @@ namespace Nancy.Authentication.Forms.Tests
 
             //Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
-                    .First()
-                    .Secure.ShouldBeTrue();
+                  .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                  .First()
+                  .Secure.ShouldBeTrue();
         }
 
         [Fact]
@@ -609,9 +611,9 @@ namespace Nancy.Authentication.Forms.Tests
 
             // Then
             result.Cookies
-                    .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
-                    .First()
-                    .Secure.ShouldBeTrue();
+                  .Where(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName)
+                  .First()
+                  .Secure.ShouldBeTrue();
         }
 
         [Fact]
@@ -647,7 +649,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
             result.Headers["Location"].ShouldEqual("/testing");
         }
@@ -658,9 +660,9 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(A.Fake<IPipelines>(), this.config);
             context.Request.Query[config.RedirectQuerystringKey] = "http://moo.com/";
 
-            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, fallbackRedirectUrl:"/moo");
+            var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid, fallbackRedirectUrl: "/moo");
 
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
             result.Headers["Location"].ShouldEqual("/moo");
         }
@@ -673,7 +675,7 @@ namespace Nancy.Authentication.Forms.Tests
 
             var result = FormsAuthentication.UserLoggedInRedirectResponse(context, userGuid);
 
-            result.ShouldBeOfType(typeof(Response));
+            result.ShouldBeOfType(typeof (Response));
             result.StatusCode.ShouldEqual(HttpStatusCode.SeeOther);
             result.Headers["Location"].ShouldEqual("/testing/login");
         }

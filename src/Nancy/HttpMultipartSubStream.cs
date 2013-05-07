@@ -8,10 +8,10 @@
     /// </summary>
     public class HttpMultipartSubStream : Stream
     {
-        private readonly Stream stream;
-        private long start;
         private readonly long end;
+        private readonly Stream stream;
         private long position;
+        private long start;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="HttpMultipartSubStream"/> class.
@@ -108,8 +108,7 @@
         /// </summary>
         /// <remarks>In the <see cref="HttpMultipartSubStream"/> type this method is implemented as no-op.</remarks>
         public override void Flush()
-        {
-        }
+        {}
 
         /// <summary>
         /// When overridden in a derived class, reads a sequence of bytes from the current stream and advances the position within the stream by the number of bytes read.
@@ -154,7 +153,7 @@
             this.stream.Position = this.position;
 
             var byteReadFromStream = this.stream.ReadByte();
-            
+
             this.RepositionAfterRead(1);
 
             return byteReadFromStream;
@@ -180,7 +179,7 @@
         /// <param name="origin">A value of type <see cref="SeekOrigin"/> indicating the reference point used to obtain the new position.</param>
         public override long Seek(long offset, SeekOrigin origin)
         {
-            var subStreamRelativePosition = 
+            var subStreamRelativePosition =
                 this.CalculateSubStreamRelativePosition(origin, offset);
 
             this.ThrowExceptionIsPositionIsOutOfBounds(subStreamRelativePosition);

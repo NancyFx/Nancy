@@ -8,28 +8,23 @@ namespace Nancy.Demo.Hosting.Self
     {
         public TestModule()
         {
-            Get["/"] = parameters => {
-                return View["staticview", this.Request.Url];
-            };
+            Get["/"] = parameters => { return View["staticview", this.Request.Url]; };
 
-            Get["/testing"] = parameters =>
-            {
-                return View["staticview", this.Request.Url];
-            };
+            Get["/testing"] = parameters => { return View["staticview", this.Request.Url]; };
 
             Get["/fileupload"] = x =>
             {
-                var model = new Index() { Name = "Boss Hawg" };
+                var model = new Index() {Name = "Boss Hawg"};
 
                 return View["FileUpload", model];
             };
 
             Post["/fileupload"] = x =>
             {
-                var model = new Index() { Name = "Boss Hawg" };
+                var model = new Index() {Name = "Boss Hawg"};
 
                 var file = this.Request.Files.FirstOrDefault();
-                string fileDetails = "None";
+                var fileDetails = "None";
 
                 if (file != null)
                 {

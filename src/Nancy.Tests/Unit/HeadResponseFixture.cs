@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System.Collections.Generic;
-    using Tests.Extensions;
+
+    using Nancy.Tests.Extensions;
+
     using Xunit;
 
     public class HeadResponseFixture
@@ -11,8 +13,8 @@ namespace Nancy.Tests.Unit
 
         public HeadResponseFixture()
         {
-            this.headers = new Dictionary<string, string> { { "Test", "Value " } };
-            this.response = new Response { ContentType = "application/json", Headers = headers, StatusCode = HttpStatusCode.ResetContent };
+            this.headers = new Dictionary<string, string> {{"Test", "Value "}};
+            this.response = new Response {ContentType = "application/json", Headers = headers, StatusCode = HttpStatusCode.ResetContent};
         }
 
         [Fact]

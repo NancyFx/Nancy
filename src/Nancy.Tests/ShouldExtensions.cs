@@ -5,6 +5,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+
     using Xunit;
 
     public static class ShouldAssertExtensions
@@ -37,7 +38,7 @@
         public static void ShouldImplementInterface<T>(this Type actual)
         {
             var found =
-                actual.GetInterfaces().Contains(typeof(T));
+                actual.GetInterfaces().Contains(typeof (T));
 
             Assert.True(found);
         }
@@ -46,7 +47,7 @@
         {
             var selection =
                 from c in collection.Cast<object>()
-                where c.GetType().IsAssignableFrom(typeof(T))
+                where c.GetType().IsAssignableFrom(typeof (T))
                 select c;
 
             Assert.True(selection.Any());
@@ -54,10 +55,10 @@
 
         public static void ShouldContainInOrder(this string actual, params string[] values)
         {
-            int index = 0;
-            foreach (string value in values)
+            var index = 0;
+            foreach (var value in values)
             {
-                int nextIndex = actual.IndexOf(value, index);
+                var nextIndex = actual.IndexOf(value, index);
                 Assert.True(nextIndex >= 0, string.Format("Looking for {0}", value));
                 index = nextIndex + value.Length;
             }
@@ -145,12 +146,12 @@
 
         public static void ShouldBeOfType<T>(this Type asserted)
         {
-            Assert.True(asserted == typeof(T));
+            Assert.True(asserted == typeof (T));
         }
 
         public static void ShouldBeOfType<T>(this object asserted)
         {
-            asserted.ShouldBeOfType(typeof(T));
+            asserted.ShouldBeOfType(typeof (T));
         }
 
         public static void ShouldBeOfType(this object asserted, Type expected)
@@ -160,7 +161,7 @@
 
         public static void ShouldNotBeOfType<T>(this object asserted)
         {
-            Assert.True(!asserted.GetType().Equals(typeof(T)));
+            Assert.True(!asserted.GetType().Equals(typeof (T)));
         }
 
         public static void ShouldBeThrownBy(this Type expectedType, Action context)
@@ -181,7 +182,7 @@
             using (var reader = new StreamReader(stream))
             {
                 var actual = reader.ReadToEnd();
-                    
+
                 if (trim)
                 {
                     actual = actual.Trim();

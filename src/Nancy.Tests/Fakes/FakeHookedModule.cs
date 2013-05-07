@@ -8,5 +8,4 @@ namespace Nancy.Tests.Fakes
             this.After = after;
         }
     }
-
 }

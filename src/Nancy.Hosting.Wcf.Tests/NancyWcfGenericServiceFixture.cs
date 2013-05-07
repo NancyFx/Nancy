@@ -5,10 +5,13 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Web;
-    using Bootstrapper;
+
     using FakeItEasy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Tests;
     using Nancy.Tests.xUnitExtensions;
+
     using Xunit;
 
     /// <remarks>
@@ -46,7 +49,7 @@ namespace Nancy.Hosting.Wcf.Tests
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
+             .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
@@ -79,14 +82,14 @@ namespace Nancy.Hosting.Wcf.Tests
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request) f.Arguments[0]);
+             .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             var baseUriWithoutTrailingSlash = new Uri("http://localhost:1234/base");
 
             // When
-            using(CreateAndOpenWebServiceHost(fakeBootstrapper, baseUriWithoutTrailingSlash))
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper, baseUriWithoutTrailingSlash))
             {
                 var request = WebRequest.Create(new Uri(BaseUri, "test/stuff"));
                 request.Method = "GET";
@@ -95,7 +98,7 @@ namespace Nancy.Hosting.Wcf.Tests
                 {
                     request.GetResponse();
                 }
-                catch(WebException)
+                catch (WebException)
                 {
                     // Will throw because it returns 404 - don't care.
                 }
@@ -131,16 +134,16 @@ namespace Nancy.Hosting.Wcf.Tests
             {
                 const string testBody = "This is the body of the request";
 
-                var request = 
+                var request =
                     WebRequest.Create(new Uri(BaseUri, "rel"));
                 request.Method = "POST";
 
-                var writer = 
+                var writer =
                     new StreamWriter(request.GetRequestStream()) {AutoFlush = true};
                 writer.Write(testBody);
 
                 // When
-                var responseBody = 
+                var responseBody =
                     new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
                 // Then
@@ -157,20 +160,20 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);            
+             .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When 
-            using (CreateAndOpenWebServiceHost(fakeBootstrapper)) 
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper))
             {
                 var request = WebRequest.Create(BaseUri);
                 request.Method = "GET";
 
-                try 
+                try
                 {
                     request.GetResponse();
                 }
-                catch (WebException) 
+                catch (WebException)
                 {
                     // Will throw because it returns 404 - don't care.
                 }
@@ -198,7 +201,7 @@ namespace Nancy.Hosting.Wcf.Tests
             {
                 host.Open();
             }
-            catch (System.ServiceModel.AddressAccessDeniedException)
+            catch (AddressAccessDeniedException)
             {
                 throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
             }

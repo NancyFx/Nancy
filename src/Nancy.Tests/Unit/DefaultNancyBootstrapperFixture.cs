@@ -1,12 +1,13 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using System.Linq;
     using System.CodeDom.Compiler;
+    using System.Linq;
+
     using Microsoft.CSharp;
 
     using Nancy.Tests.Fakes;
     using Nancy.TinyIoc;
-    
+
     using Xunit;
 
     public class DefaultNancyBootstrapperFixture
@@ -78,10 +79,9 @@
                     })
                 .CompiledAssembly;
 
-            this.bootstrapper.Initialise ();
+            this.bootstrapper.Initialise();
             Assert.Throws<TinyIoCResolutionException>(
                 () => this.bootstrapper.Container.Resolve(ass.GetType("IWillNotBeResolved")));
-            
         }
     }
 }

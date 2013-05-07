@@ -6,21 +6,21 @@
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Nancy.Conventions;
 
+    using Nancy.Conventions;
 
     /// <summary>
     /// The default implementation for how views are resolved and rendered by Nancy.
     /// </summary>
     public class DefaultViewFactory : IViewFactory
     {
-        private readonly IViewResolver viewResolver;
-        private readonly IEnumerable<IViewEngine> viewEngines;
-        private readonly IRenderContextFactory renderContextFactory;
-        private readonly ViewLocationConventions conventions;
-        private readonly IRootPathProvider rootPathProvider;
         private static readonly Action<Stream> EmptyView = x => { };
+        private readonly ViewLocationConventions conventions;
+        private readonly IRenderContextFactory renderContextFactory;
+        private readonly IRootPathProvider rootPathProvider;
         private readonly string[] viewEngineExtensions;
+        private readonly IEnumerable<IViewEngine> viewEngines;
+        private readonly IViewResolver viewResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultViewFactory"/> class.
@@ -30,7 +30,8 @@
         /// <param name="renderContextFactory">A <see cref="IRenderContextFactory"/> instance that should be used to create an <see cref="IRenderContext"/> when a view is rendered.</param>
         /// <param name="conventions">An <see cref="ViewLocationConventions"/> instance that should be used to resolve all possible view locations </param>
         /// <param name="rootPathProvider">An <see cref="IRootPathProvider"/> instance.</param>
-        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory, ViewLocationConventions conventions, IRootPathProvider rootPathProvider)
+        public DefaultViewFactory(IViewResolver viewResolver, IEnumerable<IViewEngine> viewEngines, IRenderContextFactory renderContextFactory,
+            ViewLocationConventions conventions, IRootPathProvider rootPathProvider)
         {
             this.viewResolver = viewResolver;
             this.viewEngines = viewEngines;
@@ -65,10 +66,11 @@
                 throw new ArgumentNullException("viewLocationContext", "The value of the viewLocationContext parameter cannot be null.");
             }
 
-            var actualViewName = 
+            var actualViewName =
                 viewName ?? GetViewNameFromModel(model, viewLocationContext.Context);
 
-            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with name ", actualViewName)));
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with name ", actualViewName)));
 
             return this.GetRenderedView(actualViewName, model, viewLocationContext);
         }
@@ -78,23 +80,26 @@
             var viewLocationResult =
                 this.viewResolver.GetViewLocation(viewName, model, viewLocationContext);
 
-            var resolvedViewEngine = 
+            var resolvedViewEngine =
                 GetViewEngine(viewLocationResult, viewLocationContext.Context);
 
             if (resolvedViewEngine == null)
             {
-                viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewFactory] Unable to find view engine that could render the view."));
-                throw new ViewNotFoundException(viewName, this.viewEngineExtensions, this.GetInspectedLocations(viewName, model, viewLocationContext), this.rootPathProvider);
+                viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                    x => x.AppendLine("[DefaultViewFactory] Unable to find view engine that could render the view."));
+                throw new ViewNotFoundException(viewName, this.viewEngineExtensions, this.GetInspectedLocations(viewName, model, viewLocationContext),
+                    this.rootPathProvider);
             }
 
-            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with view engine ", resolvedViewEngine.GetType().FullName)));
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine(string.Concat("[DefaultViewFactory] Rendering view with view engine ", resolvedViewEngine.GetType().FullName)));
 
             return SafeInvokeViewEngine(
                 resolvedViewEngine,
                 viewLocationResult,
                 GetSafeModel(model),
                 this.renderContextFactory.GetRenderContext(viewLocationContext)
-            );
+                );
         }
 
         private string[] GetInspectedLocations(string viewName, dynamic model, ViewLocationContext viewLocationContext)
@@ -105,7 +110,9 @@
                 try
                 {
                     strings.Add(convention.Invoke(viewName, model, viewLocationContext));
-                } catch{ }                
+                }
+                catch
+                {}
             }
             return strings.ToArray();
         }
@@ -121,9 +128,7 @@
             IDictionary<string, object> results = expandoObject;
 
             foreach (var propertyInfo in source.GetType().GetProperties())
-            {
                 results[propertyInfo.Name] = propertyInfo.GetValue(source, null);
-            }
 
             return expandoObject;
         }
@@ -135,9 +140,10 @@
                 return null;
             }
 
-            context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Attempting to resolve view engine for view extension ", viewLocationResult.Extension)));
+            context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine(string.Concat("[DefaultViewFactory] Attempting to resolve view engine for view extension ", viewLocationResult.Extension)));
 
-            var matchingViewEngines = 
+            var matchingViewEngines =
                 from viewEngine in this.viewEngines
                 where viewEngine.Extensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.InvariantCultureIgnoreCase))
                 select viewEngine;
@@ -147,7 +153,8 @@
 
         private static string GetViewNameFromModel(dynamic model, NancyContext context)
         {
-            context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewFactory] Extracting view name from model of type ", model.GetType().FullName)));
+            context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine(string.Concat("[DefaultViewFactory] Extracting view name from model of type ", model.GetType().FullName)));
 
             return Regex.Replace(model.GetType().Name, "Model$", string.Empty);
         }

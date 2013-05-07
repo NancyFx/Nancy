@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
+
     using Nancy.Validation.Rules;
+
     using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
 
@@ -18,8 +20,7 @@
         /// <param name="validator">The <see cref="IPropertyValidator"/> of the rule.</param>
         public LessThanOrEqualAdapter(PropertyRule rule, LessThanOrEqualValidator validator)
             : base(rule, validator)
-        {
-        }
+        {}
 
         /// <summary>
         /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.

@@ -8,11 +8,11 @@
     /// </summary>
     public class DynamicModelBinderAdapter : DynamicObject
     {
-        private readonly IModelBinderLocator locator;
+        private readonly string[] blacklistedProperties;
+        private readonly BindingConfig configuration;
         private readonly NancyContext context;
         private readonly object instance;
-        private readonly BindingConfig configuration;
-        private readonly string[] blacklistedProperties;
+        private readonly IModelBinderLocator locator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DynamicModelBinderAdapter"/> class.
@@ -22,7 +22,8 @@
         /// <param name="instance">Optional existing instance, or null</param>
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Blacklisted property names</param>
-        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, object instance, BindingConfig configuration, params string[] blacklistedProperties)
+        public DynamicModelBinderAdapter(IModelBinderLocator locator, NancyContext context, object instance, BindingConfig configuration,
+            params string[] blacklistedProperties)
         {
             if (locator == null)
             {

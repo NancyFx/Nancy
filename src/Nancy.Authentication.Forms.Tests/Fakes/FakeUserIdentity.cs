@@ -1,7 +1,8 @@
 namespace Nancy.Authentication.Forms.Tests.Fakes
 {
     using System.Collections.Generic;
-    using Security;
+
+    using Nancy.Security;
 
     public class FakeUserIdentity : IUserIdentity
     {

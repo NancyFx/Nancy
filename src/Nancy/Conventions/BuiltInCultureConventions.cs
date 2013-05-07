@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Threading;
+
     using Nancy.Session;
 
     /// <summary>
@@ -13,17 +14,17 @@
     /// </summary>
     public static class BuiltInCultureConventions
     {
+        static BuiltInCultureConventions()
+        {
+            CultureNames = new HashSet<string>(
+                CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name),
+                StringComparer.OrdinalIgnoreCase);
+        }
+
         /// <summary>
         /// Gets a set of all valid cultures
         /// </summary>
         public static HashSet<string> CultureNames { get; private set; }
-
-        static BuiltInCultureConventions()
-        {
-            CultureNames = new HashSet<string>(
-                                    CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name),
-                                    StringComparer.OrdinalIgnoreCase);
-        }
 
         /// <summary>
         /// Checks to see if the Form has a CurrentCulture key.
@@ -35,7 +36,7 @@
             if (context.Request.Form["CurrentCulture"] != null)
             {
                 string cultureLetters = context.Request.Form["CurrentCulture"];
-                
+
                 if (!IsValidCultureInfoName(cultureLetters))
                 {
                     return null;
@@ -54,15 +55,15 @@
         /// <returns>CultureInfo if found in Path otherwise null</returns>
         public static CultureInfo PathCulture(NancyContext context)
         {
-            var segments = 
-                context.Request.Url.Path.Split(new[] { '/' }, StringSplitOptions.RemoveEmptyEntries);
+            var segments =
+                context.Request.Url.Path.Split(new[] {'/'}, StringSplitOptions.RemoveEmptyEntries);
 
             var firstSegment =
                 segments.FirstOrDefault();
 
             if (firstSegment != null && IsValidCultureInfoName(firstSegment))
             {
-                context.Request.Url.Path = 
+                context.Request.Url.Path =
                     string.Concat("/", string.Join("/", segments.Skip(1)));
 
                 return new CultureInfo(firstSegment);

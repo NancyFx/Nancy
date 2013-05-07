@@ -7,21 +7,54 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Runtime.CompilerServices;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
+
     using Nancy.Bootstrapper;
+    using Nancy.Helpers;
     using Nancy.Responses;
-    using Nancy.Localization;
     using Nancy.ViewEngines.Razor.CSharp;
+    using Nancy.ViewEngines.Razor.VisualBasic;
 
     /// <summary>
     /// View engine for rendering razor views.
     /// </summary>
     public class RazorViewEngine : IViewEngine, IDisposable
     {
+        private readonly object compileLock = new object();
         private readonly IRazorConfiguration razorConfiguration;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
-        private readonly object compileLock = new object();
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
+        /// </summary>
+        /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
+        public RazorViewEngine(IRazorConfiguration configuration)
+        {
+            this.viewRenderers = new List<IRazorViewRenderer>
+            {
+                new CSharpRazorViewRenderer(),
+                new VisualBasicRazorViewRenderer()
+            };
+
+            this.razorConfiguration = configuration;
+        }
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <filterpriority>2</filterpriority>
+        public void Dispose()
+        {
+            if (this.viewRenderers == null)
+            {
+                return;
+            }
+
+            foreach (var disposable in this.viewRenderers.OfType<IDisposable>())
+                disposable.Dispose();
+        }
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -34,27 +67,11 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RazorViewEngine"/> class.
-        /// </summary>
-        /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
-        public RazorViewEngine(IRazorConfiguration configuration)
-        {
-            this.viewRenderers = new List<IRazorViewRenderer>
-            {
-                new CSharp.CSharpRazorViewRenderer(),
-                new VisualBasic.VisualBasicRazorViewRenderer()
-            };
-
-            this.razorConfiguration = configuration;
-        }
-
-        /// <summary>
         /// Initialise the view engine (if necessary)
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-        }
+        {}
 
         /// <summary>
         /// Renders the view.
@@ -117,16 +134,15 @@
                 if (namespaces != null)
                 {
                     foreach (var n in namespaces)
-                    {
                         engineHost.NamespaceImports.Add(n);
-                    }
                 }
             }
 
             return new RazorTemplateEngine(engineHost);
         }
 
-        private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType,
+            ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
@@ -139,18 +155,19 @@
             return viewFactory;
         }
 
-        private Func<INancyRazorView> GenerateRazorViewFactory(IRazorViewRenderer viewRenderer, GeneratorResults razorResult, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
+        private Func<INancyRazorView> GenerateRazorViewFactory(IRazorViewRenderer viewRenderer, GeneratorResults razorResult, Assembly referencingAssembly,
+            Type passedModelType, ViewLocationResult viewLocationResult)
         {
-            var outputAssemblyName = 
+            var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var modelType = 
+            var modelType =
                 FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
 
             var assemblies = new List<string>
             {
-                GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)),
-                GetAssemblyPath(typeof(IHtmlString)),
+                GetAssemblyPath(typeof (CallSite)),
+                GetAssemblyPath(typeof (IHtmlString)),
                 GetAssemblyPath(Assembly.GetExecutingAssembly()),
                 GetAssemblyPath(modelType)
             };
@@ -161,7 +178,7 @@
             {
                 assemblies.Add(GetAssemblyPath(referencingAssembly));
             }
-            
+
             if (this.razorConfiguration != null)
             {
                 var assemblyNames = this.razorConfiguration.GetAssemblyNames();
@@ -180,7 +197,7 @@
                 .Union(viewRenderer.Assemblies)
                 .ToList();
 
-            var compilerParameters = 
+            var compilerParameters =
                 new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
 
             CompilerResults results;
@@ -203,10 +220,10 @@
                 MarkErrorLines(errors, templateLines);
 
                 var errorDetails = string.Format(
-                                        "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}",
-                                        fullTemplateName,
-                                        errorMessages,
-                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2));
+                    "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}",
+                    fullTemplateName,
+                    errorMessages,
+                    templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2));
 
                 return () => new NancyRazorErrorView(errorDetails);
             }
@@ -264,7 +281,7 @@
                 var currentLine = templateReader.ReadLine();
                 while (currentLine != null)
                 {
-                    templateLines.Add(Helpers.HttpUtility.HtmlEncode(currentLine));
+                    templateLines.Add(HttpUtility.HtmlEncode(currentLine));
 
                     currentLine = templateReader.ReadLine();
                 }
@@ -287,12 +304,12 @@
 
             if (modelBlock == null)
             {
-                return passedModelType ?? typeof(object);
+                return passedModelType ?? typeof (object);
             }
 
             if (string.IsNullOrEmpty(modelBlock.Content))
             {
-                return passedModelType ?? typeof(object);
+                return passedModelType ?? typeof (object);
             }
 
             var discoveredModelType = modelBlock.Content.Trim();
@@ -319,11 +336,11 @@
             }
 
             throw new NotSupportedException(string.Format(
-                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}", 
-                                                discoveredModelType,
-                                                AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
-                                                GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
+                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
+                discoveredModelType,
+                AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
+                AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
+                GetAssembliesInDirectories().Aggregate((n1, n2) => n1 + "\n\t" + n2)));
         }
 
         private static IEnumerable<String> GetAssembliesInDirectories()
@@ -338,8 +355,8 @@
         private static IEnumerable<string> GetAssemblyDirectories()
         {
             var privateBinPathDirectories = AppDomain.CurrentDomain.SetupInformation.PrivateBinPath == null
-                                                ? new string[] { }
-                                                : AppDomain.CurrentDomain.SetupInformation.PrivateBinPath.Split(';');
+                ? new string[] {}
+                : AppDomain.CurrentDomain.SetupInformation.PrivateBinPath.Split(';');
 
             foreach (var privateBinPathDirectory in privateBinPathDirectories)
             {
@@ -375,7 +392,8 @@
             return new Uri(assembly.EscapedCodeBase).LocalPath;
         }
 
-        private INancyRazorView GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, Type passedModelType)
+        private INancyRazorView GetOrCompileView(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly,
+            Type passedModelType)
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
@@ -388,7 +406,7 @@
 
         private INancyRazorView GetViewInstance(ViewLocationResult viewLocationResult, IRenderContext renderContext, Assembly referencingAssembly, dynamic model)
         {
-            var modelType = (model == null) ? typeof(object) : model.GetType();
+            var modelType = (model == null) ? typeof (object) : model.GetType();
 
             var view =
                 this.GetOrCompileView(viewLocationResult, renderContext, referencingAssembly, modelType);
@@ -396,23 +414,6 @@
             view.Initialize(this, renderContext, model);
 
             return view;
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <filterpriority>2</filterpriority>
-        public void Dispose()
-        {
-            if (this.viewRenderers == null)
-            {
-                return;
-            }
-
-            foreach (var disposable in this.viewRenderers.OfType<IDisposable>())
-            {
-                disposable.Dispose();
-            }
         }
     }
 }

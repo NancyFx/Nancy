@@ -16,7 +16,7 @@ namespace Nancy.Bootstrapper
         /// <summary>
         /// Context key for storing the child container in the context
         /// </summary>
-        private readonly string contextKey = typeof(TContainer).FullName + "BootstrapperChildContainer";
+        private readonly string contextKey = typeof (TContainer).FullName + "BootstrapperChildContainer";
 
         /// <summary>
         /// Stores the module registrations to be registered into the request container
@@ -28,10 +28,7 @@ namespace Nancy.Bootstrapper
         /// </summary>
         protected virtual string ContextKey
         {
-            get
-            {
-                return this.contextKey;
-            }
+            get { return this.contextKey; }
         }
 
         /// <summary>
@@ -68,7 +65,7 @@ namespace Nancy.Bootstrapper
         /// <returns>An <see cref="IPipelines"/> instance.</returns>
         protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
         {
-            var requestContainer = 
+            var requestContainer =
                 this.GetConfiguredRequestContainer(context);
 
             var requestPipelines =
@@ -108,8 +105,7 @@ namespace Nancy.Bootstrapper
         /// <param name="container">Request container instance</param>
         /// <param name="context"></param>
         protected virtual void ConfigureRequestContainer(TContainer container, NancyContext context)
-        {
-        }
+        {}
 
         /// <summary>
         /// Register the given module types into the container

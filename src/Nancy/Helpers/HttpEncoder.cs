@@ -30,31 +30,33 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
-using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-using System.Text;
 
 namespace Nancy.Helpers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+    using System.Text;
+
 #if NET_4_0
 	public
 #endif
-    class HttpEncoder
+
+    internal class HttpEncoder
     {
-        static char[] hexChars = "0123456789abcdef".ToCharArray();
-        static object entitiesLock = new object();
-        static SortedDictionary<string, char> entities;
+        private static readonly char[] hexChars = "0123456789abcdef".ToCharArray();
+        private static readonly object entitiesLock = new object();
+        private static SortedDictionary<string, char> entities;
 #if NET_4_0
 		static Lazy <HttpEncoder> defaultEncoder;
 		static Lazy <HttpEncoder> currentEncoderLazy;
 #else
-        static HttpEncoder defaultEncoder;
+        private static readonly HttpEncoder defaultEncoder;
 #endif
-        static HttpEncoder currentEncoder;
+        private static readonly HttpEncoder currentEncoder;
 
-        static IDictionary<string, char> Entities
+        private static IDictionary<string, char> Entities
         {
             get
             {
@@ -111,14 +113,14 @@ namespace Nancy.Helpers
         }
 
         public HttpEncoder()
-        {
-        }
+        {}
+
 #if NET_4_0	
 		protected internal virtual
 #else
         internal static
 #endif
- void HeaderNameValueEncode(string headerName, string headerValue, out string encodedHeaderName, out string encodedHeaderValue)
+            void HeaderNameValueEncode(string headerName, string headerValue, out string encodedHeaderName, out string encodedHeaderValue)
         {
             if (String.IsNullOrEmpty(headerName))
                 encodedHeaderName = headerName;
@@ -131,7 +133,7 @@ namespace Nancy.Helpers
                 encodedHeaderValue = EncodeHeaderString(headerValue);
         }
 
-        static void StringBuilderAppend(string s, ref StringBuilder sb)
+        private static void StringBuilderAppend(string s, ref StringBuilder sb)
         {
             if (sb == null)
                 sb = new StringBuilder(s);
@@ -139,12 +141,12 @@ namespace Nancy.Helpers
                 sb.Append(s);
         }
 
-        static string EncodeHeaderString(string input)
+        private static string EncodeHeaderString(string input)
         {
             StringBuilder sb = null;
             char ch;
 
-            for (int i = 0; i < input.Length; i++)
+            for (var i = 0; i < input.Length; i++)
             {
                 ch = input[i];
 
@@ -157,6 +159,7 @@ namespace Nancy.Helpers
 
             return input;
         }
+
 #if NET_4_0		
 		protected internal virtual void HtmlAttributeEncode (string value, TextWriter output)
 		{
@@ -216,14 +219,14 @@ namespace Nancy.Helpers
 #else
         internal static
 #endif
- string UrlPathEncode(string value)
+            string UrlPathEncode(string value)
         {
             if (String.IsNullOrEmpty(value))
                 return value;
 
-            MemoryStream result = new MemoryStream();
-            int length = value.Length;
-            for (int i = 0; i < length; i++)
+            var result = new MemoryStream();
+            var length = value.Length;
+            for (var i = 0; i < length; i++)
                 UrlPathEncodeChar(value[i], result);
 
             return Encoding.ASCII.GetString(result.ToArray());
@@ -234,7 +237,7 @@ namespace Nancy.Helpers
             if (bytes == null)
                 throw new ArgumentNullException("bytes");
 
-            int blen = bytes.Length;
+            var blen = bytes.Length;
             if (blen == 0)
                 return new byte[0];
 
@@ -244,9 +247,9 @@ namespace Nancy.Helpers
             if (count < 0 || count > blen - offset)
                 throw new ArgumentOutOfRangeException("count");
 
-            MemoryStream result = new MemoryStream(count);
-            int end = offset + count;
-            for (int i = offset; i < end; i++)
+            var result = new MemoryStream(count);
+            var end = offset + count;
+            for (var i = offset; i < end; i++)
                 UrlEncodeChar((char)bytes[i], result, false);
 
             return result.ToArray();
@@ -260,15 +263,15 @@ namespace Nancy.Helpers
             if (s.Length == 0)
                 return String.Empty;
 
-            bool needEncode = false;
-            for (int i = 0; i < s.Length; i++)
+            var needEncode = false;
+            for (var i = 0; i < s.Length; i++)
             {
-                char c = s[i];
+                var c = s[i];
                 if (c == '&' || c == '"' || c == '<' || c == '>' || c > 159
 #if NET_4_0
 				    || c == '\''
 #endif
-)
+                    )
                 {
                     needEncode = true;
                     break;
@@ -278,11 +281,11 @@ namespace Nancy.Helpers
             if (!needEncode)
                 return s;
 
-            StringBuilder output = new StringBuilder();
+            var output = new StringBuilder();
             char ch;
-            int len = s.Length;
+            var len = s.Length;
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 switch (s[i])
                 {
@@ -340,15 +343,15 @@ namespace Nancy.Helpers
             if (s.Length == 0)
                 return String.Empty;
 #endif
-            bool needEncode = false;
-            for (int i = 0; i < s.Length; i++)
+            var needEncode = false;
+            for (var i = 0; i < s.Length; i++)
             {
-                char c = s[i];
+                var c = s[i];
                 if (c == '&' || c == '"' || c == '<'
 #if NET_4_0
 				    || c == '\''
 #endif
-)
+                    )
                 {
                     needEncode = true;
                     break;
@@ -358,9 +361,10 @@ namespace Nancy.Helpers
             if (!needEncode)
                 return s;
 
-            StringBuilder output = new StringBuilder();
-            int len = s.Length;
-            for (int i = 0; i < len; i++)
+            var output = new StringBuilder();
+            var len = s.Length;
+            for (var i = 0; i < len; i++)
+            {
                 switch (s[i])
                 {
                     case '&':
@@ -381,6 +385,7 @@ namespace Nancy.Helpers
                         output.Append(s[i]);
                         break;
                 }
+            }
 
             return output.ToString();
         }
@@ -398,21 +403,21 @@ namespace Nancy.Helpers
 #if NET_4_0
 			StringBuilder rawEntity = new StringBuilder ();
 #endif
-            StringBuilder entity = new StringBuilder();
-            StringBuilder output = new StringBuilder();
-            int len = s.Length;
+            var entity = new StringBuilder();
+            var output = new StringBuilder();
+            var len = s.Length;
             // 0 -> nothing,
             // 1 -> right after '&'
             // 2 -> between '&' and ';' but no '#'
             // 3 -> '#' found after '&' and getting numbers
-            int state = 0;
-            int number = 0;
-            bool is_hex_value = false;
-            bool have_trailing_digits = false;
+            var state = 0;
+            var number = 0;
+            var is_hex_value = false;
+            var have_trailing_digits = false;
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
-                char c = s[i];
+                var c = s[i];
                 if (state == 0)
                 {
                     if (c == '&')
@@ -477,7 +482,7 @@ namespace Nancy.Helpers
                     entity.Append(c);
                     if (c == ';')
                     {
-                        string key = entity.ToString();
+                        var key = entity.ToString();
                         if (key.Length > 1 && Entities.ContainsKey(key.Substring(1, key.Length - 2)))
                             key = Entities[key.Substring(1, key.Length - 2)].ToString();
 
@@ -517,7 +522,7 @@ namespace Nancy.Helpers
                     }
                     else if (is_hex_value && Uri.IsHexDigit(c))
                     {
-                        number = number * 16 + Uri.FromHex(c);
+                        number = number*16 + Uri.FromHex(c);
                         have_trailing_digits = true;
 #if NET_4_0
 						rawEntity.Append (c);
@@ -525,7 +530,7 @@ namespace Nancy.Helpers
                     }
                     else if (Char.IsDigit(c))
                     {
-                        number = number * 10 + ((int)c - '0');
+                        number = number*10 + ((int)c - '0');
                         have_trailing_digits = true;
 #if NET_4_0
 						rawEntity.Append (c);
@@ -566,9 +571,9 @@ namespace Nancy.Helpers
         {
             return (c == '!' || c == '(' || c == ')' || c == '*' || c == '-' || c == '.' || c == '_'
 #if !NET_4_0
- || c == '\''
+                || c == '\''
 #endif
-);
+                );
         }
 
         internal static void UrlEncodeChar(char c, Stream result, bool isUnicode)
@@ -579,7 +584,7 @@ namespace Nancy.Helpers
                 //if (!isUnicode)
                 //	throw new ArgumentOutOfRangeException ("c", c, "c must be less than 256");
                 int idx;
-                int i = (int)c;
+                var i = (int)c;
 
                 result.WriteByte((byte)'%');
                 result.WriteByte((byte)'u');
@@ -619,7 +624,7 @@ namespace Nancy.Helpers
                 else
                     result.WriteByte((byte)'%');
 
-                int idx = ((int)c) >> 4;
+                var idx = ((int)c) >> 4;
                 result.WriteByte((byte)hexChars[idx]);
                 idx = ((int)c) & 0x0F;
                 result.WriteByte((byte)hexChars[idx]);
@@ -632,11 +637,11 @@ namespace Nancy.Helpers
         {
             if (c < 33 || c > 126)
             {
-                byte[] bIn = Encoding.UTF8.GetBytes(c.ToString());
-                for (int i = 0; i < bIn.Length; i++)
+                var bIn = Encoding.UTF8.GetBytes(c.ToString());
+                for (var i = 0; i < bIn.Length; i++)
                 {
                     result.WriteByte((byte)'%');
-                    int idx = ((int)bIn[i]) >> 4;
+                    var idx = ((int)bIn[i]) >> 4;
                     result.WriteByte((byte)hexChars[idx]);
                     idx = ((int)bIn[i]) & 0x0F;
                     result.WriteByte((byte)hexChars[idx]);
@@ -652,7 +657,7 @@ namespace Nancy.Helpers
                 result.WriteByte((byte)c);
         }
 
-        static void InitEntities()
+        private static void InitEntities()
         {
             // Build the hash table of HTML entity references.  This list comes
             // from the HTML 4.01 W3C recommendation.

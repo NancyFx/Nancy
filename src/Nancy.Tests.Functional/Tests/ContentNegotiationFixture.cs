@@ -4,8 +4,8 @@ namespace Nancy.Tests.Functional.Tests
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Cookies;
-    using Nancy.ErrorHandling;
+
+    using Nancy.Cookies;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -19,15 +19,9 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_int_value_from_get_route_as_response_with_status_code_set_to_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with =>
-            {
-                with.Get("/int", (x,m) => 200);
-            });
+            var module = new ConfigurableNancyModule(with => { with.Get("/int", (x, m) => 200); });
 
-            var browser = new Browser(with =>
-            {
-                with.Module(module);
-            });
+            var browser = new Browser(with => { with.Module(module); });
 
             // When
             var response = browser.Get("/int");
@@ -40,15 +34,9 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_string_value_from_get_route_as_response_with_content_set_as_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with =>
-            {
-                with.Get("/string", (x, m) => "hello");
-            });
+            var module = new ConfigurableNancyModule(with => { with.Get("/string", (x, m) => "hello"); });
 
-            var browser = new Browser(with =>
-            {
-                with.Module(module);
-            });
+            var browser = new Browser(with => { with.Module(module); });
 
             // When
             var response = browser.Get("/string");
@@ -61,15 +49,9 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_return_httpstatuscode_value_from_get_route_as_response_with_content_set_as_value()
         {
             // Given
-            var module = new ConfigurableNancyModule(with =>
-            {
-                with.Get("/httpstatuscode", (x, m) => HttpStatusCode.Accepted);
-            });
+            var module = new ConfigurableNancyModule(with => { with.Get("/httpstatuscode", (x, m) => HttpStatusCode.Accepted); });
 
-            var browser = new Browser(with =>
-            {
-                with.Module(module);
-            });
+            var browser = new Browser(with => { with.Module(module); });
 
             // When
             var response = browser.Get("/httpstatuscode");
@@ -90,19 +72,14 @@ namespace Nancy.Tests.Functional.Tests
                     {
                         var wrapper = new UnclosableStreamWrapper(stream);
                         using (var writer = new StreamWriter(wrapper))
-                        {
                             writer.Write("Hiya Nancy!");
-                        }
                     };
 
                     return result;
                 });
             });
 
-            var browser = new Browser(with =>
-            {
-                with.Module(module);
-            });
+            var browser = new Browser(with => { with.Module(module); });
 
             // When
             var response = browser.Get("/action");
@@ -121,7 +98,7 @@ namespace Nancy.Tests.Functional.Tests
                 with.Get("/headers", (x, m) =>
                 {
                     var context =
-                        new NancyContext { NegotiationContext = new NegotiationContext() };
+                        new NancyContext {NegotiationContext = new NegotiationContext()};
 
                     var negotiator =
                         new Negotiator(context);
@@ -149,35 +126,35 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Should_add_negotiated_content_headers_to_response()
         {
-          // Given
+            // Given
 
-          var module = new ConfigurableNancyModule(with =>
-          {
-            with.Get("/headers", (x, m) =>
+            var module = new ConfigurableNancyModule(with =>
             {
-              var context =
-                  new NancyContext { NegotiationContext = new NegotiationContext() };
+                with.Get("/headers", (x, m) =>
+                {
+                    var context =
+                        new NancyContext {NegotiationContext = new NegotiationContext()};
 
-              var negotiator =
-                  new Negotiator(context);
-              negotiator.WithContentType("text/xml");
+                    var negotiator =
+                        new Negotiator(context);
+                    negotiator.WithContentType("text/xml");
 
-              return negotiator;
+                    return negotiator;
+                });
             });
-          });
 
-          var brower = new Browser(with =>
-          {
-            with.ResponseProcessor<TestProcessor>();
+            var brower = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
 
-            with.Module(module);
-          });
+                with.Module(module);
+            });
 
-          // When
-          var response = brower.Get("/headers");
+            // When
+            var response = brower.Get("/headers");
 
-          // Then
-          Assert.Equal("text/xml", response.Context.Response.ContentType);
+            // Then
+            Assert.Equal("text/xml", response.Context.Response.ContentType);
         }
 
         [Fact]
@@ -193,7 +170,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext {NegotiationContext = new NegotiationContext()};
 
                         var negotiator =
                             new Negotiator(context);
@@ -223,7 +200,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext {NegotiationContext = new NegotiationContext()};
 
                         var negotiator =
                             new Negotiator(context);
@@ -239,7 +216,8 @@ namespace Nancy.Tests.Functional.Tests
             // When
             var response = browser.Get("/", with =>
             {
-                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
+                with.Header("User-Agent",
+                    "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
                 with.Accept("application/xml", 0.9m);
                 with.Accept("text/html", 0.9m);
             });
@@ -262,7 +240,7 @@ namespace Nancy.Tests.Functional.Tests
                     x.Get("/test", (parameters, module) =>
                     {
                         var context =
-                            new NancyContext { NegotiationContext = new NegotiationContext() };
+                            new NancyContext {NegotiationContext = new NegotiationContext()};
 
                         var negotiator =
                             new Negotiator(context);
@@ -275,7 +253,8 @@ namespace Nancy.Tests.Functional.Tests
             // When
             var response = browser.Get("/test.foo", with =>
             {
-                with.Header("User-Agent", "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
+                with.Header("User-Agent",
+                    "Mozilla/5.0 (Windows; U; Windows NT 5.1; ru-RU) AppleWebKit/533.19.4 (KHTML, like Gecko) Version/5.0.3 Safari/533.19.4");
                 with.Accept("application/xml", 0.9m);
                 with.Accept("text/html", 0.9m);
             });
@@ -293,20 +272,13 @@ namespace Nancy.Tests.Functional.Tests
             {
                 with.ResponseProcessor<TestProcessor>();
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/test", CreateNegotiatedResponse(config =>
-                    {
-                        config.WithAllowedMediaRange("application/xml");
-                    }));
-                }));
+                with.Module(
+                    new ConfigurableNancyModule(
+                        x => { x.Get("/test", CreateNegotiatedResponse(config => { config.WithAllowedMediaRange("application/xml"); })); }));
             });
 
             // When
-            var response = browser.Get("/test", with =>
-            {
-                with.Accept("foo/bar", 0.9m);
-            });
+            var response = browser.Get("/test", with => { with.Accept("foo/bar", 0.9m); });
 
             // Then
             Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
@@ -331,10 +303,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Accept("test/test", 0.9m);
-            });
+            var response = browser.Get("/", with => { with.Accept("test/test", 0.9m); });
 
             // Then
             Assert.Equal("the model", response.Body.AsString());
@@ -360,10 +329,7 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Accept("test/test", 0.9m);
-            });
+            var response = browser.Get("/", with => { with.Accept("test/test", 0.9m); });
 
             // Then
             Assert.Equal("media model", response.Body.AsString());
@@ -375,12 +341,9 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
-                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+                with.ResponseProcessors(typeof (XmlProcessor), typeof (JsonProcessor), typeof (TestProcessor));
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse());
-                }));
+                with.Module(new ConfigurableNancyModule(x => { x.Get("/", CreateNegotiatedResponse()); }));
             });
 
             // When
@@ -397,12 +360,9 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
-                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+                with.ResponseProcessors(typeof (XmlProcessor), typeof (JsonProcessor), typeof (TestProcessor));
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse());
-                }));
+                with.Module(new ConfigurableNancyModule(x => { x.Get("/", CreateNegotiatedResponse()); }));
             });
 
             // When
@@ -422,20 +382,11 @@ namespace Nancy.Tests.Functional.Tests
             {
                 with.ResponseProcessor<TestProcessor>();
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse(config =>
-                    {
-                        config.WithStatusCode(507);
-                    }));
-                }));
+                with.Module(new ConfigurableNancyModule(x => { x.Get("/", CreateNegotiatedResponse(config => { config.WithStatusCode(507); })); }));
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Accept("test/test", 0.9m);
-            });
+            var response = browser.Get("/", with => { with.Accept("test/test", 0.9m); });
 
             // Then
             Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
@@ -449,20 +400,13 @@ namespace Nancy.Tests.Functional.Tests
             {
                 with.ResponseProcessor<TestProcessor>();
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse(config =>
-                    {
-                        config.WithStatusCode(HttpStatusCode.InsufficientStorage);
-                    }));
-                }));
+                with.Module(
+                    new ConfigurableNancyModule(
+                        x => { x.Get("/", CreateNegotiatedResponse(config => { config.WithStatusCode(HttpStatusCode.InsufficientStorage); })); }));
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Accept("test/test", 0.9m);
-            });
+            var response = browser.Get("/", with => { with.Accept("test/test", 0.9m); });
 
             // Then
             Assert.Equal(HttpStatusCode.InsufficientStorage, response.StatusCode);
@@ -472,27 +416,18 @@ namespace Nancy.Tests.Functional.Tests
         public void Should_set_negotiated_cookies_to_response()
         {
             // Given
-            var negotiatedCookie = 
+            var negotiatedCookie =
                 new NancyCookie("test", "test");
 
             var browser = new Browser(with =>
             {
                 with.ResponseProcessor<TestProcessor>();
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse(config =>
-                    {
-                        config.WithCookie(negotiatedCookie);
-                    }));
-                }));
+                with.Module(new ConfigurableNancyModule(x => { x.Get("/", CreateNegotiatedResponse(config => { config.WithCookie(negotiatedCookie); })); }));
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Accept("test/test", 0.9m);
-            });
+            var response = browser.Get("/", with => { with.Accept("test/test", 0.9m); });
 
             // Then
             Assert.Same(negotiatedCookie, response.Cookies.First());
@@ -510,12 +445,11 @@ namespace Nancy.Tests.Functional.Tests
 
             // When
             var result = Record.Exception(() =>
-                {
-                    var response = browser.Get(
-                        "/FakeModuleInvalidViewName",
-                        with =>
-                            { with.Accept("text/html", 1.0m); });
-                });
+            {
+                var response = browser.Get(
+                    "/FakeModuleInvalidViewName",
+                    with => { with.Accept("text/html", 1.0m); });
+            });
 
             // Then
             Assert.NotNull(result);
@@ -527,27 +461,21 @@ namespace Nancy.Tests.Functional.Tests
         {
             // Given
             var browser = new Browser(with =>
-                {
-                with.ResponseProcessors(typeof(NullProcessor), typeof(TestProcessor));
+            {
+                with.ResponseProcessors(typeof (NullProcessor), typeof (TestProcessor));
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/test", CreateNegotiatedResponse(config =>
-                    {
-                        config.WithAllowedMediaRange("application/xml");
-                    }));
-                }));
+                with.Module(
+                    new ConfigurableNancyModule(
+                        x => { x.Get("/test", CreateNegotiatedResponse(config => { config.WithAllowedMediaRange("application/xml"); })); }));
             });
 
             // When
-            var response = browser.Get("/test", with =>
-            {
-                with.Accept("application/xml", 0.9m);
-            });
+            var response = browser.Get("/test", with => { with.Accept("application/xml", 0.9m); });
 
             // Then
             var bodyResult = response.Body.AsString();
-            Assert.True(bodyResult.StartsWith("application/xml"), string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
+            Assert.True(bodyResult.StartsWith("application/xml"),
+                string.Format("Body should have started with 'application/xml' but was actually '{0}'", bodyResult));
         }
 
         [Theory]
@@ -558,19 +486,13 @@ namespace Nancy.Tests.Functional.Tests
             // Given
             var browser = new Browser(with =>
             {
-                with.ResponseProcessors(typeof(XmlProcessor), typeof(JsonProcessor), typeof(TestProcessor));
+                with.ResponseProcessors(typeof (XmlProcessor), typeof (JsonProcessor), typeof (TestProcessor));
 
-                with.Module(new ConfigurableNancyModule(x =>
-                {
-                    x.Get("/", CreateNegotiatedResponse());
-                }));
+                with.Module(new ConfigurableNancyModule(x => { x.Get("/", CreateNegotiatedResponse()); }));
             });
 
             // When
-            var response = browser.Get("/", with =>
-            {
-                with.Header("Accept", header);
-            });
+            var response = browser.Get("/", with => { with.Header("Accept", header); });
 
             // Then
             Assert.Equal((HttpStatusCode)200, response.StatusCode);
@@ -589,34 +511,25 @@ namespace Nancy.Tests.Functional.Tests
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
         {
             return (parameters, module) =>
+            {
+                var negotiator = new Negotiator(module.Context);
+
+                if (action != null)
                 {
-                    var negotiator = new Negotiator(module.Context);
+                    action.Invoke(negotiator);
+                }
 
-                    if (action != null)
-                    {
-                        action.Invoke(negotiator);
-                    }
-
-                    return negotiator;
-                };
+                return negotiator;
+            };
         }
 
-        /// <summary>
-        /// Test response processor that will accept any type
-        /// and put the content type and model type into the
-        /// response body for asserting against.
-        /// Hacky McHackmeister but it works :-)
-        /// </summary>
-        public class TestProcessor : IResponseProcessor
+        public class ModelProcessor : IResponseProcessor
         {
             private const string ResponseTemplate = "{0}\n{1}";
 
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
-                get
-                {
-                    yield return new Tuple<string, MediaRange>("foo", "foo/bar");
-                }
+                get { yield return new Tuple<string, MediaRange>("foo", "foo/bar"); }
             }
 
             public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
@@ -630,8 +543,24 @@ namespace Nancy.Tests.Functional.Tests
 
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
-                return string.Format(ResponseTemplate, requestedMediaRange, model == null ? "None" : model.GetType());
+                return (string)model;
             }
+        }
+
+        private class NegotiationModule : NancyModule
+        {
+            public NegotiationModule()
+            {
+                Get["/invalid-view-name"] = _ => this.GetModel();
+            }
+
+            private IEnumerable<Foo> GetModel()
+            {
+                yield return new Foo();
+            }
+
+            private class Foo
+            {}
         }
 
         public class NullProcessor : IResponseProcessor
@@ -640,10 +569,7 @@ namespace Nancy.Tests.Functional.Tests
 
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
-                get
-                {
-                    yield break;
-                }
+                get { yield break; }
             }
 
             public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
@@ -661,16 +587,19 @@ namespace Nancy.Tests.Functional.Tests
             }
         }
 
-        public class ModelProcessor : IResponseProcessor
+        /// <summary>
+        /// Test response processor that will accept any type
+        /// and put the content type and model type into the
+        /// response body for asserting against.
+        /// Hacky McHackmeister but it works :-)
+        /// </summary>
+        public class TestProcessor : IResponseProcessor
         {
             private const string ResponseTemplate = "{0}\n{1}";
 
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
-                get
-                {
-                    yield return new Tuple<string, MediaRange>("foo", "foo/bar");
-                }
+                get { yield return new Tuple<string, MediaRange>("foo", "foo/bar"); }
             }
 
             public ProcessorMatch CanProcess(MediaRange requestedMediaRange, dynamic model, NancyContext context)
@@ -684,26 +613,8 @@ namespace Nancy.Tests.Functional.Tests
 
             public Response Process(MediaRange requestedMediaRange, dynamic model, NancyContext context)
             {
-                return (string) model;
-            }
-        }
-
-        private class NegotiationModule : NancyModule
-        {
-            public NegotiationModule()
-            {
-                Get["/invalid-view-name"] = _ => this.GetModel();
-            }
-
-            private IEnumerable<Foo> GetModel()
-            {
-                yield return new Foo();
-            }
-
-            private class Foo
-            {
+                return string.Format(ResponseTemplate, requestedMediaRange, model == null ? "None" : model.GetType());
             }
         }
     }
-
 }

@@ -33,7 +33,7 @@ namespace Nancy.Cookies
         /// <summary>
         /// The value of the cookie
         /// </summary>
-        string Value { get;  }
+        string Value { get; }
 
         /// <summary>
         /// Gets the encoded value of the cookie

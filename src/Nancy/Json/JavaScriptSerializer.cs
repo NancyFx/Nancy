@@ -26,26 +26,28 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 namespace Nancy.Json
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.IO;
     using System.Collections;
-    using System.Reflection;
+    using System.Collections.Generic;
     using System.ComponentModel;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using System.Text;
+
     using Nancy.Helpers;
 
     public class JavaScriptSerializer
     {
         internal const string SerializedTypeNameKey = "__type";
 
-        List<IEnumerable<JavaScriptConverter>> _converterList;
-        int _maxJsonLength;
-        int _recursionLimit;
-        JavaScriptTypeResolver _typeResolver;
+        private List<IEnumerable<JavaScriptConverter>> _converterList;
+        private int _maxJsonLength;
+        private int _recursionLimit;
+        private readonly JavaScriptTypeResolver _typeResolver;
 
 #if NET_3_5
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 2097152, 100);
@@ -64,14 +66,13 @@ namespace Nancy.Json
 
         public JavaScriptSerializer()
             : this(null, false, 102400, 100)
-        {
-        }
+        {}
 
         public JavaScriptSerializer(JavaScriptTypeResolver resolver)
             : this(resolver, false, 102400, 100)
-        {
-        }
+        {}
 #endif
+
         internal JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit)
         {
             _typeResolver = resolver;
@@ -84,26 +85,14 @@ namespace Nancy.Json
 
         public int MaxJsonLength
         {
-            get
-            {
-                return _maxJsonLength;
-            }
-            set
-            {
-                _maxJsonLength = value;
-            }
+            get { return _maxJsonLength; }
+            set { _maxJsonLength = value; }
         }
 
         public int RecursionLimit
         {
-            get
-            {
-                return _recursionLimit;
-            }
-            set
-            {
-                _recursionLimit = value;
-            }
+            get { return _recursionLimit; }
+            set { _recursionLimit = value; }
         }
 
         internal JavaScriptTypeResolver TypeResolver
@@ -116,7 +105,7 @@ namespace Nancy.Json
             if (obj == null)
                 return default(T);
 
-            return (T)ConvertToType(typeof(T), obj);
+            return (T)ConvertToType(typeof (T), obj);
         }
 
         internal object ConvertToType(Type type, object obj)
@@ -130,7 +119,7 @@ namespace Nancy.Json
                     obj = EvaluateDictionary((IDictionary<string, object>)obj);
                 else
                 {
-                    JavaScriptConverter converter = GetConverter(type);
+                    var converter = GetConverter(type);
                     if (converter != null)
                         return converter.Deserialize(
                             EvaluateDictionary((IDictionary<string, object>)obj),
@@ -145,7 +134,7 @@ namespace Nancy.Json
             if (type == null)
                 return obj;
 
-            Type sourceType = obj.GetType();
+            var sourceType = obj.GetType();
             if (type.IsAssignableFrom(sourceType))
                 return obj;
 
@@ -155,7 +144,7 @@ namespace Nancy.Json
                 else
                     return Enum.ToObject(type, obj);
 
-            TypeConverter c = TypeDescriptor.GetConverter(type);
+            var c = TypeDescriptor.GetConverter(type);
             if (c.CanConvertFrom(sourceType))
             {
                 if (obj is string)
@@ -169,9 +158,9 @@ namespace Nancy.Json
              * an empty value 
              * (see: https://bugzilla.novell.com/show_bug.cgi?id=328836)
              */
-            if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
+            if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof (Nullable<>)))
             {
-                string s = obj as String;
+                var s = obj as String;
                 if (String.IsNullOrEmpty(s))
                     return null;
             }
@@ -184,12 +173,12 @@ namespace Nancy.Json
             return ConvertToType<T>(DeserializeObjectInternal(input));
         }
 
-        static object Evaluate(object value)
+        private static object Evaluate(object value)
         {
             return Evaluate(value, false);
         }
 
-        static object Evaluate(object value, bool convertListToArray)
+        private static object Evaluate(object value, bool convertListToArray)
         {
             if (value is IDictionary<string, object>)
                 value = EvaluateDictionary((IDictionary<string, object>)value, convertListToArray);
@@ -198,47 +187,45 @@ namespace Nancy.Json
             return value;
         }
 
-        static object EvaluateList(ArrayList e)
+        private static object EvaluateList(ArrayList e)
         {
             return EvaluateList(e, false);
         }
 
-        static object EvaluateList(ArrayList e, bool convertListToArray)
+        private static object EvaluateList(ArrayList e, bool convertListToArray)
         {
-            ArrayList list = new ArrayList();
-            foreach (object value in e)
+            var list = new ArrayList();
+            foreach (var value in e)
                 list.Add(Evaluate(value, convertListToArray));
 
             return convertListToArray ? (object)list.ToArray() : list;
         }
 
-        static IDictionary<string, object> EvaluateDictionary(IDictionary<string, object> dict)
+        private static IDictionary<string, object> EvaluateDictionary(IDictionary<string, object> dict)
         {
             return EvaluateDictionary(dict, false);
         }
 
-        static IDictionary<string, object> EvaluateDictionary(IDictionary<string, object> dict, bool convertListToArray)
+        private static IDictionary<string, object> EvaluateDictionary(IDictionary<string, object> dict, bool convertListToArray)
         {
-            Dictionary<string, object> d = new Dictionary<string, object>(StringComparer.Ordinal);
-            foreach (KeyValuePair<string, object> entry in dict)
-            {
+            var d = new Dictionary<string, object>(StringComparer.Ordinal);
+            foreach (var entry in dict)
                 d.Add(entry.Key, Evaluate(entry.Value, convertListToArray));
-            }
 
             return d;
         }
 
-        static readonly Type typeofObject = typeof(object);
-        static readonly Type typeofGenList = typeof(List<>);
+        private static readonly Type typeofObject = typeof (object);
+        private static readonly Type typeofGenList = typeof (List<>);
 
-        object ConvertToList(ArrayList col, Type type)
+        private object ConvertToList(ArrayList col, Type type)
         {
             Type elementType = null;
             if (type != null && type.HasElementType)
                 elementType = type.GetElementType();
 
             IList list;
-            if (type == null || type.IsArray || typeofObject == type || typeof(ArrayList).IsAssignableFrom(type))
+            if (type == null || type.IsArray || typeofObject == type || typeof (ArrayList).IsAssignableFrom(type))
                 list = new ArrayList();
             else if (ReflectionUtils.IsInstantiatableType(type))
                 // non-generic typed list
@@ -247,7 +234,7 @@ namespace Nancy.Json
             {
                 if (type.IsGenericType)
                 {
-                    Type[] genArgs = type.GetGenericArguments();
+                    var genArgs = type.GetGenericArguments();
                     elementType = genArgs[0];
                     // generic list
                     list = (IList)Activator.CreateInstance(typeofGenList.MakeGenericType(genArgs));
@@ -264,7 +251,7 @@ namespace Nancy.Json
                 return list;
             }
 
-            foreach (object value in col)
+            foreach (var value in col)
                 list.Add(ConvertToType(elementType, value));
 
             if (type != null && type.IsArray)
@@ -273,7 +260,7 @@ namespace Nancy.Json
             return list;
         }
 
-        object ConvertToObject(IDictionary<string, object> dict, Type type)
+        private object ConvertToObject(IDictionary<string, object> dict, Type type)
         {
             if (_typeResolver != null)
             {
@@ -288,33 +275,35 @@ namespace Nancy.Json
             if (type.IsGenericType)
             {
                 var genericTypeDefinition = type.GetGenericTypeDefinition();
-                if (genericTypeDefinition.IsAssignableFrom(typeof(IDictionary<,>)) || genericTypeDefinition.GetInterfaces().Any(i => i == typeof(IDictionary)))
+                if (genericTypeDefinition.IsAssignableFrom(typeof (IDictionary<,>)) || genericTypeDefinition.GetInterfaces().Any(i => i == typeof (IDictionary)))
                 {
-                    Type[] arguments = type.GetGenericArguments();
-                    if (arguments == null || arguments.Length != 2 || (arguments[0] != typeof(object) && arguments[0] != typeof(string) && arguments[0] != typeof(Guid)))
+                    var arguments = type.GetGenericArguments();
+                    if (arguments == null || arguments.Length != 2 ||
+                        (arguments[0] != typeof (object) && arguments[0] != typeof (string) && arguments[0] != typeof (Guid)))
                         throw new InvalidOperationException(
-                            "Type '" + type + "' is not not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
+                            "Type '" + type +
+                                "' is not not supported for serialization/deserialization of a dictionary, keys must be strings, guids or objects.");
                     if (type.IsAbstract)
                     {
-                        Type dictType = typeof(Dictionary<,>);
+                        var dictType = typeof (Dictionary<,>);
                         type = dictType.MakeGenericType(arguments[0], arguments[1]);
                     }
 
-                    isDictionaryWithGuidKey = arguments[0] == typeof(Guid);
+                    isDictionaryWithGuidKey = arguments[0] == typeof (Guid);
                 }
             }
-            else if (type.IsAssignableFrom(typeof(IDictionary)))
-                type = typeof(Dictionary<string, object>);
+            else if (type.IsAssignableFrom(typeof (IDictionary)))
+                type = typeof (Dictionary<string, object>);
 
-            object target = Activator.CreateInstance(type, true);
+            var target = Activator.CreateInstance(type, true);
 
-            foreach (KeyValuePair<string, object> entry in dict)
+            foreach (var entry in dict)
             {
-                object value = entry.Value;
+                var value = entry.Value;
                 if (target is IDictionary)
                 {
-                    Type valueType = ReflectionUtils.GetTypedDictionaryValueType(type);
-                    if (value != null && valueType == typeof(System.Object))
+                    var valueType = ReflectionUtils.GetTypedDictionaryValueType(type);
+                    if (value != null && valueType == typeof (Object))
                         valueType = value.GetType();
 
                     if (isDictionaryWithGuidKey)
@@ -327,7 +316,7 @@ namespace Nancy.Json
                     }
                     continue;
                 }
-                MemberInfo[] memberCollection = type.GetMember(entry.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
+                var memberCollection = type.GetMember(entry.Key, BindingFlags.Public | BindingFlags.Instance | BindingFlags.IgnoreCase);
                 if (memberCollection == null || memberCollection.Length == 0)
                 {
                     //must evaluate value
@@ -335,7 +324,7 @@ namespace Nancy.Json
                     continue;
                 }
 
-                MemberInfo member = memberCollection[0];
+                var member = memberCollection[0];
 
                 if (!ReflectionUtils.CanSetMemberValue(member))
                 {
@@ -344,7 +333,7 @@ namespace Nancy.Json
                     continue;
                 }
 
-                Type memberType = ReflectionUtils.GetMemberUnderlyingType(member);
+                var memberType = ReflectionUtils.GetMemberUnderlyingType(member);
 
                 if (memberType.IsInterface)
                 {
@@ -363,48 +352,48 @@ namespace Nancy.Json
             return target;
         }
 
-        Type ResolveGenericInterfaceToType(Type type)
+        private Type ResolveGenericInterfaceToType(Type type)
         {
-            Type[] genericArgs = type.GetGenericArguments();
+            var genericArgs = type.GetGenericArguments();
 
-            if (ReflectionUtils.IsSubClass(type, typeof(IDictionary<,>)))
-                return typeof(Dictionary<,>).MakeGenericType(genericArgs);
+            if (ReflectionUtils.IsSubClass(type, typeof (IDictionary<,>)))
+                return typeof (Dictionary<,>).MakeGenericType(genericArgs);
 
-            if (ReflectionUtils.IsSubClass(type, typeof(IList<>)) ||
-                ReflectionUtils.IsSubClass(type, typeof(ICollection<>)) ||
-                ReflectionUtils.IsSubClass(type, typeof(IEnumerable<>))
-            )
-                return typeof(List<>).MakeGenericType(genericArgs);
+            if (ReflectionUtils.IsSubClass(type, typeof (IList<>)) ||
+                ReflectionUtils.IsSubClass(type, typeof (ICollection<>)) ||
+                ReflectionUtils.IsSubClass(type, typeof (IEnumerable<>))
+                )
+                return typeof (List<>).MakeGenericType(genericArgs);
 
-            if (ReflectionUtils.IsSubClass(type, typeof(IComparer<>)))
-                return typeof(Comparer<>).MakeGenericType(genericArgs);
+            if (ReflectionUtils.IsSubClass(type, typeof (IComparer<>)))
+                return typeof (Comparer<>).MakeGenericType(genericArgs);
 
-            if (ReflectionUtils.IsSubClass(type, typeof(IEqualityComparer<>)))
-                return typeof(EqualityComparer<>).MakeGenericType(genericArgs);
+            if (ReflectionUtils.IsSubClass(type, typeof (IEqualityComparer<>)))
+                return typeof (EqualityComparer<>).MakeGenericType(genericArgs);
 
             return null;
         }
 
-        Type ResolveInterfaceToType(Type type)
+        private Type ResolveInterfaceToType(Type type)
         {
-            if (typeof(IDictionary).IsAssignableFrom(type))
-                return typeof(Hashtable);
+            if (typeof (IDictionary).IsAssignableFrom(type))
+                return typeof (Hashtable);
 
-            if (typeof(IList).IsAssignableFrom(type) ||
-                typeof(ICollection).IsAssignableFrom(type) ||
-                typeof(IEnumerable).IsAssignableFrom(type))
-                return typeof(ArrayList);
+            if (typeof (IList).IsAssignableFrom(type) ||
+                typeof (ICollection).IsAssignableFrom(type) ||
+                typeof (IEnumerable).IsAssignableFrom(type))
+                return typeof (ArrayList);
 
-            if (typeof(IComparer).IsAssignableFrom(type))
-                return typeof(Comparer);
+            if (typeof (IComparer).IsAssignableFrom(type))
+                return typeof (Comparer);
 
             return null;
         }
 
         public object DeserializeObject(string input)
         {
-            object obj = Evaluate(DeserializeObjectInternal(input), true);
-            IDictionary dictObj = obj as IDictionary;
+            var obj = Evaluate(DeserializeObjectInternal(input), true);
+            var dictObj = obj as IDictionary;
             if (dictObj != null && dictObj.Contains(SerializedTypeNameKey))
             {
                 if (_typeResolver == null)
@@ -440,12 +429,16 @@ namespace Nancy.Json
         internal JavaScriptConverter GetConverter(Type type)
         {
             if (_converterList != null)
-                for (int i = 0; i < _converterList.Count; i++)
+                for (var i = 0; i < _converterList.Count; i++)
                 {
-                    foreach (JavaScriptConverter converter in _converterList[i])
-                        foreach (Type supportedType in converter.SupportedTypes)
+                    foreach (var converter in _converterList[i])
+                    {
+                        foreach (var supportedType in converter.SupportedTypes)
+                        {
                             if (supportedType.IsAssignableFrom(type))
                                 return converter;
+                        }
+                    }
                 }
 
             return null;
@@ -453,7 +446,7 @@ namespace Nancy.Json
 
         public string Serialize(object obj)
         {
-            StringBuilder b = new StringBuilder();
+            var b = new StringBuilder();
             Serialize(obj, b);
             return b.ToString();
         }

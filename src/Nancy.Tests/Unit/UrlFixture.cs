@@ -1,8 +1,7 @@
-﻿using System.Net;
-
-namespace Nancy.Tests.Unit
+﻿namespace Nancy.Tests.Unit
 {
     using System;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -14,7 +13,7 @@ namespace Nancy.Tests.Unit
         {
             this.url = new Url();
         }
-        
+
         [Fact]
         public void Should_contain_schema_when_converted_to_string()
         {
@@ -101,7 +100,7 @@ namespace Nancy.Tests.Unit
             // Then
             result.ShouldEndWith("https://www.nancyfx.org:1234/base");
         }
-        
+
         [Fact]
         public void Should_append_path_when_converted_to_string()
         {

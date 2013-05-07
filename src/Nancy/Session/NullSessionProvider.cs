@@ -36,10 +36,7 @@ namespace Nancy.Session
         /// <returns></returns>
         public int Count
         {
-            get
-            {
-                throw new InvalidOperationException("Session support is not enabled.");
-            }
+            get { throw new InvalidOperationException("Session support is not enabled."); }
         }
 
         /// <summary>
@@ -63,23 +60,14 @@ namespace Nancy.Session
         /// </summary>        
         public object this[string key]
         {
-            get
-            {
-                throw new InvalidOperationException("Session support is not enabled.");
-            }
+            get { throw new InvalidOperationException("Session support is not enabled."); }
 
-            set
-            {
-                throw new InvalidOperationException("Session support is not enabled.");
-            }
+            set { throw new InvalidOperationException("Session support is not enabled."); }
         }
 
         public bool HasChanged
         {
-            get
-            {
-                return false;
-            }
+            get { return false; }
         }
     }
 }

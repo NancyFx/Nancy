@@ -5,12 +5,6 @@ namespace Nancy.Demo.Hosting.Aspnet.Models
     [Serializable]
     public class Payload : IEquatable<Payload>
     {
-        public int IntValue { get; private set; }
-
-        public bool BoolValue { get; private set; }
-
-        public string StringValue { get; private set; }
-
         /// <summary>
         /// Initializes a new instance of the <see cref="T:System.Object"/> class.
         /// </summary>
@@ -20,6 +14,12 @@ namespace Nancy.Demo.Hosting.Aspnet.Models
             this.BoolValue = boolValue;
             this.StringValue = stringValue;
         }
+
+        public int IntValue { get; private set; }
+
+        public bool BoolValue { get; private set; }
+
+        public string StringValue { get; private set; }
 
         public bool Equals(Payload other)
         {
@@ -48,7 +48,7 @@ namespace Nancy.Demo.Hosting.Aspnet.Models
                 return true;
             }
 
-            return obj.GetType() == typeof(Payload) && this.Equals((Payload)obj);
+            return obj.GetType() == typeof (Payload) && this.Equals((Payload)obj);
         }
 
         public override int GetHashCode()
@@ -56,8 +56,8 @@ namespace Nancy.Demo.Hosting.Aspnet.Models
             unchecked
             {
                 var result = this.IntValue;
-                result = (result * 397) ^ this.BoolValue.GetHashCode();
-                result = (result * 397) ^ (this.StringValue != null ? this.StringValue.GetHashCode() : 0);
+                result = (result*397) ^ this.BoolValue.GetHashCode();
+                result = (result*397) ^ (this.StringValue != null ? this.StringValue.GetHashCode() : 0);
                 return result;
             }
         }

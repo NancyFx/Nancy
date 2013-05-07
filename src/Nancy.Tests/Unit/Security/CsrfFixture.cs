@@ -14,15 +14,14 @@
 
     public class CsrfFixture
     {
-        private readonly IPipelines pipelines;
-                 
-        private readonly Request request;
-                 
-        private readonly Response response;
-
         private readonly CryptographyConfiguration cryptographyConfiguration;
 
         private readonly DefaultObjectSerializer objectSerializer;
+        private readonly IPipelines pipelines;
+
+        private readonly Request request;
+
+        private readonly Response response;
 
         public CsrfFixture()
         {
@@ -46,7 +45,7 @@
         [Fact]
         public void Should_create_cookie_in_response_if_token_exists_in_context()
         {
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
             context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "TestingToken";
 
             this.pipelines.AfterRequest.Invoke(context);
@@ -66,7 +65,7 @@
                 this.objectSerializer,
                 fakeValidator);
             csrfStartup.Initialize(this.pipelines);
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
 
             this.pipelines.AfterRequest.Invoke(context);
 
@@ -86,7 +85,7 @@
                 this.objectSerializer,
                 fakeValidator);
             csrfStartup.Initialize(this.pipelines);
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
 
             this.pipelines.AfterRequest.Invoke(context);
 
@@ -106,7 +105,7 @@
                 fakeValidator);
             csrfStartup.Initialize(this.pipelines);
             this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode("Testing Token"));
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
 
             this.pipelines.AfterRequest.Invoke(context);
 
@@ -118,7 +117,7 @@
         [Fact]
         public void Should_create_a_new_token_if_one_doesnt_exist_in_request_or_context()
         {
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
 
             this.pipelines.AfterRequest.Invoke(context);
 
@@ -133,7 +132,7 @@
         [Fact]
         public void Should_be_able_to_disable_csrf()
         {
-            var context = new NancyContext { Request = this.request, Response = this.response };
+            var context = new NancyContext {Request = this.request, Response = this.response};
             context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "TestingToken";
 
             Csrf.Disable(this.pipelines);

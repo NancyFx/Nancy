@@ -5,8 +5,9 @@ namespace Nancy.Extensions
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
+
     using Nancy.Helpers;
-    using Routing;
+    using Nancy.Routing;
 
     public static class StringExtensions
     {
@@ -14,8 +15,7 @@ namespace Nancy.Extensions
         /// A regular expression used to manipulate parameterized route segments.
         /// </summary>
         /// <value>A <see cref="Regex"/> object.</value>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static readonly Regex ParameterExpression =
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private static readonly Regex ParameterExpression =
             new Regex(@"{(?<name>[A-Za-z0-9_]*)(?:\?(?<default>[A-Za-z0-9_]*))?}", RegexOptions.Compiled);
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Nancy.Extensions
                     break;
                 }
             }
-            
+
             return ret;
         }
     }

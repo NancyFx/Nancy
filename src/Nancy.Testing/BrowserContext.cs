@@ -21,6 +21,11 @@
             this.Values.FormValues = String.Empty;
         }
 
+        private IBrowserContextValues Values
+        {
+            get { return this; }
+        }
+
         /// <summary>
         /// Gets or sets the that should be sent with the HTTP request.
         /// </summary>
@@ -139,7 +144,7 @@
         {
             this.Values.QueryString += String.Format(
                 "{0}{1}={2}",
-                this.Values.QueryString.Length == 0 ? "?" : "&", 
+                this.Values.QueryString.Length == 0 ? "?" : "&",
                 key,
                 value);
         }
@@ -150,11 +155,6 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
-        }
-
-        private IBrowserContextValues Values
-        {
-            get { return this; }
         }
     }
 }

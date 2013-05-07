@@ -64,10 +64,10 @@
         private int CalculateHashCode()
         {
             return Hash(viewName) ^
-                   Hash(viewPath) ^
-                   Hash(masterName) ^
-                   findDefaultMaster.GetHashCode() ^
-                   extra.Aggregate(0, (hash, kv) => hash ^ Hash(kv.Key) ^ Hash(kv.Value));
+                Hash(viewPath) ^
+                Hash(masterName) ^
+                findDefaultMaster.GetHashCode() ^
+                extra.Aggregate(0, (hash, kv) => hash ^ Hash(kv.Key) ^ Hash(kv.Value));
         }
 
         public override bool Equals(object obj)
@@ -95,7 +95,6 @@
                 {
                     return false;
                 }
-
             }
 
             return true;

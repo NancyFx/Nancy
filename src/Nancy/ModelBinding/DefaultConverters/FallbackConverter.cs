@@ -31,7 +31,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         {
             var converter = TypeDescriptor.GetConverter(destinationType);
 
-            if (converter == null || !converter.CanConvertFrom(typeof(string)))
+            if (converter == null || !converter.CanConvertFrom(typeof (string)))
             {
                 return null;
             }
@@ -42,7 +42,8 @@ namespace Nancy.ModelBinding.DefaultConverters
             }
             catch (FormatException)
             {
-                if (destinationType == typeof(bool) && converter.GetType() == typeof(BooleanConverter) && "on".Equals(input, StringComparison.OrdinalIgnoreCase))
+                if (destinationType == typeof (bool) && converter.GetType() == typeof (BooleanConverter) &&
+                    "on".Equals(input, StringComparison.OrdinalIgnoreCase))
                 {
                     return true;
                 }

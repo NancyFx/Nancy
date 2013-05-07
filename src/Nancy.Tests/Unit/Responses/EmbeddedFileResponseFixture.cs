@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Responses
 {
     using System.IO;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class EmbeddedFileResponseFixture

@@ -2,9 +2,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Globalization;
     using System.Text;
     using System.Threading;
 
@@ -27,12 +27,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             this.deserialize = new JsonBodyDeserializer();
 
             this.testModel = new TestModel()
-                {
-                    IntProperty = 12,
-                    StringProperty = "More cowbell",
-                    DateProperty = DateTime.Parse("2011/12/25"),
-                    ArrayProperty = new[] { "Ping", "Pong" }
-                };
+            {
+                IntProperty = 12,
+                StringProperty = "More cowbell",
+                DateProperty = DateTime.Parse("2011/12/25"),
+                ArrayProperty = new[] {"Ping", "Pong"}
+            };
 
             this.serializer = new JavaScriptSerializer();
             this.serializer.RegisterConverters(JsonSettings.Converters);
@@ -112,15 +112,15 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(json));
             var context = new BindingContext()
             {
-                DestinationType = typeof(TimeSpan),
-                ValidModelProperties = typeof(TimeSpan).GetProperties(),
+                DestinationType = typeof (TimeSpan),
+                ValidModelProperties = typeof (TimeSpan).GetProperties(),
             };
 
             // When
             var result = (TimeSpan)this.deserialize.Deserialize(
-                            "application/json",
-                            bodyStream,
-                            context);
+                "application/json",
+                bodyStream,
+                context);
 
             // Then
             result.Days.ShouldEqual(14);
@@ -132,14 +132,14 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             // Given
             var context = new BindingContext()
             {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                DestinationType = typeof (TestModel),
+                ValidModelProperties = typeof (TestModel).GetProperties(),
             };
 
             var model =
                 new TestModel
                 {
-                    ListOfPrimitivesProperty = new List<int> { 1, 3, 5 }
+                    ListOfPrimitivesProperty = new List<int> {1, 3, 5}
                 };
 
             var s = new JavaScriptSerializer();
@@ -148,9 +148,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             // When
             var result = (TestModel)this.deserialize.Deserialize(
-                            "application/json",
-                            bodyStream,
-                            context);
+                "application/json",
+                bodyStream,
+                context);
 
             // Then
             result.ListOfPrimitivesProperty.ShouldHaveCount(3);
@@ -165,8 +165,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             // Given
             var context = new BindingContext()
             {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                DestinationType = typeof (TestModel),
+                ValidModelProperties = typeof (TestModel).GetProperties(),
             };
 
             var model =
@@ -174,8 +174,8 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 {
                     ListOfComplexObjectsProperty = new List<ModelWithStringValues>
                     {
-                        new ModelWithStringValues() { Value1 = "one", Value2 = "two"},
-                        new ModelWithStringValues() { Value1 = "three", Value2 = "four"}
+                        new ModelWithStringValues() {Value1 = "one", Value2 = "two"},
+                        new ModelWithStringValues() {Value1 = "three", Value2 = "four"}
                     }
                 };
 
@@ -185,9 +185,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
             // When
             var result = (TestModel)this.deserialize.Deserialize(
-                            "application/json",
-                            bodyStream,
-                            context);
+                "application/json",
+                bodyStream,
+                context);
 
             // Then
             result.ListOfComplexObjectsProperty.ShouldHaveCount(2);
@@ -201,16 +201,16 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         [Fact]
         public void Should_Serialize_Doubles_In_Different_Cultures()
         {
-			// TODO - fixup on mono, seems to throw inside double.parse
+            // TODO - fixup on mono, seems to throw inside double.parse
             // Given
             Thread.CurrentThread.CurrentCulture = CultureInfo.GetCultureInfo("de-DE");
 
-            var modelWithDoubleValues = 
+            var modelWithDoubleValues =
                 new ModelWithDoubleValues
-                    {
-                        Latitude = 50.933984, 
-                        Longitude = 7.330627
-                    };
+                {
+                    Latitude = 50.933984,
+                    Longitude = 7.330627
+                };
 
             var s = new JavaScriptSerializer();
             var serialized = s.Serialize(modelWithDoubleValues);
@@ -231,14 +231,14 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         [InlineData("\r\n")]
         [InlineData("\r")]
         public void Should_Serialize_Last_Prop_is_Bool_And_Trailing_NewLine(string lineEndings)
-        { 
+        {
             // Given
             var json = string.Concat("{\"Property\": true", lineEndings, "}");
 
             // When
             var s = new JavaScriptSerializer();
             var deserialized = (dynamic)s.DeserializeObject(json);
-            
+
             // Then
             Assert.True(deserialized["Property"]);
         }
@@ -248,11 +248,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         {
             // Given
             var json = "{\"Property\": true}";
-            
+
             // When
             var s = new JavaScriptSerializer();
             var deserialized = (dynamic)s.DeserializeObject(json);
-            
+
             // Then
             Assert.True(deserialized["Property"]);
         }
@@ -284,9 +284,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 }
 
                 return other.StringProperty == this.StringProperty &&
-                       other.IntProperty == this.IntProperty &&
-                       !other.ArrayProperty.Except(this.ArrayProperty).Any() &&
-                       other.DateProperty.ToShortDateString() == this.DateProperty.ToShortDateString();
+                    other.IntProperty == this.IntProperty &&
+                    !other.ArrayProperty.Except(this.ArrayProperty).Any() &&
+                    other.DateProperty.ToShortDateString() == this.DateProperty.ToShortDateString();
             }
 
             public override bool Equals(object obj)
@@ -301,7 +301,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                     return true;
                 }
 
-                if (obj.GetType() != typeof(TestModel))
+                if (obj.GetType() != typeof (TestModel))
                 {
                     return false;
                 }
@@ -313,10 +313,10 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             {
                 unchecked
                 {
-                    int result = (this.StringProperty != null ? this.StringProperty.GetHashCode() : 0);
-                    result = (result * 397) ^ this.IntProperty;
-                    result = (result * 397) ^ this.DateProperty.GetHashCode();
-                    result = (result * 397) ^ (this.ArrayProperty != null ? this.ArrayProperty.GetHashCode() : 0);
+                    var result = (this.StringProperty != null ? this.StringProperty.GetHashCode() : 0);
+                    result = (result*397) ^ this.IntProperty;
+                    result = (result*397) ^ this.DateProperty.GetHashCode();
+                    result = (result*397) ^ (this.ArrayProperty != null ? this.ArrayProperty.GetHashCode() : 0);
                     return result;
                 }
             }

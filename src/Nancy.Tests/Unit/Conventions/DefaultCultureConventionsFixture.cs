@@ -2,11 +2,11 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Nancy.Conventions;
-    using Xunit;
     using System.Globalization;
+
+    using Nancy.Conventions;
+
+    using Xunit;
 
     public class DefaultCultureConventionsFixture
     {
@@ -79,9 +79,7 @@
             this.conventions.CultureConventions =
                 new List<Func<NancyContext, CultureInfo>>
                 {
-                    (ctx) => {
-                        return new CultureInfo("en-GB");
-                    }
+                    (ctx) => { return new CultureInfo("en-GB"); }
                 };
 
             // When
@@ -98,9 +96,7 @@
             this.conventions.CultureConventions =
                 new List<Func<NancyContext, CultureInfo>>
                 {
-                    (ctx) => {
-                        return new CultureInfo("en-GB");
-                    }
+                    (ctx) => { return new CultureInfo("en-GB"); }
                 };
 
             // When

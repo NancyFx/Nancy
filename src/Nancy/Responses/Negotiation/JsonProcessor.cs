@@ -9,10 +9,10 @@
     /// </summary>
     public class JsonProcessor : IResponseProcessor
     {
-        private readonly ISerializer serializer;
+        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
+            new[] {new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json"))};
 
-        private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings = 
-            new[] { new Tuple<string, MediaRange>("json", MediaRange.FromString("application/json")) };
+        private readonly ISerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="JsonProcessor"/> class,
@@ -30,7 +30,7 @@
         /// </summary>
         public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
         {
-            get {  return extensionMappings; }
+            get { return extensionMappings; }
         }
 
         /// <summary>
@@ -45,10 +45,10 @@
             if (IsExactJsonContentType(requestedMediaRange))
             {
                 return new ProcessorMatch
-                    {
-                        ModelResult = MatchResult.DontCare,
-                        RequestedContentTypeResult = MatchResult.ExactMatch
-                    };
+                {
+                    ModelResult = MatchResult.DontCare,
+                    RequestedContentTypeResult = MatchResult.ExactMatch
+                };
             }
 
             if (IsWildcardJsonContentType(requestedMediaRange))
@@ -104,7 +104,7 @@
             var subtypeString = requestedContentType.Subtype.ToString();
 
             return (subtypeString.StartsWith("vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                    subtypeString.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
+                subtypeString.EndsWith("+json", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

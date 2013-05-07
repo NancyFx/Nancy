@@ -9,18 +9,18 @@ namespace Nancy.Routing.Trie.Nodes
     {
         private string parameterName;
 
+        public OptionalCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {
+            this.ExtractParameterName();
+        }
+
         /// <summary>
         /// Score for this node
         /// </summary>
         public override int Score
         {
             get { return 1000; }
-        }
-
-        public OptionalCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
-            this.ExtractParameterName();
         }
 
         /// <summary>
@@ -36,7 +36,8 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="moduleType">The module key the route comes from</param>
         /// <param name="routeIndex">The route index in the module</param>
         /// <param name="routeDescription">The route description</param>
-        public override void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex, RouteDescription routeDescription)
+        public override void Add(string[] segments, int currentIndex, int currentScore, int nodeCount, Type moduleType, int routeIndex,
+            RouteDescription routeDescription)
         {
             base.Add(segments, currentIndex, currentScore, nodeCount, moduleType, routeIndex, routeDescription);
 

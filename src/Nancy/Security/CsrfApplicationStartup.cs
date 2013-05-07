@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Security
 {
-    using Bootstrapper;
-    using Cryptography;
+    using Nancy.Bootstrapper;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Wires up the CSRF (anti-forgety token) support at application startup.
@@ -15,7 +15,8 @@
         /// <param name="cryptographyConfiguration">The cryptograpic configuration to use.</param>
         /// <param name="objectSerializer">The serializer that should be used.</param>
         /// <param name="tokenValidator">The token validator that should be used.</param>
-        public CsrfApplicationStartup(CryptographyConfiguration cryptographyConfiguration, IObjectSerializer objectSerializer, ICsrfTokenValidator tokenValidator)
+        public CsrfApplicationStartup(CryptographyConfiguration cryptographyConfiguration, IObjectSerializer objectSerializer,
+            ICsrfTokenValidator tokenValidator)
         {
             CryptographyConfiguration = cryptographyConfiguration;
             ObjectSerializer = objectSerializer;
@@ -42,7 +43,6 @@
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
-        {
-        }
+        {}
     }
 }

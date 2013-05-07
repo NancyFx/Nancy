@@ -3,6 +3,7 @@
     using System;
     using System.IO;
     using System.Threading.Tasks;
+
     using Nancy.Extensions;
 
     /// <summary>
@@ -12,8 +13,8 @@
     {
         public static long DEFAULT_SWITCHOVER_THRESHOLD = 81920;
 
-        private bool disableStreamSwitching;
         private readonly long thresholdLength;
+        private bool disableStreamSwitching;
         private bool isSafeToDisposeStream;
         private Stream stream;
 
@@ -25,8 +26,7 @@
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
         public RequestStream(long expectedLength, long thresholdLength, bool disableStreamSwitching)
             : this(null, expectedLength, thresholdLength, disableStreamSwitching)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
@@ -36,8 +36,7 @@
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
         public RequestStream(Stream stream, long expectedLength, bool disableStreamSwitching)
             : this(stream, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
@@ -46,8 +45,7 @@
         /// <param name="disableStreamSwitching">if set to <see langword="true"/> the stream will never explicitly be moved to disk.</param>
         public RequestStream(long expectedLength, bool disableStreamSwitching)
             : this(null, expectedLength, DEFAULT_SWITCHOVER_THRESHOLD, disableStreamSwitching)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestStream"/> class.
@@ -73,38 +71,16 @@
             {
                 var task =
                     MoveToWritableStream();
- 
+
                 task.Wait();
-  
+
                 if (task.IsFaulted)
                 {
-                   throw new InvalidOperationException("Unable to copy stream", task.Exception);
+                    throw new InvalidOperationException("Unable to copy stream", task.Exception);
                 }
             }
 
             this.stream.Position = 0;
-        }
-
-        private Task<object> MoveToWritableStream()
-        {
-            var tcs = new TaskCompletionSource<object>();
-
-            var sourceStream = this.stream;
-            this.stream = new MemoryStream(StreamExtensions.BufferSize);
-
-            sourceStream.CopyTo(this, (source, destination, ex) =>
-            {
-                if (ex != null)
-                {
-                    tcs.SetException(ex);
-                }
-                else
-                {
-                    tcs.SetResult(null);
-                }
-            });
-
-            return tcs.Task;
         }
 
         /// <summary>
@@ -159,7 +135,7 @@
         /// <remarks>The stream is moved to disk when either the length of the contents or expected content length exceeds the threshold specified in the constructor.</remarks>
         public bool IsInMemory
         {
-            get { return !(this.stream.GetType() == typeof(FileStream)); }
+            get { return !(this.stream.GetType() == typeof (FileStream)); }
         }
 
         /// <summary>
@@ -179,6 +155,28 @@
 
                 this.stream.Position = value;
             }
+        }
+
+        private Task<object> MoveToWritableStream()
+        {
+            var tcs = new TaskCompletionSource<object>();
+
+            var sourceStream = this.stream;
+            this.stream = new MemoryStream(StreamExtensions.BufferSize);
+
+            sourceStream.CopyTo(this, (source, destination, ex) =>
+            {
+                if (ex != null)
+                {
+                    tcs.SetException(ex);
+                }
+                else
+                {
+                    tcs.SetResult(null);
+                }
+            });
+
+            return tcs.Task;
         }
 
         /// <summary>
@@ -388,8 +386,7 @@
                 File.Delete(fileName);
             }
             catch
-            {
-            }
+            {}
         }
 
         private void MoveStreamOutOfMemoryIfContentsLengthExceedThresholdAndSwitchingIsEnabled()
@@ -407,8 +404,7 @@
                 }
             }
             catch (NotSupportedException)
-            {
-            }
+            {}
         }
 
         private bool MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(long expectedLength)
@@ -459,9 +455,9 @@
 
             if (thresholdLength < 0)
             {
-                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength, "The value of the threshHoldLength parameter cannot be less than zero.");
+                throw new ArgumentOutOfRangeException("thresholdLength", thresholdLength,
+                    "The value of the threshHoldLength parameter cannot be less than zero.");
             }
         }
-
     }
 }

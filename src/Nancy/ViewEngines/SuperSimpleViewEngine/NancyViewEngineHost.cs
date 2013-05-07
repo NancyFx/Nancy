@@ -4,7 +4,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
     public class NancyViewEngineHost : IViewEngineHost
     {
-        private IRenderContext renderContext;
+        private readonly IRenderContext renderContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyViewEngineHost"/> class.

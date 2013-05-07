@@ -11,6 +11,15 @@
         private static string template;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="NancyRazorErrorView"/> class.
+        /// </summary>
+        /// <param name="message">The message.</param>
+        public NancyRazorErrorView(string message)
+        {
+            this.Message = message;
+        }
+
+        /// <summary>
         /// Gets or sets the template for rendinger errors.
         /// The token "[DETAILS]" will be replaced by the HTML for
         /// the actual error.
@@ -19,14 +28,6 @@
         {
             get { return template ?? (template = LoadResource(@"CompilationError.html")); }
             set { template = value; }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NancyRazorErrorView"/> class.
-        /// </summary>
-        /// <param name="message">The message.</param>
-        public NancyRazorErrorView(string message) {
-            this.Message = message;
         }
 
         /// <summary>
@@ -44,7 +45,8 @@
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(NancyRazorErrorView).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
+            var resourceStream =
+                typeof (NancyRazorErrorView).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
 
             if (resourceStream == null)
             {
@@ -52,9 +54,7 @@
             }
 
             using (var reader = new StreamReader(resourceStream))
-            {
                 return reader.ReadToEnd();
-            }
         }
     }
 }

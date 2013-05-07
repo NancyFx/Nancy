@@ -10,13 +10,11 @@
     /// </summary>
     public class FileSystemViewLocationResult : ViewLocationResult
     {
+        private readonly Func<TextReader> fileContents;
+        private readonly string fileName;
         private readonly IFileSystemReader fileSystem;
 
-        private readonly string fileName;
-
         private DateTime lastUpdated;
-
-        private readonly Func<TextReader> fileContents;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
@@ -27,7 +25,8 @@
         /// <param name="contents">A <see cref="TextReader"/> that can be used to read the contents of the located view.</param>
         /// <param name="fullFilename">Full filename of the file</param>
         /// <param name="fileSystem">An <see cref="IFileSystemReader"/> instance that should be used when retrieving view information from the file system.</param>
-        public FileSystemViewLocationResult(string location, string name, string extension, Func<TextReader> contents, string fullFilename, IFileSystemReader fileSystem)
+        public FileSystemViewLocationResult(string location, string name, string extension, Func<TextReader> contents, string fullFilename,
+            IFileSystemReader fileSystem)
         {
             this.fileSystem = fileSystem;
             this.Location = location;

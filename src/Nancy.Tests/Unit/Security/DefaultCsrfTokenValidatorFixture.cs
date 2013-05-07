@@ -1,20 +1,22 @@
 ﻿namespace Nancy.Tests.Unit.Security
 {
     using System;
+
     using Nancy.Cryptography;
     using Nancy.Security;
+
     using Xunit;
 
     public class DefaultCsrfTokenValidatorFixture
     {
-        private readonly ICsrfTokenValidator validator;
         private readonly IHmacProvider hmacProvider;
+        private readonly ICsrfTokenValidator validator;
 
         public DefaultCsrfTokenValidatorFixture()
         {
             var cryptoConfig = CryptographyConfiguration.Default;
             this.hmacProvider = cryptoConfig.HmacProvider;
-            this.validator = new DefaultCsrfTokenValidator(cryptoConfig);            
+            this.validator = new DefaultCsrfTokenValidator(cryptoConfig);
         }
 
         [Fact]
@@ -36,9 +38,9 @@
         [Fact]
         public void Should_return_token_mismatch_if_tokens_differ()
         {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 4, 3 } };
+            var date = DateTime.Now;
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 4, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
@@ -50,9 +52,9 @@
         [Fact]
         public void Should_return_token_ok_if_tokens_match_and_no_expiry_set()
         {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var date = DateTime.Now;
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
@@ -64,9 +66,9 @@
         [Fact]
         public void Should_return_token_mismatch_if_random_bytes_empty()
         {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { } };
+            var date = DateTime.Now;
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
@@ -78,9 +80,9 @@
         [Fact]
         public void Should_return_token_tampered_with_if_hmac_incorrect()
         {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var date = DateTime.Now;
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
             tokenOne.Hmac[0] -= 1;
@@ -94,9 +96,9 @@
         [Fact]
         public void Should_return_token_expired_if_it_has()
         {
-            DateTime date = DateTime.Now.AddHours(-1);
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var date = DateTime.Now.AddHours(-1);
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
@@ -108,9 +110,9 @@
         [Fact]
         public void Should_return_ok_if_valid_and_not_expired()
         {
-            DateTime date = DateTime.Now.AddHours(-1);
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var date = DateTime.Now.AddHours(-1);
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 
@@ -122,9 +124,9 @@
         [Fact]
         public void Should_return_token_ok_if_tokens_match_and_no_salt()
         {
-            DateTime date = DateTime.Now;
-            var tokenOne = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
-            var tokenTwo = new CsrfToken { CreatedDate = date, RandomBytes = new byte[] { 1, 2, 3 } };
+            var date = DateTime.Now;
+            var tokenOne = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
+            var tokenTwo = new CsrfToken {CreatedDate = date, RandomBytes = new byte[] {1, 2, 3}};
             tokenOne.CreateHmac(this.hmacProvider);
             tokenTwo.CreateHmac(this.hmacProvider);
 

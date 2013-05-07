@@ -5,8 +5,8 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.IO;
 
@@ -16,9 +16,8 @@
     [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
     public class NancyOwinHost
     {
-        private readonly INancyEngine engine;
-
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
+        private readonly INancyEngine engine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
@@ -26,8 +25,7 @@
         [Obsolete("NancyOwinHost is now obsolete, please use Nancy.Owin")]
         public NancyOwinHost()
             : this(NancyBootstrapperLocator.Bootstrapper)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
@@ -71,11 +69,11 @@
             var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
 
             var nancyRequest = new Request(
-                    owinRequestMethod,
-                    url,
-                    nancyRequestStream,
-                    owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
-                    serverClientIp);
+                owinRequestMethod,
+                url,
+                nancyRequestStream,
+                owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
+                serverClientIp);
 
             var tcs = new TaskCompletionSource<int>();
             engine.HandleRequest(
@@ -95,13 +93,11 @@
                     environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
 
                     foreach (var responseHeader in nancyResponse.Headers)
-                    {
-                        owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
-                    }
+                        owinResponseHeaders[responseHeader.Key] = new[] {responseHeader.Value};
 
                     if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
                     {
-                        owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
+                        owinResponseHeaders["Content-Type"] = new[] {nancyResponse.ContentType};
                     }
 
                     if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
@@ -115,7 +111,6 @@
                     context.Dispose();
 
                     tcs.TrySetResult(0);
-
                 }, tcs.SetException);
 
             return tcs.Task;

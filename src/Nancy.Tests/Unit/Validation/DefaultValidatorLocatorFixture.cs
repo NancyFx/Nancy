@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System;
-    using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Validation;
+
     using Xunit;
 
     public class DefaultValidatorLocatorFixture
@@ -29,7 +31,7 @@
             var subject = new DefaultValidatorLocator(fakeFactories);
 
             // When
-            var result = subject.GetValidatorForType(typeof(string));
+            var result = subject.GetValidatorForType(typeof (string));
 
             // Then
             result.ShouldBeNull();
@@ -48,7 +50,7 @@
             var subject = new DefaultValidatorLocator(fakeFactories);
 
             // When
-            var result = subject.GetValidatorForType(typeof(string));
+            var result = subject.GetValidatorForType(typeof (string));
 
             // Then
             result.ShouldBeSameAs(fakeValidator);
@@ -67,7 +69,7 @@
             var subject = new DefaultValidatorLocator(fakeFactories);
 
             // When
-            var result = subject.GetValidatorForType(typeof(string));
+            var result = subject.GetValidatorForType(typeof (string));
 
             // Then
             result.ShouldBeOfType<CompositeValidator>();
@@ -80,7 +82,7 @@
             var subject = new DefaultValidatorLocator(null);
 
             // When
-            var exception = Record.Exception(() => subject.GetValidatorForType(typeof(string)));
+            var exception = Record.Exception(() => subject.GetValidatorForType(typeof (string)));
 
             // Then
             exception.ShouldBeOfType<ModelValidationException>();

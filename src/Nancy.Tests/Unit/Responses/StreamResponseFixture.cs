@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Responses
 {
     using System.IO;
+
     using FakeItEasy;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class StreamResponseFixture
@@ -12,14 +15,14 @@
         {
             // Given
             var streamContent =
-                new byte[] { 1, 2, 3, 4, 5 };
+                new byte[] {1, 2, 3, 4, 5};
 
             var inputStream =
                 new MemoryStream(streamContent);
-            
-            var response = 
+
+            var response =
                 new StreamResponse(() => inputStream, "test");
-            
+
             var outputStream = new MemoryStream();
 
             // When
@@ -34,10 +37,10 @@
         {
             // Given
             var streamContent =
-                new byte[] { 1, 2, 3, 4, 5 };
+                new byte[] {1, 2, 3, 4, 5};
 
             var inputStream =
-                new MemoryStream(streamContent) { Position = 2 };
+                new MemoryStream(streamContent) {Position = 2};
 
             var response =
                 new StreamResponse(() => inputStream, "test");
@@ -45,7 +48,7 @@
             var outputStream = new MemoryStream();
 
             var expectedContent =
-                new byte[] { 3, 4, 5 };
+                new byte[] {3, 4, 5};
 
             // When
             response.Contents.Invoke(outputStream);

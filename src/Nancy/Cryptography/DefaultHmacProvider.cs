@@ -9,14 +9,14 @@ namespace Nancy.Cryptography
     public class DefaultHmacProvider : IHmacProvider
     {
         /// <summary>
-        /// HMAC length
-        /// </summary>
-        private readonly int hmacLength = new HMACSHA256().HashSize / 8;
-
-        /// <summary>
         /// Preferred key size for HMACSHA256
         /// </summary>
         private const int PreferredKeySize = 64;
+
+        /// <summary>
+        /// HMAC length
+        /// </summary>
+        private readonly int hmacLength = new HMACSHA256().HashSize/8;
 
         /// <summary>
         /// Key

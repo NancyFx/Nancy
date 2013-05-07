@@ -29,30 +29,28 @@
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.IO;
-using System.Text;
-
 namespace Nancy.Helpers
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Collections.Specialized;
+    using System.IO;
+    using System.Text;
+
     public sealed class HttpUtility
     {
-        sealed class HttpQSCollection : NameValueCollection
+        private sealed class HttpQSCollection : NameValueCollection
         {
             public override string ToString()
             {
-                int count = Count;
+                var count = Count;
                 if (count == 0)
                     return "";
-                StringBuilder sb = new StringBuilder();
-                string[] keys = AllKeys;
-                for (int i = 0; i < count; i++)
-                {
+                var sb = new StringBuilder();
+                var keys = AllKeys;
+                for (var i = 0; i < count; i++)
                     sb.AppendFormat("{0}={1}&", keys[i], this[keys[i]]);
-                }
                 if (sb.Length > 0)
                     sb.Length--;
                 return sb.ToString();
@@ -62,8 +60,7 @@ namespace Nancy.Helpers
         #region Constructors
 
         public HttpUtility()
-        {
-        }
+        {}
 
         #endregion // Constructors
 
@@ -106,16 +103,16 @@ namespace Nancy.Helpers
             return UrlDecode(str, Encoding.UTF8);
         }
 
-        static char[] GetChars(MemoryStream b, Encoding e)
+        private static char[] GetChars(MemoryStream b, Encoding e)
         {
             return e.GetChars(b.GetBuffer(), 0, (int)b.Length);
         }
 
-        static void WriteCharBytes(IList buf, char ch, Encoding e)
+        private static void WriteCharBytes(IList buf, char ch, Encoding e)
         {
             if (ch > 255)
             {
-                foreach (byte b in e.GetBytes(new char[] { ch }))
+                foreach (var b in e.GetBytes(new char[] {ch}))
                     buf.Add(b);
             }
             else
@@ -138,7 +135,7 @@ namespace Nancy.Helpers
             int xchar;
             char ch;
 
-            for (int i = 0; i < len; i++)
+            for (var i = 0; i < len; i++)
             {
                 ch = s[i];
                 if (ch == '%' && i + 2 < len && s[i + 1] != '%')
@@ -173,10 +170,9 @@ namespace Nancy.Helpers
                     WriteCharBytes(bytes, ch, e);
             }
 
-            byte[] buf = bytes.ToArray();
+            var buf = bytes.ToArray();
             bytes = null;
             return e.GetString(buf);
-
         }
 
         public static string UrlDecode(byte[] bytes, Encoding e)
@@ -187,9 +183,9 @@ namespace Nancy.Helpers
             return UrlDecode(bytes, 0, bytes.Length, e);
         }
 
-        static int GetInt(byte b)
+        private static int GetInt(byte b)
         {
-            char c = (char)b;
+            var c = (char)b;
             if (c >= '0' && c <= '9')
                 return c - '0';
 
@@ -202,13 +198,13 @@ namespace Nancy.Helpers
             return -1;
         }
 
-        static int GetChar(byte[] bytes, int offset, int length)
+        private static int GetChar(byte[] bytes, int offset, int length)
         {
-            int value = 0;
-            int end = length + offset;
-            for (int i = offset; i < end; i++)
+            var value = 0;
+            var end = length + offset;
+            for (var i = offset; i < end; i++)
             {
-                int current = GetInt(bytes[i]);
+                var current = GetInt(bytes[i]);
                 if (current == -1)
                     return -1;
                 value = (value << 4) + current;
@@ -217,17 +213,17 @@ namespace Nancy.Helpers
             return value;
         }
 
-        static int GetChar(string str, int offset, int length)
+        private static int GetChar(string str, int offset, int length)
         {
-            int val = 0;
-            int end = length + offset;
-            for (int i = offset; i < end; i++)
+            var val = 0;
+            var end = length + offset;
+            for (var i = offset; i < end; i++)
             {
-                char c = str[i];
+                var c = str[i];
                 if (c > 127)
                     return -1;
 
-                int current = GetInt((byte)c);
+                var current = GetInt((byte)c);
                 if (current == -1)
                     return -1;
                 val = (val << 4) + current;
@@ -252,12 +248,12 @@ namespace Nancy.Helpers
             if (count < 0 || offset + count > bytes.Length)
                 throw new ArgumentOutOfRangeException("count");
 
-            StringBuilder output = new StringBuilder();
-            MemoryStream acc = new MemoryStream();
+            var output = new StringBuilder();
+            var acc = new MemoryStream();
 
-            int end = count + offset;
+            var end = count + offset;
             int xchar;
-            for (int i = offset; i < end; i++)
+            for (var i = offset; i < end; i++)
             {
                 if (bytes[i] == '%' && i + 2 < count && bytes[i + 1] != '%')
                 {
@@ -340,25 +336,25 @@ namespace Nancy.Helpers
             if (count == 0)
                 return new byte[0];
 
-            int len = bytes.Length;
+            var len = bytes.Length;
             if (offset < 0 || offset >= len)
                 throw new ArgumentOutOfRangeException("offset");
 
             if (count < 0 || offset > len - count)
                 throw new ArgumentOutOfRangeException("count");
 
-            MemoryStream result = new MemoryStream();
-            int end = offset + count;
-            for (int i = offset; i < end; i++)
+            var result = new MemoryStream();
+            var end = offset + count;
+            for (var i = offset; i < end; i++)
             {
-                char c = (char)bytes[i];
+                var c = (char)bytes[i];
                 if (c == '+')
                 {
                     c = ' ';
                 }
                 else if (c == '%' && i < end - 2)
                 {
-                    int xchar = GetChar(bytes, i + 1, 2);
+                    var xchar = GetChar(bytes, i + 1, 2);
                     if (xchar != -1)
                     {
                         c = (char)xchar;
@@ -384,11 +380,11 @@ namespace Nancy.Helpers
             if (s == String.Empty)
                 return String.Empty;
 
-            bool needEncode = false;
-            int len = s.Length;
-            for (int i = 0; i < len; i++)
+            var needEncode = false;
+            var len = s.Length;
+            for (var i = 0; i < len; i++)
             {
-                char c = s[i];
+                var c = s[i];
                 if ((c < '0') || (c < 'A' && c > '9') || (c > 'Z' && c < 'a') || (c > 'z'))
                 {
                     if (HttpEncoder.NotEncoded(c))
@@ -403,8 +399,8 @@ namespace Nancy.Helpers
                 return s;
 
             // avoided GetByteCount call
-            byte[] bytes = new byte[Enc.GetMaxByteCount(s.Length)];
-            int realLen = Enc.GetBytes(s, 0, s.Length, bytes, 0);
+            var bytes = new byte[Enc.GetMaxByteCount(s.Length)];
+            var realLen = Enc.GetBytes(s, 0, s.Length, bytes, 0);
             return Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, 0, realLen));
         }
 
@@ -443,7 +439,7 @@ namespace Nancy.Helpers
             if (str.Length == 0)
                 return new byte[0];
 
-            byte[] bytes = e.GetBytes(str);
+            var bytes = e.GetBytes(str);
             return UrlEncodeToBytes(bytes, 0, bytes.Length);
         }
 
@@ -485,11 +481,9 @@ namespace Nancy.Helpers
             if (str.Length == 0)
                 return new byte[0];
 
-            MemoryStream result = new MemoryStream(str.Length);
-            foreach (char c in str)
-            {
+            var result = new MemoryStream(str.Length);
+            foreach (var c in str)
                 HttpEncoder.UrlEncodeChar(c, result, true);
-            }
             return result.ToArray();
         }
 
@@ -579,6 +573,7 @@ namespace Nancy.Helpers
 #endif
             }
         }
+
 #if NET_4_0
 		public static string HtmlEncode (object value)
 		{
@@ -666,6 +661,7 @@ namespace Nancy.Helpers
 			return sb.ToString ();
 		}
 #endif
+
         public static string UrlPathEncode(string s)
         {
 #if NET_4_0
@@ -701,14 +697,14 @@ namespace Nancy.Helpers
             if (query.Length == 0)
                 return;
 
-            string decoded = HtmlDecode(query);
-            int decodedLength = decoded.Length;
-            int namePos = 0;
-            bool first = true;
+            var decoded = HtmlDecode(query);
+            var decodedLength = decoded.Length;
+            var namePos = 0;
+            var first = true;
             while (namePos <= decodedLength)
             {
                 int valuePos = -1, valueEnd = -1;
-                for (int q = namePos; q < decodedLength; q++)
+                for (var q = namePos; q < decodedLength; q++)
                 {
                     if (valuePos == -1 && decoded[q] == '=')
                     {
@@ -754,6 +750,7 @@ namespace Nancy.Helpers
                     break;
             }
         }
+
         #endregion // Methods
     }
 }

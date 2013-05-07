@@ -22,12 +22,12 @@
             this.StatusCode = HttpStatusCode.OK;
 
             var content =
-                    GetResourceContent(assembly, resourcePath, name);
+                GetResourceContent(assembly, resourcePath, name);
 
             if (content != null)
             {
                 this.WithHeader("ETag", GenerateETag(content));
-                content.Seek(0, SeekOrigin.Begin);     
+                content.Seek(0, SeekOrigin.Begin);
             }
 
             this.Contents = stream =>
@@ -74,10 +74,8 @@
         private static string ByteArrayToString(byte[] data)
         {
             var output = new StringBuilder(data.Length);
-            for (int i = 0; i < data.Length; i++)
-            {
+            for (var i = 0; i < data.Length; i++)
                 output.Append(data[i].ToString("X2"));
-            }
 
             return output.ToString();
         }

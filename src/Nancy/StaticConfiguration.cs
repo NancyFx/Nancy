@@ -3,8 +3,9 @@ namespace Nancy
     using System;
     using System.Diagnostics;
     using System.Linq;
-    using Diagnostics;
+
     using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
 
     public static class StaticConfiguration
     {
@@ -26,14 +27,8 @@ namespace Nancy
         [Obsolete("DisableCaches is now obsolete, please see the StaticConfiguration.Caching properties for more finely grained control", true)]
         public static bool DisableCaches
         {
-            get
-            {
-                return disableCaches ?? (bool)(disableCaches = IsRunningDebug);
-            }
-            set
-            {
-                disableCaches = value;
-            }
+            get { return disableCaches ?? (bool)(disableCaches = IsRunningDebug); }
+            set { disableCaches = value; }
         }
 
         /// <summary>
@@ -42,14 +37,8 @@ namespace Nancy
         [Description("Disables trace output in the default 500 error pages.")]
         public static bool DisableErrorTraces
         {
-            get
-            {
-                return disableErrorTraces ?? (bool)(disableErrorTraces = IsRunningDebug);
-            }
-            set
-            {
-                disableErrorTraces = value;
-            }
+            get { return disableErrorTraces ?? (bool)(disableErrorTraces = IsRunningDebug); }
+            set { disableErrorTraces = value; }
         }
 
         /// <summary>
@@ -65,10 +54,7 @@ namespace Nancy
         /// </summary>
         public static bool IsRunningDebug
         {
-            get
-            {
-                return isRunningDebug ?? (bool)(isRunningDebug = GetDebugMode());
-            }
+            get { return isRunningDebug ?? (bool)(isRunningDebug = GetDebugMode()); }
         }
 
         /// <summary>
@@ -77,13 +63,19 @@ namespace Nancy
         /// </summary>
         public static int RequestQueryFormMultipartLimit { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether or not to enable request tracing
+        /// </summary>
+        [Description("Enable request tracing.")]
+        public static bool EnableRequestTracing { get; set; }
+
         private static bool GetDebugMode()
         {
             try
             {
                 var assembly = AppDomainAssemblyTypeScanner.TypesOf<INancyModule>(true).FirstOrDefault().Assembly;
 
-                var attributes = assembly.GetCustomAttributes(typeof(DebuggableAttribute), true);
+                var attributes = assembly.GetCustomAttributes(typeof (DebuggableAttribute), true);
 
                 if (attributes.Length == 0)
                 {
@@ -101,12 +93,6 @@ namespace Nancy
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether or not to enable request tracing
-        /// </summary>
-        [Description("Enable request tracing.")]
-        public static bool EnableRequestTracing { get; set; }
-
         public static class Caching
         {
             private static bool? enableRuntimeViewDiscovery;
@@ -120,14 +106,8 @@ namespace Nancy
             [Description("Enable runtime discovery of new views.")]
             public static bool EnableRuntimeViewDiscovery
             {
-                get
-                {
-                    return enableRuntimeViewDiscovery ?? (bool)(enableRuntimeViewDiscovery = IsRunningDebug);
-                }
-                set
-                {
-                    enableRuntimeViewDiscovery = value;
-                }
+                get { return enableRuntimeViewDiscovery ?? (bool)(enableRuntimeViewDiscovery = IsRunningDebug); }
+                set { enableRuntimeViewDiscovery = value; }
             }
 
             /// <summary>
@@ -137,14 +117,8 @@ namespace Nancy
             [Description("Enable runtime updating of view templates.")]
             public static bool EnableRuntimeViewUpdates
             {
-                get
-                {
-                    return enableRuntimeViewUpdates ?? (bool)(enableRuntimeViewUpdates = IsRunningDebug);
-                }
-                set
-                {
-                    enableRuntimeViewUpdates = value;
-                }
+                get { return enableRuntimeViewUpdates ?? (bool)(enableRuntimeViewUpdates = IsRunningDebug); }
+                set { enableRuntimeViewUpdates = value; }
             }
         }
     }

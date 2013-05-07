@@ -3,17 +3,20 @@
     using System;
     using System.IO;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Tests;
-    using SuperSimpleViewEngine;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
+
     using Xunit;
 
     public class MarkdownViewEngineFixture
     {
-        private readonly MarkDownViewEngine viewEngine;
+        private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
         private readonly IRenderContext renderContext;
         private readonly IRootPathProvider rootPathProvider;
-        private readonly FileSystemViewLocationProvider fileSystemViewLocationProvider;
+        private readonly MarkDownViewEngine viewEngine;
 
         public MarkdownViewEngineFixture()
         {
@@ -42,7 +45,7 @@ Hi there!
                 string.Empty,
                 "md",
                 () => new StringReader(markdown)
-            );
+                );
 
             var html = this.viewEngine.ConvertMarkdown(location);
 
@@ -211,14 +214,12 @@ Hi there!
         {
             stream.Position = 0;
             using (var reader = new StreamReader(stream))
-            {
                 return reader.ReadToEnd();
-            }
         }
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "md", "markdown", "html" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] {"md", "markdown", "html"}).First(r => r.Name == viewName);
             return location;
         }
     }

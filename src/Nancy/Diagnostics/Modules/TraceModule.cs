@@ -12,15 +12,9 @@
         {
             this.sessionProvider = sessionProvider;
 
-            Get["/"] = _ =>
-            {
-                return View["RequestTracing"];
-            };
+            Get["/"] = _ => { return View["RequestTracing"]; };
 
-            Get["/sessions"] = _ =>
-            {
-                return this.Response.AsJson(this.sessionProvider.GetSessions().Select(s => new { Id = s.Id }).ToArray());
-            };
+            Get["/sessions"] = _ => { return this.Response.AsJson(this.sessionProvider.GetSessions().Select(s => new {Id = s.Id}).ToArray()); };
 
             Get["/sessions/{id}"] = ctx =>
             {
@@ -30,7 +24,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                var session = 
+                var session =
                     this.sessionProvider.GetSessions().FirstOrDefault(s => s.Id == id);
 
                 if (session == null)
@@ -39,17 +33,17 @@
                 }
 
                 return this.Response.AsJson(session.RequestTraces.Select(t => new
-                    {
-                        t.Method,
-                        t.RequestUrl,
-                        ResponseType = t.ResponseType.ToString(),
-                        t.RequestContentType,
-                        t.ResponseContentType,
-                        t.RequestHeaders,
-                        t.ResponseHeaders,
-                        t.StatusCode,
-                        Log = t.TraceLog.ToString().Replace("\r", "").Split(new [] { "\n" }, StringSplitOptions.None),
-                    }).ToArray());
+                {
+                    t.Method,
+                    t.RequestUrl,
+                    ResponseType = t.ResponseType.ToString(),
+                    t.RequestContentType,
+                    t.ResponseContentType,
+                    t.RequestHeaders,
+                    t.ResponseHeaders,
+                    t.StatusCode,
+                    Log = t.TraceLog.ToString().Replace("\r", "").Split(new[] {"\n"}, StringSplitOptions.None),
+                }).ToArray());
             };
         }
     }

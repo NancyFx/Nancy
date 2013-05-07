@@ -7,6 +7,19 @@
     /// </summary>
     public class ResolveResult
     {
+        public ResolveResult()
+        {}
+
+        public ResolveResult(Route route, DynamicDictionary parameters, Func<NancyContext, Response> before, Action<NancyContext> after,
+            Func<NancyContext, Exception, Response> onError)
+        {
+            this.Route = route;
+            this.Parameters = parameters;
+            this.Before = before;
+            this.After = after;
+            this.OnError = onError;
+        }
+
         /// <summary>
         /// Gets or sets the route
         /// </summary>
@@ -31,19 +44,5 @@
         /// Gets or sets the on error module pipeline
         /// </summary>
         public Func<NancyContext, Exception, Response> OnError { get; set; }
-
-        public ResolveResult()
-        {
-            
-        }
-
-        public ResolveResult(Route route, DynamicDictionary parameters, Func<NancyContext, Response> before, Action<NancyContext> after, Func<NancyContext, Exception, Response> onError)
-        {
-            this.Route = route;
-            this.Parameters = parameters;
-            this.Before = before;
-            this.After = after;
-            this.OnError = onError;
-        }
     }
 }

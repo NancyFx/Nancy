@@ -10,7 +10,16 @@ namespace Nancy.Routing.Trie
     {
         private static readonly MatchResult noMatch = new MatchResult();
 
-        private static readonly MatchResult[] noMatches = new MatchResult[] { }; 
+        private static readonly MatchResult[] noMatches = new MatchResult[] {};
+
+        public MatchResult(IDictionary<string, object> parameters)
+        {
+            this.Parameters = parameters;
+        }
+
+        public MatchResult()
+            : this(new Dictionary<string, object>())
+        {}
 
         /// <summary>
         /// Gets or sets the captured parameters
@@ -22,10 +31,7 @@ namespace Nancy.Routing.Trie
         /// </summary>
         public static MatchResult NoMatch
         {
-            get
-            {
-                return noMatch;
-            }
+            get { return noMatch; }
         }
 
         /// <summary>
@@ -33,20 +39,7 @@ namespace Nancy.Routing.Trie
         /// </summary>
         public static MatchResult[] NoMatches
         {
-            get
-            {
-                return noMatches;
-            }
-        }
-
-        public MatchResult(IDictionary<string, object> parameters)
-        {
-            this.Parameters = parameters;
-        }
-
-        public MatchResult()
-            : this(new Dictionary<string, object>())
-        {
+            get { return noMatches; }
         }
 
         /// <summary>
@@ -79,7 +72,7 @@ namespace Nancy.Routing.Trie
                 return 1;
             }
 
-            if (string.Equals(this.ModuleType, other.ModuleType))
+            if (Equals(this.ModuleType, other.ModuleType))
             {
                 if (this.RouteIndex < other.RouteIndex)
                 {

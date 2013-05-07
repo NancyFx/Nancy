@@ -10,16 +10,14 @@ namespace Nancy.Demo.SuperSimpleViewEngine
         public MainModule()
         {
             Get["/"] = (x) =>
-                {
-                    
+            {
+                var model = new MainModel(
+                    "Jimbo",
+                    new[] {new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"),},
+                    "<script type=\"text/javascript\">alert('Naughty JavaScript!');</script>");
 
-                    var model = new MainModel(
-                        "Jimbo", 
-                        new[] { new User("Bob", "Smith"), new User("Jimbo", "Jones"), new User("Bill", "Bobs"), },
-                        "<script type=\"text/javascript\">alert('Naughty JavaScript!');</script>");
-
-                    return View["Index", model];
-                };
+                return View["Index", model];
+            };
         }
     }
 }

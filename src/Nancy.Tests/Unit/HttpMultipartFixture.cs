@@ -1,13 +1,13 @@
-using System.Collections.Generic;
-using Nancy.IO;
-
 namespace Nancy.Tests.Unit
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text;
-    using Nancy;
+
+    using Nancy.IO;
+
     using Xunit;
 
     public class HttpMultipartFixture
@@ -51,12 +51,12 @@ namespace Nancy.Tests.Unit
 
             var stream = new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
             {
-                { "sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
+                {"sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
             }, null, "epilogue"));
 
             var headers = new Dictionary<string, IEnumerable<string>>
             {
-                { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
             };
 
             // When
@@ -82,12 +82,12 @@ namespace Nancy.Tests.Unit
 
             var stream = new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
             {
-                { "sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
+                {"sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
             }));
 
             var headers = new Dictionary<string, IEnumerable<string>>
             {
-                { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
             };
 
             // When
@@ -113,12 +113,12 @@ namespace Nancy.Tests.Unit
 
             var stream = new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
             {
-                { "sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
+                {"sample.txt", new Tuple<string, string, string>("content/type", expected, "name")}
             }, "preamble", null));
 
             var headers = new Dictionary<string, IEnumerable<string>>
             {
-                { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
             };
 
             // When
@@ -139,14 +139,18 @@ namespace Nancy.Tests.Unit
         public void If_the_stream_ends_with_carriage_return_characters_it_should_not_affect_the_multipart()
         {
             // Given
-            var expected = "#!/usr/bin/env rake\n# Add your own tasks in files placed in lib/tasks ending in .rake,\n# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.\n\nrequire File.expand_path('../config/application', __FILE__)\n\nOnlinebackupWebclient::Application.load_tasks";
-            var data = string.Format("--69989\r\nContent-Disposition: form-data; name=\"Stream\"; filename=\"Rakefile\"\r\nContent-Type: text/plain\r\n\r\n{0}\r\n--69989--\r\n", expected);
+            var expected =
+                "#!/usr/bin/env rake\n# Add your own tasks in files placed in lib/tasks ending in .rake,\n# for example lib/tasks/capistrano.rake, and they will automatically be available to Rake.\n\nrequire File.expand_path('../config/application', __FILE__)\n\nOnlinebackupWebclient::Application.load_tasks";
+            var data =
+                string.Format(
+                    "--69989\r\nContent-Disposition: form-data; name=\"Stream\"; filename=\"Rakefile\"\r\nContent-Type: text/plain\r\n\r\n{0}\r\n--69989--\r\n",
+                    expected);
             var stream = new MemoryStream(Encoding.ASCII.GetBytes(data));
-            
+
             var headers = new Dictionary<string, IEnumerable<string>>
             {
-                {"Content-Type", new [] { "multipart/form-data; boundary=69989"} },
-                {"Content-Length", new [] {"403"} }
+                {"Content-Type", new[] {"multipart/form-data; boundary=69989"}},
+                {"Content-Length", new[] {"403"}}
             };
 
             // When
@@ -180,10 +184,11 @@ namespace Nancy.Tests.Unit
         //
         private static HttpMultipartSubStream BuildInputStream(string padding, int numberOfBoundaries)
         {
-            return BuildInputStream(padding, numberOfBoundaries, (i,b) => InsertRandomContent(b), null);
+            return BuildInputStream(padding, numberOfBoundaries, (i, b) => InsertRandomContent(b), null);
         }
 
-        private static HttpMultipartSubStream BuildInputStream(string padding, int numberOfBoundaries, Action<int, StringBuilder> insertContent, string dataAtTheEnd)
+        private static HttpMultipartSubStream BuildInputStream(string padding, int numberOfBoundaries, Action<int, StringBuilder> insertContent,
+            string dataAtTheEnd)
         {
             var memory = new MemoryStream(BuildRandomBoundaries(padding, numberOfBoundaries, insertContent, dataAtTheEnd));
 
@@ -224,13 +229,11 @@ namespace Nancy.Tests.Unit
 
         private static void InsertRandomContent(StringBuilder builder)
         {
-            var random = 
+            var random =
                 new Random((int)DateTime.Now.Ticks);
 
             for (var index = 0; index < random.Next(1, 200); index++)
-            {
-                builder.Append((char) random.Next(0, 255));
-            }
+                builder.Append((char)random.Next(0, 255));
         }
 
         private static byte[] BuildMultipartFileValues(Dictionary<string, Tuple<string, string, string>> formValues, string preamble, string epilogue)

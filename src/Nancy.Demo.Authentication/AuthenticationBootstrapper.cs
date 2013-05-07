@@ -2,8 +2,8 @@ namespace Nancy.Demo.Authentication
 {
     using System;
     using System.Collections.Generic;
-    using Bootstrapper;
-    using Nancy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Responses;
     using Nancy.TinyIoc;
 
@@ -24,10 +24,10 @@ namespace Nancy.Demo.Authentication
                 if (username.HasValue)
                 {
                     ctx.CurrentUser = new DemoUserIdentity
-                                          {
-                                              UserName = username.ToString(),
-                                              Claims = BuildClaims(username.ToString())
-                                          };
+                    {
+                        UserName = username.ToString(),
+                        Claims = BuildClaims(username.ToString())
+                    };
                 }
 
                 return null;

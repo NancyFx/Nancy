@@ -8,8 +8,7 @@
     {
         public VisualBasicModelCodeGenerator(string baseType)
             : base(baseType)
-        {
-        }
+        {}
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {

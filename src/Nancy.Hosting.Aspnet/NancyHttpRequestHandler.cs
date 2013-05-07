@@ -1,18 +1,14 @@
 namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Configuration;
     using System.Web;
-    using System;
+
     using Nancy.Bootstrapper;
 
     public class NancyHttpRequestHandler : IHttpHandler
     {
-        private static INancyEngine engine;
-
-        public bool IsReusable
-        {
-            get { return true; }
-        }
+        private static readonly INancyEngine engine;
 
         static NancyHttpRequestHandler()
         {
@@ -23,6 +19,18 @@ namespace Nancy.Hosting.Aspnet
             engine = bootstrapper.GetEngine();
         }
 
+        public bool IsReusable
+        {
+            get { return true; }
+        }
+
+        public void ProcessRequest(HttpContext context)
+        {
+            var wrappedContext = new HttpContextWrapper(context);
+            var handler = new NancyHandler(engine);
+            handler.ProcessRequest(wrappedContext);
+        }
+
         private static INancyBootstrapper GetBootstrapper()
         {
             return GetConfigurationBootstrapper() ?? NancyBootstrapperLocator.Bootstrapper;
@@ -30,7 +38,7 @@ namespace Nancy.Hosting.Aspnet
 
         private static INancyBootstrapper GetConfigurationBootstrapper()
         {
-            var configurationBootstrapperType = 
+            var configurationBootstrapperType =
                 GetConfigurationBootstrapperType();
 
             if (configurationBootstrapperType != null)
@@ -46,7 +54,7 @@ namespace Nancy.Hosting.Aspnet
 
         private static BootstrapperEntry GetConfigurationBootstrapperType()
         {
-            var configurationSection = 
+            var configurationSection =
                 ConfigurationManager.GetSection("nancyFx") as NancyFxSection;
 
             if (configurationSection == null)
@@ -54,10 +62,10 @@ namespace Nancy.Hosting.Aspnet
                 return null;
             }
 
-            var bootstrapperOverrideType = 
+            var bootstrapperOverrideType =
                 configurationSection.Bootstrapper.Type;
 
-            var bootstrapperOverrideAssembly = 
+            var bootstrapperOverrideAssembly =
                 configurationSection.Bootstrapper.Assembly;
 
             if (string.IsNullOrWhiteSpace(bootstrapperOverrideType) || string.IsNullOrWhiteSpace(bootstrapperOverrideAssembly))
@@ -66,13 +74,6 @@ namespace Nancy.Hosting.Aspnet
             }
 
             return new BootstrapperEntry(bootstrapperOverrideAssembly, bootstrapperOverrideType);
-        }
-
-        public void ProcessRequest(HttpContext context)
-        {
-            var wrappedContext = new HttpContextWrapper(context);
-            var handler = new NancyHandler(engine);
-            handler.ProcessRequest(wrappedContext);
         }
     }
 }

@@ -1,17 +1,15 @@
 namespace Nancy.Demo.ModelBinding
 {
     using System.Text;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
     public class XmlModule : NancyModule
     {
         public XmlModule()
         {
-            Get["/bindxml"] = x =>
-            {
-                return View["PostXml"];
-            };
+            Get["/bindxml"] = x => { return View["PostXml"]; };
 
             Post["/bindxml"] = x =>
             {

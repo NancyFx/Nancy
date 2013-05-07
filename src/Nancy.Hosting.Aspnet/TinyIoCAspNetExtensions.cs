@@ -2,6 +2,7 @@
 {
     using System;
     using System.Web;
+
     using Nancy.TinyIoc;
 
     public class HttpContextLifetimeProvider : TinyIoCContainer.ITinyIoCObjectLifetimeProvider

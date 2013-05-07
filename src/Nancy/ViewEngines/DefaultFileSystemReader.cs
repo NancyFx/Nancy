@@ -21,7 +21,10 @@
             return supportedViewExtensions
                 .SelectMany(extension => GetFilenames(path, extension))
                 .Distinct()
-                .Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
+                .Select(
+                    file =>
+                        new Tuple<string, Func<StreamReader>>(file,
+                            () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
                 .ToList();
         }
 
@@ -42,11 +45,15 @@
         /// <param name="viewName">Name of the view to search for</param>
         /// <param name="supportedViewExtensions">A list of view extensions to look for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> containing view locations and contents readers.</returns>
-        public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, string viewName, IEnumerable<string> supportedViewExtensions)
+        public IEnumerable<Tuple<string, Func<StreamReader>>> GetViewsWithSupportedExtensions(string path, string viewName,
+            IEnumerable<string> supportedViewExtensions)
         {
             return GetFilenames(path, viewName, supportedViewExtensions)
-                       .Select(file => new Tuple<string, Func<StreamReader>>(file, () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
-                       .ToList();
+                .Select(
+                    file =>
+                        new Tuple<string, Func<StreamReader>>(file,
+                            () => new StreamReader(new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))))
+                .ToList();
         }
 
         private static IEnumerable<string> GetFilenames(string path, string viewName, IEnumerable<string> supportedViewExtensions)

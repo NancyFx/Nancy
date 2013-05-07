@@ -5,7 +5,9 @@
     using System.Collections.Generic;
     using System.Web.Razor;
     using System.Web.Razor.Generator;
+
     using Microsoft.CSharp;
+    using Microsoft.CSharp.RuntimeBinder;
 
     using Nancy.Extensions;
 
@@ -15,44 +17,16 @@
     public class CSharpRazorViewRenderer : IRazorViewRenderer, IDisposable
     {
         /// <summary>
-        /// Gets the assemblies.
-        /// </summary>
-        public IEnumerable<string> Assemblies { get; private set; }
-
-        /// <summary>
-        /// Gets the extension this view renderer supports.
-        /// </summary>
-        public string Extension
-        {
-            get { return "cshtml"; }
-        }
-
-        
-
-        /// <summary>/// <summary>
-        /// Gets the <see cref="SetBaseTypeCodeGenerator"/> that should be used with the renderer.
-        /// </summary>
-        public Type ModelCodeGenerator { get; private set; }
-        /// Gets the host.
-        /// </summary>
-        public RazorEngineHost Host { get; private set; }
-
-        /// <summary>
-        /// Gets the provider that is used to generate code.
-        /// </summary>
-        public CodeDomProvider Provider { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CSharpRazorViewRenderer"/> class.
         /// </summary>
         public CSharpRazorViewRenderer()
         {
             this.Assemblies = new List<string>
             {
-                typeof(Microsoft.CSharp.RuntimeBinder.Binder).GetAssemblyPath()
+                typeof (Binder).GetAssemblyPath()
             };
 
-            this.ModelCodeGenerator = typeof(CSharpModelCodeGenerator);
+            this.ModelCodeGenerator = typeof (CSharpModelCodeGenerator);
 
             this.Provider = new CSharpCodeProvider();
 
@@ -72,5 +46,33 @@
                 this.Provider.Dispose();
             }
         }
+
+        /// <summary>
+        /// Gets the assemblies.
+        /// </summary>
+        public IEnumerable<string> Assemblies { get; private set; }
+
+        /// <summary>
+        /// Gets the extension this view renderer supports.
+        /// </summary>
+        public string Extension
+        {
+            get { return "cshtml"; }
+        }
+
+
+        /// <summary>/// <summary>
+        /// Gets the <see cref="SetBaseTypeCodeGenerator"/> that should be used with the renderer.
+        /// </summary>
+        public Type ModelCodeGenerator { get; private set; }
+
+        /// Gets the host.
+        /// </summary>
+        public RazorEngineHost Host { get; private set; }
+
+        /// <summary>
+        /// Gets the provider that is used to generate code.
+        /// </summary>
+        public CodeDomProvider Provider { get; private set; }
     }
 }

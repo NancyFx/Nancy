@@ -4,6 +4,9 @@ namespace Nancy.Tests.Unit
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+
+    using Nancy.Json;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -24,8 +27,8 @@ namespace Nancy.Tests.Unit
             // Given
             var values = new Dictionary<string, object>
             {
-                { "foo", 10 },
-                { "bar", "some value" },
+                {"foo", 10},
+                {"bar", "some value"},
             };
 
             // When
@@ -285,7 +288,7 @@ namespace Nancy.Tests.Unit
 
             // When
             DateTime result = GetDateTimeValue(this.dictionary.value);
-            
+
             // Then
             result.ShouldEqual(date);
         }
@@ -765,7 +768,7 @@ namespace Nancy.Tests.Unit
             var names = ((DynamicDictionary)parameters).GetDynamicMemberNames();
 
             // Then
-            Assert.True(names.SequenceEqual(new[] { "test", "rest" }));
+            Assert.True(names.SequenceEqual(new[] {"test", "rest"}));
         }
 
         [Fact]
@@ -779,12 +782,10 @@ namespace Nancy.Tests.Unit
 
             // When
             var names = new List<string>();
-            foreach (var name in parameters) {
-                names.Add(name);
-            }
+            foreach (var name in parameters) names.Add(name);
 
             // Then
-            Assert.True(names.SequenceEqual(new[] { "test", "rest" }));
+            Assert.True(names.SequenceEqual(new[] {"test", "rest"}));
         }
 
         [Fact]
@@ -793,7 +794,7 @@ namespace Nancy.Tests.Unit
             dynamic value = "42";
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Json.JavaScriptSerializer();
+            var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"""42""");
@@ -805,7 +806,7 @@ namespace Nancy.Tests.Unit
             dynamic value = 42;
             var input = new DynamicDictionaryValue(value);
 
-            var sut = new Json.JavaScriptSerializer();
+            var sut = new JavaScriptSerializer();
             var actual = sut.Serialize(input);
 
             actual.ShouldEqual(@"42");
@@ -821,9 +822,7 @@ namespace Nancy.Tests.Unit
 
             // When
             for (var i = 0; i < expectedNumberOfEntries; i++)
-            {
                 input[i.ToString(CultureInfo.InvariantCulture)] = i;
-            }
 
             // Then
             input.Count.ShouldEqual(expectedNumberOfEntries);

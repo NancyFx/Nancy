@@ -1,10 +1,10 @@
 namespace Nancy
 {
     using System;
-    using System.Linq;
     using System.IO;
+    using System.Linq;
 
-    using Extensions;
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     public static class FormatterExtensions
@@ -55,12 +55,13 @@ namespace Nancy
             var serializer = jsonSerializer ?? (jsonSerializer = formatter.Serializers.FirstOrDefault(s => s.CanSerialize("application/json")));
 
             var r = new JsonResponse<TModel>(model, serializer);
-        	r.StatusCode = statusCode;
+            r.StatusCode = statusCode;
 
-        	return r;
+            return r;
         }
 
-        public static Response AsRedirect(this IResponseFormatter formatter, string location, Nancy.Responses.RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
+        public static Response AsRedirect(this IResponseFormatter formatter, string location,
+            RedirectResponse.RedirectType type = RedirectResponse.RedirectType.SeeOther)
         {
             return new RedirectResponse(formatter.Context.ToFullPath(location), type);
         }
@@ -71,7 +72,7 @@ namespace Nancy
 
             return new XmlResponse<TModel>(model, "application/xml", serializer);
         }
-        
+
         public static Response FromStream(this IResponseFormatter formatter, Stream stream, string contentType)
         {
             return new StreamResponse(() => stream, contentType);

@@ -4,35 +4,33 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Linq;
-    using Helpers;
+
+    using Nancy.Helpers;
 
     public class InteractiveModule : DiagnosticModule
     {
         private readonly IInteractiveDiagnostics interactiveDiagnostics;
 
         public InteractiveModule(IInteractiveDiagnostics interactiveDiagnostics)
-            :base ("/interactive")
+            : base("/interactive")
         {
             this.interactiveDiagnostics = interactiveDiagnostics;
 
-            Get["/"] = _ =>
-            {
-                return View["InteractiveDiagnostics"];
-            };
+            Get["/"] = _ => { return View["InteractiveDiagnostics"]; };
 
             Get["/providers"] = _ =>
             {
                 var providers = this.interactiveDiagnostics
-                    .AvailableDiagnostics
-                    .Select(p => new
-                        {
-                            p.Name, 
-                            p.Description, 
-                            Type = p.GetType().Name, 
-                            p.GetType().Namespace, 
-                            Assembly = p.GetType().Assembly.GetName().Name
-                        })
-                    .ToArray();
+                                    .AvailableDiagnostics
+                                    .Select(p => new
+                                    {
+                                        p.Name,
+                                        p.Description,
+                                        Type = p.GetType().Name,
+                                        p.GetType().Namespace,
+                                        Assembly = p.GetType().Assembly.GetName().Name
+                                    })
+                                    .ToArray();
 
                 return this.Response.AsJson(providers);
             };
@@ -42,7 +40,7 @@
                 var providerName =
                     HttpUtility.UrlDecode((string)ctx.providerName);
 
-                var diagnostic = 
+                var diagnostic =
                     this.interactiveDiagnostics.GetDiagnostic(providerName);
 
                 if (diagnostic == null)
@@ -51,18 +49,18 @@
                 }
 
                 var methods = diagnostic.Methods
-                    .Select(m => new
-                        {
-                            m.MethodName, 
-                            ReturnType = m.ReturnType.ToString(), 
-                            m.Description,
-                            Arguments = m.Arguments.Select(a => new
-                            {
-                                ArgumentName = a.Item1, 
-                                ArgumentType = a.Item2.ToString()
-                            })
-                        })
-                    .ToArray();
+                                        .Select(m => new
+                                        {
+                                            m.MethodName,
+                                            ReturnType = m.ReturnType.ToString(),
+                                            m.Description,
+                                            Arguments = m.Arguments.Select(a => new
+                                            {
+                                                ArgumentName = a.Item1,
+                                                ArgumentType = a.Item2.ToString()
+                                            })
+                                        })
+                                        .ToArray();
 
                 return this.Response.AsJson(methods);
             };
@@ -75,7 +73,7 @@
                 var methodName =
                     HttpUtility.UrlDecode((string)ctx.methodName);
 
-                var method = 
+                var method =
                     this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                 if (method == null)
@@ -83,10 +81,10 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                object[] arguments = 
+                object[] arguments =
                     GetArguments(method, this.Request.Query);
 
-                return this.Response.AsJson(new { Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments) });
+                return this.Response.AsJson(new {Result = this.interactiveDiagnostics.ExecuteDiagnostic(method, arguments)});
             };
 
             Get["/templates/{providerName}/{methodName}"] = ctx =>
@@ -97,7 +95,7 @@
                 var methodName =
                     HttpUtility.UrlDecode((string)ctx.methodName);
 
-                var method = 
+                var method =
                     this.interactiveDiagnostics.GetMethod(providerName, methodName);
 
                 if (method == null)
@@ -105,7 +103,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                var template = 
+                var template =
                     this.interactiveDiagnostics.GetTemplate(method);
 
                 if (template == null)
@@ -122,19 +120,17 @@
             var arguments = new List<object>();
 
             foreach (var argument in method.Arguments)
-            {
                 arguments.Add(ConvertArgument((string)query[argument.Item1].Value, argument.Item2));
-            }
 
             return arguments.ToArray();
         }
 
         private static object ConvertArgument(string value, Type destinationType)
         {
-            var converter = 
+            var converter =
                 TypeDescriptor.GetConverter(destinationType);
 
-            if (converter == null || !converter.CanConvertFrom(typeof(string)))
+            if (converter == null || !converter.CanConvertFrom(typeof (string)))
             {
                 return null;
             }

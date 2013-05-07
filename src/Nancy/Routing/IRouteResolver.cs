@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Routing
 {
-    using System;
-
     /// <summary>
     /// Returns a route that matches the request
     /// </summary>

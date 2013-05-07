@@ -9,9 +9,9 @@
     /// </summary>
     public class DataAnnotationsValidatorAdapter : IDataAnnotationsValidatorAdapter
     {
+        protected readonly ValidationAttribute attribute;
         protected readonly PropertyDescriptor descriptor;
         protected readonly string ruleType;
-        protected readonly ValidationAttribute attribute;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
@@ -20,8 +20,7 @@
         /// <param name="attribute">The attribute.</param>
         public DataAnnotationsValidatorAdapter(string ruleType, ValidationAttribute attribute)
             : this(ruleType, attribute, null)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
@@ -42,7 +41,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationRule"/> instances.</returns>
         public virtual IEnumerable<ModelValidationRule> GetRules()
         {
-            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, descriptor == null ? null : new[] { descriptor.Name });
+            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, descriptor == null ? null : new[] {descriptor.Name});
         }
 
         /// <summary>
@@ -52,18 +51,18 @@
         /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> instances.</returns>
         public virtual IEnumerable<ModelValidationError> Validate(object instance)
         {
-            var context = 
+            var context =
                 new ValidationContext(instance, null, null)
                 {
                     MemberName = descriptor == null ? null : descriptor.Name
                 };
 
-            if(descriptor != null)
+            if (descriptor != null)
             {
                 instance = descriptor.GetValue(instance);
             }
 
-            var result = 
+            var result =
                 attribute.GetValidationResult(instance, context);
 
             if (result != null)

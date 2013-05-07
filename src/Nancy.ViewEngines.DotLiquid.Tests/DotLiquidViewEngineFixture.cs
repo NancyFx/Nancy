@@ -1,18 +1,22 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid.Tests
 {
     using System;
-    using System.IO;
-    using FakeItEasy;
-    using global::DotLiquid;
-    using Nancy.Tests;
-    using Xunit;
     using System.Collections.Generic;
+    using System.IO;
+
+    using FakeItEasy;
+
+    using Nancy.Tests;
+
+    using Xunit;
+
+    using global::DotLiquid;
 
     public class DotLiquidViewEngineFixture
     {
-        private readonly IRenderContext renderContext;
-        private readonly IFileSystemFactory factory;
         private readonly DotLiquidViewEngine engine;
+        private readonly IFileSystemFactory factory;
+        private readonly IRenderContext renderContext;
 
         public DotLiquidViewEngineFixture()
         {
@@ -21,11 +25,11 @@
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Template>>.Ignored))
-                .ReturnsLazily(x =>
-                {
-                    var result = x.GetArgument<ViewLocationResult>(0);
-                    return x.GetArgument<Func<ViewLocationResult, Template>>(1).Invoke(result);
-                });
+             .ReturnsLazily(x =>
+             {
+                 var result = x.GetArgument<ViewLocationResult>(0);
+                 return x.GetArgument<Func<ViewLocationResult, Template>>(1).Invoke(result);
+             });
             var context = new NancyContext();
 
             this.renderContext = A.Fake<IRenderContext>();
@@ -55,7 +59,7 @@
 
             // Then
             extensions.ShouldHaveCount(1);
-            extensions.ShouldEqualSequence(new[] { "liquid" });
+            extensions.ShouldEqualSequence(new[] {"liquid"});
         }
 
         [Fact]
@@ -67,10 +71,10 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"{% assign name = 'test' %}<h1>Hello Mr. {{ name }}</h1>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
 
@@ -93,10 +97,10 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
 
@@ -119,16 +123,16 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
-            var response = this.engine.RenderView(location, new { name = "test" }, this.renderContext);
+            var response = this.engine.RenderView(location, new {name = "test"}, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -144,17 +148,17 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"<h1>Hello Mr. {{ ViewBag.Name }}</h1>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
             this.renderContext.Context.ViewBag.Name = "test";
 
             // When
-            var response = this.engine.RenderView(location, new { name = "incorrect" }, this.renderContext);
+            var response = this.engine.RenderView(location, new {name = "incorrect"}, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -170,16 +174,16 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"<h1>Hello Mr. {{ Model.name }}</h1>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
-            var response = this.engine.RenderView(location, new { lastname = "test" }, this.renderContext);
+            var response = this.engine.RenderView(location, new {lastname = "test"}, this.renderContext);
             response.Contents.Invoke(stream);
 
             // Then
@@ -195,10 +199,10 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"{% if true %}{% end %}")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
@@ -222,16 +226,16 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"{{ Model.CamelCase }}")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // When
-            var dropModel = new DropModel() { CamelCase = "Hello Jamie!" };
+            var dropModel = new DropModel() {CamelCase = "Hello Jamie!"};
             var response = this.engine.RenderView(location, dropModel, this.renderContext);
             response.Contents.Invoke(stream);
 
@@ -248,22 +252,23 @@
                 string.Empty,
                 "liquid",
                 () => new StringReader(@"<ul>{% for item in Model.Items %}<li>{{ item.Name }}</li>{% endfor %}</ul>")
-            );
+                );
 
             var currentStartupContext =
-                CreateContext(new[] { location });
+                CreateContext(new[] {location});
 
             this.engine.Initialize(currentStartupContext);
             var stream = new MemoryStream();
 
             // Construct the model for the View
-            IList<Article> articles = new List<Article>() {
+            IList<Article> articles = new List<Article>()
+            {
                 new Article() {Name = "Hello"},
                 new Article() {Name = "Jamie!"},
                 new Article() {Name = "You're fun!"}
             };
 
-            Magazine menu = new Magazine() { Items = articles };
+            var menu = new Magazine() {Items = articles};
 
             // When
             var response = this.engine.RenderView(location, menu, this.renderContext);
@@ -277,12 +282,12 @@
         {
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
-                                               .Returns(results);
+             .Returns(results);
 
             var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] {"liquid"});
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             var startupContext = new ViewEngineStartupContext(
                 null,

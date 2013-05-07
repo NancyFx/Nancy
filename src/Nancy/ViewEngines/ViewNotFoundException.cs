@@ -7,13 +7,8 @@
     /// </summary>
     public class ViewNotFoundException : Exception
     {
+        private readonly string message;
         private readonly IRootPathProvider rootPathProvider;
-        public string ViewName { get; private set; }
-
-        public string[] AvailableViewEngineExtensions { get; private set; }
-        public string[] InspectedLocations { get; private set; }
-
-        private string message;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewNotFoundException"/>.
@@ -30,12 +25,12 @@
             this.InspectedLocations = inspectedLocations;
 
             this.message = String.Format(
-                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
-                    this.ViewName,
-                    string.Join(",", this.AvailableViewEngineExtensions),
-                    string.Join(",", this.InspectedLocations),
-                    this.rootPathProvider.GetRootPath(),
-                    Environment.NewLine);
+                "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
+                this.ViewName,
+                string.Join(",", this.AvailableViewEngineExtensions),
+                string.Join(",", this.InspectedLocations),
+                this.rootPathProvider.GetRootPath(),
+                Environment.NewLine);
         }
 
         /// <summary>
@@ -46,6 +41,11 @@
         {
             this.message = msg;
         }
+
+        public string ViewName { get; private set; }
+
+        public string[] AvailableViewEngineExtensions { get; private set; }
+        public string[] InspectedLocations { get; private set; }
 
         /// <summary>
         /// Gets a message that describes the current exception.

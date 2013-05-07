@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Bootstrapper;
-    using Modules;
-    using Testing;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Testing;
+    using Nancy.Tests.Functional.Modules;
+
     using Xunit;
 
     public class ViewBagTests
@@ -15,7 +17,7 @@
         public ViewBagTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                    configuration => configuration.Modules(new Type[] { typeof(RazorTestModule) }));
+                configuration => configuration.Modules(new Type[] {typeof (RazorTestModule)}));
 
             this.browser = new Browser(bootstrapper);
         }
@@ -27,10 +29,7 @@
             // When
             var response = browser.Get(
                 @"/razor-viewbag",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             // Then
             Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
@@ -43,10 +42,7 @@
             // When
             var response = browser.Get(
                 @"/razor-viewbag",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             // Then
             Assert.True(response.Body.AsString().Contains(@"Hello Bob"));

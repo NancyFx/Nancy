@@ -1,7 +1,7 @@
-using Nancy.Culture;
-
 namespace Nancy
 {
+    using Nancy.Culture;
+
     /// <summary>
     /// Creates NancyContext instances
     /// </summary>
@@ -21,7 +21,7 @@ namespace Nancy
         public NancyContext Create(Request request)
         {
             var nancyContext = new NancyContext();
-            
+
             nancyContext.Request = request;
 
             nancyContext.Culture = this.cultureService.DetermineCurrentCulture(nancyContext);

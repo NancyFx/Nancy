@@ -1,19 +1,20 @@
-
 namespace Nancy.Testing.Tests
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Text;
     using System.Linq;
+    using System.Text;
 
+    using FakeItEasy;
+
+    using Nancy.Authentication.Forms;
     using Nancy.Extensions;
-    using Nancy.Tests;
     using Nancy.Helpers;
     using Nancy.Session;
+    using Nancy.Tests;
+
     using Xunit;
-    using FakeItEasy;
-    using Nancy.Authentication.Forms;
 
     public class BrowserFixture
     {
@@ -22,7 +23,7 @@ namespace Nancy.Testing.Tests
         public BrowserFixture()
         {
             var bootstrapper =
-                new ConfigurableBootstrapper(config => config.Modules(typeof(EchoModule)));
+                new ConfigurableBootstrapper(config => config.Modules(typeof (EchoModule)));
 
             CookieBasedSessions.Enable(bootstrapper);
 
@@ -37,10 +38,10 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Post("/", with =>
-                                           {
-                                               with.HttpRequest();
-                                               with.Body(thisIsMyRequestBody);
-                                           });
+            {
+                with.HttpRequest();
+                with.Body(thisIsMyRequestBody);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(thisIsMyRequestBody);
@@ -54,10 +55,10 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = browser.Get("/userHostAddress", with =>
-                                                         {
-                                                             with.HttpRequest();
-                                                             with.UserHostAddress(userHostAddress);
-                                                         });
+            {
+                with.HttpRequest();
+                with.UserHostAddress(userHostAddress);
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(userHostAddress);
@@ -74,10 +75,10 @@ namespace Nancy.Testing.Tests
             writer.Flush();
             // When
             var result = browser.Post("/", with =>
-                                           {
-                                               with.HttpRequest();
-                                               with.Body(stream, "text/plain");
-                                           });
+            {
+                with.HttpRequest();
+                with.Body(stream, "text/plain");
+            });
 
             // Then
             result.Body.AsString().ShouldEqual(thisIsMyRequestBody);
@@ -87,13 +88,10 @@ namespace Nancy.Testing.Tests
         public void Should_be_able_to_send_json_in_body()
         {
             // Given
-            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+            var model = new EchoModel {SomeString = "Some String", SomeInt = 29, SomeBoolean = true};
 
             // When
-            var result = browser.Post("/", with =>
-                                            {
-                                                with.JsonBody(model);
-                                            });
+            var result = browser.Post("/", with => { with.JsonBody(model); });
 
             // Then
             var actualModel = result.Body.DeserializeJson<EchoModel>();
@@ -108,13 +106,10 @@ namespace Nancy.Testing.Tests
         public void Should_be_able_to_send_xml_in_body()
         {
             // Given
-            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+            var model = new EchoModel {SomeString = "Some String", SomeInt = 29, SomeBoolean = true};
 
             // When
-            var result = browser.Post("/", with =>
-            {
-                with.XMLBody(model);
-            });
+            var result = browser.Post("/", with => { with.XMLBody(model); });
 
             // Then
             var actualModel = result.Body.DeserializeXml<EchoModel>();
@@ -163,7 +158,8 @@ namespace Nancy.Testing.Tests
             // Then
             IBrowserContextValues values = context;
 
-            var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+            var cookieString = cookies.Aggregate(string.Empty,
+                (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
 
             values.Headers["Cookie"].ShouldHaveCount(1);
             values.Headers["Cookie"].First().ShouldEqual(cookieString);
@@ -184,14 +180,13 @@ namespace Nancy.Testing.Tests
 
             // When
             foreach (var cookie in cookies)
-            {
                 context.Cookie(cookie.Key, cookie.Value);
-            }
 
             // Then
             IBrowserContextValues values = context;
 
-            var cookieString = cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+            var cookieString = cookies.Aggregate(string.Empty,
+                (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
 
             values.Headers["Cookie"].ShouldHaveCount(1);
             values.Headers["Cookie"].First().ShouldEqual(cookieString);
@@ -209,10 +204,7 @@ namespace Nancy.Testing.Tests
                 };
 
             // When
-            var result = browser.Get("/cookie", with =>
-            {
-                with.Cookie(cookies);
-            });
+            var result = browser.Get("/cookie", with => { with.Cookie(cookies); });
 
             // Then
             result.Cookies.Single(x => x.Name == "CookieName").Value.ShouldEqual("CookieValue");
@@ -265,12 +257,12 @@ namespace Nancy.Testing.Tests
             // Given
             // When
             var result = browser.Get(
-                    "/session",
-                    with => with.HttpRequest())
-                .Then
-                .Get(
-                    "/session",
-                    with => with.HttpRequest());
+                "/session",
+                with => with.HttpRequest())
+                                .Then
+                                .Get(
+                                    "/session",
+                                    with => with.HttpRequest());
 
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
@@ -281,16 +273,16 @@ namespace Nancy.Testing.Tests
             // Given
             // When
             var result = browser.Get(
-                    "/session",
-                    with => with.HttpRequest())
-                .Then
-                .Get(
-                    "/nothing",
-                    with => with.HttpRequest())
-                .Then
-                .Get(
-                    "/session",
-                    with => with.HttpRequest());
+                "/session",
+                with => with.HttpRequest())
+                                .Then
+                                .Get(
+                                    "/nothing",
+                                    with => with.HttpRequest())
+                                .Then
+                                .Get(
+                                    "/session",
+                                    with => with.HttpRequest());
 
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
@@ -349,29 +341,26 @@ namespace Nancy.Testing.Tests
         {
             public EchoModule()
             {
-
                 Post["/"] = ctx =>
+                {
+                    var body = new StreamReader(this.Context.Request.Body).ReadToEnd();
+                    return new Response
                     {
-                        var body = new StreamReader(this.Context.Request.Body).ReadToEnd();
-                        return new Response
-                                {
-                                    Contents = stream =>
-                                                {
-                                                    var writer = new StreamWriter(stream);
-                                                    writer.Write(body);
-                                                    writer.Flush();
-                                                }
-                                };
+                        Contents = stream =>
+                        {
+                            var writer = new StreamWriter(stream);
+                            writer.Write(body);
+                            writer.Flush();
+                        }
                     };
+                };
 
                 Get["/cookie"] = ctx =>
                 {
                     var response = (Response)"Cookies";
 
                     foreach (var cookie in this.Request.Cookies)
-                    {
                         response.AddCookie(cookie.Key, cookie.Value);
-                    }
 
                     return response;
                 };
@@ -381,26 +370,25 @@ namespace Nancy.Testing.Tests
                 Get["/userHostAddress"] = ctx => this.Request.UserHostAddress;
 
                 Get["/session"] = ctx =>
+                {
+                    var value = Session["moo"] ?? "";
+
+                    var output = "Current session value is: " + value;
+
+                    if (string.IsNullOrEmpty(value.ToString()))
                     {
-                        var value = Session["moo"] ?? "";
+                        Session["moo"] = "I've created a session!";
+                    }
 
-                        var output = "Current session value is: " + value;
+                    var response = (Response)output;
 
-                        if (string.IsNullOrEmpty(value.ToString()))
-                        {
-                            Session["moo"] = "I've created a session!";
-                        }
-
-                        var response = (Response)output;
-
-                        return response;
-                    };
+                    return response;
+                };
 
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
             }
-
         }
     }
 }

@@ -2,7 +2,9 @@
 {
     using System.IO;
     using System.Text;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class TextResponseFixture
@@ -49,7 +51,7 @@
         public void Should_be_0_when_text_is_empty_and_body_invoked()
         {
             // Given
-            string text
+            var text
                 = string.Empty;
 
             var response =
@@ -68,7 +70,7 @@
         public void Should_set_content_type_to_text_plain()
         {
             // Given
-            string text =
+            var text =
                 "sample text";
 
             var response =
@@ -87,7 +89,7 @@
         public void Should_override_content_type()
         {
             // Given
-            string text =
+            var text =
                 "sample text";
 
             var response =

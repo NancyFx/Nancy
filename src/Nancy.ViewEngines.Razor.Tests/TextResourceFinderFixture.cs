@@ -1,17 +1,20 @@
 ﻿namespace Nancy.ViewEngines.Razor.Tests
 {
     using System;
+
     using FakeItEasy;
-    using Localization;
+
+    using Nancy.Localization;
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Extensions;
 
     public class TextResourceFinderFixture
     {
+        private readonly NancyContext context;
         private readonly dynamic finder;
         private readonly ITextResource textResource;
-        private readonly NancyContext context;
 
 
         public TextResourceFinderFixture()
@@ -74,7 +77,7 @@
         {
             // Given
             // When
-            var exception = Record.Exception(() => (decimal) finder.name);
+            var exception = Record.Exception(() => (decimal)finder.name);
 
             // Then
             exception.ShouldBeOfType<InvalidOperationException>();

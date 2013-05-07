@@ -163,7 +163,8 @@ namespace Nancy.ModelBinding
         /// <example>this.Bind&lt;Person&gt;(p =&gt; p.Name, p =&gt; p.Age)</example>
         /// <returns>Bound model instance</returns>
         /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
-        public static TModel BindAndValidate<TModel>(this INancyModule module, BindingConfig configuration, params Expression<Func<TModel, object>>[] blacklistedProperties)
+        public static TModel BindAndValidate<TModel>(this INancyModule module, BindingConfig configuration,
+            params Expression<Func<TModel, object>>[] blacklistedProperties)
         {
             var model = module.Bind<TModel>(configuration, blacklistedProperties.ParseBlacklistedPropertiesExpressionTree());
             module.Validate(model);
@@ -219,7 +220,8 @@ namespace Nancy.ModelBinding
         /// <param name="blacklistedProperties">Expressions that tell which property should be ignored</param>
         /// <example>this.Bind&lt;Person&gt;(p =&gt; p.Name, p =&gt; p.Age)</example>
         /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
-        public static TModel BindToAndValidate<TModel>(this INancyModule module, TModel instance, params Expression<Func<TModel, object>>[] blacklistedProperties)
+        public static TModel BindToAndValidate<TModel>(this INancyModule module, TModel instance,
+            params Expression<Func<TModel, object>>[] blacklistedProperties)
         {
             var model = module.BindTo<TModel>(instance, blacklistedProperties.ParseBlacklistedPropertiesExpressionTree());
             module.Validate(model);
@@ -252,7 +254,8 @@ namespace Nancy.ModelBinding
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Expressions that tell which property should be ignored</param>
         /// <example>this.Bind&lt;Person&gt;(p =&gt; p.Name, p =&gt; p.Age)</example>
-        public static TModel BindTo<TModel>(this INancyModule module, TModel instance, BindingConfig configuration, params Expression<Func<TModel, object>>[] blacklistedProperties)
+        public static TModel BindTo<TModel>(this INancyModule module, TModel instance, BindingConfig configuration,
+            params Expression<Func<TModel, object>>[] blacklistedProperties)
         {
             return module.BindTo<TModel>(instance, configuration, blacklistedProperties.ParseBlacklistedPropertiesExpressionTree());
         }
@@ -266,7 +269,8 @@ namespace Nancy.ModelBinding
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Property names to blacklist from binding</param>
         /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
-        public static TModel BindToAndValidate<TModel>(this INancyModule module, TModel instance, BindingConfig configuration, params string[] blacklistedProperties)
+        public static TModel BindToAndValidate<TModel>(this INancyModule module, TModel instance, BindingConfig configuration,
+            params string[] blacklistedProperties)
         {
             var model = module.BindTo<TModel>(instance, configuration, blacklistedProperties);
             module.Validate(model);

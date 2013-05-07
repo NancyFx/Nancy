@@ -35,7 +35,7 @@
         /// <returns>Serialised object</returns>
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
-            var serializer = new XmlSerializer(typeof(TModel));
+            var serializer = new XmlSerializer(typeof (TModel));
             serializer.Serialize(outputStream, model);
         }
 
@@ -49,9 +49,9 @@
             var contentMimeType = contentType.Split(';')[0];
 
             return contentMimeType.Equals("application/xml", StringComparison.InvariantCultureIgnoreCase) ||
-                   contentMimeType.Equals("text/xml", StringComparison.InvariantCultureIgnoreCase) ||
-                  (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                   contentMimeType.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
+                contentMimeType.Equals("text/xml", StringComparison.InvariantCultureIgnoreCase) ||
+                (contentMimeType.StartsWith("application/vnd", StringComparison.InvariantCultureIgnoreCase) &&
+                    contentMimeType.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

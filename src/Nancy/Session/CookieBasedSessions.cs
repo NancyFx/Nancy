@@ -4,9 +4,10 @@ namespace Nancy.Session
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Bootstrapper;
-    using Cryptography;
+
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
+    using Nancy.Cryptography;
     using Nancy.Helpers;
 
     /// <summary>
@@ -14,6 +15,11 @@ namespace Nancy.Session
     /// </summary>
     public class CookieBasedSessions : IObjectSerializerSelector
     {
+        /// <summary>
+        /// Cookie name for storing session information
+        /// </summary>
+        private static string cookieName = "_nc";
+
         /// <summary>
         /// Encryption provider
         /// </summary>
@@ -30,11 +36,6 @@ namespace Nancy.Session
         private IObjectSerializer serializer;
 
         /// <summary>
-        /// Cookie name for storing session information
-        /// </summary>
-        private static string cookieName = "_nc";
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CookieBasedSessions"/> class.
         /// </summary>
         /// <param name="encryptionProvider">The encryption provider.</param>
@@ -45,6 +46,15 @@ namespace Nancy.Session
             this.encryptionProvider = encryptionProvider;
             this.hmacProvider = hmacProvider;
             this.serializer = objectSerializer;
+        }
+
+        /// <summary>
+        /// Using the specified serializer
+        /// </summary>
+        /// <param name="newSerializer">Formatter to use</param>
+        public void WithSerializer(IObjectSerializer newSerializer)
+        {
+            this.serializer = newSerializer;
         }
 
         /// <summary>
@@ -64,7 +74,8 @@ namespace Nancy.Session
         /// <returns>Formatter selector for choosing a non-default serializer</returns>
         public static IObjectSerializerSelector Enable(IPipelines pipelines, CryptographyConfiguration cryptographyConfiguration)
         {
-            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider, new DefaultObjectSerializer());
+            var sessionStore = new CookieBasedSessions(cryptographyConfiguration.EncryptionProvider, cryptographyConfiguration.HmacProvider,
+                new DefaultObjectSerializer());
 
             pipelines.BeforeRequest.AddItemToStartOfPipeline(ctx => LoadSession(ctx, sessionStore));
             pipelines.AfterRequest.AddItemToEndOfPipeline(ctx => SaveSession(ctx, sessionStore));
@@ -80,15 +91,6 @@ namespace Nancy.Session
         public static IObjectSerializerSelector Enable(IPipelines pipelines)
         {
             return Enable(pipelines, CryptographyConfiguration.Default);
-        }
-
-        /// <summary>
-        /// Using the specified serializer
-        /// </summary>
-        /// <param name="newSerializer">Formatter to use</param>
-        public void WithSerializer(IObjectSerializer newSerializer)
-        {
-            this.serializer = newSerializer;
         }
 
         /// <summary>
@@ -146,7 +148,7 @@ namespace Nancy.Session
                 var hmacValid = HmacComparer.Compare(newHmac, hmacBytes, this.hmacProvider.HmacLength);
 
                 var data = this.encryptionProvider.Decrypt(encryptedCookie);
-                var parts = data.Split(new[] { ';' }, StringSplitOptions.RemoveEmptyEntries);
+                var parts = data.Split(new[] {';'}, StringSplitOptions.RemoveEmptyEntries);
                 foreach (var part in parts.Select(part => part.Split('=')))
                 {
                     var valueObject = this.serializer.Deserialize(HttpUtility.UrlDecode(part[1]));

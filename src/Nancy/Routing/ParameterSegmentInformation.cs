@@ -31,9 +31,9 @@
         {
             get
             {
-                return (this.IsOptional) ?
-                    string.Concat(this.Name, "?", this.DefaultValue) :
-                    this.Name;
+                return (this.IsOptional)
+                    ? string.Concat(this.Name, "?", this.DefaultValue)
+                    : this.Name;
             }
         }
 

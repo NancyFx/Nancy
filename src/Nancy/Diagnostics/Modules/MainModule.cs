@@ -4,10 +4,7 @@
     {
         public MainModule()
         {
-            Get["/"] = _ =>
-            {
-                return View["Dashboard"];
-            };
+            Get["/"] = _ => { return View["Dashboard"]; };
 
             Post["/"] = _ => this.Response.AsRedirect("~/");
         }

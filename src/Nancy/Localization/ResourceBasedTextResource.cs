@@ -4,17 +4,16 @@ namespace Nancy.Localization
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using System.Resources;
 
     /// <summary>
     /// Resource based implementation of <see cref="ITextResource"/>
     /// </summary>
-    public class ResourceBasedTextResource  : ITextResource
+    public class ResourceBasedTextResource : ITextResource
     {
         private readonly IResourceAssemblyProvider resourceAssemblyProvider;
         private readonly IDictionary<string, ResourceManager> resourceManagers;
-        
+
         /// <summary>
         /// Initializes a new instance of <see cref="ResourceBasedTextResource"/> to read strings from *.resx files
         /// </summary>
@@ -23,19 +22,19 @@ namespace Nancy.Localization
         {
             this.resourceAssemblyProvider = resourceAssemblyProvider;
 
-            var resources = 
+            var resources =
                 from assembly in this.resourceAssemblyProvider.GetAssembliesToScan()
                 from resourceName in assembly.GetManifestResourceNames()
                 where resourceName.EndsWith(".resources")
                 let name = Path.GetFileNameWithoutExtension(resourceName)
                 let baseName = resourceName.Replace(".resources", string.Empty)
                 select new
-                    {
-                        Name = name,
-                        Manager = new ResourceManager(baseName, assembly)
-                    };
+                {
+                    Name = name,
+                    Manager = new ResourceManager(baseName, assembly)
+                };
 
-            this.resourceManagers = 
+            this.resourceManagers =
                 resources.ToDictionary(x => x.Name, x => x.Manager, StringComparer.OrdinalIgnoreCase);
         }
 
@@ -58,12 +57,13 @@ namespace Nancy.Localization
 
                 if (candidates.Count() > 1)
                 {
-                    throw new InvalidOperationException("More than one text resources match the " + components.Item1 + " key. Try providing a more specific key.");
+                    throw new InvalidOperationException("More than one text resources match the " + components.Item1 +
+                        " key. Try providing a more specific key.");
                 }
 
-                var manager = candidates.Any() ?
-                    candidates.First().Value :
-                    null;
+                var manager = candidates.Any()
+                    ? candidates.First().Value
+                    : null;
 
                 return (manager == null) ? null : manager.GetString(components.Item2, context.Culture);
             }
@@ -76,7 +76,8 @@ namespace Nancy.Localization
 
             if (index == -1)
             {
-                throw new InvalidOperationException("The text key needs to be specified in the format resourcename.resourcekey, where resourcename should at least be the name of the resource file and at most the fully qualified path.");
+                throw new InvalidOperationException(
+                    "The text key needs to be specified in the format resourcename.resourcekey, where resourcename should at least be the name of the resource file and at most the fully qualified path.");
             }
 
             return new Tuple<string, string>(

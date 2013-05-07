@@ -5,8 +5,9 @@ namespace Nancy.ErrorHandling
     using System.IO;
     using System.Linq;
     using System.Text;
-    using IO;
+
     using Nancy.Extensions;
+    using Nancy.IO;
 
     /// <summary>
     /// Default error handler
@@ -17,7 +18,7 @@ namespace Nancy.ErrorHandling
 
         private readonly IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
 
-        private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
+        private readonly HttpStatusCode[] supportedStatusCodes = new[] {HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStatusCodeHandler"/> type.
@@ -25,15 +26,15 @@ namespace Nancy.ErrorHandling
         public DefaultStatusCodeHandler()
         {
             this.errorPages = new Dictionary<HttpStatusCode, string>
-                {
-                    { HttpStatusCode.NotFound, LoadResource("404.html") },
-                    { HttpStatusCode.InternalServerError, LoadResource("500.html") },
-                };
+            {
+                {HttpStatusCode.NotFound, LoadResource("404.html")},
+                {HttpStatusCode.InternalServerError, LoadResource("500.html")},
+            };
 
             this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
-                {
-                    { HttpStatusCode.InternalServerError, PopulateErrorInfo}
-                };
+            {
+                {HttpStatusCode.InternalServerError, PopulateErrorInfo}
+            };
         }
 
         /// <summary>
@@ -85,22 +86,20 @@ namespace Nancy.ErrorHandling
         {
             if (context.Response == null)
             {
-                context.Response = new Response() { StatusCode = statusCode };
+                context.Response = new Response() {StatusCode = statusCode};
             }
 
             context.Response.ContentType = "text/html";
             context.Response.Contents = s =>
-                {
-                    using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
-                    {
-                        writer.Write(errorPage);
-                    }
-                };
+            {
+                using (var writer = new StreamWriter(new UnclosableStreamWrapper(s), Encoding.UTF8))
+                    writer.Write(errorPage);
+            };
         }
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+            var resourceStream = typeof (INancyEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ErrorHandling.Resources.{0}", filename));
 
             if (resourceStream == null)
             {
@@ -108,9 +107,7 @@ namespace Nancy.ErrorHandling
             }
 
             using (var reader = new StreamReader(resourceStream))
-            {
                 return reader.ReadToEnd();
-            }
         }
 
         private static string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)

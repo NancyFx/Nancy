@@ -17,32 +17,40 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
-        private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+        private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?",
+            RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for context subsituations
         /// </summary>
-        private static readonly Regex ContextSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Context(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+        private static readonly Regex ContextSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Context(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?",
+            RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for each blocks
         /// </summary>
-        private static readonly Regex EachSubstitutionRegEx = new Regex(@"@Each(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?(?<Contents>.*?)@EndEach;?", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex EachSubstitutionRegEx =
+            new Regex(@"@Each(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?(?<Contents>.*?)@EndEach;?",
+                RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Compiled Regex for each block current substitutions
         /// </summary>
-        private static readonly Regex EachItemSubstitutionRegEx = new Regex(@"@(?<Encode>!)?Current(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+        private static readonly Regex EachItemSubstitutionRegEx = new Regex(@"@(?<Encode>!)?Current(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?",
+            RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled Regex for if blocks
         /// </summary>
-        private static readonly Regex ConditionalSubstitutionRegEx = new Regex(@"@If(?<Not>Not)?(?<Null>Null)?(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndIf;?", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex ConditionalSubstitutionRegEx =
+            new Regex(@"@If(?<Not>Not)?(?<Null>Null)?(?:\.(?<ModelSource>(Model|Context)+))?(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))+;?(?<Contents>.*?)@EndIf;?",
+                RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Compiled regex for partial blocks
         /// </summary>
-        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
+        private static readonly Regex PartialSubstitutionRegEx =
+            new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for section block declarations
@@ -52,7 +60,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled RegEx for section block contents
         /// </summary>
-        private static readonly Regex SectionContentsRegEx = new Regex(@"(?:@Section\[\'(?<SectionName>.+?)\'\];?(?<SectionContents>.*?)@EndSection;?)", RegexOptions.Compiled | RegexOptions.Singleline);
+        private static readonly Regex SectionContentsRegEx = new Regex(@"(?:@Section\[\'(?<SectionName>.+?)\'\];?(?<SectionContents>.*?)@EndSection;?)",
+            RegexOptions.Compiled | RegexOptions.Singleline);
 
         /// <summary>
         /// Compiled RegEx for master page declaration
@@ -70,22 +79,21 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         private static readonly Regex AntiForgeryTokenRegEx = new Regex(@"@AntiForgeryToken;?", RegexOptions.Compiled);
 
         /// <summary>
-        /// View engine transform processors
-        /// </summary>
-        private readonly List<Func<string, object, IViewEngineHost, string>> processors;
-
-        /// <summary>
         /// View engine extensions
         /// </summary>
         private readonly IEnumerable<ISuperSimpleViewEngineMatcher> matchers;
+
+        /// <summary>
+        /// View engine transform processors
+        /// </summary>
+        private readonly List<Func<string, object, IViewEngineHost, string>> processors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperSimpleViewEngine"/> class.
         /// </summary>
         public SuperSimpleViewEngine()
             : this(Enumerable.Empty<ISuperSimpleViewEngineMatcher>())
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperSimpleViewEngine"/> class, using
@@ -118,7 +126,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model, IViewEngineHost host)
         {
-            var output = 
+            var output =
                 this.processors.Aggregate(template, (current, processor) => processor(current, model ?? new object(), host));
 
             return this.matchers.Aggregate(output, (current, extension) => extension.Invoke(current, model, host));
@@ -145,12 +153,12 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return new Tuple<bool, object>(false, null);
             }
 
-            if (!typeof(IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
+            if (!typeof (IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
             {
                 return StandardTypePropertyEvaluator(model, propertyName);
             }
 
-            if (typeof(IDictionary<string, object>).IsAssignableFrom(model.GetType()))
+            if (typeof (IDictionary<string, object>).IsAssignableFrom(model.GetType()))
             {
                 return DynamicDictionaryPropertyEvaluator(model, propertyName);
             }
@@ -170,7 +178,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             var property =
                 properties.Where(p => string.Equals(p.Name, propertyName, StringComparison.InvariantCulture)).
-                FirstOrDefault();
+                           FirstOrDefault();
 
             return property == null ? new Tuple<bool, object>(false, null) : new Tuple<bool, object>(true, property.GetValue(model, null));
         }
@@ -246,7 +254,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             if (substitutionObject.Item1 == false && properties.Last().StartsWith("Has"))
             {
                 var newProperties =
-                    properties.Take(properties.Count() - 1).Concat(new[] { properties.Last().Substring(3) });
+                    properties.Take(properties.Count() - 1).Concat(new[] {properties.Last().Substring(3)});
 
                 substitutionObject = GetPropertyValueFromParameterCollection(item, newProperties);
 
@@ -402,9 +410,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     var contents = m.Groups["Contents"].Value;
                     var result = string.Empty;
                     foreach (var item in substitutionEnumerable)
-                    {
                         result += ReplaceCurrentMatch(contents, item, host);
-                    }
 
                     return result;
                 });
@@ -575,7 +581,9 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             var masterTemplate = host.GetTemplate(masterPageName, model);
             var sectionMatches = SectionContentsRegEx.Matches(template);
-            var sections = sectionMatches.Cast<Match>().ToDictionary(sectionMatch => sectionMatch.Groups["SectionName"].Value, sectionMatch => sectionMatch.Groups["SectionContents"].Value);
+            var sections = sectionMatches.Cast<Match>()
+                                         .ToDictionary(sectionMatch => sectionMatch.Groups["SectionName"].Value,
+                                             sectionMatch => sectionMatch.Groups["SectionContents"].Value);
 
             return this.RenderMasterPage(masterTemplate, sections, model, host);
         }
@@ -605,7 +613,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-		/// Gets the master page name, if one is specified
+        /// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>Master page name or String.Empty</returns>

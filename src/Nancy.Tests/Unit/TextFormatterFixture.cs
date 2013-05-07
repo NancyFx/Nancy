@@ -2,7 +2,9 @@
 {
     using System.IO;
     using System.Text;
+
     using FakeItEasy;
+
     using Xunit;
 
     public class TextFormatterFixture

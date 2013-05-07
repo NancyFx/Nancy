@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace Nancy
+﻿namespace Nancy
 {
     using System;
     using System.Linq;
@@ -11,8 +9,8 @@ namespace Nancy
     public class HttpMultipartBuffer
     {
         private readonly byte[] boundaryAsBytes;
-        private readonly byte[] closingBoundaryAsBytes;
         private readonly byte[] buffer;
+        private readonly byte[] closingBoundaryAsBytes;
         private int position;
 
         /// <summary>
@@ -35,10 +33,12 @@ namespace Nancy
         {
             get { return this.buffer.SequenceEqual(this.boundaryAsBytes); }
         }
+
         public bool IsClosingBoundary
         {
             get { return this.buffer.SequenceEqual(this.closingBoundaryAsBytes); }
         }
+
         /// <summary>
         /// Gets a value indicating whether this buffer is full.
         /// </summary>

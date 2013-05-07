@@ -1,18 +1,17 @@
-﻿
-namespace Nancy.Testing
+﻿namespace Nancy.Testing
 {
     using System;
-    using System.Globalization;
-    using System.Text;
-    using System.IO;
     using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
     using System.Linq;
+    using System.Text;
 
     using Nancy.Authentication.Forms;
     using Nancy.Extensions;
     using Nancy.Helpers;
     using Nancy.Responses;
-    using Responses.Negotiation;
+    using Nancy.Responses.Negotiation;
 
     /// <summary>
     /// Defines extensions for the <see cref="BrowserContext"/> type.
@@ -41,7 +40,7 @@ namespace Nancy.Testing
                 (IBrowserContextValues)browserContext;
 
             contextValues.Body = multipartFormData.Body;
-            contextValues.Headers["Content-Type"] = new[] { "multipart/form-data; boundary=" + boundaryName };
+            contextValues.Headers["Content-Type"] = new[] {"multipart/form-data; boundary=" + boundaryName};
         }
 
         /// <summary>
@@ -116,9 +115,7 @@ namespace Nancy.Testing
             }
 
             foreach (var cookie in cookies)
-            {
                 browserContext.Cookie(cookie.Key, cookie.Value);
-            }
         }
 
         /// <summary>
@@ -134,7 +131,7 @@ namespace Nancy.Testing
 
             if (!contextValues.Headers.ContainsKey("Cookie"))
             {
-                contextValues.Headers.Add("Cookie", new List<string> { string.Empty });
+                contextValues.Headers.Add("Cookie", new List<string> {string.Empty});
             }
 
             var values = (List<string>)contextValues.Headers["Cookie"];
@@ -187,7 +184,7 @@ namespace Nancy.Testing
                     if (contextValues.Headers["accept"].Any(x => x.Equals("*/*")))
                     {
                         contextValues.Headers.Remove("accept");
-                    }    
+                    }
                 }
             }
 

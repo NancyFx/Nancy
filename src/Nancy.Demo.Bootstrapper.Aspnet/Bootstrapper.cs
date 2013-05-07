@@ -1,7 +1,5 @@
 namespace Nancy.AspNetBootstrapperDemo
 {
-    using System;
-
     using Nancy.Demo.Bootstrapping.Aspnet;
     using Nancy.Hosting.Aspnet;
     using Nancy.TinyIoc;

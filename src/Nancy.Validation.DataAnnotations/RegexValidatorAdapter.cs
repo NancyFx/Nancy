@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+
     using Nancy.Validation.Rules;
 
     /// <summary>
@@ -17,8 +18,7 @@
         /// <param name="descriptor">The descriptor.</param>
         public RegexValidatorAdapter(RegularExpressionAttribute attribute, PropertyDescriptor descriptor)
             : base("Regex", attribute, descriptor)
-        {
-        }
+        {}
 
         /// <summary>
         /// Gets the the rules the adapter provides.
@@ -27,7 +27,7 @@
         public override IEnumerable<ModelValidationRule> GetRules()
         {
             yield return new RegexValidationRule(attribute.FormatErrorMessage,
-                new[] { descriptor.Name },
+                new[] {descriptor.Name},
                 ((RegularExpressionAttribute)attribute).Pattern);
         }
     }

@@ -1,18 +1,21 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System.Linq;
-    using Nancy.Tests.Fakes;
-    using Xunit;
+
     using FakeItEasy;
-    using Nancy.Routing;
+
     using Nancy.Culture;
+    using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
+    using Xunit;
 
     public class RouteCacheFixture
     {
         private readonly INancyModuleCatalog fakeModuleCatalog;
         private readonly IRouteCache routeCache;
-        private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IRouteSegmentExtractor routeSegmentExtractor;
 
         /// <summary>
         /// Initializes a new instance of the RouteCacheFixture class.
@@ -24,7 +27,8 @@
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
             this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
+                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider,
+                    A.Fake<ICultureService>());
         }
 
         [Fact]
@@ -32,11 +36,11 @@
         {
             // Given, When
             var routes = (from cacheEntry in this.routeCache.Keys
-                         select cacheEntry).ToList();
+                          select cacheEntry).ToList();
 
             // Then
-            routes.Contains(typeof(FakeNancyModuleWithBasePath)).ShouldBeTrue();
-            routes.Contains(typeof(FakeNancyModuleWithoutBasePath)).ShouldBeTrue();
+            routes.Contains(typeof (FakeNancyModuleWithBasePath)).ShouldBeTrue();
+            routes.Contains(typeof (FakeNancyModuleWithoutBasePath)).ShouldBeTrue();
         }
 
         [Fact]
@@ -89,8 +93,8 @@
         {
             // Given, When
             var methods = (from cacheEntry in routeCache.Values
-                          from route in cacheEntry
-                          select route.Item2.Method).Distinct();
+                           from route in cacheEntry
+                           select route.Item2.Method).Distinct();
 
             // Then
             methods.Count().ShouldEqual(4);
@@ -101,11 +105,11 @@
         {
             // Given
             var routes = this.fakeModuleCatalog
-                .GetModule(typeof(FakeNancyModuleWithBasePath), new NancyContext()).Routes.Select(r => r.Description)
-                .ToList();
+                             .GetModule(typeof (FakeNancyModuleWithBasePath), new NancyContext()).Routes.Select(r => r.Description)
+                             .ToList();
 
             // When
-            var cachedRoutes = this.routeCache[typeof(FakeNancyModuleWithBasePath)];
+            var cachedRoutes = this.routeCache[typeof (FakeNancyModuleWithBasePath)];
 
             // Then
             foreach (var cachedRoute in cachedRoutes)
@@ -119,13 +123,10 @@
         public void Should_invoke_route_description_provider_with_module_that_route_is_defined_in()
         {
             // Given
-            var module = new FakeNancyModule(with =>
-            {
-                with.AddGetRoute("/");
-            });
+            var module = new FakeNancyModule(with => { with.AddGetRoute("/"); });
 
             var catalog = A.Fake<INancyModuleCatalog>();
-            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] {module});
 
             var descriptionProvider =
                 A.Fake<IRouteDescriptionProvider>();
@@ -148,13 +149,10 @@
             // Given
             const string expectedPath = "/some/path/{capture}";
 
-            var module = new FakeNancyModule(with =>
-            {
-                with.AddGetRoute(expectedPath);
-            });
+            var module = new FakeNancyModule(with => { with.AddGetRoute(expectedPath); });
 
             var catalog = A.Fake<INancyModuleCatalog>();
-            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] { module });
+            A.CallTo(() => catalog.GetAllModules(A<NancyContext>._)).Returns(new[] {module});
 
             var descriptionProvider =
                 A.Fake<IRouteDescriptionProvider>();

@@ -3,8 +3,10 @@ namespace Nancy.Testing.Tests
     using System;
     using System.IO;
     using System.Text;
+
     using Nancy.Responses;
     using Nancy.Tests;
+
     using Xunit;
 
     public class ContextExtensionsTests
@@ -38,14 +40,14 @@ namespace Nancy.Testing.Tests
                 s.Write(bodyBytes, 0, bodyBytes.Length);
                 called = true;
             };
-            var response = new Response { Contents = bodyDelegate };
-            var context = new NancyContext() { Response = response };
+            var response = new Response {Contents = bodyDelegate};
+            var context = new NancyContext() {Response = response};
 
             // When
             var result = context.DocumentBody();
 
             // Then
-            result.ShouldBeOfType(typeof(DocumentWrapper));
+            result.ShouldBeOfType(typeof (DocumentWrapper));
             called.ShouldBeTrue();
         }
 
@@ -53,7 +55,7 @@ namespace Nancy.Testing.Tests
         public void Should_use_jsonresponse_from_context_if_it_is_present()
         {
             // Given
-            var model = new Model() { Dummy = "Data" };
+            var model = new Model() {Dummy = "Data"};
             var context = new NancyContext();
             context.Items["@@@@JSONRESPONSE@@@@"] = model; // Yucky hardcoded stringyness
 
@@ -68,8 +70,8 @@ namespace Nancy.Testing.Tests
         public void Should_create_new_wrapper_from_json_response_if_not_already_present()
         {
             // Given
-            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
-            var context = new NancyContext() { Response = response };
+            var response = new JsonResponse<Model>(new Model() {Dummy = "Data"}, new DefaultJsonSerializer());
+            var context = new NancyContext() {Response = response};
 
             // When
             var result = context.JsonBody<Model>();
@@ -82,7 +84,7 @@ namespace Nancy.Testing.Tests
         public void Should_use_xmlresponse_from_context_if_it_is_present()
         {
             // Given
-            var model = new Model() { Dummy = "Data" };
+            var model = new Model() {Dummy = "Data"};
             var context = new NancyContext();
             context.Items["@@@@XMLRESPONSE@@@@"] = model; // Yucky hardcoded stringyness
 
@@ -96,8 +98,8 @@ namespace Nancy.Testing.Tests
         public void Should_create_new_wrapper_from_xml_response_if_not_already_present()
         {
             // Given
-            var response = new XmlResponse<Model>(new Model() { Dummy = "Data" }, "text/xml", new DefaultXmlSerializer());
-            var context = new NancyContext() { Response = response };
+            var response = new XmlResponse<Model>(new Model() {Dummy = "Data"}, "text/xml", new DefaultXmlSerializer());
+            var context = new NancyContext() {Response = response};
 
             // When
             var result = context.XmlBody<Model>();
@@ -110,8 +112,8 @@ namespace Nancy.Testing.Tests
         public void Should_fail_to_return_xml_body_on_non_xml_response()
         {
             // Given
-            var response = new JsonResponse<Model>(new Model() { Dummy = "Data" }, new DefaultJsonSerializer());
-            var context = new NancyContext() { Response = response };
+            var response = new JsonResponse<Model>(new Model() {Dummy = "Data"}, new DefaultJsonSerializer());
+            var context = new NancyContext() {Response = response};
 
             // When
             var result = Record.Exception(() => context.XmlBody<Model>());

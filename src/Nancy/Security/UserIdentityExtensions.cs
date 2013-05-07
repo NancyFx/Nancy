@@ -18,7 +18,7 @@
         {
             return
                 user != null
-                && !String.IsNullOrWhiteSpace(user.UserName);
+                    && !String.IsNullOrWhiteSpace(user.UserName);
         }
 
         /// <summary>
@@ -31,8 +31,8 @@
         {
             return
                 user != null
-                && user.Claims != null
-                && user.Claims.Contains(requiredClaim);
+                    && user.Claims != null
+                    && user.Claims.Contains(requiredClaim);
         }
 
         /// <summary>
@@ -45,8 +45,8 @@
         {
             return
                 user != null
-                && user.Claims != null
-                && !requiredClaims.Any(claim => !user.Claims.Contains(claim));
+                    && user.Claims != null
+                    && !requiredClaims.Any(claim => !user.Claims.Contains(claim));
         }
 
         /// <summary>
@@ -59,8 +59,8 @@
         {
             return
                 user != null
-                && user.Claims != null
-                && requiredClaims.Any(claim => user.Claims.Contains(claim));
+                    && user.Claims != null
+                    && requiredClaims.Any(claim => user.Claims.Contains(claim));
         }
 
         /// <summary>
@@ -74,8 +74,8 @@
         {
             return
                 user != null
-                && user.Claims != null
-                && isValid(user.Claims);
+                    && user.Claims != null
+                    && isValid(user.Claims);
         }
     }
 }

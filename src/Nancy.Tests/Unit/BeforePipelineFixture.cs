@@ -2,11 +2,17 @@
 {
     using System;
     using System.Linq;
+
     using Xunit;
 
     public class BeforePipelineFixture
     {
         private BeforePipeline pipeline;
+
+        public BeforePipelineFixture()
+        {
+            this.pipeline = new BeforePipeline();
+        }
 
         private static Response CreateResponse()
         {
@@ -18,20 +24,27 @@
             return new NancyContext();
         }
 
-        public BeforePipelineFixture()
-        {
-            this.pipeline = new BeforePipeline();
-        }
-
         [Fact]
         public void When_invoked_pipeline_member_returning_a_response_stops_pipeline_execution()
         {
             var item1Called = false;
-            Func<NancyContext, Response> item1 = (r) => { item1Called = true; return null; };
+            Func<NancyContext, Response> item1 = (r) =>
+            {
+                item1Called = true;
+                return null;
+            };
             var item2Called = false;
-            Func<NancyContext, Response> item2 = (r) => { item2Called = true; return CreateResponse(); };
+            Func<NancyContext, Response> item2 = (r) =>
+            {
+                item2Called = true;
+                return CreateResponse();
+            };
             var item3Called = false;
-            Func<NancyContext, Response> item3 = (r) => { item3Called = true; return null; };
+            Func<NancyContext, Response> item3 = (r) =>
+            {
+                item3Called = true;
+                return null;
+            };
             pipeline.AddItemToEndOfPipeline(item1);
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
@@ -111,11 +124,23 @@
         public void When_cast_to_func_and_invoked_members_are_invoked()
         {
             var item1Called = false;
-            Func<NancyContext, Response> item1 = (r) => { item1Called = true; return null; };
+            Func<NancyContext, Response> item1 = (r) =>
+            {
+                item1Called = true;
+                return null;
+            };
             var item2Called = false;
-            Func<NancyContext, Response> item2 = (r) => { item2Called = true; return null; };
+            Func<NancyContext, Response> item2 = (r) =>
+            {
+                item2Called = true;
+                return null;
+            };
             var item3Called = false;
-            Func<NancyContext, Response> item3 = (r) => { item3Called = true; return null; };
+            Func<NancyContext, Response> item3 = (r) =>
+            {
+                item3Called = true;
+                return null;
+            };
             pipeline.AddItemToEndOfPipeline(item1);
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
@@ -143,13 +168,29 @@
         public void Pipeline_containing_another_pipeline_will_invoke_items_in_both_pipelines()
         {
             var item1Called = false;
-            Func<NancyContext, Response> item1 = (r) => { item1Called = true; return null; };
+            Func<NancyContext, Response> item1 = (r) =>
+            {
+                item1Called = true;
+                return null;
+            };
             var item2Called = false;
-            Func<NancyContext, Response> item2 = (r) => { item2Called = true; return null; };
+            Func<NancyContext, Response> item2 = (r) =>
+            {
+                item2Called = true;
+                return null;
+            };
             var item3Called = false;
-            Func<NancyContext, Response> item3 = (r) => { item3Called = true; return null; };
+            Func<NancyContext, Response> item3 = (r) =>
+            {
+                item3Called = true;
+                return null;
+            };
             var item4Called = false;
-            Func<NancyContext, Response> item4 = (r) => { item4Called = true; return null; };
+            Func<NancyContext, Response> item4 = (r) =>
+            {
+                item4Called = true;
+                return null;
+            };
             pipeline += item1;
             pipeline += item2;
             var subPipeline = new BeforePipeline();

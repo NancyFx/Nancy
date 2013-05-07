@@ -1,15 +1,14 @@
 namespace Nancy.Tests.Unit.ViewEngines
 {
     using System.Collections.Generic;
+    using System.Linq;
 
     using FakeItEasy;
 
-    using Fakes;
     using Nancy.ViewEngines;
+
     using Xunit;
     using Xunit.Extensions;
-
-    using System.Linq;
 
     public class DefaultViewLocatorFixture
     {
@@ -95,7 +94,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         }
 
         [Fact]
-        public void Should_throw_ambiguousviewsexception_when_locating_view_by_name_and_multiple_views_share_the_same_name_and_location_but_different_extensions()
+        public void Should_throw_ambiguousviewsexception_when_locating_view_by_name_and_multiple_views_share_the_same_name_and_location_but_different_extensions
+            ()
         {
             // Given
             var expectedView1 = new ViewLocationResult(string.Empty, "index", "spark", () => null);
@@ -281,16 +281,16 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_be_able_to_locate_view_by_name_when_the_viewname_occures_in_the_location()
         {
-           // Given
-           var expectedView = new ViewLocationResult( "views/hello", "hello", "cshtml", () => null );
-           //var additionalView = new ViewLocationResult( "views", "index", "spark", () => null );
-           var locator = CreateViewLocator(expectedView);
+            // Given
+            var expectedView = new ViewLocationResult("views/hello", "hello", "cshtml", () => null);
+            //var additionalView = new ViewLocationResult( "views", "index", "spark", () => null );
+            var locator = CreateViewLocator(expectedView);
 
-           // When
-           var result = locator.LocateView( "views/hello/hello", null );
+            // When
+            var result = locator.LocateView("views/hello/hello", null);
 
-           // Then
-           result.ShouldBeSameAs( expectedView );
+            // Then
+            result.ShouldBeSameAs(expectedView);
         }
 
         [Fact]
@@ -298,22 +298,22 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             // Given
             var viewEngine1 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine1.Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngine1.Extensions).Returns(new[] {"html"});
 
             var viewEngine2 = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine2.Extensions).Returns(new[] { "spark" });
+            A.CallTo(() => viewEngine2.Extensions).Returns(new[] {"spark"});
 
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
-            var expectedViewEngineExtensions = new[] { "html", "spark" };
+            var expectedViewEngineExtensions = new[] {"html", "spark"};
             var viewEngine = A.Fake<IViewEngine>();
             A.CallTo(() => viewEngine.Extensions).Returns(expectedViewEngineExtensions);
 
             // When
-            new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             // Then
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>.That.Matches(
-                    x => x.All(expectedViewEngineExtensions.Contains)))).MustHaveHappened();
+                x => x.All(expectedViewEngineExtensions.Contains)))).MustHaveHappened();
         }
 
 
@@ -321,12 +321,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
-                                               .Returns(results);
+             .Returns(results);
 
             var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] {"liquid"});
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             return viewLocator;
         }

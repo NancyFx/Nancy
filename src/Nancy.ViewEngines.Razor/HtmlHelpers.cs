@@ -2,7 +2,7 @@
 {
     using System;
     using System.IO;
-    using System.Linq.Expressions;
+
     using Nancy.Security;
 
     /// <summary>
@@ -41,6 +41,30 @@
         /// </summary>
         /// <value>An <see cref="IRenderContext"/> intance.</value>
         public IRenderContext RenderContext { get; set; }
+
+        /// <summary>
+        /// Returns current culture name
+        /// </summary>
+        public string CurrentLocale
+        {
+            get { return this.RenderContext.Context.Culture.Name; }
+        }
+
+        /// <summary>
+        /// Returns current authenticated user name
+        /// </summary>
+        public IUserIdentity CurrentUser
+        {
+            get { return this.RenderContext.Context.CurrentUser; }
+        }
+
+        /// <summary>
+        /// Determines if current user is authenticated
+        /// </summary>
+        public bool IsAuthenticated
+        {
+            get { return this.RenderContext.Context.CurrentUser != null; }
+        }
 
         /// <summary>
         /// Renders a partial with the given view name.
@@ -94,30 +118,6 @@
                 this.RenderContext.GetCsrfToken();
 
             return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
-        }
-
-        /// <summary>
-        /// Returns current culture name
-        /// </summary>
-        public string CurrentLocale
-        {
-            get { return this.RenderContext.Context.Culture.Name; }
-        }
-
-        /// <summary>
-        /// Returns current authenticated user name
-        /// </summary>
-        public IUserIdentity CurrentUser
-        {
-            get { return this.RenderContext.Context.CurrentUser; }
-        }
-
-        /// <summary>
-        /// Determines if current user is authenticated
-        /// </summary>
-        public bool IsAuthenticated
-        {
-            get { return this.RenderContext.Context.CurrentUser != null; }
         }
     }
 }

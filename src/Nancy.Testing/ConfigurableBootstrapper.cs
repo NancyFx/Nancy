@@ -5,51 +5,51 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Localization;
+
     using Nancy.Bootstrapper;
     using Nancy.Conventions;
     using Nancy.Culture;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
+    using Nancy.Localization;
     using Nancy.ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Routing.Trie;
     using Nancy.Security;
     using Nancy.TinyIoc;
-    using Nancy.ViewEngines;
-    using Responses.Negotiation;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// A Nancy bootstrapper that can be configured with either Type or Instance overrides for all Nancy types.
     /// </summary>
     public class ConfigurableBootstrapper : NancyBootstrapperWithRequestContainerBase<TinyIoCContainer>, IPipelines, INancyModuleCatalog
     {
-        private readonly List<object> registeredTypes;
-        private readonly List<InstanceRegistration> registeredInstances;
-        private readonly NancyInternalConfiguration configuration;
-        private readonly ConfigurableModuleCatalog catalog;
-        private bool enableAutoRegistration;
-        private DiagnosticsConfiguration diagnosticConfiguration;
-        private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
-        private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
-
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
         /// in order to try and resolve the name of the assembly that is under test so
         /// that all of its references can be loaded into the application domain.
         /// </summary>
-        public static IList<string> TestAssemblySuffixes = new[] { "test", "tests", "unittests", "specs", "specifications" };
+        public static IList<string> TestAssemblySuffixes = new[] {"test", "tests", "unittests", "specs", "specifications"};
+
+        private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
+        private readonly ConfigurableModuleCatalog catalog;
+        private readonly NancyInternalConfiguration configuration;
+        private readonly List<InstanceRegistration> registeredInstances;
+        private readonly List<object> registeredTypes;
+        private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
 
         private bool allDiscoveredModules;
+        private DiagnosticsConfiguration diagnosticConfiguration;
+        private bool enableAutoRegistration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
         /// </summary>
         public ConfigurableBootstrapper()
             : this(null)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableBootstrapper"/> class.
@@ -79,123 +79,6 @@ namespace Nancy.Testing
             }
         }
 
-        private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
-        {
-            var testAssemblyName =
-                testAssembly.GetName().Name;
-
-            LoadReferencesForAssemblyUnderTest(testAssemblyName);
-        }
-
-        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
-        {
-            base.ApplicationStartup(container, pipelines);
-            foreach (var action in this.applicationStartupActions)
-            {
-                action.Invoke(container, pipelines);
-            }
-        }
-
-        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
-        {
-            base.RequestStartup(container, pipelines, context);
-            foreach (var action in this.requestStartupActions)
-            {
-                action.Invoke(container, pipelines, context);
-            }
-        }
-
-        /// <summary>
-        /// Get all NancyModule implementation instances
-        /// </summary>
-        /// <param name="context">The current context</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
-        public new IEnumerable<INancyModule> GetAllModules(NancyContext context)
-        {
-            return base.GetAllModules(context).Union(this.catalog.GetAllModules(context));
-        }
-
-        /// <summary>
-        /// Retreive a specific module instance from the container
-        /// </summary>
-        /// <param name="container">Container to use</param>
-        /// <param name="moduleType">Type of the module</param>
-        /// <returns>INancyModule instance</returns>
-        protected override INancyModule GetModule(TinyIoCContainer container, Type moduleType)
-        {
-            var module =
-                this.catalog.GetModule(moduleType, null);
-
-            if (module != null)
-            {
-                return module;
-            }
-
-            container.Register(typeof(INancyModule), moduleType);
-            return container.Resolve<INancyModule>();
-        }
-
-        private IEnumerable<ModuleRegistration> GetModuleRegistrations()
-        {
-            return this.registeredTypes.Where(x => x is ModuleRegistration).Cast<ModuleRegistration>();
-        }
-
-        private IEnumerable<TypeRegistration> GetTypeRegistrations()
-        {
-            return this.registeredTypes.Where(x => x is TypeRegistration).Cast<TypeRegistration>();
-        }
-
-        private IEnumerable<CollectionTypeRegistration> GetCollectionTypeRegistrations()
-        {
-            return this.registeredTypes.Where(x => x.GetType() == typeof(CollectionTypeRegistration)).Cast<CollectionTypeRegistration>();
-        }
-
-        private static void LoadReferencesForAssemblyUnderTest(string testAssemblyName)
-        {
-            if (!TestAssemblySuffixes.Any(x => GetSafePathExtension(testAssemblyName).Equals("." + x, StringComparison.OrdinalIgnoreCase)))
-            {
-                return;
-            }
-
-            var testAssemblyNameWithoutExtension =
-                Path.GetFileNameWithoutExtension(testAssemblyName);
-
-            var testAssemblyPath =
-                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
-
-            if (File.Exists(testAssemblyPath))
-            {
-                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
-
-                var assemblyUnderTest = AppDomain.CurrentDomain
-                    .GetAssemblies()
-                    .FirstOrDefault(x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
-
-                if (assemblyUnderTest != null)
-                {
-                    foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
-                    {
-                        AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
-                    }
-                }
-            }
-        }
-
-        private static string GetSafePathExtension(string name)
-        {
-            return Path.GetExtension(name) ?? String.Empty;
-        }
-
-        private IEnumerable<Type> Resolve<T>()
-        {
-            var types = this.GetTypeRegistrations()
-                .Where(x => x.RegistrationType == typeof(T))
-                .Select(x => x.ImplementationType)
-                .ToList();
-
-            return (types.Any()) ? types : null;
-        }
-
         /// <summary>
         /// Nancy internal configuration
         /// </summary>
@@ -212,10 +95,10 @@ namespace Nancy.Testing
             get
             {
                 var conventions = this.registeredInstances
-                    .Where(x => x.RegistrationType == typeof(NancyConventions))
-                    .Select(x => x.Implementation)
-                    .Cast<NancyConventions>()
-                    .FirstOrDefault();
+                                      .Where(x => x.RegistrationType == typeof (NancyConventions))
+                                      .Select(x => x.Implementation)
+                                      .Cast<NancyConventions>()
+                                      .FirstOrDefault();
 
                 return conventions ?? base.Conventions;
             }
@@ -236,7 +119,7 @@ namespace Nancy.Testing
                     return moduleRegistrations;
                 }
 
-                return this.allDiscoveredModules ? base.Modules : new ModuleRegistration[] { };
+                return this.allDiscoveredModules ? base.Modules : new ModuleRegistration[] {};
             }
         }
 
@@ -282,10 +165,7 @@ namespace Nancy.Testing
 
         protected override DiagnosticsConfiguration DiagnosticsConfiguration
         {
-            get
-            {
-                return this.diagnosticConfiguration ?? base.DiagnosticsConfiguration;
-            }
+            get { return this.diagnosticConfiguration ?? base.DiagnosticsConfiguration; }
         }
 
         /// <summary>
@@ -294,6 +174,164 @@ namespace Nancy.Testing
         protected override IRootPathProvider RootPathProvider
         {
             get { return new DefaultRootPathProvider(); }
+        }
+
+        /// <summary>
+        /// Get all NancyModule implementation instances
+        /// </summary>
+        /// <param name="context">The current context</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>
+        public new IEnumerable<INancyModule> GetAllModules(NancyContext context)
+        {
+            return base.GetAllModules(context).Union(this.catalog.GetAllModules(context));
+        }
+
+        /// <summary>
+        /// <para>
+        /// The pre-request hook
+        /// </para>
+        /// <para>
+        /// The PreRequest hook is called prior to processing a request. If a hook returns
+        /// a non-null response then processing is aborted and the response provided is
+        /// returned.
+        /// </para>
+        /// </summary>
+        public BeforePipeline BeforeRequest
+        {
+            get { return this.ApplicationPipelines.BeforeRequest; }
+            set { this.ApplicationPipelines.BeforeRequest = value; }
+        }
+
+        /// <summary>
+        /// <para>
+        /// The post-request hook
+        /// </para>
+        /// <para>
+        /// The post-request hook is called after the response is created. It can be used
+        /// to rewrite the response or add/remove items from the context.
+        /// </para>
+        /// </summary>
+        public AfterPipeline AfterRequest
+        {
+            get { return this.ApplicationPipelines.AfterRequest; }
+            set { this.ApplicationPipelines.AfterRequest = value; }
+        }
+
+        /// <summary>
+        /// <para>
+        /// The error hook
+        /// </para>
+        /// <para>
+        /// The error hook is called if an exception is thrown at any time during the pipeline.
+        /// If no error hook exists a standard InternalServerError response is returned
+        /// </para>
+        /// </summary>
+        public ErrorPipeline OnError
+        {
+            get { return this.ApplicationPipelines.OnError; }
+            set { this.ApplicationPipelines.OnError = value; }
+        }
+
+        private static void PerformConventionBasedAssemblyLoading(Assembly testAssembly)
+        {
+            var testAssemblyName =
+                testAssembly.GetName().Name;
+
+            LoadReferencesForAssemblyUnderTest(testAssemblyName);
+        }
+
+        protected override void ApplicationStartup(TinyIoCContainer container, IPipelines pipelines)
+        {
+            base.ApplicationStartup(container, pipelines);
+            foreach (var action in this.applicationStartupActions)
+                action.Invoke(container, pipelines);
+        }
+
+        protected override void RequestStartup(TinyIoCContainer container, IPipelines pipelines, NancyContext context)
+        {
+            base.RequestStartup(container, pipelines, context);
+            foreach (var action in this.requestStartupActions)
+                action.Invoke(container, pipelines, context);
+        }
+
+        /// <summary>
+        /// Retreive a specific module instance from the container
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="moduleType">Type of the module</param>
+        /// <returns>INancyModule instance</returns>
+        protected override INancyModule GetModule(TinyIoCContainer container, Type moduleType)
+        {
+            var module =
+                this.catalog.GetModule(moduleType, null);
+
+            if (module != null)
+            {
+                return module;
+            }
+
+            container.Register(typeof (INancyModule), moduleType);
+            return container.Resolve<INancyModule>();
+        }
+
+        private IEnumerable<ModuleRegistration> GetModuleRegistrations()
+        {
+            return this.registeredTypes.Where(x => x is ModuleRegistration).Cast<ModuleRegistration>();
+        }
+
+        private IEnumerable<TypeRegistration> GetTypeRegistrations()
+        {
+            return this.registeredTypes.Where(x => x is TypeRegistration).Cast<TypeRegistration>();
+        }
+
+        private IEnumerable<CollectionTypeRegistration> GetCollectionTypeRegistrations()
+        {
+            return this.registeredTypes.Where(x => x.GetType() == typeof (CollectionTypeRegistration)).Cast<CollectionTypeRegistration>();
+        }
+
+        private static void LoadReferencesForAssemblyUnderTest(string testAssemblyName)
+        {
+            if (!TestAssemblySuffixes.Any(x => GetSafePathExtension(testAssemblyName).Equals("." + x, StringComparison.OrdinalIgnoreCase)))
+            {
+                return;
+            }
+
+            var testAssemblyNameWithoutExtension =
+                Path.GetFileNameWithoutExtension(testAssemblyName);
+
+            var testAssemblyPath =
+                Path.Combine(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
+
+            if (File.Exists(testAssemblyPath))
+            {
+                AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(testAssemblyNameWithoutExtension, ".dll"));
+
+                var assemblyUnderTest = AppDomain.CurrentDomain
+                                                 .GetAssemblies()
+                                                 .FirstOrDefault(
+                                                     x => x.GetName().Name.Equals(testAssemblyNameWithoutExtension, StringComparison.OrdinalIgnoreCase));
+
+                if (assemblyUnderTest != null)
+                {
+                    foreach (var referencedAssembly in assemblyUnderTest.GetReferencedAssemblies())
+                        AppDomainAssemblyTypeScanner.LoadAssemblies(AppDomain.CurrentDomain.BaseDirectory, string.Concat(referencedAssembly.Name, ".dll"));
+                }
+            }
+        }
+
+        private static string GetSafePathExtension(string name)
+        {
+            return Path.GetExtension(name) ?? String.Empty;
+        }
+
+        private IEnumerable<Type> Resolve<T>()
+        {
+            var types = this.GetTypeRegistrations()
+                            .Where(x => x.RegistrationType == typeof (T))
+                            .Select(x => x.ImplementationType)
+                            .ToList();
+
+            return (types.Any()) ? types : null;
         }
 
         /// <summary>
@@ -308,7 +346,6 @@ namespace Nancy.Testing
                 container.AutoRegister();
                 this.RegisterBootstrapperTypes(container);
             }
-
         }
 
         /// <summary>
@@ -394,10 +431,10 @@ namespace Nancy.Testing
         protected override void RegisterBootstrapperTypes(TinyIoCContainer applicationContainer)
         {
             var moduleCatalog = this.registeredInstances
-                .Where(x => x.RegistrationType == typeof(INancyModuleCatalog))
-                .Select(x => x.Implementation)
-                .Cast<INancyModuleCatalog>()
-                .FirstOrDefault() ?? this;
+                                    .Where(x => x.RegistrationType == typeof (INancyModuleCatalog))
+                                    .Select(x => x.Implementation)
+                                    .Cast<INancyModuleCatalog>()
+                                    .FirstOrDefault() ?? this;
 
             applicationContainer.Register<INancyModuleCatalog>(moduleCatalog);
         }
@@ -416,9 +453,7 @@ namespace Nancy.Testing
                 .Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType));
 
             foreach (var typeRegistration in typeRegistrations)
-            {
                 container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
-            }
         }
 
         /// <summary>
@@ -435,9 +470,7 @@ namespace Nancy.Testing
                 .Concat(collectionTypeRegistrations.Where(x => configuredCollectionTypes.All(y => y.RegistrationType != x.RegistrationType)));
 
             foreach (var collectionTypeRegistration in collectionTypeRegistrations)
-            {
                 container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
-            }
         }
 
         /// <summary>
@@ -448,8 +481,8 @@ namespace Nancy.Testing
         protected override void RegisterInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
             instanceRegistrations = this.registeredInstances
-                .Concat(instanceRegistrations.Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType)))
-                .Where(x => this.GetTypeRegistrations().All(y => y.RegistrationType != x.RegistrationType));
+                                        .Concat(instanceRegistrations.Where(x => this.registeredInstances.All(y => y.RegistrationType != x.RegistrationType)))
+                                        .Where(x => this.GetTypeRegistrations().All(y => y.RegistrationType != x.RegistrationType));
 
             foreach (var instanceRegistration in instanceRegistrations)
             {
@@ -469,57 +502,11 @@ namespace Nancy.Testing
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
                 container.Register(
-                    typeof(INancyModule),
+                    typeof (INancyModule),
                     moduleRegistrationType.ModuleType,
                     moduleRegistrationType.ModuleType.FullName).
-                    AsSingleton();
+                          AsSingleton();
             }
-        }
-
-        /// <summary>
-        /// <para>
-        /// The pre-request hook
-        /// </para>
-        /// <para>
-        /// The PreRequest hook is called prior to processing a request. If a hook returns
-        /// a non-null response then processing is aborted and the response provided is
-        /// returned.
-        /// </para>
-        /// </summary>
-        public BeforePipeline BeforeRequest
-        {
-            get { return this.ApplicationPipelines.BeforeRequest; }
-            set { this.ApplicationPipelines.BeforeRequest = value; }
-        }
-
-        /// <summary>
-        /// <para>
-        /// The post-request hook
-        /// </para>
-        /// <para>
-        /// The post-request hook is called after the response is created. It can be used
-        /// to rewrite the response or add/remove items from the context.
-        /// </para>
-        /// </summary>
-        public AfterPipeline AfterRequest
-        {
-            get { return this.ApplicationPipelines.AfterRequest; }
-            set { this.ApplicationPipelines.AfterRequest = value; }
-        }
-
-        /// <summary>
-        /// <para>
-        /// The error hook
-        /// </para>
-        /// <para>
-        /// The error hook is called if an exception is thrown at any time during the pipeline.
-        /// If no error hook exists a standard InternalServerError response is returned
-        /// </para>
-        /// </summary>
-        public ErrorPipeline OnError
-        {
-            get { return this.ApplicationPipelines.OnError; }
-            set { this.ApplicationPipelines.OnError = value; }
         }
 
         /// <summary>
@@ -549,7 +536,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Binder(IBinder binder)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IBinder), binder));
+                    new InstanceRegistration(typeof (IBinder), binder));
 
                 return this;
             }
@@ -567,7 +554,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Binder<T>() where T : IBinder
             {
-                this.bootstrapper.configuration.Binder = typeof(T);
+                this.bootstrapper.configuration.Binder = typeof (T);
                 return this;
             }
 
@@ -579,7 +566,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ContextFactory(INancyContextFactory contextFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(INancyContextFactory), contextFactory));
+                    new InstanceRegistration(typeof (INancyContextFactory), contextFactory));
 
                 return this;
             }
@@ -591,7 +578,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ContextFactory<T>() where T : INancyContextFactory
             {
-                this.bootstrapper.configuration.ContextFactory = typeof(T);
+                this.bootstrapper.configuration.ContextFactory = typeof (T);
                 return this;
             }
 
@@ -602,7 +589,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Dependency<T>(Type type)
             {
-                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), type));
+                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof (T), type));
 
                 return this;
             }
@@ -615,12 +602,10 @@ namespace Nancy.Testing
             /// <remarks>This method will register the type for all the interfaces it implements and the type itself.</remarks>
             public ConfigurableBootstrapperConfigurator Dependency<T>()
             {
-                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof(T), typeof(T)));
+                this.bootstrapper.registeredTypes.Add(new TypeRegistration(typeof (T), typeof (T)));
 
-                foreach (var interfaceType in typeof(T).GetInterfaces())
-                {
-                    this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof(T)));
-                }
+                foreach (var interfaceType in typeof (T).GetInterfaces())
+                    this.bootstrapper.registeredTypes.Add(new TypeRegistration(interfaceType, typeof (T)));
 
                 return this;
             }
@@ -633,12 +618,10 @@ namespace Nancy.Testing
             /// <remarks>This method will register the instance for all the interfaces it implements and the type itself.</remarks>
             public ConfigurableBootstrapperConfigurator Dependency<T>(T instance)
             {
-                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
+                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof (T), instance));
 
                 foreach (var interfaceType in instance.GetType().GetInterfaces())
-                {
                     this.bootstrapper.registeredInstances.Add(new InstanceRegistration(interfaceType, instance));
-                }
 
                 return this;
             }
@@ -650,7 +633,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Dependency<T>(object instance)
             {
-                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof(T), instance));
+                this.bootstrapper.registeredInstances.Add(new InstanceRegistration(typeof (T), instance));
                 return this;
             }
 
@@ -659,12 +642,10 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">The instances of the dependencies that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies) 
+            public ConfigurableBootstrapperConfigurator Dependencies(params object[] dependencies)
             {
                 foreach (var dependency in dependencies)
-                {
                     this.Dependency(dependency);
-                }
 
                 return this;
             }
@@ -674,14 +655,14 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="dependencies">An array of maps between the interfaces and instances that should be registered with the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies) 
+            public ConfigurableBootstrapperConfigurator MappedDependencies<T, K>(IEnumerable<Tuple<T, K>> dependencies)
                 where T : Type
-                where K: class 
+                where K : class
             {
                 foreach (var dependency in dependencies)
                 {
-                   this.bootstrapper.registeredInstances.Add(
-                       new InstanceRegistration(dependency.Item1, dependency.Item2));
+                    this.bootstrapper.registeredInstances.Add(
+                        new InstanceRegistration(dependency.Item1, dependency.Item2));
                 }
 
                 return this;
@@ -696,9 +677,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Dependencies<T>(params object[] dependencies)
             {
                 foreach (var dependency in dependencies)
-                {
                     this.Dependency<T>(dependency);
-                }
 
                 return this;
             }
@@ -712,9 +691,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Dependencies<T>(params Type[] dependencies)
             {
                 foreach (var dependency in dependencies)
-                {
                     this.Dependency<T>(dependency);
-                }
 
                 return this;
             }
@@ -748,7 +725,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator StatusCodeHandler<T>() where T : IStatusCodeHandler
             {
-                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] { typeof(T) });
+                this.bootstrapper.configuration.StatusCodeHandlers = new List<Type>(new[] {typeof (T)});
                 return this;
             }
 
@@ -760,7 +737,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator FieldNameConverter(IFieldNameConverter fieldNameConverter)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IFieldNameConverter), fieldNameConverter));
+                    new InstanceRegistration(typeof (IFieldNameConverter), fieldNameConverter));
 
                 return this;
             }
@@ -772,7 +749,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator FieldNameConverter<T>() where T : IFieldNameConverter
             {
-                this.bootstrapper.configuration.FieldNameConverter = typeof(T);
+                this.bootstrapper.configuration.FieldNameConverter = typeof (T);
                 return this;
             }
 
@@ -784,7 +761,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ModelBinderLocator(IModelBinderLocator modelBinderLocator)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IModelBinderLocator), modelBinderLocator));
+                    new InstanceRegistration(typeof (IModelBinderLocator), modelBinderLocator));
 
                 return this;
             }
@@ -796,7 +773,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ModelBinderLocator<T>() where T : IModelBinderLocator
             {
-                this.bootstrapper.configuration.ModelBinderLocator = typeof(T);
+                this.bootstrapper.configuration.ModelBinderLocator = typeof (T);
                 return this;
             }
 
@@ -807,7 +784,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Module<T>() where T : INancyModule
             {
-                return this.Modules(typeof(T));
+                return this.Modules(typeof (T));
             }
 
             /// <summary>
@@ -845,7 +822,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator NancyEngine(INancyEngine engine)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(INancyEngine), engine));
+                    new InstanceRegistration(typeof (INancyEngine), engine));
 
                 return this;
             }
@@ -857,7 +834,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator NancyEngine<T>() where T : INancyEngine
             {
-                this.bootstrapper.configuration.NancyEngine = typeof(T);
+                this.bootstrapper.configuration.NancyEngine = typeof (T);
                 return this;
             }
 
@@ -869,7 +846,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator NancyModuleBuilder(INancyModuleBuilder nancyModuleBuilder)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(INancyModuleBuilder), nancyModuleBuilder));
+                    new InstanceRegistration(typeof (INancyModuleBuilder), nancyModuleBuilder));
 
                 return this;
             }
@@ -881,7 +858,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator NancyModuleBuilder<T>() where T : INancyModuleBuilder
             {
-                this.bootstrapper.configuration.NancyModuleBuilder = typeof(T);
+                this.bootstrapper.configuration.NancyModuleBuilder = typeof (T);
                 return this;
             }
 
@@ -893,7 +870,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RenderContextFactory(IRenderContextFactory renderContextFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRenderContextFactory), renderContextFactory));
+                    new InstanceRegistration(typeof (IRenderContextFactory), renderContextFactory));
 
                 return this;
             }
@@ -905,7 +882,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RenderContextFactory<T>() where T : IRenderContextFactory
             {
-                this.bootstrapper.configuration.RenderContextFactory = typeof(T);
+                this.bootstrapper.configuration.RenderContextFactory = typeof (T);
                 return this;
             }
 
@@ -917,7 +894,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ResponseFormatterFactory(IResponseFormatterFactory responseFormatterFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IResponseFormatterFactory), responseFormatterFactory));
+                    new InstanceRegistration(typeof (IResponseFormatterFactory), responseFormatterFactory));
 
                 return this;
             }
@@ -929,7 +906,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResponseFormatterFactory<T>() where T : IResponseFormatterFactory
             {
-                this.bootstrapper.configuration.ResponseFormatterFactory = typeof(T);
+                this.bootstrapper.configuration.ResponseFormatterFactory = typeof (T);
                 return this;
             }
 
@@ -941,7 +918,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteCache(IRouteCache routeCache)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteCache), routeCache));
+                    new InstanceRegistration(typeof (IRouteCache), routeCache));
 
                 return this;
             }
@@ -953,7 +930,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteCache<T>() where T : IRouteCache
             {
-                this.bootstrapper.configuration.RouteCache = typeof(T);
+                this.bootstrapper.configuration.RouteCache = typeof (T);
                 return this;
             }
 
@@ -965,7 +942,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteCacheProvider(IRouteCacheProvider routeCacheProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteCacheProvider), routeCacheProvider));
+                    new InstanceRegistration(typeof (IRouteCacheProvider), routeCacheProvider));
 
                 return this;
             }
@@ -977,7 +954,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteCacheProvider<T>() where T : IRouteCacheProvider
             {
-                this.bootstrapper.configuration.RouteCacheProvider = typeof(T);
+                this.bootstrapper.configuration.RouteCacheProvider = typeof (T);
                 return this;
             }
 
@@ -989,7 +966,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RootPathProvider(IRootPathProvider rootPathProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRootPathProvider), rootPathProvider));
+                    new InstanceRegistration(typeof (IRootPathProvider), rootPathProvider));
 
                 return this;
             }
@@ -1002,7 +979,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RootPathProvider<T>() where T : IRootPathProvider
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(IRootPathProvider), typeof(T)));
+                    new TypeRegistration(typeof (IRootPathProvider), typeof (T)));
 
                 return this;
             }
@@ -1015,7 +992,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RoutePatternMatcher(IRoutePatternMatcher routePatternMatcher)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRoutePatternMatcher), routePatternMatcher));
+                    new InstanceRegistration(typeof (IRoutePatternMatcher), routePatternMatcher));
 
                 return this;
             }
@@ -1027,7 +1004,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteInvoker<T>() where T : IRouteInvoker
             {
-                this.bootstrapper.configuration.RouteInvoker = typeof(T);
+                this.bootstrapper.configuration.RouteInvoker = typeof (T);
                 return this;
             }
 
@@ -1039,7 +1016,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteInvoker(IRouteInvoker routeInvoker)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteInvoker), routeInvoker));
+                    new InstanceRegistration(typeof (IRouteInvoker), routeInvoker));
 
                 return this;
             }
@@ -1051,7 +1028,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RoutePatternMatcher<T>() where T : IRoutePatternMatcher
             {
-                this.bootstrapper.configuration.RoutePatternMatcher = typeof(T);
+                this.bootstrapper.configuration.RoutePatternMatcher = typeof (T);
                 return this;
             }
 
@@ -1063,7 +1040,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteResolver(IRouteResolver routeResolver)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteResolver), routeResolver));
+                    new InstanceRegistration(typeof (IRouteResolver), routeResolver));
 
                 return this;
             }
@@ -1075,7 +1052,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteResolver<T>() where T : IRouteResolver
             {
-                this.bootstrapper.configuration.RouteResolver = typeof(T);
+                this.bootstrapper.configuration.RouteResolver = typeof (T);
                 return this;
             }
 
@@ -1087,7 +1064,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ModelValidatorLocator(IModelValidatorLocator modelValidatorLocator)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IModelValidatorLocator), modelValidatorLocator));
+                    new InstanceRegistration(typeof (IModelValidatorLocator), modelValidatorLocator));
 
                 return this;
             }
@@ -1099,7 +1076,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ModelValidatorLocator<T>() where T : IModelValidatorLocator
             {
-                this.bootstrapper.configuration.ModelValidatorLocator = typeof(T);
+                this.bootstrapper.configuration.ModelValidatorLocator = typeof (T);
                 return this;
             }
 
@@ -1111,7 +1088,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RequestDispatcher(IRequestDispatcher requestDispatcher)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRequestDispatcher), requestDispatcher));
+                    new InstanceRegistration(typeof (IRequestDispatcher), requestDispatcher));
 
                 return this;
             }
@@ -1124,7 +1101,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RequestDispatcher<T>() where T : IRequestDispatcher
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(IRequestDispatcher), typeof(T)));
+                    new TypeRegistration(typeof (IRequestDispatcher), typeof (T)));
 
                 return this;
             }
@@ -1137,7 +1114,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ResourceAssemblyProvider(IResourceAssemblyProvider resourceAssemblyProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IResourceAssemblyProvider), resourceAssemblyProvider));
+                    new InstanceRegistration(typeof (IResourceAssemblyProvider), resourceAssemblyProvider));
 
                 return this;
             }
@@ -1149,7 +1126,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ResourceAssemblyProvider<T>() where T : IResourceAssemblyProvider
             {
-                this.bootstrapper.configuration.ResourceAssemblyProvider = typeof(T);
+                this.bootstrapper.configuration.ResourceAssemblyProvider = typeof (T);
                 return this;
             }
 
@@ -1161,7 +1138,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteDescriptionProvider<T>() where T : IRouteDescriptionProvider
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(IRouteDescriptionProvider), typeof(T)));
+                    new TypeRegistration(typeof (IRouteDescriptionProvider), typeof (T)));
 
                 return this;
             }
@@ -1174,7 +1151,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteDescriptionProvider(IRouteDescriptionProvider routeDescriptionProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteDescriptionProvider), routeDescriptionProvider));
+                    new InstanceRegistration(typeof (IRouteDescriptionProvider), routeDescriptionProvider));
 
                 return this;
             }
@@ -1187,7 +1164,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteSegmentExtractor<T>() where T : IRouteSegmentExtractor
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new TypeRegistration(typeof(IRouteSegmentExtractor), typeof(T)));
+                    new TypeRegistration(typeof (IRouteSegmentExtractor), typeof (T)));
 
                 return this;
             }
@@ -1200,7 +1177,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteSegmentExtractor(IRouteSegmentExtractor routeSegmentExtractor)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteSegmentExtractor), routeSegmentExtractor));
+                    new InstanceRegistration(typeof (IRouteSegmentExtractor), routeSegmentExtractor));
 
                 return this;
             }
@@ -1213,7 +1190,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ResponseProcessor<T>() where T : IResponseProcessor
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(IResponseProcessor), new[] { typeof(T) }));
+                    new CollectionTypeRegistration(typeof (IResponseProcessor), new[] {typeof (T)}));
 
                 return this;
             }
@@ -1226,7 +1203,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ResponseProcessors(params Type[] responseProcessors)
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(IResponseProcessor), responseProcessors));
+                    new CollectionTypeRegistration(typeof (IResponseProcessor), responseProcessors));
 
                 return this;
             }
@@ -1239,7 +1216,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator TextResource(ITextResource textResource)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(ITextResource), textResource));
+                    new InstanceRegistration(typeof (ITextResource), textResource));
 
                 return this;
             }
@@ -1251,7 +1228,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator TextResource<T>() where T : ITextResource
             {
-                this.bootstrapper.configuration.TextResource = typeof(T);
+                this.bootstrapper.configuration.TextResource = typeof (T);
                 return this;
             }
 
@@ -1263,7 +1240,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewCache(IViewCache viewCache)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewCache), viewCache));
+                    new InstanceRegistration(typeof (IViewCache), viewCache));
 
                 return this;
             }
@@ -1275,7 +1252,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewCache<T>() where T : IViewCache
             {
-                this.bootstrapper.configuration.ViewCache = typeof(T);
+                this.bootstrapper.configuration.ViewCache = typeof (T);
                 return this;
             }
 
@@ -1287,7 +1264,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewEngine(IViewEngine viewEngine)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewEngine), viewEngine));
+                    new InstanceRegistration(typeof (IViewEngine), viewEngine));
 
                 return this;
             }
@@ -1300,7 +1277,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewEngine<T>() where T : IViewEngine
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(IViewEngine), new[] { typeof(T) }));
+                    new CollectionTypeRegistration(typeof (IViewEngine), new[] {typeof (T)}));
 
                 return this;
             }
@@ -1313,7 +1290,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewEngines(params Type[] viewEngines)
             {
                 this.bootstrapper.registeredTypes.Add(
-                    new CollectionTypeRegistration(typeof(IViewEngine), viewEngines));
+                    new CollectionTypeRegistration(typeof (IViewEngine), viewEngines));
 
                 return this;
             }
@@ -1326,7 +1303,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewFactory(IViewFactory viewFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewFactory), viewFactory));
+                    new InstanceRegistration(typeof (IViewFactory), viewFactory));
 
                 return this;
             }
@@ -1338,7 +1315,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewFactory<T>() where T : IViewFactory
             {
-                this.bootstrapper.configuration.ViewFactory = typeof(T);
+                this.bootstrapper.configuration.ViewFactory = typeof (T);
                 return this;
             }
 
@@ -1350,7 +1327,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewLocationProvider(IViewLocationProvider viewLocationProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewLocationProvider), viewLocationProvider));
+                    new InstanceRegistration(typeof (IViewLocationProvider), viewLocationProvider));
 
                 return this;
             }
@@ -1362,7 +1339,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewLocationProvider<T>() where T : IViewLocationProvider
             {
-                this.bootstrapper.configuration.ViewLocationProvider = typeof(T);
+                this.bootstrapper.configuration.ViewLocationProvider = typeof (T);
                 return this;
             }
 
@@ -1374,7 +1351,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewLocator(IViewLocator viewLocator)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewLocator), viewLocator));
+                    new InstanceRegistration(typeof (IViewLocator), viewLocator));
 
                 return this;
             }
@@ -1386,7 +1363,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewLocator<T>() where T : IViewLocator
             {
-                this.bootstrapper.configuration.ViewLocator = typeof(T);
+                this.bootstrapper.configuration.ViewLocator = typeof (T);
                 return this;
             }
 
@@ -1398,7 +1375,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ViewResolver(IViewResolver viewResolver)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IViewResolver), viewResolver));
+                    new InstanceRegistration(typeof (IViewResolver), viewResolver));
 
                 return this;
             }
@@ -1410,7 +1387,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ViewResolver<T>() where T : IViewResolver
             {
-                this.bootstrapper.configuration.ViewResolver = typeof(T);
+                this.bootstrapper.configuration.ViewResolver = typeof (T);
                 return this;
             }
 
@@ -1422,7 +1399,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator CsrfTokenValidator(ICsrfTokenValidator tokenValidator)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(ICsrfTokenValidator), tokenValidator));
+                    new InstanceRegistration(typeof (ICsrfTokenValidator), tokenValidator));
 
                 return this;
             }
@@ -1434,7 +1411,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator CsrfTokenValidator<T>() where T : ICsrfTokenValidator
             {
-                this.bootstrapper.configuration.CsrfTokenValidator = typeof(T);
+                this.bootstrapper.configuration.CsrfTokenValidator = typeof (T);
                 return this;
             }
 
@@ -1446,7 +1423,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator ObjectSerializer(IObjectSerializer objectSerializer)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IObjectSerializer), objectSerializer));
+                    new InstanceRegistration(typeof (IObjectSerializer), objectSerializer));
 
                 return this;
             }
@@ -1458,7 +1435,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator ObjectSerializer<T>() where T : IObjectSerializer
             {
-                this.bootstrapper.configuration.ObjectSerializer = typeof(T);
+                this.bootstrapper.configuration.ObjectSerializer = typeof (T);
                 return this;
             }
 
@@ -1470,7 +1447,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Serializer<T>() where T : ISerializer
             {
-                this.bootstrapper.configuration.Serializers = new List<Type> { typeof(T) };
+                this.bootstrapper.configuration.Serializers = new List<Type> {typeof (T)};
                 return this;
             }
 
@@ -1504,7 +1481,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator Diagnostics(IDiagnostics diagnostics)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IDiagnostics), diagnostics));
+                    new InstanceRegistration(typeof (IDiagnostics), diagnostics));
 
                 return this;
             }
@@ -1516,7 +1493,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator Diagnostics<T>() where T : IDiagnostics
             {
-                this.bootstrapper.configuration.Diagnostics = typeof(T);
+                this.bootstrapper.configuration.Diagnostics = typeof (T);
                 return this;
             }
 
@@ -1528,7 +1505,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator CultureService(ICultureService cultureService)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(ICultureService), cultureService));
+                    new InstanceRegistration(typeof (ICultureService), cultureService));
 
                 return this;
             }
@@ -1540,7 +1517,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator CultureService<T>() where T : ICultureService
             {
-                this.bootstrapper.configuration.CultureService = typeof(T);
+                this.bootstrapper.configuration.CultureService = typeof (T);
                 return this;
             }
 
@@ -1552,7 +1529,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator StaticContentProvider(IStaticContentProvider staticContentProvider)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IStaticContentProvider), staticContentProvider));
+                    new InstanceRegistration(typeof (IStaticContentProvider), staticContentProvider));
 
                 return this;
             }
@@ -1564,7 +1541,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator StaticContentProvider<T>() where T : IStaticContentProvider
             {
-                this.bootstrapper.configuration.StaticContentProvider = typeof(T);
+                this.bootstrapper.configuration.StaticContentProvider = typeof (T);
                 return this;
             }
 
@@ -1576,7 +1553,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator RouteResolverTrie(IRouteResolverTrie routeResolverTrie)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(IRouteResolverTrie), routeResolverTrie));
+                    new InstanceRegistration(typeof (IRouteResolverTrie), routeResolverTrie));
 
                 return this;
             }
@@ -1588,7 +1565,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteResolverTrie<T>() where T : IRouteResolverTrie
             {
-                this.bootstrapper.configuration.RouteResolverTrie = typeof(T);
+                this.bootstrapper.configuration.RouteResolverTrie = typeof (T);
                 return this;
             }
 
@@ -1600,7 +1577,7 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator TrieNodeFactory(ITrieNodeFactory nodeFactory)
             {
                 this.bootstrapper.registeredInstances.Add(
-                    new InstanceRegistration(typeof(ITrieNodeFactory), nodeFactory));
+                    new InstanceRegistration(typeof (ITrieNodeFactory), nodeFactory));
 
                 return this;
             }
@@ -1612,7 +1589,7 @@ namespace Nancy.Testing
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator TrieNodeFactory<T>() where T : ITrieNodeFactory
             {
-                this.bootstrapper.configuration.TrieNodeFactory = typeof(T);
+                this.bootstrapper.configuration.TrieNodeFactory = typeof (T);
                 return this;
             }
 

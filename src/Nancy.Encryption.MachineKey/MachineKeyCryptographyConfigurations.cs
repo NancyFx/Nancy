@@ -11,13 +11,13 @@
     {
         private static readonly Lazy<CryptographyConfiguration> DefaultConfiguration =
             new Lazy<CryptographyConfiguration>(() => new CryptographyConfiguration(
-                                                          new MachineKeyEncryptionProvider(),
-                                                          new MachineKeyHmacProvider()));
+                new MachineKeyEncryptionProvider(),
+                new MachineKeyHmacProvider()));
 
         private static readonly Lazy<CryptographyConfiguration> NoEncryptionConfiguration =
             new Lazy<CryptographyConfiguration>(() => new CryptographyConfiguration(
-                                                          new NoEncryptionProvider(),
-                                                          new MachineKeyHmacProvider()));
+                new NoEncryptionProvider(),
+                new MachineKeyHmacProvider()));
 
         /// <summary>
         /// Gets the default configuration for machinekey encryption.
@@ -25,10 +25,7 @@
         /// </summary>
         public static CryptographyConfiguration Default
         {
-            get
-            {
-                return DefaultConfiguration.Value;
-            }
+            get { return DefaultConfiguration.Value; }
         }
 
         /// <summary>
@@ -36,10 +33,7 @@
         /// </summary>
         public static CryptographyConfiguration NoEncryption
         {
-            get
-            {
-                return NoEncryptionConfiguration.Value;
-            }
+            get { return NoEncryptionConfiguration.Value; }
         }
     }
 }

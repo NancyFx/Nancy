@@ -1,7 +1,8 @@
 namespace Nancy.Demo.ModelBinding.ModelBinders
 {
     using System;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
     /// <summary>
@@ -16,7 +17,7 @@ namespace Nancy.Demo.ModelBinding.ModelBinders
         /// <returns>True if binding is possible, false otherwise</returns>
         public bool CanBind(Type modelType)
         {
-            return modelType == typeof(Customer);
+            return modelType == typeof (Customer);
         }
 
         /// <summary>

@@ -10,9 +10,8 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyVisualBasicRazorBuildProvider : BuildProvider
     {
-        private readonly RazorEngineHost host;
-
         private readonly CompilerType compilerType;
+        private readonly RazorEngineHost host;
 
         private CodeCompileUnit generatedCode;
 
@@ -43,7 +42,8 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         {
             assemblyBuilder.AddCodeCompileUnit(this, this.GetGeneratedCode());
 
-            assemblyBuilder.GenerateTypeFactory(string.Format(CultureInfo.InvariantCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
+            assemblyBuilder.GenerateTypeFactory(string.Format(CultureInfo.InvariantCulture, "{0}.{1}",
+                new object[] {this.host.DefaultNamespace, this.host.DefaultClassName}));
         }
 
         /// <summary>
@@ -53,7 +53,9 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
         /// <param name="results">The compilation results for the build provider's virtual path.</param>
         public override Type GetGeneratedType(CompilerResults results)
         {
-            return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
+            return
+                results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}",
+                    new object[] {this.host.DefaultNamespace, this.host.DefaultClassName}));
         }
 
         private CodeCompileUnit GetGeneratedCode()
@@ -63,9 +65,7 @@ namespace Nancy.ViewEngines.Razor.BuildProviders
                 var engine = new RazorTemplateEngine(this.host);
                 GeneratorResults results;
                 using (var reader = this.OpenReader())
-                {
                     results = engine.GenerateCode(reader);
-                }
 
                 if (!results.Success)
                 {

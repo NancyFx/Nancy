@@ -8,9 +8,9 @@
     /// </summary>
     public class DefaultResponseFormatter : IResponseFormatter
     {
+        private readonly NancyContext context;
         private readonly IRootPathProvider rootPathProvider;
         private readonly IEnumerable<ISerializer> serializers;
-        private readonly NancyContext context;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultResponseFormatter"/> class.
@@ -29,10 +29,7 @@
         /// </summary>
         public IEnumerable<ISerializer> Serializers
         {
-            get
-            {
-                return this.serializers;
-            }
+            get { return this.serializers; }
         }
 
         /// <summary>

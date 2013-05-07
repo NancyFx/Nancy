@@ -15,18 +15,18 @@
     {
         private string parameterName;
 
+        public GreedyCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {
+            this.GetParameterName();
+        }
+
         /// <summary>
         /// Score for this node
         /// </summary>
         public override int Score
         {
             get { return 0; }
-        }
-
-        public GreedyCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
-            this.GetParameterName();
         }
 
         /// <summary>
@@ -38,7 +38,8 @@
         /// <param name="capturedParameters">Currently captured parameters</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
-        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
+        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters,
+            NancyContext context)
         {
             var fullGreedy = this.GetFullGreedy(segments, currentIndex, capturedParameters);
             if (!this.Children.Any())
@@ -89,7 +90,7 @@
         {
             if (!this.NodeData.Any())
             {
-                return new MatchResult[] { };
+                return new MatchResult[] {};
             }
 
             var value = segments.Skip(currentIndex).Aggregate((seg1, seg2) => seg1 + "/" + seg2);

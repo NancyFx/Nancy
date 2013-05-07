@@ -4,19 +4,19 @@
 
 namespace Nancy.Demo.Hosting.Owin
 {
+    #if ASPNET_WEBSOCKETS
+    using System.Net.WebSockets;
+#endif
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
     using System.Linq;
-#if ASPNET_WEBSOCKETS
-    using System.Net.WebSockets;
-#endif
+    using System.Security.Cryptography.X509Certificates;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web;
     using System.Web.Routing;
-    using System.Security.Cryptography.X509Certificates;
 
     using AppFunc = System.Func<System.Collections.Generic.IDictionary<string, object>, System.Threading.Tasks.Task>;
 
@@ -66,8 +66,7 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetRouteHandler(AppFunc app)
             : this(app, null)
-        {
-        }
+        {}
 
         public SimpleOwinAspNetRouteHandler(AppFunc app, string root)
         {
@@ -76,8 +75,7 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetRouteHandler(IEnumerable<Func<AppFunc, AppFunc>> apps)
             : this(apps, null)
-        {
-        }
+        {}
 
         public SimpleOwinAspNetRouteHandler(IEnumerable<Func<AppFunc, AppFunc>> apps, string root)
         {
@@ -106,8 +104,7 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetHandler(AppFunc app)
             : this(app, null)
-        {
-        }
+        {}
 
         public SimpleOwinAspNetHandler(AppFunc app, string root)
         {
@@ -128,13 +125,11 @@ namespace Nancy.Demo.Hosting.Owin
 
         public SimpleOwinAspNetHandler(IEnumerable<Func<AppFunc, AppFunc>> apps)
             : this(apps, null)
-        {
-        }
+        {}
 
         public SimpleOwinAspNetHandler(IEnumerable<Func<AppFunc, AppFunc>> apps, string root)
             : this(ToOwinApp(apps), root)
-        {
-        }
+        {}
 
         public static AppFunc ToOwinApp(IEnumerable<Func<AppFunc, AppFunc>> apps)
         {
@@ -195,8 +190,8 @@ namespace Nancy.Demo.Hosting.Owin
             }
 
             var serverVarsToAddToEnv = request.ServerVariables.AllKeys
-                .Where(key => !key.StartsWith("HTTP_") && !string.Equals(key, "ALL_HTTP") && !string.Equals(key, "ALL_RAW"))
-                .Select(key => new KeyValuePair<string, object>(key, request.ServerVariables.Get(key)));
+                                              .Where(key => !key.StartsWith("HTTP_") && !string.Equals(key, "ALL_HTTP") && !string.Equals(key, "ALL_RAW"))
+                                              .Select(key => new KeyValuePair<string, object>(key, request.ServerVariables.Get(key)));
 
             var env = new Dictionary<string, object>();
             env[OwinConstants.Version] = "1.0";
@@ -208,7 +203,7 @@ namespace Nancy.Demo.Hosting.Owin
             env[OwinConstants.RequestProtocol] = request.ServerVariables["SERVER_PROTOCOL"];
             env[OwinConstants.RequestBody] = request.InputStream;
             env[OwinConstants.RequestHeaders] = request.Headers.AllKeys
-                    .ToDictionary(x => x, x => request.Headers.GetValues(x), StringComparer.OrdinalIgnoreCase);
+                                                       .ToDictionary(x => x, x => request.Headers.GetValues(x), StringComparer.OrdinalIgnoreCase);
 
             if (request.ClientCertificate != null && request.ClientCertificate.Certificate.Length != 0)
             {
@@ -323,7 +318,6 @@ namespace Nancy.Demo.Hosting.Owin
 #endif
                             tcs.TrySetResult(() => { });
                         }
-
                     });
             }
             catch (Exception ex)

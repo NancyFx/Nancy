@@ -1,11 +1,13 @@
 namespace Nancy.Tests.Unit
 {
-    using System;
     using System.IO;
     using System.Text;
+
     using FakeItEasy;
+
     using Nancy.Responses;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class JsonFormatterExtensionsFixtures
@@ -17,8 +19,8 @@ namespace Nancy.Tests.Unit
         public JsonFormatterExtensionsFixtures()
         {
             this.formatter = A.Fake<IResponseFormatter>();
-            A.CallTo(() => this.formatter.Serializers).Returns(new[] { new DefaultJsonSerializer() });
-            this.model = new Person { FirstName = "Andy", LastName = "Pike" };
+            A.CallTo(() => this.formatter.Serializers).Returns(new[] {new DefaultJsonSerializer()});
+            this.model = new Person {FirstName = "Andy", LastName = "Pike"};
             this.response = this.formatter.AsJson(model);
         }
 
@@ -56,22 +58,22 @@ namespace Nancy.Tests.Unit
             }
         }
 
-		[Fact]
-		public void Json_formatter_can_deserialize_objects_of_type_Type()
-		{
-			var response = formatter.AsJson(new {type = typeof (string)});
-			using (var stream = new MemoryStream())
-			{
-				response.Contents(stream);
-				Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
-			}
-		}
+        [Fact]
+        public void Json_formatter_can_deserialize_objects_of_type_Type()
+        {
+            var response = formatter.AsJson(new {type = typeof (string)});
+            using (var stream = new MemoryStream())
+            {
+                response.Contents(stream);
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
+            }
+        }
 
-		[Fact]
-		public void Can_set_status_on_json_response()
-		{
-			var response = formatter.AsJson(new {foo = "bar"}, HttpStatusCode.InternalServerError);
-			Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
-		}
+        [Fact]
+        public void Can_set_status_on_json_response()
+        {
+            var response = formatter.AsJson(new {foo = "bar"}, HttpStatusCode.InternalServerError);
+            Assert.Equal(response.StatusCode, HttpStatusCode.InternalServerError);
+        }
     }
 }

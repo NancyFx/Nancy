@@ -7,18 +7,18 @@ namespace Nancy.Routing.Trie.Nodes
     {
         private string parameterName;
 
+        public CaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {
+            this.ExtractParameterName();
+        }
+
         /// <summary>
         /// Score for this node
         /// </summary>
         public override int Score
         {
             get { return 1000; }
-        }
-
-        public CaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
-            this.ExtractParameterName();
         }
 
         /// <summary>

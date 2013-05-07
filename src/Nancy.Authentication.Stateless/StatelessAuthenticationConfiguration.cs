@@ -1,6 +1,7 @@
 namespace Nancy.Authentication.Stateless
 {
     using System;
+
     using Nancy.Security;
 
     /// <summary>
@@ -23,10 +24,7 @@ namespace Nancy.Authentication.Stateless
         /// </summary>
         public virtual bool IsValid
         {
-            get
-            {
-                return this.GetUserIdentity != null;
-            }
+            get { return this.GetUserIdentity != null; }
         }
     }
 }

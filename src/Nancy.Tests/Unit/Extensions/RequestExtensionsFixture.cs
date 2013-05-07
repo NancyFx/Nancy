@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Tests.Unit.Extensions
 {
     using System.Collections.Generic;
+
     using Nancy.Extensions;
-    using Fakes;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class RequestExtensionsFixture
@@ -13,9 +15,9 @@
             // Given 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
-                    {
-                        { "X-Requested-With", new[] { "XMLHttpRequest" } }
-                    };
+                {
+                    {"X-Requested-With", new[] {"XMLHttpRequest"}}
+                };
 
             // When
             var request = new FakeRequest("POST", "/", headers);

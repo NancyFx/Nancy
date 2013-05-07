@@ -1,23 +1,22 @@
-
 namespace Nancy
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
+
     using Nancy.Diagnostics;
     using Nancy.Responses.Negotiation;
     using Nancy.Security;
     using Nancy.Validation;
-    using System.Globalization;
 
     /// <summary>
     /// Nancy context.
     /// </summary>
     public sealed class NancyContext : IDisposable
     {
-        private Request request;
-
         private ModelValidationResult modelValidationResult;
+        private Request request;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyContext"/> class.
@@ -27,7 +26,7 @@ namespace Nancy
             this.Items = new Dictionary<string, object>();
             this.Trace = new RequestTrace();
             this.ViewBag = new DynamicDictionary();
-            
+
             // TODO - potentially additional logic to lock to ip etc?
             this.ControlPanelEnabled = true;
         }
@@ -47,10 +46,7 @@ namespace Nancy
         /// </summary>
         public Request Request
         {
-            get
-            {
-                return this.request;
-            }
+            get { return this.request; }
 
             set
             {
@@ -110,15 +106,13 @@ namespace Nancy
         public void Dispose()
         {
             foreach (var disposableItem in this.Items.Values.OfType<IDisposable>())
-            {
                 disposableItem.Dispose();
-            }
 
             this.Items.Clear();
 
             if (this.request != null)
             {
-                ((IDisposable) this.request).Dispose();
+                ((IDisposable)this.request).Dispose();
             }
 
             if (this.Response != null)

@@ -2,8 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+
     using Nancy.Conventions;
+
     using Xunit;
 
     public class DefaultStaticContentsConventionsFixture
@@ -77,9 +78,7 @@
             this.conventions.StaticContentsConventions =
                 new List<Func<NancyContext, string, Response>>
                 {
-                    (ctx, folder) => {
-                        return new Response();
-                    }
+                    (ctx, folder) => { return new Response(); }
                 };
 
             // When
@@ -96,9 +95,7 @@
             this.conventions.StaticContentsConventions =
                 new List<Func<NancyContext, string, Response>>
                 {
-                    (ctx, folder) => {
-                        return new Response();
-                    }
+                    (ctx, folder) => { return new Response(); }
                 };
 
             // When

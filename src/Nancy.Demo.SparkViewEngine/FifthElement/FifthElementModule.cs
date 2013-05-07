@@ -7,10 +7,7 @@ namespace Nancy.Demo.SparkViewEngine.FifthElement
         /// </summary>
         public FifthElementModule()
         {
-            Get["/5"] = (x) =>
-                {
-                    return View["Fifth.spark"];
-                };
+            Get["/5"] = (x) => { return View["Fifth.spark"]; };
         }
     }
 }

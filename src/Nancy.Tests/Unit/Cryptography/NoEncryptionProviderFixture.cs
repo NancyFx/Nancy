@@ -19,7 +19,7 @@
             var inputText = "this is some text";
 
             var result = provider.Encrypt(inputText);
-            
+
             result.ShouldNotEqual(inputText);
         }
 

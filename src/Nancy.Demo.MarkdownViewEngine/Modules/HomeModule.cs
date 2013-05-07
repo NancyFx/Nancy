@@ -4,7 +4,8 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-    using ViewEngines;
+
+    using Nancy.ViewEngines;
 
     public class HomeModule : NancyModule
     {
@@ -32,7 +33,7 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
                 dynamic postModel = new ExpandoObject();
                 postModel.PopularPosts = popularposts;
                 postModel.MetaData =
-                popularposts.FirstOrDefault(x => x.Slug == parameters.viewname);
+                    popularposts.FirstOrDefault(x => x.Slug == parameters.viewname);
 
                 return View["Posts/" + parameters.viewname, postModel];
             };
@@ -40,15 +41,15 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
 
         private IEnumerable<BlogModel> GetModel()
         {
-            var views = this.viewLocationProvider.GetLocatedViews(new[] { "md", "markdown" });
+            var views = this.viewLocationProvider.GetLocatedViews(new[] {"md", "markdown"});
             var model = views.Select(x =>
             {
                 var markdown = x.Contents().ReadToEnd();
                 return new BlogModel(markdown);
             })
-            .Where(x => x.BlogDate.Date <= DateTime.Today) //Allow for future posts to be lined up but don't show
-            .OrderByDescending(x => x.BlogDate)
-            .ToList();
+                             .Where(x => x.BlogDate.Date <= DateTime.Today) //Allow for future posts to be lined up but don't show
+                             .OrderByDescending(x => x.BlogDate)
+                             .ToList();
 
             return model;
         }

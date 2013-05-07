@@ -7,10 +7,7 @@ namespace Nancy.Json.Converters
     {
         public override IEnumerable<Type> SupportedTypes
         {
-            get
-            {
-                return new[] { typeof(TimeSpan) };
-            }
+            get { return new[] {typeof (TimeSpan)}; }
         }
 
         public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
@@ -28,13 +25,13 @@ namespace Nancy.Json.Converters
             var timeSpan = (TimeSpan)obj;
 
             var result = new Dictionary<string, object>
-                             {
-                                 { "Days", timeSpan.Days },
-                                 { "Hours", timeSpan.Hours },
-                                 { "Minutes", timeSpan.Minutes },
-                                 { "Seconds", timeSpan.Seconds },
-                                 { "Milliseconds", timeSpan.Milliseconds }
-                             };
+            {
+                {"Days", timeSpan.Days},
+                {"Hours", timeSpan.Hours},
+                {"Minutes", timeSpan.Minutes},
+                {"Seconds", timeSpan.Seconds},
+                {"Milliseconds", timeSpan.Milliseconds}
+            };
 
             return result;
         }

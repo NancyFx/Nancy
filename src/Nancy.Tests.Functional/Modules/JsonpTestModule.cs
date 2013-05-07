@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Functional.Modules
+﻿namespace Nancy.Tests.Functional.Modules
 {
     public class JsonpTestModule : NancyModule
     {
@@ -11,7 +6,7 @@ namespace Nancy.Tests.Functional.Modules
         {
             Get["/string"] = x => "Normal Response";
             Get["/json"] = x => this.Response.AsJson(true);
-            Get["/{name}"] = parameters => this.Response.AsJson(new { parameters.name });
+            Get["/{name}"] = parameters => this.Response.AsJson(new {parameters.name});
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Bootstrapper;
-    using Modules;
-    using Testing;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Testing;
+    using Nancy.Tests.Functional.Modules;
+
     using Xunit;
 
     public class TracingSmokeTests
@@ -15,7 +17,7 @@
         public TracingSmokeTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                    configuration => configuration.Modules(new Type[] { typeof(RazorWithTracingTestModule) }));
+                configuration => configuration.Modules(new Type[] {typeof (RazorWithTracingTestModule)}));
 
             this.browser = new Browser(bootstrapper);
         }
@@ -27,10 +29,7 @@
             // When
             var response = browser.Get(
                 @"/tracing/razor-viewbag",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             // Then
             Assert.True(response.Body.AsString().Contains(@"Hello Bob"));

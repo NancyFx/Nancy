@@ -4,13 +4,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
-    using Bootstrapper;
 
+    using Nancy.Bootstrapper;
     using Nancy.Cookies;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Routing;
-    using Nancy.Culture;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -20,12 +19,12 @@
         public const string ERROR_KEY = "ERROR_TRACE";
         public const string ERROR_EXCEPTION = "ERROR_EXCEPTION";
 
-        private readonly IRequestDispatcher dispatcher;
         private readonly INancyContextFactory contextFactory;
-        private readonly IRequestTracing requestTracing;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
-        private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
+        private readonly IRequestDispatcher dispatcher;
+        private readonly IRequestTracing requestTracing;
         private readonly IStaticContentProvider staticContentProvider;
+        private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -36,7 +35,8 @@
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="diagnosticsConfiguration"></param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
+        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers,
+            IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
         {
             if (dispatcher == null)
             {
@@ -75,6 +75,35 @@
         public NancyContext HandleRequest(Request request)
         {
             return this.HandleRequest(request, context => context);
+        }
+
+        /// <summary>
+        /// Handles an incoming <see cref="Request"/> async.
+        /// </summary>
+        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
+        /// <param name="onComplete">Delegate to call when the request is complete</param>
+        /// <param name="onError">Deletate to call when any errors occur</param>
+        public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
+        {
+            this.HandleRequest(request, context => context, onComplete, onError);
+        }
+
+        public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+        {
+            // TODO - potentially do some things sync like the pre-req hooks?
+            // Possibly not worth it as the thread pool is quite clever
+            // when it comes to fast running tasks such as ones where the prehook returns a redirect.
+            ThreadPool.QueueUserWorkItem(s =>
+            {
+                try
+                {
+                    onComplete.Invoke(this.HandleRequest(request, preRequest));
+                }
+                catch (Exception e)
+                {
+                    onError.Invoke(e);
+                }
+            });
         }
 
         /// <summary>
@@ -145,7 +174,7 @@
         private bool EnableTracing(NancyContext ctx)
         {
             return StaticConfiguration.EnableRequestTracing &&
-                   !ctx.Items.ContainsKey(DiagnosticsHook.ItemsKey);
+                !ctx.Items.ContainsKey(DiagnosticsHook.ItemsKey);
         }
 
         private Guid GetDiagnosticsSessionGuid(NancyContext ctx)
@@ -172,37 +201,8 @@
 
         private void UpdateTraceCookie(NancyContext ctx, Guid sessionGuid)
         {
-            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true) { Expires = DateTime.Now.AddMinutes(30) };
+            var cookie = new NancyCookie("__NCTRACE", sessionGuid.ToString(), true) {Expires = DateTime.Now.AddMinutes(30)};
             ctx.Response.AddCookie(cookie);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/> async.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
-        public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            this.HandleRequest(request, context => context, onComplete, onError);
-        }
-
-        public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            // TODO - potentially do some things sync like the pre-req hooks?
-            // Possibly not worth it as the thread pool is quite clever
-            // when it comes to fast running tasks such as ones where the prehook returns a redirect.
-            ThreadPool.QueueUserWorkItem(s =>
-            {
-                try
-                {
-                    onComplete.Invoke(this.HandleRequest(request, preRequest));
-                }
-                catch (Exception e)
-                {
-                    onError.Invoke(e);
-                }
-            });
         }
 
         private void CheckStatusCodeHandler(NancyContext context)
@@ -276,7 +276,7 @@
             }
             catch (Exception e)
             {
-                context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
+                context.Response = new Response {StatusCode = HttpStatusCode.InternalServerError};
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }

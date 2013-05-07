@@ -5,6 +5,7 @@
     using System.Dynamic;
     using System.Globalization;
     using System.Linq.Expressions;
+
     using Microsoft.CSharp.RuntimeBinder;
 
     public class DynamicDictionaryValue : DynamicObject, IEquatable<DynamicDictionaryValue>, IHideObjectMembers, IConvertible
@@ -36,100 +37,6 @@
         public object Value
         {
             get { return this.value; }
-        }
-
-        /// <summary>
-        /// Returns a default value if Value is null
-        /// </summary>
-        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
-        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
-        /// <returns>If value is not null, value is returned, else default value is returned</returns>
-        public T Default<T>(T defaultValue = default(T))
-        {
-            if (this.HasValue)
-            {
-                try
-                {
-                    return (T)value;
-                }
-                catch
-                {
-                    var typeName = value.GetType().Name;
-                    var message = string.Format("Cannot convert value of type '{0}' to type '{1}'",
-                                                typeName, typeof(T).Name);
-
-                    throw new InvalidCastException(message);
-                }
-            }
-
-            return defaultValue;
-        }
-
-        /// <summary>
-        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue. 
-        /// </summary>
-        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
-        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
-        /// <returns>If value is not null, value is returned, else default value is returned</returns>
-        public T TryParse<T>(T defaultValue = default (T))
-        {
-            if (this.HasValue)
-            {
-                try
-                {
-                    if (value.GetType().IsAssignableFrom(typeof(T)))
-                    {
-                        return (T)value;
-                    }
-
-                    var TType = typeof (T);
-
-                    var stringValue = value as string;
-                    if (TType == typeof (DateTime))
-                    {
-                        DateTime result;
-
-                        if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
-                        {
-                            return (T)((object)result);
-                        }
-                    }
-                    else if (stringValue != null)
-                    {
-                        var converter = TypeDescriptor.GetConverter(TType);
-
-                        if (converter.IsValid(stringValue))
-                        {
-                            return (T) converter.ConvertFromInvariantString(stringValue);
-                        }
-                    }
-                    else if (TType == typeof (string))
-                    {
-                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
-                    }
-                }
-                catch
-                {
-                    return defaultValue;
-                }
-            }
-
-            return defaultValue;
-        }
-
-        public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
-        {
-            if (dynamicValue.value == null && compareValue == null)
-            {
-                return true;
-            }
-
-            return dynamicValue.value != null && dynamicValue.value.Equals(compareValue);
-        }
-
-        public static bool operator !=(DynamicDictionaryValue dynamicValue, object compareValue)
-        {
-            return !(dynamicValue == compareValue);
         }
 
         /// <summary>
@@ -165,7 +72,7 @@
                 return true;
             }
 
-            return compareValue.GetType() == typeof(DynamicDictionaryValue) && this.Equals((DynamicDictionaryValue)compareValue);
+            return compareValue.GetType() == typeof (DynamicDictionaryValue) && this.Equals((DynamicDictionaryValue)compareValue);
         }
 
         /// <summary>
@@ -175,6 +82,105 @@
         public override int GetHashCode()
         {
             return (this.value != null ? this.value.GetHashCode() : 0);
+        }
+
+        public override string ToString()
+        {
+            return this.value == null ? base.ToString() : Convert.ToString(this.value);
+        }
+
+        /// <summary>
+        /// Returns a default value if Value is null
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
+        public T Default<T>(T defaultValue = default(T))
+        {
+            if (this.HasValue)
+            {
+                try
+                {
+                    return (T)value;
+                }
+                catch
+                {
+                    var typeName = value.GetType().Name;
+                    var message = string.Format("Cannot convert value of type '{0}' to type '{1}'",
+                        typeName, typeof (T).Name);
+
+                    throw new InvalidCastException(message);
+                }
+            }
+
+            return defaultValue;
+        }
+
+        /// <summary>
+        /// Attempts to convert the value to type of T, failing to do so will return the defaultValue. 
+        /// </summary>
+        /// <typeparam name="T">When no default value is supplied, required to supply the default type</typeparam>
+        /// <param name="defaultValue">Optional parameter for default value, if not given it returns default of type T</param>
+        /// <returns>If value is not null, value is returned, else default value is returned</returns>
+        public T TryParse<T>(T defaultValue = default (T))
+        {
+            if (this.HasValue)
+            {
+                try
+                {
+                    if (value.GetType().IsAssignableFrom(typeof (T)))
+                    {
+                        return (T)value;
+                    }
+
+                    var TType = typeof (T);
+
+                    var stringValue = value as string;
+                    if (TType == typeof (DateTime))
+                    {
+                        DateTime result;
+
+                        if (DateTime.TryParse(stringValue, CultureInfo.InvariantCulture, DateTimeStyles.None, out result))
+                        {
+                            return (T)((object)result);
+                        }
+                    }
+                    else if (stringValue != null)
+                    {
+                        var converter = TypeDescriptor.GetConverter(TType);
+
+                        if (converter.IsValid(stringValue))
+                        {
+                            return (T)converter.ConvertFromInvariantString(stringValue);
+                        }
+                    }
+                    else if (TType == typeof (string))
+                    {
+                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
+                    }
+                }
+                catch
+                {
+                    return defaultValue;
+                }
+            }
+
+            return defaultValue;
+        }
+
+        public static bool operator ==(DynamicDictionaryValue dynamicValue, object compareValue)
+        {
+            if (dynamicValue.value == null && compareValue == null)
+            {
+                return true;
+            }
+
+            return dynamicValue.value != null && dynamicValue.value.Equals(compareValue);
+        }
+
+        public static bool operator !=(DynamicDictionaryValue dynamicValue, object compareValue)
+        {
+            return !(dynamicValue == compareValue);
         }
 
         /// <summary>
@@ -193,16 +199,16 @@
             }
 
             var convert =
-                Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof(DynamicDictionaryValue));
+                Binder.Convert(CSharpBinderFlags.None, arg.GetType(), typeof (DynamicDictionaryValue));
 
             if (!TryConvert((ConvertBinder)convert, out resultOfCast))
             {
                 return false;
             }
 
-            result = (resultOfCast == null) ? 
-                Equals(arg, resultOfCast) :
-                resultOfCast.Equals(arg);
+            result = (resultOfCast == null)
+                ? Equals(arg, resultOfCast)
+                : resultOfCast.Equals(arg);
 
             return true;
         }
@@ -222,13 +228,13 @@
             }
 
             var binderType = binder.Type;
-            if (binderType == typeof(String))
+            if (binderType == typeof (String))
             {
                 result = Convert.ToString(value);
                 return true;
             }
 
-            if (binderType == typeof(Guid) || binderType == typeof(Guid?))
+            if (binderType == typeof (Guid) || binderType == typeof (Guid?))
             {
                 Guid guid;
                 if (Guid.TryParse(Convert.ToString(value), out guid))
@@ -237,7 +243,7 @@
                     return true;
                 }
             }
-            else if (binderType == typeof(TimeSpan) || binderType == typeof(TimeSpan?))
+            else if (binderType == typeof (TimeSpan) || binderType == typeof (TimeSpan?))
             {
                 TimeSpan timespan;
                 if (TimeSpan.TryParse(Convert.ToString(value), out timespan))
@@ -248,7 +254,7 @@
             }
             else
             {
-                if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof(Nullable<>))
+                if (binderType.IsGenericType && binderType.GetGenericTypeDefinition() == typeof (Nullable<>))
                 {
                     binderType = binderType.GetGenericArguments()[0];
                 }
@@ -265,11 +271,6 @@
                 return true;
             }
             return base.TryConvert(binder, out result);
-        }
-
-        public override string ToString()
-        {
-            return this.value == null ? base.ToString() : Convert.ToString(this.value);
         }
 
         public static implicit operator bool(DynamicDictionaryValue dynamicValue)
@@ -296,8 +297,8 @@
         public static implicit operator string(DynamicDictionaryValue dynamicValue)
         {
             return dynamicValue.HasValue
-                       ? Convert.ToString(dynamicValue.value)
-                       : null;
+                ? Convert.ToString(dynamicValue.value)
+                : null;
         }
 
         public static implicit operator int(DynamicDictionaryValue dynamicValue)

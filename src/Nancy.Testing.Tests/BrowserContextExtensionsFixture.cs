@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Testing.Tests
 {
     using System.Linq;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class BrowserContextExtensionsFixture
     {
@@ -72,7 +74,7 @@
             context.Accept("application/json");
 
             // Then
-            ((IBrowserContextValues) context).Headers["accept"].First().ShouldEqual("application/json;q=1.0");
+            ((IBrowserContextValues)context).Headers["accept"].First().ShouldEqual("application/json;q=1.0");
         }
 
         [Fact]

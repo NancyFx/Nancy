@@ -2,7 +2,7 @@ namespace Nancy.Security
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+
     using Nancy.Responses;
 
     /// <summary>
@@ -85,26 +85,26 @@ namespace Nancy.Security
         private static Func<NancyContext, Response> RequiresHttps(bool redirect, int? httpsPort)
         {
             return (ctx) =>
-                   {
-                       Response response = null;
-                       var request = ctx.Request;
-                       if (!request.Url.IsSecure)
-                       {
-                           if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
-                           {
-                               var redirectUrl = request.Url.Clone();
-                               redirectUrl.Port = httpsPort;
-                               redirectUrl.Scheme = "https";
-                               response = new RedirectResponse(redirectUrl.ToString());
-                           }
-                           else
-                           {
-                               response = new Response { StatusCode = HttpStatusCode.Forbidden };                               
-                           }
-                       }
+            {
+                Response response = null;
+                var request = ctx.Request;
+                if (!request.Url.IsSecure)
+                {
+                    if (redirect && request.Method.Equals("GET", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var redirectUrl = request.Url.Clone();
+                        redirectUrl.Port = httpsPort;
+                        redirectUrl.Scheme = "https";
+                        response = new RedirectResponse(redirectUrl.ToString());
+                    }
+                    else
+                    {
+                        response = new Response {StatusCode = HttpStatusCode.Forbidden};
+                    }
+                }
 
-                       return response;
-                   };
+                return response;
+            };
         }
     }
 }

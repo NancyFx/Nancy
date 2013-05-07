@@ -4,7 +4,9 @@
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Tests.Fakes;
     using Nancy.ViewEngines.SuperSimpleViewEngine;
 
@@ -12,9 +14,8 @@
 
     public class SuperSimpleViewEngineTests
     {
-        private readonly SuperSimpleViewEngine viewEngine;
-
         private readonly IViewEngineHost fakeHost;
+        private readonly SuperSimpleViewEngine viewEngine;
 
         public SuperSimpleViewEngineTests()
         {
@@ -116,7 +117,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>@Current;</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -128,7 +129,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li id=""@Current;"">@Current;</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -153,11 +154,13 @@
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
             model.Name = "Nancy";
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
@@ -177,18 +180,20 @@
         {
             const string input = "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\t<ul>@Each.Users;\n\t\t\t<li>@Current;</li>@EndEach;\n\t\t</ul>\n\t</body>\n</html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal("<html>\n\t<head>\n\t</head>\n\t<body>\n\t\t<ul>\n\t\t\t<li>Bob</li>\n\t\t\t<li>Jim</li>\n\t\t\t<li>Bill</li>\n\t\t</ul>\n\t</body>\n</html>", output);
+            Assert.Equal(
+                "<html>\n\t<head>\n\t</head>\n\t<body>\n\t\t<ul>\n\t\t\t<li>Bob</li>\n\t\t\t<li>Jim</li>\n\t\t\t<li>Bill</li>\n\t\t</ul>\n\t</body>\n</html>",
+                output);
         }
 
         [Fact]
         public void Single_substitutions_work_with_standard_anonymous_type_objects()
         {
             const string input = @"<html><head></head><body>Hello there @Model.Name; - welcome to @Model.SiteName;</body></html>";
-            var model = new { Name = "Bob", SiteName = "Cool Site!" };
+            var model = new {Name = "Bob", SiteName = "Cool Site!"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -199,7 +204,7 @@
         public void Should_allow_each_substitutions_to_work_with_standard_anonymous_type_objects()
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li id=""@Current;"">@Current;</li>@EndEach;</ul></body></html>";
-            var model = new { Users = new List<string>() { "Bob", "Jim", "Bill" } };
+            var model = new {Users = new List<string>() {"Bob", "Jim", "Bill"}};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -210,28 +215,34 @@
         public void Should_allow_substitutions_to_work_with_standard_objects()
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_render_block_when_if_statement_returns_true()
         {
-            const string input = @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            const string input =
+                @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_not_render_block_when_if_statement_returns_false()
         {
-            const string input = @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
+            const string input =
+                @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
@@ -242,18 +253,22 @@
         [Fact]
         public void Should_not_render_block_when_ifnot_statements_returns_true()
         {
-            const string input = @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            const string input =
+                @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_render_block_when_ifnot_statement_returns_false()
         {
-            const string input = @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            const string input =
+                @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
@@ -264,7 +279,8 @@
         [Fact]
         public void Should_not_conflict_when_if_and_ifNot_statements_combined_but_not_nested()
         {
-            const string input = @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
+            const string input =
+                @"<html><head></head><body>@IfNot.HasUsers;<p>No users found!</p>@EndIf;@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
@@ -276,7 +292,7 @@
         public void Should_match_multiple_if_statements_correctly()
         {
             const string input = "@If.One;<p>One</p>@EndIf; @If.Two;<p>Two</p>@EndIf;";
-            var model = new { One = true, Two = true };
+            var model = new {One = true, Two = true};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -287,7 +303,7 @@
         public void Should_match_correctly_when_multiple_each_statements()
         {
             const string input = "@Each.Users;<li>@Current;</li>@EndEach; @Each.Admins;<li>@Current;</li>@EndEach;";
-            var model = new { Users = new List<string> { "1", "2" }, Admins = new List<string> { "3", "4" } };
+            var model = new {Users = new List<string> {"1", "2"}, Admins = new List<string> {"3", "4"}};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -297,19 +313,22 @@
         [Fact]
         public void Should_return_true_for_ifhascollection_when_if_model_has_a_collection_with_items_but_no_bool()
         {
-            const string input = @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
-            var model = new { Users = new List<string>() { "Bob", "Jim", "Bill" }, Name = "Nancy" };
+            const string input =
+                @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
+            var model = new {Users = new List<string>() {"Bob", "Jim", "Bill"}, Name = "Nancy"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_return_false_for_ifnot_hascollection_when_model_has_a_collection_with_items_but_no_bool()
         {
             const string input = @"<html><head></head><body>@IfNot.HasUsers;<p>No Users!</p>@EndIf;</body></html>";
-            var model = new { Users = new List<string>() { "Bob", "Jim", "Bill" } };
+            var model = new {Users = new List<string>() {"Bob", "Jim", "Bill"}};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -320,7 +339,7 @@
         public void Should_ignore_item_for_implicit_has_support_when_item_isnt_a_collection()
         {
             const string input = @"<html><head></head><body>@If.HasUsers;<p>Users!</p>@EndIf;</body></html>";
-            var model = new { Users = new object() };
+            var model = new {Users = new object()};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -330,8 +349,9 @@
         [Fact]
         public void Should_give_precedence_to_hasitem_bool_when_model_has_bool_and_collection()
         {
-            const string input = @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
-            var model = new { HasUsers = false, Users = new List<string>() { "Bob", "Jim", "Bill" }, Name = "Nancy" };
+            const string input =
+                @"<html><head></head><body>@If.HasUsers;<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf;</body></html>";
+            var model = new {HasUsers = false, Users = new List<string>() {"Bob", "Jim", "Bill"}, Name = "Nancy"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -349,7 +369,7 @@
             user2.Name = "Jim";
             dynamic user3 = new ExpandoObject();
             user3.Name = "Bill";
-            model.Users = new List<object>() { user1, user2, user3 };
+            model.Users = new List<object>() {user1, user2, user3};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -361,7 +381,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>@Current.Name;</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<User>() { new User("Bob"), new User("Jim"), new User("Bill") };
+            model.Users = new List<User>() {new User("Bob"), new User("Jim"), new User("Bill")};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -378,7 +398,7 @@
             user2.Name = "Jim";
             dynamic user3 = new ExpandoObject();
             user3.Name = "Bill";
-            var model = new { Users = new List<object> { user1, user2, user3 } };
+            var model = new {Users = new List<object> {user1, user2, user3}};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -389,7 +409,7 @@
         public void Should_allow_sub_properties_using_model_statement()
         {
             const string input = @"<h1>Hello @Model.User.Name;</h1>";
-            var model = new { User = new User("Bob") };
+            var model = new {User = new User("Bob")};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -400,7 +420,7 @@
         public void Should_allow_sub_properties_using_if_statement()
         {
             const string input = @"<h1>Hello @If.User.IsFriend;Friend!@EndIf;</h1>";
-            var model = new { User = new User("Bob", true) };
+            var model = new {User = new User("Bob", true)};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -411,7 +431,7 @@
         public void Should_allow_sub_properties_using_ifnot_statement()
         {
             const string input = @"<h1>Hello @IfNot.User.IsFriend;Friend!@EndIf;</h1>";
-            var model = new { User = new User("Bob", true) };
+            var model = new {User = new User("Bob", true)};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -422,7 +442,7 @@
         public void Should_allow_sub_properties_for_each_statement()
         {
             const string input = @"<html><head></head><body><ul>@Each.Sub.Users;<li>@Current;</li>@EndEach;</ul></body></html>";
-            var model = new { Sub = new { Users = new List<string>() { "Bob", "Jim", "Bill" } } };
+            var model = new {Sub = new {Users = new List<string>() {"Bob", "Jim", "Bill"}}};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -433,7 +453,17 @@
         public void Should_allow_sub_properties_for_current_statement_inside_each()
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>@Current.Item2.Name;</li>@EndEach;</ul></body></html>";
-            var model = new { Users = new List<Tuple<int, User>>() { new Tuple<int, User>(1, new User("Bob")), new Tuple<int, User>(1, new User("Jim")), new Tuple<int, User>(1, new User("Bill")) } };
+            var model =
+                new
+                {
+                    Users =
+                        new List<Tuple<int, User>>()
+                        {
+                            new Tuple<int, User>(1, new User("Bob")),
+                            new Tuple<int, User>(1, new User("Jim")),
+                            new Tuple<int, User>(1, new User("Bill"))
+                        }
+                };
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -457,7 +487,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users<li>@Current;</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -469,7 +499,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users<li>@Current;</li>@EndEach</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -481,7 +511,7 @@
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>@Current</li>@EndEach;</ul></body></html>";
             dynamic model = new ExpandoObject();
-            model.Users = new List<string>() { "Bob", "Jim", "Bill" };
+            model.Users = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -491,30 +521,36 @@
         [Fact]
         public void Should_allow_if_and_endif_without_semi_colon()
         {
-            const string input = @"<html><head></head><body>@If.HasUsers<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf</body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            const string input =
+                @"<html><head></head><body>@If.HasUsers<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul>@EndIf</body></html>";
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_allow_ifnot_and_endif_without_semi_colon()
         {
-            const string input = @"<html><head></head><body>@IfNot.HasUsers<p>No users found!</p>@EndIf<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            const string input =
+                @"<html><head></head><body>@IfNot.HasUsers<p>No users found!</p>@EndIf<ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_allow_each_without_a_variable_and_iterate_over_the_model_if_it_is_enumerable()
         {
             const string input = @"<html><head></head><body><ul>@Each<li>Hello @Current</li>@EndEach</ul></body></html>";
-            var model = new List<string>() { "Bob", "Jim", "Bill" };
+            var model = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -525,7 +561,7 @@
         public void Should_allow_variableless_each_with_semicolon()
         {
             const string input = @"<html><head></head><body><ul>@Each;<li>Hello @Current</li>@EndEach</ul></body></html>";
-            var model = new List<string>() { "Bob", "Jim", "Bill" };
+            var model = new List<string>() {"Bob", "Jim", "Bill"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -548,11 +584,13 @@
         public void Current_with_exclaimation_and_no_parameters_should_html_encode()
         {
             const string input = @"<html><head></head><body><ul>@Each;<li>Hello @!Current</li>@EndEach</ul></body></html>";
-            var model = new List<string>() { "Bob<br/>", "Jim<br/>", "Bill<br/>" };
+            var model = new List<string>() {"Bob<br/>", "Jim<br/>", "Bill<br/>"};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob&lt;br/&gt;</li><li>Hello Jim&lt;br/&gt;</li><li>Hello Bill&lt;br/&gt;</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob&lt;br/&gt;</li><li>Hello Jim&lt;br/&gt;</li><li>Hello Bill&lt;br/&gt;</li></ul></body></html>",
+                output);
         }
 
         [Fact]
@@ -566,7 +604,7 @@
             user2.Name = "Jim<br/>";
             dynamic user3 = new ExpandoObject();
             user3.Name = "Bill<br/>";
-            model.Users = new List<object>() { user1, user2, user3 };
+            model.Users = new List<object>() {user1, user2, user3};
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -666,7 +704,7 @@
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => master;
 
-            var result = viewEngine.Render(input, new { Name = "Bob" }, fakeViewEngineHost);
+            var result = viewEngine.Render(input, new {Name = "Bob"}, fakeViewEngineHost);
 
             Assert.Equal("Hello Bob!<div id='header'>\r\nHeader\r\n</div><div id='footer'>\r\nFooter\r\n</div>", result);
         }
@@ -823,7 +861,7 @@
         public void Context_substitutions_work_with_standard_anonymous_type_objects()
         {
             const string input = @"<html><head></head><body>Hello there @Context.Name; - welcome to @Context.SiteName;</body></html>";
-            var context = new { Name = "Bob", SiteName = "Cool Site!" };
+            var context = new {Name = "Bob", SiteName = "Cool Site!"};
 
             ((FakeViewEngineHost)this.fakeHost).Context = context;
 
@@ -883,7 +921,7 @@
         {
             const string input = @"<html><head></head><body>@IfNot.Context.HasUsers;<p>No users found!</p>@EndIf;</body></html>";
 
-            var model = new FakeModel("Nancy", new List<string>() { "Nancy " });
+            var model = new FakeModel("Nancy", new List<string>() {"Nancy "});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
@@ -896,7 +934,7 @@
         public void Should_allow_ifnot_and_endif_and_context_model_source()
         {
             const string input = @"<html><head></head><body>@IfNot.Context.HasUsers;No users found!@EndIf</body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
@@ -911,7 +949,7 @@
             const string input = @"<html><head></head><body>@IfNot.Model.HasUsers;No users found!@EndIf</body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
-            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -924,7 +962,7 @@
             const string input = @"<html><head></head><body>@IfNot.HasUsers;No users found!@EndIf</body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
-            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -937,7 +975,7 @@
             const string input = @"<html><head></head><body>@If.Context.HasUsers;Users found!@EndIf</body></html>";
             var model = new FakeModel("Nancy", new List<string>());
 
-            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() { "Bob", "Jim", "Bill" });
+            ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>() {"Bob", "Jim", "Bill"});
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
@@ -948,7 +986,7 @@
         public void Should_allow_if_and_endif_and_model_model_source()
         {
             const string input = @"<html><head></head><body>@If.Model.HasUsers;Users found!@EndIf</body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
@@ -961,7 +999,7 @@
         public void Should_allow_if_and_endif_and_implicit_model_model_source()
         {
             const string input = @"<html><head></head><body>@If.HasUsers;Users found!@EndIf</body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
@@ -973,27 +1011,32 @@
         [Fact]
         public void Should_support_each_block_with_model_as_model_source()
         {
-            const string input = @"<html><head></head><body><ul>@Each.Model.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            const string input =
+                @"<html><head></head><body><ul>@Each.Model.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
         public void Should_support_each_block_with_implicit_model_source()
         {
             const string input = @"<html><head></head><body><ul>@Each.Users;<li>Hello @Current;, @Model.Name; says hello!</li>@EndEach;</ul></body></html>";
-            var model = new FakeModel("Nancy", new List<string>() { "Bob", "Jim", "Bill" });
+            var model = new FakeModel("Nancy", new List<string>() {"Bob", "Jim", "Bill"});
 
             ((FakeViewEngineHost)this.fakeHost).Context = new FakeModel("NancyContext", new List<string>());
 
             var output = viewEngine.Render(input, model, this.fakeHost);
 
-            Assert.Equal(@"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>", output);
+            Assert.Equal(
+                @"<html><head></head><body><ul><li>Hello Bob, Nancy says hello!</li><li>Hello Jim, Nancy says hello!</li><li>Hello Bill, Nancy says hello!</li></ul></body></html>",
+                output);
         }
 
         [Fact]
@@ -1083,7 +1126,7 @@
             const string input = @"<html><head></head><body></body></html>";
 
             var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
-            var engine = new SuperSimpleViewEngine(new[] { extension });
+            var engine = new SuperSimpleViewEngine(new[] {extension});
             var model = new object();
 
             // When
@@ -1100,7 +1143,7 @@
             const string input = @"<html><head></head><body></body></html>";
 
             var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
-            var engine = new SuperSimpleViewEngine(new[] { extension });
+            var engine = new SuperSimpleViewEngine(new[] {extension});
 
             // When
             engine.Render(input, null, this.fakeHost);
@@ -1116,7 +1159,7 @@
             const string input = @"<html><head></head><body></body></html>";
 
             var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
-            var engine = new SuperSimpleViewEngine(new[] { extension });
+            var engine = new SuperSimpleViewEngine(new[] {extension});
 
             // When
             engine.Render(input, null, this.fakeHost);
@@ -1130,8 +1173,7 @@
     {
         public User(string name)
             : this(name, false)
-        {
-        }
+        {}
 
         public User(string name, bool isFriend)
         {
@@ -1157,10 +1199,7 @@
 
         public bool HasUsers
         {
-            get
-            {
-                return this.Users.Any();
-            }
+            get { return this.Users.Any(); }
         }
     }
 }

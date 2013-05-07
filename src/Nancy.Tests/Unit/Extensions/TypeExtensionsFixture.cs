@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Extensions
 {
     using System;
+
     using Nancy.Extensions;
+
     using Xunit;
 
     public class TypeExtensionsFixture
@@ -10,74 +12,74 @@
         public void Should_test_non_numeric_types()
         {
             Assert.False(TypeExtensions.IsNumeric(null));
-            Assert.False(typeof(object).IsNumeric());
-            Assert.False(typeof(DBNull).IsNumeric());
-            Assert.False(typeof(bool).IsNumeric());
-            Assert.False(typeof(char).IsNumeric());
-            Assert.False(typeof(DateTime).IsNumeric());
-            Assert.False(typeof(string).IsNumeric());
+            Assert.False(typeof (object).IsNumeric());
+            Assert.False(typeof (DBNull).IsNumeric());
+            Assert.False(typeof (bool).IsNumeric());
+            Assert.False(typeof (char).IsNumeric());
+            Assert.False(typeof (DateTime).IsNumeric());
+            Assert.False(typeof (string).IsNumeric());
         }
 
         [Fact]
         public void Should_test_Arrays_of_numeric_and_non_numeric_types()
         {
-            Assert.False(typeof(object[]).IsNumeric());
-            Assert.False(typeof(DBNull[]).IsNumeric());
-            Assert.False(typeof(bool[]).IsNumeric());
-            Assert.False(typeof(char[]).IsNumeric());
-            Assert.False(typeof(DateTime[]).IsNumeric());
-            Assert.False(typeof(string[]).IsNumeric());
-            Assert.False(typeof(byte[]).IsNumeric());
-            Assert.False(typeof(decimal[]).IsNumeric());
-            Assert.False(typeof(double[]).IsNumeric());
-            Assert.False(typeof(short[]).IsNumeric());
-            Assert.False(typeof(int[]).IsNumeric());
-            Assert.False(typeof(long[]).IsNumeric());
-            Assert.False(typeof(sbyte[]).IsNumeric());
-            Assert.False(typeof(float[]).IsNumeric());
-            Assert.False(typeof(ushort[]).IsNumeric());
-            Assert.False(typeof(uint[]).IsNumeric());
-            Assert.False(typeof(ulong[]).IsNumeric());
+            Assert.False(typeof (object[]).IsNumeric());
+            Assert.False(typeof (DBNull[]).IsNumeric());
+            Assert.False(typeof (bool[]).IsNumeric());
+            Assert.False(typeof (char[]).IsNumeric());
+            Assert.False(typeof (DateTime[]).IsNumeric());
+            Assert.False(typeof (string[]).IsNumeric());
+            Assert.False(typeof (byte[]).IsNumeric());
+            Assert.False(typeof (decimal[]).IsNumeric());
+            Assert.False(typeof (double[]).IsNumeric());
+            Assert.False(typeof (short[]).IsNumeric());
+            Assert.False(typeof (int[]).IsNumeric());
+            Assert.False(typeof (long[]).IsNumeric());
+            Assert.False(typeof (sbyte[]).IsNumeric());
+            Assert.False(typeof (float[]).IsNumeric());
+            Assert.False(typeof (ushort[]).IsNumeric());
+            Assert.False(typeof (uint[]).IsNumeric());
+            Assert.False(typeof (ulong[]).IsNumeric());
         }
 
         [Fact]
         public void Should_test_numeric_types()
         {
-            Assert.True(typeof(byte).IsNumeric());
-            Assert.True(typeof(decimal).IsNumeric());
-            Assert.True(typeof(double).IsNumeric());
-            Assert.True(typeof(short).IsNumeric());
-            Assert.True(typeof(int).IsNumeric());
-            Assert.True(typeof(long).IsNumeric());
-            Assert.True(typeof(sbyte).IsNumeric());
-            Assert.True(typeof(float).IsNumeric());
-            Assert.True(typeof(ushort).IsNumeric());
-            Assert.True(typeof(uint).IsNumeric());
-            Assert.True(typeof(ulong).IsNumeric());
+            Assert.True(typeof (byte).IsNumeric());
+            Assert.True(typeof (decimal).IsNumeric());
+            Assert.True(typeof (double).IsNumeric());
+            Assert.True(typeof (short).IsNumeric());
+            Assert.True(typeof (int).IsNumeric());
+            Assert.True(typeof (long).IsNumeric());
+            Assert.True(typeof (sbyte).IsNumeric());
+            Assert.True(typeof (float).IsNumeric());
+            Assert.True(typeof (ushort).IsNumeric());
+            Assert.True(typeof (uint).IsNumeric());
+            Assert.True(typeof (ulong).IsNumeric());
         }
 
         [Fact]
         public void Should_test_nullable_non_numeric_types()
         {
-            Assert.False(typeof(bool?).IsNumeric());
-            Assert.False(typeof(char?).IsNumeric());
-            Assert.False(typeof(DateTime?).IsNumeric());
+            Assert.False(typeof (bool?).IsNumeric());
+            Assert.False(typeof (char?).IsNumeric());
+            Assert.False(typeof (DateTime?).IsNumeric());
         }
 
         [Fact]
         public void Should_test_nullable_numeric_types()
         {
-            Assert.True(typeof(byte?).IsNumeric());
-            Assert.True(typeof(decimal?).IsNumeric());
-            Assert.True(typeof(double?).IsNumeric());
-            Assert.True(typeof(short?).IsNumeric());
-            Assert.True(typeof(int?).IsNumeric());
-            Assert.True(typeof(long?).IsNumeric());
-            Assert.True(typeof(sbyte?).IsNumeric());
-            Assert.True(typeof(float?).IsNumeric());
-            Assert.True(typeof(ushort?).IsNumeric());
-            Assert.True(typeof(uint?).IsNumeric());
-            Assert.True(typeof(ulong?).IsNumeric());
+            Assert.True(typeof (byte?).IsNumeric());
+            Assert.True(typeof (decimal?).IsNumeric());
+            Assert.True(typeof (double?).IsNumeric());
+            Assert.True(typeof (short?).IsNumeric());
+            Assert.True(typeof (int?).IsNumeric());
+            Assert.True(typeof (long?).IsNumeric());
+            Assert.True(typeof (sbyte?).IsNumeric());
+            Assert.True(typeof (float?).IsNumeric());
+            Assert.True(typeof (ushort?).IsNumeric());
+            Assert.True(typeof (uint?).IsNumeric());
+            Assert.True(typeof (ulong?).IsNumeric());
         }
 
         [Fact]
@@ -115,7 +117,7 @@
 
             char? nullableChar = ' ';
             Assert.False(nullableChar.GetType().IsNumeric());
-            
+
             DateTime? nullableDateTime = new DateTime(2009, 1, 1);
             Assert.False(nullableDateTime.GetType().IsNumeric());
         }
@@ -155,7 +157,6 @@
 
             ushort? nullableUInt64 = 12;
             Assert.True(nullableUInt64.GetType().IsNumeric());
-
         }
     }
 }

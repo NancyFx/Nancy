@@ -3,18 +3,21 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+
     using FakeItEasy;
+
+    using Nancy.Bootstrapper;
     using Nancy.Security;
     using Nancy.Tests;
-    using Xunit;
-    using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
+
+    using Xunit;
 
     public class BasicAuthenticationFixture
     {
+        private const string ajaxRequestHeaderKey = "X-Requested-With";
+        private const string ajaxRequestHeaderValue = "XMLHttpRequest";
         private readonly BasicAuthenticationConfiguration config;
-        const string ajaxRequestHeaderKey = "X-Requested-With";
-        const string ajaxRequestHeaderValue = "XMLHttpRequest";
         private readonly IPipelines hooks;
 
         public BasicAuthenticationFixture()
@@ -35,9 +38,9 @@
 
             // Then
             A.CallTo(() => pipelines.BeforeRequest.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
             A.CallTo(() => pipelines.AfterRequest.AddItemToEndOfPipeline(A<Action<NancyContext>>.Ignored))
-                .MustHaveHappened(Repeated.Exactly.Once);
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -48,7 +51,7 @@
 
             // When
             BasicAuthentication.Enable(module, this.config);
-            
+
             // Then
             module.Before.PipelineDelegates.ShouldHaveCount(2);
             module.After.PipelineDelegates.ShouldHaveCount(1);
@@ -61,7 +64,7 @@
             var result = Record.Exception(() => BasicAuthentication.Enable(A.Fake<IPipelines>(), null));
 
             // Then
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -71,7 +74,7 @@
             var result = Record.Exception(() => BasicAuthentication.Enable(new FakeModule(), null));
 
             // Then
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -101,7 +104,7 @@
             };
 
             string wwwAuthenticate;
-            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+            context.Response = new Response {StatusCode = HttpStatusCode.Unauthorized};
 
             // When
             this.hooks.AfterRequest.Invoke(context);
@@ -127,7 +130,7 @@
                 Request = new FakeRequest("GET", "/")
             };
 
-            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+            context.Response = new Response {StatusCode = HttpStatusCode.Unauthorized};
 
             // When
             hooks.AfterRequest.Invoke(context);
@@ -143,15 +146,15 @@
             var config = new BasicAuthenticationConfiguration(A.Fake<IUserValidator>(), "realm", UserPromptBehaviour.NonAjax);
             var hooks = new Pipelines();
             BasicAuthentication.Enable(hooks, config);
-            var headers = new Dictionary<string,IEnumerable<string>>();
-            headers.Add(ajaxRequestHeaderKey, new [] { ajaxRequestHeaderValue });
+            var headers = new Dictionary<string, IEnumerable<string>>();
+            headers.Add(ajaxRequestHeaderKey, new[] {ajaxRequestHeaderValue});
 
             var context = new NancyContext()
             {
                 Request = new FakeRequest("GET", "/", headers)
             };
 
-            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+            context.Response = new Response {StatusCode = HttpStatusCode.Unauthorized};
 
             // When
             hooks.AfterRequest.Invoke(context);
@@ -173,7 +176,7 @@
                 Request = new FakeRequest("GET", "/")
             };
 
-            context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
+            context.Response = new Response {StatusCode = HttpStatusCode.Unauthorized};
 
             // When
             hooks.AfterRequest.Invoke(context);
@@ -188,7 +191,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-                "Authorization", new[] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
+                "Authorization", new[] {"FooScheme" + " " + EncodeCredentials("foo", "bar")});
 
             // When
             var result = this.hooks.BeforeRequest.Invoke(context);
@@ -203,7 +206,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-               "Authorization", new[] { "Basic" + " " + "some credentials" });
+                "Authorization", new[] {"Basic" + " " + "some credentials"});
 
             // When
             var result = this.hooks.BeforeRequest.Invoke(context);
@@ -218,7 +221,7 @@
         {
             // Given
             var context = CreateContextWithHeader(
-               "Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+                "Authorization", new[] {"Basic" + " " + EncodeCredentials("foo", "bar")});
 
             // When
             this.hooks.BeforeRequest.Invoke(context);
@@ -240,7 +243,7 @@
             var cfg = new BasicAuthenticationConfiguration(validator, "realm");
 
             var context = CreateContextWithHeader(
-               "Authorization", new [] { "Basic" + " " + EncodeCredentials("foo", "bar") });
+                "Authorization", new[] {"Basic" + " " + EncodeCredentials("foo", "bar")});
 
             BasicAuthentication.Enable(fakePipelines, cfg);
 
@@ -255,7 +258,7 @@
         {
             var header = new Dictionary<string, IEnumerable<string>>
             {
-                { name, values }
+                {name, values}
             };
 
             return new NancyContext()
@@ -273,7 +276,7 @@
             return encodedCredentials;
         }
 
-        class FakeModule : NancyModule
+        private class FakeModule : NancyModule
         {
             public FakeModule()
             {

@@ -20,6 +20,6 @@
         /// <summary>
         /// Gets the instance registrations to register for this startup task
         /// </summary>
-        IEnumerable<InstanceRegistration> InstanceRegistrations { get; }        
+        IEnumerable<InstanceRegistration> InstanceRegistrations { get; }
     }
 }

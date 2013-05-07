@@ -2,16 +2,16 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Threading;
-    using FakeItEasy;
+
     using Nancy.Conventions;
     using Nancy.IO;
+    using Nancy.Session;
+
     using Xunit;
     using Xunit.Extensions;
-    using System.Globalization;
 
     public class BuiltInCultureConventionFixture
     {
@@ -123,7 +123,7 @@
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Accept-Language", new[] { cultureName } }
+                    {"Accept-Language", new[] {cultureName}}
                 };
 
             var context = CreateContextRequest("/", headers);
@@ -142,7 +142,7 @@
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Accept-Language", new[] { "en-GB;q=0.8", "de-DE;q=0.7" } }
+                    {"Accept-Language", new[] {"en-GB;q=0.8", "de-DE;q=0.7"}}
                 };
 
             var context = CreateContextRequest("/", headers);
@@ -161,7 +161,7 @@
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Accept-Language", new[] { "en-GB" } }
+                    {"Accept-Language", new[] {"en-GB"}}
                 };
 
             var context = CreateContextRequest("/", headers);
@@ -195,11 +195,11 @@
             var context = CreateContextRequest("/");
 
             var sessionValues = new Dictionary<string, object>
-                              {
-                                  { "CurrentCulture", cultureName }
-                              };
+            {
+                {"CurrentCulture", cultureName}
+            };
 
-            context.Request.Session = new Session.Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
 
             //When
             var exception =
@@ -216,11 +216,11 @@
             var context = CreateContextRequest("/");
 
             var sessionValues = new Dictionary<string, object>
-                              {
-                                  { "CurrentCulture", new CultureInfo("en-GB") }
-                              };
+            {
+                {"CurrentCulture", new CultureInfo("en-GB")}
+            };
 
-            context.Request.Session = new Session.Session(new Dictionary<string, object>(sessionValues));
+            context.Request.Session = new Session(new Dictionary<string, object>(sessionValues));
 
             //When
             var culture = BuiltInCultureConventions.SessionCulture(context);
@@ -249,12 +249,12 @@
         {
             // Given
             const string cookieName = "CurrentCulture";
-            string cookieData = cultureName;
+            var cookieData = cultureName;
 
             var headers = new Dictionary<string, IEnumerable<string>>
-                              {
-                                  { "cookie", new[]{ string.Format("{0}={1}", cookieName, cookieData) } }
-                              };
+            {
+                {"cookie", new[] {string.Format("{0}={1}", cookieName, cookieData)}}
+            };
 
             var context = CreateContextRequest("/", headers);
 
@@ -273,9 +273,9 @@
             const string cookieData = "en-GB";
 
             var headers = new Dictionary<string, IEnumerable<string>>
-                              {
-                                  { "cookie", new[]{ string.Format("{0}={1}", cookieName, cookieData) } }
-                              };
+            {
+                {"cookie", new[] {string.Format("{0}={1}", cookieName, cookieData)}}
+            };
 
             var context = CreateContextRequest("/", headers);
 
@@ -340,7 +340,7 @@
 
         private NancyContext PopulateForm(string cultureName)
         {
-            string bodyContent = string.Concat("CurrentCulture=", cultureName);
+            var bodyContent = string.Concat("CurrentCulture=", cultureName);
             var memory = new MemoryStream();
             var writer = new StreamWriter(memory);
             writer.Write(bodyContent);
@@ -350,7 +350,7 @@
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded"}}
                 };
 
 

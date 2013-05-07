@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class DefaultViewRendererFixture
@@ -26,7 +28,7 @@
 
             // Then
             A.CallTo(() => this.factory.RenderView(
-                A<string>.Ignored, 
+                A<string>.Ignored,
                 A<object>.Ignored,
                 A<ViewLocationContext>.That.Matches(x => x.Context.Equals(context)))).MustHaveHappened();
         }

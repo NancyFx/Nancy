@@ -47,7 +47,7 @@
                 .TypesOf<TRegistration>()
                 .Single();
 
-            this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation));
+            this.typeRegistrations.Add(new TypeRegistration(typeof (TRegistration), implementation));
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <param name="defaultImplementations">The types to register.</param>
         public void Register<TRegistration>(IEnumerable<Type> defaultImplementations)
         {
-            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof(TRegistration), defaultImplementations));
+            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof (TRegistration), defaultImplementations));
         }
 
         /// <summary>
@@ -69,7 +69,7 @@
         /// <param name="implementation">The <see cref="Type"/> to register as <typeparamref name="TRegistration"/>.</param>
         public void Register<TRegistration>(Type implementation)
         {
-            this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation));
+            this.typeRegistrations.Add(new TypeRegistration(typeof (TRegistration), implementation));
         }
 
         /// <summary>
@@ -79,7 +79,7 @@
         /// <param name="instance">The instance to register.</param>
         public void Register<TRegistration>(TRegistration instance)
         {
-            this.instanceRegistrations.Add(new InstanceRegistration(typeof(TRegistration), instance));
+            this.instanceRegistrations.Add(new InstanceRegistration(typeof (TRegistration), instance));
         }
 
         /// <summary>
@@ -99,7 +99,7 @@
                 .Where(type => type.Assembly != this.GetType().Assembly)
                 .SingleOrDefault(type => type != defaultImplementation);
 
-            this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation ?? defaultImplementation));
+            this.typeRegistrations.Add(new TypeRegistration(typeof (TRegistration), implementation ?? defaultImplementation));
         }
 
         /// <summary>
@@ -118,11 +118,11 @@
 
             if (implementation != null)
             {
-                this.typeRegistrations.Add(new TypeRegistration(typeof(TRegistration), implementation));
+                this.typeRegistrations.Add(new TypeRegistration(typeof (TRegistration), implementation));
             }
             else
             {
-                this.instanceRegistrations.Add(new InstanceRegistration(typeof(TRegistration), defaultImplementationFactory.Invoke()));
+                this.instanceRegistrations.Add(new InstanceRegistration(typeof (TRegistration), defaultImplementationFactory.Invoke()));
             }
         }
 
@@ -149,7 +149,7 @@
                 implementations = defaultImplementations.ToList();
             }
 
-            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof(TRegistration), implementations));
+            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof (TRegistration), implementations));
         }
 
         /// <summary>
@@ -170,7 +170,7 @@
                 .Where(type => !defaultImplementations.Contains(type))
                 .ToList();
 
-            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof(TRegistration), implementations.Union(defaultImplementations)));
+            this.collectionRegistrations.Add(new CollectionTypeRegistration(typeof (TRegistration), implementations.Union(defaultImplementations)));
         }
     }
 }
