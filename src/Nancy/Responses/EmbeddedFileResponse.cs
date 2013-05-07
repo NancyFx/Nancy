@@ -67,7 +67,7 @@
             using (var md5 = MD5.Create())
             {
                 var hash = md5.ComputeHash(stream);
-                return ByteArrayToString(hash);
+                return string.Concat("\"", ByteArrayToString(hash), "\"");
             }
         }
 
