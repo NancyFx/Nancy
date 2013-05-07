@@ -1,9 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
-using Microsoft.CSharp.RuntimeBinder;
-
-namespace Nancy.ViewEngines.DotLiquid
+﻿namespace Nancy.ViewEngines.DotLiquid
 {
+    using System;
     using System.Collections.Generic;
     using System.Dynamic;
 
@@ -36,11 +33,11 @@ namespace Nancy.ViewEngines.DotLiquid
 
             Type modelType = this.model.GetType();
             object value = null;
-            if(modelType.Equals(typeof(Dictionary<string, object>)))
+            if (modelType.Equals(typeof (Dictionary<string, object>)))
             {
                 value = GetExpandoObjectValue(propertyName);
             }
-            else if (modelType.Equals(typeof(DynamicDictionary)))
+            else if (modelType.Equals(typeof (DynamicDictionary)))
             {
                 value = GetDynamicDictionaryObjectValue(propertyName);
             }
@@ -53,14 +50,14 @@ namespace Nancy.ViewEngines.DotLiquid
 
         private object GetExpandoObjectValue(string propertyName)
         {
-            return (!this.model.ContainsKey(propertyName)) ?
-                null :
-                this.model[propertyName];
+            return (!this.model.ContainsKey(propertyName))
+                ? null
+                : this.model[propertyName];
         }
 
         private object GetDynamicDictionaryObjectValue(string propertyName)
         {
-            DynamicDictionaryValue dictionaryValue = this.model[propertyName] as DynamicDictionaryValue;
+            var dictionaryValue = this.model[propertyName] as DynamicDictionaryValue;
             return dictionaryValue == null || !dictionaryValue.HasValue ? null : dictionaryValue.Value;
         }
 
@@ -68,9 +65,9 @@ namespace Nancy.ViewEngines.DotLiquid
         {
             var property = this.model.GetType().GetProperty(propertyName);
 
-            return (property == null) ?
-                null : 
-                property.GetValue(this.model, null);
+            return (property == null)
+                ? null
+                : property.GetValue(this.model, null);
         }
 
         private static dynamic GetValidModelType(dynamic model)
@@ -80,8 +77,9 @@ namespace Nancy.ViewEngines.DotLiquid
                 return null;
             }
 
-            return model.GetType().Equals(typeof(ExpandoObject))
-                ? new Dictionary<string, object>(model, StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+            return model.GetType().Equals(typeof (ExpandoObject))
+                ? new Dictionary<string, object>(model,
+                    StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
                 : model;
         }
     }

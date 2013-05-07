@@ -71,7 +71,7 @@ namespace Nancy
         public string Authorization
         {
             get { return this.GetValue("Authorization", x => x.First()); }
-            set { this.SetHeaderValues("Authorization", value, x => new[] { x }); }
+            set { this.SetHeaderValues("Authorization", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -100,7 +100,7 @@ namespace Nancy
         public string Connection
         {
             get { return this.GetValue("Connection", x => x.First()); }
-            set { this.SetHeaderValues("Connection", value, x => new[] { x }); }
+            set { this.SetHeaderValues("Connection", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -110,7 +110,7 @@ namespace Nancy
         public long ContentLength
         {
             get { return this.GetValue("Content-Length", x => Convert.ToInt64(x.First())); }
-            set { this.SetHeaderValues("Content-Length", value, x => new[] { x.ToString(CultureInfo.InvariantCulture) }); }
+            set { this.SetHeaderValues("Content-Length", value, x => new[] {x.ToString(CultureInfo.InvariantCulture)}); }
         }
 
         /// <summary>
@@ -120,7 +120,7 @@ namespace Nancy
         public string ContentType
         {
             get { return this.GetValue("Content-Type", x => x.First()); }
-            set { this.SetHeaderValues("Content-Type", value, x => new[] { x }); }
+            set { this.SetHeaderValues("Content-Type", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -130,7 +130,7 @@ namespace Nancy
         public DateTime? Date
         {
             get { return this.GetValue("Date", x => ParseDateTime(x.First())); }
-            set { this.SetHeaderValues("Date", value, x => new[] { GetDateAsString(value) }); }
+            set { this.SetHeaderValues("Date", value, x => new[] {GetDateAsString(value)}); }
         }
 
         /// <summary>
@@ -140,7 +140,7 @@ namespace Nancy
         public string Host
         {
             get { return this.GetValue("Host", x => x.First()); }
-            set { this.SetHeaderValues("Host", value, x => new[] { x }); }
+            set { this.SetHeaderValues("Host", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Nancy
         public DateTime? IfModifiedSince
         {
             get { return this.GetValue("If-Modified-Since", x => ParseDateTime(x.First())); }
-            set { this.SetHeaderValues("If-Modified-Since", value, x => new[] { GetDateAsString(value) }); }
+            set { this.SetHeaderValues("If-Modified-Since", value, x => new[] {GetDateAsString(value)}); }
         }
 
         /// <summary>
@@ -180,7 +180,7 @@ namespace Nancy
         public string IfRange
         {
             get { return this.GetValue("If-Range", x => x.First()); }
-            set { this.SetHeaderValues("If-Range", value, x => new[] { x }); }
+            set { this.SetHeaderValues("If-Range", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -190,8 +190,7 @@ namespace Nancy
         public DateTime? IfUnmodifiedSince
         {
             get { return this.GetValue("If-Unmodified-Since", x => ParseDateTime(x.First())); }
-            set { this.SetHeaderValues("If-Unmodified-Since", value, x => new[] { GetDateAsString(value) }); }
-
+            set { this.SetHeaderValues("If-Unmodified-Since", value, x => new[] {GetDateAsString(value)}); }
         }
 
         /// <summary>
@@ -210,7 +209,7 @@ namespace Nancy
         public int MaxForwards
         {
             get { return this.GetValue("Max-Forwards", x => Convert.ToInt32(x.First())); }
-            set { this.SetHeaderValues("Max-Forwards", value, x => new[] { x.ToString(CultureInfo.InvariantCulture) }); }
+            set { this.SetHeaderValues("Max-Forwards", value, x => new[] {x.ToString(CultureInfo.InvariantCulture)}); }
         }
 
         /// <summary>
@@ -220,7 +219,7 @@ namespace Nancy
         public string Referrer
         {
             get { return this.GetValue("Referer", x => x.First()); }
-            set { this.SetHeaderValues("Referer", value, x => new[] { x }); }
+            set { this.SetHeaderValues("Referer", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -230,7 +229,7 @@ namespace Nancy
         public string UserAgent
         {
             get { return this.GetValue("User-Agent", x => x.First()); }
-            set { this.SetHeaderValues("User-Agent", value, x => new[] { x }); }
+            set { this.SetHeaderValues("User-Agent", value, x => new[] {x}); }
         }
 
         /// <summary>
@@ -240,6 +239,21 @@ namespace Nancy
         public IEnumerable<IEnumerable<string>> Values
         {
             get { return this.headers.Values; }
+        }
+
+        /// <summary>
+        /// Gets the values for the header identified by the <paramref name="name"/> parameter.
+        /// </summary>
+        /// <param name="name">The name of the header to return the values for.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> that contains the values for the header. If the header is not defined then <see cref="Enumerable.Empty{TResult}"/> is returned.</returns>
+        public IEnumerable<string> this[string name]
+        {
+            get
+            {
+                return (this.headers.ContainsKey(name))
+                    ? this.headers[name]
+                    : Enumerable.Empty<string>();
+            }
         }
 
         /// <summary>
@@ -260,21 +274,6 @@ namespace Nancy
             return GetEnumerator();
         }
 
-        /// <summary>
-        /// Gets the values for the header identified by the <paramref name="name"/> parameter.
-        /// </summary>
-        /// <param name="name">The name of the header to return the values for.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> that contains the values for the header. If the header is not defined then <see cref="Enumerable.Empty{TResult}"/> is returned.</returns>
-        public IEnumerable<string> this[string name]
-        {
-            get
-            {
-                return (this.headers.ContainsKey(name)) ?
-                    this.headers[name] :
-                    Enumerable.Empty<string>();
-            }
-        }
-
         private static string GetDateAsString(DateTime? value)
         {
             return !value.HasValue ? null : value.Value.ToString("R", CultureInfo.InvariantCulture);
@@ -285,7 +284,7 @@ namespace Nancy
             var values = this.GetValue(header);
 
             return values
-                .SelectMany(x => x.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                .SelectMany(x => x.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries))
                 .Select(x => x.Trim())
                 .ToList();
         }
@@ -296,7 +295,7 @@ namespace Nancy
 
             var parsed = values.Select(x =>
             {
-                var sections = x.Split(new[] { ";" }, StringSplitOptions.RemoveEmptyEntries);
+                var sections = x.Split(new[] {";"}, StringSplitOptions.RemoveEmptyEntries);
                 var mediaRange = sections[0].Trim();
                 var quality = 1m;
 
@@ -319,7 +318,7 @@ namespace Nancy
             });
 
             return parsed
-                    .OrderByDescending(x => x.Item2);
+                .OrderByDescending(x => x.Item2);
         }
 
         private static object GetDefaultValue(Type T)
@@ -327,18 +326,18 @@ namespace Nancy
             if (IsGenericEnumerable(T))
             {
                 var enumerableType = T.GetGenericArguments().First();
-                var x = typeof(List<>).MakeGenericType(new[] { enumerableType });
+                var x = typeof (List<>).MakeGenericType(new[] {enumerableType});
                 return Activator.CreateInstance(x);
             }
 
-            if (T == typeof(DateTime))
+            if (T == typeof (DateTime))
             {
                 return null;
             }
 
-            return T == typeof(string) ?
-                string.Empty :
-                null;
+            return T == typeof (string)
+                ? string.Empty
+                : null;
         }
 
         private static IEnumerable<INancyCookie> GetNancyCookies(IEnumerable<string> cookies)
@@ -362,7 +361,7 @@ namespace Nancy
         {
             if (!this.headers.ContainsKey(name))
             {
-                return (T)(GetDefaultValue(typeof(T)) ?? default(T));
+                return (T)(GetDefaultValue(typeof (T)) ?? default(T));
             }
 
             return converter.Invoke(this.headers[name]);
@@ -375,7 +374,7 @@ namespace Nancy
 
         private static bool IsGenericEnumerable(Type T)
         {
-            return !(T == typeof(string)) && T.IsGenericType && T.GetGenericTypeDefinition() == typeof(IEnumerable<>);
+            return !(T == typeof (string)) && T.IsGenericType && T.GetGenericTypeDefinition() == typeof (IEnumerable<>);
         }
 
         private static DateTime? ParseDateTime(string value)

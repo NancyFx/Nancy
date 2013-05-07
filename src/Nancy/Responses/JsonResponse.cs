@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using Json;
 
     public class JsonResponse<TModel> : Response
     {
@@ -17,7 +16,7 @@
             this.ContentType = "application/json";
             this.StatusCode = HttpStatusCode.OK;
         }
-     
+
         private static Action<Stream> GetJsonContents(TModel model, ISerializer serializer)
         {
             return stream => serializer.Serialize("application/json", model, stream);
@@ -27,7 +26,6 @@
     public class JsonResponse : JsonResponse<object>
     {
         public JsonResponse(object model, ISerializer serializer) : base(model, serializer)
-        {
-        }
+        {}
     }
 }

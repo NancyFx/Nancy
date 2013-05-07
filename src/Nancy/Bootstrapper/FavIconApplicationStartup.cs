@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Bootstrapper
 {
     using System;
-    using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using System.Linq;
@@ -40,13 +39,12 @@
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
-        {
-        }
+        {}
 
         private static byte[] ExtractDefaultIcon()
         {
             var resourceStream =
-                typeof(INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
+                typeof (INancyEngine).Assembly.GetManifestResourceStream("Nancy.favicon.ico");
 
             if (resourceStream == null)
             {
@@ -69,11 +67,11 @@
             }
 
             byte[] icon = null;
-            var extensions = new[] { "ico", "png" };
+            var extensions = new[] {"ico", "png"};
 
             var locatedFavIcons = extensions.SelectMany(extension => Directory
                 .EnumerateFiles(rootPathProvider.GetRootPath(), string.Concat("favicon.", extension), SearchOption.AllDirectories))
-                .ToArray();
+                                            .ToArray();
 
             if (locatedFavIcons.Any())
             {
@@ -84,7 +82,7 @@
 
                     var converter = new ImageConverter();
 
-                    icon = (byte[])converter.ConvertTo(image, typeof(byte[]));
+                    icon = (byte[])converter.ConvertTo(image, typeof (byte[]));
                 }
                 catch (Exception e)
                 {
@@ -109,8 +107,7 @@
                 locatedIcon = LocateIconOnFileSystem();
             }
             catch (Exception)
-            {
-            }
+            {}
 
             return locatedIcon ?? ExtractDefaultIcon();
         }

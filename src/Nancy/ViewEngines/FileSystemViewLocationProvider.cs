@@ -1,6 +1,5 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -20,8 +19,7 @@
         /// <remarks>Creating an instance using this constructor will result in the <see cref="DefaultFileSystemReader"/> being used internally.</remarks>
         public FileSystemViewLocationProvider(IRootPathProvider rootPathProvider)
             : this(rootPathProvider, new DefaultFileSystemReader())
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileSystemViewLocationProvider"/> class.
@@ -88,12 +86,12 @@
             return from match in matches
                    select
                        new FileSystemViewLocationResult(
-                       GetViewLocation(match.Item1, this.rootPath),
-                       Path.GetFileNameWithoutExtension(match.Item1),
-                       Path.GetExtension(match.Item1).Substring(1),
-                       match.Item2,
-                       match.Item1,
-                       this.fileSystemReader);
+                           GetViewLocation(match.Item1, this.rootPath),
+                           Path.GetFileNameWithoutExtension(match.Item1),
+                           Path.GetExtension(match.Item1).Substring(1),
+                           match.Item2,
+                           match.Item1,
+                           this.fileSystemReader);
         }
 
         private IEnumerable<ViewLocationResult> GetViewsFromPath(string path, IEnumerable<string> supportedViewExtensions)
@@ -103,22 +101,22 @@
             return from match in matches
                    select
                        new FileSystemViewLocationResult(
-                       GetViewLocation(match.Item1, this.rootPath),
-                       Path.GetFileNameWithoutExtension(match.Item1),
-                       Path.GetExtension(match.Item1).Substring(1),
-                       match.Item2,
-                       match.Item1,
-                       this.fileSystemReader);
+                           GetViewLocation(match.Item1, this.rootPath),
+                           Path.GetFileNameWithoutExtension(match.Item1),
+                           Path.GetExtension(match.Item1).Substring(1),
+                           match.Item2,
+                           match.Item1,
+                           this.fileSystemReader);
         }
 
         private static string GetViewLocation(string match, string rootPath)
         {
             var location = match
                 .Replace(rootPath, string.Empty)
-                .TrimStart(new[] { Path.DirectorySeparatorChar })
+                .TrimStart(new[] {Path.DirectorySeparatorChar})
                 .Replace(@"\", "/")
                 .Replace(Path.GetFileName(match), string.Empty)
-                .TrimEnd(new [] { '/' });
+                .TrimEnd(new[] {'/'});
 
             return location;
         }

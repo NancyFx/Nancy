@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
+
     using Nancy.Routing;
+
     using Xunit;
 
     public class RouteDescriptionFixture

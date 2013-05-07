@@ -1,17 +1,19 @@
 ﻿namespace Nancy.ViewEngines.Markdown
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
-    using SuperSimpleViewEngine;
-    using System;
+
+    using MarkdownSharp;
+
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
 
     public class MarkdownViewEngineHost : IViewEngineHost
     {
-        private readonly IViewEngineHost viewEngineHost;
+        private readonly Markdown parser;
         private readonly IRenderContext renderContext;
         private readonly IEnumerable<string> validExtensions;
-        private readonly MarkdownSharp.Markdown parser;
+        private readonly IViewEngineHost viewEngineHost;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkdownViewEngineHost"/> class.
@@ -25,7 +27,7 @@
             this.renderContext = renderContext;
             this.validExtensions = viewExtensions;
             this.Context = this.renderContext.Context;
-            this.parser = new MarkdownSharp.Markdown();
+            this.parser = new Markdown();
         }
 
         /// <summary>
@@ -61,7 +63,8 @@
 
             var templateContent = viewLocationResult.Contents.Invoke().ReadToEnd();
 
-            if (viewLocationResult.Name.ToLower() == "master" && validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
+            if (viewLocationResult.Name.ToLower() == "master" &&
+                validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
             {
                 return MarkdownViewengineRender.RenderMasterPage(templateContent);
             }

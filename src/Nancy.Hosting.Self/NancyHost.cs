@@ -3,12 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Net;
     using System.Linq;
-    using IO;
+    using System.Net;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
-	using Nancy.Helpers;
+    using Nancy.Helpers;
+    using Nancy.IO;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -24,9 +25,9 @@
     public class NancyHost : IDisposable
     {
         private readonly IList<Uri> baseUriList;
-        private readonly HttpListener listener;
-        private readonly INancyEngine engine;
         private readonly HostConfiguration configuration;
+        private readonly INancyEngine engine;
+        private readonly HttpListener listener;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
@@ -34,7 +35,8 @@
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris) { }
+            : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris)
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
@@ -43,7 +45,8 @@
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         /// <param name="configuration">Configuration to use</param>
         public NancyHost(HostConfiguration configuration, params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris){}
+            : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris)
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
@@ -54,8 +57,7 @@
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, params Uri[] baseUris)
             : this(bootstrapper, new HostConfiguration(), baseUris)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
@@ -84,8 +86,7 @@
         /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper)
             : this(bootstrapper, new HostConfiguration(), baseUri)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUri"/>, using
@@ -96,9 +97,8 @@
         /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         /// <param name="configuration">Configuration to use</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, HostConfiguration configuration)
-            : this (bootstrapper, configuration, baseUri)
-        {
-        }
+            : this(bootstrapper, configuration, baseUri)
+        {}
 
         /// <summary>
         /// Stops the host if it is running.
@@ -159,7 +159,7 @@
 
             if (baseUri == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}", request.Url));
             }
 
             var expectedRequestLength =
@@ -167,7 +167,8 @@
 
             var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
-            var nancyUrl = new Url {
+            var nancyUrl = new Url
+            {
                 Scheme = request.Url.Scheme,
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
@@ -189,7 +190,7 @@
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
-                request.Headers.ToDictionary(), 
+                request.Headers.ToDictionary(),
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
                 certificate);
         }
@@ -197,14 +198,10 @@
         private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
         {
             foreach (var header in nancyResponse.Headers)
-            {
                 response.AddHeader(header.Key, header.Value);
-            }
 
             foreach (var nancyCookie in nancyResponse.Cookies)
-            {
                 response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
-            }
 
             if (nancyResponse.ContentType != null)
             {
@@ -213,9 +210,7 @@
             response.StatusCode = (int)nancyResponse.StatusCode;
 
             using (var output = response.OutputStream)
-            {
                 nancyResponse.Contents.Invoke(output);
-            }
         }
 
         private static long GetExpectedRequestLength(IDictionary<string, IEnumerable<string>> incomingHeaders)
@@ -240,9 +235,9 @@
 
             long contentLength;
 
-            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ?
-                0 : 
-                contentLength;
+            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength)
+                ? 0
+                : contentLength;
         }
 
         private void GotCallback(IAsyncResult ar)

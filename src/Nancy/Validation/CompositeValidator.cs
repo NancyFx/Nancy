@@ -11,11 +11,6 @@
         private readonly IEnumerable<IModelValidator> validators;
 
         /// <summary>
-        /// Gets the description of the validator.
-        /// </summary>
-        public ModelValidationDescriptor Description { get; private set; }
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CompositeValidator"/> class.
         /// </summary>
         /// <param name="validators">The validators.</param>
@@ -24,6 +19,11 @@
             this.Description = CreateCompositeDescription(validators);
             this.validators = validators;
         }
+
+        /// <summary>
+        /// Gets the description of the validator.
+        /// </summary>
+        public ModelValidationDescriptor Description { get; private set; }
 
         /// <summary>
         /// Validates the specified instance.
@@ -40,14 +40,14 @@
                 .SelectMany(r => r.Errors)
                 .ToArray();
 
-            return !errors.Any() ?
-                ModelValidationResult.Valid :
-                new ModelValidationResult(errors);
+            return !errors.Any()
+                ? ModelValidationResult.Valid
+                : new ModelValidationResult(errors);
         }
 
         private static ModelValidationDescriptor CreateCompositeDescription(IEnumerable<IModelValidator> validators)
         {
-            var rules = 
+            var rules =
                 validators.SelectMany(v => v.Description.Rules);
 
             return new ModelValidationDescriptor(rules);

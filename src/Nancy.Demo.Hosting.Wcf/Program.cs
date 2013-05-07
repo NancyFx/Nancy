@@ -3,13 +3,14 @@
     using System;
     using System.ServiceModel;
     using System.ServiceModel.Web;
+
     using Nancy.Hosting.Wcf;
 
-    class Program
+    internal class Program
     {
         private static readonly Uri BaseUri = new Uri("http://localhost:1234/Nancy/");
 
-        static void Main()
+        private static void Main()
         {
             using (CreateAndOpenWebServiceHost())
             {
@@ -24,7 +25,7 @@
                 new NancyWcfGenericService(new DefaultNancyBootstrapper()),
                 BaseUri);
 
-            host.AddServiceEndpoint(typeof(NancyWcfGenericService), new WebHttpBinding(), "");
+            host.AddServiceEndpoint(typeof (NancyWcfGenericService), new WebHttpBinding(), "");
             host.Open();
 
             return host;

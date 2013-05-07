@@ -6,8 +6,10 @@
     using System.Reflection;
 
     using FakeItEasy;
+
     using Nancy.Bootstrapper;
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Sdk;
 
@@ -31,10 +33,7 @@
         public void Should_use_type_override_when_it_has_been_configured()
         {
             // Given
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.NancyEngine<FakeNancyEngine>();
-            });
+            var bootstrapper = new ConfigurableBootstrapper(with => { with.NancyEngine<FakeNancyEngine>(); });
 
             bootstrapper.Initialise();
 
@@ -51,10 +50,7 @@
             // Given
             var fakeEngine = A.Fake<INancyEngine>();
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-            {
-                with.NancyEngine(fakeEngine);
-            });
+            var bootstrapper = new ConfigurableBootstrapper(with => { with.NancyEngine(fakeEngine); });
 
             bootstrapper.Initialise();
 
@@ -91,10 +87,10 @@
         {
             // Given
             var availableMembers =
-                typeof(ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator)
-                .GetMethods(BindingFlags.Public | BindingFlags.Instance)
-                .Select(x => x.Name)
-                .Distinct();
+                typeof (ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator)
+                    .GetMethods(BindingFlags.Public | BindingFlags.Instance)
+                    .Select(x => x.Name)
+                    .Distinct();
 
             var expectedConfigurableMembers =
                 this.GetConfigurableBootstrapperMembers();
@@ -112,10 +108,7 @@
         [Fact]
         public void Should_throw_exceptions_if_any_occur_in_route()
         {
-            var bootstrapper = new ConfigurableBootstrapper(with =>
-                {
-                    with.Module<BlowUpModule>();
-                });
+            var bootstrapper = new ConfigurableBootstrapper(with => { with.Module<BlowUpModule>(); });
             bootstrapper.Initialise();
             var engine = bootstrapper.GetEngine();
             var request = new Request("GET", "/", "http");
@@ -130,17 +123,17 @@
         [Fact]
         public void Should_run_application_startup_closure()
         {
-            var date = new DateTime(2112,10,31);
+            var date = new DateTime(2112, 10, 31);
 
-            var bootstrapper = new ConfigurableBootstrapper(with => 
+            var bootstrapper = new ConfigurableBootstrapper(with =>
             {
                 with.ApplicationStartup((container, pipelines) =>
                 {
                     pipelines.BeforeRequest += ctx =>
-                        {
-                            ctx.Items.Add("date", date);
-                            return null;
-                        };
+                    {
+                        ctx.Items.Add("date", date);
+                        return null;
+                    };
                 });
             });
 
@@ -159,7 +152,7 @@
             var date = new DateTime(2112, 10, 31);
             var bootstrapper =
                 new ConfigurableBootstrapper(
-                    with => with.RequestStartup((container, pipelines, context) => 
+                    with => with.RequestStartup((container, pipelines, context) =>
                         context.Items.Add("date", date)));
 
             bootstrapper.Initialise();
@@ -180,12 +173,20 @@
             };
 
             var typesToReflect =
-                new[] { typeof(NancyBootstrapperBase<>), typeof(NancyInternalConfiguration) };
+                new[] {typeof (NancyBootstrapperBase<>), typeof (NancyInternalConfiguration)};
 
             return typesToReflect
                 .SelectMany(x => x.GetProperties(BindingFlags.Public | BindingFlags.Instance))
                 .Select(x => x.Name)
                 .Where(x => !ignoreList.Contains(x, StringComparer.OrdinalIgnoreCase));
+        }
+
+        private class BlowUpModule : NancyModule
+        {
+            public BlowUpModule()
+            {
+                Get["/"] = _ => { throw new InvalidOperationException("Oh noes!"); };
+            }
         }
 
         private class FakeNancyEngine : INancyEngine
@@ -211,14 +212,6 @@
             public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
             {
                 throw new NotImplementedException();
-            }
-        }
-
-        private class BlowUpModule : NancyModule
-        {
-            public BlowUpModule()
-            {
-                Get["/"] = _ => { throw new InvalidOperationException("Oh noes!"); };
             }
         }
     }

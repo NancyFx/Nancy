@@ -1,6 +1,6 @@
 namespace Nancy.ViewEngines.Razor
 {
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Default dependency registrations for the <see cref="RazorViewEngine"/> class.
@@ -9,7 +9,7 @@ namespace Nancy.ViewEngines.Razor
     {
         public RazorViewEngineApplicationRegistrations()
         {
-            this.RegisterWithDefault<IRazorConfiguration>(typeof(DefaultRazorConfiguration));
+            this.RegisterWithDefault<IRazorConfiguration>(typeof (DefaultRazorConfiguration));
         }
     }
 }

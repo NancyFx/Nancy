@@ -26,16 +26,17 @@
 // OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 // WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 //
+
 namespace Nancy.Json
 {
     using System;
 
+    public abstract class JavaScriptTypeResolver
+    {
+        protected JavaScriptTypeResolver()
+        {}
 
-	public abstract class JavaScriptTypeResolver
-	{
-		protected JavaScriptTypeResolver () { }
-
-		public abstract Type ResolveType (string id);
-		public abstract string ResolveTypeId (Type type);
-	}
+        public abstract Type ResolveType(string id);
+        public abstract string ResolveTypeId(Type type);
+    }
 }

@@ -1,8 +1,11 @@
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
+
     using Xunit;
 
     public class DynamicModelBinderAdapterFixture
@@ -14,7 +17,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = Record.Exception(() => new DynamicModelBinderAdapter(null, new NancyContext(), null, A.Dummy<BindingConfig>()));
 
             // Then
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -24,7 +27,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = Record.Exception(() => new DynamicModelBinderAdapter(A.Fake<IModelBinderLocator>(), null, null, A.Dummy<BindingConfig>()));
 
             // Then
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -34,7 +37,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = Record.Exception(() => new DynamicModelBinderAdapter(A.Fake<IModelBinderLocator>(), A.Dummy<NancyContext>(), null, null));
 
             // Then
-            result.ShouldBeOfType(typeof(ArgumentNullException));
+            result.ShouldBeOfType(typeof (ArgumentNullException));
         }
 
         [Fact]
@@ -53,7 +56,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             Model result = adapter;
 
             // Then
-            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeLocator.GetBinderForType(typeof (Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -93,7 +96,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = (Model)adapter;
 
             // Then
-            A.CallTo(() => fakeLocator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => fakeLocator.GetBinderForType(typeof (Model), A<NancyContext>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -128,7 +131,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var result = Record.Exception(() => (Model)adapter);
 
             // Then
-            result.ShouldBeOfType(typeof(ModelBindingException));
+            result.ShouldBeOfType(typeof (ModelBindingException));
         }
 
         [Fact]
@@ -143,7 +146,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             var fakeLocator = A.Fake<IModelBinderLocator>();
             A.CallTo(() => fakeLocator.GetBinderForType(A<Type>.Ignored, A<NancyContext>.Ignored)).Returns(fakeModelBinder);
-            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context , null, A.Dummy<BindingConfig>());
+            dynamic adapter = new DynamicModelBinderAdapter(fakeLocator, context, null, A.Dummy<BindingConfig>());
 
             // When
             Model result = adapter;
@@ -170,7 +173,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             Model result = adapter;
 
             // Then
-            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, typeof(Model), A<object>._, A<BindingConfig>._, A<string[]>._)).MustHaveHappened();
+            A.CallTo(() => fakeModelBinder.Bind(A<NancyContext>._, typeof (Model), A<object>._, A<BindingConfig>._, A<string[]>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -244,6 +247,5 @@ namespace Nancy.Tests.Unit.ModelBinding
     }
 
     public class Model
-    {
-    }
+    {}
 }

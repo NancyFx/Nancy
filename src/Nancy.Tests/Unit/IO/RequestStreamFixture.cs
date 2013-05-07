@@ -2,10 +2,12 @@ namespace Nancy.Tests.Unit.IO
 {
     using System;
     using System.IO;
+
     using FakeItEasy;
+
     using Nancy.IO;
+
     using Xunit;
-    using Xunit.Extensions;
 
     public class RequestStreamFixture
     {
@@ -40,7 +42,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_enabled()
         {
             // Given
-            var inputStream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var inputStream = new MemoryStream(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
             // When
             var result = RequestStream.FromStream(inputStream, 0, 4, false);
@@ -53,7 +55,7 @@ namespace Nancy.Tests.Unit.IO
         public void Should_not_move_stream_out_of_memory_if_longer_than_threshold_and_stream_switching_is_disabled()
         {
             // Given
-            var inputStream = new MemoryStream(new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 });
+            var inputStream = new MemoryStream(new byte[] {0, 1, 2, 3, 4, 5, 6, 7, 8, 9});
 
             // When
             var result = RequestStream.FromStream(inputStream, 0, 4, true);
@@ -394,7 +396,7 @@ namespace Nancy.Tests.Unit.IO
         {
             // Given
             var stream = CreateFakeStream();
-            
+
             // When
             var request = RequestStream.FromStream(stream, 1, 0, false);
 
@@ -554,33 +556,27 @@ namespace Nancy.Tests.Unit.IO
 
         private static Stream CreateFakeStream()
         {
-            var stream = A.Fake<Stream>(x =>
-            {
-                x.Implements(typeof(IDisposable));
-            });
+            var stream = A.Fake<Stream>(x => { x.Implements(typeof (IDisposable)); });
 
             A.CallTo(() => stream.CanRead).Returns(true);
             A.CallTo(() => stream.CanSeek).Returns(true);
             A.CallTo(() => stream.CanTimeout).Returns(true);
             A.CallTo(() => stream.CanWrite).Returns(true);
-            
+
             return stream;
         }
 
         private class ConfigurableMemoryStream : MemoryStream
         {
+            private readonly long length;
             private readonly bool readable;
             private readonly bool seekable;
             private readonly bool timeoutable;
             private readonly bool writable;
-            private readonly long length;
             private long position;
 
-            public bool HasBeenDisposed { get; private set; }
-            public bool HasBeenFlushed { get; private set; }
-            public bool HasBeenSeeked { get; private set; }
-
-            public ConfigurableMemoryStream(bool Readable = true, bool Seekable = true, bool Timeoutable = true, bool Writable = true, long Length = 0, long Position = 0)
+            public ConfigurableMemoryStream(bool Readable = true, bool Seekable = true, bool Timeoutable = true, bool Writable = true, long Length = 0,
+                long Position = 0)
             {
                 this.readable = Readable;
                 this.seekable = Seekable;
@@ -589,6 +585,10 @@ namespace Nancy.Tests.Unit.IO
                 this.length = Length;
                 this.position = Position;
             }
+
+            public bool HasBeenDisposed { get; private set; }
+            public bool HasBeenFlushed { get; private set; }
+            public bool HasBeenSeeked { get; private set; }
 
             public override bool CanRead
             {
@@ -618,7 +618,7 @@ namespace Nancy.Tests.Unit.IO
             public override long Position
             {
                 get { return this.position; }
-                set { this.position = value ; }
+                set { this.position = value; }
             }
 
             protected override void Dispose(bool disposing)

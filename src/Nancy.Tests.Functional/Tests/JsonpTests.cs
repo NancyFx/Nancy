@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using Nancy.Testing;
-using Nancy.Tests.Functional.Modules;
-using Xunit;
-
-namespace Nancy.Tests.Functional.Tests
+﻿namespace Nancy.Tests.Functional.Tests
 {
+    using System;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Testing;
+    using Nancy.Tests.Functional.Modules;
+
+    using Xunit;
+
     public class JsonpTests
     {
         private readonly INancyBootstrapper bootstrapper;
@@ -18,10 +17,7 @@ namespace Nancy.Tests.Functional.Tests
         public JsonpTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                    configuration =>
-                        {
-                            configuration.Modules(new Type[] { typeof(JsonpTestModule) });
-                        });
+                configuration => { configuration.Modules(new Type[] {typeof (JsonpTestModule)}); });
 
             this.browser = new Browser(bootstrapper);
         }
@@ -29,10 +25,7 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Ensure_that_Jsonp_hook_does_not_affect_normal_responses()
         {
-            var result = browser.Get("/test/string", c =>
-            {
-                c.HttpRequest();
-            });
+            var result = browser.Get("/test/string", c => { c.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal("Normal Response", result.Body.AsString());
@@ -50,10 +43,7 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Ensure_that_Jsonp_hook_does_not_affect_a_normal_json_response()
         {
-            var result = browser.Get("/test/json", c =>
-            {
-                c.HttpRequest();
-            });
+            var result = browser.Get("/test/json", c => { c.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal("true", result.Body.AsString());

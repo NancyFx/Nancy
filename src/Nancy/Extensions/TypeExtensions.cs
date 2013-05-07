@@ -16,7 +16,7 @@
 
         public static bool IsArray(this Type source)
         {
-            return source.BaseType == typeof(Array);
+            return source.BaseType == typeof (Array);
         }
 
         /// <summary>
@@ -41,7 +41,7 @@
 
         public static bool IsCollection(this Type source)
         {
-            var collectionType = typeof(ICollection<>);
+            var collectionType = typeof (ICollection<>);
 
             return source.IsGenericType && source
                 .GetInterfaces()
@@ -50,7 +50,7 @@
 
         public static bool IsEnumerable(this Type source)
         {
-            var enumerableType = typeof(IEnumerable<>);
+            var enumerableType = typeof (IEnumerable<>);
 
             return source.IsGenericType && source.GetGenericTypeDefinition() == enumerableType;
         }
@@ -83,7 +83,7 @@
                 case TypeCode.UInt64:
                     return true;
                 case TypeCode.Object:
-                    if (source.IsGenericType && source.GetGenericTypeDefinition() == typeof(Nullable<>))
+                    if (source.IsGenericType && source.GetGenericTypeDefinition() == typeof (Nullable<>))
                     {
                         return IsNumeric(Nullable.GetUnderlyingType(source));
                     }

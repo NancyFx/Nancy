@@ -7,17 +7,16 @@ namespace Nancy.Routing.Trie.Nodes
     /// </summary>
     public class LiteralNode : TrieNode
     {
+        public LiteralNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {}
+
         /// <summary>
         /// Score for this node
         /// </summary>
         public override int Score
         {
             get { return 10000; }
-        }
-
-        public LiteralNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
         }
 
         /// <summary>
@@ -30,9 +29,9 @@ namespace Nancy.Routing.Trie.Nodes
             var comparisonType = StaticConfiguration.CaseSensitive ? StringComparison.Ordinal : StringComparison.OrdinalIgnoreCase;
 
             if (string.Equals(
-                    segment, 
-                    this.RouteDefinitionSegment, 
-                    comparisonType))
+                segment,
+                this.RouteDefinitionSegment,
+                comparisonType))
             {
                 return new SegmentMatch(true);
             }

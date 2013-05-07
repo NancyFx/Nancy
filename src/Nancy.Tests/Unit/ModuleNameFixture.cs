@@ -1,30 +1,11 @@
 ﻿namespace Nancy.Tests.Unit
 {
-    using Xunit;
     using Nancy.Extensions;
+
+    using Xunit;
 
     public class ModuleNameFixture
     {
-        class FakeModule : NancyModule
-        {
-            
-        }
-
-        class SuperDuperHappyModule : NancyModule
-        {
-            
-        }
-
-        class ThisIsNoJoke : NancyModule
-        {
-            
-        }
-
-        class ModuleForNancy : NancyModule
-        {
-            
-        }
-
         [Fact]
         public void Should_strip_module_from_name()
         {
@@ -77,5 +58,16 @@
             name.ShouldEqual("ModuleForNancy");
         }
 
+        private class FakeModule : NancyModule
+        {}
+
+        private class ModuleForNancy : NancyModule
+        {}
+
+        private class SuperDuperHappyModule : NancyModule
+        {}
+
+        private class ThisIsNoJoke : NancyModule
+        {}
     }
 }

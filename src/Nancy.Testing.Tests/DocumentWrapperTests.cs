@@ -1,7 +1,7 @@
 namespace Nancy.Testing.Tests
 {
     using System.Text;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class DocumentWrapperTests

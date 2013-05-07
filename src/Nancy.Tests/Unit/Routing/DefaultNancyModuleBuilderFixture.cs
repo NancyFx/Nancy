@@ -1,21 +1,23 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using FakeItEasy;
-    using Fakes;
+
     using Nancy.ModelBinding;
     using Nancy.Routing;
-    using Nancy.ViewEngines;
-    using Xunit;
+    using Nancy.Tests.Fakes;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
+
+    using Xunit;
 
     public class DefaultNancyModuleBuilderFixture
     {
         private readonly DefaultNancyModuleBuilder builder;
-        private readonly IResponseFormatterFactory responseFormatterFactory;
-        private readonly IViewFactory viewFactory;
-        private readonly NancyModule module;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly NancyModule module;
+        private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelValidatorLocator validatorLocator;
+        private readonly IViewFactory viewFactory;
 
         public DefaultNancyModuleBuilderFixture()
         {
@@ -81,7 +83,7 @@
             // Then
             A.CallTo(() => this.responseFormatterFactory.Create(context)).MustHaveHappened();
         }
-        
+
         [Fact]
         public void Should_set_response_on_module_to_resolved_response_formatter()
         {

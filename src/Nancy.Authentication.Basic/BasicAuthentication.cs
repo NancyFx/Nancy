@@ -2,6 +2,7 @@
 {
     using System;
     using System.Text;
+
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
     using Nancy.Security;
@@ -70,21 +71,21 @@
             }
 
             return context =>
-                {
-                    RetrieveCredentials(context, configuration);
-                    return null;
-                };
+            {
+                RetrieveCredentials(context, configuration);
+                return null;
+            };
         }
 
         private static Action<NancyContext> GetAuthenticationPromptHook(BasicAuthenticationConfiguration configuration)
         {
             return context =>
+            {
+                if (context.Response.StatusCode == HttpStatusCode.Unauthorized && SendAuthenticateResponseHeader(context, configuration))
                 {
-                    if (context.Response.StatusCode == HttpStatusCode.Unauthorized && SendAuthenticateResponseHeader(context, configuration))
-                    {
-                        context.Response.Headers["WWW-Authenticate"] = String.Format("{0} realm=\"{1}\"", SCHEME, configuration.Realm);
-                    }
-                };
+                    context.Response.Headers["WWW-Authenticate"] = String.Format("{0} realm=\"{1}\"", SCHEME, configuration.Realm);
+                }
+            };
         }
 
         private static void RetrieveCredentials(NancyContext context, BasicAuthenticationConfiguration configuration)
@@ -133,7 +134,8 @@
 
         private static bool SendAuthenticateResponseHeader(NancyContext context, BasicAuthenticationConfiguration configuration)
         {
-            return configuration.UserPromptBehaviour == UserPromptBehaviour.Always || (configuration.UserPromptBehaviour == UserPromptBehaviour.NonAjax && !context.Request.IsAjaxRequest());
+            return configuration.UserPromptBehaviour == UserPromptBehaviour.Always ||
+                (configuration.UserPromptBehaviour == UserPromptBehaviour.NonAjax && !context.Request.IsAjaxRequest());
         }
     }
 }

@@ -5,12 +5,11 @@
     public class FakeNancyModule : NancyModule
     {
         public FakeNancyModule()
-        {
-        }
+        {}
 
         public FakeNancyModule(Action<FakeNancyModuleConfigurator> closure)
         {
-            var configurator = 
+            var configurator =
                 new FakeNancyModuleConfigurator(this);
 
             closure.Invoke(configurator);
@@ -27,9 +26,7 @@
 
             public FakeNancyModuleConfigurator AddDeleteRoute(string path)
             {
-                this.module.Delete[path] = parameters => {
-                    return HttpStatusCode.OK;
-                };
+                this.module.Delete[path] = parameters => { return HttpStatusCode.OK; };
 
                 return this;
             }
@@ -47,18 +44,14 @@
 
             public FakeNancyModuleConfigurator AddPostRoute(string path)
             {
-                this.module.Post[path] = parameters => {
-                    return HttpStatusCode.OK;
-                };
+                this.module.Post[path] = parameters => { return HttpStatusCode.OK; };
 
                 return this;
             }
 
             public FakeNancyModuleConfigurator AddPutRoute(string path)
             {
-                this.module.Put[path] = parameters => {
-                    return HttpStatusCode.OK;
-                };
+                this.module.Put[path] = parameters => { return HttpStatusCode.OK; };
 
                 return this;
             }

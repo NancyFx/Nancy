@@ -7,11 +7,8 @@
 
     public class InteractiveDiagnostics : IInteractiveDiagnostics
     {
-        private readonly IDiagnosticsProvider[] providers;
-
         private const BindingFlags Flags = BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
-
-        public IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; private set; }
+        private readonly IDiagnosticsProvider[] providers;
 
         public InteractiveDiagnostics(IEnumerable<IDiagnosticsProvider> providers)
         {
@@ -19,6 +16,8 @@
 
             this.BuildAvailableDiagnostics();
         }
+
+        public IEnumerable<InteractiveDiagnostic> AvailableDiagnostics { get; private set; }
 
         public object ExecuteDiagnostic(InteractiveDiagnosticMethod interactiveDiagnosticMethod, object[] arguments)
         {
@@ -37,7 +36,7 @@
             var diagObjectType = interactiveDiagnosticMethod.ParentDiagnosticObject.GetType();
 
             return GetTemplateFromProperty(interactiveDiagnosticMethod, diagObjectType) ??
-                   GetTemplateFromAttribute(interactiveDiagnosticMethod);
+                GetTemplateFromAttribute(interactiveDiagnosticMethod);
         }
 
         public InteractiveDiagnostic GetDiagnostic(string providerName)
@@ -64,11 +63,11 @@
             foreach (var diagnosticsProvider in this.providers)
             {
                 diags.Add(new InteractiveDiagnostic
-                    {
-                        Name = diagnosticsProvider.Name,
-                        Description = diagnosticsProvider.Description,
-                        Methods = this.GetDiagnosticMethods(diagnosticsProvider)
-                    });
+                {
+                    Name = diagnosticsProvider.Name,
+                    Description = diagnosticsProvider.Description,
+                    Methods = this.GetDiagnosticMethods(diagnosticsProvider)
+                });
             }
 
             this.AvailableDiagnostics = diags;
@@ -86,11 +85,11 @@
             foreach (var methodInfo in methods)
             {
                 diagnosticMethods.Add(new InteractiveDiagnosticMethod(
-                                            diagnosticsProvider.DiagnosticObject,
-                                            methodInfo.ReturnType,
-                                            methodInfo.Name,
-                                            this.GetArguments(methodInfo),
-                                            this.GetDescription(diagnosticsProvider, methodInfo)));
+                    diagnosticsProvider.DiagnosticObject,
+                    methodInfo.ReturnType,
+                    methodInfo.Name,
+                    this.GetArguments(methodInfo),
+                    this.GetDescription(diagnosticsProvider, methodInfo)));
             }
 
             return diagnosticMethods;
@@ -99,7 +98,7 @@
         private string GetDescription(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
             return GetDescriptionFromProperty(diagnosticsProvider, methodInfo) ??
-                   GetDescriptionFromAttribute(diagnosticsProvider, methodInfo);
+                GetDescriptionFromAttribute(diagnosticsProvider, methodInfo);
         }
 
         private IEnumerable<Tuple<string, Type>> GetArguments(MethodInfo methodInfo)
@@ -108,9 +107,7 @@
             var arguments = new List<Tuple<string, Type>>(parameters.Length);
 
             foreach (var parameterInfo in parameters)
-            {
                 arguments.Add(Tuple.Create(parameterInfo.Name, parameterInfo.ParameterType));
-            }
 
             return arguments;
         }
@@ -133,7 +130,7 @@
         {
             var method = GetMethodInfo(interactiveDiagnosticMethod);
 
-            var attribute = (TemplateAttribute)Attribute.GetCustomAttribute(method, typeof(TemplateAttribute));
+            var attribute = (TemplateAttribute)Attribute.GetCustomAttribute(method, typeof (TemplateAttribute));
 
             return attribute != null ? attribute.Template : null;
         }
@@ -153,7 +150,7 @@
 
         private static string GetDescriptionFromAttribute(IDiagnosticsProvider diagnosticsProvider, MethodInfo methodInfo)
         {
-            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof(DescriptionAttribute));
+            var attribute = (DescriptionAttribute)Attribute.GetCustomAttribute(methodInfo, typeof (DescriptionAttribute));
 
             return attribute != null ? attribute.Description : null;
         }

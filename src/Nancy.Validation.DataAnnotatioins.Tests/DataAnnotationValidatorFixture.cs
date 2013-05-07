@@ -1,11 +1,13 @@
 ﻿namespace Nancy.Validation.DataAnnotatioins.Tests
 {
+    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
+
     using Nancy.Tests;
     using Nancy.Validation.DataAnnotations;
+
     using Xunit;
-    using System.Collections.Generic;
 
     public class DataAnnotationValidatorFixture
     {
@@ -13,7 +15,7 @@
         public void Should_not_throw_when_no_validation_attributes_exist()
         {
             // Given, When
-            var ex = Record.Exception(() => new DataAnnotationsValidator(typeof(string)));
+            var ex = Record.Exception(() => new DataAnnotationsValidator(typeof (string)));
 
             // Then
             ex.ShouldBeNull();
@@ -23,8 +25,8 @@
         public void Should_invoke_validation()
         {
             // Given
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
-            var instance = new TestModel { Age = "yeah" };
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
+            var instance = new TestModel {Age = "yeah"};
 
             // When
             var result = subject.Validate(instance);
@@ -38,7 +40,7 @@
         public void Description_should_be_correct()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.ShouldNotBeNull();
@@ -49,7 +51,7 @@
         public void Should_read_range_annotation()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "Comparison" && r.MemberNames.Contains("Value"));
@@ -60,7 +62,7 @@
         public void Should_read_regex_annotation()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "Regex" && r.MemberNames.Contains("Age"));
@@ -70,7 +72,7 @@
         public void Should_read_required_annotation()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "NotNull" && r.MemberNames.Contains("FirstName"));
@@ -81,7 +83,7 @@
         public void Should_read_string_length_annotation()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "StringLength" && r.MemberNames.Contains("FirstName"));
@@ -91,7 +93,7 @@
         public void Should_read_self_annotation()
         {
             // Given, When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "Self" && r.MemberNames == null);
@@ -101,13 +103,28 @@
         public void Should_use_custom_validator()
         {
             // Given
-            DataAnnotationsValidator.RegisterAdapter(typeof(OopsValidationAttribute), (a, d) => new OopsAdapter(a));
+            DataAnnotationsValidator.RegisterAdapter(typeof (OopsValidationAttribute), (a, d) => new OopsAdapter(a));
 
             // When
-            var subject = new DataAnnotationsValidator(typeof(TestModel));
+            var subject = new DataAnnotationsValidator(typeof (TestModel));
 
             // Then
             subject.Description.Rules.ShouldHave(r => r.RuleType == "Oops" && r.MemberNames == null);
+        }
+
+        private class OopsAdapter : DataAnnotationsValidatorAdapter
+        {
+            public OopsAdapter(ValidationAttribute attribute)
+                : base("Oops", attribute)
+            {}
+        }
+
+        private class OopsValidationAttribute : ValidationAttribute
+        {
+            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+            {
+                return new ValidationResult("Oops");
+            }
         }
 
         [OopsValidation]
@@ -127,22 +144,6 @@
             public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
             {
                 return Enumerable.Empty<ValidationResult>();
-            }
-        }
-
-        private class OopsValidationAttribute : ValidationAttribute
-        {
-            protected override ValidationResult IsValid(object value, ValidationContext validationContext)
-            {
-                return new ValidationResult("Oops");
-            }
-        }
-
-        private class OopsAdapter : DataAnnotationsValidatorAdapter
-        {
-            public OopsAdapter(ValidationAttribute attribute)
-                : base("Oops", attribute)
-            {
             }
         }
     }

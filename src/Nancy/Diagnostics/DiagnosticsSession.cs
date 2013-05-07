@@ -30,14 +30,10 @@ namespace Nancy.Diagnostics
             var plainTextWithSaltBytes = new byte[plainText.Length + salt.Length];
 
             for (var i = 0; i < plainText.Length; i++)
-            {
                 plainTextWithSaltBytes[i] = plainText[i];
-            }
 
             for (var i = 0; i < salt.Length; i++)
-            {
                 plainTextWithSaltBytes[plainText.Length + i] = salt[i];
-            }
 
             return algorithm.ComputeHash(plainTextWithSaltBytes);
         }

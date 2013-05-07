@@ -5,6 +5,12 @@
 
     public class RequestTrace
     {
+        public RequestTrace()
+        {
+            this.TraceLog = new TraceLog();
+            this.Items = new Dictionary<string, object>();
+        }
+
         public string Method { get; set; }
 
         public Url RequestUrl { get; set; }
@@ -24,11 +30,5 @@
         public IDictionary<string, IEnumerable<string>> RequestHeaders { get; set; }
 
         public IDictionary<string, string> ResponseHeaders { get; set; }
-
-        public RequestTrace()
-        {
-            this.TraceLog = new TraceLog();
-            this.Items = new Dictionary<string, object>();
-        }
     }
 }

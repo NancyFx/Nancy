@@ -38,7 +38,7 @@
 
             var result = Record.Exception(() => response.AsAttachment(null, "text/html"));
 
-            result.ShouldBeOfType(typeof(ArgumentException));
+            result.ShouldBeOfType(typeof (ArgumentException));
         }
 
         [Fact]
@@ -55,7 +55,7 @@
 
             // When
             var result = response.AsAttachment();
-            
+
             // Then
             result.Headers["Content-Disposition"].ShouldContain(filename);
             result.ContentType.ShouldEqual("image/png");
@@ -89,7 +89,7 @@
             var response = new Response();
             response.Headers = null;
 
-            var result = response.WithHeaders(new[] { Tuple.Create("test", "test") });
+            var result = response.WithHeaders(new[] {Tuple.Create("test", "test")});
 
             result.Headers.ShouldNotBeNull();
             result.Headers.Count.ShouldEqual(1);
@@ -102,7 +102,7 @@
             response.Headers = new Dictionary<string, string>();
             response.Headers.Add("Existing", "Test");
 
-            var result = response.WithHeaders(new[] { Tuple.Create("test", "test") });
+            var result = response.WithHeaders(new[] {Tuple.Create("test", "test")});
 
             result.Headers.ShouldNotBeNull();
             result.Headers.Count.ShouldEqual(2);
@@ -114,8 +114,8 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                            Tuple.Create("test", "testvalue"), 
-                            Tuple.Create("test2", "test2value"));
+                Tuple.Create("test", "testvalue"),
+                Tuple.Create("test2", "test2value"));
 
             result.Headers.ShouldNotBeNull();
             result.Headers["test"].ShouldEqual("testvalue");
@@ -128,8 +128,8 @@
             var response = new Response();
 
             var result = response.WithHeaders(
-                new { Header = "test", Value = "testvalue" }, 
-                new { Header = "test2", Value = "test2value" });
+                new {Header = "test", Value = "testvalue"},
+                new {Header = "test2", Value = "test2value"});
 
             result.Headers.ShouldNotBeNull();
             result.Headers["test"].ShouldEqual("testvalue");

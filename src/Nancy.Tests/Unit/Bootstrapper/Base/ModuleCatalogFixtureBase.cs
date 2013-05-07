@@ -2,7 +2,9 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.Bootstrapper;
+
     using Xunit;
 
     public abstract class ModuleCatalogFixtureBase
@@ -19,7 +21,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             {
                 return new[]
                 {
-                    new ModuleRegistration(typeof(FakeModule)), 
+                    new ModuleRegistration(typeof (FakeModule)),
                 };
             }
         }
@@ -29,8 +31,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         {
             var context1 = new NancyContext();
             var context2 = new NancyContext();
-            var output1 = this.Catalog.GetModule(typeof(FakeModule), context1);
-            var output2 = this.Catalog.GetModule(typeof(FakeModule), context2);
+            var output1 = this.Catalog.GetModule(typeof (FakeModule), context1);
+            var output2 = this.Catalog.GetModule(typeof (FakeModule), context2);
 
             output1.ShouldNotBeNull();
             output2.ShouldNotBeNull();
@@ -49,10 +51,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             output2.ShouldNotBeNull();
             output1.ShouldNotBeSameAs(output2);
         }
-        
+
         public class FakeModule : NancyModule
-        {
-            
-        }
+        {}
     }
 }

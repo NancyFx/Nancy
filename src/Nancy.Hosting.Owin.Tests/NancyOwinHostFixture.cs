@@ -5,25 +5,28 @@ namespace Nancy.Tests
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
-    using Bootstrapper;
-    using FakeItEasy;
-    using Hosting.Owin;
-    using Xunit;
-    using Xunit.Extensions;
 
-    using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
+    using FakeItEasy;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Hosting.Owin;
+
+    using Xunit;
+
+    using ResponseCallBack =
+        System.Action
+            <string, System.Collections.Generic.IDictionary<string, string>,
+                System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
 
     public class NancyOwinHostFixture
     {
-        private readonly NancyOwinHost host;
-
-        private readonly ResponseCallBack fakeResponseCallback;
-
-        private readonly Action<Exception> fakeErrorCallback;
         private readonly Dictionary<string, object> environment;
-        private readonly Dictionary<string, string[]> requestHeaders;
-        private readonly INancyEngine fakeEngine;
         private readonly INancyBootstrapper fakeBootstrapper;
+        private readonly INancyEngine fakeEngine;
+        private readonly Action<Exception> fakeErrorCallback;
+        private readonly ResponseCallBack fakeResponseCallback;
+        private readonly NancyOwinHost host;
+        private readonly Dictionary<string, string[]> requestHeaders;
 
         public NancyOwinHostFixture()
         {
@@ -42,21 +45,21 @@ namespace Nancy.Tests
             var tcs = new TaskCompletionSource<object>();
 
             this.environment = new Dictionary<string, object>()
-                                   {
-                                       { "owin.RequestMethod", "GET" },
-                                       { "owin.RequestPath", "/test" },
-                                       { "owin.RequestPathBase", "/root" },
-                                       { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestBody", Stream.Null },
-                                       { "owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
-                                       { "owin.RequestScheme", "http" },
-                                       { "owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
-                                       { "owin.ResponseBody", Stream.Null },
-                                       { "owin.Version", "1.0" },
-                                       { "owin.CallCancelled", CancellationToken.None }
-                                   };
+            {
+                {"owin.RequestMethod", "GET"},
+                {"owin.RequestPath", "/test"},
+                {"owin.RequestPathBase", "/root"},
+                {"owin.RequestQueryString", "var=value"},
+                {"owin.RequestBody", Stream.Null},
+                {"owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)},
+                {"owin.RequestScheme", "http"},
+                {"owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)},
+                {"owin.ResponseBody", Stream.Null},
+                {"owin.Version", "1.0"},
+                {"owin.CallCancelled", CancellationToken.None}
+            };
 
-            this.requestHeaders = new Dictionary<string, string[]> { { "Host", new[] { "testserver" } } };
+            this.requestHeaders = new Dictionary<string, string[]> {{"Host", new[] {"testserver"}}};
         }
 
         /*
@@ -322,10 +325,10 @@ namespace Nancy.Tests
         [Fact]
         public void Should_set_cookie_with_valid_header()
         {
-            var fakeResponse = new Response() { StatusCode = HttpStatusCode.OK };
+            var fakeResponse = new Response() {StatusCode = HttpStatusCode.OK};
             fakeResponse.AddCookie("test", "testvalue");
             fakeResponse.AddCookie("test1", "testvalue1");
-            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var fakeContext = new NancyContext() {Response = fakeResponse};
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
@@ -344,8 +347,11 @@ namespace Nancy.Tests
         /// <param name="context">Context to return</param>
         private void SetupFakeNancyCompleteCallback(NancyContext context)
         {
-            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
-                .Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
+            A.CallTo(
+                () =>
+                    this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<Action<NancyContext>>.Ignored,
+                        A<Action<Exception>>.Ignored))
+             .Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
@@ -353,6 +359,5 @@ namespace Nancy.Tests
             object value;
             return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
         }
-
     }
 }

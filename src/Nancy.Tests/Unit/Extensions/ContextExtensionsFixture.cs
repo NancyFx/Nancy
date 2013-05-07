@@ -15,15 +15,15 @@
             // Given 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
-                    {
-                        { "X-Requested-With", new[] { "XMLHttpRequest" } }
-                    };
+                {
+                    {"X-Requested-With", new[] {"XMLHttpRequest"}}
+                };
 
             // When
             var context = new NancyContext
-                              {
-                                  Request = new FakeRequest("POST", "/", headers)
-                              };
+            {
+                Request = new FakeRequest("POST", "/", headers)
+            };
 
             // Then
             Assert.True(context.IsAjaxRequest());
@@ -44,9 +44,9 @@
         {
             // Given when
             var context = new NancyContext
-                              {
-                                  Request = new FakeRequest("POST", "/")
-                              };
+            {
+                Request = new FakeRequest("POST", "/")
+            };
 
             // Then
             Assert.False(context.IsAjaxRequest());
@@ -62,7 +62,7 @@
                 Path = "/"
             };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
+            var nancyContext = new NancyContext {Request = request};
 
             var result = nancyContext.ToFullPath(input);
 
@@ -79,7 +79,7 @@
                 Path = "/"
             };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
+            var nancyContext = new NancyContext {Request = request};
 
             var result = nancyContext.ToFullPath(input);
 
@@ -96,7 +96,7 @@
                 Path = "/"
             };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
+            var nancyContext = new NancyContext {Request = request};
 
             var result = nancyContext.ToFullPath(input);
 
@@ -147,9 +147,9 @@
         {
             var request = new Request(
                 "GET",
-                url ?? new Url() { Scheme = "http", BasePath = "testing", HostName = "test.com", Path = "test" });
+                url ?? new Url() {Scheme = "http", BasePath = "testing", HostName = "test.com", Path = "test"});
 
-            return new NancyContext() { Request = request };
+            return new NancyContext() {Request = request};
         }
     }
 }

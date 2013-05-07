@@ -10,7 +10,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
 
     public class FallbackConverterFixture
     {
-        private ITypeConverter converter;
+        private readonly ITypeConverter converter;
 
         public FallbackConverterFixture()
         {
@@ -30,7 +30,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
         {
             var input = "12";
 
-            var result = (int)converter.Convert(input, typeof(int), null);
+            var result = (int)converter.Convert(input, typeof (int), null);
 
             result.ShouldEqual(12);
         }
@@ -40,7 +40,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
         {
             var input = 12.34.ToString();
 
-            var result = (double)converter.Convert(input, typeof(double), null);
+            var result = (double)converter.Convert(input, typeof (double), null);
 
             result.ShouldEqual(12.34);
         }
@@ -51,7 +51,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
             var now = DateTime.Now;
             var input = now.ToString();
 
-            var result = (DateTime)converter.Convert(input, typeof(DateTime), null);
+            var result = (DateTime)converter.Convert(input, typeof (DateTime), null);
 
             result.ShouldEqual(now);
         }
@@ -63,9 +63,9 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultConverters
         [InlineData("ON")]
         public void Should_convert_on_to_true_for_bool(string value)
         {
-            string input = "on";
+            var input = "on";
 
-            var result = (bool)converter.Convert(input, typeof(bool), null);
+            var result = (bool)converter.Convert(input, typeof (bool), null);
 
             result.ShouldBeTrue();
         }

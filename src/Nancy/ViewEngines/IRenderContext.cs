@@ -38,7 +38,7 @@ namespace Nancy.ViewEngines
         /// <param name="input">Input url such as ~/styles/main.css</param>
         /// <returns>Parsed absolut url path</returns>
         string ParsePath(string input);
-        
+
         /// <summary>
         /// HTML encodes a string.
         /// </summary>

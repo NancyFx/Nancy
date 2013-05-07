@@ -18,8 +18,8 @@ namespace Nancy.Demo.Hosting.Aspnet
         }
 
         public string GetContent()
-		{
+        {
             return "This is a per-request dependency, constructed on: " + this.currentDateTime.ToLongTimeString();
-		}
+        }
     }
 }

@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.Cookies;
     using Nancy.Responses.Negotiation;
-    using Cookies;
 
     public static class NegotiatorExtensions
     {
@@ -29,10 +30,8 @@
         public static Negotiator WithCookies(this Negotiator negotiator, IEnumerable<INancyCookie> cookies)
         {
             foreach (var cookie in cookies)
-            {
                 negotiator.WithCookie(cookie);
-            }
-            
+
             return negotiator;
         }
 
@@ -45,7 +44,7 @@
         /// <returns>Modified negotiator</returns>
         public static Negotiator WithHeader(this Negotiator negotiator, string header, string value)
         {
-            return negotiator.WithHeaders(new { Header = header, Value = value });
+            return negotiator.WithHeaders(new {Header = header, Value = value});
         }
 
         /// <summary>
@@ -56,8 +55,9 @@
         /// <returns>Modified negotiator</returns>
         public static Negotiator WithContentType(this Negotiator negotiator, string contentType)
         {
-          return negotiator.WithHeaders(new { Header = "Content-Type", Value = contentType });
+            return negotiator.WithHeaders(new {Header = "Content-Type", Value = contentType});
         }
+
         /// <summary>
         /// Adds headers to the response using anonymous types
         /// </summary>
@@ -84,9 +84,7 @@
         public static Negotiator WithHeaders(this Negotiator negotiator, params Tuple<string, string>[] headers)
         {
             foreach (var keyValuePair in headers)
-            {
                 negotiator.NegotiationContext.Headers[keyValuePair.Item1] = keyValuePair.Item2;
-            }
 
             return negotiator;
         }
@@ -118,9 +116,7 @@
                     mr => mr.Type.IsWildcard && mr.Subtype.IsWildcard).ToArray();
 
             foreach (var wildcard in wildcards)
-            {
                 negotiator.NegotiationContext.PermissableMediaRanges.Remove(wildcard);
-            }
 
             negotiator.NegotiationContext.PermissableMediaRanges.Add(mediaRange);
 
@@ -210,16 +206,16 @@
         {
             var properties = header.GetType()
                                    .GetProperties()
-                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
+                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof (string))
                                    .ToArray();
 
             var headerProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
 
             var valueProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
 
             if (headerProperty == null || valueProperty == null)
             {

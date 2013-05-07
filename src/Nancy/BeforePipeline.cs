@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Linq;
 
     /// <summary>
     /// <para>
@@ -15,15 +14,13 @@
     /// composite pipelines.
     /// </para>
     /// </summary>
-    public class BeforePipeline : NamedPipelineBase<Func<NancyContext, Response>> 
+    public class BeforePipeline : NamedPipelineBase<Func<NancyContext, Response>>
     {
         public BeforePipeline()
-        {
-        }
+        {}
 
         public BeforePipeline(int capacity) : base(capacity)
-        {
-        }
+        {}
 
         public static implicit operator Func<NancyContext, Response>(BeforePipeline pipeline)
         {
@@ -46,9 +43,7 @@
         public static BeforePipeline operator +(BeforePipeline pipelineToAddTo, BeforePipeline pipelineToAdd)
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
-            {
                 pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
-            }
 
             return pipelineToAddTo;
         }
@@ -70,12 +65,10 @@
             using (var enumerator = this.PipelineDelegates.GetEnumerator())
             {
                 while (returnValue == null && enumerator.MoveNext())
-                {
                     returnValue = enumerator.Current.Invoke(context);
-                }
             }
 
             return returnValue;
         }
     }
-} 
+}

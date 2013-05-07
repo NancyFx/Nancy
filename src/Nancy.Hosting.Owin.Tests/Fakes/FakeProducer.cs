@@ -2,24 +2,24 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
 {
     using System;
     using System.Threading;
+
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                             System.Action,                         // continuation
-                             bool>,                                 // continuation will be invoked
-                             System.Action<System.Exception>,       // onError
-                             System.Action,                         // on Complete
-                             System.Action>;                        // cancel
+        System.Action, // continuation
+        bool>, // continuation will be invoked
+        System.Action<System.Exception>, // onError
+        System.Action, // on Complete
+        System.Action>; // cancel
 
     public class FakeProducer
     {
-        private Func<ArraySegment<byte>, Action, bool> onNext;
-        private Action<Exception> onError;
-        private Action onComplete;
-
-        private bool sendContinuation;
+        private readonly bool autoSend;
+        private readonly byte[] buffer;
+        private readonly int chunkSize;
+        private readonly bool sendContinuation;
         private int currentIndex;
-        private byte[] buffer;
-        private int chunkSize;
-        private bool autoSend;
+        private Action onComplete;
+        private Action<Exception> onError;
+        private Func<ArraySegment<byte>, Action, bool> onNext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeProducer"/> class. 
@@ -102,9 +102,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             }
 
             while (!this.IsComplete)
-            {
                 this.SendChunk();
-            }
 
             this.onComplete.Invoke();
         }

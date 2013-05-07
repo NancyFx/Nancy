@@ -23,29 +23,23 @@ namespace Nancy.Bootstrapper
         /// </summary>
         public Pipelines(IPipelines pipelines)
         {
-            this.AfterRequest = 
+            this.AfterRequest =
                 new AfterPipeline(pipelines.AfterRequest.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.AfterRequest.PipelineItems)
-            {
                 this.AfterRequest.AddItemToEndOfPipeline(pipelineItem);
-            }
 
-            this.BeforeRequest = 
+            this.BeforeRequest =
                 new BeforePipeline(pipelines.BeforeRequest.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.BeforeRequest.PipelineItems)
-            {
                 this.BeforeRequest.AddItemToEndOfPipeline(pipelineItem);
-            }
 
-            this.OnError = 
+            this.OnError =
                 new ErrorPipeline(pipelines.OnError.PipelineItems.Count());
 
             foreach (var pipelineItem in pipelines.OnError.PipelineItems)
-            {
                 this.OnError.AddItemToEndOfPipeline(pipelineItem);
-            }
         }
 
         /// <summary>

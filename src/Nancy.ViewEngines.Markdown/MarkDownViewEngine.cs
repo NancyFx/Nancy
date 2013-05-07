@@ -1,22 +1,19 @@
 namespace Nancy.ViewEngines.Markdown
 {
-    using System;
-    using System.Linq;
-    using ViewEngines;
     using System.Collections.Generic;
-    using Responses;
     using System.IO;
-    using MarkdownSharp;
-    using SuperSimpleViewEngine;
     using System.Text.RegularExpressions;
+
+    using MarkdownSharp;
+
+    using Nancy.Responses;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
 
     /// <summary>
     /// Viewengine for rendering Markdown
     /// </summary>
     public class MarkDownViewEngine : IViewEngine
     {
-        private readonly SuperSimpleViewEngine engineWrapper;
-
         /// <summary>
         /// A regex for removing paragraph tags that the parser inserts on unknown content such as @Section['Content']
         /// </summary>
@@ -30,15 +27,7 @@ namespace Nancy.ViewEngines.Markdown
         /// </remarks>
         private static readonly Regex ParagraphSubstitution = new Regex("<p>(@[^<]*)</p>", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-        /// <summary>
-        /// Gets the extensions file extensions that are supported by the view engine.
-        /// </summary>
-        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
-        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
-        public IEnumerable<string> Extensions
-        {
-            get { return new[] { "md", "markdown" }; }
-        }
+        private readonly SuperSimpleViewEngine engineWrapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MarkDownViewEngine"/> class.
@@ -50,12 +39,21 @@ namespace Nancy.ViewEngines.Markdown
         }
 
         /// <summary>
+        /// Gets the extensions file extensions that are supported by the view engine.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
+        public IEnumerable<string> Extensions
+        {
+            get { return new[] {"md", "markdown"}; }
+        }
+
+        /// <summary>
         /// Initialise the view engine (if necessary)
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-        }
+        {}
 
         /// <summary>
         /// Renders the view.
@@ -68,14 +66,11 @@ namespace Nancy.ViewEngines.Markdown
         {
             var response = new HtmlResponse();
 
-            var html = renderContext.ViewCache.GetOrAdd(viewLocationResult, result =>
-                                                                                {
-                                                                                    return ConvertMarkdown(viewLocationResult);
-                                                                                });
+            var html = renderContext.ViewCache.GetOrAdd(viewLocationResult, result => { return ConvertMarkdown(viewLocationResult); });
 
 
-
-            var renderHtml = this.engineWrapper.Render(html, model, new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext, this.Extensions));
+            var renderHtml = this.engineWrapper.Render(html, model,
+                new MarkdownViewEngineHost(new NancyViewEngineHost(renderContext), renderContext, this.Extensions));
 
             response.Contents = stream =>
             {
@@ -98,7 +93,7 @@ namespace Nancy.ViewEngines.Markdown
         /// </param>
         public string ConvertMarkdown(ViewLocationResult viewLocationResult)
         {
-            string content =
+            var content =
                 viewLocationResult.Contents().ReadToEnd();
 
             if (content.StartsWith("<!DOCTYPE html>"))
@@ -112,4 +107,3 @@ namespace Nancy.ViewEngines.Markdown
         }
     }
 }
-

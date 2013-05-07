@@ -5,12 +5,13 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using ModelBinding;
+
+    using Nancy.ModelBinding;
 
     public class SettingsModule : DiagnosticModule
     {
-        private static readonly IEnumerable<Type> Types = new[] { typeof(StaticConfiguration) }.Union(
-                                                                  typeof(StaticConfiguration).GetNestedTypes(BindingFlags.Static | BindingFlags.Public));
+        private static readonly IEnumerable<Type> Types = new[] {typeof (StaticConfiguration)}.Union(
+            typeof (StaticConfiguration).GetNestedTypes(BindingFlags.Static | BindingFlags.Public));
 
         public SettingsModule()
             : base("/settings")
@@ -18,27 +19,28 @@
             Get["/"] = _ =>
             {
                 var properties = Types.SelectMany(t => t.GetProperties(BindingFlags.Static | BindingFlags.Public))
-                                      .Where(x => x.PropertyType == typeof(bool));
+                                      .Where(x => x.PropertyType == typeof (bool));
 
                 var model = from property in properties
-                        orderby property.Name
-                        let value = (bool) property.GetValue(null, null)
-                        let description = GetDescription(property)
-                        where !string.IsNullOrEmpty(description)
-                        select new {
-                            Name = property.Name,
-                            Description = description,
-                            DisplayName = Regex.Replace(property.Name, "[A-Z]", " $0"),
-                            Value = value,
-                            Checked = (value) ? "checked='checked'" : string.Empty
-                        };
-                
+                            orderby property.Name
+                            let value = (bool)property.GetValue(null, null)
+                            let description = GetDescription(property)
+                            where !string.IsNullOrEmpty(description)
+                            select new
+                            {
+                                Name = property.Name,
+                                Description = description,
+                                DisplayName = Regex.Replace(property.Name, "[A-Z]", " $0"),
+                                Value = value,
+                                Checked = (value) ? "checked='checked'" : string.Empty
+                            };
+
                 return View["Settings", model];
             };
 
-            Post["/"] = parameters => {
-
-                var model = 
+            Post["/"] = parameters =>
+            {
+                var model =
                     this.Bind<SettingsModel>();
 
                 var property = GetProperty(model);
@@ -47,7 +49,7 @@
                 {
                     property.SetValue(null, model.Value, null);
                 }
-                
+
                 return HttpStatusCode.OK;
             };
         }

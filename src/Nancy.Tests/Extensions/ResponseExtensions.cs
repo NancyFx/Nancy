@@ -10,9 +10,7 @@ namespace Nancy.Tests.Extensions
             response.Contents.Invoke(memory);
             memory.Position = 0;
             using (var reader = new StreamReader(memory))
-            {
                 return reader.ReadToEnd();
-            }
         }
     }
 }

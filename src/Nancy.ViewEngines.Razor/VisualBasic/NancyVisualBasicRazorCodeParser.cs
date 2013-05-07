@@ -1,6 +1,5 @@
 ﻿namespace Nancy.ViewEngines.Razor.VisualBasic
 {
-    using System;
     using System.Globalization;
     using System.Linq;
     using System.Web.Razor.Generator;
@@ -16,8 +15,8 @@
     {
         internal const string ModelTypeKeyword = "ModelType";
 
-        private bool modelStatementFound;
         private SourceLocation? endInheritsLocation;
+        private bool modelStatementFound;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyVisualBasicRazorCodeParser"/> class.
@@ -66,9 +65,9 @@
             this.Span.CodeGenerator = new VisualBasicModelCodeGenerator(baseType);
 
             this.CheckForInheritsAndModelStatements();
-            
+
             this.Output(SpanKind.Code);
-            
+
             return false;
         }
 
@@ -91,7 +90,8 @@
         {
             if (this.modelStatementFound && this.endInheritsLocation.HasValue)
             {
-                this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @Inherits statement and an @ModelType statement."));
+                this.Context.OnError(this.endInheritsLocation.Value,
+                    string.Format(CultureInfo.CurrentCulture, "Cannot have both an @Inherits statement and an @ModelType statement."));
             }
         }
     }

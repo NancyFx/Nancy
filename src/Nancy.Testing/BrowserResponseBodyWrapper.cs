@@ -20,14 +20,6 @@ namespace Nancy.Testing
             this.responseBytes = contentStream.ToArray();
         }
 
-        private static MemoryStream GetContentStream(Response response)
-        {
-            var contentsStream = new MemoryStream();
-            response.Contents.Invoke(contentsStream);
-            contentsStream.Position = 0;
-            return contentsStream;
-        }
-
         /// <summary>
         /// Gets a <see cref="QueryWrapper"/> for the provided <paramref name="selector"/>.
         /// </summary>
@@ -62,6 +54,14 @@ namespace Nancy.Testing
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        private static MemoryStream GetContentStream(Response response)
+        {
+            var contentsStream = new MemoryStream();
+            response.Contents.Invoke(contentsStream);
+            contentsStream.Position = 0;
+            return contentsStream;
         }
     }
 }

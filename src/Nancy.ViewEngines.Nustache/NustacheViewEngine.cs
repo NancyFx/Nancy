@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using global::Nustache.Core;
+
     using Nancy.Responses;
+
+    using global::Nustache.Core;
 
     /// <summary>
     /// View engine for rendering nustache views.
@@ -18,7 +20,7 @@
         /// <remarks>The extensions should not have a leading dot in the name.</remarks>
         public IEnumerable<string> Extensions
         {
-            get { return new[] { "nustache" }; }
+            get { return new[] {"nustache"}; }
         }
 
         /// <summary>
@@ -26,29 +28,7 @@
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-        }
-
-        private Template GetOrCompileTemplate(ViewLocationResult viewLocationResult, IRenderContext renderContext)
-        {
-            var viewFactory = renderContext.ViewCache.GetOrAdd(
-                viewLocationResult,
-                x => this.GetCompiledTemplate<dynamic>(x.Contents.Invoke()));
-
-            var view = viewFactory.Invoke();
-
-            return view;
-        }
-
-        private Func<Template> GetCompiledTemplate<TModel>(TextReader reader)
-        {
-            var template = new Template();
-            template.Load(reader);
-
-            return () =>{
-                return template;
-            };
-        }
+        {}
 
         /// <summary>
         /// Renders the view.
@@ -72,6 +52,25 @@
                     template.Render(model, writer, null);
                 }
             };
+        }
+
+        private Template GetOrCompileTemplate(ViewLocationResult viewLocationResult, IRenderContext renderContext)
+        {
+            var viewFactory = renderContext.ViewCache.GetOrAdd(
+                viewLocationResult,
+                x => this.GetCompiledTemplate<dynamic>(x.Contents.Invoke()));
+
+            var view = viewFactory.Invoke();
+
+            return view;
+        }
+
+        private Func<Template> GetCompiledTemplate<TModel>(TextReader reader)
+        {
+            var template = new Template();
+            template.Load(reader);
+
+            return () => { return template; };
         }
     }
 }

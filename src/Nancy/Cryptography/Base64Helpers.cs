@@ -11,9 +11,9 @@ namespace Nancy.Cryptography
         /// <returns>Base64 encoded length</returns>
         public static int GetBase64Length(int normalLength)
         {
-            var inputPadding = (normalLength % 3 != 0) ? (3 - (normalLength % 3)) : 0;
+            var inputPadding = (normalLength%3 != 0) ? (3 - (normalLength%3)) : 0;
 
-            return (int)Math.Ceiling((normalLength + inputPadding) * 4.0 / 3.0);
+            return (int)Math.Ceiling((normalLength + inputPadding)*4.0/3.0);
         }
     }
 }

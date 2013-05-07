@@ -1,11 +1,12 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-    using Bootstrapper;
-    using Cookies;
-    using Cryptography;
-    using Helpers;
+
+    using Nancy.Bootstrapper;
+    using Nancy.Cookies;
+    using Nancy.Cryptography;
     using Nancy.Extensions;
+    using Nancy.Helpers;
 
     /// <summary>
     /// Nancy forms authentication implementation
@@ -22,15 +23,9 @@ namespace Nancy.Authentication.Forms
         /// </summary>
         public static string FormsAuthenticationCookieName
         {
-            get
-            {
-                return formsAuthenticationCookieName;
-            }
+            get { return formsAuthenticationCookieName; }
 
-            set
-            {
-                formsAuthenticationCookieName = value;
-            }
+            set { formsAuthenticationCookieName = value; }
         }
 
         /// <summary>
@@ -60,7 +55,7 @@ namespace Nancy.Authentication.Forms
             pipelines.BeforeRequest.AddItemToStartOfPipeline(GetLoadAuthenticationHook(configuration));
             if (!configuration.DisableRedirect)
             {
-                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));                
+                pipelines.AfterRequest.AddItemToEndOfPipeline(GetRedirectToLoginHook(configuration));
             }
         }
 
@@ -73,7 +68,8 @@ namespace Nancy.Authentication.Forms
         /// <param name="cookieExpiry">Optional expiry date for the cookie (for 'Remember me')</param>
         /// <param name="fallbackRedirectUrl">Url to redirect to if none in the querystring</param>
         /// <returns>Nancy response with redirect.</returns>
-        public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = null)
+        public static Response UserLoggedInRedirectResponse(NancyContext context, Guid userIdentifier, DateTime? cookieExpiry = null,
+            string fallbackRedirectUrl = null)
         {
             var redirectUrl = fallbackRedirectUrl;
 
@@ -87,7 +83,7 @@ namespace Nancy.Authentication.Forms
                 redirectUrl = "/";
             }
 
-            string redirectQuerystringKey = GetRedirectQuerystringKey(currentConfiguration);
+            var redirectQuerystringKey = GetRedirectQuerystringKey(currentConfiguration);
 
             if (context.Request.Query[redirectQuerystringKey].HasValue)
             {
@@ -117,7 +113,7 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildCookie(userIdentifier, cookieExpiry, currentConfiguration);
 
             response.AddCookie(authenticationCookie);
@@ -149,7 +145,7 @@ namespace Nancy.Authentication.Forms
             var response =
                 (Response)HttpStatusCode.OK;
 
-            var authenticationCookie = 
+            var authenticationCookie =
                 BuildLogoutCookie(currentConfiguration);
 
             response.AddCookie(authenticationCookie);
@@ -171,16 +167,16 @@ namespace Nancy.Authentication.Forms
             }
 
             return context =>
+            {
+                var userGuid = GetAuthenticatedUserFromCookie(context, configuration);
+
+                if (userGuid != Guid.Empty)
                 {
-                    var userGuid = GetAuthenticatedUserFromCookie(context, configuration);
+                    context.CurrentUser = configuration.UserMapper.GetUserFromIdentifier(userGuid, context);
+                }
 
-                    if (userGuid != Guid.Empty)
-                    {
-                        context.CurrentUser = configuration.UserMapper.GetUserFromIdentifier(userGuid, context);
-                    }
-
-                    return null;
-                };
+                return null;
+            };
         }
 
         /// <summary>
@@ -191,18 +187,18 @@ namespace Nancy.Authentication.Forms
         private static Action<NancyContext> GetRedirectToLoginHook(FormsAuthenticationConfiguration configuration)
         {
             return context =>
+            {
+                if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
                 {
-                    if (context.Response.StatusCode == HttpStatusCode.Unauthorized)
-                    {
-                        string redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
+                    var redirectQuerystringKey = GetRedirectQuerystringKey(configuration);
 
-                        context.Response = context.GetRedirect(
-                            string.Format("{0}?{1}={2}", 
+                    context.Response = context.GetRedirect(
+                        string.Format("{0}?{1}={2}",
                             configuration.RedirectUrl,
                             redirectQuerystringKey,
                             context.ToFullPath("~" + context.Request.Path + HttpUtility.UrlEncode(context.Request.Url.Query))));
-                    }
-                };
+                }
+            };
         }
 
         /// <summary>
@@ -241,14 +237,14 @@ namespace Nancy.Authentication.Forms
         {
             var cookieContents = EncryptAndSignCookie(userIdentifier.ToString(), configuration);
 
-            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL) { Expires = cookieExpiry };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, cookieContents, true, configuration.RequiresSSL) {Expires = cookieExpiry};
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -263,14 +259,14 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) {Expires = DateTime.Now.AddDays(-1)};
 
-            if(!string.IsNullOrEmpty(configuration.Domain))
+            if (!string.IsNullOrEmpty(configuration.Domain))
             {
                 cookie.Domain = configuration.Domain;
             }
 
-            if(!string.IsNullOrEmpty(configuration.Path))
+            if (!string.IsNullOrEmpty(configuration.Path))
             {
                 cookie.Path = configuration.Path;
             }
@@ -313,7 +309,7 @@ namespace Nancy.Authentication.Forms
         public static string DecryptAndValidateAuthenticationCookie(string cookieValue, FormsAuthenticationConfiguration configuration)
         {
             // TODO - shouldn't this be automatically decoded by nancy cookie when that change is made?
-            var decodedCookie = Helpers.HttpUtility.UrlDecode(cookieValue);
+            var decodedCookie = HttpUtility.UrlDecode(cookieValue);
 
             var hmacStringLength = Base64Helpers.GetBase64Length(configuration.CryptographyConfiguration.HmacProvider.HmacLength);
 
@@ -346,13 +342,13 @@ namespace Nancy.Authentication.Forms
             {
                 redirectQuerystringKey = configuration.RedirectQuerystringKey;
             }
-            
-            if(string.IsNullOrWhiteSpace(redirectQuerystringKey))
+
+            if (string.IsNullOrWhiteSpace(redirectQuerystringKey))
             {
                 redirectQuerystringKey = FormsAuthenticationConfiguration.DefaultRedirectQuerystringKey;
             }
 
             return redirectQuerystringKey;
         }
-     }
+    }
 }

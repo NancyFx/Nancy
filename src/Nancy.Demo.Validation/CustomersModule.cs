@@ -1,10 +1,11 @@
 namespace Nancy.Demo.Validation
 {
     using System.Linq;
-    using ModelBinding;
+
+    using Nancy.Demo.Validation.Database;
+    using Nancy.Demo.Validation.Models;
+    using Nancy.ModelBinding;
     using Nancy.Validation;
-    using Database;
-    using Models;
 
     public class CustomersModule : NancyModule
     {
@@ -12,24 +13,24 @@ namespace Nancy.Demo.Validation
             : base("/customers")
         {
             Get["/"] = x =>
-                { 
-                    var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
+            {
+                var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
 
-                    return View["Customers", model];
-                };
+                return View["Customers", model];
+            };
 
             Post["/"] = x =>
+            {
+                Customer model = this.Bind();
+                var result = this.Validate(model);
+                if (!result.IsValid)
                 {
-                    Customer model = this.Bind();
-                    var result = this.Validate(model);
-                    if (!result.IsValid)
-                    {
-                        return View["CustomerError", result];
-                    }
+                    return View["CustomerError", result];
+                }
 
-                    DB.Customers.Add(model);
-                    return this.Response.AsRedirect("/Customers");
-                };
+                DB.Customers.Add(model);
+                return this.Response.AsRedirect("/Customers");
+            };
         }
     }
 }

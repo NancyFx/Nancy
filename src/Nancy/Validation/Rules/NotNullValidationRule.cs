@@ -12,6 +12,6 @@
         /// <param name="memberNames">The member names.</param>
         public NotNullValidationRule(Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames)
             : base("NotNull", errorMessageFormatter, memberNames)
-        { }
+        {}
     }
 }

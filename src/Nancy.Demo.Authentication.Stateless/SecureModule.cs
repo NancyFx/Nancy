@@ -12,18 +12,18 @@ namespace Nancy.Demo.Authentication.Stateless
             this.RequiresAuthentication();
 
             Get["secure"] = x =>
-                {
-                    //Context.CurrentUser was set by StatelessAuthentication earlier in the pipeline
-                    var identity = (DemoUserIdentity)this.Context.CurrentUser;
+            {
+                //Context.CurrentUser was set by StatelessAuthentication earlier in the pipeline
+                var identity = (DemoUserIdentity)this.Context.CurrentUser;
 
-                    //return the secure information in a json response
-                    var userModel = new UserModel(identity.UserName);
-                    return this.Response.AsJson(new
-                        {
-                            SecureContent = "here's some secure content that you can only see if you provide a correct apiKey",
-                            User = userModel
-                        });
-                };
+                //return the secure information in a json response
+                var userModel = new UserModel(identity.UserName);
+                return this.Response.AsJson(new
+                {
+                    SecureContent = "here's some secure content that you can only see if you provide a correct apiKey",
+                    User = userModel
+                });
+            };
         }
     }
 }

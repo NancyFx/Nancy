@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-namespace Nancy.Responses
+﻿namespace Nancy.Responses
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
 
     using Nancy.Helpers;
 
@@ -15,18 +13,10 @@ namespace Nancy.Responses
     public class GenericFileResponse : Response
     {
         /// <summary>
-        /// Represents a list of "base paths" where it is safe to
-        /// serve files from.
-        /// Attempting to server a file outside of these safe paths
-        /// will fail with a 404.
-        /// </summary>
-        public static IList<string> SafePaths { get; set; }
-
-        /// <summary>
         ///  Size of buffer for transmitting file. Default size 4 Mb
         /// </summary>
-        public static int BufferSize = 4 * 1024 * 1024;
-                
+        public static int BufferSize = 4*1024*1024;
+
         static GenericFileResponse()
         {
             SafePaths = new List<string>();
@@ -38,10 +28,9 @@ namespace Nancy.Responses
         /// </summary>
         /// <param name="filePath">The name of the file, including path relative to the root of the application, that should be returned.</param>
         /// <remarks>The <see cref="MimeTypes.GetMimeType"/> method will be used to determine the mimetype of the file and will be used as the content-type of the response. If no match if found the content-type will be set to application/octet-stream.</remarks>
-        public GenericFileResponse(string filePath) : 
-            this (filePath, MimeTypes.GetMimeType(filePath))
-        {
-        }
+        public GenericFileResponse(string filePath) :
+            this(filePath, MimeTypes.GetMimeType(filePath))
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
@@ -52,8 +41,7 @@ namespace Nancy.Responses
         /// <param name="context">Current context</param>
         public GenericFileResponse(string filePath, NancyContext context)
             : this(filePath, MimeTypes.GetMimeType(filePath), context)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericFileResponse"/> for the file specified
@@ -68,6 +56,14 @@ namespace Nancy.Responses
         }
 
         /// <summary>
+        /// Represents a list of "base paths" where it is safe to
+        /// serve files from.
+        /// Attempting to server a file outside of these safe paths
+        /// will fail with a 404.
+        /// </summary>
+        public static IList<string> SafePaths { get; set; }
+
+        /// <summary>
         /// Gets the filename of the file response
         /// </summary>
         /// <value>A string containing the name of the file.</value>
@@ -78,13 +74,11 @@ namespace Nancy.Responses
             return stream =>
             {
                 using (var file = File.OpenRead(filePath))
-                {
                     file.CopyTo(stream, (int)(length < BufferSize ? length : BufferSize));
-                }
             };
         }
 
-        static bool IsSafeFilePath(string rootPath, string filePath)
+        private static bool IsSafeFilePath(string rootPath, string filePath)
         {
             if (!Path.HasExtension(filePath))
             {
@@ -150,7 +144,7 @@ namespace Nancy.Responses
             {
                 this.StatusCode = HttpStatusCode.NotModified;
                 this.ContentType = null;
-                this.Contents = Response.NoBody;
+                this.Contents = NoBody;
 
                 return;
             }

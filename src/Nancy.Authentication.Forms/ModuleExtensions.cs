@@ -1,7 +1,8 @@
 namespace Nancy.Authentication.Forms
 {
     using System;
-    using Extensions;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Module extensions for login/logout of forms auth
@@ -18,9 +19,9 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response with redirect if request was not ajax, otherwise with OK.</returns>
         public static Response Login(this INancyModule module, Guid userIdentifier, DateTime? cookieExpiry = null, string fallbackRedirectUrl = "/")
         {
-            return module.Context.Request.IsAjaxRequest() ?
-                LoginWithoutRedirect(module, userIdentifier, cookieExpiry) :
-                LoginAndRedirect(module, userIdentifier, cookieExpiry, fallbackRedirectUrl);
+            return module.Context.Request.IsAjaxRequest()
+                ? LoginWithoutRedirect(module, userIdentifier, cookieExpiry)
+                : LoginAndRedirect(module, userIdentifier, cookieExpiry, fallbackRedirectUrl);
         }
 
         /// <summary>
@@ -56,9 +57,9 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy response with redirect if request was not ajax, otherwise with OK.</returns>
         public static Response Logout(this INancyModule module, string redirectUrl)
         {
-            return module.Context.Request.IsAjaxRequest() ?
-               FormsAuthentication.LogOutResponse() :
-               FormsAuthentication.LogOutAndRedirectResponse(module.Context, redirectUrl);
+            return module.Context.Request.IsAjaxRequest()
+                ? FormsAuthentication.LogOutResponse()
+                : FormsAuthentication.LogOutAndRedirectResponse(module.Context, redirectUrl);
         }
 
         /// <summary>

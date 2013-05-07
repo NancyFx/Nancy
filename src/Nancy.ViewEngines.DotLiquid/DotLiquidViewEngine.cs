@@ -1,14 +1,15 @@
 ﻿namespace Nancy.ViewEngines.DotLiquid
 {
-    using Responses;
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.IO;
+
+    using Nancy.Responses;
+
     using global::DotLiquid;
+    using global::DotLiquid.Exceptions;
     using global::DotLiquid.FileSystems;
     using global::DotLiquid.NamingConventions;
-    using global::DotLiquid.Exceptions;
 
     /// <summary>
     /// View engine for rendering dotLiquid views.
@@ -23,8 +24,7 @@
         /// <remarks>The instance will use the <see cref="DefaultFileSystemFactory"/> internally.</remarks>
         public DotLiquidViewEngine()
             : this(new DefaultFileSystemFactory())
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
@@ -83,7 +83,6 @@
 
                 // If we got past that, we have a good response
                 status = HttpStatusCode.OK;
-
             }
             catch (SyntaxException syntaxException)
             {
@@ -91,12 +90,12 @@
                 status = HttpStatusCode.InternalServerError;
 
                 // Build the error message
-                String errorMessage = String.Format("Syntax error in liquid view '{0}':\r\n\r\n{1}",
+                var errorMessage = String.Format("Syntax error in liquid view '{0}':\r\n\r\n{1}",
                     String.Format("{0}/{1}.{2}", viewLocationResult.Location, viewLocationResult.Name, viewLocationResult.Extension),
                     syntaxException.Message);
 
                 // Create the error model with a Nancy DynamicDictionary because i can ;)
-                DynamicDictionary errorModel = new DynamicDictionary();
+                var errorModel = new DynamicDictionary();
                 errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
 
                 // Hash up the Error model so DotLiquid will understand it
@@ -107,17 +106,17 @@
                     });
 
                 // Grab the error HTML from the embedded resource and build up the DotLiquid template.
-                String errorHtml = LoadResource(@"500.liquid");
+                var errorHtml = LoadResource(@"500.liquid");
                 parsed = Template.Parse(errorHtml);
             }
             catch (Exception ex)
             {
                 status = HttpStatusCode.InternalServerError;
                 // Build the error message
-                String errorMessage = String.Format("Error: {0}", ex.Message);
+                var errorMessage = String.Format("Error: {0}", ex.Message);
 
                 // Create the error model with a Nancy DynamicDictionary because i can ;)
-                DynamicDictionary errorModel = new DynamicDictionary();
+                var errorModel = new DynamicDictionary();
                 errorModel.Add(new KeyValuePair<string, dynamic>("ErrorMessage", errorMessage));
 
                 // Hash up the Error model so DotLiquid will understand it
@@ -128,7 +127,7 @@
                     });
 
                 // Grab the error HTML from the embedded resource
-                String errorHtml = LoadResource(@"500.liquid");
+                var errorHtml = LoadResource(@"500.liquid");
                 parsed = Template.Parse(errorHtml);
             }
 
@@ -138,14 +137,15 @@
                 parsed.Render(stream, new RenderParameters
                 {
                     LocalVariables = hashedModel,
-                    Registers = Hash.FromAnonymousObject(new { nancy = renderContext })
+                    Registers = Hash.FromAnonymousObject(new {nancy = renderContext})
                 });
             });
         }
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(DotLiquidViewEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
+            var resourceStream =
+                typeof (DotLiquidViewEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.DotLiquid.Resources.{0}", filename));
 
             if (resourceStream == null)
             {
@@ -153,9 +153,7 @@
             }
 
             using (var reader = new StreamReader(resourceStream))
-            {
                 return reader.ReadToEnd();
-            }
         }
     }
 }

@@ -1,7 +1,8 @@
 namespace Nancy.Validation.DataAnnotations
 {
     using System.Collections.Generic;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Application registrations for Data Annotations validation types.
@@ -15,8 +16,8 @@ namespace Nancy.Validation.DataAnnotations
         {
             get
             {
-                yield return new TypeRegistration(typeof(IModelValidator), typeof(DataAnnotationsValidator));
-                yield return new TypeRegistration(typeof(IModelValidatorFactory), typeof(DataAnnotationsValidatorFactory));
+                yield return new TypeRegistration(typeof (IModelValidator), typeof (DataAnnotationsValidator));
+                yield return new TypeRegistration(typeof (IModelValidatorFactory), typeof (DataAnnotationsValidatorFactory));
             }
         }
 

@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.ViewEngines
 {
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class ViewNotFoundExceptionFixture
@@ -14,7 +16,7 @@
             A.CallTo(() => rootPathProvider.GetRootPath()).Returns("The root path");
 
             // When
-            var result = new ViewNotFoundException("foo", new[] { "html", "sshtml" }, new[] { "baz", "bar" }, rootPathProvider);
+            var result = new ViewNotFoundException("foo", new[] {"html", "sshtml"}, new[] {"baz", "bar"}, rootPathProvider);
 
             // Then
             result.Message.ShouldContain("foo");

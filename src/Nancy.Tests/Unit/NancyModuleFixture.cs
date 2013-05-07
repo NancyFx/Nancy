@@ -2,7 +2,9 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Linq;
-    using Fakes;
+
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class NancyModuleFixture
@@ -164,17 +166,14 @@ namespace Nancy.Tests.Unit
             {
                 public CustomRouteBuilder(string method, NancyModule parentModule)
                     : base(method, parentModule)
-                {
-                }
+                {}
 
                 public Func<dynamic, dynamic> this[params string[] paths]
                 {
                     set
                     {
                         foreach (var path in paths)
-                        {
                             this.AddRoute(path, null, value);
-                        }
                     }
                 }
             }

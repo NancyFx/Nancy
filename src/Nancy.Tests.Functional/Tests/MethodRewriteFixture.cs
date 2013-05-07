@@ -1,28 +1,24 @@
 namespace Nancy.Tests.Functional.Tests
 {
     using System;
-    using Testing;
+
+    using Nancy.Testing;
+
     using Xunit;
 
     public class MethodRewriteFixture
     {
-        private Browser browser;
+        private readonly Browser browser;
 
         public MethodRewriteFixture()
         {
-            this.browser = new Browser(with =>
-            {
-                with.Module<MethodRewriteModule>();
-            });
+            this.browser = new Browser(with => { with.Module<MethodRewriteModule>(); });
         }
 
         [Fact]
         public void Should_rewrite_method_when_method_form_input_is_provided()
         {
-            var response = this.browser.Post("/", with =>
-            {
-                with.FormValue("_method", "DELETE");
-            });
+            var response = this.browser.Post("/", with => { with.FormValue("_method", "DELETE"); });
 
             Assert.Equal("Delete route", response.Body.AsString());
         }
@@ -30,10 +26,7 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Should_rewrite_method_when_x_http_method_override_form_input_is_provided()
         {
-            var response = this.browser.Post("/", with =>
-            {
-                with.FormValue("X-HTTP-Method-Override", "DELETE");
-            });
+            var response = this.browser.Post("/", with => { with.FormValue("X-HTTP-Method-Override", "DELETE"); });
 
             Assert.Equal("Delete route", response.Body.AsString());
         }
@@ -41,10 +34,7 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Should_rewrite_method_when_x_http_method_header_input_is_provided()
         {
-            var response = this.browser.Post("/", with =>
-            {
-                with.Header("X-HTTP-Method-Override", "DELETE");
-            });
+            var response = this.browser.Post("/", with => { with.Header("X-HTTP-Method-Override", "DELETE"); });
 
             Assert.Equal("Delete route", response.Body.AsString());
         }
@@ -95,10 +85,7 @@ namespace Nancy.Tests.Functional.Tests
     {
         public MethodRewriteModule()
         {
-            Delete["/"] = x =>
-            {
-                return "Delete route";
-            };
+            Delete["/"] = x => { return "Delete route"; };
         }
     }
 }

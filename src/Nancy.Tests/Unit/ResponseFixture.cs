@@ -2,9 +2,9 @@
 {
     using System;
 
-    using Nancy;
-	using Nancy.Cookies;
+    using Nancy.Cookies;
     using Nancy.Tests.Extensions;
+
     using Xunit;
 
     public class ResponseFixture
@@ -57,7 +57,7 @@
         {
             // Given, When
             Response response = 200;
-            
+
             // Then
             response.StatusCode.ShouldEqual(HttpStatusCode.OK);
         }
@@ -157,13 +157,13 @@
         [Fact]
         public void Should_set_a_cookie_with_name_and_value()
         {
-			// Given
+            // Given
             var response = new Response();
-			
-			// When
+
+            // When
             response.AddCookie("itsover", "9000");
-			
-			// Then
+
+            // Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", null, null, null);
         }
@@ -171,14 +171,14 @@
         [Fact]
         public void Should_set_a_cookie_with_name_and_value_and_expiry()
         {
-			// Given
+            // Given
             var response = new Response();
             var date = DateTime.Now;
-			
-			// When
+
+            // When
             response.AddCookie("itsover", "9000", date);
-			
-			// Then
+
+            // Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", date, null, null);
         }
@@ -186,19 +186,19 @@
         [Fact]
         public void Should_set_a_cookie_with_everything()
         {
-			// Given
+            // Given
             var response = new Response();
             var date = DateTime.Now;
-			
-			// When
+
+            // When
             response.AddCookie("itsover", "9000", date, "life", "/andeverything");
-			
-			// Then
+
+            // Then
             response.Cookies.Count.ShouldEqual(1);
             ValidateCookie(response.Cookies[0], "itsover", "9000", date, "life", "/andeverything");
         }
-						
-		private static void ValidateCookie(INancyCookie cookie, string name, string value, DateTime? expires, string domain, string path)
+
+        private static void ValidateCookie(INancyCookie cookie, string name, string value, DateTime? expires, string domain, string path)
         {
             cookie.Name.ShouldEqual(name);
             cookie.Value.ShouldEqual(value);

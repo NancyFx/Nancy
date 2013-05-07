@@ -1,12 +1,14 @@
 namespace Nancy.Tests.Unit.Sessions
 {
     using System;
-    using Session;
+
+    using Nancy.Session;
+
     using Xunit;
 
     public class NullSessionProviderFixture
     {
-        private NullSessionProvider provider;
+        private readonly NullSessionProvider provider;
 
         public NullSessionProviderFixture()
         {
@@ -18,7 +20,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var exception = Record.Exception(() => provider.GetEnumerator());
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            exception.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
@@ -26,7 +28,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var exception = Record.Exception(() => provider.Count);
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            exception.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
@@ -34,7 +36,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var exception = Record.Exception(() => provider.DeleteAll());
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            exception.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
@@ -42,7 +44,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var exception = Record.Exception(() => provider.Delete("test"));
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            exception.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
@@ -50,7 +52,7 @@ namespace Nancy.Tests.Unit.Sessions
         {
             var exception = Record.Exception(() => provider["test"]);
 
-            exception.ShouldBeOfType(typeof(InvalidOperationException));
+            exception.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]

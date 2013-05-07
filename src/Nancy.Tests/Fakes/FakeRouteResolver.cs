@@ -12,10 +12,10 @@ namespace Nancy.Tests.Fakes
         {
             return new ResolveResult
             {
-                Route = new FakeRoute(), 
-                Parameters = new DynamicDictionary(), 
-                Before = null, 
-                After = null, 
+                Route = new FakeRoute(),
+                Parameters = new DynamicDictionary(),
+                Before = null,
+                After = null,
                 OnError = null
             };
         }

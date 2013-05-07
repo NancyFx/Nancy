@@ -2,7 +2,6 @@
 {
     using System;
     using System.Linq;
-    using Nancy.Extensions;
 
     /// <summary>
     /// Class for locating an INancyBootstrapper implementation.
@@ -23,8 +22,8 @@
         {
             // Get the first non-abstract implementation of INancyBootstrapper if one exists in the
             // app domain. If none exist then just use the default one.
-            var bootstrapperInterface = typeof(INancyBootstrapper);
-            var defaultBootstrapper = typeof(DefaultNancyBootstrapper);
+            var bootstrapperInterface = typeof (INancyBootstrapper);
+            var defaultBootstrapper = typeof (DefaultNancyBootstrapper);
 
             var locatedBootstrappers =
                 from type in AppDomainAssemblyTypeScanner.Types

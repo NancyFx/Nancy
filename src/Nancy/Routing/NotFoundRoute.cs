@@ -14,7 +14,6 @@
         /// <param name="path">The path of the route.</param>
         public NotFoundRoute(string method, string path)
             : base(method, path, null, x => new NotFoundResponse())
-        {
-        }
+        {}
     }
 }

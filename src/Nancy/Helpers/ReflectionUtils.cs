@@ -1,4 +1,5 @@
 #region License
+
 // Copyright (c) 2007 James Newton-King
 //
 // Permission is hereby granted, free of charge, to any person
@@ -21,17 +22,20 @@
 // WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 // FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 // OTHER DEALINGS IN THE SOFTWARE.
-#endregion
 
-using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Collections;
+#endregion
 
 namespace Nancy.Helpers
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Reflection;
+
     internal static class ReflectionUtils
     {
+        private static readonly Type GenericDictionaryType = typeof (IDictionary<,>);
+
         public static bool IsInstantiatableType(Type t)
         {
             if (t == null)
@@ -54,18 +58,19 @@ namespace Nancy.Helpers
             return (t.GetConstructor(BindingFlags.Instance, null, Type.EmptyTypes, null) != null);
         }
 
-		public static bool IsAssignable (Type to, Type from) {
-			if (to == null)
-				throw new ArgumentNullException("to");
+        public static bool IsAssignable(Type to, Type from)
+        {
+            if (to == null)
+                throw new ArgumentNullException("to");
 
-			if (to.IsAssignableFrom (from))
-				return true;
+            if (to.IsAssignableFrom(from))
+                return true;
 
-			if (to.IsGenericType && from.IsGenericTypeDefinition)
-				return to.IsAssignableFrom (from.MakeGenericType (to.GetGenericArguments ()));
+            if (to.IsGenericType && from.IsGenericTypeDefinition)
+                return to.IsAssignableFrom(from.MakeGenericType(to.GetGenericArguments()));
 
-			return false;
-		}
+            return false;
+        }
 
         public static bool IsSubClass(Type type, Type check)
         {
@@ -77,10 +82,8 @@ namespace Nancy.Helpers
 
             if (check.IsInterface)
             {
-                foreach (Type t in type.GetInterfaces())
-                {
+                foreach (var t in type.GetInterfaces())
                     if (IsSubClass(t, check)) return true;
-                }
             }
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
             {
@@ -100,12 +103,12 @@ namespace Nancy.Helpers
             if (type == null)
                 throw new ArgumentNullException("type");
 
-			if (type.IsArray)
-				return type.GetElementType ();
-			else if (type.IsGenericType && typeof (List<>).IsAssignableFrom (type.GetGenericTypeDefinition ()))
-				return type.GetGenericArguments () [0];
-			else
-				throw new Exception ("Bad type");
+            if (type.IsArray)
+                return type.GetElementType();
+            else if (type.IsGenericType && typeof (List<>).IsAssignableFrom(type.GetGenericTypeDefinition()))
+                return type.GetGenericArguments()[0];
+            else
+                throw new Exception("Bad type");
         }
 
         public static Type GetTypedDictionaryValueType(Type type)
@@ -113,31 +116,32 @@ namespace Nancy.Helpers
             if (type == null)
                 throw new ArgumentNullException("type");
 
-			Type genDictType = GetGenericDictionary(type);
+            var genDictType = GetGenericDictionary(type);
 
-			if (genDictType != null)
-				return genDictType.GetGenericArguments () [1];
-            else if (typeof(IDictionary).IsAssignableFrom(type))
+            if (genDictType != null)
+                return genDictType.GetGenericArguments()[1];
+            else if (typeof (IDictionary).IsAssignableFrom(type))
                 return null;
             else
                 throw new Exception("Bad type");
         }
 
-		static readonly Type GenericDictionaryType = typeof (IDictionary<,>);
-		public static Type GetGenericDictionary (Type type) {
-			if (type.IsGenericType && GenericDictionaryType.IsAssignableFrom (type.GetGenericTypeDefinition ()))
-				return type;
+        public static Type GetGenericDictionary(Type type)
+        {
+            if (type.IsGenericType && GenericDictionaryType.IsAssignableFrom(type.GetGenericTypeDefinition()))
+                return type;
 
-			Type[] ifaces = type.GetInterfaces();
-			if (ifaces != null)
-				for (int i = 0; i < ifaces.Length; i++) {
-					Type current = GetGenericDictionary (ifaces [i]);
-					if (current != null)
-						return current;
-				}
+            var ifaces = type.GetInterfaces();
+            if (ifaces != null)
+                for (var i = 0; i < ifaces.Length; i++)
+                {
+                    var current = GetGenericDictionary(ifaces[i]);
+                    if (current != null)
+                        return current;
+                }
 
-			return null;
-		}
+            return null;
+        }
 
         public static Type GetMemberUnderlyingType(MemberInfo member)
         {
@@ -166,7 +170,7 @@ namespace Nancy.Helpers
             if (member == null)
                 throw new ArgumentNullException("member");
 
-            PropertyInfo propertyInfo = member as PropertyInfo;
+            var propertyInfo = member as PropertyInfo;
 
             if (propertyInfo != null)
                 return IsIndexedProperty(propertyInfo);
@@ -236,25 +240,25 @@ namespace Nancy.Helpers
             }
         }
 
-		/// <summary>
-		/// Determines whether the specified MemberInfo can be read.
-		/// </summary>
-		/// <param name="member">The MemberInfo to determine whether can be read.</param>
-		/// <returns>
-		/// 	<c>true</c> if the specified MemberInfo can be read; otherwise, <c>false</c>.
-		/// </returns>
-		public static bool CanReadMemberValue(MemberInfo member)
-		{
-			switch (member.MemberType)
-			{
-				case MemberTypes.Field:
-					return true;
-				case MemberTypes.Property:
-					return ((PropertyInfo) member).CanRead;
-				default:
-					return false;
-			}
-		}
+        /// <summary>
+        /// Determines whether the specified MemberInfo can be read.
+        /// </summary>
+        /// <param name="member">The MemberInfo to determine whether can be read.</param>
+        /// <returns>
+        /// 	<c>true</c> if the specified MemberInfo can be read; otherwise, <c>false</c>.
+        /// </returns>
+        public static bool CanReadMemberValue(MemberInfo member)
+        {
+            switch (member.MemberType)
+            {
+                case MemberTypes.Field:
+                    return true;
+                case MemberTypes.Property:
+                    return ((PropertyInfo)member).CanRead;
+                default:
+                    return false;
+            }
+        }
 
         /// <summary>
         /// Determines whether the specified MemberInfo can be set.
@@ -276,14 +280,14 @@ namespace Nancy.Helpers
             }
         }
 
-		public static IEnumerable<MemberInfo> GetFieldsAndProperties (Type type, BindingFlags bindingAttr) {
-
-			MemberInfo [] members = type.GetFields (bindingAttr);
-			for (int i = 0; i < members.Length; i++)
-				yield return members [i];
-			members = type.GetProperties (bindingAttr);
-			for (int i = 0; i < members.Length; i++)
-				yield return members [i];
-		}
+        public static IEnumerable<MemberInfo> GetFieldsAndProperties(Type type, BindingFlags bindingAttr)
+        {
+            MemberInfo[] members = type.GetFields(bindingAttr);
+            for (var i = 0; i < members.Length; i++)
+                yield return members[i];
+            members = type.GetProperties(bindingAttr);
+            for (var i = 0; i < members.Length; i++)
+                yield return members[i];
+        }
     }
 }

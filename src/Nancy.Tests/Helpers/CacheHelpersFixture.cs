@@ -10,7 +10,7 @@
 
     public class CacheHelpersFixture
     {
-        private string etag;
+        private readonly string etag;
 
         private DateTime lastModified;
 
@@ -19,7 +19,7 @@
             this.etag = "etag";
             this.lastModified = DateTime.Now;
         }
-        
+
         [Fact]
         public void Should_return_modified_false_if_no_etag_and_no_ifmodifiedsince_sent()
         {
@@ -75,16 +75,16 @@
             var headers = new Dictionary<string, IEnumerable<string>>();
             if (!string.IsNullOrEmpty(etag))
             {
-                headers["If-None-Match"] = new[] { etag };
+                headers["If-None-Match"] = new[] {etag};
             }
             if (lastModified.HasValue)
             {
-                headers["If-Modified-Since"] = new[] { lastModified.Value.ToString("R", CultureInfo.InvariantCulture) };
+                headers["If-Modified-Since"] = new[] {lastModified.Value.ToString("R", CultureInfo.InvariantCulture)};
             }
 
-            var request = new Request("GET", new Url { Path = "/", Scheme = "http" }, headers: headers);
+            var request = new Request("GET", new Url {Path = "/", Scheme = "http"}, headers: headers);
 
-            var context = new NancyContext { Request = request };
+            var context = new NancyContext {Request = request};
 
             return context;
         }

@@ -32,9 +32,9 @@ namespace Nancy.Conventions
                 return Tuple.Create(false, "The static contents conventions cannot be null.");
             }
 
-            return (conventions.StaticContentsConventions.Count > 0) ?
-                Tuple.Create(true, string.Empty) :
-                Tuple.Create(false, "The static contents conventions cannot be empty.");
+            return (conventions.StaticContentsConventions.Count > 0)
+                ? Tuple.Create(true, string.Empty)
+                : Tuple.Create(false, "The static contents conventions cannot be empty.");
         }
     }
 }

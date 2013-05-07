@@ -1,9 +1,10 @@
 namespace Nancy.BindingDemo
 {
     using System.Linq;
-    using Demo.ModelBinding.Database;
-    using Demo.ModelBinding.Models;
-    using ModelBinding;
+
+    using Nancy.Demo.ModelBinding.Database;
+    using Nancy.Demo.ModelBinding.Models;
+    using Nancy.ModelBinding;
 
     public class CustomersModule : NancyModule
     {
@@ -11,22 +12,22 @@ namespace Nancy.BindingDemo
             : base("/customers")
         {
             Get["/"] = x =>
-                { 
-                    var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
+            {
+                var model = DB.Customers.OrderBy(e => e.RenewalDate).ToArray();
 
-                    return View["Customers", model];
-                };
+                return View["Customers", model];
+            };
 
             Post["/"] = x =>
-                {
-                    Customer model = this.Bind();
-                    var model2 = this.Bind<Customer>();
+            {
+                Customer model = this.Bind();
+                var model2 = this.Bind<Customer>();
 
-                    DB.Customers.Add(model);
-                    DB.Customers.Add(model2);
+                DB.Customers.Add(model);
+                DB.Customers.Add(model2);
 
-                    return this.Response.AsRedirect("/Customers");
-                };
+                return this.Response.AsRedirect("/Customers");
+            };
         }
     }
 }

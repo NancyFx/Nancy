@@ -3,12 +3,13 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Encapsulates HTTP-response information from an Nancy operation.
     /// </summary>
-    public class Response: IDisposable
+    public class Response : IDisposable
     {
         /// <summary>
         /// Null object representing no body    
@@ -54,7 +55,14 @@ namespace Nancy
         public HttpStatusCode StatusCode { get; set; }
 
         public IList<INancyCookie> Cookies { get; private set; }
-        
+
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <remarks>This method can be overriden in sub-classes to dispose of response specific resources.</remarks>
+        public virtual void Dispose()
+        {}
+
         public Response AddCookie(string name, string value)
         {
             return AddCookie(name, value, null, null, null);
@@ -64,10 +72,10 @@ namespace Nancy
         {
             return AddCookie(name, value, expires, null, null);
         }
-    
+
         public Response AddCookie(string name, string value, DateTime? expires, string domain, string path)
         {
-            return AddCookie(new NancyCookie(name, value){ Expires = expires, Domain = domain, Path = path });
+            return AddCookie(new NancyCookie(name, value) {Expires = expires, Domain = domain, Path = path});
         }
 
         public Response AddCookie(INancyCookie nancyCookie)
@@ -78,39 +86,31 @@ namespace Nancy
 
         public static implicit operator Response(HttpStatusCode statusCode)
         {
-            return new Response { StatusCode = statusCode };
+            return new Response {StatusCode = statusCode};
         }
 
         public static implicit operator Response(int statusCode)
         {
-            return new Response { StatusCode = (HttpStatusCode)statusCode };
+            return new Response {StatusCode = (HttpStatusCode)statusCode};
         }
 
         public static implicit operator Response(string contents)
         {
-            return new Response { Contents = GetStringContents(contents) };
+            return new Response {Contents = GetStringContents(contents)};
         }
 
         public static implicit operator Response(Action<Stream> streamFactory)
         {
-            return new Response { Contents = streamFactory };
+            return new Response {Contents = streamFactory};
         }
 
         protected static Action<Stream> GetStringContents(string contents)
         {
             return stream =>
             {
-                var writer = new StreamWriter(stream) { AutoFlush = true };
+                var writer = new StreamWriter(stream) {AutoFlush = true};
                 writer.Write(contents);
             };
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <remarks>This method can be overriden in sub-classes to dispose of response specific resources.</remarks>
-        public virtual void Dispose()
-        {
         }
     }
 }

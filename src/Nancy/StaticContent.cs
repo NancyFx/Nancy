@@ -1,10 +1,10 @@
 namespace Nancy
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
-    using Conventions;
+
     using Nancy.Bootstrapper;
+    using Nancy.Conventions;
 
     /// <summary>
     /// Registers the static contents hook in the application pipeline at startup.
@@ -30,8 +30,7 @@ namespace Nancy
         /// Perform any initialisation tasks
         /// </summary>
         public void Initialize(IPipelines pipelines)
-        {
-        }
+        {}
 
         /// <summary>
         /// Enable "manual" static content.

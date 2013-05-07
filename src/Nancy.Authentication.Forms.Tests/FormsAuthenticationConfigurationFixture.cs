@@ -4,24 +4,25 @@ namespace Nancy.Authentication.Forms.Tests
 
     using Nancy.Cryptography;
     using Nancy.Tests;
+
     using Xunit;
 
     public class FormsAuthenticationConfigurationFixture
     {
-        private FormsAuthenticationConfiguration config;
+        private readonly FormsAuthenticationConfiguration config;
 
         public FormsAuthenticationConfigurationFixture()
         {
             var cryptographyConfiguration = new CryptographyConfiguration(
-                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })),
-                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })));
+                new RijndaelEncryptionProvider(new PassphraseKeyGenerator("SuperSecretPass", new byte[] {1, 2, 3, 4, 5, 6, 7, 8})),
+                new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure", new byte[] {1, 2, 3, 4, 5, 6, 7, 8})));
 
             this.config = new FormsAuthenticationConfiguration()
-                              {
-                                  CryptographyConfiguration = cryptographyConfiguration,
-                                  RedirectUrl = "/login",
-                                  UserMapper = A.Fake<IUserMapper>(),
-                              };
+            {
+                CryptographyConfiguration = cryptographyConfiguration,
+                RedirectUrl = "/login",
+                UserMapper = A.Fake<IUserMapper>(),
+            };
         }
 
         [Fact]
@@ -75,7 +76,7 @@ namespace Nancy.Authentication.Forms.Tests
         [Fact]
         public void Should_not_be_valid_with_null_hmac_provider()
         {
-            config.CryptographyConfiguration = new CryptographyConfiguration(config.CryptographyConfiguration.EncryptionProvider, null); 
+            config.CryptographyConfiguration = new CryptographyConfiguration(config.CryptographyConfiguration.EncryptionProvider, null);
 
             var result = config.IsValid;
 

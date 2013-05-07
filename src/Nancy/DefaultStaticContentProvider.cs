@@ -1,7 +1,5 @@
 ﻿namespace Nancy
 {
-    using System.Linq;
-
     using Nancy.Conventions;
 
     /// <summary>
@@ -10,9 +8,9 @@
     /// </summary>
     public class DefaultStaticContentProvider : IStaticContentProvider
     {
-        private readonly IRootPathProvider rootPathProvider;
         private readonly StaticContentsConventions conventions;
-        private string rootPath;
+        private readonly string rootPath;
+        private readonly IRootPathProvider rootPathProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStaticContentProvider"/> class, using the

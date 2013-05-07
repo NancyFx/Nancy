@@ -2,13 +2,15 @@
 {
     using System.Collections.Generic;
     using System.IO;
+
     using Nancy.Responses;
+
     using Xunit;
 
     public class GenericFileResponseFixture
-	{
-		private readonly string imagePath;
+    {
         private const string imageContentType = "image/png";
+        private readonly string imagePath;
 
         public GenericFileResponseFixture()
         {
@@ -17,9 +19,9 @@
 
             GenericFileResponse.SafePaths = new List<string> {assemblyPath};
 
-			this.imagePath =
+            this.imagePath =
                 Path.GetFileName(this.GetType().Assembly.Location);
-		}
+        }
 
         [Fact]
         public void Should_set_status_code_to_not_found_when_file_name_is_empty()
@@ -71,7 +73,7 @@
         public void Should_set_status_code_to_not_found_when_file_is_above_root_path()
         {
             // Given
-            var path = 
+            var path =
                 Path.Combine(this.imagePath, "..", "..");
 
             // When
@@ -81,30 +83,30 @@
             response.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
-		[Fact]
-		public void Should_set_status_code_to_ok()
-		{
-			// Given, When
-			var response = new GenericFileResponse(this.imagePath, imageContentType);
-						
-			// Then
-			response.StatusCode.ShouldEqual(HttpStatusCode.OK);
-		}
-		
-		[Fact]
-		public void Should_return_file_unchanged()
-		{
-			// Given
-			var expected = File.ReadAllBytes(this.imagePath);
+        [Fact]
+        public void Should_set_status_code_to_ok()
+        {
+            // Given, When
             var response = new GenericFileResponse(this.imagePath, imageContentType);
-			
-			// When
-			var result = GetResponseContents(response);
-			
-			// Then
-			result.ShouldEqualSequence(expected);
-		}
-        
+
+            // Then
+            response.StatusCode.ShouldEqual(HttpStatusCode.OK);
+        }
+
+        [Fact]
+        public void Should_return_file_unchanged()
+        {
+            // Given
+            var expected = File.ReadAllBytes(this.imagePath);
+            var response = new GenericFileResponse(this.imagePath, imageContentType);
+
+            // When
+            var result = GetResponseContents(response);
+
+            // Then
+            result.ShouldEqualSequence(expected);
+        }
+
         [Fact]
         public void Should_set_filename_property_to_filename()
         {
@@ -114,14 +116,14 @@
             // Then
             response.Filename.ShouldEqual(Path.GetFileName(this.imagePath));
         }
-		
-		private static IEnumerable<byte> GetResponseContents(Response response)
-		{
-			var ms = new MemoryStream();
-			response.Contents(ms);
-			ms.Flush();
-			
-			return ms.ToArray();
-		}
-	}
+
+        private static IEnumerable<byte> GetResponseContents(Response response)
+        {
+            var ms = new MemoryStream();
+            response.Contents(ms);
+            ms.Flush();
+
+            return ms.ToArray();
+        }
+    }
 }

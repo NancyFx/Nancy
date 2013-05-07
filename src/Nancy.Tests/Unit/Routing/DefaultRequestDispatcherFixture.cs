@@ -3,10 +3,13 @@ namespace Nancy.Tests.Unit.Routing
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using FakeItEasy;
-    using Fakes;
+
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
+    using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultRequestDispatcherFixture
@@ -22,10 +25,8 @@ namespace Nancy.Tests.Unit.Routing
             this.routeResolver = A.Fake<IRouteResolver>();
             this.routeInvoker = A.Fake<IRouteInvoker>();
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
-                {
-                    return (Response)((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[1]);
-                });
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<DynamicDictionary>._, A<NancyContext>._))
+             .ReturnsLazily(arg => { return (Response)((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[1]); });
 
             this.requestDispatcher =
                 new DefaultRequestDispatcher(this.routeResolver, this.responseProcessors, this.routeInvoker);
@@ -47,7 +48,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var capturedExecutionOrder = new List<string>();
-            var expectedExecutionOrder = new[] { "Prehook", "RouteInvoke", "Posthook" };
+            var expectedExecutionOrder = new[] {"Prehook", "RouteInvoke", "Posthook"};
 
             var route = new FakeRoute
             {
@@ -62,7 +63,11 @@ namespace Nancy.Tests.Unit.Routing
             {
                 Route = route,
                 Parameters = DynamicDictionary.Empty,
-                Before = ctx => { capturedExecutionOrder.Add("Prehook"); return null; },
+                Before = ctx =>
+                {
+                    capturedExecutionOrder.Add("Prehook");
+                    return null;
+                },
                 After = ctx => capturedExecutionOrder.Add("Posthook"),
                 OnError = null
             };
@@ -70,7 +75,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -85,7 +90,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var capturedExecutionOrder = new List<string>();
-            var expectedExecutionOrder = new[] { "Prehook", "Posthook" };
+            var expectedExecutionOrder = new[] {"Prehook", "Posthook"};
 
             var route = new FakeRoute
             {
@@ -110,7 +115,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -138,7 +143,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -165,7 +170,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -190,7 +195,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -214,11 +219,11 @@ namespace Nancy.Tests.Unit.Routing
             var parameters = new DynamicDictionary();
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               parameters,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                parameters,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
 
@@ -260,15 +265,15 @@ namespace Nancy.Tests.Unit.Routing
                 };
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -283,8 +288,8 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var expectedAcceptHeaders = new List<Tuple<string, decimal>>
             {
-                { new Tuple<string, decimal>("application/json", 0.8m) },
-                { new Tuple<string, decimal>("application/xml", 0.4m) }
+                {new Tuple<string, decimal>("application/json", 0.8m)},
+                {new Tuple<string, decimal>("application/xml", 0.4m)}
             };
 
             var requestedAcceptHeaders =
@@ -292,22 +297,22 @@ namespace Nancy.Tests.Unit.Routing
 
             var request = new FakeRequest("GET", "/")
             {
-                Headers = { Accept = expectedAcceptHeaders }
+                Headers = {Accept = expectedAcceptHeaders}
             };
 
             var context =
-                new NancyContext { Request = request };
+                new NancyContext {Request = request};
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -339,21 +344,21 @@ namespace Nancy.Tests.Unit.Routing
 
             var mappings = new List<Tuple<string, MediaRange>>
             {
-                { new Tuple<string, MediaRange>("json", "application/json") }
+                {new Tuple<string, MediaRange>("json", "application/json")}
             };
 
             A.CallTo(() => processor.ExtensionMappings).Returns(mappings);
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -375,15 +380,15 @@ namespace Nancy.Tests.Unit.Routing
                 };
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedPath = ((NancyContext)x.Arguments[0]).Request.Path)
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -409,7 +414,7 @@ namespace Nancy.Tests.Unit.Routing
                 A.Fake<IResponseProcessor>();
 
             var jsonProcessormappings =
-                new List<Tuple<string, MediaRange>> { { new Tuple<string, MediaRange>("json", "application/json") } };
+                new List<Tuple<string, MediaRange>> {{new Tuple<string, MediaRange>("json", "application/json")}};
 
             A.CallTo(() => jsonProcessor.ExtensionMappings).Returns(jsonProcessormappings);
 
@@ -418,10 +423,10 @@ namespace Nancy.Tests.Unit.Routing
 
             var otherProcessormappings =
                 new List<Tuple<string, MediaRange>>
-                    {
-                        { new Tuple<string, MediaRange>("json", "application/json") },
-                        { new Tuple<string, MediaRange>("xml", "application/xml") }
-                    };
+                {
+                    {new Tuple<string, MediaRange>("json", "application/json")},
+                    {new Tuple<string, MediaRange>("xml", "application/xml")}
+                };
 
             A.CallTo(() => otherProcessor.ExtensionMappings).Returns(otherProcessormappings);
 
@@ -429,15 +434,15 @@ namespace Nancy.Tests.Unit.Routing
             this.responseProcessors.Add(otherProcessor);
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -448,7 +453,9 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
-        public void Should_set_quality_to_high_for_mapped_media_ranges_before_invoking_route_resolver_when_path_contains_extension_and_mapped_response_processors_exists()
+        public void
+            Should_set_quality_to_high_for_mapped_media_ranges_before_invoking_route_resolver_when_path_contains_extension_and_mapped_response_processors_exists
+            ()
         {
             // Given
             var requestedAcceptHeaders =
@@ -464,22 +471,22 @@ namespace Nancy.Tests.Unit.Routing
                 A.Fake<IResponseProcessor>();
 
             var jsonProcessormappings =
-                new List<Tuple<string, MediaRange>> { { new Tuple<string, MediaRange>("json", "application/json") } };
+                new List<Tuple<string, MediaRange>> {{new Tuple<string, MediaRange>("json", "application/json")}};
 
             A.CallTo(() => jsonProcessor.ExtensionMappings).Returns(jsonProcessormappings);
 
             this.responseProcessors.Add(jsonProcessor);
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -500,11 +507,11 @@ namespace Nancy.Tests.Unit.Routing
                 };
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
 
@@ -532,22 +539,22 @@ namespace Nancy.Tests.Unit.Routing
                 A.Fake<IResponseProcessor>();
 
             var jsonProcessormappings =
-                new List<Tuple<string, MediaRange>> { { new Tuple<string, MediaRange>("json", "application/json") } };
+                new List<Tuple<string, MediaRange>> {{new Tuple<string, MediaRange>("json", "application/json")}};
 
             A.CallTo(() => jsonProcessor.ExtensionMappings).Returns(jsonProcessormappings);
 
             this.responseProcessors.Add(jsonProcessor);
 
             var resolvedRoute = new ResolveResult(
-               new NotFoundRoute("GET", "/"),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new NotFoundRoute("GET", "/"),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context))
-                .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
-                .Returns(resolvedRoute);
+             .Invokes(x => requestedAcceptHeaders = ((NancyContext)x.Arguments[0]).Request.Headers.Accept.ToList())
+             .Returns(resolvedRoute);
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -569,11 +576,11 @@ namespace Nancy.Tests.Unit.Routing
             var parameters = new DynamicDictionary();
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               parameters,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                parameters,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
 
@@ -595,11 +602,11 @@ namespace Nancy.Tests.Unit.Routing
                 };
 
             var resolvedRoute = new ResolveResult(
-               new FakeRoute(),
-               DynamicDictionary.Empty,
-               null,
-               null,
-               null);
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
 
             A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolvedRoute);
 
@@ -615,7 +622,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var capturedExecutionOrder = new List<string>();
-            var expectedExecutionOrder = new[] { "Prehook", "OnErrorHook" };
+            var expectedExecutionOrder = new[] {"Prehook", "OnErrorHook"};
 
             var route = new FakeRoute
             {
@@ -629,14 +636,22 @@ namespace Nancy.Tests.Unit.Routing
             var resolvedRoute = new ResolveResult(
                 route,
                 DynamicDictionary.Empty,
-                ctx => { capturedExecutionOrder.Add("Prehook"); throw new Exception("Prehook"); },
+                ctx =>
+                {
+                    capturedExecutionOrder.Add("Prehook");
+                    throw new Exception("Prehook");
+                },
                 ctx => capturedExecutionOrder.Add("Posthook"),
-                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+                (ctx, ex) =>
+                {
+                    capturedExecutionOrder.Add("OnErrorHook");
+                    return new Response();
+                });
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -651,7 +666,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var capturedExecutionOrder = new List<string>();
-            var expectedExecutionOrder = new[] { "RouteInvoke", "OnErrorHook" };
+            var expectedExecutionOrder = new[] {"RouteInvoke", "OnErrorHook"};
 
             var route = new FakeRoute
             {
@@ -667,12 +682,16 @@ namespace Nancy.Tests.Unit.Routing
                 DynamicDictionary.Empty,
                 ctx => null,
                 ctx => capturedExecutionOrder.Add("Posthook"),
-                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+                (ctx, ex) =>
+                {
+                    capturedExecutionOrder.Add("OnErrorHook");
+                    return new Response();
+                });
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -687,7 +706,7 @@ namespace Nancy.Tests.Unit.Routing
         {
             // Given
             var capturedExecutionOrder = new List<string>();
-            var expectedExecutionOrder = new[] { "Posthook", "OnErrorHook" };
+            var expectedExecutionOrder = new[] {"Posthook", "OnErrorHook"};
 
             var route = new FakeRoute
             {
@@ -698,13 +717,21 @@ namespace Nancy.Tests.Unit.Routing
                 route,
                 DynamicDictionary.Empty,
                 ctx => null,
-                ctx => { capturedExecutionOrder.Add("Posthook"); throw new Exception("Posthook"); },
-                (ctx, ex) => { capturedExecutionOrder.Add("OnErrorHook"); return new Response(); });
+                ctx =>
+                {
+                    capturedExecutionOrder.Add("Posthook");
+                    throw new Exception("Posthook");
+                },
+                (ctx, ex) =>
+                {
+                    capturedExecutionOrder.Add("OnErrorHook");
+                    return new Response();
+                });
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             // When
             this.requestDispatcher.Dispatch(context);
@@ -733,7 +760,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             //When
 
@@ -760,7 +787,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             //When
 
@@ -788,7 +815,7 @@ namespace Nancy.Tests.Unit.Routing
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
             var context =
-                new NancyContext { Request = new Request("GET", "/", "http") };
+                new NancyContext {Request = new Request("GET", "/", "http")};
 
             var exception = Assert.Throws<Exception>(() => this.requestDispatcher.Dispatch(context));
 

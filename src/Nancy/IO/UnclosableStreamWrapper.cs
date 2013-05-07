@@ -35,10 +35,7 @@
         /// </summary>
         public Stream BaseStream
         {
-            get
-            {
-                return this.baseStream;
-            }
+            get { return this.baseStream; }
         }
 
         /// <summary>
@@ -50,10 +47,7 @@
         /// <filterpriority>1</filterpriority>
         public override bool CanRead
         {
-            get
-            {
-                return this.baseStream.CanRead;
-            }
+            get { return this.baseStream.CanRead; }
         }
 
         /// <summary>
@@ -65,10 +59,7 @@
         /// <filterpriority>1</filterpriority>
         public override bool CanSeek
         {
-            get
-            {
-                return this.baseStream.CanSeek;
-            }
+            get { return this.baseStream.CanSeek; }
         }
 
         /// <summary>
@@ -80,10 +71,7 @@
         /// <filterpriority>1</filterpriority>
         public override bool CanWrite
         {
-            get
-            {
-                return this.baseStream.CanWrite;
-            }
+            get { return this.baseStream.CanWrite; }
         }
 
         /// <summary>
@@ -95,10 +83,7 @@
         /// <exception cref="T:System.NotSupportedException">A class derived from Stream does not support seeking. </exception><exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception><filterpriority>1</filterpriority>
         public override long Length
         {
-            get
-            {
-                return this.baseStream.Length;
-            }
+            get { return this.baseStream.Length; }
         }
 
         /// <summary>
@@ -110,15 +95,9 @@
         /// <exception cref="T:System.IO.IOException">An I/O error occurs. </exception><exception cref="T:System.NotSupportedException">The stream does not support seeking. </exception><exception cref="T:System.ObjectDisposedException">Methods were called after the stream was closed. </exception><filterpriority>1</filterpriority>
         public override long Position
         {
-            get
-            {
-                return this.baseStream.Position;
-            }
+            get { return this.baseStream.Position; }
 
-            set
-            {
-                this.baseStream.Position = value;
-            }
+            set { this.baseStream.Position = value; }
         }
 
         /// <summary>
@@ -130,10 +109,7 @@
         /// <filterpriority>2</filterpriority>
         public override bool CanTimeout
         {
-            get
-            {
-                return this.baseStream.CanTimeout;
-            }
+            get { return this.baseStream.CanTimeout; }
         }
 
         /// <summary>
@@ -145,15 +121,9 @@
         /// <exception cref="T:System.InvalidOperationException">The <see cref="P:System.IO.Stream.ReadTimeout"/> method always throws an <see cref="T:System.InvalidOperationException"/>. </exception><filterpriority>2</filterpriority>
         public override int ReadTimeout
         {
-            get
-            {
-                return this.baseStream.ReadTimeout;
-            }
+            get { return this.baseStream.ReadTimeout; }
 
-            set
-            {
-                this.baseStream.ReadTimeout = value;
-            }
+            set { this.baseStream.ReadTimeout = value; }
         }
 
         /// <summary>
@@ -165,23 +135,9 @@
         /// <exception cref="T:System.InvalidOperationException">The <see cref="P:System.IO.Stream.WriteTimeout"/> method always throws an <see cref="T:System.InvalidOperationException"/>. </exception><filterpriority>2</filterpriority>
         public override int WriteTimeout
         {
-            get
-            {
-                return this.baseStream.WriteTimeout;
-            }
+            get { return this.baseStream.WriteTimeout; }
 
-            set
-            {
-                this.baseStream.WriteTimeout = value;
-            }
-        }
-
-        /// <summary>
-        /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
-        /// </summary>
-        /// <filterpriority>1</filterpriority>
-        public override void Close()
-        {
+            set { this.baseStream.WriteTimeout = value; }
         }
 
         /// <summary>
@@ -189,8 +145,14 @@
         /// </summary>
         /// <filterpriority>2</filterpriority>
         public new void Dispose()
-        {
-        }
+        {}
+
+        /// <summary>
+        /// Closes the current stream and releases any resources (such as sockets and file handles) associated with the current stream.
+        /// </summary>
+        /// <filterpriority>1</filterpriority>
+        public override void Close()
+        {}
 
         /// <summary>
         /// When overridden in a derived class, clears all buffers for this stream and causes any buffered data to be written to the underlying device.
@@ -314,7 +276,6 @@
         /// </summary>
         /// <param name="disposing">true to release both managed and unmanaged resources; false to release only unmanaged resources.</param>
         protected override void Dispose(bool disposing)
-        {
-        }
+        {}
     }
 }

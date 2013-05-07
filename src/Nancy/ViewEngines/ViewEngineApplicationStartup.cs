@@ -1,6 +1,7 @@
 namespace Nancy.ViewEngines
 {
     using System.Collections.Generic;
+
     using Nancy.Bootstrapper;
 
     /// <summary>
@@ -8,8 +9,8 @@ namespace Nancy.ViewEngines
     /// </summary>
     public class ViewEngineApplicationStartup : IApplicationStartup
     {
-        private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IViewCache viewCache;
+        private readonly IEnumerable<IViewEngine> viewEngines;
         private readonly IViewLocator viewLocator;
 
         /// <summary>
@@ -33,9 +34,7 @@ namespace Nancy.ViewEngines
         public void Initialize(IPipelines pipelines)
         {
             foreach (var viewEngine in viewEngines)
-            {
                 viewEngine.Initialize(CreateViewEngineStartupContext(viewEngine));
-            }
         }
 
         private ViewEngineStartupContext CreateViewEngineStartupContext(IViewEngine viewEngine)

@@ -11,8 +11,7 @@
         /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
         /// </summary>
         public ConfigurableNancyModule()
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.
@@ -20,8 +19,7 @@
         /// <param name="closure">The configuration of the module.</param>
         public ConfigurableNancyModule(Action<ConfigurableNancyModuleConfigurator> closure)
             : this(string.Empty, closure)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConfigurableNancyModule"/> class.

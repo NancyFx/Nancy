@@ -4,19 +4,21 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System.Collections.Specialized;
     using System.IO;
     using System.Web;
-    using Nancy.Cookies;
+
     using FakeItEasy;
-    using Nancy.Hosting.Aspnet;
+
+    using Nancy.Cookies;
+
     using Xunit;
 
     public class NancyHandlerFixture
     {
-        private readonly NancyHandler handler;
         private readonly HttpContextBase context;
-        private readonly HttpRequestBase request;
-        private readonly HttpResponseBase response;
         private readonly INancyEngine engine;
         private readonly NameValueCollection formData;
+        private readonly NancyHandler handler;
+        private readonly HttpRequestBase request;
+        private readonly HttpResponseBase response;
 
         public NancyHandlerFixture()
         {
@@ -43,7 +45,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         {
             // Given
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
+            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() {Response = new Response()});
 
             // When
             this.handler.ProcessRequest(this.context);
@@ -60,7 +62,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             var cookie2 = A.Fake<INancyCookie>();
             var r = new Response();
             r.AddCookie(cookie1).AddCookie(cookie2);
-            var nancyContext = new NancyContext { Response = r };
+            var nancyContext = new NancyContext {Response = r};
 
             A.CallTo(() => cookie1.ToString()).Returns("the first cookie");
             A.CallTo(() => cookie2.ToString()).Returns("the second cookie");
@@ -80,7 +82,7 @@ namespace Nancy.Hosting.Aspnet.Tests
         {
             // Given
             var disposable = A.Fake<IDisposable>();
-            var nancyContext = new NancyContext() { Response = new Response() };
+            var nancyContext = new NancyContext() {Response = new Response()};
             nancyContext.Items.Add("Disposable", disposable);
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);

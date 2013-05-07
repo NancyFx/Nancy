@@ -12,11 +12,12 @@
             this.applicationDependency = applicationDependency;
             this.requestDependency = requestDependency;
 
-            Get["/dependency"] = x =>{
-                var model = 
+            Get["/dependency"] = x =>
+            {
+                var model =
                     new RatPackWithDependencyText
-                    { 
-                        FirstName = "Bob", 
+                    {
+                        FirstName = "Bob",
                         ApplicationDependencyText = this.applicationDependency.GetContent(),
                         RequestDependencyText = this.requestDependency.GetContent()
                     };

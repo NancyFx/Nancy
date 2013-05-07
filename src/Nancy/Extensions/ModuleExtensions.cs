@@ -2,9 +2,7 @@ namespace Nancy.Extensions
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text.RegularExpressions;
-    using Nancy.Helpers;
 
     public static class ModuleExtensions
     {
@@ -12,8 +10,7 @@ namespace Nancy.Extensions
         /// A regular expression used to manipulate parameterized route segments.
         /// </summary>
         /// <value>A <see cref="Regex"/> object.</value>
-        [DebuggerBrowsable(DebuggerBrowsableState.Never)]
-        private static readonly Regex ModuleNameExpression =
+        [DebuggerBrowsable(DebuggerBrowsableState.Never)] private static readonly Regex ModuleNameExpression =
             new Regex(@"(?<name>[\w]+)Module$", RegexOptions.Compiled);
 
         /// <summary>   
@@ -35,6 +32,5 @@ namespace Nancy.Extensions
 
             return typeName;
         }
-
     }
 }

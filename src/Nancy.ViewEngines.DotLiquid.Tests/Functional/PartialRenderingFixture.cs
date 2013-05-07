@@ -1,6 +1,7 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
 {
-    using Testing;
+    using Nancy.Testing;
+
     using Xunit;
 
     public class PartialRenderingFixture
@@ -9,7 +10,8 @@ namespace Nancy.ViewEngines.DotLiquid.Tests.Functional
 
         public PartialRenderingFixture()
         {
-            var bootstrapper = new ConfigurableBootstrapper(with => {
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
                 with.Module<PartialRenderingModule>();
                 with.RootPathProvider<RootPathProvider>();
             });

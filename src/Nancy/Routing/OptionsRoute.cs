@@ -7,10 +7,9 @@
     /// </summary>
     public class OptionsRoute : Route
     {
-        public OptionsRoute(string path, IEnumerable<string> allowedMethods) 
+        public OptionsRoute(string path, IEnumerable<string> allowedMethods)
             : base("OPTIONS", path, null, x => CreateMethodOptionsResponse(allowedMethods))
-        {            
-        }
+        {}
 
         private static Response CreateMethodOptionsResponse(IEnumerable<string> allowedMethods)
         {

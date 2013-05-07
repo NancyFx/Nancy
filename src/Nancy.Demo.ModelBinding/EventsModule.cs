@@ -1,8 +1,9 @@
 namespace Nancy.Demo.ModelBinding
 {
     using System.Linq;
-    using Database;
-    using Models;
+
+    using Nancy.Demo.ModelBinding.Database;
+    using Nancy.Demo.ModelBinding.Models;
     using Nancy.ModelBinding;
 
     public class EventsModule : NancyModule
@@ -11,22 +12,22 @@ namespace Nancy.Demo.ModelBinding
             : base("/events")
         {
             Get["/"] = x =>
-                { 
-                    var model = DB.Events.OrderBy(e => e.Time).ToArray();
+            {
+                var model = DB.Events.OrderBy(e => e.Time).ToArray();
 
-                    return View["Events", model];
-                };
+                return View["Events", model];
+            };
 
             Post["/"] = x =>
-                {
-                    Event model = this.Bind();
-                    var model2 = this.Bind<Event>("Location"); // Blacklist location
+            {
+                Event model = this.Bind();
+                var model2 = this.Bind<Event>("Location"); // Blacklist location
 
-                    DB.Events.Add(model);
-                    DB.Events.Add(model2);
+                DB.Events.Add(model);
+                DB.Events.Add(model2);
 
-                    return this.Response.AsRedirect("/Events");
-                };
+                return this.Response.AsRedirect("/Events");
+            };
         }
     }
 }

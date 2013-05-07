@@ -1,9 +1,12 @@
 namespace Nancy.Tests.Unit.ModelBinding
 {
     using System;
+
     using FakeItEasy;
+
     using Nancy.ModelBinding;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class DefaultModelBinderLocatorFixture
@@ -15,7 +18,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         /// </summary>
         public DefaultModelBinderLocatorFixture()
         {
-            this.defaultBinder = new DefaultBinder(new ITypeConverter[] { }, new IBodyDeserializer[] { }, A.Fake<IFieldNameConverter>(), new BindingDefaults());
+            this.defaultBinder = new DefaultBinder(new ITypeConverter[] {}, new IBodyDeserializer[] {}, A.Fake<IFieldNameConverter>(), new BindingDefaults());
         }
 
         [Fact]
@@ -31,9 +34,9 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(false);
-            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] {fakeBinder}, this.defaultBinder);
 
-            var result = locator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored);
+            var result = locator.GetBinderForType(typeof (Model), A<NancyContext>.Ignored);
 
             result.ShouldBeSameAs(this.defaultBinder);
         }
@@ -43,9 +46,9 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(false);
-            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] {fakeBinder}, this.defaultBinder);
 
-            var result = locator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored);
+            var result = locator.GetBinderForType(typeof (Model), A<NancyContext>.Ignored);
 
             result.ShouldNotBeSameAs(fakeBinder);
         }
@@ -55,9 +58,9 @@ namespace Nancy.Tests.Unit.ModelBinding
         {
             var fakeBinder = A.Fake<IModelBinder>();
             A.CallTo(() => fakeBinder.CanBind(A<Type>.Ignored)).Returns(true);
-            var locator = new DefaultModelBinderLocator(new IModelBinder[] { fakeBinder }, this.defaultBinder);
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] {fakeBinder}, this.defaultBinder);
 
-            var result = locator.GetBinderForType(typeof(Model), A<NancyContext>.Ignored);
+            var result = locator.GetBinderForType(typeof (Model), A<NancyContext>.Ignored);
 
             result.ShouldBeSameAs(fakeBinder);
         }
@@ -66,10 +69,10 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_be_able_to_bind_interfaces()
         {
             var binder = new InterfaceModelBinder();
-            var locator = new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
-            var locatedBinder = locator.GetBinderForType(typeof(Concrete), A<NancyContext>.Ignored);
+            var locator = new DefaultModelBinderLocator(new IModelBinder[] {binder}, this.defaultBinder);
+            var locatedBinder = locator.GetBinderForType(typeof (Concrete), A<NancyContext>.Ignored);
 
-            var result = locatedBinder.Bind(null, typeof(Concrete), null, new BindingConfig()) as IAmAnInterface;
+            var result = locatedBinder.Bind(null, typeof (Concrete), null, new BindingConfig()) as IAmAnInterface;
 
             result.ShouldNotBeNull();
         }
@@ -77,15 +80,15 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_be_able_to_bind_interfaces_using_module_extensions()
         {
-            var binder = 
+            var binder =
                 new InterfaceModelBinder();
-            
-            var locator = 
-                new DefaultModelBinderLocator(new IModelBinder[] { binder }, this.defaultBinder);
-            
+
+            var locator =
+                new DefaultModelBinderLocator(new IModelBinder[] {binder}, this.defaultBinder);
+
             var module = new TestBindingModule
             {
-                Context = new NancyContext() { Request = new FakeRequest("GET", "/") },
+                Context = new NancyContext() {Request = new FakeRequest("GET", "/")},
                 ModelBinderLocator = locator
             };
 
@@ -94,6 +97,25 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             result.ShouldNotBeNull();
             result2.ShouldNotBeNull();
+        }
+
+        private class Concrete : IAmAnInterface
+        {}
+
+        private interface IAmAnInterface
+        {}
+
+        private class InterfaceModelBinder : IModelBinder
+        {
+            public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
+            {
+                return new Concrete() as IAmAnInterface;
+            }
+
+            public bool CanBind(Type modelType)
+            {
+                return typeof (IAmAnInterface).IsAssignableFrom(modelType);
+            }
         }
 
         private class TestBindingModule : NancyModule
@@ -110,29 +132,6 @@ namespace Nancy.Tests.Unit.ModelBinding
                 var result = this.Bind<Concrete>();
 
                 return result;
-            }
-        }
-
-        interface IAmAnInterface
-        {
-
-        }
-
-        class Concrete : IAmAnInterface
-        {
-
-        }
-
-        class InterfaceModelBinder : IModelBinder
-        {
-            public object Bind(NancyContext context, Type modelType, object instance, BindingConfig configuration, params string[] blackList)
-            {
-                return new Concrete() as IAmAnInterface;
-            }
-
-            public bool CanBind(Type modelType)
-            {
-                return typeof(IAmAnInterface).IsAssignableFrom(modelType);
             }
         }
     }

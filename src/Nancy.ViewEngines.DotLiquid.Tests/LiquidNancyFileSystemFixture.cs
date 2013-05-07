@@ -1,14 +1,17 @@
 namespace Nancy.ViewEngines.DotLiquid.Tests
 {
-    using System.IO;
     using System.Collections.Generic;
+    using System.IO;
+
     using FakeItEasy;
-    using global::DotLiquid;
-    using global::DotLiquid.Exceptions;
+
     using Nancy.Tests;
 
     using Xunit;
     using Xunit.Extensions;
+
+    using global::DotLiquid;
+    using global::DotLiquid.Exceptions;
 
     public class LiquidNancyFileSystemFixture
     {
@@ -222,25 +225,25 @@ namespace Nancy.ViewEngines.DotLiquid.Tests
         {
             var viewLocationProvider = A.Fake<IViewLocationProvider>();
             A.CallTo(() => viewLocationProvider.GetLocatedViews(A<IEnumerable<string>>._))
-                                               .Returns(viewLocationResults);
+             .Returns(viewLocationResults);
 
             var viewEngine = A.Fake<IViewEngine>();
-            A.CallTo(() => viewEngine.Extensions).Returns(new[] { "liquid" });
+            A.CallTo(() => viewEngine.Extensions).Returns(new[] {"liquid"});
 
-            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] { viewEngine });
+            var viewLocator = new DefaultViewLocator(viewLocationProvider, new[] {viewEngine});
 
             var startupContext = new ViewEngineStartupContext(
                 null,
                 viewLocator);
-            
+
             var renderContext = A.Fake<IRenderContext>();
             A.CallTo(() => renderContext.LocateView(A<string>.Ignored, A<object>.Ignored))
-                .ReturnsLazily(x => viewLocator.LocateView(x.Arguments.Get<string>(0), null));
+             .ReturnsLazily(x => viewLocator.LocateView(x.Arguments.Get<string>(0), null));
 
             context = new Context(new List<Hash>(), new Hash(),
-                Hash.FromAnonymousObject(new { nancy = renderContext }), false);
+                Hash.FromAnonymousObject(new {nancy = renderContext}), false);
 
-            return new LiquidNancyFileSystem(startupContext, new[] { "liquid" });
+            return new LiquidNancyFileSystem(startupContext, new[] {"liquid"});
         }
     }
 }

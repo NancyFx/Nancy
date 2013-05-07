@@ -1,9 +1,13 @@
+
 #if !__MonoCS__
+
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
+
     using Nancy.Bootstrapper;
     using Nancy.Routing;
+
     using Xunit;
 
     /// <summary>
@@ -18,20 +22,17 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
     {
         private readonly NancyInternalConfiguration configuration;
 
+        protected BootstrapperBaseFixtureBase()
+        {
+            this.configuration = NancyInternalConfiguration.WithOverrides(
+                builder => { builder.NancyEngine = typeof (FakeEngine); });
+        }
+
         protected abstract NancyBootstrapperBase<TContainer> Bootstrapper { get; }
 
         protected NancyInternalConfiguration Configuration
         {
             get { return this.configuration; }
-        }
-
-        protected BootstrapperBaseFixtureBase()
-        {
-            this.configuration = NancyInternalConfiguration.WithOverrides(
-                builder =>
-                {
-                    builder.NancyEngine = typeof(FakeEngine);
-                });
         }
 
         [Fact]
@@ -50,7 +51,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             var result = this.Bootstrapper.GetEngine();
 
             result.ShouldNotBeNull();
-            result.ShouldBeOfType(typeof(INancyEngine));
+            result.ShouldBeOfType(typeof (INancyEngine));
         }
 
         [Fact]
@@ -60,7 +61,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             var result = this.Bootstrapper.GetEngine();
 
-            result.ShouldBeOfType(typeof(FakeEngine));
+            result.ShouldBeOfType(typeof (FakeEngine));
         }
 
         [Fact]
@@ -70,15 +71,37 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             var result1 = this.Bootstrapper.GetEngine();
             var result2 = this.Bootstrapper.GetEngine();
-            
+
             result1.ShouldBeSameAs(result2);
         }
 
         public class FakeEngine : INancyEngine
         {
+            private readonly INancyContextFactory contextFactory;
             private readonly IRouteResolver resolver;
             private readonly IRouteCache routeCache;
-            private readonly INancyContextFactory contextFactory;
+
+            public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
+            {
+                if (resolver == null)
+                {
+                    throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
+                }
+
+                if (routeCache == null)
+                {
+                    throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
+                }
+
+                if (contextFactory == null)
+                {
+                    throw new ArgumentNullException("contextFactory");
+                }
+
+                this.resolver = resolver;
+                this.routeCache = routeCache;
+                this.contextFactory = contextFactory;
+            }
 
             public INancyContextFactory ContextFactory
             {
@@ -102,28 +125,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             public Func<NancyContext, Exception, Response> OnErrorHook { get; set; }
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
-
-            public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
-            {
-                if (resolver == null)
-                {
-                    throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
-                }
-
-                if (routeCache == null)
-                {
-                    throw new ArgumentNullException("routeCache", "The routeCache parameter cannot be null.");
-                }
-
-                if (contextFactory == null)
-                {
-                    throw new ArgumentNullException("contextFactory");
-                }
-
-                this.resolver = resolver;
-                this.routeCache = routeCache;
-                this.contextFactory = contextFactory;
-            }
 
             /// <summary>
             /// Handles an incoming <see cref="Request"/>.
@@ -153,4 +154,5 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         }
     }
 }
+
 #endif

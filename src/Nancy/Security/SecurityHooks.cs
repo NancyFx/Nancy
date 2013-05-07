@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+
     using Nancy.Responses;
 
     /// <summary>
@@ -97,7 +98,7 @@
                 Response response = null;
                 if (!test(ctx))
                 {
-                    response = new Response { StatusCode = statusCode };
+                    response = new Response {StatusCode = statusCode};
                 }
 
                 return response;
@@ -120,7 +121,7 @@
                     }
                     else
                     {
-                        response = new Response { StatusCode = HttpStatusCode.Forbidden };
+                        response = new Response {StatusCode = HttpStatusCode.Forbidden};
                     }
                 }
 

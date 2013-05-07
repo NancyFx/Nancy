@@ -15,8 +15,8 @@ namespace Nancy.Routing
     /// </summary>
     public class DefaultRouteInvoker : IRouteInvoker
     {
-        private readonly IEnumerable<IResponseProcessor> processors;
         private readonly AcceptHeaderCoercionConventions coercionConventions;
+        private readonly IEnumerable<IResponseProcessor> processors;
 
         public DefaultRouteInvoker(IEnumerable<IResponseProcessor> processors, AcceptHeaderCoercionConventions coercionConventions)
         {
@@ -86,13 +86,14 @@ namespace Nancy.Routing
             return (Response)routeResult;
         }
 
-        private static Response NegotiateResponse(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, object model, Negotiator negotiator, NancyContext context)
+        private static Response NegotiateResponse(IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders,
+            object model, Negotiator negotiator, NancyContext context)
         {
             foreach (var compatibleHeader in compatibleHeaders)
             {
                 var prioritizedProcessors = compatibleHeader.Item2
-                    .OrderByDescending(x => x.Item2.ModelResult)
-                    .ThenByDescending(x => x.Item2.RequestedContentTypeResult);
+                                                            .OrderByDescending(x => x.Item2.ModelResult)
+                                                            .ThenByDescending(x => x.Item2.RequestedContentTypeResult);
 
                 foreach (var prioritizedProcessor in prioritizedProcessors)
                 {
@@ -100,7 +101,8 @@ namespace Nancy.Routing
                     context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Invoking processor: {0}\n", processorType));
 
                     var response =
-                        prioritizedProcessor.Item1.Process(compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1), context);
+                        prioritizedProcessor.Item1.Process(compatibleHeader.Item1, negotiator.NegotiationContext.GetModelForMediaRange(compatibleHeader.Item1),
+                            context);
 
                     if (response != null)
                     {
@@ -124,17 +126,17 @@ namespace Nancy.Routing
             context.WriteTraceLog(sb =>
             {
                 var allowableFormats = negotiator.NegotiationContext
-                    .PermissableMediaRanges
-                    .Select(mr => mr.ToString())
-                    .Aggregate((t1, t2) => t1 + ", " + t2);
+                                                 .PermissableMediaRanges
+                                                 .Select(mr => mr.ToString())
+                                                 .Aggregate((t1, t2) => t1 + ", " + t2);
 
                 var originalAccept = context.Request.Headers["accept"].Any()
-                                         ? string.Join(", ", context.Request.Headers["accept"])
-                                         : "None";
+                    ? string.Join(", ", context.Request.Headers["accept"])
+                    : "None";
 
-                var coercedAccept = coercedAcceptHeaders.Any() ?
-                                        coercedAcceptHeaders.Select(h => h.Item1).Aggregate((t1, t2) => t1 + ", " + t2) :
-                                        "None";
+                var coercedAccept = coercedAcceptHeaders.Any()
+                    ? coercedAcceptHeaders.Select(h => h.Item1).Aggregate((t1, t2) => t1 + ", " + t2)
+                    : "None";
 
                 sb.AppendFormat("[DefaultRouteInvoker] Original accept header: {0}\n", originalAccept);
                 sb.AppendFormat("[DefaultRouteInvoker] Coerced accept header: {0}\n", coercedAccept);
@@ -176,31 +178,28 @@ namespace Nancy.Routing
             }
 
             foreach (var cookie in negotiator.NegotiationContext.Cookies)
-            {
                 response.Cookies.Add(cookie);
-            }
 
             return response;
         }
 
         private static void CheckForContentTypeHeader(Negotiator negotiator, Response response)
         {
-          if (negotiator.NegotiationContext.Headers.ContainsKey("Content-Type"))
-          {
-            response.ContentType = negotiator.NegotiationContext.Headers["Content-Type"];
-            negotiator.NegotiationContext.Headers.Remove("Content-Type");
-          }
-        }
-
-        private static void AddNegotiatedHeaders(Negotiator negotiator, Response response)
-        { 
-            foreach (var header in negotiator.NegotiationContext.Headers)
+            if (negotiator.NegotiationContext.Headers.ContainsKey("Content-Type"))
             {
-                response.Headers[header.Key] = header.Value;
+                response.ContentType = negotiator.NegotiationContext.Headers["Content-Type"];
+                negotiator.NegotiationContext.Headers.Remove("Content-Type");
             }
         }
 
-        private static void AddLinkHeaders(NancyContext context, IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Response response)
+        private static void AddNegotiatedHeaders(Negotiator negotiator, Response response)
+        {
+            foreach (var header in negotiator.NegotiationContext.Headers)
+                response.Headers[header.Key] = header.Value;
+        }
+
+        private static void AddLinkHeaders(NancyContext context,
+            IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> compatibleHeaders, Response response)
         {
             var linkProcessors = new Dictionary<string, MediaRange>();
 
@@ -224,13 +223,14 @@ namespace Nancy.Routing
                 context.Request.Url.BasePath + "/" + Path.GetFileNameWithoutExtension(context.Request.Url.Path);
 
             var links = linkProcessors.Keys
-                .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp, linkProcessors[lp]))
-                .Aggregate((lp1, lp2) => lp1 + "," + lp2);
+                                      .Select(lp => string.Format("<{0}.{1}>; rel=\"{2}\"", baseUrl, lp, linkProcessors[lp]))
+                                      .Aggregate((lp1, lp2) => lp1 + "," + lp2);
 
             response.Headers["Link"] = links;
         }
 
-        private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(IEnumerable<Tuple<string, decimal>> coercedAcceptHeaders, NancyContext context, Negotiator negotiator)
+        private Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>[] GetCompatibleHeaders(
+            IEnumerable<Tuple<string, decimal>> coercedAcceptHeaders, NancyContext context, Negotiator negotiator)
         {
             List<Tuple<string, decimal>> acceptHeaders;
 
@@ -245,14 +245,18 @@ namespace Nancy.Routing
             else
             {
                 acceptHeaders = coercedAcceptHeaders.Where(header => header.Item2 > 0m)
-                    .SelectMany(header => permissableMediaRanges.Where(mr => mr.Matches(header.Item1)).Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
-                    .ToList();
+                                                    .SelectMany(
+                                                        header =>
+                                                            permissableMediaRanges.Where(mr => mr.Matches(header.Item1))
+                                                                                  .Select(mr => Tuple.Create(mr.ToString(), header.Item2)))
+                                                    .ToList();
             }
 
             return this.GetCompatibleProcessors(acceptHeaders, negotiator, context).ToArray();
         }
 
-        private IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> GetCompatibleProcessors(IEnumerable<Tuple<string, decimal>> acceptHeaders, Negotiator negotiator, NancyContext context)
+        private IEnumerable<Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>> GetCompatibleProcessors(
+            IEnumerable<Tuple<string, decimal>> acceptHeaders, Negotiator negotiator, NancyContext context)
         {
             foreach (var header in acceptHeaders)
             {
@@ -264,7 +268,7 @@ namespace Nancy.Routing
                     yield return new Tuple<string, IEnumerable<Tuple<IResponseProcessor, ProcessorMatch>>>(
                         header.Item1,
                         compatibleProcessors
-                    );
+                        );
                 }
             }
         }
@@ -274,9 +278,7 @@ namespace Nancy.Routing
             var currentHeaders = context.Request.Headers.Accept;
 
             foreach (var coercion in coercionConventions)
-            {
                 currentHeaders = coercion.Invoke(currentHeaders, context);
-            }
 
             return currentHeaders;
         }

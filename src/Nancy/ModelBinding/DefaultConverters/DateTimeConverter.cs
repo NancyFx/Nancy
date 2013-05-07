@@ -15,7 +15,7 @@
         /// <returns>True if conversion supported, false otherwise</returns>
         public bool CanConvertTo(Type destinationType, BindingContext context)
         {
-            return destinationType == typeof(DateTime);
+            return destinationType == typeof (DateTime);
         }
 
         /// <summary>

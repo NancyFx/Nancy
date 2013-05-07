@@ -9,9 +9,8 @@ namespace Nancy.Cryptography
     /// </summary>
     public class RijndaelEncryptionProvider : IEncryptionProvider
     {
-        private readonly byte[] key;
-
         private readonly byte[] iv;
+        private readonly byte[] key;
 
         /// <summary>
         /// Creates a new instance of the RijndaelEncryptionProvider class

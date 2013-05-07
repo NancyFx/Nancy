@@ -3,12 +3,13 @@ namespace Nancy.Demo.Authentication.Forms
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using Nancy.Authentication.Forms;
     using Nancy.Security;
 
     public class UserDatabase : IUserMapper
     {
-        private static List<Tuple<string, string, Guid>> users = new List<Tuple<string, string, Guid>>();
+        private static readonly List<Tuple<string, string, Guid>> users = new List<Tuple<string, string, Guid>>();
 
         static UserDatabase()
         {
@@ -21,8 +22,8 @@ namespace Nancy.Demo.Authentication.Forms
             var userRecord = users.Where(u => u.Item3 == identifier).FirstOrDefault();
 
             return userRecord == null
-                       ? null
-                       : new DemoUserIdentity {UserName = userRecord.Item1};
+                ? null
+                : new DemoUserIdentity {UserName = userRecord.Item1};
         }
 
         public static Guid? ValidateUser(string username, string password)

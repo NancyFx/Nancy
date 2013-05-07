@@ -1,21 +1,20 @@
-﻿using Nancy.Extensions;
-using Nancy.Responses.Negotiation;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
-    using ModelBinding;
-    using Nancy.ViewEngines;
+    using Nancy.Extensions;
+    using Nancy.ModelBinding;
+    using Nancy.Responses.Negotiation;
     using Nancy.Validation;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Default implementation for building a full configured <see cref="INancyModule"/> instance.
     /// </summary>
     public class DefaultNancyModuleBuilder : INancyModuleBuilder
     {
-        private readonly IViewFactory viewFactory;
-        private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelBinderLocator modelBinderLocator;
+        private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelValidatorLocator validatorLocator;
+        private readonly IViewFactory viewFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
@@ -24,7 +23,8 @@ namespace Nancy.Routing
         /// <param name="responseFormatterFactory">An <see cref="IResponseFormatterFactory"/> instance that should be used to create a response formatter for the module.</param>
         /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
         /// <param name="validatorLocator">A <see cref="IModelValidatorLocator"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator)
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator,
+            IModelValidatorLocator validatorLocator)
         {
             this.viewFactory = viewFactory;
             this.responseFormatterFactory = responseFormatterFactory;
@@ -55,10 +55,10 @@ namespace Nancy.Routing
         {
             // TODO - not sure if this should be here or not, but it'll do for now :)
             context.NegotiationContext = new NegotiationContext
-                                             {
-                                                 ModuleName = module.GetModuleName(),
-                                                 ModulePath = module.ModulePath,
-                                             };
+            {
+                ModuleName = module.GetModuleName(),
+                ModulePath = module.ModulePath,
+            };
         }
     }
 }

@@ -1,8 +1,8 @@
-﻿using CompilerException = Spark.Compiler.CompilerException;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
     using System.Collections.Generic;
+
+    using global::Spark.Compiler;
 
     public class SparkViewEngineResult
     {

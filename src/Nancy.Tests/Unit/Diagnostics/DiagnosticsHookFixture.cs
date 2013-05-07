@@ -2,10 +2,12 @@
 {
     using System;
     using System.Linq;
+
     using Nancy.Cookies;
     using Nancy.Cryptography;
     using Nancy.Diagnostics;
     using Nancy.Testing;
+
     using Xunit;
 
     public class DiagnosticsHookFixture
@@ -71,7 +73,7 @@
         public void Should_return_login_page_with_no_auth_cookie()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -93,7 +95,7 @@
         public void Should_return_main_page_with_valid_auth_cookie()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -105,10 +107,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get(diagsConfig.Path, with =>
-                {
-                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
-                });
+            var result = browser.Get(diagsConfig.Path, with => { with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password")); });
 
             // Then
             result.Body["#infoBox"].ShouldExistOnce();
@@ -118,7 +117,7 @@
         public void Should_return_login_page_with_expired_auth_cookie()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -130,10 +129,8 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get(diagsConfig.Path, with =>
-            {
-                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10)));
-            });
+            var result = browser.Get(diagsConfig.Path,
+                with => { with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", DateTime.Now.AddMinutes(-10))); });
 
             // Then
             result.Body["#login"].ShouldExistOnce();
@@ -143,7 +140,7 @@
         public void Should_return_login_page_with_auth_cookie_with_incorrect_password()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -155,10 +152,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Get(diagsConfig.Path, with =>
-            {
-                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("wrongPassword"));
-            });
+            var result = browser.Get(diagsConfig.Path, with => { with.Cookie(DiagsCookieName, this.GetSessionCookieValue("wrongPassword")); });
 
             // Then
             result.Body["#login"].ShouldExistOnce();
@@ -168,7 +162,7 @@
         public void Should_not_accept_invalid_password()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -180,10 +174,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Post(diagsConfig.Path, with =>
-            {
-                with.FormValue("Password", "wrongpassword");
-            });
+            var result = browser.Post(diagsConfig.Path, with => { with.FormValue("Password", "wrongpassword"); });
 
             // Then
             result.Body["#login"].ShouldExistOnce();
@@ -194,7 +185,7 @@
         public void Should_set_login_cookie_when_password_correct()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -206,10 +197,7 @@
             var browser = new Browser(bootstrapper);
 
             // When
-            var result = browser.Post(diagsConfig.Path, with =>
-            {
-                with.FormValue("Password", "password");
-            });
+            var result = browser.Post(diagsConfig.Path, with => { with.FormValue("Password", "password"); });
 
             // Then
             result.Cookies.Any(c => c.Name == DiagsCookieName).ShouldBeTrue();
@@ -220,7 +208,7 @@
         public void Should_use_rolling_expiry_for_auth_cookie()
         {
             // Given
-            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+            var diagsConfig = new DiagnosticsConfiguration {Password = "password", CryptographyConfiguration = this.cryptoConfig};
 
             var bootstrapper = new ConfigurableBootstrapper(with =>
             {
@@ -233,10 +221,7 @@
             var expiryDate = DateTime.Now.AddMinutes(5);
 
             // When
-            var result = browser.Get(diagsConfig.Path, with =>
-            {
-                with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate));
-            });
+            var result = browser.Get(diagsConfig.Path, with => { with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password", expiryDate)); });
 
             // Then
             result.Cookies.Any(c => c.Name == DiagsCookieName).ShouldBeTrue();
@@ -249,11 +234,11 @@
             var salt = DiagnosticsSession.GenerateRandomSalt();
             var hash = DiagnosticsSession.GenerateSaltedHash(password, salt);
             var session = new DiagnosticsSession
-                {
-                    Hash = hash,
-                    Salt = salt,
-                    Expiry = expiry.HasValue ? expiry.Value : DateTime.Now.AddMinutes(15),
-                };
+            {
+                Hash = hash,
+                Salt = salt,
+                Expiry = expiry.HasValue ? expiry.Value : DateTime.Now.AddMinutes(15),
+            };
 
             var serializedSession = this.objectSerializer.Serialize(session);
 
@@ -270,7 +255,7 @@
             var hmacStringLength = Base64Helpers.GetBase64Length(this.cryptoConfig.HmacProvider.HmacLength);
             var encryptedSession = cookieValue.Substring(hmacStringLength);
             var decrypted = this.cryptoConfig.EncryptionProvider.Decrypt(encryptedSession);
-            
+
             return this.objectSerializer.Deserialize(decrypted) as DiagnosticsSession;
         }
     }

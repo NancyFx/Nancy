@@ -1,7 +1,9 @@
 namespace Nancy.Tests.Unit
 {
     using System;
+
     using FakeItEasy;
+
     using Xunit;
 
     public class NancyContextFixture
@@ -27,8 +29,10 @@ namespace Nancy.Tests.Unit
         public void Should_dispose_request_when_being_disposed()
         {
             // Given
-            var request = A.Fake<Request>(x => {
-                x.Implements(typeof (IDisposable));;
+            var request = A.Fake<Request>(x =>
+            {
+                x.Implements(typeof (IDisposable));
+                ;
                 x.WithArgumentsForConstructor(new[] {"GET", "/", "http"});
             });
 

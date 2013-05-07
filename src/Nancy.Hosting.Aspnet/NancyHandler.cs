@@ -4,14 +4,15 @@ namespace Nancy.Hosting.Aspnet
     using System.Globalization;
     using System.Linq;
     using System.Web;
-    using IO;
+
     using Nancy.Extensions;
+    using Nancy.IO;
 
     /// <summary>
     /// Bridges the communication between Nancy and ASP.NET based hosting.
     /// </summary>
     public class NancyHandler
-    {        
+    {
         private readonly INancyEngine engine;
 
         /// <summary>
@@ -32,9 +33,7 @@ namespace Nancy.Hosting.Aspnet
             var request = CreateNancyRequest(context);
 
             using (var nancyContext = this.engine.HandleRequest(request))
-            {
                 SetNancyResponseToHttpResponse(context, nancyContext.Response);
-            }
         }
 
         private static Request CreateNancyRequest(HttpContextBase context)
@@ -50,22 +49,22 @@ namespace Nancy.Hosting.Aspnet
             path = string.IsNullOrWhiteSpace(path) ? "/" : path;
 
             var nancyUrl = new Url
-                               {
-                                   Scheme = context.Request.Url.Scheme,
-                                   HostName = context.Request.Url.Host,
-                                   Port = context.Request.Url.Port,
-                                   BasePath = basePath,
-                                   Path = path,
-                                   Query = context.Request.Url.Query,
-                                   Fragment = context.Request.Url.Fragment,
-                               };
+            {
+                Scheme = context.Request.Url.Scheme,
+                HostName = context.Request.Url.Host,
+                Port = context.Request.Url.Port,
+                BasePath = basePath,
+                Path = path,
+                Query = context.Request.Url.Query,
+                Fragment = context.Request.Url.Fragment,
+            };
             byte[] certificate = null;
 
             if (context.Request.ClientCertificate != null && context.Request.ClientCertificate.Certificate.Length != 0)
             {
                 certificate = context.Request.ClientCertificate.Certificate;
             }
-                
+
             return new Request(
                 context.Request.HttpMethod.ToUpperInvariant(),
                 nancyUrl,
@@ -113,20 +112,16 @@ namespace Nancy.Hosting.Aspnet
                 context.Response.ContentType = response.ContentType;
             }
             context.Response.StatusCode = (int)response.StatusCode;
-            response.Contents.Invoke(context.Response.OutputStream);         
+            response.Contents.Invoke(context.Response.OutputStream);
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)
         {
             foreach (var header in response.Headers.ToDictionary(x => x.Key, x => x.Value))
-            {
                 context.Response.AddHeader(header.Key, header.Value);
-            }
 
-            foreach(var cookie in response.Cookies.ToArray())
-            {
+            foreach (var cookie in response.Cookies.ToArray())
                 context.Response.AddHeader("Set-Cookie", cookie.ToString());
-            }
         }
     }
 }

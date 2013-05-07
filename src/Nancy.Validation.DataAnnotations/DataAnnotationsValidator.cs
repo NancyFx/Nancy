@@ -11,20 +11,16 @@
     /// </summary>
     public class DataAnnotationsValidator : IModelValidator
     {
-        private static readonly Dictionary<Type, Func<ValidationAttribute, PropertyDescriptor, IDataAnnotationsValidatorAdapter>> factories = new Dictionary<Type, Func<ValidationAttribute, PropertyDescriptor, IDataAnnotationsValidatorAdapter>>
+        private static readonly Dictionary<Type, Func<ValidationAttribute, PropertyDescriptor, IDataAnnotationsValidatorAdapter>> factories = new Dictionary
+            <Type, Func<ValidationAttribute, PropertyDescriptor, IDataAnnotationsValidatorAdapter>>
         {
-            { typeof(RangeAttribute), (attribute, descriptor) => new RangeValidatorAdapter((RangeAttribute)attribute, descriptor) },
-            { typeof(RegularExpressionAttribute), (attribute, descriptor) => new RegexValidatorAdapter((RegularExpressionAttribute)attribute, descriptor) },
-            { typeof(RequiredAttribute), (attribute, descriptor) => new RequiredValidatorAdapter((RequiredAttribute)attribute, descriptor) },
-            { typeof(StringLengthAttribute), (attribute, descriptor) => new StringLengthValidatorAdapter((StringLengthAttribute)attribute, descriptor) },
+            {typeof (RangeAttribute), (attribute, descriptor) => new RangeValidatorAdapter((RangeAttribute)attribute, descriptor)},
+            {typeof (RegularExpressionAttribute), (attribute, descriptor) => new RegexValidatorAdapter((RegularExpressionAttribute)attribute, descriptor)},
+            {typeof (RequiredAttribute), (attribute, descriptor) => new RequiredValidatorAdapter((RequiredAttribute)attribute, descriptor)},
+            {typeof (StringLengthAttribute), (attribute, descriptor) => new StringLengthValidatorAdapter((StringLengthAttribute)attribute, descriptor)},
         };
 
         private readonly List<IDataAnnotationsValidatorAdapter> adapters;
-
-        /// <summary>
-        /// Gets the description of the validator.
-        /// </summary>
-        public ModelValidationDescriptor Description { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidator"/> class.
@@ -38,6 +34,11 @@
         }
 
         /// <summary>
+        /// Gets the description of the validator.
+        /// </summary>
+        public ModelValidationDescriptor Description { get; private set; }
+
+        /// <summary>
         /// Validates the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
@@ -45,11 +46,9 @@
         public ModelValidationResult Validate(object instance)
         {
             var errors = new List<ModelValidationError>();
-            
+
             foreach (var adapter in adapters)
-            {
                 errors.AddRange(adapter.Validate(instance));
-            }
 
             return new ModelValidationResult(errors);
         }
@@ -66,19 +65,17 @@
 
         private static List<IDataAnnotationsValidatorAdapter> GetAdapters(Type type)
         {
-            var typeDescriptor = 
+            var typeDescriptor =
                 new AssociatedMetadataTypeTypeDescriptionProvider(type).GetTypeDescriptor(type);
 
-            var adapters = 
+            var adapters =
                 GetAdapters(null, type, typeDescriptor.GetAttributes().OfType<ValidationAttribute>());
 
-            var propertyDescriptors = 
+            var propertyDescriptors =
                 typeDescriptor.GetProperties();
 
             foreach (PropertyDescriptor property in propertyDescriptors)
-            {
                 adapters.AddRange(GetAdapters(property, property.PropertyType, property.Attributes.OfType<ValidationAttribute>()));
-            }
 
             return adapters;
         }
@@ -98,7 +95,7 @@
                 adapters.Add(factory(attribute, descriptor));
             }
 
-            if (descriptor == null && typeof(IValidatableObject).IsAssignableFrom(type))
+            if (descriptor == null && typeof (IValidatableObject).IsAssignableFrom(type))
             {
                 adapters.Add(new DataAnnotationsValidatableObjectValidatorAdapter());
             }

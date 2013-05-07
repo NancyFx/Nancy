@@ -38,10 +38,18 @@
 
         public class DiagObject
         {
-            public void NoReturnValue()
+            public string SayHelloWithAgeTemplate
             {
-
+                get { return "<h1>Templated Results</h1><p>{{model.Result}}</p>"; }
             }
+
+            public string SayHelloWithAgeDescription
+            {
+                get { return "Simple test method that takes a name and an age and returns a result with a template."; }
+            }
+
+            public void NoReturnValue()
+            {}
 
             public string StringReturnValue()
             {
@@ -51,22 +59,6 @@
             public string SayHello(string name)
             {
                 return string.Format("Hello {0}!", name);
-            }
-
-            public string SayHelloWithAgeTemplate
-            {
-                get
-                {
-                    return "<h1>Templated Results</h1><p>{{model.Result}}</p>";
-                }
-            }
-
-            public string SayHelloWithAgeDescription
-            {
-                get
-                {
-                    return "Simple test method that takes a name and an age and returns a result with a template.";
-                }
             }
 
             public string SayHelloWithAge(string myName, int myAge)

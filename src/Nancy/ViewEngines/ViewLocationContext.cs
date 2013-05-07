@@ -20,6 +20,6 @@ namespace Nancy.ViewEngines
         /// <summary>
         /// The request/response context
         /// </summary>
-        public NancyContext Context{ get; set; }
+        public NancyContext Context { get; set; }
     }
 }

@@ -14,13 +14,13 @@
         /// <returns>A <see cref="ModelValidationResult"/> instance.</returns>
         public static ModelValidationResult Validate<T>(this INancyModule module, T instance)
         {
-            var validator = 
-                module.ValidatorLocator.GetValidatorForType(typeof(T));
+            var validator =
+                module.ValidatorLocator.GetValidatorForType(typeof (T));
 
             var result =
-                (validator == null) ?
-                    ModelValidationResult.Valid :
-                    validator.Validate(instance);
+                (validator == null)
+                    ? ModelValidationResult.Valid
+                    : validator.Validate(instance);
 
             module.ModelValidationResult = result;
 

@@ -1,8 +1,9 @@
-using System;
-using Nancy.ErrorHandling;
-
 namespace Nancy.Testing
 {
+    using System;
+
+    using Nancy.ErrorHandling;
+
     public class PassThroughStatusCodeHandler : IStatusCodeHandler
     {
         public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext context)

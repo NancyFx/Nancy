@@ -103,13 +103,13 @@
         {
             const string input = "/scripts/test.js";
             var url = new Url
-                {
-                    BasePath = "/base/path",
-                    Path = "/"
-                };
+            {
+                BasePath = "/base/path",
+                Path = "/"
+            };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var nancyContext = new NancyContext {Request = request};
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
@@ -122,13 +122,13 @@
         {
             const string input = "~/scripts/test.js";
             var url = new Url
-                {
-                    BasePath = "/base/path/",
-                    Path = "/"
-                };
+            {
+                BasePath = "/base/path/",
+                Path = "/"
+            };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var nancyContext = new NancyContext {Request = request};
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
@@ -141,13 +141,13 @@
         {
             const string input = "~/scripts/test.js";
             var url = new Url
-                {
-                    BasePath = null,
-                    Path = "/"
-                };
+            {
+                BasePath = null,
+                Path = "/"
+            };
             var request = new Request("GET", url);
-            var nancyContext = new NancyContext { Request = request };
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var nancyContext = new NancyContext {Request = request};
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = context.ParsePath(input);
@@ -160,7 +160,7 @@
         {
             var nancyContext = new NancyContext();
             nancyContext.Items[CsrfToken.DEFAULT_CSRF_KEY] = "testing";
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = context.GetCsrfToken();
@@ -175,24 +175,24 @@
         {
             var nancyContext = new NancyContext();
             nancyContext.Items[CsrfToken.DEFAULT_CSRF_KEY] = new object();
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = Record.Exception(() => context.GetCsrfToken());
 
-            result.ShouldBeOfType(typeof(InvalidOperationException));
+            result.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
         public void Should_throw_if_context_does_not_contain_valid_csrf_token_and_its_requested()
         {
             var nancyContext = new NancyContext();
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);
 
             var result = Record.Exception(() => context.GetCsrfToken());
 
-            result.ShouldBeOfType(typeof(InvalidOperationException));
+            result.ShouldBeOfType(typeof (InvalidOperationException));
         }
 
         [Fact]
@@ -200,7 +200,7 @@
         {
             // Given
             var nancyContext = new NancyContext();
-            var viewLocationContext = new ViewLocationContext { Context = nancyContext };
+            var viewLocationContext = new ViewLocationContext {Context = nancyContext};
 
             // When
             var context = new DefaultRenderContext(null, null, null, viewLocationContext);

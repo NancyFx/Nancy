@@ -2,6 +2,7 @@
 {
     using System;
     using System.Configuration;
+    using System.Globalization;
     using System.Linq;
     using System.Reflection;
     using System.Text;
@@ -18,15 +19,15 @@
     /// </summary>
     public class MachineKeyHmacProvider : IHmacProvider
     {
-        /// <summary>
-        /// Gets the length of the HMAC signature in bytes
-        /// </summary>
-        public int HmacLength { get; private set; }
-
         public MachineKeyHmacProvider()
         {
             this.GetHmacLength();
         }
+
+        /// <summary>
+        /// Gets the length of the HMAC signature in bytes
+        /// </summary>
+        public int HmacLength { get; private set; }
 
         /// <summary>
         /// Create a hmac from the given data
@@ -83,18 +84,18 @@
         /// <returns>Actual byte array</returns>
         private static byte[] HexStringToByteArray(string data)
         {
-            if (string.IsNullOrEmpty(data) || data.Length % 2 != 0)
+            if (string.IsNullOrEmpty(data) || data.Length%2 != 0)
             {
-                return new byte[] { };
+                return new byte[] {};
             }
 
-            var output = new byte[data.Length / 2];
+            var output = new byte[data.Length/2];
 
-            for (var i = 0; i < data.Length / 2; i++)
+            for (var i = 0; i < data.Length/2; i++)
             {
-                var numberString = new string(new[] { data[2 * i], data[2 * i + 1] });
+                var numberString = new string(new[] {data[2*i], data[2*i + 1]});
 
-                var value = byte.Parse(numberString, System.Globalization.NumberStyles.HexNumber);
+                var value = byte.Parse(numberString, NumberStyles.HexNumber);
 
                 output[i] = value;
             }

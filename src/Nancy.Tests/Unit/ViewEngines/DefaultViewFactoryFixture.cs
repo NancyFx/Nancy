@@ -3,21 +3,23 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System;
     using System.Dynamic;
     using System.IO;
-    using FakeItEasy;
-    using Nancy.ViewEngines;
-    using Nancy.Tests.Fakes;
-    using Xunit;
     using System.Linq;
-    using Nancy.Conventions;
 
+    using FakeItEasy;
+
+    using Nancy.Conventions;
+    using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
+
+    using Xunit;
 
     public class DefaultViewFactoryFixture
     {
-        private readonly IViewResolver resolver;
-        private readonly IRenderContextFactory renderContextFactory;
-        private readonly ViewLocationContext viewLocationContext;
         private readonly ViewLocationConventions conventions;
+        private readonly IRenderContextFactory renderContextFactory;
+        private readonly IViewResolver resolver;
         private readonly IRootPathProvider rootPathProvider;
+        private readonly ViewLocationContext viewLocationContext;
 
         public DefaultViewFactoryFixture()
         {
@@ -39,7 +41,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         {
             if (viewEngines == null)
             {
-                viewEngines = new IViewEngine[] { };
+                viewEngines = new IViewEngine[] {};
             }
 
             return new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, this.conventions, this.rootPathProvider);
@@ -49,11 +51,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_get_render_context_from_factory_when_rendering_view()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -71,11 +74,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_render_view_with_context_created_by_factory()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -96,11 +100,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_not_build_render_context_more_than_once()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -187,7 +192,7 @@ namespace Nancy.Tests.Unit.ViewEngines
             var factory = this.CreateFactory();
             var model = new object();
 
-            var viewContext = 
+            var viewContext =
                 new ViewLocationContext
                 {
                     Context = new NancyContext(),
@@ -198,20 +203,23 @@ namespace Nancy.Tests.Unit.ViewEngines
             Record.Exception(() => factory.RenderView(null, model, viewContext));
 
             // Then
-            A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.That.Matches(x => x.ModulePath.Equals("/bar")))).MustHaveHappened();
+            A.CallTo(
+                () => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.That.Matches(x => x.ModulePath.Equals("/bar"))))
+             .MustHaveHappened();
         }
 
         [Fact]
         public void Should_call_first_view_engine_that_supports_extension_with_view_location_results()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
+            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] {"html"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -229,11 +237,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_ignore_case_when_locating_view_engine_for_view_name_extension()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "HTML" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"HTML"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
@@ -251,13 +260,14 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_response_from_invoked_engine()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
             Action<Stream> actionReturnedFromEngine = x => { };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored)).Returns(actionReturnedFromEngine);
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
@@ -275,11 +285,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_return_empty_action_when_view_engine_throws_exception()
         {
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, A<IRenderContext>.Ignored)).Throws(new Exception());
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
@@ -300,11 +311,12 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_invoke_view_engine_with_model()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
             A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, null, null)).Throws(new Exception());
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
@@ -324,37 +336,42 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_covert_anonymoustype_model_to_expandoobject_before_invoking_view_engine()
         {
             // Given
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
             };
 
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
-            var model = new { Name = "" };
+            var model = new {Name = ""};
             var factory = this.CreateFactory(viewEngines);
 
             // When
             factory.RenderView("foo", model, this.viewLocationContext);
 
             // Then
-            A.CallTo(() => viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof(ExpandoObject))), A<IRenderContext>.Ignored)).MustHaveHappened();
+            A.CallTo(
+                () =>
+                    viewEngines[0].RenderView(A<ViewLocationResult>.Ignored, A<object>.That.Matches(x => x.GetType().Equals(typeof (ExpandoObject))),
+                        A<IRenderContext>.Ignored)).MustHaveHappened();
         }
 
         [Fact]
         public void Should_transfer_anonymoustype_model_members_to_expandoobject_members_before_invoking_view_engines()
         {
             // Given
-            var viewEngines = new[] {
-              new FakeViewEngine { Extensions = new[] { "html"}}
+            var viewEngines = new[]
+            {
+                new FakeViewEngine {Extensions = new[] {"html"}}
             };
 
             var location = new ViewLocationResult("location", "name", "html", GetEmptyContentReader());
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(location);
 
-            var model = new { Name = "Nancy" };
+            var model = new {Name = "Nancy"};
             var factory = this.CreateFactory(viewEngines);
 
             // When
@@ -405,41 +422,44 @@ namespace Nancy.Tests.Unit.ViewEngines
         [Fact]
         public void Should_provide_view_name_and_available_extensions_in_not_found_exception()
         {
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
+                A.Fake<IViewEngine>(),
             };
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "sshtml" });
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
+            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] {"sshtml"});
             var factory = this.CreateFactory(viewEngines);
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
             var result = Record.Exception(() => factory.RenderView("foo", null, this.viewLocationContext)) as ViewNotFoundException;
 
-            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
+            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] {"html", "sshtml"});
             result.ViewName.ShouldEqual("foo");
         }
 
         [Fact]
         public void Should_provide_list_of_inspected_view_locations_in_not_found_exception()
         {
-            var viewEngines = new[] {
-              A.Fake<IViewEngine>(),
-              A.Fake<IViewEngine>(),
+            var viewEngines = new[]
+            {
+                A.Fake<IViewEngine>(),
+                A.Fake<IViewEngine>(),
             };
-            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] { "html" });
-            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] { "sshtml" });            
-             
-            var conventions = new Func<string, dynamic, ViewLocationContext, string>[] {(a,b,c) => "baz"};
-            var factory = new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, new ViewLocationConventions(conventions), this.rootPathProvider);
-            
+            A.CallTo(() => viewEngines[0].Extensions).Returns(new[] {"html"});
+            A.CallTo(() => viewEngines[1].Extensions).Returns(new[] {"sshtml"});
+
+            var conventions = new Func<string, dynamic, ViewLocationContext, string>[] {(a, b, c) => "baz"};
+            var factory = new DefaultViewFactory(this.resolver, viewEngines, this.renderContextFactory, new ViewLocationConventions(conventions),
+                this.rootPathProvider);
+
             A.CallTo(() => this.resolver.GetViewLocation(A<string>.Ignored, A<object>.Ignored, A<ViewLocationContext>.Ignored)).Returns(null);
 
             var result = (Record.Exception(() => factory.RenderView("foo", null, this.viewLocationContext))) as ViewNotFoundException;
 
-            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] { "html", "sshtml" });
+            result.AvailableViewEngineExtensions.ShouldEqualSequence(new[] {"html", "sshtml"});
             result.ViewName.ShouldEqual("foo");
-            result.InspectedLocations.ShouldEqualSequence(new [] {"baz"});
+            result.InspectedLocations.ShouldEqualSequence(new[] {"baz"});
         }
 
 

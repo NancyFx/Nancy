@@ -1,13 +1,14 @@
 namespace Nancy.Demo.Authentication.Stateless
 {
-    using Nancy.Security;
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
+    using Nancy.Security;
+
     public class UserDatabase
-    {        
-        static readonly List<Tuple<string, string>> ActiveApiKeys = new List<Tuple<string, string>>();
+    {
+        private static readonly List<Tuple<string, string>> ActiveApiKeys = new List<Tuple<string, string>>();
         private static readonly List<Tuple<string, string>> Users = new List<Tuple<string, string>>();
 
         static UserDatabase()
@@ -20,7 +21,7 @@ namespace Nancy.Demo.Authentication.Stateless
         {
             var activeKey = ActiveApiKeys.FirstOrDefault(x => x.Item2 == apiKey);
 
-            if(activeKey==null)
+            if (activeKey == null)
             {
                 return null;
             }
@@ -34,7 +35,7 @@ namespace Nancy.Demo.Authentication.Stateless
             //try to get a user from the "database" that matches the given username and password
             var userRecord = Users.FirstOrDefault(u => u.Item1 == username && u.Item2 == password);
 
-            if(userRecord==null)
+            if (userRecord == null)
             {
                 return null;
             }
@@ -42,7 +43,7 @@ namespace Nancy.Demo.Authentication.Stateless
             //now that the user is validated, create an api key that can be used for subsequent requests
             var apiKey = Guid.NewGuid().ToString();
             ActiveApiKeys.Add(new Tuple<string, string>(username, apiKey));
-            return apiKey;            
+            return apiKey;
         }
 
         public static void RemoveApiKey(string apiKey)

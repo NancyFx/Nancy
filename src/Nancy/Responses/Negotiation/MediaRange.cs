@@ -22,10 +22,7 @@ namespace Nancy.Responses.Negotiation
         /// </summary>
         public bool IsWildcard
         {
-            get
-            {
-                return this.Type.IsWildcard && this.Subtype.IsWildcard;
-            }
+            get { return this.Type.IsWildcard && this.Subtype.IsWildcard; }
         }
 
         /// <summary>
@@ -64,12 +61,12 @@ namespace Nancy.Responses.Negotiation
                 }
             }
 
-            return new MediaRange { Type = parts[0], Subtype = parts[1] };
+            return new MediaRange {Type = parts[0], Subtype = parts[1]};
         }
 
         public static implicit operator MediaRange(string contentType)
         {
-            return MediaRange.FromString(contentType);
+            return FromString(contentType);
         }
 
         public static implicit operator string(MediaRange mediaRange)

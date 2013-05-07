@@ -9,8 +9,8 @@
     /// </summary>
     public class NancyCSharpRazorCodeParser : CSharpCodeParser
     {
-        private bool modelStatementFound;
         private SourceLocation? endInheritsLocation;
+        private bool modelStatementFound;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyCSharpRazorCodeParser"/> class.
@@ -56,7 +56,8 @@
         {
             if (this.modelStatementFound && this.endInheritsLocation.HasValue)
             {
-                this.Context.OnError(this.endInheritsLocation.Value, string.Format(CultureInfo.CurrentCulture, "Cannot have both an @inherits statement and an @model statement."));
+                this.Context.OnError(this.endInheritsLocation.Value,
+                    string.Format(CultureInfo.CurrentCulture, "Cannot have both an @inherits statement and an @model statement."));
             }
         }
     }

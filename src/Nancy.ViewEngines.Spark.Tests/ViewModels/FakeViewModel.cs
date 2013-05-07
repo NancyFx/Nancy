@@ -1,7 +1,7 @@
-﻿using System;
-
-namespace Nancy.ViewEngines.Spark.Tests.ViewModels
+﻿namespace Nancy.ViewEngines.Spark.Tests.ViewModels
 {
+    using System;
+
     public class FakeViewModel
     {
         public string Text { get; set; }

@@ -15,14 +15,6 @@
 
         private ConcurrentQueue<T> internalStore;
 
-        public int CurrentSize
-        {
-            get
-            {
-                return this.internalStore.Count;
-            }
-        }
-
         /// <summary>
         /// Creates a new instance of the ConcurrentLimitedCollection class
         /// </summary>
@@ -31,6 +23,11 @@
         {
             this.maxSize = maxSize;
             this.internalStore = new ConcurrentQueue<T>();
+        }
+
+        public int CurrentSize
+        {
+            get { return this.internalStore.Count; }
         }
 
         /// <summary>

@@ -2,6 +2,7 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Linq;
+
     using Nancy.Extensions;
 
     /// <summary>
@@ -36,9 +37,10 @@ namespace Nancy.Bootstrapper
                     string.Join(", ", incompatibleTypes.Select(type => type.FullName));
 
                 var errorMessage =
-                    string.Format("{0} must implement {1} inorder to be registered by {2}", incompatibleTypeNames, this.RegistrationType.FullName, this.GetType().Name);
+                    string.Format("{0} must implement {1} inorder to be registered by {2}", incompatibleTypeNames, this.RegistrationType.FullName,
+                        this.GetType().Name);
 
-                throw new ArgumentException(errorMessage);  
+                throw new ArgumentException(errorMessage);
             }
         }
     }

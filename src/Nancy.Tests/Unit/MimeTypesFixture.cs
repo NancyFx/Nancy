@@ -4,7 +4,7 @@
 
     public class MimeTypesFixture
     {
-        [Fact] 
+        [Fact]
         public void Should_return_appropriate_mime_for_common_extensions()
         {
             // Given, When, Then
@@ -16,21 +16,21 @@
             MimeTypes.GetMimeType(".xml").ShouldEqual("application/xml");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_return_octet_stream_if_unknown_mime_type()
         {
             // Given, When, Then
             MimeTypes.GetMimeType(".crazyext").ShouldEqual("application/octet-stream");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_return_appropriate_mime_for_numerical_extensions()
         {
             // Given, When, Then
             MimeTypes.GetMimeType(".323").ShouldEqual("text/h323");
         }
 
-        [Fact] 
+        [Fact]
         public void Should_return_appropriate_mime_for_Special_char_extensions()
         {
             // Given, When, Then

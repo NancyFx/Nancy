@@ -7,9 +7,12 @@ namespace Nancy.Routing.Trie.Nodes
     /// </summary>
     public class RootNode : TrieNode
     {
-        private SegmentMatch segmentMatch = new SegmentMatch(true);
-
         private readonly Dictionary<string, object> localCaptures = new Dictionary<string, object>();
+        private readonly SegmentMatch segmentMatch = new SegmentMatch(true);
+
+        public RootNode(ITrieNodeFactory nodeFactory)
+            : base(null, null, nodeFactory)
+        {}
 
         /// <summary>
         /// Score for this node
@@ -17,11 +20,6 @@ namespace Nancy.Routing.Trie.Nodes
         public override int Score
         {
             get { return 0; }
-        }
-
-        public RootNode(ITrieNodeFactory nodeFactory)
-            : base(null, null, nodeFactory)
-        {
         }
 
         /// <summary>
@@ -32,7 +30,8 @@ namespace Nancy.Routing.Trie.Nodes
         /// <param name="capturedParameters">Currently captured parameters</param>
         /// <param name="context">Current Nancy context</param>
         /// <returns>A collection of <see cref="MatchResult"/> objects</returns>
-        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters, NancyContext context)
+        public override IEnumerable<MatchResult> GetMatches(string[] segments, int currentIndex, IDictionary<string, object> capturedParameters,
+            NancyContext context)
         {
             if (segments.Length == 0)
             {

@@ -32,8 +32,7 @@
         /// <param name="action">The action that should take place when the route is invoked.</param>
         public Route(string method, string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> action)
             : this(new RouteDescription(method, path, condition), action)
-        {
-        }
+        {}
 
         /// <summary>
         /// Gets or sets the action that should take place when the route is invoked.

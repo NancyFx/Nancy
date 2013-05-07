@@ -15,7 +15,6 @@
         /// <param name="innerException"></param>
         public RequestExecutionException(Exception innerException)
             : base("Oh noes!", innerException)
-        {
-        }
+        {}
     }
 }

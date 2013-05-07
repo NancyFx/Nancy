@@ -23,10 +23,7 @@
         /// <param name="allowedExtensions">A list of extensions that is valid for the conventions. If not supplied, all extensions are valid</param>
         public string this[string requestDirectory, params string[] allowedExtensions]
         {
-            set
-            {
-                this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value, allowedExtensions));
-            }
+            set { this.conventions.StaticContentsConventions.Add(StaticContentConventionBuilder.AddDirectory(requestDirectory, value, allowedExtensions)); }
         }
     }
 }

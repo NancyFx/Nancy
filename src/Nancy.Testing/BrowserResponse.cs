@@ -43,10 +43,7 @@
         /// <value>A <see cref="BrowserResponseBodyWrapper"/> instance.</value>
         public BrowserResponseBodyWrapper Body
         {
-            get
-            {
-                return this.body ?? (this.body = new BrowserResponseBodyWrapper(this.Context.Response));
-            }
+            get { return this.body ?? (this.body = new BrowserResponseBodyWrapper(this.Context.Response)); }
         }
 
         /// <summary>
@@ -63,7 +60,7 @@
         {
             get { return this.Context.Response.Headers; }
         }
-        
+
         /// <summary>
         /// Gets the HTTP status code of the response.
         /// </summary>
@@ -86,10 +83,7 @@
         /// </summary>
         public Browser Then
         {
-            get
-            {
-                return this.hostBrowser;
-            }
+            get { return this.hostBrowser; }
         }
     }
 }

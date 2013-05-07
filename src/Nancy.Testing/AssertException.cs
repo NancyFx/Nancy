@@ -12,16 +12,14 @@ namespace Nancy.Testing
         /// Initializes a new instance of the <see cref="AssertException"/> class.
         /// </summary>
         public AssertException()
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssertException"/> class.
         /// </summary>
         /// <param name="message">The exception message.</param>
         public AssertException(string message) : base(message)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssertException"/> class.
@@ -29,8 +27,7 @@ namespace Nancy.Testing
         /// <param name="message">The exception message.</param>
         /// <param name="innerException">The inner exception.</param>
         public AssertException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AssertException"/> class.
@@ -40,7 +37,6 @@ namespace Nancy.Testing
         /// <exception cref="T:System.ArgumentNullException">The <paramref name="info"/> parameter is null. </exception>
         /// <exception cref="T:System.Runtime.Serialization.SerializationException">The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0). </exception>
         protected AssertException(SerializationInfo info, StreamingContext context) : base(info, context)
-        {
-        }
+        {}
     }
 }

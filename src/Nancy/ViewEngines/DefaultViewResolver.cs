@@ -1,6 +1,7 @@
 ﻿namespace Nancy.ViewEngines
 {
     using System;
+
     using Nancy.Conventions;
 
     /// <summary>
@@ -51,7 +52,8 @@
                 return null;
             }
 
-            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewResolver] Resolving view for '", viewName , "', using view location conventions.")));
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine(string.Concat("[DefaultViewResolver] Resolving view for '", viewName, "', using view location conventions.")));
 
             foreach (var convention in conventions)
             {
@@ -63,24 +65,28 @@
                     continue;
                 }
 
-                viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewResolver] Attempting to locate view using convention '", conventionBasedViewName, "'")));
+                viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                    x => x.AppendLine(string.Concat("[DefaultViewResolver] Attempting to locate view using convention '", conventionBasedViewName, "'")));
 
-                var locatedView = 
+                var locatedView =
                     this.viewLocator.LocateView(conventionBasedViewName, viewLocationContext.Context);
 
                 if (locatedView != null)
                 {
-                    viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[DefaultViewResolver] View resolved at '", conventionBasedViewName, "'")));
+                    viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                        x => x.AppendLine(string.Concat("[DefaultViewResolver] View resolved at '", conventionBasedViewName, "'")));
                     return locatedView;
                 }
             }
 
-            viewLocationContext.Context.Trace.TraceLog.WriteLog(x => x.AppendLine("[DefaultViewResolver] No view could be resolved using the available view location conventions."));
+            viewLocationContext.Context.Trace.TraceLog.WriteLog(
+                x => x.AppendLine("[DefaultViewResolver] No view could be resolved using the available view location conventions."));
 
             return null;
         }
 
-        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model, ViewLocationContext viewLocationContext)
+        private static string SafeInvokeConvention(Func<string, object, ViewLocationContext, string> convention, string viewName, dynamic model,
+            ViewLocationContext viewLocationContext)
         {
             try
             {

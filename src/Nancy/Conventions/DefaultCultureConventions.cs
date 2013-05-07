@@ -3,10 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using Nancy.Session;
 
     public class DefaultCultureConventions : IConvention
     {
@@ -31,9 +27,9 @@
                 return Tuple.Create(false, "The culture conventions cannot be null.");
             }
 
-            return (conventions.CultureConventions.Count > 0) ?
-               Tuple.Create(true, string.Empty) :
-               Tuple.Create(false, "The culture conventions cannot be empty.");
+            return (conventions.CultureConventions.Count > 0)
+                ? Tuple.Create(true, string.Empty)
+                : Tuple.Create(false, "The culture conventions cannot be empty.");
         }
 
         /// <summary>
@@ -51,8 +47,6 @@
                 BuiltInCultureConventions.CookieCulture,
                 BuiltInCultureConventions.ThreadCulture
             };
-
         }
-
     }
 }

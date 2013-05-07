@@ -17,12 +17,10 @@
     public class ErrorPipeline : NamedPipelineBase<Func<NancyContext, Exception, Response>>
     {
         public ErrorPipeline()
-        {
-        }
+        {}
 
         public ErrorPipeline(int capacity) : base(capacity)
-        {
-        }
+        {}
 
         public static implicit operator Func<NancyContext, Exception, Response>(ErrorPipeline pipeline)
         {
@@ -45,9 +43,7 @@
         public static ErrorPipeline operator +(ErrorPipeline pipelineToAddTo, ErrorPipeline pipelineToAdd)
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
-            {
                 pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
-            }
 
             return pipelineToAddTo;
         }
@@ -72,9 +68,7 @@
             using (var enumerator = this.PipelineDelegates.GetEnumerator())
             {
                 while (returnValue == null && enumerator.MoveNext())
-                {
                     returnValue = enumerator.Current.Invoke(context, ex);
-                }
             }
 
             return returnValue;

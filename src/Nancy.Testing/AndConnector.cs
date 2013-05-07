@@ -1,10 +1,8 @@
 namespace Nancy.Testing
 {
-    using Nancy;
-
     public class AndConnector<TSource> : IHideObjectMembers
     {
-        private TSource source;
+        private readonly TSource source;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AndConnector{TSource}"/> class. 
@@ -22,10 +20,7 @@ namespace Nancy.Testing
         /// </summary>
         public TSource And
         {
-            get
-            {
-                return this.source;
-            }
+            get { return this.source; }
         }
     }
 }

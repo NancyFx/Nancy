@@ -1,8 +1,9 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
-    using Fakes;
+
     using Nancy.Routing;
+
     using Xunit;
 
     public class RouteFixture
@@ -68,7 +69,8 @@
             //Given
             DynamicDictionary capturedParameters = null;
 
-            Func<dynamic, Response> action = x => {
+            Func<dynamic, Response> action = x =>
+            {
                 capturedParameters = x;
                 return null;
             };

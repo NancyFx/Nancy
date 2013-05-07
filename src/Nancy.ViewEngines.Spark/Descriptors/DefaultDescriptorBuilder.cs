@@ -3,7 +3,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using Spark;
+
     using global::Spark;
     using global::Spark.Parser;
     using global::Spark.Parser.Syntax;
@@ -14,9 +14,8 @@
         private UseMasterGrammar grammar;
 
         public DefaultDescriptorBuilder()
-            : this((string) null)
-        {
-        }
+            : this((string)null)
+        {}
 
         public DefaultDescriptorBuilder(string prefix)
         {
@@ -42,9 +41,7 @@
         {
             var extra = new Dictionary<string, object>();
             foreach (var filter in Filters)
-            {
                 filter.ExtraParameters(viewLocationResult, extra);
-            }
 
             return extra;
         }
@@ -52,14 +49,14 @@
         public virtual SparkViewDescriptor BuildDescriptor(BuildDescriptorParams buildDescriptorParams, ICollection<string> searchedLocations)
         {
             var descriptor = new SparkViewDescriptor
-                                 {
-                                     TargetNamespace = GetNamespaceEncodedPathViewPath(buildDescriptorParams.ViewPath)
-                                 };
+            {
+                TargetNamespace = GetNamespaceEncodedPathViewPath(buildDescriptorParams.ViewPath)
+            };
 
             if (!LocatePotentialTemplate(
                 PotentialViewLocations(buildDescriptorParams.ViewPath,
-                                       buildDescriptorParams.ViewName,
-                                       buildDescriptorParams.Extra),
+                    buildDescriptorParams.ViewName,
+                    buildDescriptorParams.Extra),
                 descriptor.Templates,
                 searchedLocations))
             {
@@ -70,7 +67,7 @@
             {
                 if (!LocatePotentialTemplate(
                     PotentialMasterLocations(buildDescriptorParams.MasterName,
-                                             buildDescriptorParams.Extra),
+                        buildDescriptorParams.Extra),
                     descriptor.Templates,
                     searchedLocations))
                 {
@@ -81,7 +78,7 @@
             {
                 LocatePotentialTemplate(
                     PotentialDefaultMasterLocations(buildDescriptorParams.ViewPath,
-                                                    buildDescriptorParams.Extra),
+                        buildDescriptorParams.Extra),
                     descriptor.Templates,
                     null);
             }
@@ -91,7 +88,7 @@
             {
                 if (!LocatePotentialTemplate(
                     PotentialMasterLocations(trailingUseMaster,
-                                             buildDescriptorParams.Extra ),
+                        buildDescriptorParams.Extra),
                     descriptor.Templates,
                     searchedLocations))
                 {
@@ -139,9 +136,7 @@
             if (searchedLocations != null)
             {
                 foreach (var potentialTemplate in potentialTemplates)
-                {
                     searchedLocations.Add(potentialTemplate);
-                }
             }
 
             return false;
@@ -156,44 +151,44 @@
         protected virtual IEnumerable<string> PotentialViewLocations(string viewPath, string viewName, IDictionary<string, object> extra)
         {
             return ApplyFilters(new[]
-                                    {
-                                        Path.Combine(viewPath, viewName + ".spark"),
-                                        Path.Combine(viewPath, viewName + ".shade"),
-                                        Path.Combine("Shared", viewName + ".spark"),
-                                        Path.Combine("Shared", viewName + ".shade")
-                                    }, extra);
+            {
+                Path.Combine(viewPath, viewName + ".spark"),
+                Path.Combine(viewPath, viewName + ".shade"),
+                Path.Combine("Shared", viewName + ".spark"),
+                Path.Combine("Shared", viewName + ".shade")
+            }, extra);
         }
 
-        protected virtual IEnumerable<string> PotentialMasterLocations( string masterName, IDictionary<string, object> extra )
+        protected virtual IEnumerable<string> PotentialMasterLocations(string masterName, IDictionary<string, object> extra)
         {
             return ApplyFilters(new[]
-                                    {
-                                        Path.Combine("Layouts", masterName + ".spark"),
-                                        Path.Combine("Layouts", masterName + ".shade"),
-                                        Path.Combine("Shared", masterName + ".spark"),
-                                        Path.Combine("Shared", masterName + ".shade"),
-                                        Path.Combine("Views", masterName + ".spark"),
-                                        Path.Combine("Views", masterName + ".shade"),
-                                        Path.Combine("Views", "Layouts", masterName + ".spark"),
-                                        Path.Combine("Views", "Layouts", masterName + ".shade"),
-                                        Path.Combine("Views", "Shared", masterName + ".spark"),
-                                        Path.Combine("Views", "Shared", masterName + ".shade")
-                                    }, extra);
+            {
+                Path.Combine("Layouts", masterName + ".spark"),
+                Path.Combine("Layouts", masterName + ".shade"),
+                Path.Combine("Shared", masterName + ".spark"),
+                Path.Combine("Shared", masterName + ".shade"),
+                Path.Combine("Views", masterName + ".spark"),
+                Path.Combine("Views", masterName + ".shade"),
+                Path.Combine("Views", "Layouts", masterName + ".spark"),
+                Path.Combine("Views", "Layouts", masterName + ".shade"),
+                Path.Combine("Views", "Shared", masterName + ".spark"),
+                Path.Combine("Views", "Shared", masterName + ".shade")
+            }, extra);
         }
 
         protected virtual IEnumerable<string> PotentialDefaultMasterLocations(string controllerName, IDictionary<string, object> extra)
         {
             return ApplyFilters(new[]
-                                    {
-                                        Path.Combine("Layouts", "Application.spark"),
-                                        Path.Combine("Layouts", "Application.shade"),
-                                        Path.Combine("Shared", "Application.spark"),
-                                        Path.Combine("Shared", "Application.shade"),
-                                        Path.Combine("Views", "Layouts", "Application.spark"),
-                                        Path.Combine("Views", "Layouts", "Application.shade"),
-                                        Path.Combine("Views", "Shared", "Application.spark"),
-                                        Path.Combine("Views", "Shared", "Application.shade"),
-                                    }, extra);
+            {
+                Path.Combine("Layouts", "Application.spark"),
+                Path.Combine("Layouts", "Application.shade"),
+                Path.Combine("Shared", "Application.spark"),
+                Path.Combine("Shared", "Application.shade"),
+                Path.Combine("Views", "Layouts", "Application.spark"),
+                Path.Combine("Views", "Layouts", "Application.shade"),
+                Path.Combine("Views", "Shared", "Application.spark"),
+                Path.Combine("Views", "Shared", "Application.shade"),
+            }, extra);
         }
 
         private static string GetNamespaceEncodedPathViewPath(string viewPath)
@@ -214,7 +209,7 @@
                 var startOfElement = !string.IsNullOrEmpty(prefix) ? Ch("<" + prefix + ":use") : Ch("<use");
                 var startOfAttribute = Ch("master").And(whiteSpace0).And(Ch('=')).And(whiteSpace0);
                 var attrValue = Ch('\'').And(Rep(ChNot('\''))).And(Ch('\''))
-                    .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
+                                        .Or(Ch('\"').And(Rep(ChNot('\"'))).And(Ch('\"')));
 
                 var endOfElement = Ch("/>");
 
@@ -228,15 +223,15 @@
 
                 ParseUseMaster =
                     pos =>
+                    {
+                        for (var scan = pos; scan.PotentialLength() != 0; scan = scan.Advance(1))
                         {
-                            for (Position scan = pos; scan.PotentialLength() != 0; scan = scan.Advance(1))
-                            {
-                                ParseResult<string> result = useMaster(scan);
-                                if (result != null)
-                                    return result;
-                            }
-                            return null;
-                        };
+                            var result = useMaster(scan);
+                            if (result != null)
+                                return result;
+                        }
+                        return null;
+                    };
             }
 
             public ParseAction<string> ParseUseMaster { get; private set; }

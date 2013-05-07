@@ -24,8 +24,7 @@ namespace Nancy
         /// </summary>
         protected NancyModule()
             : this(String.Empty)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyModule"/> class.
@@ -46,10 +45,7 @@ namespace Nancy
         /// </summary>
         public dynamic ViewBag
         {
-            get
-            {
-                return this.Context == null ? null : this.Context.ViewBag;
-            }
+            get { return this.Context == null ? null : this.Context.ViewBag; }
         }
 
         /// <summary>
@@ -108,24 +104,6 @@ namespace Nancy
         }
 
         /// <summary>
-        ///  Get the root path of the routes in the current module.
-        ///  </summary>
-        /// <value>
-        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
-        /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
-        /// </remarks>
-        public string ModulePath { get; private set; }
-
-        /// <summary>
-        /// Gets all declared routes by the module.
-        /// </summary>
-        /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
-        public virtual IEnumerable<Route> Routes
-        {
-            get { return this.routes.AsReadOnly(); }
-        }
-
-        /// <summary>
         /// Gets the current session.
         /// </summary>
         public ISession Session
@@ -145,6 +123,24 @@ namespace Nancy
         public Negotiator Negotiate
         {
             get { return new Negotiator(this.Context); }
+        }
+
+        /// <summary>
+        ///  Get the root path of the routes in the current module.
+        ///  </summary>
+        /// <value>
+        /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
+        /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
+        /// </remarks>
+        public string ModulePath { get; private set; }
+
+        /// <summary>
+        /// Gets all declared routes by the module.
+        /// </summary>
+        /// <value>A <see cref="IEnumerable{T}"/> instance, containing all <see cref="Route"/> instances declared by the module.</value>
+        public virtual IEnumerable<Route> Routes
+        {
+            get { return this.routes.AsReadOnly(); }
         }
 
         /// <summary>
@@ -228,7 +224,7 @@ namespace Nancy
             {
                 if (this.Context != null)
                 {
-                    this.Context.ModelValidationResult = value;                    
+                    this.Context.ModelValidationResult = value;
                 }
             }
         }

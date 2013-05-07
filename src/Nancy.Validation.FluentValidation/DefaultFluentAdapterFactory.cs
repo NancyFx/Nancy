@@ -2,6 +2,7 @@ namespace Nancy.Validation.FluentValidation
 {
     using System;
     using System.Collections.Generic;
+
     using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
 
@@ -10,30 +11,45 @@ namespace Nancy.Validation.FluentValidation
     /// </summary>
     public class DefaultFluentAdapterFactory : IFluentAdapterFactory
     {
-        private static readonly Dictionary<Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>> factories = new Dictionary<Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>>
+        private static readonly Dictionary<Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>> factories = new Dictionary
+            <Type, Func<PropertyRule, IPropertyValidator, IFluentAdapter>>
         {
-            { typeof(EmailValidator), (memberName, propertyValdiator) => new EmailAdapter(memberName, (EmailValidator)propertyValdiator) },
-            { typeof(EqualValidator), (memberName, propertyValidator) => new EqualAdapter(memberName, (EqualValidator)propertyValidator) },
-            { typeof(ExactLengthValidator), (memberName, propertyValidator) => new ExactLengthAdapater(memberName, (ExactLengthValidator)propertyValidator) },
-            { typeof(ExclusiveBetweenValidator), (memberName, propertyValidator) => new ExclusiveBetweenAdapter(memberName, (ExclusiveBetweenValidator)propertyValidator) },
-            { typeof(GreaterThanValidator), (memberName, propertyValidator) => new GreaterThanAdapter(memberName, (GreaterThanValidator)propertyValidator) },
-            { typeof(GreaterThanOrEqualValidator), (memberName, propertyValidator) => new GreaterThanOrEqualAdapter(memberName, (GreaterThanOrEqualValidator)propertyValidator) },
-            { typeof(InclusiveBetweenValidator), (memberName, propertyValidator) => new InclusiveBetweenAdapter(memberName, (InclusiveBetweenValidator)propertyValidator) },
-            { typeof(LengthValidator), (memberName, propertyValidator) => new LengthAdapter(memberName, (LengthValidator)propertyValidator) },
-            { typeof(LessThanValidator), (memberName, propertyValidator) => new LessThanAdapter(memberName, (LessThanValidator)propertyValidator) },
-            { typeof(LessThanOrEqualValidator), (memberName, propertyValidator) => new LessThanOrEqualAdapter(memberName, (LessThanOrEqualValidator)propertyValidator) },
-            { typeof(NotEmptyValidator), (memberName, propertyValidator) => new NotEmptyAdapter(memberName, (NotEmptyValidator)propertyValidator) },
-            { typeof(NotEqualValidator), (memberName, propertyValidator) => new NotEqualAdapter(memberName, (NotEqualValidator)propertyValidator) },
-            { typeof(NotNullValidator), (memberName, propertyValidator) => new NotNullAdapter(memberName, (NotNullValidator)propertyValidator) },
-            { typeof(RegularExpressionValidator), (memberName, propertyValdiator) => new RegularExpressionAdapter(memberName, (RegularExpressionValidator)propertyValdiator) },
+            {typeof (EmailValidator), (memberName, propertyValdiator) => new EmailAdapter(memberName, (EmailValidator)propertyValdiator)},
+            {typeof (EqualValidator), (memberName, propertyValidator) => new EqualAdapter(memberName, (EqualValidator)propertyValidator)},
+            {typeof (ExactLengthValidator), (memberName, propertyValidator) => new ExactLengthAdapater(memberName, (ExactLengthValidator)propertyValidator)},
+            {
+                typeof (ExclusiveBetweenValidator),
+                (memberName, propertyValidator) => new ExclusiveBetweenAdapter(memberName, (ExclusiveBetweenValidator)propertyValidator)
+            },
+            {typeof (GreaterThanValidator), (memberName, propertyValidator) => new GreaterThanAdapter(memberName, (GreaterThanValidator)propertyValidator)},
+            {
+                typeof (GreaterThanOrEqualValidator),
+                (memberName, propertyValidator) => new GreaterThanOrEqualAdapter(memberName, (GreaterThanOrEqualValidator)propertyValidator)
+            },
+            {
+                typeof (InclusiveBetweenValidator),
+                (memberName, propertyValidator) => new InclusiveBetweenAdapter(memberName, (InclusiveBetweenValidator)propertyValidator)
+            },
+            {typeof (LengthValidator), (memberName, propertyValidator) => new LengthAdapter(memberName, (LengthValidator)propertyValidator)},
+            {typeof (LessThanValidator), (memberName, propertyValidator) => new LessThanAdapter(memberName, (LessThanValidator)propertyValidator)},
+            {
+                typeof (LessThanOrEqualValidator),
+                (memberName, propertyValidator) => new LessThanOrEqualAdapter(memberName, (LessThanOrEqualValidator)propertyValidator)
+            },
+            {typeof (NotEmptyValidator), (memberName, propertyValidator) => new NotEmptyAdapter(memberName, (NotEmptyValidator)propertyValidator)},
+            {typeof (NotEqualValidator), (memberName, propertyValidator) => new NotEqualAdapter(memberName, (NotEqualValidator)propertyValidator)},
+            {typeof (NotNullValidator), (memberName, propertyValidator) => new NotNullAdapter(memberName, (NotNullValidator)propertyValidator)},
+            {
+                typeof (RegularExpressionValidator),
+                (memberName, propertyValdiator) => new RegularExpressionAdapter(memberName, (RegularExpressionValidator)propertyValdiator)
+            },
         };
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultFluentAdapterFactory"/> class.
         /// </summary>
         public DefaultFluentAdapterFactory()
-        {
-        }
+        {}
 
         /// <summary>
         /// Creates a <see cref="IFluentAdapter"/> instance based on the provided <paramref name="rule"/> and <paramref name="propertyValidator"/>.

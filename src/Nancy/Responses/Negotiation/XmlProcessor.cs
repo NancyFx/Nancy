@@ -9,10 +9,10 @@
     /// </summary>
     public class XmlProcessor : IResponseProcessor
     {
-        private readonly ISerializer serializer;
-
         private static readonly IEnumerable<Tuple<string, MediaRange>> extensionMappings =
-            new[] { new Tuple<string, MediaRange>("xml", MediaRange.FromString("application/xml")) };
+            new[] {new Tuple<string, MediaRange>("xml", MediaRange.FromString("application/xml"))};
+
+        private readonly ISerializer serializer;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="XmlProcessor"/> class,
@@ -114,7 +114,7 @@
             var subtypeString = requestedContentType.Subtype.ToString();
 
             return (subtypeString.StartsWith("vnd", StringComparison.InvariantCultureIgnoreCase) &&
-                    subtypeString.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
+                subtypeString.EndsWith("+xml", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

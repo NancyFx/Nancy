@@ -1,7 +1,8 @@
 namespace Nancy
 {
     using System;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Defines the functionality of an engine that can handle Nancy <see cref="Request"/>s.
@@ -13,7 +14,7 @@ namespace Nancy
         /// </summary>
         /// <value>An <see cref="IPipelines"/> instance.</value>
         Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
-            
+
         /// <summary>
         /// Handles an incoming <see cref="Request"/>.
         /// </summary>

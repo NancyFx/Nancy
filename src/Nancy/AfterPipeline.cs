@@ -1,7 +1,6 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Linq;
 
     /// <summary>
     /// <para>
@@ -16,12 +15,10 @@
     public class AfterPipeline : NamedPipelineBase<Action<NancyContext>>
     {
         public AfterPipeline()
-        {
-        }
+        {}
 
         public AfterPipeline(int capacity) : base(capacity)
-        {
-        }
+        {}
 
         public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
         {
@@ -44,9 +41,7 @@
         public static AfterPipeline operator +(AfterPipeline pipelineToAddTo, AfterPipeline pipelineToAdd)
         {
             foreach (var pipelineItem in pipelineToAdd.PipelineItems)
-            {
                 pipelineToAddTo.AddItemToEndOfPipeline(pipelineItem);
-            }
 
             return pipelineToAddTo;
         }
@@ -54,9 +49,7 @@
         public void Invoke(NancyContext context)
         {
             foreach (var pipelineItem in this.PipelineDelegates)
-            {
                 pipelineItem.Invoke(context);
-            }
         }
     }
 }

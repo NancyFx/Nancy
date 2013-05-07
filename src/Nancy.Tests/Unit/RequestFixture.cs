@@ -5,8 +5,11 @@ namespace Nancy.Tests.Unit
     using System.IO;
     using System.Linq;
     using System.Text;
+
     using FakeItEasy;
+
     using Nancy.IO;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -18,7 +21,7 @@ namespace Nancy.Tests.Unit
             // Given
             var stream = A.Fake<RequestStream>(x =>
             {
-                x.Implements(typeof(IDisposable));
+                x.Implements(typeof (IDisposable));
                 x.WithArgumentsForConstructor(() => new RequestStream(0, false));
             });
 
@@ -41,7 +44,7 @@ namespace Nancy.Tests.Unit
         public void Should_be_disposable()
         {
             // Given, When, Then
-            typeof(Request).ShouldImplementInterface<IDisposable>();
+            typeof (Request).ShouldImplementInterface<IDisposable>();
         }
 
         [Fact]
@@ -56,7 +59,7 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers =
-                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+                new Dictionary<string, IEnumerable<string>> {{"content-type", new[] {"application/x-www-form-urlencoded"}}};
 
             // When
             var request = new Request("POST", "/", headers, memory, "http");
@@ -81,7 +84,7 @@ namespace Nancy.Tests.Unit
             memory.Position = 0;
 
             var headers =
-                new Dictionary<string, IEnumerable<string>> { { "content-type", new[] { "application/x-www-form-urlencoded" } } };
+                new Dictionary<string, IEnumerable<string>> {{"content-type", new[] {"application/x-www-form-urlencoded"}}};
 
             // When
             var request = new Request(method, "/", headers, memory, "http");
@@ -154,9 +157,9 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var headers = new Dictionary<string, IEnumerable<string>>()
-                {
-                    { "content-type", new[] {"foo"} }
-                };
+            {
+                {"content-type", new[] {"foo"}}
+            };
 
             // When
             var request = new Request("GET", "/", headers, CreateRequestStream(), "http");
@@ -192,7 +195,7 @@ namespace Nancy.Tests.Unit
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded"}}
                 };
 
             // When
@@ -216,7 +219,7 @@ namespace Nancy.Tests.Unit
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded; charset=UTF-8" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded; charset=UTF-8"}}
                 };
 
             // When
@@ -233,14 +236,14 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>
                 {
-                    { "name", "John Doe"},
-                    { "age", "42"}
+                    {"name", "John Doe"},
+                    {"age", "42"}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -258,13 +261,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "test", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
+                    {"test", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -281,13 +284,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
+                    {"sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -304,13 +307,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
+                    {"sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -327,13 +330,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
+                    {"sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -350,13 +353,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "fieldname")}
+                    {"sample.txt", new Tuple<string, string, string>("content/type", "some test content", "fieldname")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -385,12 +388,12 @@ namespace Nancy.Tests.Unit
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded"}}
                 };
 
             // When
             var request = new Request("POST", "/", headers, CreateRequestStream(memory), "http");
-            
+
             // Then
             ((string)request.Form.name).ShouldEqual("John Doe");
         }
@@ -435,7 +438,8 @@ namespace Nancy.Tests.Unit
         {
             // Given, when
             var cookieName = "_nc";
-            var cookieData = "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
+            var cookieData =
+                "Y+M3rcC/7ssXvHTx9pwCbwQVV4g=sp0hUZVApYgGbKZIU4bvXbBCVl9fhSEssEXSGdrt4jVag6PO1oed8lSd+EJD1nzWx4OTTCTZKjYRWeHE97QVND4jJIl+DuKRgJnSl3hWI5gdgGjcxqCSTvMOMGmW3NHLVyKpajGD8tq1DXhXMyXHjTzrCAYl8TGzwyJJGx/gd7VMJeRbAy9JdHOxEUlCKUnPneWN6q+/ITFryAa5hAdfcjXmh4Fgym75whKOMkWO+yM2icdsciX0ShcvnEQ/bXcTHTya6d7dJVfZl7qQ8AgIQv8ucQHxD3NxIvHNPBwms2ClaPds0HG5N+7pu7eMSFZjUHpDrrCnFvYN+JDiG3GMpf98LuCCvxemvipJo2MUkY4J1LvaDFoWA5tIxAfItZJkSIW2d8JPDwFk8OHJy8zhyn8AjD2JFqWaUZr4y9KZOtgI0V0Qlq0mS3mDSlLn29xapgoPHBvykwQjR6TwF2pBLpStsfZa/tXbEv2mc3VO3CnErIA1lEfKNqn9C/Dw6hqW";
             var headers = new Dictionary<string, IEnumerable<string>>();
             var cookies = new List<string>();
             cookies.Add(string.Format("{0}={1}", cookieName, cookieData));
@@ -521,7 +525,7 @@ namespace Nancy.Tests.Unit
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded; charset=UTF-8" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded; charset=UTF-8"}}
                 };
 
             // When
@@ -538,13 +542,13 @@ namespace Nancy.Tests.Unit
             var memory =
                 new MemoryStream(BuildMultipartFileValues(new Dictionary<string, Tuple<string, string, string>>
                 {
-                    { "sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
+                    {"sample.txt", new Tuple<string, string, string>("content/type", "some test content", "whatever")}
                 }));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -563,12 +567,12 @@ namespace Nancy.Tests.Unit
                     new KeyValuePair<string, string>("age", "32"),
                     new KeyValuePair<string, string>("age", "42"),
                     new KeyValuePair<string, string>("age", "52")
-                ));
+                    ));
 
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                    {"content-type", new[] {"multipart/form-data; boundary=----NancyFormBoundary"}}
                 };
 
             // When
@@ -583,7 +587,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var sb = new StringBuilder();
-            for (int i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
+            for (var i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
             {
                 if (i > 0)
                 {
@@ -601,7 +605,7 @@ namespace Nancy.Tests.Unit
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                    {"content-type", new[] {"application/x-www-form-urlencoded"}}
                 };
 
             // When
@@ -616,7 +620,7 @@ namespace Nancy.Tests.Unit
         {
             // Given
             var sb = new StringBuilder();
-            for (int i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
+            for (var i = 0; i < StaticConfiguration.RequestQueryFormMultipartLimit + 10; i++)
             {
                 if (i > 0)
                 {

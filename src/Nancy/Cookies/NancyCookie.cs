@@ -10,13 +10,11 @@ namespace Nancy.Cookies
     {
         public NancyCookie(string name, string value)
             : this(name, value, false)
-        {
-        }
+        {}
 
         public NancyCookie(string name, string value, bool httpOnly)
             : this(name, value, httpOnly, false)
-        {
-        }
+        {}
 
         public NancyCookie(string name, string value, bool httpOnly, bool secure)
         {
@@ -47,10 +45,7 @@ namespace Nancy.Cookies
         /// </summary>
         public string EncodedName
         {
-            get
-            {
-                return HttpUtility.UrlEncode(this.Name);
-            }
+            get { return HttpUtility.UrlEncode(this.Name); }
         }
 
         /// <summary>
@@ -68,10 +63,7 @@ namespace Nancy.Cookies
         /// </summary>
         public string EncodedValue
         {
-            get
-            {
-                return HttpUtility.UrlEncode(this.Value);
-            }
+            get { return HttpUtility.UrlEncode(this.Value); }
         }
 
         /// <summary>
@@ -83,12 +75,12 @@ namespace Nancy.Cookies
         /// Whether the cookie is secure (i.e. HTTPS only)
         /// </summary>
         public bool Secure { get; private set; }
-        
+
         public override string ToString()
         {
             var sb = new StringBuilder(50);
             sb.AppendFormat("{0}={1}; path={2}", this.EncodedName, this.EncodedValue, Path ?? "/");
-            
+
             if (Expires != null)
             {
                 sb.Append("; expires=");

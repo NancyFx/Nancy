@@ -14,8 +14,7 @@
         /// Initializes a new instance of the <see cref="DefaultFileSystemFactory"/> class
         /// </summary>
         public DefaultFileSystemFactory()
-        {
-        }
+        {}
 
         /// <summary>
         /// Gets a <see cref="IFileSystem"/> instance for the provided <paramref name="context"/>.

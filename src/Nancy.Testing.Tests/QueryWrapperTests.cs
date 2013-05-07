@@ -1,9 +1,10 @@
 namespace Nancy.Testing.Tests
 {
     using System.Linq;
+
     using CsQuery;
     using CsQuery.Implementation;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class QueryWrapperTests
@@ -12,13 +13,13 @@ namespace Nancy.Testing.Tests
         public void Should_use_cq_find_when_indexer_invoked()
         {
             // Given
-            var document = 
+            var document =
                 CQ.Create(@"<html><head></head><body><div id='testId' class='myClass'>Test</div></body></html>");
 
             var queryResult =
                 document.Find("#testId").FirstOrDefault();
 
-            var wrapper = 
+            var wrapper =
                 new QueryWrapper(document);
 
             // When

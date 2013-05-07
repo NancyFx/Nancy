@@ -5,7 +5,7 @@
         [NancyRoute("GET", "/")]
         public dynamic Root(dynamic parameters)
         {
-            return View["Index", new { Name = "Jimbo!" }];
+            return View["Index", new {Name = "Jimbo!"}];
         }
 
         public bool FilteredFilter(NancyContext context)

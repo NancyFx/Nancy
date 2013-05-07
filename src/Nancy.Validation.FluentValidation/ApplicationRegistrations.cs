@@ -1,7 +1,8 @@
 namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Application registrations for Fluent Validation types.
@@ -15,8 +16,8 @@ namespace Nancy.Validation.FluentValidation
         {
             get
             {
-                yield return new TypeRegistration(typeof(IModelValidator), typeof(FluentValidationValidator));
-                yield return new TypeRegistration(typeof(IModelValidatorFactory), typeof(FluentValidationValidatorFactory));
+                yield return new TypeRegistration(typeof (IModelValidator), typeof (FluentValidationValidator));
+                yield return new TypeRegistration(typeof (IModelValidatorFactory), typeof (FluentValidationValidatorFactory));
             }
         }
 

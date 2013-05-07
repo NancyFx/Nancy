@@ -2,6 +2,7 @@
 {
     using System;
     using System.Globalization;
+
     using Xunit;
 
     public class DynamicDictionaryValueFixture
@@ -222,7 +223,7 @@
             Assert.False(valueFalse);
         }
 
-		[Fact]
+        [Fact]
         public void Should_be_able_to_implictly_cast_long_to_other_value_types()
         {
             // Given 
@@ -420,7 +421,7 @@
         public void Should_be_able_to_call_ConvertToDateTime()
         {
             //Given
-            DateTime expected = new DateTime(1952, 3, 11);
+            var expected = new DateTime(1952, 3, 11);
             object value = new DynamicDictionaryValue(expected);
 
             //When
@@ -452,7 +453,7 @@
             object value = new DynamicDictionaryValue(expected);
 
             //When
-            var actual = Convert.ChangeType(value, typeof(int));
+            var actual = Convert.ChangeType(value, typeof (int));
 
             //Then
             Assert.Equal(expected, actual);
@@ -585,7 +586,7 @@
         public void Should_return_default_value_of_datetime_when_calling_default_given_null()
         {
             //Given
-            DateTime expected = DateTime.Parse("10 Dec, 2012");
+            var expected = DateTime.Parse("10 Dec, 2012");
             dynamic value = new DynamicDictionaryValue(null);
 
             //When
@@ -711,7 +712,7 @@
         public void Should_still_return_default_int_datetime_when_no_default_value_given()
         {
             //Given
-            DateTime expected = DateTime.MinValue;
+            var expected = DateTime.MinValue;
             dynamic value = new DynamicDictionaryValue(null);
 
             //When
@@ -798,8 +799,8 @@
         public void Should_implicitly_convert_from_string_based_on_given_parameter_type_of_datetime()
         {
             //Given
-            DateTime expected = DateTime.Parse("13 Dec, 2012");
-            DateTime notExpected = DateTime.Parse("15 Mar, 1986");
+            var expected = DateTime.Parse("13 Dec, 2012");
+            var notExpected = DateTime.Parse("15 Mar, 1986");
             dynamic value = new DynamicDictionaryValue("13 December 2012");
 
             //When
@@ -883,7 +884,7 @@
         public void Should_implicitly_convert_from_string_based_on_given_generic_type_of_datetime()
         {
             //Given
-            DateTime expected = DateTime.Parse("13 Dec, 2012");
+            var expected = DateTime.Parse("13 Dec, 2012");
             dynamic value = new DynamicDictionaryValue("13 December 2012");
 
             //When
@@ -897,7 +898,7 @@
         public void Should_return_default_value_if_implicit_convert_fails_on_datetime()
         {
             //Given
-            DateTime expected = DateTime.Parse("13 December 2012");
+            var expected = DateTime.Parse("13 December 2012");
             dynamic value = new DynamicDictionaryValue("Rawrrrr");
 
             //When
@@ -958,8 +959,8 @@
             //This test is unrealistic in my opinion, but it should still call ToString on the datetime value
 
             //Given
-            string expected = DateTime.Parse("22 Nov, 2012").ToString(CultureInfo.InvariantCulture);
-            string notExpected = DateTime.Parse("18 Jun, 2011").ToString(CultureInfo.InvariantCulture);
+            var expected = DateTime.Parse("22 Nov, 2012").ToString(CultureInfo.InvariantCulture);
+            var notExpected = DateTime.Parse("18 Jun, 2011").ToString(CultureInfo.InvariantCulture);
             dynamic value = new DynamicDictionaryValue(DateTime.Parse("22 Nov, 2012"));
 
             //When

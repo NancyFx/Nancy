@@ -1,4 +1,5 @@
 ﻿// ReSharper disable CheckNamespace
+
 namespace Owin
 // ReSharper restore CheckNamespace
 {
@@ -12,7 +13,7 @@ namespace Owin
     {
         public static void UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper = null)
         {
-            builder.Use(typeof(NancyOwinHost), bootstrapper ?? NancyBootstrapperLocator.Bootstrapper);
+            builder.Use(typeof (NancyOwinHost), bootstrapper ?? NancyBootstrapperLocator.Bootstrapper);
         }
     }
 }

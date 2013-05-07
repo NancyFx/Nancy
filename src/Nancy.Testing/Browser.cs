@@ -5,9 +5,10 @@ namespace Nancy.Testing
     using System.IO;
     using System.Linq;
     using System.Text;
+
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
-    using IO;
+    using Nancy.IO;
 
     /// <summary>
     /// Provides the capability of executing a request with Nancy, using a specific configuration provided by an <see cref="INancyBootstrapper"/> instance.
@@ -15,9 +16,9 @@ namespace Nancy.Testing
     public class Browser : IHideObjectMembers
     {
         private readonly INancyBootstrapper bootstrapper;
-        private readonly INancyEngine engine;
 
         private readonly IDictionary<string, string> cookies = new Dictionary<string, string>();
+        private readonly INancyEngine engine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class, with the
@@ -26,8 +27,7 @@ namespace Nancy.Testing
         /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
         public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action)
             : this(new ConfigurableBootstrapper(action))
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.
@@ -141,7 +141,8 @@ namespace Nancy.Testing
                 return;
             }
 
-            var cookieString = this.cookies.Aggregate(string.Empty, (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
+            var cookieString = this.cookies.Aggregate(string.Empty,
+                (current, cookie) => current + string.Format("{0}={1};", HttpUtility.UrlEncode(cookie.Key), HttpUtility.UrlEncode(cookie.Value)));
 
             context.Header("Cookie", cookieString);
         }
@@ -175,11 +176,11 @@ namespace Nancy.Testing
 
             var useFormValues = !String.IsNullOrEmpty(contextValues.FormValues);
             var bodyContents = useFormValues ? contextValues.FormValues : contextValues.BodyString;
-            var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] { };
+            var bodyBytes = bodyContents != null ? Encoding.UTF8.GetBytes(bodyContents) : new byte[] {};
 
             if (useFormValues && !contextValues.Headers.ContainsKey("Content-Type"))
             {
-                contextValues.Headers["Content-Type"] = new[] { "application/x-www-form-urlencoded" };
+                contextValues.Headers["Content-Type"] = new[] {"application/x-www-form-urlencoded"};
             }
 
             contextValues.Body = new MemoryStream(bodyBytes);
@@ -202,7 +203,8 @@ namespace Nancy.Testing
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString, contextValues.UserHostAddress);
+            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString,
+                contextValues.UserHostAddress);
         }
     }
 }

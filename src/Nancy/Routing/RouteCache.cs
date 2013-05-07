@@ -1,9 +1,9 @@
 ﻿namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
-    using System;
+
     using Nancy.Culture;
 
     /// <summary>
@@ -11,8 +11,8 @@
     /// </summary>
     public class RouteCache : Dictionary<Type, List<Tuple<int, RouteDescription>>>, IRouteCache
     {
-        private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IRouteSegmentExtractor routeSegmentExtractor;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -20,7 +20,8 @@
         /// <param name="moduleCatalog">The <see cref="INancyModuleCatalog"/> that should be used by the cache.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
+        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor,
+            IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
@@ -28,9 +29,7 @@
             var request = new Request("GET", "/", "http");
 
             using (var context = contextFactory.Create(request))
-            {
                 this.BuildCache(moduleCatalog.GetAllModules(context));
-            }
         }
 
         /// <summary>

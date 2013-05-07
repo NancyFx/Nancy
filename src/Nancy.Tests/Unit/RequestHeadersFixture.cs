@@ -3,8 +3,9 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy;
+
     using Nancy.Cookies;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -38,7 +39,7 @@
         public void Should_return_all_header_names_when_keys_are_retrieved()
         {
             // Given
-            var rawHeaders = 
+            var rawHeaders =
                 new Dictionary<string, IEnumerable<string>>
                 {
                     {"accept", null},
@@ -64,7 +65,7 @@
 
             // When
             var headers = new RequestHeaders(rawHeaders);
-            
+
             // Then
             headers.Accept.ShouldHaveCount(0);
         }
@@ -73,10 +74,10 @@
         public void Should_return_all_accept_headers_when_multiple_are_available()
         {
             // Given
-            var rawHeaders = 
+            var rawHeaders =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Accept", new[] { "text/plain", "text/ninja" } }
+                    {"Accept", new[] {"text/plain", "text/ninja"}}
                 };
 
             // When
@@ -92,8 +93,8 @@
         public void Should_parse_accept_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "text/plain, text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+            var values = new[] {"text/plain, text/ninja"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -108,8 +109,8 @@
         public void Should_parse_accept_header_value_quality_when_available()
         {
             // Given
-            var values = new[] { "text/plain;q=0.3" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+            var values = new[] {"text/plain;q=0.3"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -124,8 +125,8 @@
         public void Should_default_accept_header_values_to_quality_one_if_not_explicitly_defined()
         {
             // Given
-            var values = new[] { "text/plain" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+            var values = new[] {"text/plain"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -140,8 +141,8 @@
         public void Should_ignore_accept_header_values_with_invalid_quality()
         {
             // Given
-            var values = new[] { "text/plain, text/ninja;q=a" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+            var values = new[] {"text/plain, text/ninja;q=a"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -156,8 +157,8 @@
         public void Should_sort_accept_header_values_decending_based_on_quality()
         {
             // Given
-            var values = new[] { "text/plain;q=0.3, text/ninja, text/html;q=0.7" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+            var values = new[] {"text/plain;q=0.3, text/ninja, text/html;q=0.7"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -175,8 +176,8 @@
         public void Should_ignore_case_of_accept_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "text/plain", "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"text/plain", "text/ninja"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
@@ -203,8 +204,8 @@
         public void Should_return_accept_charset_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "utf-8", "iso-8859-5" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", expectedValues } };
+            var expectedValues = new[] {"utf-8", "iso-8859-5"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -219,8 +220,8 @@
         public void Should_parse_accept_charset_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "utf-8, iso-8859-5" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+            var values = new[] {"utf-8, iso-8859-5"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -235,8 +236,8 @@
         public void Should_parse_accept_charset_header_value_quality_when_available()
         {
             // Given
-            var values = new[] { "utf-8;q=0.3" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+            var values = new[] {"utf-8;q=0.3"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -251,8 +252,8 @@
         public void Should_default_accept_charset_header_values_to_quality_one_if_not_explicitly_defined()
         {
             // Given
-            var values = new[] { "utf-8" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+            var values = new[] {"utf-8"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -267,8 +268,8 @@
         public void Should_ignore_accept_charset_header_values_with_invalid_quality()
         {
             // Given
-            var values = new[] { "utf-8, iso-8859-5;q=a" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+            var values = new[] {"utf-8, iso-8859-5;q=a"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -283,8 +284,8 @@
         public void Should_sort_accept_charset_header_values_decending_based_on_quality()
         {
             // Given
-            var values = new[] { "utf-8;q=0.3, iso-8859-5, iso-8859-15;q=0.7" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", values } };
+            var values = new[] {"utf-8;q=0.3, iso-8859-5, iso-8859-15;q=0.7"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -302,8 +303,8 @@
         public void Should_ignore_case_of_accept_charset_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "utf-8", "iso-8859-5" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"utf-8", "iso-8859-5"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
@@ -330,8 +331,8 @@
         public void Should_return_accept_encoding_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "compress", "sdch" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", expectedValues } };
+            var expectedValues = new[] {"compress", "sdch"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Encoding", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
@@ -346,8 +347,8 @@
         public void Should_parse_accept_encoding_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "compress, sdch" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", values } };
+            var values = new[] {"compress, sdch"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Encoding", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
@@ -364,8 +365,8 @@
         public void Should_ignore_case_of_accept_encoding_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "compress", "sdch" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"compress", "sdch"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
@@ -393,8 +394,8 @@
         public void Should_return_accept_language_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "en-US", "sv-SE" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", expectedValues } };
+            var expectedValues = new[] {"en-US", "sv-SE"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -409,8 +410,8 @@
         public void Should_parse_accept_language_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "en-US, sv-SE" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+            var values = new[] {"en-US, sv-SE"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -425,8 +426,8 @@
         public void Should_parse_accept_language_header_value_quality_when_available()
         {
             // Given
-            var values = new[] { "en-US;q=0.3" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+            var values = new[] {"en-US;q=0.3"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -441,8 +442,8 @@
         public void Should_default_accept_language_header_values_to_quality_one_if_not_explicitly_defined()
         {
             // Given
-            var values = new[] { "en-US" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+            var values = new[] {"en-US"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -457,8 +458,8 @@
         public void Should_ignore_accept_language_header_values_with_invalid_quality()
         {
             // Given
-            var values = new[] { "en-US, sv-SE;q=a" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+            var values = new[] {"en-US, sv-SE;q=a"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -473,8 +474,8 @@
         public void Should_sort_accept_language_header_values_decending_based_on_quality()
         {
             // Given
-            var values = new[] { "en-US;q=0.3, da, sv-SE;q=0.7" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept-Language", values } };
+            var values = new[] {"en-US;q=0.3, da, sv-SE;q=0.7"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept-Language", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -492,8 +493,8 @@
         public void Should_ignore_case_of_accept_language_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "en-US", "sv-SE" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"en-US", "sv-SE"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
@@ -501,7 +502,7 @@
             // Then
             headers.Count.ShouldEqual(2);
         }
-        
+
         [Fact]
         public void Should_return_empty_string_when_authorization_headers_are_not_available()
         {
@@ -519,8 +520,8 @@
         public void Should_return_authorization_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Authorization", expectedValues } };
+            var expectedValues = new[] {"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Authorization", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -535,8 +536,8 @@
         public void Should_ignore_case_of_authorization_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -562,8 +563,8 @@
         public void Should_return_cache_control_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "public", "max-age=123445" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cache-Control", expectedValues } };
+            var expectedValues = new[] {"public", "max-age=123445"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Cache-Control", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -578,8 +579,8 @@
         public void Should_ignore_case_of_cache_control_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "public", "max-age=123445" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"public", "max-age=123445"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -605,8 +606,8 @@
         public void Should_return_connection_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "closed" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Connection", expectedValues } };
+            var expectedValues = new[] {"closed"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Connection", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -621,8 +622,8 @@
         public void Should_ignore_case_of_connection_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "closed" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"closed"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -648,8 +649,8 @@
         public void Should_return_content_length_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "12345" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Length", expectedValues } };
+            var expectedValues = new[] {"12345"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Content-Length", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -664,8 +665,8 @@
         public void Should_ignore_case_of_content_length_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "12345" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"12345"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -691,8 +692,8 @@
         public void Should_return_content_type_header_when_available()
         {
             // Given
-            var expectedValues = new[] { "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Content-Type", expectedValues } };
+            var expectedValues = new[] {"text/ninja"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Content-Type", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -707,8 +708,8 @@
         public void Should_ignore_case_of_content_type_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "text/ninja" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"text/ninja"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -727,7 +728,8 @@
             var headers = new RequestHeaders(rawHeaders);
 
             // Then
-            headers.Date.ShouldBeNull();;
+            headers.Date.ShouldBeNull();
+            ;
         }
 
 
@@ -736,8 +738,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Date", expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Date", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -750,8 +752,8 @@
         public void Should_be_null_when_date_headers_are_invalid()
         {
             // Given
-            var expectedValues = new[] { "Bad Date Header" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Date", expectedValues } };
+            var expectedValues = new[] {"Bad Date Header"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Date", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -777,8 +779,8 @@
         public void Should_return_cookie_headers_when_available()
         {
             // Given
-            var rawValues = new[] { "foo=bar", "name=value" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
+            var rawValues = new[] {"foo=bar", "name=value"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Cookie", rawValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -794,8 +796,8 @@
         public void Should_ignore_case_of_cookie_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "foo=bar", "name=value" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"foo=bar", "name=value"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -812,8 +814,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -839,8 +841,8 @@
         public void Should_return_host_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "en.wikipedia.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Host", expectedValues } };
+            var expectedValues = new[] {"en.wikipedia.org"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Host", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -855,8 +857,8 @@
         public void Should_ignore_case_of_host_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "en.wikipedia.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"en.wikipedia.org"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -882,8 +884,8 @@
         public void Should_return_ifmatch_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Match", expectedValues } };
+            var expectedValues = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Match", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -896,8 +898,8 @@
         public void Should_parse_ifmatch_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Match", values } };
+            var values = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Match", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).IfMatch.ToList();
@@ -914,8 +916,8 @@
         public void Should_ignore_case_of_ifmatch_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -942,8 +944,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -956,8 +958,8 @@
         public void Should_return_null_when_ifmodifiedsince_when_invalid()
         {
             // Given
-            var expectedValues = new[] { "Bad Date" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", expectedValues } };
+            var expectedValues = new[] {"Bad Date"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -973,8 +975,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1000,8 +1002,8 @@
         public void Should_return_ifnonematch_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", expectedValues } };
+            var expectedValues = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-None-Match", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1014,8 +1016,8 @@
         public void Should_parse_ifnonematch_header_values_when_containing_multiple_values()
         {
             // Given
-            var values = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", values } };
+            var values = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-None-Match", values}};
 
             // When
             var headers = new RequestHeaders(rawHeaders).IfNoneMatch.ToList();
@@ -1032,8 +1034,8 @@
         public void Should_ignore_case_of_ifnonematch_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "xyzzy", "c3piozzzz" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"xyzzy", "c3piozzzz"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1059,8 +1061,8 @@
         public void Should_return_ifrange_header_when_available()
         {
             // Given
-            var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Range", expectedValues } };
+            var expectedValues = new[] {"737060cd8c284d8af7ad3082f209582d"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Range", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1075,8 +1077,8 @@
         public void Should_ignore_case_of_ifrange_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "737060cd8c284d8af7ad3082f209582d" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"737060cd8c284d8af7ad3082f209582d"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1103,8 +1105,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Unmodified-Since", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1117,8 +1119,8 @@
         public void Should_return_null_ifunmodifiedsince_is_invalid()
         {
             // Given
-            var expectedValues = new[] { "Bad Date" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", expectedValues } };
+            var expectedValues = new[] {"Bad Date"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"If-Unmodified-Since", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1134,8 +1136,8 @@
         {
             // Given
             var expectedDate = new DateTime(2011, 11, 15, 8, 12, 31);
-            var expectedValues = new[] { "Tue, 15 Nov 2011 08:12:31 GMT" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"Tue, 15 Nov 2011 08:12:31 GMT"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1161,8 +1163,8 @@
         public void Should_return_maxforwards_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "12" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", expectedValues } };
+            var expectedValues = new[] {"12"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Max-Forwards", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1177,8 +1179,8 @@
         public void Should_ignore_case_of_maxforwards_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "12" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"12"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1204,8 +1206,8 @@
         public void Should_return_referer_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "http://nancyfx.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Referer", expectedValues } };
+            var expectedValues = new[] {"http://nancyfx.org"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Referer", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1220,8 +1222,8 @@
         public void Should_ignore_case_of_referer_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "http://nancyfx.org" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"http://nancyfx.org"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1247,8 +1249,8 @@
         public void Should_return_useragent_headers_when_available()
         {
             // Given
-            var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "User-Agent", expectedValues } };
+            var expectedValues = new[] {"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"User-Agent", expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1263,8 +1265,8 @@
         public void Should_ignore_case_of_useragent_header_name_when_retrieving_values(string headerName)
         {
             // Given
-            var expectedValues = new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { headerName, expectedValues } };
+            var expectedValues = new[] {"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{headerName, expectedValues}};
 
             // When
             var headers = new RequestHeaders(rawHeaders);
@@ -1291,8 +1293,8 @@
         public void Should_header_values_when_available_using_indexer()
         {
             // Given
-            var expectedValues = new[] { "fakeValue1", "fakeValue2" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var expectedValues = new[] {"fakeValue1", "fakeValue2"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"some-header", expectedValues}};
             var headers = new RequestHeaders(rawHeaders);
 
             // When
@@ -1306,8 +1308,8 @@
         public void Should_ignore_case_when_available_using_indexer()
         {
             // Given
-            var expectedValues = new[] { "fakeValue1", "fakeValue2" };
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "some-header", expectedValues } };
+            var expectedValues = new[] {"fakeValue1", "fakeValue2"};
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"some-header", expectedValues}};
             var headers = new RequestHeaders(rawHeaders);
 
             // When
@@ -1321,15 +1323,16 @@
         public void Should_allow_accept_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                new Tuple<string, decimal>("text/plain", 0.8m), 
-                new Tuple<string, decimal>("text/ninja", 0.5m), 
+            var expectedValues = new[]
+            {
+                new Tuple<string, decimal>("text/plain", 0.8m),
+                new Tuple<string, decimal>("text/ninja", 0.5m),
             };
 
-            var rawHeaders = 
-                new Dictionary<string, IEnumerable<string>> { { "Accept", new [] { "initial value" } } };
+            var rawHeaders =
+                new Dictionary<string, IEnumerable<string>> {{"Accept", new[] {"initial value"}}};
 
-            var headers = 
+            var headers =
                 new RequestHeaders(rawHeaders) {Accept = expectedValues};
 
             // When
@@ -1347,10 +1350,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { "text/plain" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept", new[] {"text/plain"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Accept = null };
+                new RequestHeaders(rawHeaders) {Accept = null};
 
             // When
             var values = headers.Keys;
@@ -1363,16 +1366,17 @@
         public void Should_allow_accept_charset_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                new Tuple<string, decimal>("utf-8", 0.7m), 
-                new Tuple<string, decimal>("iso-8859-5", 0.3m), 
+            var expectedValues = new[]
+            {
+                new Tuple<string, decimal>("utf-8", 0.7m),
+                new Tuple<string, decimal>("iso-8859-5", 0.3m),
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", new[] { "utf-7" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", new[] {"utf-7"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptCharset = expectedValues };
+                new RequestHeaders(rawHeaders) {AcceptCharset = expectedValues};
 
             // When
             var values = headers.AcceptCharset.ToList();
@@ -1389,10 +1393,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Charset", new[] { "iso-8859-5" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Charset", new[] {"iso-8859-5"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptCharset = null };
+                new RequestHeaders(rawHeaders) {AcceptCharset = null};
 
             // When
             var values = headers.Keys;
@@ -1405,16 +1409,17 @@
         public void Should_allow_accept_encoding_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                "compress", 
-                "gzip", 
+            var expectedValues = new[]
+            {
+                "compress",
+                "gzip",
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", new[] { "sdch" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Encoding", new[] {"sdch"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptEncoding = expectedValues };
+                new RequestHeaders(rawHeaders) {AcceptEncoding = expectedValues};
 
             // When
             var values = headers.AcceptEncoding.ToList();
@@ -1429,10 +1434,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Encoding", new[] { "compress" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Encoding", new[] {"compress"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptEncoding = null };
+                new RequestHeaders(rawHeaders) {AcceptEncoding = null};
 
             // When
             var values = headers.Keys;
@@ -1445,16 +1450,17 @@
         public void Should_allow_accept_language_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                new Tuple<string, decimal>("en-US", 0.7m), 
+            var expectedValues = new[]
+            {
+                new Tuple<string, decimal>("en-US", 0.7m),
                 new Tuple<string, decimal>("sv-SE", 0.3m)
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Language", new[] { "da" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Language", new[] {"da"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptLanguage = expectedValues };
+                new RequestHeaders(rawHeaders) {AcceptLanguage = expectedValues};
 
             // When
             var values = headers.AcceptLanguage.ToList();
@@ -1471,10 +1477,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Accept-Language", new[] { "en-US" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Accept-Language", new[] {"en-US"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { AcceptLanguage = null };
+                new RequestHeaders(rawHeaders) {AcceptLanguage = null};
 
             // When
             var values = headers.Keys;
@@ -1488,10 +1494,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Authorization", new[] { "Basic 12345LDKJDFJDDSFDFvfdf==" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Authorization", new[] {"Basic 12345LDKJDFJDDSFDFvfdf=="}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Authorization = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" };
+                new RequestHeaders(rawHeaders) {Authorization = "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="};
 
             // When
             var values = headers.Authorization;
@@ -1505,10 +1511,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Authorization", new[] { "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Authorization", new[] {"Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ=="}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Authorization = null };
+                new RequestHeaders(rawHeaders) {Authorization = null};
 
             // When
             var values = headers.Keys;
@@ -1521,16 +1527,17 @@
         public void Should_allow_cache_control_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                "public", 
-                "max-age=123445", 
+            var expectedValues = new[]
+            {
+                "public",
+                "max-age=123445",
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Cache-Control", new[] { "no-transform" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Cache-Control", new[] {"no-transform"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { CacheControl = expectedValues };
+                new RequestHeaders(rawHeaders) {CacheControl = expectedValues};
 
             // When
             var values = headers.CacheControl.ToList();
@@ -1545,10 +1552,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Cache-Control", new[] { "public" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Cache-Control", new[] {"public"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { CacheControl = null };
+                new RequestHeaders(rawHeaders) {CacheControl = null};
 
             // When
             var values = headers.Keys;
@@ -1562,10 +1569,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Connection", new[] { "closed" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Connection", new[] {"closed"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Connection = "keep-alive" };
+                new RequestHeaders(rawHeaders) {Connection = "keep-alive"};
 
             // When
             var values = headers.Connection;
@@ -1579,10 +1586,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Connection", new[] { "text/plain" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Connection", new[] {"text/plain"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Connection = null };
+                new RequestHeaders(rawHeaders) {Connection = null};
 
             // When
             var values = headers.Keys;
@@ -1596,10 +1603,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Length", new[] { "12345" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Content-Length", new[] {"12345"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { ContentLength = 54321 };
+                new RequestHeaders(rawHeaders) {ContentLength = 54321};
 
             // When
             var values = headers.ContentLength;
@@ -1613,10 +1620,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Length", new[] { "12345" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Content-Length", new[] {"12345"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { ContentLength = 0 };
+                new RequestHeaders(rawHeaders) {ContentLength = 0};
 
             // When
             var values = headers.Keys;
@@ -1630,10 +1637,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "application/json" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Content-Type", new[] {"application/json"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { ContentType = "text/html" };
+                new RequestHeaders(rawHeaders) {ContentType = "text/html"};
 
             // When
             var values = headers.ContentType;
@@ -1647,10 +1654,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Content-Type", new[] { "text/plain" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Content-Type", new[] {"text/plain"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { ContentType = null };
+                new RequestHeaders(rawHeaders) {ContentType = null};
 
             // When
             var values = headers.Keys;
@@ -1667,10 +1674,10 @@
                 new DateTime(2012, 12, 15, 8, 12, 31);
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Date", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Date", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Date = expectedValue };
+                new RequestHeaders(rawHeaders) {Date = expectedValue};
 
             // When
             var values = headers.Date;
@@ -1684,10 +1691,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Date", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Date", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Date = null };
+                new RequestHeaders(rawHeaders) {Date = null};
 
             // When
             var values = headers.Keys;
@@ -1703,10 +1710,10 @@
             const string expectedValue = "www.nancyfx.org";
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Host", new[] { "en.wikipedia.org" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Host", new[] {"en.wikipedia.org"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Host = expectedValue };
+                new RequestHeaders(rawHeaders) {Host = expectedValue};
 
             // When
             var values = headers.Host;
@@ -1720,10 +1727,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Host", new[] { "www.nancyfx.org" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Host", new[] {"www.nancyfx.org"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Host = null };
+                new RequestHeaders(rawHeaders) {Host = null};
 
             // When
             var values = headers.Keys;
@@ -1736,15 +1743,16 @@
         public void Should_allow_if_match_headers_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                "fsdfsd", "c3pdfgdfgjiozzzz" 
+            var expectedValues = new[]
+            {
+                "fsdfsd", "c3pdfgdfgjiozzzz"
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Match", new[] { "xyzzy", "c3piozzzz" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Match", new[] {"xyzzy", "c3piozzzz"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfMatch = expectedValues };
+                new RequestHeaders(rawHeaders) {IfMatch = expectedValues};
 
             // When
             var values = headers.IfMatch.ToArray();
@@ -1758,10 +1766,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Match", new[] { "fsdfsd" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Match", new[] {"fsdfsd"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfMatch = null };
+                new RequestHeaders(rawHeaders) {IfMatch = null};
 
             // When
             var values = headers.Keys;
@@ -1778,10 +1786,10 @@
                 new DateTime(2012, 12, 15, 8, 12, 31);
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfModifiedSince = expectedValue };
+                new RequestHeaders(rawHeaders) {IfModifiedSince = expectedValue};
 
             // When
             var values = headers.IfModifiedSince;
@@ -1795,10 +1803,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfModifiedSince = null };
+                new RequestHeaders(rawHeaders) {IfModifiedSince = null};
 
             // When
             var values = headers.Keys;
@@ -1811,15 +1819,16 @@
         public void Should_allow_if_none_match_to_be_overwritten()
         {
             // Given
-            var expectedValues = new[] {
-                "fsdfsd", "c3pdfgdfgjiozzzz" 
+            var expectedValues = new[]
+            {
+                "fsdfsd", "c3pdfgdfgjiozzzz"
             };
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { "xyzzy", "c3piozzzz" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-None-Match", new[] {"xyzzy", "c3piozzzz"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfNoneMatch = expectedValues };
+                new RequestHeaders(rawHeaders) {IfNoneMatch = expectedValues};
 
             // When
             var values = headers.IfNoneMatch.ToArray();
@@ -1833,10 +1842,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { "fsdfsd" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-None-Match", new[] {"fsdfsd"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfNoneMatch = null };
+                new RequestHeaders(rawHeaders) {IfNoneMatch = null};
 
             // When
             var values = headers.Keys;
@@ -1852,10 +1861,10 @@
             const string expectedValue = "737060cd8c284d8af7ad3082f209582d";
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Range", new[] { "737060ed712v4d8af7ad3082f209582d" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Range", new[] {"737060ed712v4d8af7ad3082f209582d"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfRange = expectedValue };
+                new RequestHeaders(rawHeaders) {IfRange = expectedValue};
 
             // When
             var values = headers.IfRange;
@@ -1869,10 +1878,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Range", new[] { "737060cd8c284d8af7ad3082f209582d" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Range", new[] {"737060cd8c284d8af7ad3082f209582d"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfRange = null };
+                new RequestHeaders(rawHeaders) {IfRange = null};
 
             // When
             var values = headers.Keys;
@@ -1889,10 +1898,10 @@
                 new DateTime(2012, 12, 15, 8, 12, 31);
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Unmodified-Since", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfUnmodifiedSince = expectedValue };
+                new RequestHeaders(rawHeaders) {IfUnmodifiedSince = expectedValue};
 
             // When
             var values = headers.IfUnmodifiedSince;
@@ -1906,10 +1915,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "If-Unmodified-Since", new[] { "Tue, 15 Nov 2011 08:12:31 GMT" } } };
+                new Dictionary<string, IEnumerable<string>> {{"If-Unmodified-Since", new[] {"Tue, 15 Nov 2011 08:12:31 GMT"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { IfUnmodifiedSince = null };
+                new RequestHeaders(rawHeaders) {IfUnmodifiedSince = null};
 
             // When
             var values = headers.Keys;
@@ -1925,10 +1934,10 @@
             const int expectedValue = 10;
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", new[] { "3" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Max-Forwards", new[] {"3"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { MaxForwards = expectedValue };
+                new RequestHeaders(rawHeaders) {MaxForwards = expectedValue};
 
             // When
             var values = headers.MaxForwards;
@@ -1942,10 +1951,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Max-Forwards", new[] { "2" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Max-Forwards", new[] {"2"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { MaxForwards = 0 };
+                new RequestHeaders(rawHeaders) {MaxForwards = 0};
 
             // When
             var values = headers.Keys;
@@ -1961,10 +1970,10 @@
             const string expectedValue = "www.nancyfx.org";
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Referer", new[] { "en.wikipedia.com" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Referer", new[] {"en.wikipedia.com"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Referrer = expectedValue };
+                new RequestHeaders(rawHeaders) {Referrer = expectedValue};
 
             // When
             var values = headers.Referrer;
@@ -1978,10 +1987,10 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "Referer", new[] { "en.wikipedia.com" } } };
+                new Dictionary<string, IEnumerable<string>> {{"Referer", new[] {"en.wikipedia.com"}}};
 
             var headers =
-                new RequestHeaders(rawHeaders) { Referrer = null };
+                new RequestHeaders(rawHeaders) {Referrer = null};
 
             // When
             var values = headers.Keys;
@@ -1997,10 +2006,13 @@
             const string expectedValue = "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:15.0) Gecko/20120427 Firefox/15.0a1";
 
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "User-Agent", new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" } } };
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    {"User-Agent", new[] {"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1"}}
+                };
 
             var headers =
-                new RequestHeaders(rawHeaders) { UserAgent = expectedValue };
+                new RequestHeaders(rawHeaders) {UserAgent = expectedValue};
 
             // When
             var values = headers.UserAgent;
@@ -2014,10 +2026,13 @@
         {
             // Given
             var rawHeaders =
-                new Dictionary<string, IEnumerable<string>> { { "User-Agent", new[] { "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1" } } };
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    {"User-Agent", new[] {"Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.1 (KHTML, like Gecko) Chrome/14.0.815.0 Safari/535.1"}}
+                };
 
             var headers =
-                new RequestHeaders(rawHeaders) { UserAgent = null };
+                new RequestHeaders(rawHeaders) {UserAgent = null};
 
             // When
             var values = headers.Keys;
@@ -2034,7 +2049,7 @@
         [InlineData("application/xhtml+xml; q=.7; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.7)]
         public void Should_retrieve_weighting_for_accept_headers(string header, string typeToCheck, double weighting)
         {
-            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { header } } };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> {{"Accept", new[] {header}}};
 
             var headers = new RequestHeaders(rawHeaders);
 

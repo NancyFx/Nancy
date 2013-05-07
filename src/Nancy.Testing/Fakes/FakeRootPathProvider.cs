@@ -10,17 +10,18 @@ namespace Nancy.Testing.Fakes
     public class FakeRootPathProvider : IRootPathProvider
     {
         private static string rootPath;
-        public static string RootPath
-        {
-            get { return rootPath; }
-            set { rootPath = value; }
-        }
 
         static FakeRootPathProvider()
         {
             var assembly = Assembly.GetEntryAssembly();
 
             rootPath = assembly == null ? Environment.CurrentDirectory : Path.GetDirectoryName(Assembly.GetEntryAssembly().Location);
+        }
+
+        public static string RootPath
+        {
+            get { return rootPath; }
+            set { rootPath = value; }
         }
 
         /// <summary>

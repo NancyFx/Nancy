@@ -1,9 +1,9 @@
 namespace Nancy.Testing
 {
     using System;
-	using System.IO;
-	using System.Xml.Linq;
-    
+    using System.IO;
+    using System.Xml.Linq;
+
     /// <summary>
     /// Defines extensions for the <see cref="BrowserResponse"/> type.
     /// </summary>
@@ -15,7 +15,8 @@ namespace Nancy.Testing
         /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
         /// <param name="location">The location that should have been redirected to.</param>
         /// <param name="stringComparer">The string comparer that should be used by the assertion. The default value is <see cref="StringComparison.InvariantCulture"/>.</param>
-        public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location, StringComparison stringComparer = StringComparison.InvariantCulture)
+        public static void ShouldHaveRedirectedTo(this BrowserResponse response, string location,
+            StringComparison stringComparer = StringComparison.InvariantCulture)
         {
             if (response.StatusCode != HttpStatusCode.SeeOther)
             {
@@ -28,14 +29,14 @@ namespace Nancy.Testing
             }
         }
 
-		public static XDocument BodyAsXml(this BrowserResponse response)
-		{
-			using (var contentsStream = new MemoryStream())
-			{
-				response.Context.Response.Contents.Invoke(contentsStream);
-				contentsStream.Position = 0;
-				return XDocument.Load(contentsStream);
-			}
-		}
+        public static XDocument BodyAsXml(this BrowserResponse response)
+        {
+            using (var contentsStream = new MemoryStream())
+            {
+                response.Context.Response.Contents.Invoke(contentsStream);
+                contentsStream.Position = 0;
+                return XDocument.Load(contentsStream);
+            }
+        }
     }
 }

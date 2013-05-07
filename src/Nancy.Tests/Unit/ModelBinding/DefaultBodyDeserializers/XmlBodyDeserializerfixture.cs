@@ -2,9 +2,11 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 {
     using System.IO;
     using System.Text;
+    using System.Xml.Serialization;
+
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
-    using System.Xml.Serialization;
+
     using Xunit;
 
     public class XmlBodyDeserializerFixture
@@ -79,26 +81,26 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             var bodyStream = new MemoryStream(Encoding.UTF8.GetBytes(this.testModelXml));
             var context = new BindingContext()
             {
-                DestinationType = typeof(TestModel),
-                ValidModelProperties = typeof(TestModel).GetProperties(),
+                DestinationType = typeof (TestModel),
+                ValidModelProperties = typeof (TestModel).GetProperties(),
             };
 
             // When
             var result = (TestModel)this.deserialize.Deserialize(
-                            "application/xml",
-                            bodyStream,
-                            context);
+                "application/xml",
+                bodyStream,
+                context);
 
             // Then
             result.ShouldNotBeNull();
-            result.ShouldBeOfType(typeof(TestModel));
+            result.ShouldBeOfType(typeof (TestModel));
             result.ShouldEqual(this.testModel);
         }
 
         public static string ToXmlString<T>(T input)
         {
             string xml;
-            var ser = new XmlSerializer(typeof(T));
+            var ser = new XmlSerializer(typeof (T));
             using (var ms = new MemoryStream())
             {
                 ser.Serialize(ms, input);
@@ -111,6 +113,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
         {
             [XmlElement("fooProp")]
             public string Foo { get; set; }
+
             [XmlElement()]
             public int Bar { get; set; }
 
@@ -126,7 +129,7 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
                 if (ReferenceEquals(null, obj)) return false;
                 if (ReferenceEquals(this, obj)) return true;
                 if (obj.GetType() != typeof (TestModel)) return false;
-                return Equals((TestModel) obj);
+                return Equals((TestModel)obj);
             }
 
             public override int GetHashCode()

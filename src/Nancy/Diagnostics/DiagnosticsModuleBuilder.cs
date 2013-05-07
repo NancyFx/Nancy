@@ -1,15 +1,16 @@
 namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
-    using ModelBinding;
+
+    using Nancy.ModelBinding;
     using Nancy.Routing;
 
     internal class DiagnosticsModuleBuilder : INancyModuleBuilder
     {
+        private readonly IModelBinderLocator modelBinderLocator;
         private readonly IRootPathProvider rootPathProvider;
 
         private readonly IEnumerable<ISerializer> serializers;
-        private readonly IModelBinderLocator modelBinderLocator;
 
         public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IModelBinderLocator modelBinderLocator)
         {

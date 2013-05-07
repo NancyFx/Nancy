@@ -4,6 +4,12 @@
 
     public class NancyRouteAttribute : Attribute
     {
+        public NancyRouteAttribute(string method, string path)
+        {
+            this.Method = method;
+            this.Path = path;
+        }
+
         /// <summary>
         /// The method for the route
         /// </summary>
@@ -13,11 +19,5 @@
         /// The path for the route
         /// </summary>
         public string Path { get; set; }
-
-        public NancyRouteAttribute(string method, string path)
-        {
-            this.Method = method;
-            this.Path = path;
-        }
     }
 }

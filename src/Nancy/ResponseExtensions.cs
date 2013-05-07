@@ -46,7 +46,7 @@ namespace Nancy
         /// <returns>Modified response</returns>
         public static Response WithHeader(this Response response, string header, string value)
         {
-            return response.WithHeaders(new { Header = header, Value = value });
+            return response.WithHeaders(new {Header = header, Value = value});
         }
 
         /// <summary>
@@ -80,9 +80,7 @@ namespace Nancy
             }
 
             foreach (var keyValuePair in headers)
-            {
                 response.Headers[keyValuePair.Item1] = keyValuePair.Item2;
-            }
 
             return response;
         }
@@ -119,7 +117,7 @@ namespace Nancy
         /// <returns>Modified response</returns>
         public static Response WithStatusCode(this Response response, int statusCode)
         {
-            response.StatusCode = (HttpStatusCode) statusCode;
+            response.StatusCode = (HttpStatusCode)statusCode;
             return response;
         }
 
@@ -127,16 +125,16 @@ namespace Nancy
         {
             var properties = header.GetType()
                                    .GetProperties()
-                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof(string))
+                                   .Where(prop => prop.CanRead && prop.PropertyType == typeof (string))
                                    .ToArray();
 
             var headerProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Header", StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
 
             var valueProperty = properties
-                                    .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
-                                    .FirstOrDefault();
+                .Where(p => string.Equals(p.Name, "Value", StringComparison.InvariantCultureIgnoreCase))
+                .FirstOrDefault();
 
             if (headerProperty == null || valueProperty == null)
             {

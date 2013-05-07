@@ -1,12 +1,8 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
-    using System;
     using System.Linq;
-    using System.Reflection;
 
     using FakeItEasy;
-
-    using Machine.Specifications;
 
     using Nancy.Bootstrapper;
     using Nancy.ModelBinding;
@@ -21,7 +17,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             var result = NancyInternalConfiguration.Default;
 
             result.ShouldNotBeNull();
-            result.ShouldBeOfType(typeof(NancyInternalConfiguration));
+            result.ShouldBeOfType(typeof (NancyInternalConfiguration));
         }
 
         [Fact]
@@ -54,7 +50,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             var result = config.GetTypeRegistations();
 
             result.Where(tr => tr.ImplementationType == fakeModelBinderLocator.GetType()).Any()
-                .ShouldBeTrue();
+                  .ShouldBeTrue();
         }
 
         [Fact]

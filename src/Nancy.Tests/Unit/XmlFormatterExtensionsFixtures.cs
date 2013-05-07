@@ -2,28 +2,30 @@ namespace Nancy.Tests.Unit
 {
     using System.IO;
     using System.Xml;
+
     using FakeItEasy;
 
     using Nancy.Responses;
     using Nancy.Tests.Fakes;
+
     using Xunit;
 
     public class XmlFormatterExtensionsFixtures
     {
-        private readonly DefaultResponseFormatter responseFormatter;
         private readonly Person model;
         private readonly Response response;
+        private readonly DefaultResponseFormatter responseFormatter;
         private readonly IRootPathProvider rootPathProvider;
 
 
         public XmlFormatterExtensionsFixtures()
         {
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            
-            this.responseFormatter =
-                new DefaultResponseFormatter(this.rootPathProvider, new NancyContext(), new ISerializer[] { new DefaultXmlSerializer() });
 
-            this.model = new Person { FirstName = "Andy", LastName = "Pike" };
+            this.responseFormatter =
+                new DefaultResponseFormatter(this.rootPathProvider, new NancyContext(), new ISerializer[] {new DefaultXmlSerializer()});
+
+            this.model = new Person {FirstName = "Andy", LastName = "Pike"};
             this.response = this.responseFormatter.AsXml(model);
         }
 

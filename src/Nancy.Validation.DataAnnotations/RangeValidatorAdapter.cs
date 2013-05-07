@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+
     using Nancy.Validation.Rules;
 
     /// <summary>
@@ -18,8 +19,7 @@
         /// <param name="descriptor">The descriptor.</param>
         public RangeValidatorAdapter(RangeAttribute attribute, PropertyDescriptor descriptor)
             : base("Comparison", attribute, descriptor)
-        {
-        }
+        {}
 
         /// <summary>
         /// Gets the the rules the adapter provides.
@@ -28,28 +28,28 @@
         public override IEnumerable<ModelValidationRule> GetRules()
         {
             var ra = (RangeAttribute)attribute;
-            
+
             yield return new ComparisonValidationRule(attribute.FormatErrorMessage,
-                new[] { descriptor.Name },
+                new[] {descriptor.Name},
                 ComparisonOperator.GreaterThanOrEqual,
                 Convert(ra.OperandType, ra.Minimum));
 
             yield return new ComparisonValidationRule(attribute.FormatErrorMessage,
-                new[] { descriptor.Name },
+                new[] {descriptor.Name},
                 ComparisonOperator.LessThanOrEqual,
                 Convert(ra.OperandType, ra.Maximum));
         }
 
         private static object Convert(Type type, object value)
         {
-            if(value == null)
+            if (value == null)
             {
                 return null;
             }
 
-            if(value is string)
+            if (value is string)
             {
-                var converter = 
+                var converter =
                     TypeDescriptor.GetConverter(type);
 
                 return converter.ConvertFromString((string)value);

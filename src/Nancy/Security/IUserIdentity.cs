@@ -17,6 +17,6 @@
         /// The claims of the authenticated user.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/>, containing the claims.</value>
-        IEnumerable<string> Claims { get; } 
+        IEnumerable<string> Claims { get; }
     }
 }

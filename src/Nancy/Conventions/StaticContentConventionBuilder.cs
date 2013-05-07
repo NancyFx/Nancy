@@ -5,8 +5,9 @@ namespace Nancy.Conventions
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
-    using Helpers;
-    using Responses;
+
+    using Nancy.Helpers;
+    using Nancy.Responses;
 
     /// <summary>
     /// Helper class for defining directory-based conventions for static contents.
@@ -15,7 +16,7 @@ namespace Nancy.Conventions
     {
         private static readonly ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
-		
+
         static StaticContentConventionBuilder()
         {
             ResponseFactoryCache = new ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>>();
@@ -40,7 +41,7 @@ namespace Nancy.Conventions
                 var path =
                     HttpUtility.UrlDecode(ctx.Request.Path);
 
-                var fileName = 
+                var fileName =
                     Path.GetFileName(path);
 
                 if (string.IsNullOrEmpty(fileName))
@@ -48,25 +49,30 @@ namespace Nancy.Conventions
                     return null;
                 }
 
-                var pathWithoutFilename = 
+                var pathWithoutFilename =
                     GetPathWithoutFilename(fileName, path);
 
                 if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                 {
-                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'" )));
+                    ctx.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path,
+                                "' does not match convention mapped to '", requestedPath, "'")));
                     return null;
                 }
 
-                contentPath = 
+                contentPath =
                     GetContentPath(requestedPath, contentPath);
 
                 if (contentPath.Equals("/"))
                 {
-                    throw new ArgumentException("This is not the security vulnerability you are looking for. Mapping static content to the root of your application is not a good idea.");
+                    throw new ArgumentException(
+                        "This is not the security vulnerability you are looking for. Mapping static content to the root of your application is not a good idea.");
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root),
+                        BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
 
                 return responseFactory.Invoke(ctx);
             };
@@ -87,31 +93,37 @@ namespace Nancy.Conventions
 
         public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)
         {
-            return (ctx, root) => {
-
+            return (ctx, root) =>
+            {
                 var path =
                     ctx.Request.Path;
 
                 if (!path.Equals(requestedFile, StringComparison.OrdinalIgnoreCase))
                 {
-                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedFile, "'")));
+                    ctx.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path,
+                                "' does not match convention mapped to '", requestedFile, "'")));
                     return null;
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] { }));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root),
+                        BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
 
                 return responseFactory.Invoke(ctx);
             };
         }
 
-        private static Func<ResponseFactoryCacheKey, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
+        private static Func<ResponseFactoryCacheKey, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath,
+            string requestedPath, string contentPath, string[] allowedExtensions)
         {
             return pathAndRootPair =>
             {
-                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
+                context.Trace.TraceLog.WriteLog(
+                    x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
 
-                var extension = 
+                var extension =
                     Path.GetExtension(pathAndRootPair.Path);
 
                 if (!string.IsNullOrEmpty(extension))
@@ -119,33 +131,41 @@ namespace Nancy.Conventions
                     extension = extension.Substring(1);
                 }
 
-                if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e.TrimStart(new [] {'.'}), extension, StringComparison.OrdinalIgnoreCase)))
+                if (allowedExtensions.Length != 0 &&
+                    !allowedExtensions.Any(e => string.Equals(e.TrimStart(new[] {'.'}), extension, StringComparison.OrdinalIgnoreCase)))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
+                    context.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension,
+                                "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
                     return ctx => null;
                 }
 
-                var transformedRequestPath = 
+                var transformedRequestPath =
                     GetSafeRequestPath(pathAndRootPair.Path, requestedPath, contentPath);
 
-                transformedRequestPath = 
+                transformedRequestPath =
                     GetEncodedPath(transformedRequestPath);
 
                 var fileName =
                     Path.GetFullPath(Path.Combine(applicationRootPath, transformedRequestPath));
 
-                var contentRootPath = 
+                var contentRootPath =
                     Path.GetFullPath(Path.Combine(applicationRootPath, GetEncodedPath(contentPath)));
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName, "' is trying to access a path outside the content folder '", contentPath, "'")));
+                    context.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[StaticContentConventionBuilder] The request '", fileName,
+                                "' is trying to access a path outside the content folder '", contentPath, "'")));
                     return ctx => null;
                 }
 
                 if (!File.Exists(fileName))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested file '", fileName, "' does not exist")));
+                    context.Trace.TraceLog.WriteLog(
+                        x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested file '", fileName, "' does not exist")));
                     return ctx => null;
                 }
 
@@ -156,17 +176,17 @@ namespace Nancy.Conventions
 
         private static string GetEncodedPath(string path)
         {
-            return PathReplaceRegex.Replace(path.TrimStart(new[] { '/' }), Path.DirectorySeparatorChar.ToString());
+            return PathReplaceRegex.Replace(path.TrimStart(new[] {'/'}), Path.DirectorySeparatorChar.ToString());
         }
 
         private static string GetPathWithoutFilename(string fileName, string path)
         {
-            var pathWithoutFileName = 
+            var pathWithoutFileName =
                 path.Replace(fileName, string.Empty);
 
-            return (pathWithoutFileName.Equals("/")) ? 
-                pathWithoutFileName : 
-                pathWithoutFileName.TrimEnd(new[] {'/'});
+            return (pathWithoutFileName.Equals("/"))
+                ? pathWithoutFileName
+                : pathWithoutFileName.TrimEnd(new[] {'/'});
         }
 
         private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
@@ -253,7 +273,7 @@ namespace Nancy.Conventions
                 {
                     return true;
                 }
-                
+
                 if (obj.GetType() != this.GetType())
                 {
                     return false;
@@ -266,7 +286,7 @@ namespace Nancy.Conventions
             {
                 unchecked
                 {
-                    return ((this.path != null ? this.path.GetHashCode() : 0) * 397) ^ (this.rootPath != null ? this.rootPath.GetHashCode() : 0);
+                    return ((this.path != null ? this.path.GetHashCode() : 0)*397) ^ (this.rootPath != null ? this.rootPath.GetHashCode() : 0);
                 }
             }
         }

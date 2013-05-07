@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System.Linq;
+
     using FakeItEasy;
+
     using Nancy.Validation;
+
     using Xunit;
 
     public class CompositeValidatorFixture
@@ -12,8 +15,10 @@
         {
             // Given
             var fakeValidators = A.CollectionOfFake<IModelValidator>(2);
-            A.CallTo(() => fakeValidators[0].Description).Returns(new ModelValidationDescriptor(new[] { new ModelValidationRule("Test1", s => s, new[] { "Member1" }) }));
-            A.CallTo(() => fakeValidators[1].Description).Returns(new ModelValidationDescriptor(new[] { new ModelValidationRule("Test2", s => s, new[] { "Member2" }) }));
+            A.CallTo(() => fakeValidators[0].Description)
+             .Returns(new ModelValidationDescriptor(new[] {new ModelValidationRule("Test1", s => s, new[] {"Member1"})}));
+            A.CallTo(() => fakeValidators[1].Description)
+             .Returns(new ModelValidationDescriptor(new[] {new ModelValidationRule("Test2", s => s, new[] {"Member2"})}));
             var subject = new CompositeValidator(fakeValidators);
 
             // When

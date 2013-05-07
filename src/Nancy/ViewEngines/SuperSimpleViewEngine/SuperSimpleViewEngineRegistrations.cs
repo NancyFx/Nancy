@@ -1,7 +1,8 @@
 ﻿namespace Nancy.ViewEngines.SuperSimpleViewEngine
 {
     using System.Collections.Generic;
-    using Bootstrapper;
+
+    using Nancy.Bootstrapper;
 
     /// <summary>
     /// Performs application registations for the SuperSimpleViewEngine.
@@ -23,8 +24,10 @@
         {
             get
             {
-                return new[] {
-                    new CollectionTypeRegistration(typeof(ISuperSimpleViewEngineMatcher), AppDomainAssemblyTypeScanner.TypesOf<ISuperSimpleViewEngineMatcher>(ScanMode.All))
+                return new[]
+                {
+                    new CollectionTypeRegistration(typeof (ISuperSimpleViewEngineMatcher),
+                        AppDomainAssemblyTypeScanner.TypesOf<ISuperSimpleViewEngineMatcher>(ScanMode.All))
                 };
             }
         }

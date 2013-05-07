@@ -5,8 +5,8 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
+    using System.Threading.Tasks;
 
     using Nancy.Bootstrapper;
     using Nancy.IO;
@@ -16,9 +16,8 @@
     /// </summary>
     public class NancyOwinHost
     {
-        private readonly INancyEngine engine;
-
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
+        private readonly INancyEngine engine;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyOwinHost"/> class.
@@ -67,19 +66,19 @@
             var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
 
             var nancyRequest = new Request(
-                    owinRequestMethod,
-                    url,
-                    nancyRequestStream,
-                    owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
-                    serverClientIp,
-                    certificate);
+                owinRequestMethod,
+                url,
+                nancyRequestStream,
+                owinRequestHeaders.ToDictionary(kv => kv.Key, kv => (IEnumerable<string>)kv.Value, StringComparer.OrdinalIgnoreCase),
+                serverClientIp,
+                certificate);
 
             var tcs = new TaskCompletionSource<int>();
 
             this.engine.HandleRequest(
                 nancyRequest,
                 StoreEnvironment(environment),
-                RequestComplete(environment, tcs), 
+                RequestComplete(environment, tcs),
                 RequestErrored(tcs));
 
             return tcs.Task;
@@ -93,11 +92,11 @@
         private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment)
         {
             return context =>
-                {
-                    environment["nancy.NancyContext"] = context;
-                    context.Items[RequestEnvironmentKey] = environment;
-                    return context;
-                };
+            {
+                environment["nancy.NancyContext"] = context;
+                context.Items[RequestEnvironmentKey] = environment;
+                return context;
+            };
         }
 
         /// <summary>
@@ -111,35 +110,33 @@
         private static Action<NancyContext> RequestComplete(IDictionary<string, object> environment, TaskCompletionSource<int> tcs)
         {
             return context =>
+            {
+                var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+                var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+
+                var nancyResponse = context.Response;
+                environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
+
+                foreach (var responseHeader in nancyResponse.Headers)
+                    owinResponseHeaders[responseHeader.Key] = new[] {responseHeader.Value};
+
+                if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
                 {
-                    var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
-                    var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+                    owinResponseHeaders["Content-Type"] = new[] {nancyResponse.ContentType};
+                }
 
-                    var nancyResponse = context.Response;
-                    environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
+                if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
+                {
+                    owinResponseHeaders["Set-Cookie"] =
+                        nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+                }
 
-                    foreach (var responseHeader in nancyResponse.Headers)
-                    {
-                        owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
-                    }
+                nancyResponse.Contents(owinResponseBody);
 
-                    if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
-                    {
-                        owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
-                    }
+                context.Dispose();
 
-                    if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
-                    {
-                        owinResponseHeaders["Set-Cookie"] =
-                            nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
-                    }
-
-                    nancyResponse.Contents(owinResponseBody);
-
-                    context.Dispose();
-
-                    tcs.TrySetResult(0);
-                };
+                tcs.TrySetResult(0);
+            };
         }
 
         /// <summary>

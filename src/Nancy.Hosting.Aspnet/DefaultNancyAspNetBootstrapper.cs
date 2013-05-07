@@ -1,10 +1,10 @@
-﻿using Nancy.Diagnostics;
-
-namespace Nancy.Hosting.Aspnet
+﻿namespace Nancy.Hosting.Aspnet
 {
+    using System;
     using System.Collections.Generic;
 
-    using Bootstrapper;
+    using Nancy.Bootstrapper;
+    using Nancy.Diagnostics;
     using Nancy.TinyIoc;
 
     /// <summary>
@@ -56,7 +56,7 @@ namespace Nancy.Hosting.Aspnet
         /// <param name="moduleType">Module type</param>
         /// <param name="context">The current context</param>
         /// <returns>The <see cref="INancyModule"/> instance</returns>
-        public override INancyModule GetModule(System.Type moduleType, NancyContext context)
+        public override INancyModule GetModule(Type moduleType, NancyContext context)
         {
             return this.ApplicationContainer.Resolve<INancyModule>(moduleType.FullName);
         }
@@ -119,9 +119,7 @@ namespace Nancy.Hosting.Aspnet
         protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
-            {
                 container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
-            }
         }
 
         /// <summary>
@@ -133,9 +131,7 @@ namespace Nancy.Hosting.Aspnet
         protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
-            {
                 container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
-            }
         }
 
         /// <summary>
@@ -146,9 +142,7 @@ namespace Nancy.Hosting.Aspnet
         protected override sealed void RegisterModules(TinyIoCContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes)
         {
             foreach (var registrationType in moduleRegistrationTypes)
-            {
-                container.Register(typeof(INancyModule), registrationType.ModuleType, registrationType.ModuleType.FullName).AsPerRequestSingleton();
-            }
+                container.Register(typeof (INancyModule), registrationType.ModuleType, registrationType.ModuleType.FullName).AsPerRequestSingleton();
         }
 
         /// <summary>

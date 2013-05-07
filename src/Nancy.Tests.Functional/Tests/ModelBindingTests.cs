@@ -1,10 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System.Collections.Generic;
-    using System.Linq;
-    using Bootstrapper;
-    using ModelBinding;
-    using Testing;
+
+    using Nancy.Bootstrapper;
+    using Nancy.ModelBinding;
+    using Nancy.Testing;
+
     using Xunit;
 
     public class ModelBindingFixture
@@ -14,8 +15,8 @@
 
         public ModelBindingFixture()
         {
-            this.bootstrapper = 
-                new ConfigurableBootstrapper(with => with.Modules(new[] { typeof(ModelBindingModule), typeof(MixedSourceModelBindingModule) }));
+            this.bootstrapper =
+                new ConfigurableBootstrapper(with => with.Modules(new[] {typeof (ModelBindingModule), typeof (MixedSourceModelBindingModule)}));
 
             this.browser = new Browser(bootstrapper);
         }
@@ -27,7 +28,8 @@
             const string body = "[{ 'key1': 'value1' , 'key2': 'value2'},{ 'key1': 'value1' , 'key2': 'value2'}, { 'key1': 'value1' , 'key2': 'value2'}]";
 
             // When
-            var result = this.browser.Post("/jsonlist", with => {
+            var result = this.browser.Post("/jsonlist", with =>
+            {
                 with.Body(body);
                 with.Header("content-type", "application/json");
             });
@@ -62,9 +64,9 @@
             {
                 var model = this.Bind<List<MyModel>>();
 
-                return (model.Count == 3) ? 
-                    HttpStatusCode.OK : 
-                    HttpStatusCode.InternalServerError;
+                return (model.Count == 3)
+                    ? HttpStatusCode.OK
+                    : HttpStatusCode.InternalServerError;
             };
         }
     }
@@ -75,12 +77,12 @@
         {
             Put["/foo/{key1}"] = _ =>
             {
-                var bodyModel = this.Bind<MyModel>(new BindingConfig { BodyOnly = true });
+                var bodyModel = this.Bind<MyModel>(new BindingConfig {BodyOnly = true});
                 var paramModel = this.Bind<ParamModel>();
 
-                return (bodyModel.key1 != paramModel.key1) ?
-                    HttpStatusCode.OK :
-                    HttpStatusCode.InternalServerError;
+                return (bodyModel.key1 != paramModel.key1)
+                    ? HttpStatusCode.OK
+                    : HttpStatusCode.InternalServerError;
             };
         }
     }

@@ -3,10 +3,7 @@
     using System;
     using System.Linq;
 
-    using Nancy;
-    using Trie;
-
-    using MatchResult = Trie.MatchResult;
+    using Nancy.Routing.Trie;
 
     public class DefaultRouteResolver : IRouteResolver
     {
@@ -26,11 +23,6 @@
             this.trie = trie;
 
             this.BuildTrie();
-        }
-
-        private void BuildTrie()
-        {
-            this.trie.BuildTrie(this.routeCache);
         }
 
         public ResolveResult Resolve(NancyContext context)
@@ -62,6 +54,11 @@
             return this.GetNotFoundResult(context);
         }
 
+        private void BuildTrie()
+        {
+            this.trie.BuildTrie(this.routeCache);
+        }
+
         private ResolveResult BuildOptionsResult(NancyContext context)
         {
             var path = context.Request.Path;
@@ -71,11 +68,11 @@
             var optionsResult = new OptionsRoute(path, options);
 
             return new ResolveResult(
-                            optionsResult,
-                            new DynamicDictionary(), 
-                            null,
-                            null,
-                            null);                        
+                optionsResult,
+                new DynamicDictionary(),
+                null,
+                null,
+                null);
         }
 
         private bool IsOptionsRequest(NancyContext context)
@@ -121,7 +118,7 @@
         private static string GetMethod(NancyContext context)
         {
             var requestedMethod = context.Request.Method;
-            
+
             return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ? "GET" : requestedMethod;
         }
     }

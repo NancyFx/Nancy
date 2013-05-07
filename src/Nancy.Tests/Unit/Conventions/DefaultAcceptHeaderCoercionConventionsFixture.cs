@@ -1,17 +1,13 @@
 ﻿namespace Nancy.Tests.Unit.Conventions
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
     using Nancy.Conventions;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class DefaultAcceptHeaderCoercionConventionsFixture
     {
-         
-        private readonly NancyConventions conventions;
         private readonly DefaultAcceptHeaderCoercionConventions acceptHeaderConventions;
+        private readonly NancyConventions conventions;
 
         public DefaultAcceptHeaderCoercionConventionsFixture()
         {
@@ -31,6 +27,7 @@
             // Then
             result.Item1.ShouldBeFalse();
         }
+
         [Fact]
         public void Should_return_correct_error_message_when_not_be_valid_because_conventions_is_null()
         {

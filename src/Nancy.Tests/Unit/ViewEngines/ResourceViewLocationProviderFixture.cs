@@ -5,8 +5,11 @@ namespace Nancy.Tests.Unit.ViewEngines
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
     using FakeItEasy;
+
     using Nancy.ViewEngines;
+
     using Xunit;
 
     public class ResourceViewLocationProviderFixture
@@ -17,7 +20,7 @@ namespace Nancy.Tests.Unit.ViewEngines
 
         public ResourceViewLocationProviderFixture()
         {
-            ResourceViewLocationProvider.Ignore.Clear(); 
+            ResourceViewLocationProvider.Ignore.Clear();
             this.reader = A.Fake<IResourceReader>();
             this.resourceAssemblyProvider = A.Fake<IResourceAssemblyProvider>();
             this.viewProvider = new ResourceViewLocationProvider(this.reader, this.resourceAssemblyProvider);
@@ -27,7 +30,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 ResourceViewLocationProvider.RootNamespaces.Add(this.GetType().Assembly, "Some.Resource");
             }
 
-            A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] { this.GetType().Assembly });
+            A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[] {this.GetType().Assembly});
         }
 
         [Fact]
@@ -60,8 +63,8 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_empty_result_when_view_resources_could_be_found()
         {
             // Given
-            var extensions = new[] { "html" };
-            
+            var extensions = new[] {"html"};
+
 
             // When
             var result = this.viewProvider.GetLocatedViews(extensions);
@@ -74,7 +77,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_view_location_result_with_file_name_set()
         {
             // Given
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             var match = new Tuple<string, Func<StreamReader>>(
                 "Some.Resource.View.html",
@@ -93,13 +96,13 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_view_location_result_with_content_set()
         {
             // Given
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             var match = new Tuple<string, Func<StreamReader>>(
                 "Some.Resource.View.html",
                 () => null);
 
-            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] { match });
+            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] {match});
 
             // When
             var result = this.viewProvider.GetLocatedViews(extensions);
@@ -112,7 +115,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_throw_invalid_operation_exception_if_only_one_view_was_found_and_no_root_namespace_has_been_defined()
         {
             // Given
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             ResourceViewLocationProvider.RootNamespaces.Remove(this.GetType().Assembly);
 
@@ -120,7 +123,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 "Some.Resource.View.html",
                 () => null);
 
-            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] { match });
+            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] {match});
 
             // When
             var exception = Record.Exception(() => this.viewProvider.GetLocatedViews(extensions).ToList());
@@ -133,7 +136,7 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_set_error_message_when_throwing_invalid_operation_exception_due_to_not_being_able_to_figure_out_common_namespace()
         {
             // Given
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             ResourceViewLocationProvider.RootNamespaces.Remove(this.GetType().Assembly);
 
@@ -141,7 +144,7 @@ namespace Nancy.Tests.Unit.ViewEngines
                 "Some.Resource.View.html",
                 () => null);
 
-            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] { match });
+            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] {match});
 
             var expectedErrorMessage =
                 string.Format("Only one view was found in assembly {0}, but no rootnamespace had been registered.", this.GetType().Assembly.FullName);
@@ -157,13 +160,13 @@ namespace Nancy.Tests.Unit.ViewEngines
         public void Should_return_view_location_result_where_location_is_set_in_platform_neutral_format()
         {
             // Given
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             var match = new Tuple<string, Func<StreamReader>>(
                 "Some.Resource.Path.With.Sub.Folder.View.html",
                 () => null);
 
-            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] { match });
+            A.CallTo(() => this.reader.GetResourceStreamMatches(A<Assembly>._, A<IEnumerable<string>>._)).Returns(new[] {match});
 
             // When
             var result = this.viewProvider.GetLocatedViews(extensions);
@@ -178,18 +181,18 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Given
             A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[]
             {
-                typeof(NancyEngine).Assembly,
+                typeof (NancyEngine).Assembly,
                 this.GetType().Assembly
             });
 
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             // When
             this.viewProvider.GetLocatedViews(extensions).ToList();
 
             // Then
             A.CallTo(() => this.reader.GetResourceStreamMatches(this.GetType().Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
-            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof(NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
+            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof (NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
         }
 
         [Fact]
@@ -198,20 +201,20 @@ namespace Nancy.Tests.Unit.ViewEngines
             // Given
             A.CallTo(() => this.resourceAssemblyProvider.GetAssembliesToScan()).Returns(new[]
             {
-                typeof(NancyEngine).Assembly,
+                typeof (NancyEngine).Assembly,
                 this.GetType().Assembly
             });
 
             ResourceViewLocationProvider.Ignore.Add(this.GetType().Assembly);
 
-            var extensions = new[] { "html" };
+            var extensions = new[] {"html"};
 
             // When
             this.viewProvider.GetLocatedViews(extensions).ToList();
 
             // Then
             A.CallTo(() => this.reader.GetResourceStreamMatches(this.GetType().Assembly, A<IEnumerable<string>>._)).MustNotHaveHappened();
-            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof(NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
+            A.CallTo(() => this.reader.GetResourceStreamMatches(typeof (NancyEngine).Assembly, A<IEnumerable<string>>._)).MustHaveHappened();
         }
     }
 }

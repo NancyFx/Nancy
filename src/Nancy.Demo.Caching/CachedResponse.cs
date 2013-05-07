@@ -3,7 +3,6 @@
     using System;
     using System.IO;
     using System.Text;
-    using Nancy;
 
     /// <summary>
     /// Wraps a regular response in a cached response
@@ -34,7 +33,7 @@
         {
             return stream =>
             {
-                var writer = new StreamWriter(stream) { AutoFlush = true };
+                var writer = new StreamWriter(stream) {AutoFlush = true};
                 writer.Write(contents);
             };
         }

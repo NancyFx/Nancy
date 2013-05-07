@@ -12,9 +12,7 @@
         /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
         /// </summary>
         protected ViewLocationResult()
-        {
-            
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ViewLocationResult"/> class.
@@ -57,15 +55,6 @@
         public string Name { get; protected set; }
 
         /// <summary>
-        /// Gets a value indicating whether the current item is stale
-        /// </summary>
-        /// <returns>True if stale, false otherwise</returns>
-        public virtual bool IsStale()
-        {
-            return false;
-        }
-
-        /// <summary>
         /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
         /// <returns><see langword="true"/> if the current object is equal to the <paramref name="other"/> parameter; otherwise, <see langword="false"/>.</returns>
@@ -78,6 +67,15 @@
         }
 
         /// <summary>
+        /// Gets a value indicating whether the current item is stale
+        /// </summary>
+        /// <returns>True if stale, false otherwise</returns>
+        public virtual bool IsStale()
+        {
+            return false;
+        }
+
+        /// <summary>
         /// Determines whether the specified <see cref="object"/> is equal to the current <see cref="object"/>.
         /// </summary>
         /// <returns><see langword="true"/> if the specified <see cref="object"/> is equal to the current <see cref="object"/>; otherwise, <see langword="false"/>.</returns>
@@ -86,7 +84,7 @@
         {
             if (ReferenceEquals(null, obj)) return false;
             if (ReferenceEquals(this, obj)) return true;
-            return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult) obj);
+            return obj.GetType() == typeof (ViewLocationResult) && Equals((ViewLocationResult)obj);
         }
 
         /// <summary>

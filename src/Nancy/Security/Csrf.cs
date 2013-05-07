@@ -1,8 +1,9 @@
 ﻿namespace Nancy.Security
 {
     using System;
-    using Cookies;
+
     using Nancy.Bootstrapper;
+    using Nancy.Cookies;
     using Nancy.Helpers;
 
     /// <summary>
@@ -31,8 +32,8 @@
                     if (context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY))
                     {
                         context.Response.Cookies.Add(new NancyCookie(CsrfToken.DEFAULT_CSRF_KEY,
-                                                                     (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY],
-                                                                     true));
+                            (string)context.Items[CsrfToken.DEFAULT_CSRF_KEY],
+                            true));
                         return;
                     }
 
@@ -122,7 +123,7 @@
         private static CsrfToken GetFormToken(Request request)
         {
             CsrfToken formToken = null;
-            
+
             var formTokenString = request.Form[CsrfToken.DEFAULT_CSRF_KEY].Value;
             if (formTokenString != null)
             {

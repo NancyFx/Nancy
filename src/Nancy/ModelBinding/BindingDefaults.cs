@@ -2,8 +2,8 @@ namespace Nancy.ModelBinding
 {
     using System.Collections.Generic;
 
-    using DefaultBodyDeserializers;
-    using DefaultConverters;
+    using Nancy.ModelBinding.DefaultBodyDeserializers;
+    using Nancy.ModelBinding.DefaultConverters;
 
     /// <summary>
     /// Provides default binding converters/deserializers
@@ -11,9 +11,8 @@ namespace Nancy.ModelBinding
     /// </summary>
     public class BindingDefaults
     {
-        private readonly IEnumerable<ITypeConverter> defaultTypeConverters;
-
         private readonly IEnumerable<IBodyDeserializer> defaultBodyDeserializers;
+        private readonly IEnumerable<ITypeConverter> defaultTypeConverters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BindingDefaults"/> class.
@@ -24,16 +23,16 @@ namespace Nancy.ModelBinding
             // as the binding defaults class itself is replacable if necessary,
             // and none of defaults have any dependencies.
             this.defaultTypeConverters = new ITypeConverter[]
-                {
-                    new CollectionConverter(),
-                    new FallbackConverter(),
-                };
+            {
+                new CollectionConverter(),
+                new FallbackConverter(),
+            };
 
             this.defaultBodyDeserializers = new IBodyDeserializer[]
-                {
-                    new JsonBodyDeserializer(),
-                    new XmlBodyDeserializer()
-                };
+            {
+                new JsonBodyDeserializer(),
+                new XmlBodyDeserializer()
+            };
         }
 
         /// <summary>
@@ -41,10 +40,7 @@ namespace Nancy.ModelBinding
         /// </summary>
         public virtual IEnumerable<ITypeConverter> DefaultTypeConverters
         {
-            get
-            {
-                return this.defaultTypeConverters;
-            }
+            get { return this.defaultTypeConverters; }
         }
 
         /// <summary>
@@ -52,10 +48,7 @@ namespace Nancy.ModelBinding
         /// </summary>
         public virtual IEnumerable<IBodyDeserializer> DefaultBodyDeserializers
         {
-            get
-            {
-                return this.defaultBodyDeserializers;
-            }
+            get { return this.defaultBodyDeserializers; }
         }
     }
 }

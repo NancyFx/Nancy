@@ -6,21 +6,17 @@
     {
         public TestModule()
         {
-            Get["/rel"] = parameters => {
-                return "This is the site route";
-            };
+            Get["/rel"] = parameters => { return "This is the site route"; };
 
             Get["/rel/header"] = parameters =>
-                {
-                    var response = new Response();
-                    response.Headers["X-Some-Header"] = "Some value";
+            {
+                var response = new Response();
+                response.Headers["X-Some-Header"] = "Some value";
 
-                    return response;
-                };
-
-            Post["/rel"] = parameters => {
-                return new StreamReader(this.Request.Body).ReadToEnd();
+                return response;
             };
+
+            Post["/rel"] = parameters => { return new StreamReader(this.Request.Body).ReadToEnd(); };
         }
     }
 }

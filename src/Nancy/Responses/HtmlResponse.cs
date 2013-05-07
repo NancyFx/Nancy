@@ -3,7 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using Cookies;
+
+    using Nancy.Cookies;
 
     /// <summary>
     /// Represents a HTML (text/html) response
@@ -17,7 +18,8 @@
         /// <param name="contents">Response body delegate - defaults to empty if null</param>
         /// <param name="headers">Headers if required</param>
         /// <param name="cookies">Cookies if required</param>
-        public HtmlResponse(HttpStatusCode statusCode = HttpStatusCode.OK, Action<Stream> contents = null, IDictionary<string, string> headers = null, IEnumerable<INancyCookie> cookies = null)
+        public HtmlResponse(HttpStatusCode statusCode = HttpStatusCode.OK, Action<Stream> contents = null, IDictionary<string, string> headers = null,
+            IEnumerable<INancyCookie> cookies = null)
         {
             this.ContentType = "text/html";
             this.StatusCode = statusCode;
@@ -35,9 +37,7 @@
             if (cookies != null)
             {
                 foreach (var nancyCookie in cookies)
-                {
                     this.Cookies.Add(nancyCookie);
-                }
             }
         }
     }

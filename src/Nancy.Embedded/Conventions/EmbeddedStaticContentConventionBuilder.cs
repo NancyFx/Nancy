@@ -6,8 +6,9 @@
     using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
-    using Helpers;
-    using Responses;
+
+    using Nancy.Helpers;
+    using Nancy.Responses;
 
     public class EmbeddedStaticContentConventionBuilder
     {
@@ -26,61 +27,71 @@
         /// <param name="contentPath">The path to where the content is stored in your application, relative to the root. If this is <see langword="null" /> then it will be the same as <paramref name="requestedPath"/>.</param>
         /// <param name="allowedExtensions">A list of extensions that is valid for the conventions. If not supplied, all extensions are valid.</param>
         /// <returns>A <see cref="EmbeddedFileResponse"/> instance for the requested embedded static contents if it was found, otherwise <see langword="null"/>.</returns>
-        public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string contentPath = null, params string[] allowedExtensions)
+        public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string contentPath = null,
+            params string[] allowedExtensions)
         {
             return (ctx, root) =>
+            {
+                var path =
+                    HttpUtility.UrlDecode(ctx.Request.Path);
+
+                var fileName =
+                    Path.GetFileName(path);
+
+                if (string.IsNullOrEmpty(fileName))
                 {
-                    var path =
-                        HttpUtility.UrlDecode(ctx.Request.Path);
+                    return null;
+                }
 
-                    var fileName =
-                        Path.GetFileName(path);
+                var pathWithoutFilename =
+                    GetPathWithoutFilename(fileName, path);
 
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return null;
-                    }
+                if (!requestedPath.StartsWith("/"))
+                {
+                    requestedPath = string.Concat("/", requestedPath);
+                }
 
-                    var pathWithoutFilename =
-                        GetPathWithoutFilename(fileName, path);
+                if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", path,
+                                "' does not match convention mapped to '", requestedPath, "'")));
+                    return null;
+                }
 
-                    if (!requestedPath.StartsWith("/"))
-                    {
-                        requestedPath = string.Concat("/", requestedPath);
-                    }
+                contentPath =
+                    GetContentPath(requestedPath, contentPath);
 
-                    if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'")));
-                        return null;
-                    }
+                var responseFactory =
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, requestedPath, contentPath, assembly, allowedExtensions));
 
-                    contentPath =
-                        GetContentPath(requestedPath, contentPath);
-
-                    var responseFactory =
-                        ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, requestedPath, contentPath, assembly, allowedExtensions));
-
-                    return responseFactory.Invoke();
-                };
+                return responseFactory.Invoke();
+            };
         }
 
-        private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string requestedPath, string contentPath, Assembly assembly, string[] allowedExtensions)
+        private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string requestedPath, string contentPath, Assembly assembly,
+            string[] allowedExtensions)
         {
             return requestPath =>
             {
-                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] Attempting to resolve embedded static content '", requestPath, "'")));
+                context.Trace.TraceLog.WriteLog(
+                    x =>
+                        x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] Attempting to resolve embedded static content '", requestPath, "'")));
 
                 var extension = Path.GetExtension(requestPath);
 
                 if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
+                    context.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested extension '", extension,
+                                "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
                     return () => null;
                 }
 
                 var transformedRequestPath =
-                     GetSafeRequestPath(requestPath, requestedPath, contentPath);
+                    GetSafeRequestPath(requestPath, requestedPath, contentPath);
 
                 transformedRequestPath =
                     GetEncodedPath(transformedRequestPath);
@@ -94,7 +105,10 @@
 
                 if (!IsWithinContentFolder(contentRootPath, fileName))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The request '", fileName, "' is trying to access a path outside the content folder '", contentPath, "'")));
+                    context.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The request '", fileName,
+                                "' is trying to access a path outside the content folder '", contentPath, "'")));
                     return () => null;
                 }
 
@@ -106,7 +120,10 @@
 
                 if (!assembly.GetManifestResourceNames().Any(x => string.Equals(x, resourceName + "." + fileName, StringComparison.OrdinalIgnoreCase)))
                 {
-                    context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", requestPath, "' was not found in assembly '", assembly.GetName().Name, "'")));
+                    context.Trace.TraceLog.WriteLog(
+                        x =>
+                            x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", requestPath,
+                                "' was not found in assembly '", assembly.GetName().Name, "'")));
                     return () => null;
                 }
 
@@ -117,7 +134,7 @@
 
         private static string GetEncodedPath(string path)
         {
-            return PathReplaceRegex.Replace(path.TrimStart(new[] { '/' }), Path.DirectorySeparatorChar.ToString());
+            return PathReplaceRegex.Replace(path.TrimStart(new[] {'/'}), Path.DirectorySeparatorChar.ToString());
         }
 
         private static string GetSafeRequestPath(string requestPath, string requestedPath, string contentPath)
@@ -154,9 +171,9 @@
             var pathWithoutFileName =
                 path.Replace(fileName, string.Empty);
 
-            return (pathWithoutFileName.Equals("/")) ?
-                pathWithoutFileName :
-                pathWithoutFileName.TrimEnd(new[] { '/' });
+            return (pathWithoutFileName.Equals("/"))
+                ? pathWithoutFileName
+                : pathWithoutFileName.TrimEnd(new[] {'/'});
         }
 
         /// <summary>

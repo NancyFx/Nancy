@@ -26,7 +26,7 @@
         /// <returns>Response object containing the rendered view (if found)</returns>
         public Response RenderView(NancyContext context, string viewName, object model = null)
         {
-            var viewContext = new ViewLocationContext { Context = context };
+            var viewContext = new ViewLocationContext {Context = context};
 
             return this.factory.RenderView(viewName, model, viewContext);
         }

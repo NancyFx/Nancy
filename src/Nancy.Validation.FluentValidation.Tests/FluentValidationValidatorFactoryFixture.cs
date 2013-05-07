@@ -1,8 +1,11 @@
 ﻿namespace Nancy.Validation.FluentValidation.Tests
 {
     using FakeItEasy;
+
     using Nancy.Tests;
+
     using Xunit;
+
     using global::FluentValidation;
 
     public class FluentValidationValidatorFactoryFixture
@@ -14,7 +17,7 @@
             var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
 
             // When
-            var instance = factory.Create(typeof(ClassUnderTest));
+            var instance = factory.Create(typeof (ClassUnderTest));
 
             // Then
             instance.ShouldNotBeNull();
@@ -27,18 +30,16 @@
             var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
 
             // When
-            var instance = factory.Create(typeof(string));
+            var instance = factory.Create(typeof (string));
 
             // Then
             instance.ShouldBeNull();
         }
 
         public class ClassUnderTest
-        {
-        }
+        {}
 
         public class ClassUnderTestValidator : AbstractValidator<ClassUnderTest>
-        {
-        }
+        {}
     }
 }

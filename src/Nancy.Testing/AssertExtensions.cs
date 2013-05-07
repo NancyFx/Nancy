@@ -74,9 +74,7 @@ namespace Nancy.Testing
         public static AndConnector<QueryWrapper> ShouldBeOfClass(this QueryWrapper query, string className)
         {
             foreach (var node in query)
-            {
                 node.ShouldBeOfClass(className);
-            }
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -84,7 +82,8 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that a node contains the specified text
         /// </summary>
-        public static AndConnector<NodeWrapper> ShouldContain(this NodeWrapper node, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<NodeWrapper> ShouldContain(this NodeWrapper node, string contents,
+            StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             Asserts.Contains(contents, node.InnerText, comparisonType);
 
@@ -94,12 +93,11 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts the every node should contain the specified text
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents,
+            StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             foreach (var node in query)
-            {
                 node.ShouldContain(contents, comparisonType);
-            }
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -117,7 +115,8 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that an element has a specific attribute with a specified value
         /// </summary>
-        public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<NodeWrapper> ShouldContainAttribute(this NodeWrapper node, string name, string value,
+            StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             Asserts.Equal(node.Attributes[name], value, comparisonType);
 
@@ -130,9 +129,7 @@ namespace Nancy.Testing
         public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name)
         {
             foreach (var node in query)
-            {
                 node.ShouldContainAttribute(name);
-            }
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -140,12 +137,11 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that an element has a specific attribute with a specified value
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name, string value,
+            StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             foreach (var node in query)
-            {
                 node.ShouldContainAttribute(name, value);
-            }
 
             return new AndConnector<QueryWrapper>(query);
         }

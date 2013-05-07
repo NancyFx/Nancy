@@ -6,6 +6,7 @@
     using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
+
     using Nancy.Extensions;
 
     /// <summary>
@@ -60,9 +61,9 @@
             var parameterizedSegments =
                 GetParameterizedSegments2(segments);
 
-            var parsedSegments = (segments.Any()) ?
-                string.Join(string.Empty, parameterizedSegments.Item1) :
-                "/";
+            var parsedSegments = (segments.Any())
+                ? string.Join(string.Empty, parameterizedSegments.Item1)
+                : "/";
 
             var pattern =
                 string.Concat(@"^", parsedSegments, @"$");
@@ -81,9 +82,9 @@
                 var name =
                     result.Item1.GroupNameFromNumber(i);
 
-                var value = (matches[i].Success) ?
-                    matches[i].Value :
-                    result.Item2.Where(x => x.Name.Equals(name) && !string.IsNullOrEmpty(x.DefaultValue)).Select(x => x.DefaultValue).SingleOrDefault();
+                var value = (matches[i].Success)
+                    ? matches[i].Value
+                    : result.Item2.Where(x => x.Name.Equals(name) && !string.IsNullOrEmpty(x.DefaultValue)).Select(x => x.DefaultValue).SingleOrDefault();
 
                 data[name] = value;
             }

@@ -4,7 +4,6 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Reflection;
 
     using Nancy.ModelBinding;
@@ -21,6 +20,29 @@
     /// </summary>
     public abstract class UglifiedNancyModule : INancyModule
     {
+        public UglifiedNancyModule()
+            : this(string.Empty)
+        {}
+
+        private UglifiedNancyModule(string modulePath)
+        {
+            this.After = new AfterPipeline();
+            this.Before = new BeforePipeline();
+            this.OnError = new ErrorPipeline();
+
+            this.ModulePath = modulePath;
+        }
+
+        public ViewRenderer View
+        {
+            get { return new ViewRenderer(this); }
+        }
+
+        public Negotiator Negotiate
+        {
+            get { return new Negotiator(this.Context); }
+        }
+
         public AfterPipeline After { get; set; }
 
         public BeforePipeline Before { get; set; }
@@ -43,36 +65,9 @@
 
         public string ModulePath { get; private set; }
 
-        public ViewRenderer View
-        {
-            get { return new ViewRenderer(this); }
-        }
-
-        public Negotiator Negotiate
-        {
-            get { return new Negotiator(this.Context); }
-        }
-
-        public UglifiedNancyModule()
-            : this(string.Empty)
-        {
-        }
-
         public IEnumerable<Route> Routes
         {
-            get
-            {
-                return this.GetRoutes();
-            }
-        }
-
-        private UglifiedNancyModule(string modulePath)
-        {
-            this.After = new AfterPipeline();
-            this.Before = new BeforePipeline();
-            this.OnError = new ErrorPipeline();
-
-            this.ModulePath = modulePath;
+            get { return this.GetRoutes(); }
         }
 
         private IEnumerable<Route> GetRoutes()
@@ -88,14 +83,14 @@
 
             foreach (var method in methods)
             {
-                var attribute = method.GetCustomAttributes(typeof(NancyRouteAttribute), false).FirstOrDefault() as NancyRouteAttribute;
+                var attribute = method.GetCustomAttributes(typeof (NancyRouteAttribute), false).FirstOrDefault() as NancyRouteAttribute;
 
                 if (attribute == null)
                 {
                     continue;
                 }
 
-                var routeDelegate = (Func<dynamic, dynamic>)Delegate.CreateDelegate(typeof(Func<dynamic, dynamic>), this, method.Name);
+                var routeDelegate = (Func<dynamic, dynamic>)Delegate.CreateDelegate(typeof (Func<dynamic, dynamic>), this, method.Name);
 
                 var filter = this.GetFilter(method.Name);
 
@@ -117,7 +112,7 @@
                 return null;
             }
 
-            return (Func<NancyContext, bool>)Delegate.CreateDelegate(typeof(Func<NancyContext, bool>), this, method.Name);
+            return (Func<NancyContext, bool>)Delegate.CreateDelegate(typeof (Func<NancyContext, bool>), this, method.Name);
         }
 
         /// <summary>
@@ -182,6 +177,5 @@
                 return new Negotiator(this.module.Context);
             }
         }
-
     }
 }

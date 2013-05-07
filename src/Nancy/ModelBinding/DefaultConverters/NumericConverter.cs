@@ -1,7 +1,8 @@
 ﻿namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
-    using Extensions;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Converter for numeric types

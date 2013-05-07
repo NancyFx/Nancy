@@ -5,6 +5,16 @@ namespace Nancy.Diagnostics
 
     public class InteractiveDiagnosticMethod
     {
+        public InteractiveDiagnosticMethod(object parentDiagnostic, Type returnType, string methodName, IEnumerable<Tuple<string, Type>> arguments,
+            string description)
+        {
+            this.ParentDiagnosticObject = parentDiagnostic;
+            this.ReturnType = returnType;
+            this.MethodName = methodName;
+            this.Arguments = arguments;
+            this.Description = description;
+        }
+
         public object ParentDiagnosticObject { get; private set; }
 
         public Type ReturnType { get; private set; }
@@ -14,14 +24,5 @@ namespace Nancy.Diagnostics
         public string Description { get; private set; }
 
         public IEnumerable<Tuple<string, Type>> Arguments { get; private set; }
-
-        public InteractiveDiagnosticMethod(object parentDiagnostic, Type returnType, string methodName, IEnumerable<Tuple<string, Type>> arguments, string description)
-        {
-            this.ParentDiagnosticObject = parentDiagnostic;
-            this.ReturnType = returnType;
-            this.MethodName = methodName;
-            this.Arguments = arguments;
-            this.Description = description;
-        }
     }
 }

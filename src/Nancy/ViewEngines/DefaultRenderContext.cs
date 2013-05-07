@@ -2,26 +2,23 @@
 {
     using System;
     using System.Collections.Generic;
-    using Cryptography;
-    using Nancy.Extensions;
-    using Nancy.Localization;
 
-    using Security;
-    using Session;
+    using Nancy.Extensions;
+    using Nancy.Helpers;
+    using Nancy.Localization;
+    using Nancy.Security;
 
     /// <summary>
     /// Default render context implementation.
     /// </summary>
     public class DefaultRenderContext : IRenderContext
     {
-        private readonly IViewResolver viewResolver;
-        private readonly IViewCache viewCache;
-
         private readonly ITextResource textResource;
 
+        private readonly TextResourceFinder textResourceFinder;
+        private readonly IViewCache viewCache;
         private readonly ViewLocationContext viewLocationContext;
-
-        private TextResourceFinder textResourceFinder;
+        private readonly IViewResolver viewResolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRenderContext"/> class.
@@ -91,7 +88,7 @@
         /// <returns>A HTML encoded <see cref="string"/>.</returns>
         public string HtmlEncode(string input)
         {
-            return Helpers.HttpUtility.HtmlEncode(input);
+            return HttpUtility.HtmlEncode(input);
         }
 
         /// <summary>

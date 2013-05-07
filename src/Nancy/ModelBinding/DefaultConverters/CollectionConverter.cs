@@ -1,19 +1,19 @@
 namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using Extensions;
+
+    using Nancy.Extensions;
 
     /// <summary>
     /// Converter for handling enumerable types
     /// </summary>
     public class CollectionConverter : ITypeConverter
     {
-        private readonly MethodInfo enumerableCastMethod = typeof(Enumerable).GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
-        private readonly MethodInfo enumerableToArrayMethod = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private readonly MethodInfo enumerableToListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
+        private readonly MethodInfo enumerableCastMethod = typeof (Enumerable).GetMethod("Cast", BindingFlags.Public | BindingFlags.Static);
+        private readonly MethodInfo enumerableToArrayMethod = typeof (Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
+        private readonly MethodInfo enumerableToListMethod = typeof (Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
 
         /// <summary>
         /// Whether the converter can convert to the destination type
@@ -76,9 +76,7 @@ namespace Nancy.ModelBinding.DefaultConverters
             var collectionAddMethod = destinationType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var item in items)
-            {
-                collectionAddMethod.Invoke(returnCollection, new[] { converter.Convert(item, genericType, context) });
-            }
+                collectionAddMethod.Invoke(returnCollection, new[] {converter.Convert(item, genericType, context)});
 
             return returnCollection;
         }
@@ -101,12 +99,12 @@ namespace Nancy.ModelBinding.DefaultConverters
 
             var returnArray = items.Select(s => converter.Convert(s, elementType, context));
 
-            var genericCastMethod = this.enumerableCastMethod.MakeGenericMethod(new[] { elementType });
-            var generictoArrayMethod = this.enumerableToArrayMethod.MakeGenericMethod(new[] { elementType });
+            var genericCastMethod = this.enumerableCastMethod.MakeGenericMethod(new[] {elementType});
+            var generictoArrayMethod = this.enumerableToArrayMethod.MakeGenericMethod(new[] {elementType});
 
-            var castArray = genericCastMethod.Invoke(null, new object[] { returnArray });
+            var castArray = genericCastMethod.Invoke(null, new object[] {returnArray});
 
-            return generictoArrayMethod.Invoke(null, new[] { castArray });
+            return generictoArrayMethod.Invoke(null, new[] {castArray});
         }
 
         private object ConvertEnumerable(string[] items, Type destinationType, BindingContext context)
@@ -124,12 +122,12 @@ namespace Nancy.ModelBinding.DefaultConverters
 
             // Use ToList rather than AsEnumerable to make sure the collection
             // is materialised and converters are called as appropriate.
-            var genericCastMethod = this.enumerableCastMethod.MakeGenericMethod(new[] { genericType });
-            var genericToListMethod = this.enumerableToListMethod.MakeGenericMethod(new[] { genericType });
+            var genericCastMethod = this.enumerableCastMethod.MakeGenericMethod(new[] {genericType});
+            var genericToListMethod = this.enumerableToListMethod.MakeGenericMethod(new[] {genericType});
 
-            var castArray = genericCastMethod.Invoke(null, new object[] { returnArray });
+            var castArray = genericCastMethod.Invoke(null, new object[] {returnArray});
 
-            return genericToListMethod.Invoke(null, new[] { castArray });
+            return genericToListMethod.Invoke(null, new[] {castArray});
         }
     }
 }

@@ -82,8 +82,8 @@ namespace Nancy
             get
             {
                 return this.Scheme + "://" +
-                       GetHostName(this.HostName) +
-                       GetPort(this.Port);
+                    GetHostName(this.HostName) +
+                    GetPort(this.Port);
             }
         }
 
@@ -92,21 +92,7 @@ namespace Nancy
         /// </summary>
         public bool IsSecure
         {
-            get
-            {
-                return "https".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase);
-            }
-        }
-
-        public override string ToString()
-        {
-            return this.Scheme + "://" + 
-                GetHostName(this.HostName) + 
-                GetPort(this.Port) +
-                GetCorrectPath(this.BasePath) +
-                GetCorrectPath(this.Path) +
-                this.Query +
-                GetFragment(this.Fragment);
+            get { return "https".Equals(this.Scheme, StringComparison.OrdinalIgnoreCase); }
         }
 
         /// <summary>
@@ -118,6 +104,17 @@ namespace Nancy
             return Clone();
         }
 
+        public override string ToString()
+        {
+            return this.Scheme + "://" +
+                GetHostName(this.HostName) +
+                GetPort(this.Port) +
+                GetCorrectPath(this.BasePath) +
+                GetCorrectPath(this.Path) +
+                this.Query +
+                GetFragment(this.Fragment);
+        }
+
         /// <summary>
         /// Clones the url.
         /// </summary>
@@ -125,15 +122,15 @@ namespace Nancy
         public Url Clone()
         {
             return new Url
-                       {
-                           BasePath = this.BasePath,
-                           Fragment = this.Fragment,
-                           HostName = this.HostName,
-                           Port = this.Port,
-                           Query = this.Query,
-                           Path = this.Path,
-                           Scheme = this.Scheme
-                       };
+            {
+                BasePath = this.BasePath,
+                Fragment = this.Fragment,
+                HostName = this.HostName,
+                Port = this.Port,
+                Query = this.Query,
+                Path = this.Path,
+                Scheme = this.Scheme
+            };
         }
 
         /// <summary>
@@ -158,9 +155,9 @@ namespace Nancy
 
         private static string GetPort(int? port)
         {
-            return (!port.HasValue) ?
-                string.Empty : 
-                string.Concat(":", port.Value);
+            return (!port.HasValue)
+                ? string.Empty
+                : string.Concat(":", port.Value);
         }
 
         private static string GetHostName(string hostName)
@@ -170,9 +167,8 @@ namespace Nancy
             if (IPAddress.TryParse(hostName, out address))
             {
                 return (address.AddressFamily == AddressFamily.InterNetworkV6)
-                           ? string.Concat("[", address.ToString(), "]")
-                           : address.ToString();
-
+                    ? string.Concat("[", address.ToString(), "]")
+                    : address.ToString();
             }
 
             return hostName;

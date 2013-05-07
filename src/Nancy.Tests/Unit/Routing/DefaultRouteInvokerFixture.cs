@@ -18,7 +18,8 @@
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
+            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(),
+                new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
         }
 
         [Fact]

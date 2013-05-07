@@ -1,6 +1,6 @@
 namespace Nancy.Authentication.Forms
 {
-    using Cryptography;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Configuration options for forms authentication
@@ -13,8 +13,7 @@ namespace Nancy.Authentication.Forms
         /// Initializes a new instance of the <see cref="FormsAuthenticationConfiguration"/> class.
         /// </summary>
         public FormsAuthenticationConfiguration() : this(CryptographyConfiguration.Default)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FormsAuthenticationConfiguration"/> class.

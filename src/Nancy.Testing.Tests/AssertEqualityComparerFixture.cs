@@ -1,7 +1,9 @@
 namespace Nancy.Testing.Tests
 {
     using System;
+
     using Nancy.Tests;
+
     using Xunit;
     using Xunit.Extensions;
 
@@ -131,14 +133,35 @@ namespace Nancy.Testing.Tests
             result.ShouldEqual(expectedResult);
         }
 
+        public class CompareableModel : IComparable
+        {
+            private readonly int returnValue;
+
+            public CompareableModel()
+                : this(0)
+            {}
+
+            public CompareableModel(int returnValue)
+            {
+                this.returnValue = returnValue;
+            }
+
+            public object ExpectedValueThatWasPassedIn { get; private set; }
+
+            public int CompareTo(object comparable)
+            {
+                this.ExpectedValueThatWasPassedIn = comparable;
+                return this.returnValue;
+            }
+        }
+
         public class EquatableModel : IEquatable<EquatableModel>
         {
             private readonly bool returnValue;
 
             public EquatableModel()
                 : this(true)
-            {
-            }
+            {}
 
             public EquatableModel(bool returnValue)
             {
@@ -160,8 +183,7 @@ namespace Nancy.Testing.Tests
 
             public GenericCompareableModel()
                 : this(0)
-            {
-            }
+            {}
 
             public GenericCompareableModel(int returnValue)
             {
@@ -171,29 +193,6 @@ namespace Nancy.Testing.Tests
             public GenericCompareableModel ExpectedValueThatWasPassedIn { get; private set; }
 
             public int CompareTo(GenericCompareableModel comparable)
-            {
-                this.ExpectedValueThatWasPassedIn = comparable;
-                return this.returnValue;
-            }
-        }
-
-        public class CompareableModel : IComparable
-        {
-            private readonly int returnValue;
-
-            public CompareableModel()
-                : this(0)
-            {
-            }
-
-            public CompareableModel(int returnValue)
-            {
-                this.returnValue = returnValue;
-            }
-
-            public object ExpectedValueThatWasPassedIn { get; private set; }
-
-            public int CompareTo(object comparable)
             {
                 this.ExpectedValueThatWasPassedIn = comparable;
                 return this.returnValue;

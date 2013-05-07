@@ -6,6 +6,7 @@
     using System.Dynamic;
     using System.Linq;
     using System.Reflection;
+
     using Nancy.Bootstrapper;
     using Nancy.ViewEngines;
 
@@ -14,10 +15,7 @@
         public InfoModule(IRootPathProvider rootPathProvider, NancyInternalConfiguration configuration)
             : base("/info")
         {
-            Get["/"] = _ =>
-            {
-                return View["Info"];
-            };
+            Get["/"] = _ => { return View["Info"]; };
 
             Get["/data"] = _ =>
             {
@@ -39,9 +37,9 @@
                     var value =
                         propertyInfo.GetValue(configuration, null);
 
-                    data.Configuration[propertyInfo.Name] = (!typeof(IEnumerable).IsAssignableFrom(value.GetType())) ?
-                        new[] { value.ToString() } :
-                        ((IEnumerable<object>) value).Select(x => x.ToString());
+                    data.Configuration[propertyInfo.Name] = (!typeof (IEnumerable).IsAssignableFrom(value.GetType()))
+                        ? new[] {value.ToString()}
+                        : ((IEnumerable<object>)value).Select(x => x.ToString());
                 }
 
                 return this.Response.AsJson((object)data);
@@ -54,32 +52,32 @@
                 AppDomainAssemblyTypeScanner.TypesOf<IViewEngine>();
 
             return engines
-                .Select(engine => engine.Name.Split(new [] { "ViewEngine" }, StringSplitOptions.None)[0])
+                .Select(engine => engine.Name.Split(new[] {"ViewEngine"}, StringSplitOptions.None)[0])
                 .ToArray();
         }
 
         private static string GetBootstrapperContainer()
         {
             var name = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Select(asm => asm.GetName())
-                .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
+                                .GetAssemblies()
+                                .Select(asm => asm.GetName())
+                                .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Bootstrappers."));
 
-            return (name == null) ?
-                "TinyIoC" :
-                string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
+            return (name == null)
+                ? "TinyIoC"
+                : string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
 
         private static string GetHosting()
         {
             var name = AppDomain.CurrentDomain
-                .GetAssemblies()
-                .Select(asm => asm.GetName())
-                .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));
+                                .GetAssemblies()
+                                .Select(asm => asm.GetName())
+                                .FirstOrDefault(asmName => asmName.Name != null && asmName.Name.StartsWith("Nancy.Hosting."));
 
-            return (name == null) ?
-                "Unknown" : 
-                string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
+            return (name == null)
+                ? "Unknown"
+                : string.Format("{0} (v{1})", name.Name.Split('.').Last(), name.Version);
         }
     }
 }

@@ -12,6 +12,6 @@
         /// <param name="memberNames">The member names.</param>
         public NotEmptyValidationRule(Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames)
             : base("NotEmpty", errorMessageFormatter, memberNames)
-        { }
+        {}
     }
 }

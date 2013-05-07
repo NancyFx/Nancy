@@ -1,15 +1,18 @@
 ﻿namespace Nancy.Tests.Unit.Validation
 {
     using System;
+
     using FakeItEasy;
-    using Nancy.Validation;
-    using Xunit;
+
     using Nancy.Tests.Fakes;
+    using Nancy.Validation;
+
+    using Xunit;
 
     public class ModuleExtensionsFixture
     {
-        private readonly IModelValidatorLocator validatorLocator;
         private readonly FakeNancyModule subject;
+        private readonly IModelValidatorLocator validatorLocator;
 
         public ModuleExtensionsFixture()
         {
@@ -50,7 +53,7 @@
         {
             // Given
             var validator = A.Fake<IModelValidator>();
-            A.CallTo(() => validator.Validate(A<object>.Ignored)).Returns(new ModelValidationResult(new[] { new ModelValidationError("blah", s => "blah") }));
+            A.CallTo(() => validator.Validate(A<object>.Ignored)).Returns(new ModelValidationResult(new[] {new ModelValidationError("blah", s => "blah")}));
             A.CallTo(() => validatorLocator.GetValidatorForType(A<Type>.Ignored)).Returns(validator);
 
             // When
@@ -61,7 +64,6 @@
         }
 
         private class FakeModel
-        {
-        }
+        {}
     }
 }

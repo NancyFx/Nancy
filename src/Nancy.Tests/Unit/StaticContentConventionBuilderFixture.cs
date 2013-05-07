@@ -5,9 +5,10 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+
     using Nancy.Conventions;
-    using Nancy.IO;
     using Nancy.Responses;
+
     using Xunit;
 
     public class StaticContentConventionBuilderFixture
@@ -168,7 +169,7 @@
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var etag = initialResult.Headers["ETag"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } } };
+            var headers = new Dictionary<string, IEnumerable<string>> {{"If-None-Match", new[] {etag}}};
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -180,7 +181,7 @@
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var moddedTime = initialResult.Headers["Last-Modified"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTime } } };
+            var headers = new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", new[] {moddedTime}}};
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -192,7 +193,7 @@
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var etag = initialResult.Headers["ETag"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag.Substring(1) } } };
+            var headers = new Dictionary<string, IEnumerable<string>> {{"If-None-Match", new[] {etag.Substring(1)}}};
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -207,7 +208,7 @@
             var moddedTime = DateTime.ParseExact(moddedTimeString, "R", CultureInfo.InvariantCulture, DateTimeStyles.None)
                                      .AddHours(-1);
             moddedTimeString = moddedTime.ToString("R", CultureInfo.InvariantCulture);
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-Modified-Since", new[] { moddedTimeString } } };
+            var headers = new Dictionary<string, IEnumerable<string>> {{"If-Modified-Since", new[] {moddedTimeString}}};
 
             var result = this.GetStaticContentResponse("css/css", "styles.css", headers: headers);
 
@@ -219,14 +220,15 @@
         {
             var initialResult = this.GetStaticContentResponse("css/css", "styles.css");
             var etag = initialResult.Headers["ETag"];
-            var headers = new Dictionary<string, IEnumerable<string>> { { "If-None-Match", new[] { etag } } };
+            var headers = new Dictionary<string, IEnumerable<string>> {{"If-None-Match", new[] {etag}}};
 
             var result = this.GetStaticContent("css/css", "styles.css", headers: headers);
 
             result.ShouldEqual(string.Empty);
         }
 
-        private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
+        private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null,
+            IDictionary<string, IEnumerable<string>> headers = null)
         {
             var response = this.GetStaticContentResponse(virtualDirectory, requestedFilename, root, headers);
 
@@ -244,7 +246,8 @@
             return string.Format("Static content returned an invalid response of {0}", response == null ? "(null)" : response.GetType().ToString());
         }
 
-        private Response GetStaticContentResponse(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
+        private Response GetStaticContentResponse(string virtualDirectory, string requestedFilename, string root = null,
+            IDictionary<string, IEnumerable<string>> headers = null)
         {
             var context = GetContext(virtualDirectory, requestedFilename, headers);
 
@@ -264,10 +267,10 @@
 
             var request = new Request(
                 "GET",
-                new Url { Path = resource, Scheme = "http" },
+                new Url {Path = resource, Scheme = "http"},
                 headers: headers ?? new Dictionary<string, IEnumerable<string>>());
 
-            var context = new NancyContext { Request = request };
+            var context = new NancyContext {Request = request};
             return context;
         }
 

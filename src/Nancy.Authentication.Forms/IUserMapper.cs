@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Authentication.Forms
 {
     using System;
+
     using Nancy.Security;
 
     /// <summary>

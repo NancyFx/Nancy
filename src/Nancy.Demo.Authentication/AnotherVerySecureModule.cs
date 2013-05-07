@@ -1,6 +1,5 @@
 namespace Nancy.Demo.Authentication
 {
-    using Nancy;
     using Nancy.Demo.Authentication.Models;
     using Nancy.Security;
 
@@ -11,7 +10,7 @@ namespace Nancy.Demo.Authentication
     {
         public AnotherVerySecureModule() : base("/superSecure")
         {
-            this.RequiresClaims(new[] { "SuperSecure" });
+            this.RequiresClaims(new[] {"SuperSecure"});
 
             Get["/"] = x =>
             {

@@ -50,9 +50,7 @@ namespace Nancy
                 var formatter = new BinaryFormatter();
 
                 using (var inputStream = new MemoryStream(inputBytes, false))
-                {
                     return formatter.Deserialize(inputStream);
-                }
             }
             catch (FormatException)
             {
@@ -62,10 +60,10 @@ namespace Nancy
             {
                 return null;
             }
-	    catch (IOException)
-	    {
-		return null;
-	    }
+            catch (IOException)
+            {
+                return null;
+            }
         }
     }
 }

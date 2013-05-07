@@ -28,9 +28,7 @@
             return stream =>
             {
                 using (this.source = sourceDelegate.Invoke())
-                {
                     this.source.CopyTo(stream);
-                }
             };
         }
 
@@ -41,7 +39,7 @@
         {
             if (this.source != null)
             {
-                this.source.Dispose();       
+                this.source.Dispose();
             }
         }
     }

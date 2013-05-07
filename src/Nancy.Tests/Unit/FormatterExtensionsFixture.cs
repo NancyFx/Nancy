@@ -1,30 +1,31 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using FakeItEasy;
+
     using Xunit;
 
     public class FormatterExtensionsFixture
     {
-        private readonly IResponseFormatter formatter;
         private readonly NancyContext context;
+        private readonly IResponseFormatter formatter;
 
         public FormatterExtensionsFixture()
         {
             this.context = new NancyContext();
-            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context, new ISerializer[] { });
+            this.formatter = new DefaultResponseFormatter(A.Fake<IRootPathProvider>(), context, new ISerializer[] {});
         }
 
         [Fact]
         public void Should_expand_base_path_for_redirect_if_tilde_present()
         {
             this.context.Request = new Request(
-                "GET", 
+                "GET",
                 new Url
-                    {
-                        BasePath = "/basePath",
-                        Path = "Path",
-                        Scheme = "http",
-                    });
+                {
+                    BasePath = "/basePath",
+                    Path = "Path",
+                    Scheme = "http",
+                });
 
             var result = this.formatter.AsRedirect("~/test");
 

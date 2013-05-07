@@ -3,26 +3,26 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
     using System;
     using System.IO;
     using System.Threading;
+
     using BodyDelegate = System.Func<System.Func<System.ArraySegment<byte>, // data
-                                 System.Action,                         // continuation
-                                 bool>,                                 // continuation will be invoked
-                                 System.Action<System.Exception>,       // onError
-                                 System.Action,                         // on Complete
-                                 System.Action>;                        // cancel
+        System.Action, // continuation
+        bool>, // continuation will be invoked
+        System.Action<System.Exception>, // onError
+        System.Action, // on Complete
+        System.Action>; // cancel
 
     /// <summary>
     /// Consumes a body delegate
     /// </summary>
     public class FakeConsumer
     {
+        private readonly ManualResetEventSlim sync = new ManualResetEventSlim();
         private readonly bool useContinuation;
 
+        private bool bodyDelegateInvoked;
         private Action cancelDelegate;
 
-        private bool bodyDelegateInvoked;
-
         private MemoryStream dataStream;
-        private ManualResetEventSlim sync = new ManualResetEventSlim();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FakeConsumer"/> class.
@@ -61,7 +61,7 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
         {
             if (bodyDelegate == null)
             {
-                throw new ArgumentNullException("bodyDelegate");    
+                throw new ArgumentNullException("bodyDelegate");
             }
 
             this.sync.Reset();
@@ -138,10 +138,10 @@ namespace Nancy.Hosting.Owin.Tests.Fakes
             // and running us sync.
             var worker = new Thread(
                 ts =>
-                    {
-                        this.ConsumeDataSync(data);
-                        continuation.Invoke();
-                    });
+                {
+                    this.ConsumeDataSync(data);
+                    continuation.Invoke();
+                });
 
             worker.Start();
         }

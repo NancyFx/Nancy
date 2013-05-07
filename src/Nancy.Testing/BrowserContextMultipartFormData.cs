@@ -12,14 +12,14 @@
         public const string DefaultBoundaryName = "--NancyMultiPartBoundary123124";
 
         private readonly string boundaryName;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserContextMultipartFormData"/> class using the default boundary name
         /// </summary>
         /// <param name="configuration">The configuration that should be used to create the multipart/form-data encoded data.</param>
         public BrowserContextMultipartFormData(Action<BrowserContextMultipartFormDataConfigurator> configuration)
             : this(configuration, DefaultBoundaryName)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BrowserContextMultipartFormData"/> class.
@@ -111,7 +111,7 @@
 
                 builder.Append(CRLF);
                 builder.Append("--" + this.boundary);
-                builder.Append(CRLF);  
+                builder.Append(CRLF);
                 builder.AppendFormat(@"Content-Disposition: form-data; name=""{0}""", name);
                 if (!String.IsNullOrWhiteSpace(filename))
                 {

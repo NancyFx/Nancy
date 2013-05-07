@@ -8,8 +8,8 @@
     /// </summary>
     public class TextResourceFinder : DynamicObject
     {
-        private readonly ITextResource textResource;
         private readonly NancyContext context;
+        private readonly ITextResource textResource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TextResourceFinder"/> class.
@@ -30,7 +30,7 @@
         /// <returns>Returns a value or a non existing value from the <see cref="ITextResource"/> implementation</returns>
         public override bool TryGetMember(GetMemberBinder binder, out object result)
         {
-            result = 
+            result =
                 new DynamicMemberChainer(binder.Name, this.context, this.textResource);
 
             return true;
@@ -38,9 +38,9 @@
 
         public class DynamicMemberChainer : DynamicObject
         {
-            private string memberName;
             private readonly NancyContext context;
             private readonly ITextResource textResource;
+            private string memberName;
 
             public DynamicMemberChainer(string memberName, NancyContext context, ITextResource resource)
             {
@@ -61,7 +61,7 @@
 
             public override bool TryConvert(ConvertBinder binder, out object result)
             {
-                if (binder.ReturnType == typeof(string))
+                if (binder.ReturnType == typeof (string))
                 {
                     result = this.textResource[this.memberName, this.context];
                     return true;
@@ -72,7 +72,8 @@
 
             public override string ToString()
             {
-                return this.textResource[this.memberName, this.context]; ;
+                return this.textResource[this.memberName, this.context];
+                ;
             }
         }
     }

@@ -19,9 +19,7 @@
             foreach (var key in source.Keys)
             {
                 foreach (var value in source[key])
-                {
                     collection.Add(key, value);
-                }
             }
 
             return collection;
@@ -50,7 +48,7 @@
         {
             var knownKeys = new HashSet<TKey>();
 
-            foreach (TSource element in source)
+            foreach (var element in source)
             {
                 if (knownKeys.Add(keySelector(element)))
                 {

@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using Nancy.Testing;
-    using Nancy.Tests;
+
     using Xunit;
 
     public class DefaultRouteResolverFixture
@@ -151,7 +151,7 @@
             public NoRootModule()
             {
                 Get["/notroot"] = _ => "foo";
-            }        
+            }
         }
 
         private class TestModule : NancyModule
@@ -182,10 +182,7 @@
 
                 Get["/greedy/{test*}/badger/{woo}"] = _ => "GreedyAndCapture " + _.test + " " + _.woo;
 
-                Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x =>
-                {
-                    return string.Format("RegEx {0} {1}", x.foo, x.bar);
-                };
+                Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x => { return string.Format("RegEx {0} {1}", x.foo, x.bar); };
             }
         }
     }

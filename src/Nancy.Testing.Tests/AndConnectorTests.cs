@@ -1,9 +1,8 @@
 namespace Nancy.Testing.Tests
 {
     using System.Text;
-    using Nancy.Testing;
+
     using Xunit;
-    using Xunit.Sdk;
 
     public class AndConnectorTests
     {
@@ -30,20 +29,20 @@ namespace Nancy.Testing.Tests
             // When
             var result = Record.Exception(
                 () =>
-                    {
-                        const string input =
-                            @"<html><head></head><body><div id='testId' class='myOtherClass'>Test</div></body></html>";
+                {
+                    const string input =
+                        @"<html><head></head><body><div id='testId' class='myOtherClass'>Test</div></body></html>";
 
                     var buffer =
                         Encoding.UTF8.GetBytes(input);
 
-                    var document = 
+                    var document =
                         new DocumentWrapper(buffer);
 
-                        document["#testId"].ShouldExist().And.ShouldBeOfClass("myClass");
-                    });
+                    document["#testId"].ShouldExist().And.ShouldBeOfClass("myClass");
+                });
 
-            Assert.IsType<Nancy.Testing.AssertException>(result);
+            Assert.IsType<AssertException>(result);
         }
     }
 }

@@ -1,8 +1,8 @@
-using System;
-using System.Text;
-
 namespace Nancy.Extensions
 {
+    using System;
+    using System.Text;
+
     using Nancy.Responses;
 
     /// <summary>
@@ -37,7 +37,7 @@ namespace Nancy.Extensions
             {
                 return path.TrimStart('~');
             }
-            
+
             if (string.IsNullOrEmpty(context.Request.Url.BasePath))
             {
                 return path.TrimStart('~');

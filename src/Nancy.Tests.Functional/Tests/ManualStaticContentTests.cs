@@ -16,11 +16,11 @@
         public ManualStaticContentTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                    configuration =>
-                        {
-                            configuration.ApplicationStartup((c, p) => StaticContent.Enable(p));
-                            configuration.Modules(new Type[] { });
-                        });
+                configuration =>
+                {
+                    configuration.ApplicationStartup((c, p) => StaticContent.Enable(p));
+                    configuration.Modules(new Type[] {});
+                });
 
             this.browser = new Browser(bootstrapper);
         }
@@ -29,11 +29,8 @@
         public void Should_serve_valid_static_content()
         {
             var response = browser.Get(
-                @"/Content/smiley.png", 
-                with =>
-                    {
-                        with.HttpRequest();
-                    });
+                @"/Content/smiley.png",
+                with => { with.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -43,10 +40,7 @@
         {
             var response = browser.Get(
                 @"/Content/smiley2.png",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -56,10 +50,7 @@
         {
             var response = browser.Get(
                 @"/cOntent/smiley.png",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
@@ -69,10 +60,7 @@
         {
             var response = browser.Get(
                 @"/Content/../../../Tests/StaticContentTests.cs",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
@@ -82,10 +70,7 @@
         {
             var response = browser.Get(
                 @"/Content/../hidden.txt",
-                with =>
-                {
-                    with.HttpRequest();
-                });
+                with => { with.HttpRequest(); });
 
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }

@@ -14,6 +14,13 @@ namespace Nancy.Session
         int Count { get; }
 
         /// <summary>
+        /// Retrieves the value from the session
+        /// </summary>        
+        object this[string key] { get; set; }
+
+        bool HasChanged { get; }
+
+        /// <summary>
         /// Deletes the session and all associated information
         /// </summary>
         void DeleteAll();
@@ -22,12 +29,5 @@ namespace Nancy.Session
         /// Deletes the specific key from the session
         /// </summary>
         void Delete(string key);
-
-        /// <summary>
-        /// Retrieves the value from the session
-        /// </summary>        
-        object this[string key] { get; set; }
-
-        bool HasChanged { get; }
     }
 }

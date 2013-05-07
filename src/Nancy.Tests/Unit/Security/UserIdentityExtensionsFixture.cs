@@ -2,10 +2,7 @@ namespace Nancy.Tests.Unit.Security
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
 
-    using FakeItEasy;
-    using Nancy.Responses;
     using Nancy.Security;
     using Nancy.Tests.Fakes;
 
@@ -30,7 +27,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_authentication_if_the_username_is_null()
         {
             // Given
-            IUserIdentity user = GetFakeUser(null);
+            var user = GetFakeUser(null);
 
             // When
             var result = user.IsAuthenticated();
@@ -43,7 +40,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_authentication_if_the_username_is_empty()
         {
             // Given
-            IUserIdentity user = GetFakeUser("");
+            var user = GetFakeUser("");
 
             // When
             var result = user.IsAuthenticated();
@@ -56,7 +53,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_authentication_if_the_username_is_whitespace()
         {
             // Given
-            IUserIdentity user = GetFakeUser("   \r\n   ");
+            var user = GetFakeUser("   \r\n   ");
 
             // When
             var result = user.IsAuthenticated();
@@ -69,7 +66,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_true_for_authentication_if_username_is_set()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake");
+            var user = GetFakeUser("Fake");
 
             // When
             var result = user.IsAuthenticated();
@@ -77,7 +74,7 @@ namespace Nancy.Tests.Unit.Security
             // Then
             result.ShouldBeTrue();
         }
-        
+
         [Fact]
         public void Should_return_false_for_required_claim_if_the_user_is_null()
         {
@@ -96,7 +93,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_required_claim_if_the_claims_are_null()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake");
+            var user = GetFakeUser("Fake");
             var requiredClaim = "not-present-claim";
 
             // When
@@ -105,12 +102,12 @@ namespace Nancy.Tests.Unit.Security
             // Then
             result.ShouldBeFalse();
         }
-        
+
         [Fact]
         public void Should_return_false_for_required_claim_if_the_user_does_not_have_claim()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new [] { "present-claim" }) ;
+            var user = GetFakeUser("Fake", new[] {"present-claim"});
             var requiredClaim = "not-present-claim";
 
             // When
@@ -124,7 +121,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_true_for_required_claim_if_the_user_does_have_claim()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new [] { "present-claim" }) ;
+            var user = GetFakeUser("Fake", new[] {"present-claim"});
             var requiredClaim = "present-claim";
 
             // When
@@ -139,7 +136,7 @@ namespace Nancy.Tests.Unit.Security
         {
             // Given
             IUserIdentity user = null;
-            var requiredClaims = new[] { "not-present-claim1", "not-present-claim2" };
+            var requiredClaims = new[] {"not-present-claim1", "not-present-claim2"};
 
             // When
             var result = user.HasClaims(requiredClaims);
@@ -152,8 +149,8 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_required_claims_if_the_claims_are_null()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake");
-            var requiredClaims = new[] { "not-present-claim1", "not-present-claim2" };
+            var user = GetFakeUser("Fake");
+            var requiredClaims = new[] {"not-present-claim1", "not-present-claim2"};
 
             // When
             var result = user.HasClaims(requiredClaims);
@@ -161,13 +158,13 @@ namespace Nancy.Tests.Unit.Security
             // Then
             result.ShouldBeFalse();
         }
-        
+
         [Fact]
         public void Should_return_false_for_required_claims_if_the_user_does_not_have_all_claims()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
-            var requiredClaims = new[] { "present-claim1", "not-present-claim1" };
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
+            var requiredClaims = new[] {"present-claim1", "not-present-claim1"};
 
             // When
             var result = user.HasClaims(requiredClaims);
@@ -180,8 +177,8 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_true_for_required_claims_if_the_user_does_have_all_claims()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
-            var requiredClaims = new[] { "present-claim1", "present-claim2" };
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
+            var requiredClaims = new[] {"present-claim1", "present-claim2"};
 
             // When
             var result = user.HasClaims(requiredClaims);
@@ -195,7 +192,7 @@ namespace Nancy.Tests.Unit.Security
         {
             // Given
             IUserIdentity user = null;
-            var requiredClaims = new[] { "not-present-claim1", "not-present-claim2" };
+            var requiredClaims = new[] {"not-present-claim1", "not-present-claim2"};
 
             // When
             var result = user.HasAnyClaim(requiredClaims);
@@ -208,8 +205,8 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_any_required_claim_if_the_claims_are_null()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake");
-            var requiredClaims = new[] { "not-present-claim1", "not-present-claim2" };
+            var user = GetFakeUser("Fake");
+            var requiredClaims = new[] {"not-present-claim1", "not-present-claim2"};
 
             // When
             var result = user.HasAnyClaim(requiredClaims);
@@ -217,13 +214,13 @@ namespace Nancy.Tests.Unit.Security
             // Then
             result.ShouldBeFalse();
         }
-        
+
         [Fact]
         public void Should_return_false_for_any_required_claim_if_the_user_does_not_have_any_claim()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
-            var requiredClaims = new[] { "not-present-claim1", "not-present-claim2" };
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
+            var requiredClaims = new[] {"not-present-claim1", "not-present-claim2"};
 
             // When
             var result = user.HasAnyClaim(requiredClaims);
@@ -236,8 +233,8 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_true_for_any_required_claim_if_the_user_does_have_any_of_claim()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
-            var requiredClaims = new[] { "present-claim1", "not-present-claim1" };
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
+            var requiredClaims = new[] {"present-claim1", "not-present-claim1"};
 
             // When
             var result = user.HasAnyClaim(requiredClaims);
@@ -264,7 +261,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_valid_claim_if_claims_are_null()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake");
+            var user = GetFakeUser("Fake");
             Func<IEnumerable<string>, bool> isValid = claims => true;
 
             // When
@@ -278,7 +275,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_false_for_valid_claim_if_the_validation_fails()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
             Func<IEnumerable<string>, bool> isValid = claims => false;
 
             // When
@@ -292,7 +289,7 @@ namespace Nancy.Tests.Unit.Security
         public void Should_return_true_for_valid_claim_if_the_validation_succeeds()
         {
             // Given
-            IUserIdentity user = GetFakeUser("Fake", new[] { "present-claim1", "present-claim2", "present-claim3" });
+            var user = GetFakeUser("Fake", new[] {"present-claim1", "present-claim2", "present-claim3"});
             Func<IEnumerable<string>, bool> isValid = claims => true;
 
             // When
@@ -307,7 +304,7 @@ namespace Nancy.Tests.Unit.Security
         {
             // Given
             IEnumerable<string> userClaims = new string[0];
-            IUserIdentity user = GetFakeUser("Fake", userClaims);
+            var user = GetFakeUser("Fake", userClaims);
 
             IEnumerable<string> validatedClaims = null;
             Func<IEnumerable<string>, bool> isValid = claims =>
@@ -329,7 +326,7 @@ namespace Nancy.Tests.Unit.Security
             var ret = new FakeUserIdentity();
             ret.UserName = userName;
             ret.Claims = claims;
-            
+
             return ret;
         }
     }

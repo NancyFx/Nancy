@@ -2,19 +2,19 @@ namespace Nancy.Diagnostics
 {
     using System.IO;
     using System.Linq;
-    using Nancy.Localization;
 
-    using Responses;
-    using Security;
-    using ViewEngines;
-    using ViewEngines.SuperSimpleViewEngine;
+    using Nancy.Localization;
+    using Nancy.Responses;
+    using Nancy.Security;
+    using Nancy.ViewEngines;
+    using Nancy.ViewEngines.SuperSimpleViewEngine;
 
     public class DiagnosticsViewRenderer
     {
-        private readonly NancyContext context;
         private static readonly IViewResolver ViewResolver = new DiagnosticsViewResolver();
 
         private static readonly IViewEngine Engine = new SuperSimpleViewEngineWrapper(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
+        private readonly NancyContext context;
 
         public DiagnosticsViewRenderer(NancyContext context)
         {
@@ -43,15 +43,15 @@ namespace Nancy.Diagnostics
 
             context.Items.Add(CsrfToken.DEFAULT_CSRF_KEY, "DIAGNOSTICSTOKEN");
 
-            var renderContext = 
-                new DefaultRenderContext(ViewResolver, cache, new DummyTextResource(), new ViewLocationContext() { Context = context });
+            var renderContext =
+                new DefaultRenderContext(ViewResolver, cache, new DummyTextResource(), new ViewLocationContext() {Context = context});
 
             return Engine.RenderView(location, model, renderContext);
         }
 
         private static Stream GetBodyStream(string name)
         {
-            var view = new EmbeddedFileResponse(typeof(DiagnosticsViewRenderer).Assembly, "Nancy.Diagnostics.Views", name);
+            var view = new EmbeddedFileResponse(typeof (DiagnosticsViewRenderer).Assembly, "Nancy.Diagnostics.Views", name);
 
             var stream = new MemoryStream();
 
@@ -92,10 +92,7 @@ namespace Nancy.Diagnostics
         {
             public string this[string key, NancyContext context]
             {
-                get
-                {
-                    return string.Empty;
-                }
+                get { return string.Empty; }
             }
         }
     }

@@ -2,8 +2,9 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Linq;
+
     using CsQuery;
-    using Nancy.Testing;
+
     using Xunit;
 
     public class AssertExtensionsTests
@@ -16,7 +17,8 @@ namespace Nancy.Testing.Tests
         public AssertExtensionsTests()
         {
             var document =
-                CQ.Create(@"<html><head></head><body><div id='testId' class='myClass' attribute1 attribute2='value2'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
+                CQ.Create(
+                    @"<html><head></head><body><div id='testId' class='myClass' attribute1 attribute2='value2'>Test</div><div class='anotherClass'>Tes</div><span class='class'>some contents</span><span class='class'>This has contents</span></body></html>");
 
             this.query =
                 new QueryWrapper(document);
@@ -241,7 +243,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
         }
-        
+
         [Fact]
         public void ShouldContainAttribute_SingleElementNotContainingAttributeAndValue_ShouldThrowAssert()
         {
@@ -306,7 +308,7 @@ namespace Nancy.Testing.Tests
             // Then
             Assert.Null(result);
         }
-        
+
         [Fact]
         public void ShouldContainAttribute_SingleElementContainingAttributeAndValue_ShouldNotThrowAssert()
         {

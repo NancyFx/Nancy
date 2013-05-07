@@ -1,20 +1,21 @@
 ﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <title>Login</title>
-</head>
-<body>
-    <form method="POST">
-        Username <input type="text" name="Username" />
-        <br />
-        Password <input name="Password" type="password" />
-        <br />
-        Remember Me <input name="RememberMe" type="checkbox" value="True" />
-        <br />
-        <input type="submit" value="Login" />
-    </form>
-    @if (Model.Errored) {
-        <div id="errorBox" class="floatingError">Invalid Username or Password</div>
-    }
-</body>
+    <head>
+        <title>Login</title>
+    </head>
+    <body>
+        <form method="POST">
+            Username <input type="text" name="Username" />
+            <br />
+            Password <input name="Password" type="password" />
+            <br />
+            Remember Me <input name="RememberMe" type="checkbox" value="True" />
+            <br />
+            <input type="submit" value="Login" />
+        </form>
+        @if (Model.Errored)
+        {
+            <div id="errorBox" class="floatingError">Invalid Username or Password</div>
+        }
+    </body>
 </html>

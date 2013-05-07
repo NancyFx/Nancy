@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Diagnostics
 {
-    using Cryptography;
+    using Nancy.Cryptography;
 
     /// <summary>
     /// Settings for the diagnostics dashboard
@@ -8,7 +8,7 @@
     public class DiagnosticsConfiguration
     {
         private string path;
- 
+
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class,
         /// using the <see cref="CryptographyConfiguration.Default"/> cryptographic 
@@ -16,8 +16,7 @@
         /// </summary>
         public DiagnosticsConfiguration()
             : this(CryptographyConfiguration.Default)
-        {
-        }
+        {}
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DiagnosticsConfiguration"/> class,

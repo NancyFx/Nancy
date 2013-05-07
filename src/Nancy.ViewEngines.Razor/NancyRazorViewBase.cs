@@ -5,14 +5,14 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+
     using Nancy.Helpers;
 
     /// <summary>
     /// Default base class for nancy razor views
     /// </summary>
     public abstract class NancyRazorViewBase : NancyRazorViewBase<dynamic>
-    {
-    }
+    {}
 
     /// <summary>
     /// Base class for nancy razor views.
@@ -23,6 +23,15 @@
         private readonly StringBuilder contents;
         private string childBody;
         private IDictionary<string, string> childSections;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
+        /// </summary>
+        protected NancyRazorViewBase()
+        {
+            this.Sections = new Dictionary<string, Action>();
+            this.contents = new StringBuilder();
+        }
 
         /// <summary>
         /// Gets the Html helper.
@@ -105,11 +114,10 @@
         /// </summary>
         public dynamic Text
         {
-            get
-            {
-                return this.RenderContext.TextResourceFinder;
-            }
+            get { return this.RenderContext.TextResourceFinder; }
         }
+
+        protected IRenderContext RenderContext { get; set; }
 
         /// <summary>
         /// Executes the view.
@@ -129,17 +137,6 @@
             this.Model = (TModel)model;
             this.Url = new UrlHelpers<TModel>(engine, renderContext);
             this.ViewBag = renderContext.Context.ViewBag;
-        }
-
-        protected IRenderContext RenderContext { get; set; }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="NancyRazorViewBase"/> class.
-        /// </summary>
-        protected NancyRazorViewBase()
-        {
-            this.Sections = new Dictionary<string, Action>();
-            this.contents = new StringBuilder();
         }
 
         /// <summary>
@@ -166,14 +163,15 @@
             this.WriteLiteral(attributeValue);
         }
 
-        public virtual void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
+        public virtual void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix,
+            params AttributeValue[] values)
         {
             var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
             this.WriteLiteralTo(writer, attributeValue);
         }
 
         private string BuildAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix,
-                                      params AttributeValue[] values)
+            params AttributeValue[] values)
         {
             var writtenAttribute = false;
             var attributeBuilder = new StringBuilder(prefix.Item1);
@@ -237,7 +235,7 @@
 
             if (value is bool)
             {
-                var boolValue = (bool) value;
+                var boolValue = (bool)value;
 
                 return boolValue;
             }
@@ -386,7 +384,10 @@
                 }
                 catch (NullReferenceException)
                 {
-                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key));
+                    throw new ViewRenderException(
+                        string.Format(
+                            "A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)",
+                            section.Key));
                 }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }

@@ -11,18 +11,18 @@ namespace Nancy.Routing.Trie.Nodes
 
         private string[] groupNames;
 
+        public RegExNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {
+            this.BuildRegEx();
+        }
+
         /// <summary>
         /// Score for this node
         /// </summary>
         public override int Score
         {
             get { return 1000; }
-        }
-
-        public RegExNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
-            this.BuildRegEx();
         }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace Nancy.Routing.Trie.Nodes
 
             return result;
         }
-    
+
         private void BuildRegEx()
         {
             this.expression = new Regex(this.RouteDefinitionSegment, RegexOptions.Compiled);

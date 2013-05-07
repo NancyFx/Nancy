@@ -13,9 +13,9 @@
         /// </summary>
         /// <param name="type">The type.</param>
         /// <returns>An <see cref="IModelValidator"/> instance. If no data annotation rules were found for the specified <paramref name="type"/> then <see langword="null"/> is returned.</returns>
-        public IModelValidator Create(Type type) 
+        public IModelValidator Create(Type type)
         {
-            var validator = 
+            var validator =
                 new DataAnnotationsValidator(type);
 
             return validator.Description.Rules.Any()

@@ -4,15 +4,16 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
     using System.Collections;
     using System.IO;
     using System.Reflection;
-    using Extensions;
-    using Json;
+
+    using Nancy.Extensions;
+    using Nancy.Json;
 
     /// <summary>
     /// Deserializes request bodies in JSON format
     /// </summary>
     public class JsonBodyDeserializer : IBodyDeserializer
     {
-        private readonly MethodInfo deserializeMethod = typeof(JavaScriptSerializer).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
+        private readonly MethodInfo deserializeMethod = typeof (JavaScriptSerializer).GetMethod("Deserialize", BindingFlags.Instance | BindingFlags.Public);
 
         /// <summary>
         /// Whether the deserializer can deserialize the content type
@@ -39,13 +40,11 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
             bodyStream.Position = 0;
             string bodyText;
             using (var bodyReader = new StreamReader(bodyStream))
-            {
                 bodyText = bodyReader.ReadToEnd();
-            }
 
-            var genericDeserializeMethod = this.deserializeMethod.MakeGenericMethod(new[] { context.DestinationType });
+            var genericDeserializeMethod = this.deserializeMethod.MakeGenericMethod(new[] {context.DestinationType});
 
-            var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] { bodyText });
+            var deserializedObject = genericDeserializeMethod.Invoke(serializer, new[] {bodyText});
 
             return deserializedObject;
         }
@@ -54,13 +53,11 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         {
             var returnCollection = Activator.CreateInstance(destinationType);
 
-            var collectionAddMethod = 
+            var collectionAddMethod =
                 destinationType.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
 
             foreach (var item in (IEnumerable)items)
-            {
-                collectionAddMethod.Invoke(returnCollection, new[] { item });
-            }
+                collectionAddMethod.Invoke(returnCollection, new[] {item});
 
             return returnCollection;
         }
@@ -75,9 +72,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
             }
 
             foreach (var property in context.ValidModelProperties)
-            {
                 CopyPropertyValue(property, deserializedObject, returnObject);
-            }
 
             return returnObject;
         }

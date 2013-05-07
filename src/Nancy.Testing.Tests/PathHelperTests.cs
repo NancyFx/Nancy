@@ -2,7 +2,9 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.IO;
+
     using Nancy.Tests;
+
     using Xunit;
 
     public class PathHelperTests
@@ -26,7 +28,7 @@ namespace Nancy.Testing.Tests
             // Given
             var path = Path.Combine("c:", "this", "this", "the", "other", "path");
             var expectedPath = Path.Combine("c:", "this", "this", "the");
-            
+
             // When
             var result = PathHelper.GetParent(path, 2);
 
@@ -51,7 +53,7 @@ namespace Nancy.Testing.Tests
         public void Should_throw_argumentexception_when_path_is_null()
         {
             // Given
-            string path = null;            
+            string path = null;
 
             // When
             var exception = Record.Exception(() => PathHelper.GetParent(path, 28));

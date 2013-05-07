@@ -2,7 +2,6 @@ namespace Nancy.Demo.Authentication.Stateless
 {
     using Nancy.Authentication.Stateless;
     using Nancy.Bootstrapper;
-    using Nancy.Conventions;
     using Nancy.TinyIoc;
 
     public class StatelessAuthBootstrapper : DefaultNancyBootstrapper
@@ -17,27 +16,27 @@ namespace Nancy.Demo.Authentication.Stateless
             // your user's identity.
             var configuration =
                 new StatelessAuthenticationConfiguration(nancyContext =>
-                    {
-                        //for now, we will pull the apiKey from the querystring, 
-                        //but you can pull it from any part of the NancyContext
-                        var apiKey = (string) nancyContext.Request.Query.ApiKey.Value;
+                {
+                    //for now, we will pull the apiKey from the querystring, 
+                    //but you can pull it from any part of the NancyContext
+                    var apiKey = (string)nancyContext.Request.Query.ApiKey.Value;
 
-                        //get the user identity however you choose to (for now, using a static class/method)
-                        return UserDatabase.GetUserFromApiKey(apiKey);
-                    });
+                    //get the user identity however you choose to (for now, using a static class/method)
+                    return UserDatabase.GetUserFromApiKey(apiKey);
+                });
 
             AllowAccessToConsumingSite(pipelines);
 
             StatelessAuthentication.Enable(pipelines, configuration);
         }
 
-        static void AllowAccessToConsumingSite(IPipelines pipelines)
+        private static void AllowAccessToConsumingSite(IPipelines pipelines)
         {
             pipelines.AfterRequest.AddItemToEndOfPipeline(x =>
-                {
-                    x.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                    x.Response.Headers.Add("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT,OPTIONS");
-                });
+            {
+                x.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                x.Response.Headers.Add("Access-Control-Allow-Methods", "POST,GET,DELETE,PUT,OPTIONS");
+            });
         }
     }
 }

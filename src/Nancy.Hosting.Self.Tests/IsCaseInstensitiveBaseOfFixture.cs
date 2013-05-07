@@ -1,14 +1,16 @@
 namespace Nancy.Hosting.Self.Tests
 {
     using System;
-    using Xunit;
+
     using Nancy.Tests;
+
+    using Xunit;
 
     public class IsCaseInstensitiveBaseOfFixture
     {
-        private readonly Uri baseUri = new Uri("http://host/path/path/file");
-        private readonly Uri baseSlashUri = new Uri("http://host/path/path/");
         private readonly Uri baseLocalHostUri = new Uri("http://localhost/path/path/");
+        private readonly Uri baseSlashUri = new Uri("http://host/path/path/");
+        private readonly Uri baseUri = new Uri("http://host/path/path/file");
 
         [Fact]
         public void url_should_be_base_of_sub_directory()

@@ -2,7 +2,8 @@
 {
     using System.Collections.Generic;
     using System.IO;
-    using Responses;
+
+    using Nancy.Responses;
 
     /// <summary>
     /// Nancy IViewEngine wrapper for the super simple view engine
@@ -12,22 +13,12 @@
         /// <summary>
         /// Extensions that the view engine supports
         /// </summary>
-        private readonly string[] extensions = new[] { "sshtml", "html", "htm" };
+        private readonly string[] extensions = new[] {"sshtml", "html", "htm"};
 
         /// <summary>
         /// The engine itself
         /// </summary>
         private readonly SuperSimpleViewEngine viewEngine;
-
-        /// <summary>
-        /// Gets the extensions file extensions that are supported by the view engine.
-        /// </summary>
-        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
-        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
-        public IEnumerable<string> Extensions
-        {
-            get { return this.extensions; }
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SuperSimpleViewEngineWrapper"/> class, using
@@ -40,12 +31,21 @@
         }
 
         /// <summary>
+        /// Gets the extensions file extensions that are supported by the view engine.
+        /// </summary>
+        /// <value>An <see cref="IEnumerable{T}"/> instance containing the extensions.</value>
+        /// <remarks>The extensions should not have a leading dot in the name.</remarks>
+        public IEnumerable<string> Extensions
+        {
+            get { return this.extensions; }
+        }
+
+        /// <summary>
         /// Initialise the view engine (if necessary)
         /// </summary>
         /// <param name="viewEngineStartupContext">Startup context</param>
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
-        {
-        }
+        {}
 
         /// <summary>
         /// Renders the view.

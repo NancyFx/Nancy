@@ -1,13 +1,13 @@
 ﻿namespace Nancy.Tests.Unit
 {
     using System.Text;
-    using Nancy;
+
     using Xunit;
 
     public class HttpMultipartBufferFixture
     {
-        private HttpMultipartBuffer buffer;
         private readonly byte[] boundary;
+        private readonly HttpMultipartBuffer buffer;
 
         public HttpMultipartBufferFixture()
         {
@@ -27,9 +27,7 @@
         {
             // Given, When
             for (var counter = 0; counter < this.boundary.Length - 1; counter++)
-            {
                 this.buffer.Insert(67);
-            }
 
             // Then
             this.buffer.IsFull.ShouldBeFalse();
@@ -40,9 +38,7 @@
         {
             // Given, When
             foreach (var t in this.boundary)
-            {
                 this.buffer.Insert(67);
-            }
 
             // Then
             this.buffer.IsFull.ShouldBeTrue();
@@ -60,9 +56,7 @@
         {
             // Given, When
             foreach (var t in this.boundary)
-            {
                 this.buffer.Insert(t);
-            }
 
             //Then
             this.buffer.IsBoundary.ShouldBeTrue();
@@ -78,9 +72,7 @@
             this.buffer.Reset();
 
             foreach (var t in this.boundary)
-            {
                 this.buffer.Insert(t);
-            }
 
             // Then
             this.buffer.IsBoundary.ShouldBeTrue();

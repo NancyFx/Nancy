@@ -1,8 +1,8 @@
 namespace Nancy.Validation.FluentValidation
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
+
     using global::FluentValidation;
     using global::FluentValidation.Internal;
     using global::FluentValidation.Results;
@@ -13,8 +13,8 @@ namespace Nancy.Validation.FluentValidation
     /// </summary>
     public class FluentValidationValidator : IModelValidator
     {
-        private readonly IValidator validator;
         private readonly IFluentAdapterFactory factory;
+        private readonly IValidator validator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FluentValidationValidator"/> class for the
@@ -60,7 +60,7 @@ namespace Nancy.Validation.FluentValidation
 
             var rules = new List<ModelValidationRule>();
 
-            var membersWithValidators = 
+            var membersWithValidators =
                 fluentDescriptor.GetMembersWithValidators();
 
             foreach (var memberWithValidators in membersWithValidators)
@@ -72,9 +72,7 @@ namespace Nancy.Validation.FluentValidation
                 foreach (var rule in fluentRules)
                 {
                     foreach (var v in rule.Validators)
-                    {
                         rules.AddRange(GetValidationRule(rule, v));
-                    }
                 }
             }
 
@@ -83,9 +81,9 @@ namespace Nancy.Validation.FluentValidation
 
         private static IEnumerable<ModelValidationError> GetErrors(ValidationResult results)
         {
-            return results.IsValid ? 
-                Enumerable.Empty<ModelValidationError>() :
-                results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, s => error.ErrorMessage));
+            return results.IsValid
+                ? Enumerable.Empty<ModelValidationError>()
+                : results.Errors.Select(error => new ModelValidationError(new[] {error.PropertyName}, s => error.ErrorMessage));
         }
 
         private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
