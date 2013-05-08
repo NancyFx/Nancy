@@ -13,12 +13,12 @@ namespace Nancy.Conventions
     /// </summary>
     public class StaticContentConventionBuilder
     {
-        private static readonly ConcurrentDictionary<string, Func<NancyContext, Response>> ResponseFactoryCache;
+        private static readonly ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>> ResponseFactoryCache;
         private static readonly Regex PathReplaceRegex = new Regex(@"[/\\]", RegexOptions.Compiled);
 		
         static StaticContentConventionBuilder()
         {
-            ResponseFactoryCache = new ConcurrentDictionary<string, Func<NancyContext, Response>>();
+            ResponseFactoryCache = new ConcurrentDictionary<ResponseFactoryCacheKey, Func<NancyContext, Response>>();
         }
 
         /// <summary>
@@ -66,7 +66,7 @@ namespace Nancy.Conventions
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedPath, contentPath, allowedExtensions));
 
                 return responseFactory.Invoke(ctx);
             };
@@ -99,27 +99,27 @@ namespace Nancy.Conventions
                 }
 
                 var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] {}));
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] { }));
 
                 return responseFactory.Invoke(ctx);
             };
         }
 
-        private static Func<string, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
+        private static Func<ResponseFactoryCacheKey, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)
         {
-            return requestPath =>
+            return pathAndRootPair =>
             {
-                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", requestPath, "'")));
-                var extension = Path.GetExtension(requestPath);
+                context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] Attempting to resolve static content '", pathAndRootPair, "'")));
+                var extension = Path.GetExtension(pathAndRootPair.Path).Substring(1);
 
-                if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e, extension, StringComparison.OrdinalIgnoreCase)))
+                if (allowedExtensions.Length != 0 && !allowedExtensions.Any(e => string.Equals(e.TrimStart(new [] {'.'}), extension, StringComparison.OrdinalIgnoreCase)))
                 {
                     context.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested extension '", extension, "' does not match any of the valid extensions for the convention '", string.Join(",", allowedExtensions), "'")));
                     return ctx => null;
                 }
 
                 var transformedRequestPath = 
-                    GetSafeRequestPath(requestPath, requestedPath, contentPath);
+                    GetSafeRequestPath(pathAndRootPair.Path, requestedPath, contentPath);
 
                 transformedRequestPath = 
                     GetEncodedPath(transformedRequestPath);
@@ -187,6 +187,81 @@ namespace Nancy.Conventions
         private static bool IsWithinContentFolder(string contentRootPath, string fileName)
         {
             return fileName.StartsWith(contentRootPath, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Used to uniquely identify a request. Needed for when two Nancy applications want to serve up static content of the same
+        /// name from within the same AppDomain.
+        /// </summary>
+        private class ResponseFactoryCacheKey : IEquatable<ResponseFactoryCacheKey>
+        {
+            private readonly string path;
+            private readonly string rootPath;
+
+            public ResponseFactoryCacheKey(string path, string rootPath)
+            {
+                this.path = path;
+                this.rootPath = rootPath;
+            }
+
+            /// <summary>
+            /// The path of the static content for which this response is being issued
+            /// </summary>
+            public string Path
+            {
+                get { return this.path; }
+            }
+
+            /// <summary>
+            /// The root folder path of the Nancy application for which this response will be issued
+            /// </summary>
+            public string RootPath
+            {
+                get { return this.rootPath; }
+            }
+
+            public bool Equals(ResponseFactoryCacheKey other)
+            {
+                if (ReferenceEquals(null, other))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, other))
+                {
+                    return true;
+                }
+
+                return string.Equals(this.path, other.path) && string.Equals(this.rootPath, other.rootPath);
+            }
+
+            public override bool Equals(object obj)
+            {
+                if (ReferenceEquals(null, obj))
+                {
+                    return false;
+                }
+
+                if (ReferenceEquals(this, obj))
+                {
+                    return true;
+                }
+                
+                if (obj.GetType() != this.GetType())
+                {
+                    return false;
+                }
+
+                return Equals((ResponseFactoryCacheKey)obj);
+            }
+
+            public override int GetHashCode()
+            {
+                unchecked
+                {
+                    return ((this.path != null ? this.path.GetHashCode() : 0) * 397) ^ (this.rootPath != null ? this.rootPath.GetHashCode() : 0);
+                }
+            }
         }
     }
 }

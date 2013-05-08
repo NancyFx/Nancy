@@ -15,7 +15,7 @@ namespace Nancy.Routing.Trie.Nodes
             get { return 10000; }
         }
 
-        public LiteralNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        public LiteralNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {
         }

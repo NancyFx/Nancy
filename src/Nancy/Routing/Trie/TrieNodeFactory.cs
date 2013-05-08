@@ -13,7 +13,7 @@ namespace Nancy.Routing.Trie
         /// <param name="parent">Parent node</param>
         /// <param name="segment">Segment</param>
         /// <returns>TrieNode instance</returns>
-        public TrieNode GetNodeForSegment(TrieNode parent, string segment)
+        public virtual TrieNode GetNodeForSegment(TrieNode parent, string segment)
         {
             if (parent == null)
             {
@@ -30,7 +30,7 @@ namespace Nancy.Routing.Trie
                 return this.GetCaptureNode(parent, segment);
             }
 
-            if (segment.StartsWith("^(") && segment.EndsWith(")"))
+            if (segment.StartsWith("^(") && (segment.EndsWith(")") || segment.EndsWith(")$")))
             {
                 return new GreedyRegExCaptureNode(parent, segment, this);
             }

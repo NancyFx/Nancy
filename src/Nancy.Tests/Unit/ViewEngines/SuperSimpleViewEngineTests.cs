@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-
+    using FakeItEasy;
     using Nancy.Tests.Fakes;
     using Nancy.ViewEngines.SuperSimpleViewEngine;
 
@@ -19,7 +19,7 @@
         public SuperSimpleViewEngineTests()
         {
             this.fakeHost = new FakeViewEngineHost();
-            this.viewEngine = new SuperSimpleViewEngine();
+            this.viewEngine = new SuperSimpleViewEngine(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
         }
 
         [Fact]
@@ -579,7 +579,6 @@
             const string input = @"<html><head></head><body>@Partial['testing'];</body></html>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => "Test partial content";
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, new object(), fakeViewEngineHost);
 
@@ -594,7 +593,6 @@
             fakeViewEngineHost.GetTemplateCallback = (s, m) => "Hello @Model.Name";
             dynamic model = new ExpandoObject();
             model.Name = "Bob";
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, model, fakeViewEngineHost);
 
@@ -612,7 +610,6 @@
             model.Name = "Jim";
             subModel.Name = "Bob";
             model.User = subModel;
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, model, fakeViewEngineHost);
 
@@ -625,9 +622,8 @@
             const string input = @"<html><head></head><body>@Partial['testing'];</body></html>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => "Test partial content";
-            var viewEngine = new SuperSimpleViewEngine();
 
-            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+            var result = this.viewEngine.Render(input, null, fakeViewEngineHost);
 
             Assert.Equal(@"<html><head></head><body>Test partial content</body></html>", result);
         }
@@ -643,9 +639,8 @@
                 called = (s == "myMaster");
                 return "";
             };
-            var viewEngine = new SuperSimpleViewEngine();
 
-            viewEngine.Render(input, null, fakeViewEngineHost);
+            this.viewEngine.Render(input, null, fakeViewEngineHost);
 
             Assert.True(called);
         }
@@ -657,9 +652,8 @@
             const string master = @"<div id='header'>@Section['Header'];</div><div id='footer'>@Section['Footer'];</div>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => master;
-            var viewEngine = new SuperSimpleViewEngine();
 
-            var result = viewEngine.Render(input, null, fakeViewEngineHost);
+            var result = this.viewEngine.Render(input, null, fakeViewEngineHost);
 
             Assert.Equal("<div id='header'>\r\nHeader\r\n</div><div id='footer'>\r\nFooter\r\n</div>", result);
         }
@@ -671,7 +665,6 @@
             const string master = @"Hello @Model.Name!<div id='header'>@Section['Header'];</div><div id='footer'>@Section['Footer'];</div>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => master;
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, new { Name = "Bob" }, fakeViewEngineHost);
 
@@ -687,7 +680,6 @@
 
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => s == "middle" ? middle : top;
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, null, fakeViewEngineHost);
 
@@ -700,7 +692,6 @@
             const string input = @"<script src='@Path['~/scripts/test.js']'></script>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.ExpandPathCallBack = s => s.Replace("~/", "/BasePath/");
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, null, fakeViewEngineHost);
 
@@ -712,7 +703,6 @@
         {
             const string input = "<html><body><form>@AntiForgeryToken</form><body></html>";
             var fakeViewEngineHost = new FakeViewEngineHost();
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, null, fakeViewEngineHost);
 
@@ -868,7 +858,6 @@
             const string input = @"<html><head></head><body>@Partial['testing'];</body></html>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => "Hello @Context.Name";
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, null, fakeViewEngineHost);
 
@@ -882,7 +871,6 @@
             const string master = @"Hello @Context.Name!<div id='header'>@Section['Header'];</div><div id='footer'>@Section['Footer'];</div>";
             var fakeViewEngineHost = new FakeViewEngineHost();
             fakeViewEngineHost.GetTemplateCallback = (s, m) => master;
-            var viewEngine = new SuperSimpleViewEngine();
 
             var result = viewEngine.Render(input, null, fakeViewEngineHost);
 
@@ -1050,6 +1038,91 @@
             var output = viewEngine.Render(input, model, this.fakeHost);
 
             Assert.Equal(@"<html><head></head><body></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_invoke_all_matchers()
+        {
+            // Given
+            var extension1 = A.Fake<ISuperSimpleViewEngineMatcher>();
+            A.CallTo(() => extension1.Invoke(A<string>._, A<object>._, A<IViewEngineHost>._)).Returns("Foo");
+
+            var extension2 = A.Fake<ISuperSimpleViewEngineMatcher>();
+            A.CallTo(() => extension2.Invoke(A<string>._, A<object>._, A<IViewEngineHost>._)).ReturnsLazily(x => (string)x.Arguments[0] + "Bar");
+
+            const string input = @"<html><head></head><body></body></html>";
+
+            var engine = new SuperSimpleViewEngine(new[] {extension1, extension2});
+
+            // When
+            var output = engine.Render(input, null, this.fakeHost);
+
+            // Then
+            Assert.Equal("FooBar", output);
+        }
+
+        [Fact]
+        public void Should_support_being_passed_null_matchers()
+        {
+            // Given
+            const string input = @"<html><head></head><body></body></html>";
+
+            var engine = new SuperSimpleViewEngine(null);
+
+            // When
+            var output = engine.Render(input, null, this.fakeHost);
+
+            // Then
+            Assert.Equal(input, output);
+        }
+
+        [Fact]
+        public void Shoud_pass_model_to_matchers()
+        {
+            // Given
+            const string input = @"<html><head></head><body></body></html>";
+
+            var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
+            var engine = new SuperSimpleViewEngine(new[] { extension });
+            var model = new object();
+
+            // When
+            engine.Render(input, model, this.fakeHost);
+
+            // Then
+            A.CallTo(() => extension.Invoke(A<string>._, model, A<IViewEngineHost>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Shoud_pass_content_to_matchers()
+        {
+            // Given
+            const string input = @"<html><head></head><body></body></html>";
+
+            var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
+            var engine = new SuperSimpleViewEngine(new[] { extension });
+
+            // When
+            engine.Render(input, null, this.fakeHost);
+
+            // Then
+            A.CallTo(() => extension.Invoke(input, A<object>._, A<IViewEngineHost>._)).MustHaveHappened();
+        }
+
+        [Fact]
+        public void Shoud_pass_view_engine_host_to_matchers()
+        {
+            // Given
+            const string input = @"<html><head></head><body></body></html>";
+
+            var extension = A.Fake<ISuperSimpleViewEngineMatcher>();
+            var engine = new SuperSimpleViewEngine(new[] { extension });
+
+            // When
+            engine.Render(input, null, this.fakeHost);
+
+            // Then
+            A.CallTo(() => extension.Invoke(A<string>._, A<object>._, this.fakeHost)).MustHaveHappened();
         }
     }
 

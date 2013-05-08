@@ -59,15 +59,15 @@ namespace Nancy.Bootstrapper
         /// be included as a true from another delegate will take precedence.
         /// </summary>
         public static IEnumerable<Func<Assembly, bool>> AssembliesToScan
-        { 
-            private get 
+        {
+            private get
             {
                 return assembliesToScan ?? (assembliesToScan = DefaultAssembliesToScan);
-            } 
-            set 
+            }
+            set
             {
                 assembliesToScan = value;
-                UpdateTypes ();
+                UpdateTypes();
             }
         }
 
@@ -217,21 +217,28 @@ namespace Nancy.Bootstrapper
 
             UpdateAssemblies();
 
+            var existingAssemblyPaths =
+                assemblies.Select(a => a.Location).ToArray();
+
             foreach (var directory in GetAssemblyDirectories())
             {
-                var existingAssemblyPaths =
-                    assemblies.Select(a => a.Location).ToArray();
-
                 var unloadedAssemblies = Directory
                     .GetFiles(directory, "*.dll")
                     .Where(f => !existingAssemblyPaths.Contains(f, StringComparer.InvariantCultureIgnoreCase)).ToArray();
 
                 foreach (var unloadedAssembly in unloadedAssemblies)
                 {
-                    var inspectedAssembly =
-                        Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
+                    Assembly inspectedAssembly = null;
+                    try
+                    {
+                        inspectedAssembly = Assembly.ReflectionOnlyLoadFrom(unloadedAssembly);
+                    }
+                    catch (BadImageFormatException biEx)
+                    {
+                        //the assembly maybe it's not managed code
+                    }
 
-                    if (inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
+                    if (inspectedAssembly != null && inspectedAssembly.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase)))
                     {
                         try
                         {
@@ -244,6 +251,10 @@ namespace Nancy.Bootstrapper
                 }
             }
 
+
+            UpdateTypes();
+
+           
             UpdateTypes();
 
             nancyReferencingAssembliesLoaded = true;

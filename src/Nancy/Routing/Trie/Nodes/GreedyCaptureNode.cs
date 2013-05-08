@@ -23,7 +23,7 @@
             get { return 0; }
         }
 
-        public GreedyCaptureNode(TrieNode parent, string segment, TrieNodeFactory nodeFactory)
+        public GreedyCaptureNode(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
             : base(parent, segment, nodeFactory)
         {
             this.GetParameterName();

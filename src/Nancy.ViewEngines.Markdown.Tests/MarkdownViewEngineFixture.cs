@@ -18,10 +18,10 @@
         public MarkdownViewEngineFixture()
         {
             this.renderContext = A.Fake<IRenderContext>();
-            this.viewEngine = new MarkDownViewEngine(new SuperSimpleViewEngine());
+            this.viewEngine = new MarkDownViewEngine(new SuperSimpleViewEngine(Enumerable.Empty<ISuperSimpleViewEngineMatcher>()));
 
             this.rootPathProvider = A.Fake<IRootPathProvider>();
-            
+
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "Markdown"));
 
             this.fileSystemViewLocationProvider = new FileSystemViewLocationProvider(this.rootPathProvider, new DefaultFileSystemReader());

@@ -129,7 +129,10 @@
     <Compile Include="Conventions\IConvention.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
+    <Compile Include="Conventions\StaticContentHelper.cs" />
     <Compile Include="Conventions\StaticContentsConventions.cs" />
+    <Compile Include="Conventions\StaticDirectoryContent.cs" />
+    <Compile Include="Conventions\StaticFileContent.cs" />
     <Compile Include="Culture\DefaultCultureService.cs" />
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
@@ -412,9 +415,11 @@
     <Compile Include="ViewEngines\IViewRenderer.cs" />
     <Compile Include="ViewEngines\IViewResolver.cs" />
     <Compile Include="ViewEngines\ResourceViewLocationProvider.cs" />
+    <Compile Include="ViewEngines\SuperSimpleViewEngine\ISuperSimpleViewEngineMatcher.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\IViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngine.cs" />
+    <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineRegistrations.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\SuperSimpleViewEngineWrapper.cs" />
     <Compile Include="ViewEngines\ViewEngineApplicationStartup.cs" />
     <Compile Include="ViewEngines\ViewEngineStartupContext.cs" />
