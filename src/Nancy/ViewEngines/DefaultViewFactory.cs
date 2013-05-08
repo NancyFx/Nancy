@@ -99,15 +99,26 @@
 
         private string[] GetInspectedLocations(string viewName, dynamic model, ViewLocationContext viewLocationContext)
         {
-            var strings = new List<string>();
+            var inspectedLocations = new List<string>();
+
             foreach (var convention in conventions)
             {
                 try
                 {
-                    strings.Add(convention.Invoke(viewName, model, viewLocationContext));
-                } catch{ }                
+                    var location =
+                        convention.Invoke(viewName, model, viewLocationContext);
+
+                    if (!string.IsNullOrWhiteSpace(location))
+                    {
+                        inspectedLocations.Add(location);
+                    }
+                }
+                catch
+                {
+                }                
             }
-            return strings.ToArray();
+
+            return inspectedLocations.ToArray();
         }
 
         private static object GetSafeModel(object model)
