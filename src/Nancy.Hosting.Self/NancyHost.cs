@@ -152,7 +152,10 @@
         /// </summary>
         public void Stop()
         {
-            listener.Stop();
+            if (this.listener.IsListening)
+            {
+                listener.Stop();
+            }
         }
 
         /// <summary>
