@@ -14,13 +14,13 @@
             }
 
             this.Contents = GetJsonContents(model, serializer);
-            this.ContentType = "application/json";
+            this.ContentType = "application/json; charset=utf8";
             this.StatusCode = HttpStatusCode.OK;
         }
      
         private static Action<Stream> GetJsonContents(TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize("application/json", model, stream);
+            return stream => serializer.Serialize("application/json; charset=utf8", model, stream);
         }
     }
 
