@@ -39,10 +39,10 @@
 
             if (!results.Any())
             {
-				if (this.IsOptionsRequest(context))
-				{
-					return this.BuildOptionsResult(context);
-				}
+                if (this.IsOptionsRequest(context))
+                {
+                    return this.BuildOptionsResult(context);
+                }
                 return this.GetNotFoundResult(context);
             }
 
