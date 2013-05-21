@@ -35,15 +35,14 @@
 
         public ResolveResult Resolve(NancyContext context)
         {
-            if (this.IsOptionsRequest(context))
-            {
-                return this.BuildOptionsResult(context);
-            }
-
             var results = this.trie.GetMatches(GetMethod(context), context.Request.Path, context);
 
             if (!results.Any())
             {
+                if (this.IsOptionsRequest(context))
+                {
+                    return this.BuildOptionsResult(context);
+                }
                 return this.GetNotFoundResult(context);
             }
 
