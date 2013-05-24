@@ -61,7 +61,9 @@ namespace Nancy.Hosting.Aspnet
                                };
             byte[] certificate = null;
 
-            if (context.Request.ClientCertificate != null && context.Request.ClientCertificate.Certificate.Length != 0)
+            if (context.Request.ClientCertificate != null &&
+                context.Request.ClientCertificate.IsPresent &&
+                context.Request.ClientCertificate.Certificate.Length != 0)
             {
                 certificate = context.Request.ClientCertificate.Certificate;
             }
