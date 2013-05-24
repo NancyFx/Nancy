@@ -17,12 +17,15 @@
         private readonly IPipelines pipelines;
                  
         private readonly Request request;
-                 
+
+        private readonly FakeRequest optionsRequest;
+         
         private readonly Response response;
 
         private readonly CryptographyConfiguration cryptographyConfiguration;
 
         private readonly DefaultObjectSerializer objectSerializer;
+        
 
         public CsrfFixture()
         {
@@ -40,6 +43,9 @@
             Csrf.Enable(this.pipelines);
 
             this.request = new FakeRequest("GET", "/");
+
+            this.optionsRequest = new FakeRequest("OPTIONS", "/");
+
             this.response = new Response();
         }
 
@@ -67,6 +73,28 @@
                 fakeValidator);
             csrfStartup.Initialize(this.pipelines);
             var context = new NancyContext { Request = this.request, Response = this.response };
+
+            this.pipelines.AfterRequest.Invoke(context);
+
+            this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
+            context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
+            context.Items[CsrfToken.DEFAULT_CSRF_KEY].ShouldEqual("ValidToken");
+        }
+
+        [Fact]
+        public void Should_not_generate_a_new_token_on_an_options_request_and_not_add_a_cookie()
+        {
+            this.optionsRequest.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, "ValidToken");
+            
+            var fakeValidator = A.Fake<ICsrfTokenValidator>();
+            A.CallTo(() => fakeValidator.CookieTokenStillValid(A<CsrfToken>.Ignored)).Returns(true);
+            var csrfStartup = new CsrfApplicationStartup(
+                this.cryptographyConfiguration,
+                this.objectSerializer,
+                fakeValidator);
+            csrfStartup.Initialize(this.pipelines);
+            var context = new NancyContext { Request = this.optionsRequest, Response = this.response };
+            context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "ValidToken";
 
             this.pipelines.AfterRequest.Invoke(context);
 

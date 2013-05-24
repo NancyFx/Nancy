@@ -23,7 +23,7 @@
                 CsrfHookName,
                 context =>
                 {
-                    if (context.Response == null || context.Response.Cookies == null)
+                    if (context.Response == null || context.Response.Cookies == null || context.Request.Method.Equals("OPTIONS", StringComparison.OrdinalIgnoreCase))
                     {
                         return;
                     }
