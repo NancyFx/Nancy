@@ -33,6 +33,17 @@ namespace Nancy.Authentication.Forms.Tests
         }
 
         [Fact]
+        public void Should_be_valid_with_empty_redirect_url_when_redirect_is_disabled()
+        {
+            config.RedirectUrl = "";
+            config.DisableRedirect = true;
+
+            var result = config.IsValid;
+
+            result.ShouldBeTrue();
+        }
+
+        [Fact]
         public void Should_not_be_valid_with_empty_redirect_url()
         {
             config.RedirectUrl = "";
