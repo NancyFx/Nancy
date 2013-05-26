@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.Linq;
     using System.Security.Principal;
@@ -273,7 +274,7 @@
                 certificate);
         }
 
-        private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
+        private void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
         {
             foreach (var header in nancyResponse.Headers)
             {
@@ -291,9 +292,41 @@
             }
             response.StatusCode = (int)nancyResponse.StatusCode;
 
+            if (configuration.AllowChunkedEncoding)
+            {
+                OutputWithDefaultTransferEncoding(nancyResponse, response);
+            }
+            else
+            {
+                OutputWithContentLength(nancyResponse, response);
+            }
+        }
+
+        private static void OutputWithDefaultTransferEncoding(Response nancyResponse, HttpListenerResponse response)
+        {
             using (var output = response.OutputStream)
             {
                 nancyResponse.Contents.Invoke(output);
+            }
+        }
+
+        private static void OutputWithContentLength(Response nancyResponse, HttpListenerResponse response)
+        {
+            byte[] buffer;
+            using (var memoryStream = new MemoryStream())
+            {
+                nancyResponse.Contents.Invoke(memoryStream);
+                buffer = memoryStream.ToArray();
+            }
+
+            response.SendChunked = false;
+            response.ContentLength64 = buffer.Length;
+
+            using (var output = response.OutputStream)
+            using (var writer = new BinaryWriter(output))
+            {
+                writer.Write(buffer);
+                writer.Flush();
             }
         }
 
