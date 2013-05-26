@@ -36,7 +36,7 @@ namespace Nancy.ViewEngines.Spark
 
         public string ParsePath(string input)
         {
-            string siteRoot = _innerContext.ParsePath("/");
+            string siteRoot = _innerContext.ParsePath("~/");
             return _engine.ResourcePathManager.GetResourcePath(siteRoot, input);
         }
 

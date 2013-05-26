@@ -265,7 +265,9 @@
         {
             //Given
             A.CallTo(() => this.renderContext.ParsePath(A<string>.Ignored))
-                .Returns("/mysensationalrootfolder/scripts/test.js");
+                .Returns("/scripts/test.js");
+            A.CallTo(() => this.renderContext.ParsePath("~/"))
+                .Returns("/mysensationalrootfolder/");
             
             //When
             this.FindViewAndRender("ViewThatUsesTildeSubstitution");
