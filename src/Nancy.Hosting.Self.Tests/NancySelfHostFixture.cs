@@ -1,14 +1,14 @@
 ﻿#if !__MonoCS__ 
 namespace Nancy.Hosting.Self.Tests
 {
-    using System;
-    using System.IO;
-    using System.Net;
-    using FakeItEasy;
-    using Nancy.Bootstrapper;
-    using Nancy.Tests;
-    using Nancy.Tests.xUnitExtensions;
-    using Xunit;
+	using System;
+	using System.IO;
+	using System.Net;
+	using FakeItEasy;
+	using Nancy.Bootstrapper;
+	using Nancy.Tests;
+	using Nancy.Tests.xUnitExtensions;
+	using Xunit;
 
 	/// <remarks>
 	/// These tests attempt to listen on port 1234, and so require either administrative 
@@ -24,14 +24,14 @@ namespace Nancy.Hosting.Self.Tests
 		[SkippableFact]
 		public void Should_be_able_to_get_any_header_from_selfhost()
 		{
-            // Given
+			// Given
 			using (CreateAndOpenSelfHost())
 			{
-                // When
+				// When
 				var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
 				request.Method = "GET";
 
-                // Then
+				// Then
 				request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
 			}
 		}
@@ -39,7 +39,7 @@ namespace Nancy.Hosting.Self.Tests
 		[SkippableFact]
 		public void Should_set_query_string_and_uri_correctly()
 		{
-            // Given
+			// Given
 			Request nancyRequest = null;
 			var fakeEngine = A.Fake<INancyEngine>();
 			A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
@@ -49,7 +49,7 @@ namespace Nancy.Hosting.Self.Tests
 			var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 			A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
-            // When
+			// When
 			using (CreateAndOpenSelfHost(fakeBootstrapper))
 			{
 				var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
@@ -65,7 +65,7 @@ namespace Nancy.Hosting.Self.Tests
 				}
 			}
 
-            // Then
+			// Then
 			nancyRequest.Path.ShouldEqual("/test/stuff");
 			Assert.True(nancyRequest.Query.query.HasValue);
 			Assert.True(nancyRequest.Query.query2.HasValue);
@@ -82,6 +82,46 @@ namespace Nancy.Hosting.Self.Tests
 				var response = reader.ReadToEnd();
 
 				response.ShouldEqual("This is the site route");
+			}
+		}
+
+		[SkippableFact]
+		public void Should_be_able_to_get_from_chunked_selfhost()
+		{
+			using (CreateAndOpenSelfHost())
+			{
+				var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+
+				Assert.Equal("chunked", response.Headers["Transfer-Encoding"]);
+				Assert.Equal(null, response.Headers["Content-Length"]);
+
+				using (var reader = new StreamReader(response.GetResponseStream()))
+				{
+					var contents = reader.ReadToEnd();
+					contents.ShouldEqual("This is the site route");
+				}
+			}
+		}
+
+		[SkippableFact]
+		public void Should_be_able_to_get_from_contentlength_selfhost()
+		{
+			HostConfiguration configuration = new HostConfiguration()
+			{
+				AllowChunkedEncoding = false
+			};
+			using (CreateAndOpenSelfHost(null, configuration))
+			{
+				var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+
+				Assert.Equal(null, response.Headers["Transfer-Encoding"]);
+				Assert.Equal(22, Convert.ToInt32(response.Headers["Content-Length"]));
+
+				using (var reader = new StreamReader(response.GetResponseStream()))
+				{
+					var contents = reader.ReadToEnd();
+					contents.ShouldEqual("This is the site route");
+				}
 			}
 		}
 
@@ -120,8 +160,8 @@ namespace Nancy.Hosting.Self.Tests
 				response.ShouldEqual("This is the site home");
 			}
 		}
-	
-		private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null)
+
+		private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null, HostConfiguration configuration = null)
 		{
 			if (nancyBootstrapper == null)
 			{
@@ -130,8 +170,8 @@ namespace Nancy.Hosting.Self.Tests
 
 			var host = new NancyHost(
 				nancyBootstrapper,
+				configuration,
 				BaseUri);
-
 
 			try
 			{
@@ -161,12 +201,12 @@ namespace Nancy.Hosting.Self.Tests
 			}
 		}
 
-        [SkippableFact]
-        public void Should_be_serializable()
-        {
-            var type = typeof(NancyHost);
-            Assert.True(type.Attributes.ToString().Contains("Serializable"));
-        }
+		[SkippableFact]
+		public void Should_be_serializable()
+		{
+			var type = typeof(NancyHost);
+			Assert.True(type.Attributes.ToString().Contains("Serializable"));
+		}
 
 		private class NancyHostWrapper : IDisposable
 		{
