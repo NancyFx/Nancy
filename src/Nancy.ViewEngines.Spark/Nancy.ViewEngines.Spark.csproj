@@ -112,7 +112,9 @@
     <Compile Include="Descriptors\DefaultDescriptorBuilder.cs" />
     <Compile Include="NancyBindingProvider.cs" />
     <Compile Include="NancySparkView.cs" />
+    <Compile Include="NancyViewData.cs" />
     <Compile Include="NancyViewFolder.cs" />
+    <Compile Include="SparkRenderConextWrapper.cs" />
     <Compile Include="SparkViewEngineResult.cs" />
     <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>

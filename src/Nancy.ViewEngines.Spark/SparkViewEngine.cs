@@ -120,9 +120,11 @@
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return new HtmlResponse(contents: stream =>
-            {
+                {
+                IRenderContext sparkRenderConext = new SparkRenderConextWrapper(renderContext, engine);
+
                 SparkViewEngineResult sparkViewEngineResult =
-                    this.CreateView(viewLocationResult, model ?? new ExpandoObject(), renderContext);
+                    this.CreateView(viewLocationResult, model ?? new ExpandoObject(), sparkRenderConext);
 
                 var writer =
                     new StreamWriter(stream);

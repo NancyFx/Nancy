@@ -1,4 +1,8 @@
-﻿namespace Nancy.ViewEngines.Spark
+﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Nancy.ViewEngines.Spark
 {
     using System.IO;
     using System.Web;
@@ -6,6 +10,13 @@
 
     public abstract class NancySparkView : SparkViewBase
     {
+        private readonly NancyViewData _viewData;
+
+        protected NancySparkView()
+        {
+            _viewData = new NancyViewData(this);
+        }
+
         public object Model { get; set; }
 
         public TextWriter Writer { get; set; }
@@ -58,6 +69,11 @@
         public string SiteResource(string path)
         {
             return this.RenderContext.ParsePath(path);
+        }
+
+        public NancyViewData ViewData
+        {
+            get { return _viewData; }
         }
     }
 
