@@ -181,6 +181,9 @@
     <None Include="TestViews\Shared\Partial.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="TestViews\Stub\ViewThatUsesViewDataForViewBag.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="TestViews\Stub\Subfolder\Subfolderview.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

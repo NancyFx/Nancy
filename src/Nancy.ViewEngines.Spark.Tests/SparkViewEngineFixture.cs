@@ -445,6 +445,21 @@
                 "</html>");
         }
 
+        [Fact]
+        public void Should_allow_using_viewdata_tag_for_retrieving_values_from_ViewBag()
+        {
+            // Given
+            var nancyContext = new NancyContext();
+            nancyContext.ViewBag["foo"] = "bar";
+            A.CallTo(() => renderContext.Context).Returns(nancyContext);
+
+            // When
+            FindViewAndRender("ViewThatUsesViewDataForViewBag");
+
+            // Then
+            this.output.ShouldContain("<div>bar</div>");
+        }
+
         private ViewLocationResult GetShadeViewLocation(string viewName)
         {
             A.CallTo(() => this.rootPathProvider.GetRootPath()).Returns(Path.Combine(Environment.CurrentDirectory, "ShadeViews"));
