@@ -359,7 +359,7 @@ namespace Nancy.Testing
 
 
         /// <summary>
-        /// Gets the diagnostics for intialisation
+        /// Gets the diagnostics for initialisation
         /// </summary>
         /// <returns>IDagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
