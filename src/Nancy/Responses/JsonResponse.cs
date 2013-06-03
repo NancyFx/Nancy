@@ -10,7 +10,7 @@
 
         static JsonResponse()
         {
-            _contentType = "application/json" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : ";charset=" + JsonSettings.DefaultCharset);
+            _contentType = "application/json" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : "; charset=" + JsonSettings.DefaultCharset);
         }
 
         public JsonResponse(TModel model, ISerializer serializer)

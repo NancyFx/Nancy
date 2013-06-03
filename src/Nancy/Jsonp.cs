@@ -56,7 +56,7 @@
 
                 // set content type to application/javascript so browsers can handle it by default
                 // http://stackoverflow.com/questions/111302/best-content-type-to-serve-jsonp
-                context.Response.ContentType = "application/javascript" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : ";charset=" + JsonSettings.DefaultCharset);
+                context.Response.ContentType = "application/javascript" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : "; charset=" + JsonSettings.DefaultCharset);
                 context.Response.Contents = stream =>
                 {
                     // disposing of stream is handled elsewhere
