@@ -6,11 +6,11 @@
 
     public abstract class NancySparkView : SparkViewBase
     {
-        private readonly NancyViewData _viewData;
+        private readonly NancyViewData viewData;
 
         protected NancySparkView()
         {
-            _viewData = new NancyViewData(this);
+            this.viewData = new NancyViewData(this);
         }
 
         public object Model { get; set; }
@@ -69,7 +69,7 @@
 
         public NancyViewData ViewData
         {
-            get { return _viewData; }
+            get { return this.viewData; }
         }
     }
 
