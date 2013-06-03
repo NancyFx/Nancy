@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
     using System.IO;
     using System.Web;

@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using Nancy.Localization;
-
-namespace Nancy.ViewEngines.Spark
+﻿namespace Nancy.ViewEngines.Spark
 {
+    using System.Collections.Generic;
+    using Nancy.Localization;
+
     public class SparkRenderContextWrapper : IRenderContext
     {
         private readonly IRenderContext _innerContext;
