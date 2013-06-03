@@ -17,6 +17,12 @@
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
+        /// Gets or sets a property that determines if Transfer-Encoding: Chunked is allowed
+        /// for the response instead of Content-Length (default: true).
+        /// </summary>
+        public bool AllowChunkedEncoding { get; set; }
+
+        /// <summary>
         /// Gets or sets a property that provides a callback to be called
         /// if there's an unhandled exception in the self host.
         /// Note: this will *not* be called for normal nancy Exceptions
@@ -28,6 +34,7 @@
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
+            this.AllowChunkedEncoding = true;
             this.UnhandledExceptionCallback = e =>
                 {
                     var message = String.Format("---\n{0}\n---\n", e);
