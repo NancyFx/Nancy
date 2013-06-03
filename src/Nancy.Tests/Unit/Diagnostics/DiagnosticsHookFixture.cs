@@ -29,7 +29,8 @@
             // Given
             var diagsConfig = new DiagnosticsConfiguration { Password = null, CryptographyConfiguration = this.cryptoConfig };
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>{
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
                 with.Diagnostics<DefaultDiagnostics>();
@@ -296,7 +297,7 @@
             var hmacStringLength = Base64Helpers.GetBase64Length(this.cryptoConfig.HmacProvider.HmacLength);
             var encryptedSession = cookieValue.Substring(hmacStringLength);
             var decrypted = this.cryptoConfig.EncryptionProvider.Decrypt(encryptedSession);
-            
+
             return this.objectSerializer.Deserialize(decrypted) as DiagnosticsSession;
         }
     }
