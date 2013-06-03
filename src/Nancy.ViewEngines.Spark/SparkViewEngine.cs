@@ -120,7 +120,7 @@
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
             return new HtmlResponse(contents: stream =>
-                {
+            {
                 var sparkRenderConext = new SparkRenderContextWrapper(renderContext, engine);
 
                 SparkViewEngineResult sparkViewEngineResult =
