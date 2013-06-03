@@ -15,15 +15,17 @@
 
         public InteractiveDiagnostics(IEnumerable<IDiagnosticsProvider> providers)
         {
-            var onlyNancyProviders = providers.All(provider =>
+            var customProvidersAvailable = providers.Any(provider =>
             {
-                return provider.GetType() == typeof(Nancy.Diagnostics.TestingDiagnosticProvider) ||
-                provider.GetType() == typeof(Nancy.Routing.DefaultRouteCacheProvider);
+                Type providerType = provider.GetType();
+
+                return providerType != typeof(Nancy.Diagnostics.TestingDiagnosticProvider) &
+                       providerType != typeof(Nancy.Routing.DefaultRouteCacheProvider);
             });
 
-            if (!onlyNancyProviders)
+            if (customProvidersAvailable)
             {
-                // Exclude the TestingDiagnosticProvider
+                // Exclude only the TestingDiagnosticProvider
                 this.providers = providers.Where(provider => provider.GetType() != typeof(Nancy.Diagnostics.TestingDiagnosticProvider)).ToArray();
             }
             else
