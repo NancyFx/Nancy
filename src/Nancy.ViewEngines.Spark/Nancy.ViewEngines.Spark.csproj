@@ -114,7 +114,7 @@
     <Compile Include="NancySparkView.cs" />
     <Compile Include="NancyViewData.cs" />
     <Compile Include="NancyViewFolder.cs" />
-    <Compile Include="SparkRenderConextWrapper.cs" />
+    <Compile Include="SparkRenderContextWrapper.cs" />
     <Compile Include="SparkViewEngineResult.cs" />
     <Compile Include="SparkViewEngine.cs" />
   </ItemGroup>

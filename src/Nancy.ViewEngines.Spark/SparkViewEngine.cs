@@ -121,7 +121,7 @@
         {
             return new HtmlResponse(contents: stream =>
                 {
-                IRenderContext sparkRenderConext = new SparkRenderConextWrapper(renderContext, engine);
+                IRenderContext sparkRenderConext = new SparkRenderContextWrapper(renderContext, engine);
 
                 SparkViewEngineResult sparkViewEngineResult =
                     this.CreateView(viewLocationResult, model ?? new ExpandoObject(), sparkRenderConext);

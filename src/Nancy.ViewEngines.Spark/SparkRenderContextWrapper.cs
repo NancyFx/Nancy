@@ -3,12 +3,12 @@ using Nancy.Localization;
 
 namespace Nancy.ViewEngines.Spark
 {
-    public class SparkRenderConextWrapper : IRenderContext
+    public class SparkRenderContextWrapper : IRenderContext
     {
         private readonly IRenderContext _innerContext;
         private readonly global::Spark.SparkViewEngine _engine;
 
-        public SparkRenderConextWrapper(IRenderContext innerContext, global::Spark.SparkViewEngine engine)
+        public SparkRenderContextWrapper(IRenderContext innerContext, global::Spark.SparkViewEngine engine)
         {
             _innerContext = innerContext;
             _engine = engine;
