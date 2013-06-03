@@ -2,11 +2,11 @@
 {
     public class NancyViewData
     {
-        private readonly NancySparkView _view;
+        private readonly NancySparkView view;
 
         public NancyViewData(NancySparkView view)
         {
-            _view = view;
+            this.view = view;
         }
 
         public object Eval(string key)
@@ -17,9 +17,9 @@
 
         private bool TryGetViewData(string key, out object value)
         {
-            if (_view.ViewBag.ContainsKey(key) && _view.ViewBag[key].HasValue)
+            if (this.view.ViewBag.ContainsKey(key) && this.view.ViewBag[key].HasValue)
             {
-                value = _view.ViewBag[key].Value;
+                value = this.view.ViewBag[key].Value;
                 return true;
             }
 
