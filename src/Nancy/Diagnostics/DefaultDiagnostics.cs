@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
-    using System.Linq;
     using ModelBinding;
     using Nancy.Bootstrapper;
     using Responses.Negotiation;
@@ -25,6 +24,7 @@
         public DefaultDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, ICultureService cultureService)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
+            this.diagnosticProviders = diagnosticProviders;
             this.rootPathProvider = rootPathProvider;
             this.serializers = serializers;
             this.requestTracing = requestTracing;
@@ -32,15 +32,6 @@
             this.modelBinderLocator = modelBinderLocator;
             this.responseProcessors = responseProcessors;
             this.cultureService = cultureService;
-
-            if (diagnosticProviders.Count() > 2)
-            {
-                this.diagnosticProviders = diagnosticProviders.Where(diagProv => diagProv.GetType() != typeof(Nancy.Diagnostics.TestingDiagnosticProvider));
-            }
-            else
-            {
-                this.diagnosticProviders = diagnosticProviders;
-            }
         }
 
         /// <summary>
