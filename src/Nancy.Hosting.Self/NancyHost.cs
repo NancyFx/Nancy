@@ -323,10 +323,12 @@
             response.ContentLength64 = buffer.Length;
 
             using (var output = response.OutputStream)
-            using (var writer = new BinaryWriter(output))
             {
-                writer.Write(buffer);
-                writer.Flush();
+                using (var writer = new BinaryWriter(output))
+                {
+                    writer.Write(buffer);
+                    writer.Flush();
+                }
             }
         }
 

@@ -1,227 +1,227 @@
 ﻿#if !__MonoCS__ 
 namespace Nancy.Hosting.Self.Tests
 {
-	using System;
-	using System.IO;
-	using System.Net;
-	using FakeItEasy;
-	using Nancy.Bootstrapper;
-	using Nancy.Tests;
-	using Nancy.Tests.xUnitExtensions;
-	using Xunit;
+    using System;
+    using System.IO;
+    using System.Net;
+    using FakeItEasy;
+    using Nancy.Bootstrapper;
+    using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
+    using Xunit;
 
-	/// <remarks>
-	/// These tests attempt to listen on port 1234, and so require either administrative 
-	/// privileges or that a command similar to the following has been run with
-	/// administrative privileges:
-	/// <code>netsh http add urlacl url=http://+:1234/base user=DOMAIN\user</code>
-	/// See http://msdn.microsoft.com/en-us/library/ms733768.aspx for more information.
-	/// </remarks>
-	public class NancySelfHostFixture
-	{
-		private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
+    /// <remarks>
+    /// These tests attempt to listen on port 1234, and so require either administrative 
+    /// privileges or that a command similar to the following has been run with
+    /// administrative privileges:
+    /// <code>netsh http add urlacl url=http://+:1234/base user=DOMAIN\user</code>
+    /// See http://msdn.microsoft.com/en-us/library/ms733768.aspx for more information.
+    /// </remarks>
+    public class NancySelfHostFixture
+    {
+        private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
 
-		[SkippableFact]
-		public void Should_be_able_to_get_any_header_from_selfhost()
-		{
-			// Given
-			using (CreateAndOpenSelfHost())
-			{
-				// When
-				var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
-				request.Method = "GET";
+        [SkippableFact]
+        public void Should_be_able_to_get_any_header_from_selfhost()
+        {
+            // Given
+            using (CreateAndOpenSelfHost())
+            {
+                // When
+                var request = WebRequest.Create(new Uri(BaseUri, "rel/header/?query=value"));
+                request.Method = "GET";
 
-				// Then
-				request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
-			}
-		}
+                // Then
+                request.GetResponse().Headers["X-Some-Header"].ShouldEqual("Some value");
+            }
+        }
 
-		[SkippableFact]
-		public void Should_set_query_string_and_uri_correctly()
-		{
-			// Given
-			Request nancyRequest = null;
-			var fakeEngine = A.Fake<INancyEngine>();
-			A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-				.Invokes(f => nancyRequest = (Request) f.Arguments[0])
-				.ReturnsLazily(c => new NancyContext(){Request = (Request)c.Arguments[0], Response = new Response()});
-				
-			var fakeBootstrapper = A.Fake<INancyBootstrapper>();
-			A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+        [SkippableFact]
+        public void Should_set_query_string_and_uri_correctly()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .ReturnsLazily(c => new NancyContext() { Request = (Request)c.Arguments[0], Response = new Response() });
 
-			// When
-			using (CreateAndOpenSelfHost(fakeBootstrapper))
-			{
-				var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
-				request.Method = "GET";
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
-				try
-				{
-					request.GetResponse();
-				}
-				catch (WebException)
-				{
-					// Will throw because it returns 404 - don't care.
-				}
-			}
+            // When
+            using (CreateAndOpenSelfHost(fakeBootstrapper))
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "test/stuff?query=value&query2=value2"));
+                request.Method = "GET";
 
-			// Then
-			nancyRequest.Path.ShouldEqual("/test/stuff");
-			Assert.True(nancyRequest.Query.query.HasValue);
-			Assert.True(nancyRequest.Query.query2.HasValue);
-		}
+                try
+                {
+                    request.GetResponse();
+                }
+                catch (WebException)
+                {
+                    // Will throw because it returns 404 - don't care.
+                }
+            }
 
-		[SkippableFact]
-		public void Should_be_able_to_get_from_selfhost()
-		{
-			using (CreateAndOpenSelfHost())
-			{
-				var reader =
-					new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
+            // Then
+            nancyRequest.Path.ShouldEqual("/test/stuff");
+            Assert.True(nancyRequest.Query.query.HasValue);
+            Assert.True(nancyRequest.Query.query2.HasValue);
+        }
 
-				var response = reader.ReadToEnd();
+        [SkippableFact]
+        public void Should_be_able_to_get_from_selfhost()
+        {
+            using (CreateAndOpenSelfHost())
+            {
+                var reader =
+                    new StreamReader(WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse().GetResponseStream());
 
-				response.ShouldEqual("This is the site route");
-			}
-		}
+                var response = reader.ReadToEnd();
 
-		[SkippableFact]
-		public void Should_be_able_to_get_from_chunked_selfhost()
-		{
-			using (CreateAndOpenSelfHost())
-			{
-				var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+                response.ShouldEqual("This is the site route");
+            }
+        }
 
-				Assert.Equal("chunked", response.Headers["Transfer-Encoding"]);
-				Assert.Equal(null, response.Headers["Content-Length"]);
+        [SkippableFact]
+        public void Should_be_able_to_get_from_chunked_selfhost()
+        {
+            using (CreateAndOpenSelfHost())
+            {
+                var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
 
-				using (var reader = new StreamReader(response.GetResponseStream()))
-				{
-					var contents = reader.ReadToEnd();
-					contents.ShouldEqual("This is the site route");
-				}
-			}
-		}
+                Assert.Equal("chunked", response.Headers["Transfer-Encoding"]);
+                Assert.Equal(null, response.Headers["Content-Length"]);
 
-		[SkippableFact]
-		public void Should_be_able_to_get_from_contentlength_selfhost()
-		{
-			HostConfiguration configuration = new HostConfiguration()
-			{
-				AllowChunkedEncoding = false
-			};
-			using (CreateAndOpenSelfHost(null, configuration))
-			{
-				var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var contents = reader.ReadToEnd();
+                    contents.ShouldEqual("This is the site route");
+                }
+            }
+        }
 
-				Assert.Equal(null, response.Headers["Transfer-Encoding"]);
-				Assert.Equal(22, Convert.ToInt32(response.Headers["Content-Length"]));
+        [SkippableFact]
+        public void Should_be_able_to_get_from_contentlength_selfhost()
+        {
+            HostConfiguration configuration = new HostConfiguration()
+            {
+                AllowChunkedEncoding = false
+            };
+            using (CreateAndOpenSelfHost(null, configuration))
+            {
+                var response = WebRequest.Create(new Uri(BaseUri, "rel")).GetResponse();
 
-				using (var reader = new StreamReader(response.GetResponseStream()))
-				{
-					var contents = reader.ReadToEnd();
-					contents.ShouldEqual("This is the site route");
-				}
-			}
-		}
+                Assert.Equal(null, response.Headers["Transfer-Encoding"]);
+                Assert.Equal(22, Convert.ToInt32(response.Headers["Content-Length"]));
 
-		[SkippableFact]
-		public void Should_be_able_to_post_body_to_selfhost()
-		{
-			using (CreateAndOpenSelfHost())
-			{
-				const string testBody = "This is the body of the request";
+                using (var reader = new StreamReader(response.GetResponseStream()))
+                {
+                    var contents = reader.ReadToEnd();
+                    contents.ShouldEqual("This is the site route");
+                }
+            }
+        }
 
-				var request =
-					WebRequest.Create(new Uri(BaseUri, "rel"));
-				request.Method = "POST";
+        [SkippableFact]
+        public void Should_be_able_to_post_body_to_selfhost()
+        {
+            using (CreateAndOpenSelfHost())
+            {
+                const string testBody = "This is the body of the request";
 
-				var writer =
-					new StreamWriter(request.GetRequestStream()) { AutoFlush = true };
-				writer.Write(testBody);
+                var request =
+                    WebRequest.Create(new Uri(BaseUri, "rel"));
+                request.Method = "POST";
 
-				var responseBody =
-					new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
+                var writer =
+                    new StreamWriter(request.GetRequestStream()) { AutoFlush = true };
+                writer.Write(testBody);
 
-				responseBody.ShouldEqual(testBody);
-			}
-		}
-		
-		[SkippableFact]
-		public void Should_be_able_to_get_from_selfhost_with_slashless_uri()
-		{
-			using (CreateAndOpenSelfHost())
-			{
-				var reader =
-					new StreamReader(WebRequest.Create(BaseUri.ToString().TrimEnd('/')).GetResponse().GetResponseStream());
+                var responseBody =
+                    new StreamReader(request.GetResponse().GetResponseStream()).ReadToEnd();
 
-				var response = reader.ReadToEnd();
+                responseBody.ShouldEqual(testBody);
+            }
+        }
 
-				response.ShouldEqual("This is the site home");
-			}
-		}
+        [SkippableFact]
+        public void Should_be_able_to_get_from_selfhost_with_slashless_uri()
+        {
+            using (CreateAndOpenSelfHost())
+            {
+                var reader =
+                    new StreamReader(WebRequest.Create(BaseUri.ToString().TrimEnd('/')).GetResponse().GetResponseStream());
 
-		private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null, HostConfiguration configuration = null)
-		{
-			if (nancyBootstrapper == null)
-			{
-				nancyBootstrapper = new DefaultNancyBootstrapper();
-			}
+                var response = reader.ReadToEnd();
 
-			var host = new NancyHost(
-				nancyBootstrapper,
-				configuration,
-				BaseUri);
+                response.ShouldEqual("This is the site home");
+            }
+        }
 
-			try
-			{
-				host.Start();
-			}
-			catch
-			{
-				throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
-			}
+        private static NancyHostWrapper CreateAndOpenSelfHost(INancyBootstrapper nancyBootstrapper = null, HostConfiguration configuration = null)
+        {
+            if (nancyBootstrapper == null)
+            {
+                nancyBootstrapper = new DefaultNancyBootstrapper();
+            }
 
-			return new NancyHostWrapper(host);
-		}
+            var host = new NancyHost(
+                nancyBootstrapper,
+                configuration,
+                BaseUri);
+
+            try
+            {
+                host.Start();
+            }
+            catch
+            {
+                throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
+            }
+
+            return new NancyHostWrapper(host);
+        }
 
 
-		[SkippableFact]
-		public void Should_be_able_to_recover_from_rendering_exception()
-		{
-			using (CreateAndOpenSelfHost())
-			{
-				
-				var reader =
-					new StreamReader(WebRequest.Create(new Uri(BaseUri,"exception")).GetResponse().GetResponseStream());
+        [SkippableFact]
+        public void Should_be_able_to_recover_from_rendering_exception()
+        {
+            using (CreateAndOpenSelfHost())
+            {
 
-				var response = reader.ReadToEnd();
+                var reader =
+                    new StreamReader(WebRequest.Create(new Uri(BaseUri, "exception")).GetResponse().GetResponseStream());
 
-				response.ShouldEqual("Content");
-			}
-		}
+                var response = reader.ReadToEnd();
 
-		[SkippableFact]
-		public void Should_be_serializable()
-		{
-			var type = typeof(NancyHost);
-			Assert.True(type.Attributes.ToString().Contains("Serializable"));
-		}
+                response.ShouldEqual("Content");
+            }
+        }
 
-		private class NancyHostWrapper : IDisposable
-		{
-			private readonly NancyHost host;
+        [SkippableFact]
+        public void Should_be_serializable()
+        {
+            var type = typeof(NancyHost);
+            Assert.True(type.Attributes.ToString().Contains("Serializable"));
+        }
 
-			public NancyHostWrapper(NancyHost host)
-			{
-				this.host = host;
-			}
+        private class NancyHostWrapper : IDisposable
+        {
+            private readonly NancyHost host;
 
-			public void Dispose()
-			{
-				host.Stop();
-			}
-		}
-	}
+            public NancyHostWrapper(NancyHost host)
+            {
+                this.host = host;
+            }
+
+            public void Dispose()
+            {
+                host.Stop();
+            }
+        }
+    }
 }
 #endif
