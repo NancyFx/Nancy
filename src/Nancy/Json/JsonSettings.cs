@@ -17,6 +17,11 @@ namespace Nancy.Json
         /// Maximum number of recursions
         /// </summary>
         public static int MaxRecursions { get; set; }
+        
+        /// <summary>
+        /// Default charset for json responses.
+        /// </summary>
+        public static string DefaultCharset { get; set; }
 
         public static IList<JavaScriptConverter> Converters { get; set; }
 
@@ -24,6 +29,7 @@ namespace Nancy.Json
         {
             MaxJsonLength = 102400;
             MaxRecursions = 100;
+            DefaultCharset = "utf8";
             Converters = new List<JavaScriptConverter>
                              {
                                  new TimeSpanConverter(),
