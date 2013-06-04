@@ -3,7 +3,12 @@
     using System.Collections.Generic;
     using Nancy.Localization;
 
-    public class SparkRenderContextWrapper : IRenderContext
+    /// <summary>
+    /// Wraps <see cref="IRenderContext"/> to replace tilde (~/) path resolution with Spark's native implementation. 
+    /// </summary>
+    /// <remarks>This allows the use of &lt;resources /&gt; configuration section. 
+    /// Read more on http://sparkviewengine.com/documentation/configuring#Sparksettingsinconfigfile</remarks>
+    internal class SparkRenderContextWrapper : IRenderContext
     {
         private readonly IRenderContext innerContext;
         private readonly global::Spark.SparkViewEngine engine;

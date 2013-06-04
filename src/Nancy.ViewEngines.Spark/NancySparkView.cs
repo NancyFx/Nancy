@@ -67,6 +67,10 @@
             return this.RenderContext.ParsePath(path);
         }
 
+        /// <summary>
+        /// Non-model specific data retrieved using the &lt;viewdata /&gt; tag in Spark views
+        /// </summary>
+        /// <remarks>See more on http://sparkviewengine.com/documentation/variables#Usingviewdata</remarks>
         public NancyViewData ViewData
         {
             get { return this.viewData; }
