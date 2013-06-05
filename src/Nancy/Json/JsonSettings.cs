@@ -2,15 +2,12 @@ namespace Nancy.Json
 {
     using System.Collections.Generic;
     using Converters;
-    using Responses;
 
     /// <summary>
     /// Json serializer settings
     /// </summary>
     public static class JsonSettings
     {
-        private static string _defaultsCharset;
-
         /// <summary>
         /// Max length of json output
         /// </summary>
@@ -20,22 +17,11 @@ namespace Nancy.Json
         /// Maximum number of recursions
         /// </summary>
         public static int MaxRecursions { get; set; }
-        
+
         /// <summary>
         /// Default charset for json responses.
         /// </summary>
-        public static string DefaultCharset 
-        { 
-            get
-            {
-                return _defaultsCharset;
-            } 
-            set
-            {
-                _defaultsCharset = value;
-                JsonResponse.CharSet = value;
-            } 
-        }
+        public static string DefaultCharset { get; set; }
 
         public static IList<JavaScriptConverter> Converters { get; set; }
 

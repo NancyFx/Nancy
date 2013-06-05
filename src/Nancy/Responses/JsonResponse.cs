@@ -6,16 +6,11 @@ namespace Nancy.Responses
 
     public class JsonResponse<TModel> : Response
     {
-        private static string _contentType = "application/json";
-        /// <summary>
-        /// Sets the char set.
-        /// </summary>
-        /// <value>The char set.</value>
-        internal static string CharSet 
-		{ 
-            set 
-			{
-                _contentType = "application/json" + (String.IsNullOrWhiteSpace (value) ? "" : "; charset=" + value);
+        private static string contentType
+        {
+            get
+            {
+                return "application/json" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : "; charset=" + JsonSettings.DefaultCharset);
             }
         }
 
@@ -27,13 +22,13 @@ namespace Nancy.Responses
             }
 
             this.Contents = GetJsonContents (model, serializer);
-            this.ContentType = _contentType;
+            this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 
         private static Action<Stream> GetJsonContents (TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize (_contentType, model, stream);
+            return stream => serializer.Serialize (contentType, model, stream);
         }
     }
 
