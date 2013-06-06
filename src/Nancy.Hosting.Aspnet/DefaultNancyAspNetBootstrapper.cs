@@ -16,7 +16,7 @@ namespace Nancy.Hosting.Aspnet
         /// <summary>
         /// Gets the diagnostics for initialisation
         /// </summary>
-        /// <returns>IDagnostics implementation</returns>
+        /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
         {
             return this.ApplicationContainer.Resolve<IDiagnostics>();

@@ -42,7 +42,7 @@ namespace Nancy.Bootstrapper
 
         /// <summary>
         /// The default assemblies for scanning.
-        /// Includes the nancy assembly and anythign referencing a nancy assembly
+        /// Includes the nancy assembly and anything referencing a nancy assembly
         /// </summary>
         public static Func<Assembly, bool>[] DefaultAssembliesToScan = new Func<Assembly, bool>[]
                                           {
