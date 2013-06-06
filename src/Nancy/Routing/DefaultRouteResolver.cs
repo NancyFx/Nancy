@@ -4,6 +4,8 @@
     using System.Linq;
 
     using Nancy;
+    using Nancy.Helpers;
+
     using Trie;
 
     using MatchResult = Trie.MatchResult;
@@ -35,7 +37,9 @@
 
         public ResolveResult Resolve(NancyContext context)
         {
-            var results = this.trie.GetMatches(GetMethod(context), context.Request.Path, context);
+            var pathDecoded = HttpUtility.UrlDecode(context.Request.Path);
+
+            var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
 
             if (!results.Any())
             {
