@@ -433,7 +433,13 @@
                 return;
             }
 
-            this.stream.Position = 0;
+            // Seek to 0 if we can, although if we can't seek, and we've already written (if the size is unknown) then
+            // we are screwed anyway, and some streams that don't support seek also don't let you read hte position so
+            // there's no real way to check :-/
+            if (this.stream.CanSeek)
+            {
+                this.stream.Position = 0;
+            }
             this.stream.CopyTo(targetStream, 8196);
             if (this.stream.CanSeek)
             {
