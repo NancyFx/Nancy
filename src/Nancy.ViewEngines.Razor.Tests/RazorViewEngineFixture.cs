@@ -555,6 +555,32 @@
         }
 
         [Fact]
+        public void Should_render_compilation_source_on_compilation_error()
+        {
+            // Given
+            var view = new StringBuilder()
+                .AppendLine("@using Nancy.ViewEngines.Razor.Tests.GreetingViewBase")
+                .Append("<h1>@Greet(</h1>");
+
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "cshtml",
+                () => new StringReader(view.ToString())
+            );
+
+            var stream = new MemoryStream();
+
+            //When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            //Then
+            var output = ReadAll(stream);
+            output.ShouldContain("namespace RazorOutput {");
+        }
+
+        [Fact]
         public void Should_render_attributes_with_dynamic_null_inside()
         {
             var location = FindView("ViewThatUsesAttributeWithDynamicNullInside");
