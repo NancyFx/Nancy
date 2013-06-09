@@ -7,9 +7,11 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
     using Nancy.Bootstrapper;
+    using Nancy.Helpers;
     using Nancy.Responses;
     using Nancy.Localization;
     using Nancy.ViewEngines.Razor.CSharp;
@@ -199,14 +201,18 @@
                 var templateLines = GetViewBodyLines(viewLocationResult);
                 var errors = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
                 var errorMessages = BuildErrorMessages(errors);
+                var compilationSource = GetCompilationSource(viewRenderer.Provider, razorResult.GeneratedCode);
 
                 MarkErrorLines(errors, templateLines);
 
+                int lineNumber = 1;
+
                 var errorDetails = string.Format(
-                                        "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}",
+                                        "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}<br/><br/>Compilation Source:<br/><pre><code>{3}</code></pre>",
                                         fullTemplateName,
                                         errorMessages,
-                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2));
+                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2), 
+                                        compilationSource.Aggregate((s1, s2) => s1 + "<br/>Line " + lineNumber++ + ":\t" + s2));
 
                 return () => new NancyRazorErrorView(errorDetails);
             }
@@ -232,6 +238,19 @@
             }
 
             return () => (INancyRazorView)Activator.CreateInstance(type);
+        }
+
+        private string[] GetCompilationSource(CodeDomProvider provider, CodeCompileUnit generatedCode)
+        {
+            var compilationSourceBuilder = new StringBuilder();
+            using (var writer = new IndentedTextWriter(new StringWriter(compilationSourceBuilder), "\t"))
+            {
+                provider.GenerateCodeFromCompileUnit(generatedCode, writer, new CodeGeneratorOptions());
+            }
+
+            var compilationSource = compilationSourceBuilder.ToString();
+            return HttpUtility.HtmlEncode(compilationSource)
+                .Split(new[] { Environment.NewLine }, StringSplitOptions.None);
         }
 
         private static string BuildErrorMessages(IEnumerable<CompilerError> errors)
