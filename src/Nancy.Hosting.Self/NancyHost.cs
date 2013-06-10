@@ -3,12 +3,12 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Net;
     using System.Linq;
-    using IO;
+    using System.Net;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
-	using Nancy.Helpers;
+    using Nancy.Helpers;
+    using Nancy.IO;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -23,9 +23,11 @@
     [Serializable]
     public class NancyHost : IDisposable
     {
+        [NonSerialized]
+        private readonly HttpListener listener = new HttpListener();
         private readonly IList<Uri> baseUriList;
-        private readonly HttpListener listener;
         private readonly INancyEngine engine;
+        [NonSerialized]
         private readonly HostConfiguration configuration;
 
         /// <summary>
@@ -34,7 +36,9 @@
         /// </summary>
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris) { }
+            : this(NancyBootstrapperLocator.Bootstrapper, new HostConfiguration(), baseUris)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
@@ -43,7 +47,9 @@
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         /// <param name="configuration">Configuration to use</param>
         public NancyHost(HostConfiguration configuration, params Uri[] baseUris)
-            : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris){}
+            : this(NancyBootstrapperLocator.Bootstrapper, configuration, baseUris)
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>, using
@@ -67,9 +73,13 @@
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, HostConfiguration configuration, params Uri[] baseUris)
         {
+            if (bootstrapper == null)
+            {
+                throw new ArgumentNullException("bootstrapper");
+            }
+
             this.configuration = configuration ?? new HostConfiguration();
             this.baseUriList = baseUris;
-            this.listener = new HttpListener();
 
             bootstrapper.Initialise();
             this.engine = bootstrapper.GetEngine();
@@ -96,7 +106,7 @@
         /// <param name="bootstrapper">The bootstrapper that should be used to handle the request.</param>
         /// <param name="configuration">Configuration to use</param>
         public NancyHost(Uri baseUri, INancyBootstrapper bootstrapper, HostConfiguration configuration)
-            : this (bootstrapper, configuration, baseUri)
+            : this(bootstrapper, configuration, baseUri)
         {
         }
 
@@ -105,7 +115,16 @@
         /// </summary>
         public void Dispose()
         {
-            this.Stop();
+            this.Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="NancyHost"/> class.
+        /// </summary>
+        ~NancyHost()
+        {
+            this.Dispose(false);
         }
 
         /// <summary>
@@ -133,7 +152,23 @@
         /// </summary>
         public void Stop()
         {
-            listener.Stop();
+            if (this.listener.IsListening)
+            {
+                listener.Stop();
+            }
+        }
+
+        /// <summary>
+        /// Releases unmanaged and - optionally - managed resources.
+        /// </summary>
+        /// <param name="disposing"><c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                this.Stop();
+                this.listener.Close();
+            }
         }
 
         private void AddPrefixes()
@@ -154,20 +189,19 @@
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
             var asyncResult = request.BeginGetClientCertificate(null, null);
-
             var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+                throw new InvalidOperationException(String.Format(CultureInfo.CurrentCulture, "Unable to locate base URI for request: {0}", request.Url));
             }
 
-            var expectedRequestLength =
-                GetExpectedRequestLength(request.Headers.ToDictionary());
+            var expectedRequestLength = GetExpectedRequestLength(request.Headers.ToDictionary());
 
             var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
-            var nancyUrl = new Url {
+            var nancyUrl = new Url
+            {
                 Scheme = request.Url.Scheme,
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
@@ -189,7 +223,7 @@
                 request.HttpMethod,
                 nancyUrl,
                 RequestStream.FromStream(request.InputStream, expectedRequestLength, false),
-                request.Headers.ToDictionary(), 
+                request.Headers.ToDictionary(),
                 (request.RemoteEndPoint != null) ? request.RemoteEndPoint.Address.ToString() : null,
                 certificate);
         }
@@ -210,6 +244,7 @@
             {
                 response.ContentType = nancyResponse.ContentType;
             }
+
             response.StatusCode = (int)nancyResponse.StatusCode;
 
             using (var output = response.OutputStream)
@@ -230,8 +265,7 @@
                 return 0;
             }
 
-            var headerValue =
-                incomingHeaders["Content-Length"].SingleOrDefault();
+            var headerValue = incomingHeaders["Content-Length"].SingleOrDefault();
 
             if (headerValue == null)
             {
@@ -239,10 +273,9 @@
             }
 
             long contentLength;
-
-            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength) ?
-                0 : 
-                contentLength;
+            return !long.TryParse(headerValue, NumberStyles.Any, CultureInfo.InvariantCulture, out contentLength)
+                ? 0
+                : contentLength;
         }
 
         private void GotCallback(IAsyncResult ar)
