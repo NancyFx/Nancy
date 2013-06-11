@@ -195,17 +195,16 @@
             {
                 var output = new string[results.Output.Count];
                 results.Output.CopyTo(output, 0);
-                var outputString = string.Join("\n", output);
 
                 var fullTemplateName = viewLocationResult.Location + "/" + viewLocationResult.Name + "." + viewLocationResult.Extension;
                 var templateLines = GetViewBodyLines(viewLocationResult);
                 var errors = results.Errors.OfType<CompilerError>().Where(ce => !ce.IsWarning).ToArray();
                 var errorMessages = BuildErrorMessages(errors);
-                var compilationSource = GetCompilationSource(viewRenderer.Provider, razorResult.GeneratedCode);
+                var compilationSource = this.GetCompilationSource(viewRenderer.Provider, razorResult.GeneratedCode);
 
                 MarkErrorLines(errors, templateLines);
 
-                int lineNumber = 1;
+                var lineNumber = 1;
 
                 var errorDetails = string.Format(
                                         "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}<br/><br/>Compilation Source:<br/><pre><code>{3}</code></pre>",
