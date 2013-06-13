@@ -41,7 +41,7 @@
       if (segment.StartsWith(this.preLiteral) && segment.EndsWith(this.postLiteral))
       {
         match = new SegmentMatch(true);
-        match.CapturedParameters.Add(this.parameterName, segment.Substring(this.preLiteral.Length, segment.Length - this.postLiteral.Length));
+        match.CapturedParameters.Add(this.parameterName, segment.Substring(this.preLiteral.Length, segment.Length - this.postLiteral.Length - this.preLiteral.Length));
       }
       return match;
     }
