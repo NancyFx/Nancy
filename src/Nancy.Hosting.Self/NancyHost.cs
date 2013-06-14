@@ -153,8 +153,6 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var asyncResult = request.BeginGetClientCertificate(null, null);
-
             var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
@@ -178,7 +176,8 @@
             };
 
             byte[] certificate = null;
-            var x509Certificate = request.EndGetClientCertificate(asyncResult);
+            
+            var x509Certificate = request.GetClientCertificate();
 
             if (x509Certificate != null)
             {
