@@ -1,0 +1,3 @@
+﻿<content:head>
+    <script type="text/javascript" src="~/content/scripts/test.js" />
+</content:head>

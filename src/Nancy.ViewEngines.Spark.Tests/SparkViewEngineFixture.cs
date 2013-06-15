@@ -264,14 +264,28 @@
         public void Should_substitute_tilde_in_resource_url_with_parse_result_from_Render_Context()
         {
             //Given
-            A.CallTo(() => this.renderContext.ParsePath(A<string>.Ignored))
-                .Returns("/mysensationalrootfolder/scripts/test.js");
-            
+            A.CallTo(() => this.renderContext.ParsePath("~/"))
+                .Returns("/mysensationalrootfolder/");
+
             //When
             this.FindViewAndRender("ViewThatUsesTildeSubstitution");
 
             //Then
             this.output.ShouldContain(@"<script type=""text/javascript"" src=""/mysensationalrootfolder/scripts/test.js""/>");
+        }
+
+        [Fact]
+        public void Should_allow_overriding_of_tilde_substitiution_with_resource_paths_from_config()
+        {
+            //Given
+            A.CallTo(() => this.renderContext.ParsePath("~/"))
+                .Returns("/mysensationalrootfolder/");
+
+            //When
+            this.FindViewAndRender("ViewThatUsesTildeSubstitutionWithSparkReplace");
+
+            //Then
+            this.output.ShouldContain(@"<script type=""text/javascript"" src=""http://cdn.example.com/mysite/scripts/test.js""/>");
         }
 
         [Fact]
@@ -443,6 +457,21 @@
                 "</div>",
                 "</body>",
                 "</html>");
+        }
+
+        [Fact]
+        public void Should_allow_using_viewdata_tag_for_retrieving_values_from_ViewBag()
+        {
+            // Given
+            var nancyContext = new NancyContext();
+            nancyContext.ViewBag["foo"] = "bar";
+            A.CallTo(() => renderContext.Context).Returns(nancyContext);
+
+            // When
+            FindViewAndRender("ViewThatUsesViewDataForViewBag");
+
+            // Then
+            this.output.ShouldContain("<div>bar</div>");
         }
 
         private ViewLocationResult GetShadeViewLocation(string viewName)

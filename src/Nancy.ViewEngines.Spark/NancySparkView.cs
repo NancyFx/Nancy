@@ -6,6 +6,13 @@
 
     public abstract class NancySparkView : SparkViewBase
     {
+        private readonly NancyViewData viewData;
+
+        protected NancySparkView()
+        {
+            this.viewData = new NancyViewData(this);
+        }
+
         public object Model { get; set; }
 
         public TextWriter Writer { get; set; }
@@ -58,6 +65,15 @@
         public string SiteResource(string path)
         {
             return this.RenderContext.ParsePath(path);
+        }
+
+        /// <summary>
+        /// Non-model specific data retrieved using the &lt;viewdata /&gt; tag in Spark views
+        /// </summary>
+        /// <remarks>See more on http://sparkviewengine.com/documentation/variables#Usingviewdata</remarks>
+        public NancyViewData ViewData
+        {
+            get { return this.viewData; }
         }
     }
 
