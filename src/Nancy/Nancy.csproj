@@ -219,6 +219,7 @@
     <Compile Include="Routing\Trie\NodeDataExtensions.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNodeWithDefaultValue.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithLiteral.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyRegExCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\LiteralNode.cs" />
