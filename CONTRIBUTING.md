@@ -1,11 +1,10 @@
 # How to contribute
 
-First of all, thank you for wanting to contribute to Nancy! We really apprechiate all the awesome support are get from our community. We want to keep it as easy as possible to contribute changes that get things working in your environment. There are a few guidelines that we need contributors to follow so that we can have a chance of keeping on top of things.
+First of all, thank you for wanting to contribute to Nancy! We really appreciate all the awesome support we get from our community. We want to keep it as easy as possible to contribute changes that get things working in your environment. There are a few guidelines that we need contributors to follow so that we have a chance of keeping on top of things.
 
 ## Making Changes
 
 1. [Fork](http://help.github.com/forking/) on GitHub
-1. Make sure your line-endings are [configured correctly](https://github.com/NancyFx/Nancy/wiki/Make-sure-line-endings-doesn%27t-bite-you)
 1. Clone your fork locally
 1. Configure the upstream repo (`git remote add upstream git://github.com/NancyFx/Nancy`)
 1. Create a local branch (`git checkout -b myBranch`)
@@ -33,10 +32,10 @@ If you're working on a long running feature then you may want to do this quite o
 
 ## Sending a Pull Request
 
-While working on your feature you may well create several branches, which is fine, but before you send a pull request you should ensure that you have rebased back to a single "Feature branch" - we care about your commits, and we care about your feature branch; but we don't care about how many or which branches you created while you were working on it :-)
+While working on your feature you may well create several branches, which is fine, but before you send a pull request you should ensure that you have rebased back to a single "Feature branch". We care about your commits, and we care about your feature branch; but we don't care about how many or which branches you created while you were working on it :smile:.
 
 When you're ready to go you should confirm that you are up to date and rebased with upstream/master (see "Handling Updates from Upstream/Master" above), and then:
 
 1. `git push origin myBranch`
 1. Send a descriptive [Pull Request](http://help.github.com/pull-requests/) on GitHub - making sure you have selected the correct branch in the GitHub UI!
-1. Wait for TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD ;-)
+1. Wait for @TheCodeJunkie to merge your changes in and reformat all of your code because he has StyleCop OCD :wink:.
