@@ -138,6 +138,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="ShadeViews\Features\ShadeCodeMayBeDashOrAtBraced.shade">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -179,6 +180,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestViews\Shared\Partial.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestViews\Stub\ViewThatUsesTildeSubstitutionWithSparkReplace.spark">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="TestViews\Stub\ViewThatUsesViewDataForViewBag.spark">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="TestViews\Stub\Subfolder\Subfolderview.spark">
