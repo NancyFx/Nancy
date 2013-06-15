@@ -35,6 +35,11 @@ namespace Nancy.Routing.Trie
                 return new GreedyRegExCaptureNode(parent, segment, this);
             }
 
+            if (CaptureNodeWithLiteral.MatchRegex.IsMatch(segment))
+            {
+              return new CaptureNodeWithLiteral(parent, segment, this);
+            }
+
             return new LiteralNode(parent, segment, this);
         }
 
