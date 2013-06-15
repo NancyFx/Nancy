@@ -24,6 +24,8 @@
     [Serializable]
     public class NancyHost : IDisposable
     {
+        private const int ACCESS_DENIED = 5;
+
         private readonly IList<Uri> baseUriList;
         private HttpListener listener;
         private readonly INancyEngine engine;
@@ -117,7 +119,7 @@
 
             try
             {
-                listener.BeginGetContext(GotCallback, null);
+                this.listener.BeginGetContext(this.GotCallback, null);
             }
             catch (Exception e)
             {
@@ -129,14 +131,14 @@
 
         private void StartListener()
         {
-            if (TryStartListener())
+            if (this.TryStartListener())
             {
                 return;
             }
 
             if (!this.configuration.UrlReservations.CreateAutomatically)
             {
-                throw new AutomaticUrlReservationCreationFailureException(this.GetPrefixes(), GetUser());
+                throw new AutomaticUrlReservationCreationFailureException(this.GetPrefixes(), this.GetUser());
             }
 
             if (!this.TryAddUrlReservations())
@@ -156,20 +158,20 @@
             {
                 // if the listener fails to start, it gets disposed; 
                 // so we need a new one, each time.
-                listener = new HttpListener();
-                foreach (var prefix in GetPrefixes())
+                this.listener = new HttpListener();
+                foreach (var prefix in this.GetPrefixes())
                 {
-                    listener.Prefixes.Add(prefix);
+                    this.listener.Prefixes.Add(prefix);
                 }
 
-                listener.Start();
+                this.listener.Start();
+                
                 return true;
             }
             catch (HttpListenerException e)
             {
-                if (e.ErrorCode == 5)
+                if (e.ErrorCode == ACCESS_DENIED)
                 {
-                    // access denied
                     return false;
                 }
 
@@ -179,9 +181,9 @@
 
         private bool TryAddUrlReservations()
         {
-            var user = GetUser();
+            var user = this.GetUser();
 
-            foreach (var prefix in GetPrefixes())
+            foreach (var prefix in this.GetPrefixes())
             {
                 if (!NetSh.AddUrlAcl(prefix, user))
                 {
@@ -207,12 +209,12 @@
         /// </summary>
         public void Stop()
         {
-            listener.Stop();
+            this.listener.Stop();
         }
 
         private IEnumerable<string> GetPrefixes()
         {
-            foreach (var baseUri in baseUriList)
+            foreach (var baseUri in this.baseUriList)
             {
                 var prefix = baseUri.ToString();
 
@@ -227,7 +229,7 @@
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
+            var baseUri = this.baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
             {
@@ -326,9 +328,9 @@
         {
             try
             {
-                var ctx = listener.EndGetContext(ar);
-                listener.BeginGetContext(GotCallback, null);
-                Process(ctx);
+                var ctx = this.listener.EndGetContext(ar);
+                this.listener.BeginGetContext(this.GotCallback, null);
+                this.Process(ctx);
             }
             catch (Exception e)
             {
@@ -336,7 +338,7 @@
 
                 try
                 {
-                    listener.BeginGetContext(GotCallback, null);
+                    this.listener.BeginGetContext(this.GotCallback, null);
                 }
                 catch
                 {
@@ -349,8 +351,8 @@
         {
             try
             {
-                var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
+                using (var nancyContext = this.engine.HandleRequest(nancyRequest))
                 {
                     try
                     {
