@@ -3,13 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Net;
     using System.Linq;
     using System.Security.Principal;
     using IO;
+    using Mono.Net;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
-	using Nancy.Helpers;
+    using Nancy.Helpers;
 
     /// <summary>
     /// Allows to host Nancy server inside any application - console or windows service.
@@ -282,7 +282,7 @@
 
             foreach (var nancyCookie in nancyResponse.Cookies)
             {
-                response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
+                response.Headers.Add(System.Net.HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
             if (nancyResponse.ContentType != null)

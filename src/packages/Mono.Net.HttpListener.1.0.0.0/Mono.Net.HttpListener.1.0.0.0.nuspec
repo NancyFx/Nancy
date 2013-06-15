@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Mono.Net.HttpListener</id>
+    <version>1.0.0.0</version>
+    <title>Mono.Net.HttpListener</title>
+    <authors>Jb Evain</authors>
+    <owners>Jb Evain</owners>
+    <licenseUrl>http://opensource.org/licenses/mit-license.php</licenseUrl>
+    <projectUrl>http://github.com/jbevain/mono.net.httplistener/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A fully managed HttpListener implementation extracted from Mono. It's not as complete as the .net implementation of System.Net.HttpListener, but it doesn't require Administrator rights to listen on all interfaces, making it perfect to serve http content for test servers.</description>
+    <summary>A fully managed HttpListener implementation extracted from Mono.</summary>
+    <language>en-US</language>
+    <tags>http listener httplistener server mono</tags>
+  </metadata>
+</package>
