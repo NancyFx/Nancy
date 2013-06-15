@@ -134,12 +134,12 @@
                 return;
             }
 
-            if (!this.configuration.NamespaceReservationsConfiguration.CreateReservations)
+            if (!this.configuration.UrlReservations.CreateAutomatically)
             {
-                throw new UnableToCreateNamespaceReservationsException(this.GetPrefixes(), GetUser());
+                throw new AutomaticUrlReservationCreationFailureException(this.GetPrefixes(), GetUser());
             }
 
-            if (!TryAddNamespaceReservation())
+            if (!this.TryAddUrlReservations())
             {
                 throw new InvalidOperationException("Unable to configure namespace reservation");
             }
@@ -177,7 +177,7 @@
             }
         }
 
-        private bool TryAddNamespaceReservation()
+        private bool TryAddUrlReservations()
         {
             var user = GetUser();
 
@@ -194,10 +194,11 @@
 
         private string GetUser()
         {
-            if (!string.IsNullOrWhiteSpace(this.configuration.NamespaceReservationsConfiguration.User))
+            if (!string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User))
             {
-                return this.configuration.NamespaceReservationsConfiguration.User;
+                return this.configuration.UrlReservations.User;
             }
+
             return WindowsIdentity.GetCurrent().Name;
         }
 

@@ -3,24 +3,25 @@
     using System;
     using System.Diagnostics;
 
-    internal static class Uac
+    /// <summary>
+    /// Helpers for UAC
+    /// </summary>
+    public static class UacHelper
     {
+        /// <summary>
+        /// Run an executable elevated
+        /// </summary>
+        /// <param name="file">File to execute</param>
+        /// <param name="args">Arguments to pass to the executable</param>
+        /// <returns>True if sucessful, false otherwise</returns>
         public static bool RunElevated(string file, string args)
         {
-            Console.WriteLine("{0} {1}", file, args);
-
             var process = CreateProcess(args, file);
+
             process.Start();
             process.WaitForExit();
 
-            var exitCode = process.ExitCode;
-            if (exitCode == 0)
-            {
-                return true;
-            }
-
-            Console.WriteLine("Failed to execute command. Exit code: {0}", exitCode);
-            return false;
+            return process.ExitCode == 0;
         }
 
         private static Process CreateProcess(string args, string file)
