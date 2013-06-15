@@ -18,6 +18,11 @@
         public bool RewriteLocalhost { get; set; }
 
         /// <summary>
+        /// Configuration around creating namespace reservations
+        /// </summary>
+        public NamespaceReservationsConfiguration NamespaceReservationsConfiguration { get; set; }
+
+        /// <summary>
         /// Gets or sets a property that provides a callback to be called
         /// if there's an unhandled exception in the self host.
         /// Note: this will *not* be called for normal nancy Exceptions
@@ -38,6 +43,7 @@
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
+            this.NamespaceReservationsConfiguration = new NamespaceReservationsConfiguration();
             this.UnhandledExceptionCallback = e =>
                 {
                     var message = string.Format("---\n{0}\n---\n", e);
