@@ -165,7 +165,8 @@
 
             var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
-            var nancyUrl = new Url {
+            var nancyUrl = new Url 
+            {
                 Scheme = request.Url.Scheme,
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
@@ -176,12 +177,15 @@
             };
 
             byte[] certificate = null;
-            
-            var x509Certificate = request.GetClientCertificate();
 
-            if (x509Certificate != null)
+            if (this.configuration.EnableClientCertificates)
             {
-                certificate = x509Certificate.RawData;
+                var x509Certificate = request.GetClientCertificate();
+
+                if (x509Certificate != null)
+                {
+                    certificate = x509Certificate.RawData;
+                }
             }
 
             return new Request(

@@ -13,6 +13,7 @@
         /// rewritten to htp://+:port/ style uris to allow for listening on 
         /// all ports, but requiring either a url reservation, or admin
         /// access
+        /// Defaults to true.
         /// </summary>
         public bool RewriteLocalhost { get; set; }
 
@@ -25,14 +26,24 @@
         /// </summary>
         public Action<Exception> UnhandledExceptionCallback { get; set; }
 
+        /// <summary>
+        /// Gets or sets a property that determines whether client certificates
+        /// are enabled or not.
+        /// When set to true the self host will request a client certificate if the 
+        /// request is running over SSL.
+        /// Defaults to false.
+        /// </summary>
+        public bool EnableClientCertificates { get; set; }
+
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
             this.UnhandledExceptionCallback = e =>
                 {
-                    var message = String.Format("---\n{0}\n---\n", e);
+                    var message = string.Format("---\n{0}\n---\n", e);
                     Debug.Write(message);
                 };
+            this.EnableClientCertificates = false;
         }
     }
 }
