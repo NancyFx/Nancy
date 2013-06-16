@@ -23,6 +23,12 @@
         public UrlReservations UrlReservations { get; set; }
 
         /// <summary>
+        /// Gets or sets a property that determines if Transfer-Encoding: Chunked is allowed
+        /// for the response instead of Content-Length (default: true).
+        /// </summary>
+        public bool AllowChunkedEncoding { get; set; }
+
+        /// <summary>
         /// Gets or sets a property that provides a callback to be called
         /// if there's an unhandled exception in the self host.
         /// Note: this will *not* be called for normal nancy Exceptions
@@ -44,6 +50,7 @@
         {
             this.RewriteLocalhost = true;
             this.UrlReservations = new UrlReservations();
+            this.AllowChunkedEncoding = true;
             this.UnhandledExceptionCallback = e =>
                 {
                     var message = string.Format("---\n{0}\n---\n", e);
