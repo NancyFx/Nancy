@@ -46,6 +46,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+            var owinRequestHost = GetHeader(owinRequestHeaders, "Host");
 
             var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
             var certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
@@ -54,15 +55,7 @@
 
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
-            var url = new Url
-            {
-                Scheme = owinRequestScheme,
-                HostName = GetHeader(owinRequestHeaders, "Host"),
-                Port = null,
-                BasePath = owinRequestPathBase,
-                Path = owinRequestPath,
-                Query = owinRequestQueryString,
-            };
+            var url = CreateUrl(owinRequestHost, owinRequestScheme, owinRequestPathBase, owinRequestPath, owinRequestQueryString);
 
             var nancyRequestStream = new RequestStream(owinRequestBody, ExpectedLength(owinRequestHeaders), false);
 
@@ -83,6 +76,48 @@
                 RequestErrored(tcs));
 
             return tcs.Task;
+        }
+
+        /// <summary>
+        /// Creates the Nancy URL
+        /// </summary>
+        /// <param name="owinRequestHost">OWIN Hostname</param>
+        /// <param name="owinRequestScheme">OWIN Scheme</param>
+        /// <param name="owinRequestPathBase">OWIN Base path</param>
+        /// <param name="owinRequestPath">OWIN Path</param>
+        /// <param name="owinRequestQueryString">OWIN Querystring</param>
+        /// <returns></returns>
+        private static Url CreateUrl(
+            string owinRequestHost,
+            string owinRequestScheme,
+            string owinRequestPathBase,
+            string owinRequestPath,
+            string owinRequestQueryString)
+        {
+            int? port = null;
+
+            var hostnameParts = owinRequestHost.Split(':');
+            if (hostnameParts.Length == 2)
+            {
+                owinRequestHost = hostnameParts[0];
+
+                int tempPort;
+                if (int.TryParse(hostnameParts[1], out tempPort))
+                {
+                    port = tempPort;
+                }
+            }
+
+            var url = new Url
+                          {
+                              Scheme = owinRequestScheme,
+                              HostName = owinRequestHost,
+                              Port = port,
+                              BasePath = owinRequestPathBase,
+                              Path = owinRequestPath,
+                              Query = owinRequestQueryString,
+                          };
+            return url;
         }
 
         /// <summary>
