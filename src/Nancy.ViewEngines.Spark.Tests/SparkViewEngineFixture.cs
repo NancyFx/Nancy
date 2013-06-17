@@ -274,6 +274,7 @@
             this.output.ShouldContain(@"<script type=""text/javascript"" src=""/mysensationalrootfolder/scripts/test.js""/>");
         }
 
+#if !__MonoCS__
         [Fact]
         public void Should_allow_overriding_of_tilde_substitiution_with_resource_paths_from_config()
         {
@@ -287,6 +288,7 @@
             //Then
             this.output.ShouldContain(@"<script type=""text/javascript"" src=""http://cdn.example.com/mysite/scripts/test.js""/>");
         }
+#endif
 
         [Fact]
         public void Should_support_files_with_the_spark_extensions()
