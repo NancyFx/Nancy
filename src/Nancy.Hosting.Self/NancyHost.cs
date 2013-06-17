@@ -210,7 +210,10 @@
         /// </summary>
         public void Stop()
         {
-            this.listener.Stop();
+            if (this.listener.IsListening)
+            {
+                listener.Stop();
+            }
         }
 
         private IEnumerable<string> GetPrefixes()

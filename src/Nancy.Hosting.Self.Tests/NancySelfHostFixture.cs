@@ -22,6 +22,28 @@ namespace Nancy.Hosting.Self.Tests
         private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
 
         [SkippableFact]
+        public void Should_be_get_an_exception_indicating_a_conflict_when_trying_to_listen_on_a_used_prefix()
+        {
+            Exception ex;
+
+            // Given
+            using (CreateAndOpenSelfHost())
+            {
+                // When
+                ex = Record.Exception(() =>
+                    {
+                        using (var host = new NancyHost(BaseUri))
+                        {
+                            host.Start();
+                        }
+                    });
+            }
+
+            // Then
+            ex.Message.ShouldContain("conflict");
+        }
+
+        [SkippableFact]
         public void Should_be_able_to_get_any_header_from_selfhost()
         {
             // Given
