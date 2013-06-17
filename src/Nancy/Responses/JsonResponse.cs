@@ -1,4 +1,4 @@
-namespace Nancy.Responses
+﻿namespace Nancy.Responses
 {
     using System;
     using System.IO;
@@ -14,27 +14,27 @@ namespace Nancy.Responses
             }
         }
 
-        public JsonResponse (TModel model, ISerializer serializer)
+        public JsonResponse(TModel model, ISerializer serializer)
         {
-            if (serializer == null) 
-			{
-                throw new InvalidOperationException ("JSON Serializer not set");
+            if (serializer == null)
+            {
+                throw new InvalidOperationException("JSON Serializer not set");
             }
 
-            this.Contents = GetJsonContents (model, serializer);
+            this.Contents = GetJsonContents(model, serializer);
             this.ContentType = contentType;
             this.StatusCode = HttpStatusCode.OK;
         }
 
-        private static Action<Stream> GetJsonContents (TModel model, ISerializer serializer)
+        private static Action<Stream> GetJsonContents(TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize (contentType, model, stream);
+            return stream => serializer.Serialize(contentType, model, stream);
         }
     }
 
     public class JsonResponse : JsonResponse<object>
     {
-        public JsonResponse (object model, ISerializer serializer) : base(model, serializer)
+        public JsonResponse(object model, ISerializer serializer) : base(model, serializer)
         {
         }
     }
