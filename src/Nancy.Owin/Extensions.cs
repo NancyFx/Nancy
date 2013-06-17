@@ -10,9 +10,9 @@ namespace Owin
     /// </summary>
     public static class Extensions
     {
-        public static void UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper = null)
+        public static void UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper = null, HostConfiguration hostConfiguration = null)
         {
-            builder.Use(typeof(NancyOwinHost), bootstrapper ?? NancyBootstrapperLocator.Bootstrapper);
+            builder.Use(typeof(NancyOwinHost), bootstrapper ?? NancyBootstrapperLocator.Bootstrapper, hostConfiguration ?? new HostConfiguration());
         }
     }
 }

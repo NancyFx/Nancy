@@ -16,6 +16,8 @@
     /// </summary>
     public class NancyOwinHost
     {
+        private readonly HostConfiguration hostConfiguration;
+
         private readonly INancyEngine engine;
 
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
@@ -25,8 +27,10 @@
         /// </summary>
         /// <param name="next">Next middleware to run if necessary</param>
         /// <param name="bootstrapper">The bootstrapper that should be used by the host.</param>
-        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper)
+        /// <param name="hostConfiguration">Host configuration options</param>
+        public NancyOwinHost(Func<IDictionary<string, object>, Task> next, INancyBootstrapper bootstrapper, HostConfiguration hostConfiguration)
         {
+            this.hostConfiguration = hostConfiguration;
             bootstrapper.Initialise();
 
             this.engine = bootstrapper.GetEngine();
@@ -48,8 +52,12 @@
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
             var owinRequestHost = GetHeader(owinRequestHeaders, "Host");
 
-            var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
-            var certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+            byte[] certificate = null;
+            if (this.hostConfiguration.EnableClientCertificates)
+            {
+                var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
+                certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
+            }
 
             var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
 
