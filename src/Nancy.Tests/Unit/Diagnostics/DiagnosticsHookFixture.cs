@@ -29,7 +29,8 @@
             // Given
             var diagsConfig = new DiagnosticsConfiguration { Password = null, CryptographyConfiguration = this.cryptoConfig };
 
-            var bootstrapper = new ConfigurableBootstrapper(with =>{
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
                 with.EnableAutoRegistration();
                 with.DiagnosticsConfiguration(diagsConfig);
                 with.Diagnostics<DefaultDiagnostics>();
@@ -244,6 +245,32 @@
                 .Expiry.ShouldNotEqual(expiryDate);
         }
 
+        [Fact]
+        public void Should_return_diagnostic_example()
+        {
+            // Given no custom interactive diagnostic providers
+            var diagsConfig = new DiagnosticsConfiguration { Password = "password", CryptographyConfiguration = this.cryptoConfig };
+
+            var bootstrapper = new ConfigurableBootstrapper(with =>
+            {
+                with.EnableAutoRegistration();
+                with.DiagnosticsConfiguration(diagsConfig);
+                with.Diagnostics<DefaultDiagnostics>();
+            });
+
+            var browser = new Browser(bootstrapper);
+
+            // When querying the list of interactive providers
+            var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
+                {
+                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
+                });
+
+            // Then we should see the fake testing provider and not the Nancy provided testing example
+            result.Body.AsString().ShouldNotContain("Fake testing provider");
+            result.Body.AsString().Contains("Testing Diagnostic Provider");
+        }
+
         private string GetSessionCookieValue(string password, DateTime? expiry = null)
         {
             var salt = DiagnosticsSession.GenerateRandomSalt();
@@ -270,7 +297,7 @@
             var hmacStringLength = Base64Helpers.GetBase64Length(this.cryptoConfig.HmacProvider.HmacLength);
             var encryptedSession = cookieValue.Substring(hmacStringLength);
             var decrypted = this.cryptoConfig.EncryptionProvider.Decrypt(encryptedSession);
-            
+
             return this.objectSerializer.Deserialize(decrypted) as DiagnosticsSession;
         }
     }
