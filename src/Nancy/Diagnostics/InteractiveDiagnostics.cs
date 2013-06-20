@@ -15,7 +15,23 @@
 
         public InteractiveDiagnostics(IEnumerable<IDiagnosticsProvider> providers)
         {
-            this.providers = providers.ToArray();
+            var customProvidersAvailable = providers.Any(provider =>
+            {
+                Type providerType = provider.GetType();
+
+                return providerType != typeof(Nancy.Diagnostics.TestingDiagnosticProvider) &
+                       providerType != typeof(Nancy.Routing.DefaultRouteCacheProvider);
+            });
+
+            if (customProvidersAvailable)
+            {
+                // Exclude only the TestingDiagnosticProvider
+                this.providers = providers.Where(provider => provider.GetType() != typeof(Nancy.Diagnostics.TestingDiagnosticProvider)).ToArray();
+            }
+            else
+            {
+                this.providers = providers.ToArray();
+            }
 
             this.BuildAvailableDiagnostics();
         }
