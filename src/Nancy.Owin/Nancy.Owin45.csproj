@@ -72,6 +72,7 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="HostConfiguration.cs" />
     <Compile Include="NancyContextExtensions.cs" />
+    <Compile Include="NancyModuleExtensions.cs" />
     <Compile Include="NancyOwinHost.cs" />
   </ItemGroup>
   <ItemGroup>

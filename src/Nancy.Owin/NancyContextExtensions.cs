@@ -1,4 +1,6 @@
-﻿namespace Nancy
+﻿// ReSharper disable CheckNamespace
+namespace Nancy
+// ReSharper restore CheckNamespace
 {
     using System.Collections.Generic;
     using System.Security.Claims;
