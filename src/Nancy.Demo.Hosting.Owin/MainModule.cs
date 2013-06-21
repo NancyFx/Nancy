@@ -1,4 +1,4 @@
-namespace Nancy.Demo.Hosting.Owin
+namespace Nancy.Demo.Owin
 {
     using System.Collections.Generic;
     using System.Linq;
