@@ -21,6 +21,8 @@
   <files>
     <file src="build\binaries\Nancy.Owin.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Owin.pdb" target="lib\net40" />
+    <file src="build\binaries\net45\Nancy.Owin.dll" target="lib\net45" />
+    <file src="build\binaries\net45\Nancy.Owin.pdb" target="lib\net45" />
     <file src="src\Nancy.Owin\**\*.cs" target="src" />
   </files>
 </package>

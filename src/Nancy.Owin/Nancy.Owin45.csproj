@@ -17,7 +17,7 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-	<BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
     <OutputPath>bin\net45\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -27,7 +27,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-	<BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
     <OutputPath>bin\net45\Release\</OutputPath>
     <DefineConstants>TRACE;NET45</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -36,7 +36,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
-	<BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
     <OutputPath>bin\net45\MonoDebug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;NET45</DefineConstants>
     <DebugType>full</DebugType>
@@ -47,7 +47,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\net45\MonoRelease\</OutputPath>
-	<BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\net45\</BaseIntermediateOutputPath>
     <DefineConstants>TRACE;NET45</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -68,8 +68,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HostConfiguration.cs" />
+    <Compile Include="NancyContextExtensions.cs" />
     <Compile Include="NancyOwinHost.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -59,6 +59,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DictionaryExtensions.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="HostConfiguration.cs" />
     <Compile Include="NancyOwinHost.cs" />
