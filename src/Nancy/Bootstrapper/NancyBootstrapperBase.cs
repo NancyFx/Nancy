@@ -554,18 +554,16 @@
             }
         }
 
-
         private static IRootPathProvider GetRootPathProvider()
         {
-            var providerType = AppDomainAssemblyTypeScanner
-                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
-                .SingleOrDefault();
-
-            if (providerType == null)
+            var providerTypes = AppDomainAssemblyTypeScanner
+                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy).ToList();
+            if (providerTypes.Count() > 1)
             {
-                providerType = typeof(DefaultRootPathProvider);
+                throw new MultipleRootPathProvidersLocatedException(providerTypes);
             }
 
+            var providerType = providerTypes.SingleOrDefault() ?? typeof(DefaultRootPathProvider);
             return Activator.CreateInstance(providerType) as IRootPathProvider;
         }
     }
