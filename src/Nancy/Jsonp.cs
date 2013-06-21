@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Nancy.Bootstrapper;
-using System.IO;
-
-namespace Nancy
+﻿namespace Nancy
 {
+    using System;
+    using System.IO;
+    using System.Linq;
+
+    using Nancy.Json;
+    using Nancy.Bootstrapper;
+
     public static class Jsonp
     {
         static PipelineItem<Action<NancyContext>> JsonpItem;
@@ -56,7 +56,7 @@ namespace Nancy
 
                 // set content type to application/javascript so browsers can handle it by default
                 // http://stackoverflow.com/questions/111302/best-content-type-to-serve-jsonp
-                context.Response.ContentType = "application/javascript";
+                context.Response.ContentType = "application/javascript" + (String.IsNullOrWhiteSpace(JsonSettings.DefaultCharset) ? "" : "; charset=" + JsonSettings.DefaultCharset);
                 context.Response.Contents = stream =>
                 {
                     // disposing of stream is handled elsewhere
