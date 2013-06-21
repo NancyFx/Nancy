@@ -1,9 +1,9 @@
-namespace Nancy.Demo.Hosting.Owin
+namespace Nancy.Demo.Owin
 {
     using System.Collections.Generic;
     using System.Linq;
     using Models;
-    using Nancy.Hosting.Owin;
+    using Nancy.Owin;
 
     public class MainModule : NancyModule
     {

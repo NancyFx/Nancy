@@ -11,8 +11,8 @@
     <ProjectTypeGuids>{349C5851-65DF-11DA-9384-00065B846F21};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Demo.Hosting.Owin</RootNamespace>
-    <AssemblyName>Nancy.Demo.Hosting.Owin</AssemblyName>
+    <RootNamespace>Nancy.Demo.Owin</RootNamespace>
+    <AssemblyName>Nancy.Demo.Owin</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <UseIISExpress>true</UseIISExpress>
     <FileUpgradeFlags>
@@ -138,9 +138,9 @@
     <Compile Include="SimpleOwinAspNetHost.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj">
-      <Project>{500B28EA-BFDB-4686-8A7D-5CA38B11EF21}</Project>
-      <Name>Nancy.Hosting.Owin</Name>
+    <ProjectReference Include="..\Nancy.Owin\Nancy.Owin.csproj">
+      <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
+      <Name>Nancy.Owin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Spark\Nancy.ViewEngines.Spark.csproj">
       <Project>{4B7E35DF-1569-4346-B180-A09615723095}</Project>

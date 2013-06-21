@@ -43,23 +43,23 @@
         /// <returns>Returns result</returns>
         public Task Invoke(IDictionary<string, object> environment)
         {
-            var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
-            var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
-            var owinRequestHeaders = Get<IDictionary<string, string[]>>(environment, "owin.RequestHeaders");
-            var owinRequestPathBase = Get<string>(environment, "owin.RequestPathBase");
-            var owinRequestPath = Get<string>(environment, "owin.RequestPath");
-            var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
-            var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var owinRequestHost = GetHeader(owinRequestHeaders, "Host");
+            var owinRequestMethod = environment.Get<string>("owin.RequestMethod");
+            var owinRequestScheme = environment.Get<string>("owin.RequestScheme");
+            var owinRequestHeaders = environment.Get<IDictionary<string, string[]>>("owin.RequestHeaders");
+            var owinRequestPathBase = environment.Get<string>("owin.RequestPathBase");
+            var owinRequestPath = environment.Get<string>("owin.RequestPath");
+            var owinRequestQueryString = environment.Get<string>("owin.RequestQueryString");
+            var owinRequestBody = environment.Get<Stream>("owin.RequestBody");
+            var owinRequestHost = owinRequestHeaders.GetHeader("Host") ?? "localhost"; //Host header may not be present in pure owin environment
 
             byte[] certificate = null;
             if (this.hostConfiguration.EnableClientCertificates)
             {
-                var clientCertificate = Get<X509Certificate>(environment, "ssl.ClientCertificate");
+                var clientCertificate = environment.Get<X509Certificate>("ssl.ClientCertificate");
                 certificate = (clientCertificate == null) ? null : clientCertificate.GetRawCertData();
             }
 
-            var serverClientIp = Get<string>(environment, "server.RemoteIpAddress");
+            var serverClientIp = environment.Get<string>("server.RemoteIpAddress");
 
             //var callCancelled = Get<CancellationToken>(environment, "owin.RequestBody");
 
@@ -155,8 +155,8 @@
         {
             return context =>
                 {
-                    var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
-                    var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+                    var owinResponseHeaders = environment.Get<IDictionary<string, string[]>>("owin.ResponseHeaders");
+                    var owinResponseBody = environment.Get<Stream>("owin.ResponseBody");
 
                     var nancyResponse = context.Response;
                     environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
@@ -195,21 +195,9 @@
             return tcs.SetException;
         }
 
-        private static T Get<T>(IDictionary<string, object> env, string key)
-        {
-            object value;
-            return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
-        }
-
-        private static string GetHeader(IDictionary<string, string[]> headers, string key)
-        {
-            string[] value;
-            return headers.TryGetValue(key, out value) && value != null ? string.Join(",", value.ToArray()) : null;
-        }
-
         private static long ExpectedLength(IDictionary<string, string[]> headers)
         {
-            var header = GetHeader(headers, "Content-Length");
+            var header = headers.GetHeader("Content-Length");
             if (string.IsNullOrWhiteSpace(header))
                 return 0;
 

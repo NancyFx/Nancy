@@ -2,7 +2,7 @@
 
 // https://github.com/prabirshrestha/simple-owin
 
-namespace Nancy.Demo.Hosting.Owin
+namespace Nancy.Demo.Owin
 {
     using System;
     using System.Collections.Generic;

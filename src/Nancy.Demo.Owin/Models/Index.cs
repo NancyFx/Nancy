@@ -1,4 +1,4 @@
-namespace Nancy.Demo.Hosting.Owin.Models
+namespace Nancy.Demo.Owin.Models
 {
     public class Index
     {
