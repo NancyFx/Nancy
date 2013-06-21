@@ -25,6 +25,11 @@
         public Type DestinationType { get; set; }
 
         /// <summary>
+        /// The generic type of a collection is only used when DestinationType is a enumerble.
+        /// </summary>
+        public Type GenericType { get; set; }
+
+        /// <summary>
         /// The current model object (or null for body deserialization)
         /// </summary>
         public object Model { get; set; }

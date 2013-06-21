@@ -1,7 +1,6 @@
 namespace Nancy.ModelBinding.DefaultConverters
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using Extensions;
@@ -35,7 +34,6 @@ namespace Nancy.ModelBinding.DefaultConverters
         /// <returns>Converted object of the destination type</returns>
         public object Convert(string input, Type destinationType, BindingContext context)
         {
-            // TODO - Lots of reflection in here, should probably cache the methodinfos
             if (string.IsNullOrEmpty(input))
             {
                 return null;
@@ -67,7 +65,7 @@ namespace Nancy.ModelBinding.DefaultConverters
             var genericType = destinationType.GetGenericArguments().First();
             var returnCollection = Activator.CreateInstance(destinationType);
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType, context)).FirstOrDefault();
+            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(genericType, context));
             if (converter == null)
             {
                 return null;
@@ -92,7 +90,7 @@ namespace Nancy.ModelBinding.DefaultConverters
                 return null;
             }
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(elementType, context)).FirstOrDefault();
+            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(elementType, context));
 
             if (converter == null)
             {
@@ -113,7 +111,7 @@ namespace Nancy.ModelBinding.DefaultConverters
         {
             var genericType = destinationType.GetGenericArguments().First();
 
-            var converter = context.TypeConverters.Where(c => c.CanConvertTo(genericType, context)).FirstOrDefault();
+            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(genericType, context));
 
             if (converter == null)
             {

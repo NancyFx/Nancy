@@ -6,23 +6,27 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.Linq;
     using System.Text;
     using System.Globalization;
+    using System.Xml.Serialization;
+
     using FakeItEasy;
-
-    using Nancy.IO;
-    using Nancy.ModelBinding;
     using Fakes;
-
+    
+    using Nancy.IO;
+    using Nancy.Json;
+    using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
+    
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
+    
     using Xunit.Extensions;
-
     using Xunit;
 
     public class DefaultBinderFixture
     {
         private readonly IFieldNameConverter passthroughNameConverter;
         private readonly BindingDefaults emptyDefaults;
+        private readonly JavaScriptSerializer serializer;
 
         public DefaultBinderFixture()
         {
@@ -33,6 +37,9 @@ namespace Nancy.Tests.Unit.ModelBinding
             this.emptyDefaults = A.Fake<BindingDefaults>();
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new IBodyDeserializer[] { });
             A.CallTo(() => this.emptyDefaults.DefaultTypeConverters).Returns(new ITypeConverter[] { });
+
+            this.serializer = new JavaScriptSerializer();
+            this.serializer.RegisterConverters(JsonSettings.Converters);
         }
 
         [Fact]
@@ -86,7 +93,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            binder.Bind(context, this.GetType(), null, new BindingConfig());
+            binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
@@ -104,7 +111,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            binder.Bind(context, this.GetType(), null, new BindingConfig());
+            binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
@@ -121,7 +128,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            binder.Bind(context, this.GetType(), null, new BindingConfig());
+            binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => deserializer.CanDeserialize("application/xml"))
@@ -141,7 +148,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.ShouldBeOfType<TestModel>();
@@ -200,7 +207,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["IntProperty"] = "12";
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => typeConverter.CanConvertTo(null, null)).WithAnyArguments()
@@ -219,7 +226,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["StringProperty"] = "Test";
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
@@ -237,7 +244,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["DateProperty"] = "Broken";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -255,7 +262,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["AnotherIntProperty"] = "morebad";
 
             // Then
-            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel), null, new BindingConfig()))
+            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel), null, BindingConfig.Default))
                 .ShouldMatch(exception =>
                              exception.BoundType == typeof(TestModel)
                              && exception.PropertyBindingExceptions.Any(pe =>
@@ -288,10 +295,10 @@ namespace Nancy.Tests.Unit.ModelBinding
             A.CallTo(() => this.emptyDefaults.DefaultBodyDeserializers).Returns(new[] { deserializer });
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(7);
+            validProperties.ShouldEqual(9);
         }
 
         [Fact]
@@ -304,7 +311,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["IntProperty"] = "12";
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => this.passthroughNameConverter.Convert(null)).WithAnyArguments()
@@ -321,7 +328,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["IntProperty"] = "12";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig(), "IntProperty");
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default, "IntProperty");
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -363,7 +370,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            binder.Bind(context, this.GetType(), null, new BindingConfig());
+            binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => deserializer.Deserialize(null, null, null)).WithAnyArguments()
@@ -383,7 +390,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["StringProperty"] = "Test";
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => typeConverter.Convert(null, null, null)).WithAnyArguments()
@@ -406,7 +413,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            binder.Bind(context, this.GetType(), null, new BindingConfig());
+            binder.Bind(context, this.GetType(), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => userDeserializer.Deserialize(null, null, null)).WithAnyArguments()
@@ -431,7 +438,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["StringProperty"] = "Test";
 
             // When
-            binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             A.CallTo(() => userTypeConverter.Convert(null, null, null)).WithAnyArguments()
@@ -452,7 +459,7 @@ namespace Nancy.Tests.Unit.ModelBinding
 
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(3);
@@ -469,7 +476,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "3";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(3);
@@ -478,7 +485,6 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Form_properties_should_take_precendence_over_request_properties()
         {
-
             var binder = this.GetBinder();
 
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
@@ -488,11 +494,119 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Query["IntProperty"] = "1";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(3);
         }
+
+        [Fact]
+        public void Should_bind_multiple_Form_properties_to_list()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+            context.Request.Form["StringProperty_0"] = "Test";
+            context.Request.Form["IntProperty_0"] = "1";
+            context.Request.Form["StringProperty_1"] = "Test2";
+            context.Request.Form["IntProperty_1"] = "2";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.First().IntProperty.ShouldEqual(1);
+            result.Last().StringProperty.ShouldEqual("Test2");
+            result.Last().IntProperty.ShouldEqual(2);
+        }
+
+        [Fact]
+        public void Should_bind_to_IEnumerable_from_Form()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues"] = "1,2,3,4";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
+
+            // Then
+            result.IntValues.ShouldHaveCount(4);
+        }
+
+        [Fact]
+        public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs()
+        {
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues_0"] = "1,2,3,4";
+            context.Request.Form["IntValues_1"] = "5,6,7,8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+            
+            // Then
+            result.First().IntValues.ShouldHaveCount(4);
+            result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
+            result.Last().IntValues.ShouldHaveCount(4);
+            result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
+
+        [Fact]
+        public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs_using_brackets_and_specifying_an_instance()
+        {
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues[0]"] = "1,2,3,4";
+            context.Request.Form["IntValues[1]"] = "5,6,7,8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), new List<TestModel> { new TestModel {AnotherStringProprety = "Test"} }, new BindingConfig { Overwrite = false});
+
+            // Then
+            result.First().AnotherStringProprety.ShouldEqual("Test");
+            result.First().IntValues.ShouldHaveCount(4);
+            result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
+            result.Last().IntValues.ShouldHaveCount(4);
+            result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
+        [Fact]
+        public void Should_bind_to_IEnumerable_from_Form_with_multiple_inputs_using_brackets()
+        {
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["IntValues[0]"] = "1,2,3,4";
+            context.Request.Form["IntValues[1]"] = "5,6,7,8";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().IntValues.ShouldHaveCount(4);
+            result.First().IntValues.ShouldEqualSequence(new[] { 1, 2, 3, 4 });
+            result.Last().IntValues.ShouldHaveCount(4);
+            result.Last().IntValues.ShouldEqualSequence(new[] { 5, 6, 7, 8 });
+        }
+
 
         [Fact]
         public void Form_properties_should_take_precendence_over_request_properties_and_context_properties()
@@ -508,7 +622,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "2";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(3);
@@ -528,7 +642,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "13";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.StringProperty.ShouldEqual("Test");
             result.IntProperty.ShouldEqual(12);
@@ -545,7 +659,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Query["IntProperty"] = "12";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -569,7 +683,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["DoubleProperty"] = "4,50";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.DoubleProperty.ShouldEqual(expected);
@@ -594,7 +708,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["DateProperty"] = date;
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
             // Then
             result.DateProperty.Date.Month.ShouldEqual(month);
             result.DateProperty.Date.Day.ShouldEqual(day);
@@ -614,7 +728,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["IntProperty"] = "12";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("Test");
@@ -704,18 +818,142 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_bind_list_model_from_body()
         {
+            //Given
             var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
             var body = XmlBodyDeserializerFixture.ToXmlString(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
 
             // When
-            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, new BindingConfig());
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
             // Then
 
             result.First().StringProperty.ShouldEqual("Test");
             result.Last().StringProperty.ShouldEqual("AnotherTest");
         }
+
+
+        [Fact]
+        public void Should_bind_array_model_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+
+            // When
+            var result = (TestModel[])binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default);
+            
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+        }
+
+        [Fact]
+        public void Should_bind_ienumerable_model_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (IEnumerable<TestModel>)binder.Bind(context, typeof(IEnumerable<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+        }
+
+
+        [Fact]
+        public void Should_bind_ienumerable_model_with_instance_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new List<TestModel>(new[] { new TestModel { StringProperty = "Test" }, new TestModel { StringProperty = "AnotherTest" } }));
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            var then = DateTime.Now;
+            var instance = new List<TestModel> { new TestModel{ DateProperty = then }, new TestModel { IntProperty = 9, AnotherStringProprety = "Bananas" } };
+
+            // When
+            var result = (IEnumerable<TestModel>)binder.Bind(context, typeof(IEnumerable<TestModel>), instance, new BindingConfig{Overwrite = false});
+
+            // Then
+            result.First().StringProperty.ShouldEqual("Test");
+            result.First().DateProperty.ShouldEqual(then);
+            result.Last().StringProperty.ShouldEqual("AnotherTest");
+            result.Last().IntProperty.ShouldEqual(9);
+            result.Last().AnotherStringProprety.ShouldEqual("Bananas");
+        }
+        
+        [Fact]
+        public void Should_bind_model_with_instance_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { StringProperty = "Test" });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
+
+            var then = DateTime.Now;
+            var instance = new TestModel { DateProperty = then, IntProperty = 6, AnotherStringProprety = "Beers" };
+
+            // Wham
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), instance, new BindingConfig { Overwrite = false });
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.DateProperty.ShouldEqual(then);
+            result.IntProperty.ShouldEqual(6);
+            result.AnotherStringProprety.ShouldEqual("Beers");
+        }
+        
+        [Fact]
+        public void Should_bind_model_from_body_that_contains_an_array()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
+            var binder = this.GetBinder(typeConverters, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new TestModel {StringProperty = "Test", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}});
+            
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
+
+            // Then
+            result.SomeStrings.ShouldHaveCount(6);
+            result.SomeStrings.ShouldEqualSequence(new[] { "E", "A", "D", "G", "B", "E" });
+        }
+
+
+        [Fact]
+        public void Should_bind_array_model_from_body_that_contains_an_array()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body =
+                serializer.Serialize(new[]
+                {
+                    new TestModel {StringProperty = "Test", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}},
+                    new TestModel {StringProperty = "AnotherTest", SomeStrings = new[] {"E", "A", "D", "G", "B", "E"}}
+                });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (TestModel[])binder.Bind(context, typeof(TestModel[]), null, BindingConfig.Default, "SomeStrings");
+            
+            // Then
+            result.First().SomeStrings.ShouldBeNull();
+            result.Last().SomeStrings.ShouldBeNull();
+        }
+
 
         [Fact]
         public void Form_request_and_context_properties_should_take_precedence_over_body_properties()
@@ -724,7 +962,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter(), };
             var bodyDeserializers = new IBodyDeserializer[] { new XmlBodyDeserializer() };
             var binder = this.GetBinder(typeConverters, bodyDeserializers);
-            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel() { IntProperty = 0, StringProperty = "From body" });
+            var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { IntProperty = 0, StringProperty = "From body" });
 
             var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/xml" }, body);
 
@@ -733,7 +971,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["AnotherStringProprety"] = "From context";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("From form");
@@ -790,6 +1028,7 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_be_able_to_bind_body_request_form_and_context_properties()
         {
+            //Given 
             var binder = this.GetBinder(null, new List<IBodyDeserializer> { new XmlBodyDeserializer() });
             var body = XmlBodyDeserializerFixture.ToXmlString(new TestModel { DateProperty = new DateTime(2012, 8, 16) });
 
@@ -800,7 +1039,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Parameters["AnotherStringProprety"] = "From Context";
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
             result.StringProperty.ShouldEqual("From Query");
@@ -812,12 +1051,13 @@ namespace Nancy.Tests.Unit.ModelBinding
         [Fact]
         public void Should_ignore_existing_instance_if_type_doesnt_match()
         {
+            //Given 
             var binder = this.GetBinder();
             var existing = new object();
             var context = CreateContextWithHeader("Content-Type", new[] { "application/xml" });
 
             // When
-            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, new BindingConfig());
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), existing, BindingConfig.Default);
 
             // Then
             result.ShouldNotBeSameAs(existing);
@@ -885,6 +1125,11 @@ namespace Nancy.Tests.Unit.ModelBinding
 
             public double DoubleProperty { get; set; }
 
+            [XmlIgnore]
+            public IEnumerable<int> IntValues { get; set; }
+
+            public string[] SomeStrings { get; set; }
+            
             public int this[int index]
             {
                 get { return 0; }
