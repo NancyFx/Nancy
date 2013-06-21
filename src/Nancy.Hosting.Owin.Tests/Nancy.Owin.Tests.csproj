@@ -8,8 +8,8 @@
     <ProjectGuid>{12BDFB8B-29BD-4F0F-890F-983F1F9F77EE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Hosting.Owin.Tests</RootNamespace>
-    <AssemblyName>Nancy.Hosting.Owin.Tests</AssemblyName>
+    <RootNamespace>Nancy.Owin.Tests</RootNamespace>
+    <AssemblyName>Nancy.Owin.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
