@@ -117,16 +117,15 @@
     <Compile Include="Fakes\FakeConsumer.cs" />
     <Compile Include="Fakes\FakeProducer.cs" />
     <Compile Include="NancyOwinHostFixture.cs" />
-    <Compile Include="ResponseStreamFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj">
       <Project>{7959D79C-9E2B-4871-9470-6A6B527ABE5E}</Project>
       <Name>Nancy.Demo.Hosting.Owin</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj">
-      <Project>{500B28EA-BFDB-4686-8A7D-5CA38B11EF21}</Project>
-      <Name>Nancy.Hosting.Owin</Name>
+    <ProjectReference Include="..\Nancy.Owin\Nancy.Owin.csproj">
+      <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
+      <Name>Nancy.Owin</Name>
     </ProjectReference>
     <ProjectReference Include="..\Nancy\Nancy.csproj">
       <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>

@@ -50,7 +50,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var owinRequestHost = GetHeader(owinRequestHeaders, "Host");
+            var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? "localhost"; //Host header may not be present in pure owin environment
 
             byte[] certificate = null;
             if (this.hostConfiguration.EnableClientCertificates)

@@ -7,9 +7,10 @@ namespace Nancy.Tests
     using System.Threading.Tasks;
     using Bootstrapper;
     using FakeItEasy;
-    using Hosting.Owin;
+
+    using Nancy.Owin;
+
     using Xunit;
-    using Xunit.Extensions;
 
     using ResponseCallBack = System.Action<string, System.Collections.Generic.IDictionary<string, string>, System.Func<System.Func<System.ArraySegment<byte>, System.Action, bool>, System.Action<System.Exception>, System.Action, System.Action>>;
 
@@ -33,7 +34,7 @@ namespace Nancy.Tests
 
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
 
-            this.host = new NancyOwinHost(fakeBootstrapper);
+            this.host = new NancyOwinHost(null, fakeBootstrapper, new HostConfiguration());
 
             this.fakeResponseCallback = (status, headers, bodyDelegate) => { };
 
@@ -329,7 +330,7 @@ namespace Nancy.Tests
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
-            this.host.ProcessRequest(environment).Wait();
+            this.host.Invoke(environment).Wait();
 
             var respHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
 
