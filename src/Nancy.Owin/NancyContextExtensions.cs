@@ -1,7 +1,9 @@
-﻿namespace Nancy.Owin
+﻿namespace Nancy
 {
     using System.Collections.Generic;
     using System.Security.Claims;
+
+    using Nancy.Owin;
 
     public static class NancyContextExtensions
     {
