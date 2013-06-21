@@ -119,7 +119,7 @@
     <Compile Include="NancyOwinHostFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Demo.Hosting.Owin\Nancy.Demo.Owin.csproj">
+    <ProjectReference Include="..\Nancy.Demo.Owin\Nancy.Demo.Owin.csproj">
       <Project>{7959D79C-9E2B-4871-9470-6A6B527ABE5E}</Project>
       <Name>Nancy.Demo.Owin</Name>
     </ProjectReference>

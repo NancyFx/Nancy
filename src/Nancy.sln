@@ -65,7 +65,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Wcf", "N
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Hosting.Aspnet", "Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj", "{E127FED3-01C0-41BA-BF83-D8DCDD827D6A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Owin", "Nancy.Demo.Hosting.Owin\Nancy.Demo.Owin.csproj", "{7959D79C-9E2B-4871-9470-6A6B527ABE5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Owin", "Nancy.Demo.Owin\Nancy.Demo.Owin.csproj", "{7959D79C-9E2B-4871-9470-6A6B527ABE5E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Authentication.Forms.TestingDemo", "Nancy.Demo.Authentication.Forms.TestingDemo\Nancy.Demo.Authentication.Forms.TestingDemo.csproj", "{948A8EF6-D50C-45EA-9AFD-7A4723ADAB0B}"
 EndProject
