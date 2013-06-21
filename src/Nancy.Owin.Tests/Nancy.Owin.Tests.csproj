@@ -85,15 +85,7 @@
     </Reference>
     <Reference Include="System.Core">
     </Reference>
-    <Reference Include="System.Xml.Linq">
-    </Reference>
-    <Reference Include="System.Data.DataSetExtensions">
-    </Reference>
     <Reference Include="Microsoft.CSharp">
-    </Reference>
-    <Reference Include="System.Data">
-    </Reference>
-    <Reference Include="System.Xml">
     </Reference>
     <Reference Include="FakeItEasy, Version=1.7.4109.1, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c">
       <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
@@ -119,10 +111,6 @@
     <Compile Include="NancyOwinHostFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Demo.Owin\Nancy.Demo.Owin.csproj">
-      <Project>{7959D79C-9E2B-4871-9470-6A6B527ABE5E}</Project>
-      <Name>Nancy.Demo.Owin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.Owin\Nancy.Owin.csproj">
       <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
       <Name>Nancy.Owin</Name>
