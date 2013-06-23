@@ -11,12 +11,12 @@
         All,
 
         /// <summary>
-        /// Only in types that are defined in Nancy assemblies.
+        /// Only in types that are defined in the Nancy assembly.
         /// </summary>
         OnlyNancy,
 
         /// <summary>
-        /// Only types that are defined outside Nancy assemblies.
+        /// Only types that are defined outside the Nancy assembly.
         /// </summary>
         ExcludeNancy
     }
