@@ -557,13 +557,17 @@
         private static IRootPathProvider GetRootPathProvider()
         {
             var providerTypes = AppDomainAssemblyTypeScanner
-                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy).ToList();
-            if (providerTypes.Count() > 1)
+                .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
+                .ToArray();
+
+            if (providerTypes.Length > 1)
             {
                 throw new MultipleRootPathProvidersLocatedException(providerTypes);
             }
 
-            var providerType = providerTypes.SingleOrDefault() ?? typeof(DefaultRootPathProvider);
+            var providerType = 
+                providerTypes.SingleOrDefault() ?? typeof(DefaultRootPathProvider);
+
             return Activator.CreateInstance(providerType) as IRootPathProvider;
         }
     }
