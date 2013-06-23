@@ -10,17 +10,18 @@
     /// Exception raised when the <see cref="NancyBootstrapperBase{T}"/> discovers more than one
     /// <see cref="IRootPathProvider"/> implementation in the loaded assemblies.
     /// </summary>
-    public class MultipleRootPathProvidersLocatedException : Exception
+    public class MultipleRootPathProvidersLocatedException : BootstrapperException
     {
-        private const string defaultMessageIntroduction = @"More than one IRootPathProvider was found";
-        private const string defaultMessageConclusion = @"and since we do not know which one you want to use, you need to override the RootPathProvider property on your bootstrapper and specify which one to use. Sorry for the inconvenience.";
-        private const string defaultMessage = defaultMessageIntroduction + ", " + defaultMessageConclusion;
+        private const string DefaultMessageIntroduction = @"More than one IRootPathProvider was found";
+        private const string DefaultMessageConclusion = @"and since we do not know which one you want to use, you need to override the RootPathProvider property on your bootstrapper and specify which one to use. Sorry for the inconvenience.";
+        private const string DefaultMessage = DefaultMessageIntroduction + ", " + DefaultMessageConclusion;
+        private string errorMessage;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MultipleRootPathProvidersLocatedException"/> class.
         /// </summary>
         public MultipleRootPathProvidersLocatedException()
-            : base(defaultMessage)
+            : base(DefaultMessage)
         {}
 
         /// <summary>
@@ -45,7 +46,7 @@
         /// </summary>
         /// <param name="providerTypes">The provider types.</param>
         public MultipleRootPathProvidersLocatedException(IEnumerable<Type> providerTypes)
-            : base(defaultMessage)
+            : base(DefaultMessage)
         {
             this.StoreProviderTypes(providerTypes);
         }
@@ -73,7 +74,9 @@
         /// <param name="providerTypes">The provider types.</param>
         private void StoreProviderTypes(IEnumerable<Type> providerTypes)
         {
-            this.ProviderTypes = providerTypes.ToList().AsReadOnly();
+            this.ProviderTypes = 
+                providerTypes.ToList().AsReadOnly();
+
             this.Data.Add("ProviderTypes", this.ProviderTypes);
         }
 
@@ -93,20 +96,28 @@
         {
             get
             {
-                if ((this.ProviderTypes == null) || (!this.ProviderTypes.Any()))
-                {
-                    return base.Message;
-                }
-
-                var builder = new StringBuilder(defaultMessageIntroduction);
-                foreach (var providerType in this.ProviderTypes)
-                {
-                    builder.AppendFormat("\n    {0}", providerType.FullName);
-                }
-                builder.AppendFormat(@"\n{0}", defaultMessageConclusion);
-
-                return builder.ToString();
+                return (this.errorMessage ?? (this.errorMessage = this.GetErrorMessage()));
             }
+        }
+
+        private string GetErrorMessage()
+        {
+            if ((this.ProviderTypes == null) || (!this.ProviderTypes.Any()))
+            {
+                return base.Message;
+            }
+
+            var builder = 
+                new StringBuilder(DefaultMessageIntroduction);
+
+            foreach (var providerType in this.ProviderTypes)
+            {
+                builder.AppendFormat("\n    {0}", providerType.FullName);
+            }
+
+            builder.AppendFormat(@"\n{0}", DefaultMessageConclusion);
+
+            return builder.ToString();
         }
     }
 }

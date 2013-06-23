@@ -981,7 +981,7 @@ namespace Nancy.Testing
                 return this;
             }
 
-            /// <summary>
+            /// <summary> 
             /// Configures the bootstrapper to use the provided instance of <see cref="IRootPathProvider"/>.
             /// </summary>
             /// <param name="rootPathProvider">The <see cref="IRootPathProvider"/> instance that should be used by the bootstrapper.</param>
@@ -1008,7 +1008,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Configures the bootstrapper to use the provided instance of <see cref="IRoutePatternMatcher"/>.
+            /// Configures the bootstrapper to usgezze the provided instance of <see cref="IRoutePatternMatcher"/>.
             /// </summary>
             /// <param name="routePatternMatcher">The <see cref="IRoutePatternMatcher"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>

@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\BootstrapperException.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\ContainerRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
