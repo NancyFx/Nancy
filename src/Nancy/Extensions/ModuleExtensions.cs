@@ -36,5 +36,15 @@ namespace Nancy.Extensions
             return typeName;
         }
 
+        /// <summary>
+        /// Returns a boolean indicating whether the route is executing, or whether the module is
+        /// being constructed.
+        /// </summary>
+        /// <param name="module">The module instance</param>
+        /// <returns>True if the route is being executed, false if the module is being constructed</returns>
+        public static bool RouteExecuting(this INancyModule module)
+        {
+            return module.Context != null;
+        }
     }
 }
