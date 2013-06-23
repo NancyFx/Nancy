@@ -115,7 +115,7 @@
                 builder.AppendFormat("\n    {0}", providerType.FullName);
             }
 
-            builder.AppendFormat(@"\n{0}", DefaultMessageConclusion);
+            builder.AppendFormat("\n {0}", DefaultMessageConclusion);
 
             return builder.ToString();
         }
