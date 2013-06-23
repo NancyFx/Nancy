@@ -327,12 +327,12 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
         }
 
-        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterApplicationTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             this.TypeRegistrations = typeRegistrations;
         }
 
-        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
+        protected override void RegisterApplicationCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
         {
             this.CollectionTypeRegistrations = collectionTypeRegistrations;
         }
@@ -342,7 +342,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             PassedModules = new List<ModuleRegistration>(moduleRegistrationTypes);
         }
 
-        protected override void RegisterInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        protected override void RegisterApplicationInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
             this.InstanceRegistrations = instanceRegistrations;
         }
@@ -453,11 +453,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         {
         }
 
-        protected override void RegisterTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override void RegisterApplicationTypes(object container, IEnumerable<TypeRegistration> typeRegistrations)
         {
         }
 
-        protected override void RegisterCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        protected override void RegisterApplicationCollectionTypes(object container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
         }
 
@@ -466,7 +466,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             this.RegisterModulesRegistrationTypes = moduleRegistrationTypes;
         }
 
-        protected override void RegisterInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        protected override void RegisterApplicationInstances(object container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
         }
     }

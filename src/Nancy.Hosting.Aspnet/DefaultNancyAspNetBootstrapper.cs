@@ -112,11 +112,11 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
-        /// Register the default implementations of internally used types into the container as singletons
+        /// Register the given instances into the application container
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="typeRegistrations">Type registrations to register</param>
-        protected override sealed void RegisterTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
+        protected override sealed void RegisterApplicationTypes(TinyIoCContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
             foreach (var typeRegistration in typeRegistrations)
             {
@@ -125,12 +125,12 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
-        /// Register the various collections into the container as singletons to later be resolved
+        /// Register the given collections into the container as singletons to later be resolved
         /// by IEnumerable{Type} constructor dependencies.
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
-        protected override sealed void RegisterCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
+        protected override sealed void RegisterApplicationCollectionTypes(TinyIoCContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn)
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
             {
@@ -152,11 +152,11 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
-        /// Register the given instances into the container
+        /// Register the given instances into the container as singletons
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="instanceRegistrations">Instance registration types</param>
-        protected override void RegisterInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
+        protected override void RegisterApplicationInstances(TinyIoCContainer container, IEnumerable<InstanceRegistration> instanceRegistrations)
         {
             foreach (var instanceRegistration in instanceRegistrations)
             {

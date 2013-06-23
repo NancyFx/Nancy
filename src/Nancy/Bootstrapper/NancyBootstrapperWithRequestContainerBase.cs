@@ -2,8 +2,8 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
-    /// <summary>
     /// Nancy bootstrapper base with per-request container support.
     /// Stores/retrieves the child container in the context to ensure that
     /// only one child container is stored per request, and that the child 
@@ -73,6 +73,38 @@ namespace Nancy.Bootstrapper
 
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
+
+            foreach (var requestRegistrationTask in this.GetRequestRegistrationTasks(requestContainer).ToList())
+            {
+                var requestTypeRegistrations =
+                    requestRegistrationTask.TypeRegistrations;
+
+                if (requestTypeRegistrations != null)
+                {
+                    this.RegisterRequestTypes(requestContainer, requestTypeRegistrations);
+                }
+
+                var requestCollectionRegistrations =
+                    requestRegistrationTask.CollectionTypeRegistrations;
+
+                if (requestCollectionRegistrations != null)
+                {
+                    this.RegisterApplicationCollectionTypes(requestContainer, requestCollectionRegistrations);
+                }
+
+                var requestInstanceRegistrations =
+                    requestRegistrationTask.InstanceRegistrations;
+
+                if (requestInstanceRegistrations != null)
+                {
+                    this.RegisterApplicationInstances(requestContainer, requestInstanceRegistrations);
+                }
+            }
+
+            foreach (var requestStartupTask in this.GetRequestStartupTasks(requestContainer).ToList())
+            {
+                requestStartupTask.Initialize(requestPipelines, context);
+            }
 
             this.RequestStartup(requestContainer, requestPipelines, context);
 
@@ -148,5 +180,41 @@ namespace Nancy.Bootstrapper
         /// <param name="moduleType">Type of the module</param>
         /// <returns>NancyModule instance</returns>
         protected abstract INancyModule GetModule(TContainer container, Type moduleType);
+
+        /// <summary>
+        /// Gets all registered request registration tasks
+        /// </summary>
+        /// <param name="requestContainer">Request container instance</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestRegistrations"/> instances.</returns>
+        protected abstract IEnumerable<IRequestRegistrations> GetRequestRegistrationTasks(TContainer requestContainer);
+
+        /// <summary>
+        /// Gets all registered request startup tasks
+        /// </summary>
+        /// <param name="requestContainer">Request container instance</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
+        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks(TContainer requestContainer);
+
+        /// <summary>
+        /// Register the various collections into the request container as singletons to later be resolved
+        /// by IEnumerable{Type} constructor dependencies.
+        /// </summary>
+        /// <param name="requestContainer">Request container to register into</param>
+        /// <param name="collectionTypeRegistrations">Collection type registrations to register</param>
+        protected abstract void RegisterRequestCollectionTypes(TContainer requestContainer, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations);
+
+        /// <summary>
+        /// Register the given instances into the request container
+        /// </summary>
+        /// <param name="requestContainer">Request container to register into</param>
+        /// <param name="instanceRegistrations">Instance registration types</param>
+        protected abstract void RegisterRequestInstances(TContainer requestContainer, IEnumerable<InstanceRegistration> instanceRegistrations);
+
+        /// <summary>
+        /// Register the given instances into the request container as singletons
+        /// </summary>
+        /// <param name="requestContainer">Request container to register into</param>
+        /// <param name="typeRegistrations">Type registrations to register</param>
+        protected abstract void RegisterRequestTypes(TContainer requestContainer, IEnumerable<TypeRegistration> typeRegistrations);
     }
 }

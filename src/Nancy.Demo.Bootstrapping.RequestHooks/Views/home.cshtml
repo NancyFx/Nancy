@@ -1,0 +1,26 @@
+﻿<html>
+<head>
+    <title>Request Hooks Demo</title>
+</head>
+<body>
+    <h1>Request Hooks Demo</h1>
+    
+    <p>The best time to start a role-plating game, via a demo IRequestSartup: @Model.Now</p>
+    
+    <p>My role-playing game of choice, via a demo IRequestRegistration.TypeRegistrations: @Model.RolePlayingGame</p>
+
+    <p>
+        The best D&D character classes, via a demo IRequestRegistration.CollectionTypeRegistrations:
+        <ul>
+            @foreach (var characterClass in Model.CharacterClasses)
+            {
+                <li>@characterClass.Name</li>
+            }
+        </ul>
+    </p>
+    
+    <p>
+        The best role-playing game die, via a demo IRequestRegistration.InstanceRegistrations: d @Model.Die.
+    </p>
+</body>
+</html>

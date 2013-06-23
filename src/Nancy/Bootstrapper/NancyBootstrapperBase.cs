@@ -165,6 +165,22 @@
         }
 
         /// <summary>
+        /// Gets all request registration tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestRegistrationTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestRegistrations>(); }
+        }
+
+        /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestStartupTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
+        }
+
+        /// <summary>
         /// Gets the root path provider
         /// </summary>
         protected virtual IRootPathProvider RootPathProvider
@@ -242,10 +258,10 @@
             var instanceRegistrations = this.Conventions.GetInstanceRegistrations()
                                             .Concat(this.GetAdditionalInstances());
 
-            this.RegisterTypes(this.ApplicationContainer, typeRegistrations);
-            this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
+            this.RegisterApplicationTypes(this.ApplicationContainer, typeRegistrations);
+            this.RegisterApplicationCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
             this.RegisterModules(this.ApplicationContainer, this.Modules);
-            this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
+            this.RegisterApplicationInstances(this.ApplicationContainer, instanceRegistrations);
 
             foreach (var applicationRegistrationTask in this.GetApplicationRegistrationTasks().ToList())
             {
@@ -254,7 +270,7 @@
 
                 if (applicationTypeRegistrations != null)
                 {
-                    this.RegisterTypes(this.ApplicationContainer, applicationTypeRegistrations);
+                    this.RegisterApplicationTypes(this.ApplicationContainer, applicationTypeRegistrations);
                 }
 
                 var applicationCollectionRegistrations =
@@ -262,7 +278,7 @@
 
                 if (applicationCollectionRegistrations != null)
                 {
-                    this.RegisterCollectionTypes(this.ApplicationContainer, applicationCollectionRegistrations);
+                    this.RegisterApplicationCollectionTypes(this.ApplicationContainer, applicationCollectionRegistrations);
                 }
 
                 var applicationInstanceRegistrations =
@@ -270,7 +286,7 @@
 
                 if (applicationInstanceRegistrations != null)
                 {
-                    this.RegisterInstances(this.ApplicationContainer, applicationInstanceRegistrations);
+                    this.RegisterApplicationInstances(this.ApplicationContainer, applicationInstanceRegistrations);
                 }
             }
 
@@ -466,19 +482,19 @@
         protected abstract void RegisterBootstrapperTypes(TContainer applicationContainer);
 
         /// <summary>
-        /// Register the default implementations of internally used types into the container as singletons
+        /// Register the given instances into the application container
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="typeRegistrations">Type registrations to register</param>
-        protected abstract void RegisterTypes(TContainer container, IEnumerable<TypeRegistration> typeRegistrations);
+        protected abstract void RegisterApplicationTypes(TContainer container, IEnumerable<TypeRegistration> typeRegistrations);
 
         /// <summary>
-        /// Register the various collections into the container as singletons to later be resolved
+        /// Register the given collections into the container as singletons to later be resolved
         /// by IEnumerable{Type} constructor dependencies.
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="collectionTypeRegistrationsn">Collection type registrations to register</param>
-        protected abstract void RegisterCollectionTypes(TContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn);
+        protected abstract void RegisterApplicationCollectionTypes(TContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrationsn);
 
         /// <summary>
         /// Register the given module types into the container
@@ -488,11 +504,11 @@
         protected abstract void RegisterModules(TContainer container, IEnumerable<ModuleRegistration> moduleRegistrationTypes);
 
         /// <summary>
-        /// Register the given instances into the container
+        /// Register the given instances into the container as singletons
         /// </summary>
         /// <param name="container">Container to register into</param>
         /// <param name="instanceRegistrations">Instance registration types</param>
-        protected abstract void RegisterInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
+        protected abstract void RegisterApplicationInstances(TContainer container, IEnumerable<InstanceRegistration> instanceRegistrations);
         
         /// <summary>
         /// Gets additional required type registrations
@@ -536,7 +552,9 @@
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
                     new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
                     new CollectionTypeRegistration(typeof(IApplicationRegistrations), this.ApplicationRegistrationTasks), 
-                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
+                    new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories),
+                    new CollectionTypeRegistration(typeof(IRequestRegistrations), this.RequestRegistrationTasks),
+                    new CollectionTypeRegistration(typeof(IRequestStartup), this.RequestStartupTasks)
                 };
         }
 
