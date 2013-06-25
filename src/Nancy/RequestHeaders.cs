@@ -349,14 +349,14 @@ namespace Nancy
             }
 
             string[] cookieStrings;
-            string[] cookieData;
+            int equalPos;
             foreach (var cookie in cookies)
             {
                 cookieStrings = cookie.Split(';');
                 foreach (var cookieString in cookieStrings)
                 {
-                    cookieData = cookieString.Trim().Split('=');
-                    yield return new NancyCookie(cookieData[0], cookieData[1]);
+                    equalPos = cookieString.IndexOf('=');
+                    if (equalPos >= 0) yield return new NancyCookie(cookieString.Substring(0, equalPos).TrimStart(), cookieString.Substring(equalPos+1).TrimEnd());
                 }
             }
         }
