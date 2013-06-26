@@ -10,8 +10,15 @@ install:
   - sudo wget -q -P "/opt"  "http://samples.nancyfx.org/content/mono-3.0.12-bin.tar.bz2"
   - gem install rake
   - gem install albacore
-  - ls
+  - echo echo Running on Mono 2.x >> ./travis.sh
+  - echo rake mono >> ./travis.sh
+  - echo echo Running on Mono 3.x >> ./travis.sh
+  - echo sudo tar xk -C "/opt" -f /opt/mono-3.0.12-bin.tar.bz2 >> ./travis.sh
+  - echo export PATH="/opt/mono/bin:$PATH" >> ./travis.sh
+  - echo export LD_LIBRARY_PATH="/opt/mono/bin" >> ./travis.sh
+  - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
+  - more ./travis.sh
 script: ./travis.sh
 notifications:
   email:
