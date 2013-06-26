@@ -14,7 +14,8 @@ install:
   - echo rake mono >> ./travis.sh
   - echo echo Running on Mono 3.x >> ./travis.sh
   - echo sudo tar xkv -C "/opt" -f /opt/mono-3.0.12-bin.tar.bz2 >> ./travis.sh
-  - echo /opt/mono/bin/mono --version >> ./travis.sh
+  - echo ldd /opt/mono/bin/mono >> ./travis.sh
+  - echo ls -l /opt >> .travis.sh
   - echo export PATH="/opt/mono/bin:$PATH" >> ./travis.sh
   - echo export LD_LIBRARY_PATH="/opt/mono/bin" >> ./travis.sh
   - echo rake mono >> ./travis.sh
