@@ -10,6 +10,7 @@ install:
   - sudo wget -q -P "/opt"  "http://samples.nancyfx.org/content/mono-3.0.12-bin.tar.bz2"
   - gem install rake
   - gem install albacore
+  - ls
 script: travis.sh
 notifications:
   email:
