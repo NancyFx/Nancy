@@ -6,9 +6,11 @@ install:
   - sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys 0E1FAD0C
   - sudo apt-get update
   - sudo apt-get install mono-devel mono-gmcs mono-vbnc
+  - sudo apt-get install getttext
+  - sudo wget -q -P="/opt"  "http://samples.nancyfx.org/content/mono-3.0.12-bin.tar.bz2"
   - gem install rake
   - gem install albacore
-script: rake mono
+script: travis.sh
 notifications:
   email:
     - nancy@nancyfx.org
