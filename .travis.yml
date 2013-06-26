@@ -19,6 +19,7 @@ install:
   - echo rake mono >> ./travis.sh
   - chmod +x ./travis.sh
   - more ./travis.sh
+  - uname -a
 script: ./travis.sh
 notifications:
   email:
