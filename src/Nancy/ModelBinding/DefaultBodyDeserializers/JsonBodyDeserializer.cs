@@ -18,8 +18,9 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// Whether the deserializer can deserialize the content type
         /// </summary>
         /// <param name="contentType">Content type to deserialize</param>
+        /// <param name="context">Current <see cref="BindingContext"/>.</param>
         /// <returns>True if supported, false otherwise</returns>
-        public bool CanDeserialize(string contentType)
+        public bool CanDeserialize(string contentType, BindingContext context)
         {
             return Json.IsJsonContentType(contentType);
         }
