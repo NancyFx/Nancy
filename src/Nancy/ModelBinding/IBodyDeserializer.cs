@@ -12,15 +12,16 @@ namespace Nancy.ModelBinding
         /// Whether the deserializer can deserialize the content type
         /// </summary>
         /// <param name="contentType">Content type to deserialize</param>
+        /// <param name="context">Current <see cref="BindingContext"/>.</param>
         /// <returns>True if supported, false otherwise</returns>
-        bool CanDeserialize(string contentType);
+        bool CanDeserialize(string contentType, BindingContext context);
 
         /// <summary>
         /// Deserialize the request body to a model
         /// </summary>
         /// <param name="contentType">Content type to deserialize</param>
         /// <param name="bodyStream">Request body stream</param>
-        /// <param name="context">Current context</param>
+        /// <param name="context">Current <see cref="BindingContext"/>.</param>
         /// <returns>Model instance</returns>
         object Deserialize(string contentType, Stream bodyStream, BindingContext context);
     }

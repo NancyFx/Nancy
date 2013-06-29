@@ -460,14 +460,14 @@ namespace Nancy.ModelBinding
             }
 
             var contentType = GetRequestContentType(context.Context);
-            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType));
+            var bodyDeserializer = this.bodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
             if (bodyDeserializer != null)
             {
                 return bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context);
             }
 
-            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType));
+            bodyDeserializer = this.defaults.DefaultBodyDeserializers.FirstOrDefault(b => b.CanDeserialize(contentType, context));
 
             return bodyDeserializer != null ?
                 bodyDeserializer.Deserialize(contentType, context.Context.Request.Body, context) :
