@@ -6,6 +6,7 @@
     using System.Linq;
 
     using Nancy.Conventions;
+    using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
@@ -95,6 +96,22 @@
 
             // Then
             Assert.IsType<Response>(result);
+        }
+
+        [Fact]
+        public void Should_handle_RouteExecutionEarlyExitException_gracefully()
+        {
+            // Given
+            var response = new Response();
+            var route = new FakeRoute(c => { throw new RouteExecutionEarlyExitException(response); });
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext();
+
+            // When
+            var result = this.invoker.Invoke(route, parameters, context);
+
+            // Then
+            result.ShouldBeSameAs(response);
         }
     }
 }

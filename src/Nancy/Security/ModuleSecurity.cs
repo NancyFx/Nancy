@@ -3,6 +3,9 @@ namespace Nancy.Security
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.ErrorHandling;
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     /// <summary>
@@ -16,7 +19,19 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this INancyModule module)
         {
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
+            if (module.RouteExecuting())
+            {
+                var result = SecurityHooks.RequiresAuthentication().Invoke(module.Context);
+
+                if (result != null)
+                {
+                    throw new RouteExecutionEarlyExitException(result);
+                }
+            }
+            else
+            {
+                module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
+            }
         }
 
         /// <summary>
