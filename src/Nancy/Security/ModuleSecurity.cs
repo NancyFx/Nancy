@@ -19,19 +19,7 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this INancyModule module)
         {
-            if (module.RouteExecuting())
-            {
-                var result = SecurityHooks.RequiresAuthentication().Invoke(module.Context);
-
-                if (result != null)
-                {
-                    throw new RouteExecutionEarlyExitException(result);
-                }
-            }
-            else
-            {
-                module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
-            }
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication());
         }
 
         /// <summary>
