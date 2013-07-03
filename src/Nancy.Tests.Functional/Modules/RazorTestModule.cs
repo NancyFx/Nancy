@@ -15,6 +15,15 @@ namespace Nancy.Tests.Functional.Modules
 
                     return View["RazorPage"];
                 };
+
+            Get["/razor-viewbag-serialized"] = _ =>
+            {
+                this.ViewBag.Name = "Bob";
+
+                var serialized = this.ViewBag.Serializable();
+
+                return serialized;
+            };
         }
     }
 }
