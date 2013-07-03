@@ -19,7 +19,7 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this INancyModule module)
         {
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication());
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
         }
 
         /// <summary>
@@ -29,8 +29,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresClaims(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication());
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresClaims(requiredClaims));
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresClaims(requiredClaims), "Requires Claims");
         }
 
         /// <summary>
@@ -40,8 +40,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresAnyClaim(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication());
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims));
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
         }
 
         /// <summary>
@@ -51,8 +51,8 @@ namespace Nancy.Security
         /// <param name="isValid">Claims validator</param>
         public static void RequiresValidatedClaims(this INancyModule module, Func<IEnumerable<string>, bool> isValid)
         {
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication());
-            module.AddBeforeHookOrExecute(SecurityHooks.RequiresValidatedClaims(isValid));
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresValidatedClaims(isValid), "Requires Validated Claim");
         }
 
         /// <summary>

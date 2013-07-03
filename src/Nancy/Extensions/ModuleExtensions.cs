@@ -56,7 +56,8 @@ namespace Nancy.Extensions
         /// </summary>
         /// <param name="module">Current module</param>
         /// <param name="beforeDelegate">Delegate to add or execute</param>
-        public static void AddBeforeHookOrExecute(this INancyModule module, Func<NancyContext, Response> beforeDelegate)
+        /// <param name="earlyExitReason">Optional reason for the early exit (if necessary)</param>
+        public static void AddBeforeHookOrExecute(this INancyModule module, Func<NancyContext, Response> beforeDelegate, string earlyExitReason = null)
         {
             if (module.RouteExecuting())
             {
@@ -64,7 +65,7 @@ namespace Nancy.Extensions
 
                 if (result != null)
                 {
-                    throw new RouteExecutionEarlyExitException(result);
+                    throw new RouteExecutionEarlyExitException(result, earlyExitReason);
                 }
             }
             else
