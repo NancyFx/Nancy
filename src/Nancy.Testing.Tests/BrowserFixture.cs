@@ -16,6 +16,8 @@ namespace Nancy.Testing.Tests
     using FakeItEasy;
     using Nancy.Authentication.Forms;
 
+    using Xunit.Extensions;
+
     public class BrowserFixture
     {
         private readonly Browser browser;
@@ -401,6 +403,44 @@ namespace Nancy.Testing.Tests
             //Then
             result.Body.AsString().ShouldEqual("john++");
         }
+	
+	[Fact]
+        public void Should_return_JSON_serialized_form()
+        {
+            var response = browser.Post("/serializedform", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.FormValue("SomeString", "Hi");
+                with.FormValue("SomeInt", "1");
+                with.FormValue("SomeBoolean", "true");
+            });
+
+            var actualModel = response.Body.DeserializeJson<EchoModel>();
+
+            Assert.Equal("Hi", actualModel.SomeString);
+            Assert.Equal(1, actualModel.SomeInt);
+            Assert.Equal(true, actualModel.SomeBoolean);
+        }
+
+        [Fact]
+        public void Should_return_JSON_serialized_querystring()
+        {
+            var response = browser.Get("/serializedquerystring", (with) =>
+            {
+                with.HttpRequest();
+                with.Accept("application/json");
+                with.Query("SomeString", "Hi");
+                with.Query("SomeInt", "1");
+                with.Query("SomeBoolean", "true");
+            });
+
+            var actualModel = response.Body.DeserializeJson<EchoModel>();
+
+            Assert.Equal("Hi", actualModel.SomeString);
+            Assert.Equal(1, actualModel.SomeInt);
+            Assert.Equal(true, actualModel.SomeBoolean);
+        }
 
         public class EchoModel
         {
@@ -467,6 +507,20 @@ namespace Nancy.Testing.Tests
                 Post["/encoded"] = parameters => (string)this.Request.Form.name;
 
                 Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;
+
+                Post["/serializedform"] = _ =>
+                {
+                    var data = Request.Form.Serializable();
+
+                    return data;
+                };
+
+                Get["/serializedquerystring"] = _ =>
+                {
+                    var data = Request.Query.Serializable();
+
+                    return data;
+                };
             }
 
         }
