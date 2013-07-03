@@ -91,6 +91,7 @@
     <Compile Include="Modules\RazorTestModule.cs" />
     <Compile Include="Tests\AbsoluteUrlTests.cs" />
     <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
+    <Compile Include="Modules\SerializeTestModule.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Tests\ManualStaticContentTests.cs" />
     <Compile Include="Tests\PartialViewTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
+    <Compile Include="Tests\SerializeTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Testing\Nancy.Testing.csproj">

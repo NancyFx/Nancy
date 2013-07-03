@@ -377,34 +377,6 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void Should_encode_form()
-        {
-            //Given, When
-            var result = browser.Post("/encoded", with =>
-            {
-                with.HttpRequest();
-                with.FormValue("name", "john++");
-            });
-
-            //Then
-            result.Body.AsString().ShouldEqual("john++");
-        }
-
-        [Fact]
-        public void Should_encode_querystring()
-        {
-            //Given, When
-            var result = browser.Post("/encodedquerystring", with =>
-            {
-                with.HttpRequest();
-                with.Query("name", "john++");
-            });
-
-            //Then
-            result.Body.AsString().ShouldEqual("john++");
-        }
-	
-	[Fact]
         public void Should_return_JSON_serialized_form()
         {
             var response = browser.Post("/serializedform", (with) =>
@@ -440,6 +412,34 @@ namespace Nancy.Testing.Tests
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
             Assert.Equal(true, actualModel.SomeBoolean);
+        }
+
+        [Fact]
+        public void Should_encode_form()
+        {
+            //Given, When
+            var result = browser.Post("/encoded", with =>
+            {
+                with.HttpRequest();
+                with.FormValue("name", "john++");
+            });
+
+            //Then
+            result.Body.AsString().ShouldEqual("john++");
+        }
+
+        [Fact]
+        public void Should_encode_querystring()
+        {
+            //Given, When
+            var result = browser.Post("/encodedquerystring", with =>
+            {
+                with.HttpRequest();
+                with.Query("name", "john++");
+            });
+
+            //Then
+            result.Body.AsString().ShouldEqual("john++");
         }
 
         public class EchoModel
@@ -503,7 +503,7 @@ namespace Nancy.Testing.Tests
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
-
+ 
                 Post["/encoded"] = parameters => (string)this.Request.Form.name;
 
                 Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;
@@ -522,7 +522,6 @@ namespace Nancy.Testing.Tests
                     return data;
                 };
             }
-
         }
     }
 }
