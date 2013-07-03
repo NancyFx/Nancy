@@ -16,10 +16,19 @@
         /// <param name="response">
         /// The response.
         /// </param>
-        public RouteExecutionEarlyExitException(Response response)
+        /// <param name="reason">
+        /// The reason for the early exit.
+        /// </param>
+        public RouteExecutionEarlyExitException(Response response, string reason = null)
         {
-            Response = response;
+            this.Response = response;
+            this.Reason = reason ?? "(none)";
         }
+
+        /// <summary>
+        /// Gets or sets the reason for the early exit
+        /// </summary>
+        public string Reason { get; set; }
 
         /// <summary>
         /// Gets or sets the response

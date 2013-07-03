@@ -25,10 +25,16 @@
 
         public IDictionary<string, string> ResponseHeaders { get; set; }
 
-        public RequestTrace()
+        public RequestTrace(bool logActive)
         {
-            this.TraceLog = new TraceLog();
+            this.TraceLog = new TraceLog(logActive);
             this.Items = new Dictionary<string, object>();
+        }
+
+        public RequestTrace()
+            : this(StaticConfiguration.EnableRequestTracing)
+        {
+            
         }
     }
 }

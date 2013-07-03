@@ -42,6 +42,7 @@ namespace Nancy.Routing
             }
             catch (RouteExecutionEarlyExitException earlyExitException)
             {
+                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
                 result = earlyExitException.Response;
             }
 

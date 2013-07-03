@@ -6,6 +6,7 @@
     using System.Linq;
 
     using Nancy.Conventions;
+    using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
@@ -112,6 +113,22 @@
 
             // Then
             result.ShouldBeSameAs(response);
+        }
+
+        [Fact]
+        public void Should_log_the_reason_for_early_exits()
+        {
+            // Given
+            var response = new Response();
+            var route = new FakeRoute(c => { throw new RouteExecutionEarlyExitException(response, "Reason Testing"); });
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext { Trace = new RequestTrace(true) };
+
+            // When
+            var result = this.invoker.Invoke(route, parameters, context);
+
+            // Then
+            context.Trace.TraceLog.ToString().ShouldContain("Reason Testing");
         }
     }
 }

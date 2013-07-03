@@ -7,12 +7,17 @@ namespace Nancy.Diagnostics
     {
         private readonly StringBuilder log;
 
-        public TraceLog()
+        public TraceLog(bool enabled)
         {
-            if (StaticConfiguration.EnableRequestTracing)
+            if (enabled)
             {
                 this.log = new StringBuilder();
             }
+        }
+
+        public TraceLog()
+            : this(StaticConfiguration.EnableRequestTracing)
+        {
         }
 
         public void WriteLog(Action<StringBuilder> logDelegate)
