@@ -144,6 +144,8 @@
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="Diagnostics\ITraceLog.cs" />
+    <Compile Include="Diagnostics\NullLog.cs" />
     <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
     <Compile Include="ErrorHandling\RouteExecutionEarlyExitException.cs" />

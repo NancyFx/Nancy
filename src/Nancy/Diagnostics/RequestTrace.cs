@@ -9,7 +9,7 @@
 
         public Url RequestUrl { get; set; }
 
-        public TraceLog TraceLog { get; private set; }
+        public ITraceLog TraceLog { get; private set; }
 
         public IDictionary<string, object> Items { get; private set; }
 
@@ -27,7 +27,7 @@
 
         public RequestTrace(bool logActive)
         {
-            this.TraceLog = new TraceLog(logActive);
+            this.TraceLog = logActive ? (ITraceLog) new TraceLog() : new NullLog();
             this.Items = new Dictionary<string, object>();
         }
 

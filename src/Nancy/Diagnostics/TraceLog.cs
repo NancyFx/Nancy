@@ -3,21 +3,13 @@ namespace Nancy.Diagnostics
     using System;
     using System.Text;
 
-    public class TraceLog
+    public class TraceLog : ITraceLog
     {
         private readonly StringBuilder log;
 
-        public TraceLog(bool enabled)
-        {
-            if (enabled)
-            {
-                this.log = new StringBuilder();
-            }
-        }
-
         public TraceLog()
-            : this(StaticConfiguration.EnableRequestTracing)
         {
+            this.log = new StringBuilder();
         }
 
         public void WriteLog(Action<StringBuilder> logDelegate)
