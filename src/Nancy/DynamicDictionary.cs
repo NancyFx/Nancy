@@ -13,6 +13,7 @@
         private readonly IDictionary<string, dynamic> dictionary =
             new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
+       
         /// <summary>
         /// Returns an empty dynamic dictionary.
         /// </summary>
@@ -317,6 +318,21 @@
         private static string GetNeutralKey(string key)
         {
             return key.Replace("-", string.Empty);
+        }
+
+        public Dictionary<string, object> Serializable()
+        {
+            var data = new Dictionary<string, object>();
+
+            foreach (var item in dictionary)
+            {
+                var newKey = item.Key;
+                var newValue = ((DynamicDictionaryValue)item.Value).Value;
+
+                data.Add(newKey,newValue);
+            }
+
+            return data;
         }
     }
 }
