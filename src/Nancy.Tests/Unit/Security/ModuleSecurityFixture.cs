@@ -14,7 +14,7 @@ namespace Nancy.Tests.Unit.Security
     public class ModuleSecurityFixture
     {
         [Fact]
-        public void Should_add_an_item_to_the_start_of_the_begin_pipeline_when_RequiresAuthentication_enabled()
+        public void Should_add_an_item_to_the_end_of_the_begin_pipeline_when_RequiresAuthentication_enabled()
         {
             var module = new FakeHookedModule(A.Fake<BeforePipeline>());
 
@@ -24,7 +24,7 @@ namespace Nancy.Tests.Unit.Security
         }
 
         [Fact]
-        public void Should_add_two_items_to_the_start_of_the_begin_pipeline_when_RequiresClaims_enabled()
+        public void Should_add_two_items_to_the_end_of_the_begin_pipeline_when_RequiresClaims_enabled()
         {
             var module = new FakeHookedModule(A.Fake<BeforePipeline>());
 
@@ -34,13 +34,13 @@ namespace Nancy.Tests.Unit.Security
         }
 
         [Fact]
-        public void Should_add_two_items_to_the_start_of_the_begin_pipeline_when_RequiresValidatedClaims_enabled()
+        public void Should_add_two_items_to_the_end_of_the_begin_pipeline_when_RequiresValidatedClaims_enabled()
         {
             var module = new FakeHookedModule(A.Fake<BeforePipeline>());
 
             module.RequiresValidatedClaims(c => false);
 
-            A.CallTo(() => module.Before.AddItemToStartOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
+            A.CallTo(() => module.Before.AddItemToEndOfPipeline(A<Func<NancyContext, Response>>.Ignored)).MustHaveHappened(Repeated.Exactly.Twice);
         }
 
         [Fact]

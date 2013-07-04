@@ -20,6 +20,10 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>4.0</OldToolsVersion>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -121,11 +125,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="SecureModule.cs" />
     <Compile Include="DemoUserIdentity.cs" />
     <Compile Include="FormsAuthBootstrapper.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\UserModel.cs" />
-    <Compile Include="SecureModule.cs" />
+    <Compile Include="PartlySecureModule.cs" />
     <Compile Include="UserDatabase.cs" />
   </ItemGroup>
   <ItemGroup>

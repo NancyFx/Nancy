@@ -6,6 +6,7 @@ namespace Nancy.Routing
     using System.Linq;
 
     using Nancy.Conventions;
+    using Nancy.ErrorHandling;
     using Nancy.Extensions;
     using Nancy.Responses;
     using Nancy.Responses.Negotiation;
@@ -33,7 +34,17 @@ namespace Nancy.Routing
         /// <returns>A <see cref="Response"/> intance that represents the result of the invoked route.</returns>
         public Response Invoke(Route route, DynamicDictionary parameters, NancyContext context)
         {
-            var result = route.Invoke(parameters);
+            dynamic result;
+
+            try
+            {
+                result = route.Invoke(parameters);
+            }
+            catch (RouteExecutionEarlyExitException earlyExitException)
+            {
+                context.WriteTraceLog(sb => sb.AppendFormat("[DefaultRouteInvoker] Caught RouteExecutionEarlyExitException - reason {0}", earlyExitException.Reason));
+                result = earlyExitException.Response;
+            }
 
             if (result == null)
             {

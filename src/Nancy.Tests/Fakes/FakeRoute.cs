@@ -1,5 +1,7 @@
 namespace Nancy.Tests.Fakes
 {
+    using System;
+
     using Nancy.Routing;
 
     public class FakeRoute : Route
@@ -21,6 +23,12 @@ namespace Nancy.Tests.Fakes
                 this.ActionWasInvoked = true;
                 return response;
             };
+        }
+
+        public FakeRoute(Func<dynamic, dynamic> actionDelegate)
+            : base("GET", "/", null, actionDelegate)
+        {
+            
         }
     }
 }
