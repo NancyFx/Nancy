@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Text;
     using System.Xml.Serialization;
 
     public class DefaultXmlSerializer : ISerializer
@@ -35,8 +36,20 @@
         /// <returns>Serialised object</returns>
         public void Serialize<TModel>(string contentType, TModel model, Stream outputStream)
         {
-            var serializer = new XmlSerializer(typeof(TModel));
-            serializer.Serialize(outputStream, model);
+            try
+            {
+                var serializer = new XmlSerializer(typeof(TModel));
+                serializer.Serialize(outputStream, model);
+            }
+            catch (Exception exception)
+            {
+                if (!StaticConfiguration.DisableErrorTraces)
+                {
+                    var bytes = Encoding.UTF8.GetBytes(exception.Message);
+                    outputStream.Write(bytes, 0, exception.Message.Length);
+                }
+            }
+
         }
 
         private static bool IsXmlType(string contentType)

@@ -3,6 +3,7 @@ namespace Nancy.Testing.Tests
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.ObjectModel;
     using System.IO;
     using System.Text;
     using System.Linq;
@@ -14,6 +15,8 @@ namespace Nancy.Testing.Tests
     using Xunit;
     using FakeItEasy;
     using Nancy.Authentication.Forms;
+
+    using Xunit.Extensions;
 
     public class BrowserFixture
     {
@@ -338,6 +341,31 @@ namespace Nancy.Testing.Tests
             cookieValue.ShouldEqual(cookieContents);
         }
 
+        [Theory]
+        [InlineData("application/json")]
+        [InlineData("application/xml")]
+        public void Should_return_error_message_on_cyclical_exception(string accept)
+        {
+            //Given/When
+            var result = browser.Get("/cyclical", with => with.Accept(accept));
+
+            //Then
+            result.Body.AsString().ShouldNotBeEmpty();
+        }
+
+        [Theory]
+        [InlineData("application/json")]
+        [InlineData("application/xml")]
+        public void Should_return_no_error_message_on_cyclical_exception_when_disabled_error_trace(string accept)
+        {
+            //Given/When
+            StaticConfiguration.DisableErrorTraces = true;
+            var result = browser.Get("/cyclical", with => with.Accept(accept));
+
+            //Then
+            result.Body.AsString().ShouldBeEmpty();
+        }
+
         public class EchoModel
         {
             public string SomeString { get; set; }
@@ -345,10 +373,35 @@ namespace Nancy.Testing.Tests
             public bool SomeBoolean { get; set; }
         }
 
+        public class Category
+        {
+            public string Name { get; set; }
+            public ICollection<Product> Products { get; set; }
+        }
+
+        public class Product
+        {
+            public string Name { get; set; }
+            public Category Category { get; set; }
+        }
+
         public class EchoModule : NancyModule
         {
             public EchoModule()
             {
+                Get["/cyclical"] = ctx =>
+                {
+                    var category = new Category();
+                    category.Name = "Electronics";
+
+                    var product = new Product();
+                    product.Name = "iPad";
+                    product.Category = category;
+
+                    category.Products = new Collection<Product>(new List<Product>(new[] { product }));
+
+                    return product;
+                };
 
                 Post["/"] = ctx =>
                     {
