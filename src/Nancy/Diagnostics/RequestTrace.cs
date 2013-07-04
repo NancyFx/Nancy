@@ -9,7 +9,7 @@
 
         public Url RequestUrl { get; set; }
 
-        public TraceLog TraceLog { get; private set; }
+        public ITraceLog TraceLog { get; private set; }
 
         public IDictionary<string, object> Items { get; private set; }
 
@@ -25,10 +25,16 @@
 
         public IDictionary<string, string> ResponseHeaders { get; set; }
 
-        public RequestTrace()
+        public RequestTrace(bool logActive)
         {
-            this.TraceLog = new TraceLog();
+            this.TraceLog = logActive ? (ITraceLog) new TraceLog() : new NullLog();
             this.Items = new Dictionary<string, object>();
+        }
+
+        public RequestTrace()
+            : this(StaticConfiguration.EnableRequestTracing)
+        {
+            
         }
     }
 }

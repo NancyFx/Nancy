@@ -73,7 +73,7 @@ namespace Nancy
         /// <summary>
         /// Diagnostic request tracing
         /// </summary>
-        public RequestTrace Trace { get; private set; }
+        public RequestTrace Trace { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether control panel access is enabled for this request
