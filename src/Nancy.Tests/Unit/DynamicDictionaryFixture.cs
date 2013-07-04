@@ -1127,7 +1127,7 @@ namespace Nancy.Tests.Unit
             var input = new DynamicDictionary();
 
             //When
-            var result = input.Serializable();
+            var result = input.ToDictionary();
 
             //Then
             Assert.IsType(typeof(Dictionary<string, object>), result);
@@ -1137,13 +1137,12 @@ namespace Nancy.Tests.Unit
         public void Should_return_dynamic_values_as_objects()
         {
             //Given/When
-            var result = this.dictionary.Serializable();
+            var result = this.dictionary.ToDictionary();
 
             //Then
             Assert.IsType(typeof(long), GetLongValue(result["TestInt"]));
             Assert.IsType(typeof(string), GetStringValue(result["TestString"]));
         }
-
 
         [Fact]
         public void Should_return_dynamic_objects_as_objects()
@@ -1153,7 +1152,7 @@ namespace Nancy.Tests.Unit
             input.Add("Test", new { Title = "Fred", Number = 123 });
 
             //When
-            var result = input.Serializable();
+            var result = input.ToDictionary();
 
             //Then
             Assert.Equal("Fred", ((dynamic)result["Test"]).Title);

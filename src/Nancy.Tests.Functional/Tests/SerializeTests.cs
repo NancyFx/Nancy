@@ -9,7 +9,7 @@
 
     public class SerializeTests
     {
-         private readonly INancyBootstrapper bootstrapper;
+        private readonly INancyBootstrapper bootstrapper;
 
         private readonly Browser browser;
 
@@ -24,6 +24,7 @@
         [Fact]
         public void Should_return_JSON_serialized_form()
         {
+            //Given
             var response = browser.Post("/serializedform", (with) =>
             {
                 with.HttpRequest();
@@ -33,8 +34,10 @@
                 with.FormValue("SomeBoolean", "true");
             });
 
+            //When
             var actualModel = response.Body.DeserializeJson<EchoModel>();
 
+            //Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
             Assert.Equal(true, actualModel.SomeBoolean);
@@ -43,6 +46,7 @@
         [Fact]
         public void Should_return_JSON_serialized_querystring()
         {
+            //Given
             var response = browser.Get("/serializedquerystring", (with) =>
             {
                 with.HttpRequest();
@@ -52,8 +56,10 @@
                 with.Query("SomeBoolean", "true");
             });
 
+            //When
             var actualModel = response.Body.DeserializeJson<EchoModel>();
 
+            //Then
             Assert.Equal("Hi", actualModel.SomeString);
             Assert.Equal(1, actualModel.SomeInt);
             Assert.Equal(true, actualModel.SomeBoolean);
@@ -66,6 +72,4 @@
             public bool SomeBoolean { get; set; }
         }
     }
-
-
 }

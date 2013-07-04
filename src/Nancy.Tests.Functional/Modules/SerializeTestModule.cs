@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Nancy.Tests.Functional.Modules
+﻿namespace Nancy.Tests.Functional.Modules
 {
     public class SerializeTestModule : NancyModule
     {
@@ -11,14 +6,14 @@ namespace Nancy.Tests.Functional.Modules
         {
             Post["/serializedform"] = _ =>
             {
-                var data = Request.Form.Serializable();
+                var data = Request.Form.ToDictionary();
 
                 return data;
             };
 
             Get["/serializedquerystring"] = _ =>
             {
-                var data = Request.Query.Serializable();
+                var data = Request.Query.ToDictionary();
 
                 return data;
             };
