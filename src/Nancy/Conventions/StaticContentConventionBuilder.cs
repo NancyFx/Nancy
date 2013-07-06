@@ -40,8 +40,7 @@ namespace Nancy.Conventions
                 var path =
                     HttpUtility.UrlDecode(ctx.Request.Path);
 
-                var fileName = 
-                    Path.GetFileName(path);
+                var fileName = GetSafeFileName(path);
 
                 if (string.IsNullOrEmpty(fileName))
                 {
@@ -70,6 +69,19 @@ namespace Nancy.Conventions
 
                 return responseFactory.Invoke(ctx);
             };
+        }
+
+        private static string GetSafeFileName(string path)
+        {
+            try
+            {
+                return Path.GetFileName(path);
+            }
+            catch (Exception)
+            {
+            }
+                
+            return null;
         }
 
         private static string GetContentPath(string requestedPath, string contentPath)
