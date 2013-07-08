@@ -9,6 +9,7 @@
     using Nancy.IO;
     using Nancy.Responses;
     using Xunit;
+    using Xunit.Extensions;
 
     public class StaticContentConventionBuilderFixture
     {
@@ -224,6 +225,25 @@
             var result = this.GetStaticContent("css/css", "styles.css", headers: headers);
 
             result.ShouldEqual(string.Empty);
+        }
+
+        [Theory]
+        [InlineData('"')]
+        [InlineData('<')]
+        [InlineData('>')]
+        [InlineData('|')]
+        public void Should_not_throw_exception_when_path_contains_invalid_filename_character(char invalidCharacter)
+        {
+            // Given
+            var fileName = string.Format("name{0}.ext", invalidCharacter);
+
+            // When
+            var exception = Record.Exception(() => {
+                this.GetStaticContent("css/css", fileName);
+            });
+
+            // Then
+            exception.ShouldBeNull();
         }
 
         private string GetStaticContent(string virtualDirectory, string requestedFilename, string root = null, IDictionary<string, IEnumerable<string>> headers = null)
