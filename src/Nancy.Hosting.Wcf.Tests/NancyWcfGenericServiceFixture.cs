@@ -12,15 +12,15 @@ namespace Nancy.Hosting.Wcf.Tests
     using Xunit;
 
     /// <remarks>
-    /// These tests attempt to listen on port 1234, and so require either administrative 
+    /// These tests attempt to listen on port 56297, and so require either administrative 
     /// privileges or that a command similar to the following has been run with
     /// administrative privileges:
-    /// <code>netsh http add urlacl url=http://+:1234/base user=DOMAIN\user</code>
+    /// <code>netsh http add urlacl url=http://+:56297/base user=DOMAIN\user</code>
     /// See http://msdn.microsoft.com/en-us/library/ms733768.aspx for more information.
     /// </remarks>
     public class NancyWcfGenericServiceFixture
     {
-        private static readonly Uri BaseUri = new Uri("http://localhost:1234/base/");
+        private static readonly Uri BaseUri = new Uri("http://localhost:56297/base/");
 
         [SkippableFact]
         public void Should_be_able_to_get_any_header_from_selfhost()
@@ -83,7 +83,7 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
-            var baseUriWithoutTrailingSlash = new Uri("http://localhost:1234/base");
+            var baseUriWithoutTrailingSlash = new Uri("http://localhost:56297/base");
 
             // When
             using(CreateAndOpenWebServiceHost(fakeBootstrapper, baseUriWithoutTrailingSlash))
@@ -103,7 +103,7 @@ namespace Nancy.Hosting.Wcf.Tests
 
             // Then
             nancyRequest.Path.ShouldEqual("/test/stuff");
-            nancyRequest.Url.ToString().ShouldEqual("http://localhost:1234/base/test/stuff");
+            nancyRequest.Url.ToString().ShouldEqual("http://localhost:56297/base/test/stuff");
         }
 
         [SkippableFact]
@@ -177,7 +177,7 @@ namespace Nancy.Hosting.Wcf.Tests
             }
 
             // Then
-            Assert.Equal(1234, nancyRequest.Url.Port);
+            Assert.Equal(56297, nancyRequest.Url.Port);
             Assert.Equal("localhost", nancyRequest.Url.HostName);
             Assert.Equal("http", nancyRequest.Url.Scheme);
         }
