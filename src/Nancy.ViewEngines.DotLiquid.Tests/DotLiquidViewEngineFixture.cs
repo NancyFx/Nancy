@@ -266,7 +266,7 @@
         [Fact]
         public void When_rendering_model_inheriting_drop_should_preserve_camel_case()
         {
-            // Writing the test name is snake_case is slightly ironic, no?
+            // Writing the test name in snake_case is slightly ironic, no?
 
             // Given
             var location = new ViewLocationResult(
