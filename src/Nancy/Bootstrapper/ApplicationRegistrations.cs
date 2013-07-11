@@ -87,7 +87,7 @@
         /// will be used for the registration, else it will use <paramref name="defaultImplementation"/>.
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
-        /// <param name="defaultImplementation">The implementation of <typeparamref name="TRegistration"/> that will be use if no other implenmentation can be found.</param>
+        /// <param name="defaultImplementation">The implementation of <typeparamref name="TRegistration"/> that will be use if no other implementation can be found.</param>
         /// <remarks>
         /// When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in and it will also ignore
         /// the type specified by <paramref name="defaultImplementation"/>.
