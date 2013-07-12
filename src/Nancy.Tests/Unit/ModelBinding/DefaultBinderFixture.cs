@@ -562,6 +562,66 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_more_than_10_multiple_Form_properties_to_list()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+            context.Request.Form["IntProperty_0"] = "1";
+            context.Request.Form["IntProperty_01"] = "2";
+            context.Request.Form["IntProperty_02"] = "3";
+            context.Request.Form["IntProperty_03"] = "4";
+            context.Request.Form["IntProperty_04"] = "5";
+            context.Request.Form["IntProperty_05"] = "6";
+            context.Request.Form["IntProperty_06"] = "7";
+            context.Request.Form["IntProperty_07"] = "8";
+            context.Request.Form["IntProperty_08"] = "9";
+            context.Request.Form["IntProperty_09"] = "10";
+            context.Request.Form["IntProperty_10"] = "11";
+            context.Request.Form["IntProperty_11"] = "12";
+            context.Request.Form["IntProperty_12"] = "13";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().IntProperty.ShouldEqual(1);
+            result.Last().IntProperty.ShouldEqual(13);
+        }
+
+        [Fact]
+        public void Should_bind_more_than_10_multiple_Form_properties_to_list_should_work_with_padded_zeros()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+            context.Request.Form["IntProperty_00"] = "1";
+            context.Request.Form["IntProperty_01"] = "2";
+            context.Request.Form["IntProperty_02"] = "3";
+            context.Request.Form["IntProperty_03"] = "4";
+            context.Request.Form["IntProperty_04"] = "5";
+            context.Request.Form["IntProperty_05"] = "6";
+            context.Request.Form["IntProperty_06"] = "7";
+            context.Request.Form["IntProperty_07"] = "8";
+            context.Request.Form["IntProperty_08"] = "9";
+            context.Request.Form["IntProperty_09"] = "10";
+            context.Request.Form["IntProperty_10"] = "11";
+            context.Request.Form["IntProperty_11"] = "12";
+            context.Request.Form["IntProperty_12"] = "13";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().IntProperty.ShouldEqual(1);
+            result.Last().IntProperty.ShouldEqual(13);
+        }
+
+        [Fact]
         public void Should_bind_to_IEnumerable_from_Form()
         {
             //Given
