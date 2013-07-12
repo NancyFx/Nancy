@@ -21,6 +21,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
+        /// <param name="namingConvention">Determines the DotLiquid naming convention that will be used for filters and Drops. This will default to the <c>RubyNamingConvention</c>.</param>
         /// <remarks>The instance will use the <see cref="DefaultFileSystemFactory"/> internally.</remarks>
         public DotLiquidViewEngine(INamingConvention namingConvention)
             : this(new DefaultFileSystemFactory(), namingConvention)
@@ -31,6 +32,7 @@
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
         /// <param name="fileSystemFactory">Factory used to retrieve the <see cref="IFileSystem"/> instance that should be used by the engine.</param>
+        /// <param name="namingConvention">The naming convention used by filters and DotLiquid's <c>Drop</c>s</param>
         public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory, INamingConvention namingConvention)
         {
             this.fileSystemFactory = fileSystemFactory;
