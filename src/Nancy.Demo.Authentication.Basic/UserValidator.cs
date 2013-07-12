@@ -7,7 +7,11 @@
 	{
 		public IUserIdentity Validate(string username, string password)
 		{
-		    return new DemoUserIdentity {UserName = username};
+		   if (username == "demo" && password == "demo")
+		      return new DemoUserIdentity { UserName = username };
+
+         // Not recognised => anonymous.
+		   return null;
 		}
 	}
 }
