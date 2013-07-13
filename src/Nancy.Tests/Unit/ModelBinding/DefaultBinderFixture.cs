@@ -622,6 +622,35 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_more_than_10_multiple_Form_properties_to_list_starting_counting_from_1()
+        {
+            //Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+            context.Request.Form["IntProperty_01"] = "1";
+            context.Request.Form["IntProperty_02"] = "2";
+            context.Request.Form["IntProperty_03"] = "3";
+            context.Request.Form["IntProperty_04"] = "4";
+            context.Request.Form["IntProperty_05"] = "5";
+            context.Request.Form["IntProperty_06"] = "6";
+            context.Request.Form["IntProperty_07"] = "7";
+            context.Request.Form["IntProperty_08"] = "8";
+            context.Request.Form["IntProperty_09"] = "9";
+            context.Request.Form["IntProperty_10"] = "10";
+            context.Request.Form["IntProperty_11"] = "11";
+            context.Request.Form["IntProperty_12"] = "12";
+
+            // When
+            var result = (List<TestModel>)binder.Bind(context, typeof(List<TestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.First().IntProperty.ShouldEqual(1);
+            result.Last().IntProperty.ShouldEqual(13);
+        }
+
+        [Fact]
         public void Should_bind_to_IEnumerable_from_Form()
         {
             //Given
