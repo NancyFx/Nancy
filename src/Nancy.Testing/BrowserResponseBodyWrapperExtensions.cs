@@ -58,6 +58,18 @@ namespace Nancy.Testing
             var serializer = 
                 new JavaScriptSerializer();
 
+            return bodyWrapper.DeserializeJson<TModel>(serializer);
+        }
+
+        /// <summary>
+        /// Gets the deserialized representation of the JSON in the response body.
+        /// </summary>
+        /// <typeparam name="TModel">The type that the JSON response body should be deserialized to.</typeparam>
+        /// <param name="bodyWrapper">An instance of the <see cref="BrowserResponseBodyWrapper"/> that the extension should be invoked on.</param>
+        /// <param name="serializer">An instance of <see cref="JavaScriptSerializer"/>, controlling the deserialization.</param>
+        /// <value>A <typeparamref name="TModel"/> instance representation of the HTTP response body.</value>
+        public static TModel DeserializeJson<TModel>(this BrowserResponseBodyWrapper bodyWrapper, JavaScriptSerializer serializer)
+        {
             return serializer.Deserialize<TModel>(bodyWrapper.AsString());
         }
 
