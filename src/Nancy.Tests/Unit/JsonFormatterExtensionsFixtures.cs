@@ -25,7 +25,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_return_a_response_with_the_standard_json_content_type()
         {
-            response.ContentType.ShouldEqual("application/json; charset=utf8");
+            response.ContentType.ShouldEqual("application/json; charset=utf-8");
         }
 
         [Fact]
