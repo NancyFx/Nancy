@@ -26,8 +26,8 @@ namespace Nancy.ModelBinding
 
         private readonly static MethodInfo toListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
         private readonly static MethodInfo toArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
-        private readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
+        private static readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
+        private static readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
@@ -104,8 +104,7 @@ namespace Nancy.ModelBinding
 
             if (!bindingContext.Configuration.BodyOnly)
             {
-                if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||
-                    bindingContext.DestinationType.IsEnumerable())
+                if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||bindingContext.DestinationType.IsEnumerable())
                 {
                     var loopCount = GetBindingListInstanceCount(context);
                     var model = (IList)bindingContext.Model;
@@ -189,27 +188,30 @@ namespace Nancy.ModelBinding
         private int GetBindingListInstanceCount(NancyContext context)
         {
             var dictionary = context.Request.Form as IDictionary<string, object>;
+            
             if (dictionary == null)
             {
                 return 0;
             }
 
-            var matches = dictionary.Keys.Where(x => IsMatch(x) != -1).ToArray();
+            //Get a distinct list of indexes. So if you have:
+            // IntProperty_5
+            // StringProperty_5
+            // IntProperty_7
+            // StringProperty_8
+            //You'll end up with a list of 3 matches: 5,7,8
+
+            var matches = dictionary.Keys.Select(IsMatch).Where(x => x != -1).Distinct().ToArray();
 
             if (!matches.Any())
             {
                 return 0;
             }
 
-            var orderedFormParam = matches.OrderByDescending(y => y).First();
-
-            //because the index does not equal the length
-            var value = this.IsMatch(orderedFormParam) + 1;
-
-            return value;
+            return matches.Count();
         }
 
-        private int IsMatch(string item)
+        private static int IsMatch(string item)
         {
             var bracketMatch = bracketRegex.Match(item);
             if (bracketMatch.Success)
@@ -437,16 +439,27 @@ namespace Nancy.ModelBinding
         {
             if (index != -1)
             {
-                if (context.RequestData.ContainsKey(propertyName + '_' + index))
-                {
-                    return context.RequestData[propertyName + '_' + index];
-                }
+                //What is needed here is: I need to be able to see if a specific property has a value specified in the RequestData Where the index-id corresponds to the given index. 
+                //These indexes are not related so we need a dictionary of indexes with their corresponding index-id's. 
+                var indexindexes = context.RequestData.Keys.Select(IsMatch).OrderBy(i => i).Distinct().Select((k, i) => new KeyValuePair<int, int>(i, k)).ToDictionary(k => k.Key, v => v.Value);
 
-                if (context.RequestData.ContainsKey(propertyName + '[' + index + ']'))
+                //And then I need to find the corresponding property with that index.
+                if (indexindexes.ContainsKey(index))
                 {
-                    return context.RequestData[propertyName + '[' + index + ']'];
-                }
+                    //Uses an anymous method I don't have to do the IsMatch twice.
+                    var propertyValue =
+                        context.RequestData.Where(c =>
+                        {
+                            var indexId = IsMatch(c.Key);
+                            return c.Key.StartsWith(propertyName) && indexId != -1 && indexId == indexindexes[index];
+                        })
+                        .Select(k => k.Value)
+                        .FirstOrDefault();
 
+                    //And it could posibly not be there.
+                    return propertyValue ?? string.Empty;
+                }
+                
                 return String.Empty;
             }
             return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
