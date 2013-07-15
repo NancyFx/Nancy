@@ -29,7 +29,7 @@ namespace Nancy.Json
         {
             MaxJsonLength = 102400;
             MaxRecursions = 100;
-            DefaultCharset = "utf8";
+            DefaultCharset = "utf-8";
             Converters = new List<JavaScriptConverter>
                              {
                                  new TimeSpanConverter(),
