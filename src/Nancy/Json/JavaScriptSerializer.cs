@@ -72,7 +72,7 @@ namespace Nancy.Json
         {
         }
 #endif
-        internal JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit)
+        public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit)
         {
             _typeResolver = resolver;
 
