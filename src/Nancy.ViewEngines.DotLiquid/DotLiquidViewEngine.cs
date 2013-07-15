@@ -16,7 +16,7 @@
     public class DotLiquidViewEngine : IViewEngine
     {
         private readonly IFileSystemFactory fileSystemFactory;
-        private readonly INamingConvention _namingConvention;
+        private readonly INamingConvention namingConvention;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
@@ -36,7 +36,7 @@
         public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory, INamingConvention namingConvention)
         {
             this.fileSystemFactory = fileSystemFactory;
-            _namingConvention = namingConvention;
+            this.namingConvention = namingConvention;
         }
 
         /// <summary>
@@ -56,7 +56,7 @@
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
             Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext, this.Extensions);
-            Template.NamingConvention = _namingConvention;
+            Template.NamingConvention = this.namingConvention;
         }
 
         /// <summary>
