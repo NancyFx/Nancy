@@ -15,7 +15,7 @@ namespace Nancy.Authentication.Basic
 		/// </summary>
 		/// <param name="username">Username</param>
 		/// <param name="password">Password</param>
-		/// <returns>A value indicating whether the user was authenticated or not</returns>
+		/// <returns>A value representing the authenticated user, null if the user was not authenticated.</returns>
 		IUserIdentity Validate(string username, string password);
 	}
 }
