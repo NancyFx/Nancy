@@ -650,8 +650,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.First().IntProperty.ShouldEqual(1);
             result.Last().IntProperty.ShouldEqual(12);
         }
-
-
+        
         [Fact]
         public void Should_bind_more_than_10_multiple_Form_properties_to_list_starting_with_jagged_ids()
         {
@@ -682,7 +681,6 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.Last().IntProperty.ShouldEqual(9);
             result.Last().StringProperty.ShouldEqual("nine");
         }
-
 
         [Fact]
         public void Should_bind_to_IEnumerable_from_Form()
@@ -878,9 +876,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.DateProperty.Date.Day.ShouldEqual(day);
             result.DateProperty.Date.Year.ShouldEqual(year);
         }
-
-
-
+        
         [Fact]
         public void Should_be_able_to_bind_from_request_and_context_simultaneously()
         {

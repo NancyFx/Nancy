@@ -185,6 +185,19 @@ namespace Nancy.ModelBinding
                      bindingContext.Configuration.Overwrite));
         }
 
+        /// <summary>
+        /// Gets the number of distinct indexes from context:
+        ///
+        /// i.e:
+        ///  IntProperty_5
+        ///  StringProperty_5
+        ///  IntProperty_7
+        ///  StringProperty_8
+        ///  You'll end up with a list of 3 matches: 5,7,8
+        /// 
+        /// </summary>
+        /// <param name="context">Current Context </param>
+        /// <returns>An int containing the number of elements</returns>
         private int GetBindingListInstanceCount(NancyContext context)
         {
             var dictionary = context.Request.Form as IDictionary<string, object>;
@@ -194,21 +207,7 @@ namespace Nancy.ModelBinding
                 return 0;
             }
 
-            //Get a distinct list of indexes. So if you have:
-            // IntProperty_5
-            // StringProperty_5
-            // IntProperty_7
-            // StringProperty_8
-            //You'll end up with a list of 3 matches: 5,7,8
-
-            var matches = dictionary.Keys.Select(IsMatch).Where(x => x != -1).Distinct().ToArray();
-
-            if (!matches.Any())
-            {
-                return 0;
-            }
-
-            return matches.Count();
+            return dictionary.Keys.Select(IsMatch).Where(x => x != -1).Distinct().ToArray().Length;
         }
 
         private static int IsMatch(string item)
@@ -439,14 +438,15 @@ namespace Nancy.ModelBinding
         {
             if (index != -1)
             {
-                //What is needed here is: I need to be able to see if a specific property has a value specified in the RequestData Where the index-id corresponds to the given index. 
-                //These indexes are not related so we need a dictionary of indexes with their corresponding index-id's. 
-                var indexindexes = context.RequestData.Keys.Select(IsMatch).OrderBy(i => i).Distinct().Select((k, i) => new KeyValuePair<int, int>(i, k)).ToDictionary(k => k.Key, v => v.Value);
 
-                //And then I need to find the corresponding property with that index.
+                var indexindexes = context.RequestData.Keys.Select(IsMatch)
+                                           .OrderBy(i => i)
+                                           .Distinct()
+                                           .Select((k, i) => new KeyValuePair<int, int>(i, k))
+                                           .ToDictionary(k => k.Key, v => v.Value);
+
                 if (indexindexes.ContainsKey(index))
                 {
-                    //Uses an anymous method I don't have to do the IsMatch twice.
                     var propertyValue =
                         context.RequestData.Where(c =>
                         {
@@ -456,7 +456,6 @@ namespace Nancy.ModelBinding
                         .Select(k => k.Value)
                         .FirstOrDefault();
 
-                    //And it could posibly not be there.
                     return propertyValue ?? string.Empty;
                 }
                 
