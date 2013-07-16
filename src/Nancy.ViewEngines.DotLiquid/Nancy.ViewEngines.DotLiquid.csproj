@@ -107,6 +107,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DefaultFileSystemFactory.cs" />
+    <Compile Include="DotLiquidApplicationRegistrations.cs" />
     <Compile Include="DotLiquidViewEngine.cs" />
     <Compile Include="DynamicDrop.cs" />
     <Compile Include="IFileSystemFactory.cs" />
