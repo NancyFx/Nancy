@@ -26,8 +26,8 @@ namespace Nancy.ModelBinding
 
         private readonly static MethodInfo toListMethodInfo = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
         private readonly static MethodInfo toArrayMethodInfo = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
-        private readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
-        private readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
+        private static readonly Regex bracketRegex = new Regex(@"\[(\d+)\]\z", RegexOptions.Compiled);
+        private static readonly Regex underscoreRegex = new Regex(@"_(\d+)\z", RegexOptions.Compiled);
 
         public DefaultBinder(IEnumerable<ITypeConverter> typeConverters, IEnumerable<IBodyDeserializer> bodyDeserializers, IFieldNameConverter fieldNameConverter, BindingDefaults defaults)
         {
@@ -104,8 +104,7 @@ namespace Nancy.ModelBinding
 
             if (!bindingContext.Configuration.BodyOnly)
             {
-                if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||
-                    bindingContext.DestinationType.IsEnumerable())
+                if (bindingContext.DestinationType.IsCollection() || bindingContext.DestinationType.IsArray() ||bindingContext.DestinationType.IsEnumerable())
                 {
                     var loopCount = GetBindingListInstanceCount(context);
                     var model = (IList)bindingContext.Model;
@@ -186,30 +185,32 @@ namespace Nancy.ModelBinding
                      bindingContext.Configuration.Overwrite));
         }
 
+        /// <summary>
+        /// Gets the number of distinct indexes from context:
+        ///
+        /// i.e:
+        ///  IntProperty_5
+        ///  StringProperty_5
+        ///  IntProperty_7
+        ///  StringProperty_8
+        ///  You'll end up with a list of 3 matches: 5,7,8
+        /// 
+        /// </summary>
+        /// <param name="context">Current Context </param>
+        /// <returns>An int containing the number of elements</returns>
         private int GetBindingListInstanceCount(NancyContext context)
         {
             var dictionary = context.Request.Form as IDictionary<string, object>;
+            
             if (dictionary == null)
             {
                 return 0;
             }
 
-            var matches = dictionary.Keys.Where(x => IsMatch(x) != -1).ToArray();
-
-            if (!matches.Any())
-            {
-                return 0;
-            }
-
-            var orderedFormParam = matches.OrderByDescending(y => y).First();
-
-            //because the index does not equal the length
-            var value = this.IsMatch(orderedFormParam) + 1;
-
-            return value;
+            return dictionary.Keys.Select(IsMatch).Where(x => x != -1).Distinct().ToArray().Length;
         }
 
-        private int IsMatch(string item)
+        private static int IsMatch(string item)
         {
             var bracketMatch = bracketRegex.Match(item);
             if (bracketMatch.Success)
@@ -437,16 +438,27 @@ namespace Nancy.ModelBinding
         {
             if (index != -1)
             {
-                if (context.RequestData.ContainsKey(propertyName + '_' + index))
-                {
-                    return context.RequestData[propertyName + '_' + index];
-                }
 
-                if (context.RequestData.ContainsKey(propertyName + '[' + index + ']'))
-                {
-                    return context.RequestData[propertyName + '[' + index + ']'];
-                }
+                var indexindexes = context.RequestData.Keys.Select(IsMatch)
+                                           .OrderBy(i => i)
+                                           .Distinct()
+                                           .Select((k, i) => new KeyValuePair<int, int>(i, k))
+                                           .ToDictionary(k => k.Key, v => v.Value);
 
+                if (indexindexes.ContainsKey(index))
+                {
+                    var propertyValue =
+                        context.RequestData.Where(c =>
+                        {
+                            var indexId = IsMatch(c.Key);
+                            return c.Key.StartsWith(propertyName) && indexId != -1 && indexId == indexindexes[index];
+                        })
+                        .Select(k => k.Value)
+                        .FirstOrDefault();
+
+                    return propertyValue ?? string.Empty;
+                }
+                
                 return String.Empty;
             }
             return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
