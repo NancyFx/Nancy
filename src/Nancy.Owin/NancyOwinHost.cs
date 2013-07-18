@@ -23,8 +23,6 @@
 
         private readonly INancyEngine engine;
 
-        private readonly HashSet<HttpStatusCode> passThroughStatusCodes;
-
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
@@ -36,7 +34,6 @@
         {
             this.next = next;
             this.options = options;
-            this.passThroughStatusCodes = new HashSet<HttpStatusCode>(options.PassThroughStatusCodes);
             options.Bootstrapper.Initialise();
             this.engine = options.Bootstrapper.GetEngine();
         }
@@ -83,7 +80,7 @@
             this.engine.HandleRequest(
                 nancyRequest,
                 StoreEnvironment(environment),
-                RequestComplete(environment, this.passThroughStatusCodes, this.next, tcs), 
+                RequestComplete(environment, this.options.PerformPassThrough, this.next, tcs), 
                 RequestErrored(tcs));
 
             return tcs.Task;
@@ -99,7 +96,7 @@
         /// <returns>Delegate</returns>
         private static Action<NancyContext> RequestComplete(
             IDictionary<string, object> environment,
-            HashSet<HttpStatusCode> passThroughStatusCodes,
+            Func<NancyContext, bool> performPassThrough,
             Func<IDictionary<string, object>, Task> next,
             TaskCompletionSource<int> tcs)
         {
@@ -109,7 +106,7 @@
                     var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
 
                     var nancyResponse = context.Response;
-                    if (!passThroughStatusCodes.Contains(nancyResponse.StatusCode))
+                    if (!performPassThrough(context))
                     {
                         environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
 
