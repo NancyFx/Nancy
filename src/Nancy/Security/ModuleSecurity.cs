@@ -3,6 +3,9 @@ namespace Nancy.Security
     using System;
     using System.Collections.Generic;
     using System.Linq;
+
+    using Nancy.ErrorHandling;
+    using Nancy.Extensions;
     using Nancy.Responses;
 
     /// <summary>
@@ -16,7 +19,7 @@ namespace Nancy.Security
         /// <param name="module">Module to enable</param>
         public static void RequiresAuthentication(this INancyModule module)
         {
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
         }
 
         /// <summary>
@@ -26,8 +29,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresClaims(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresClaims(requiredClaims));
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresClaims(requiredClaims), "Requires Claims");
         }
 
         /// <summary>
@@ -37,8 +40,8 @@ namespace Nancy.Security
         /// <param name="requiredClaims">Claim(s) required</param>
         public static void RequiresAnyClaim(this INancyModule module, IEnumerable<string> requiredClaims)
         {
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAuthentication());
-            module.Before.AddItemToEndOfPipeline(SecurityHooks.RequiresAnyClaim(requiredClaims));
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAnyClaim(requiredClaims), "Requires Any Claim");
         }
 
         /// <summary>
@@ -48,8 +51,8 @@ namespace Nancy.Security
         /// <param name="isValid">Claims validator</param>
         public static void RequiresValidatedClaims(this INancyModule module, Func<IEnumerable<string>, bool> isValid)
         {
-            module.Before.AddItemToStartOfPipeline(SecurityHooks.RequiresValidatedClaims(isValid));
-            module.Before.AddItemToStartOfPipeline(SecurityHooks.RequiresAuthentication());
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresAuthentication(), "Requires Authentication");
+            module.AddBeforeHookOrExecute(SecurityHooks.RequiresValidatedClaims(isValid), "Requires Validated Claim");
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
 namespace Nancy.Tests.Unit
 {
-    using System;
     using System.IO;
     using System.Text;
     using FakeItEasy;
+
     using Nancy.Responses;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -25,7 +25,7 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_return_a_response_with_the_standard_json_content_type()
         {
-            response.ContentType.ShouldEqual("application/json");
+            response.ContentType.ShouldEqual("application/json; charset=utf-8");
         }
 
         [Fact]

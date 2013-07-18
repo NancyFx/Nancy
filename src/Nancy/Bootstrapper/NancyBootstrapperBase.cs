@@ -314,7 +314,7 @@
         }
 
         /// <summary>
-        /// Gets the diagnostics for intialisation
+        /// Gets the diagnostics for initialisation
         /// </summary>
         /// <returns>IDiagnostics implementation</returns>
         protected abstract IDiagnostics GetDiagnostics();
@@ -554,17 +554,19 @@
             }
         }
 
-
         private static IRootPathProvider GetRootPathProvider()
         {
-            var providerType = AppDomainAssemblyTypeScanner
+            var providerTypes = AppDomainAssemblyTypeScanner
                 .TypesOf<IRootPathProvider>(ScanMode.ExcludeNancy)
-                .SingleOrDefault();
+                .ToArray();
 
-            if (providerType == null)
+            if (providerTypes.Length > 1)
             {
-                providerType = typeof(DefaultRootPathProvider);
+                throw new MultipleRootPathProvidersLocatedException(providerTypes);
             }
+
+            var providerType = 
+                providerTypes.SingleOrDefault() ?? typeof(DefaultRootPathProvider);
 
             return Activator.CreateInstance(providerType) as IRootPathProvider;
         }

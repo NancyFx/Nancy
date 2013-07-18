@@ -108,6 +108,7 @@
     </Compile>
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\BootstrapperException.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\ContainerRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />
+    <Compile Include="Bootstrapper\MultipleRootPathProvidersLocatedException.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
     <Compile Include="Bootstrapper\ScanMode.cs" />
@@ -142,8 +144,11 @@
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
     <Compile Include="Diagnostics\DisabledDiagnostics.cs" />
     <Compile Include="Diagnostics\IDiagnostics.cs" />
+    <Compile Include="Diagnostics\ITraceLog.cs" />
+    <Compile Include="Diagnostics\NullLog.cs" />
     <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\IErrorHandler.cs" />
+    <Compile Include="ErrorHandling\RouteExecutionEarlyExitException.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
@@ -219,6 +224,7 @@
     <Compile Include="Routing\Trie\NodeDataExtensions.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNodeWithDefaultValue.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithLiteral.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyRegExCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\LiteralNode.cs" />

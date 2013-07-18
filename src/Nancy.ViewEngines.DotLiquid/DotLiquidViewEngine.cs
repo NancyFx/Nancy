@@ -16,13 +16,15 @@
     public class DotLiquidViewEngine : IViewEngine
     {
         private readonly IFileSystemFactory fileSystemFactory;
+        private readonly INamingConvention namingConvention;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
+        /// <param name="namingConvention">Determines the DotLiquid naming convention that will be used for filters and Drops. This will default to the <c>RubyNamingConvention</c>.</param>
         /// <remarks>The instance will use the <see cref="DefaultFileSystemFactory"/> internally.</remarks>
-        public DotLiquidViewEngine()
-            : this(new DefaultFileSystemFactory())
+        public DotLiquidViewEngine(INamingConvention namingConvention)
+            : this(new DefaultFileSystemFactory(), namingConvention)
         {
         }
 
@@ -30,9 +32,11 @@
         /// Initializes a new instance of the <see cref="DotLiquidViewEngine"/> class.
         /// </summary>
         /// <param name="fileSystemFactory">Factory used to retrieve the <see cref="IFileSystem"/> instance that should be used by the engine.</param>
-        public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory)
+        /// <param name="namingConvention">The naming convention used by filters and DotLiquid's <c>Drop</c>s</param>
+        public DotLiquidViewEngine(IFileSystemFactory fileSystemFactory, INamingConvention namingConvention)
         {
             this.fileSystemFactory = fileSystemFactory;
+            this.namingConvention = namingConvention;
         }
 
         /// <summary>
@@ -52,7 +56,7 @@
         public void Initialize(ViewEngineStartupContext viewEngineStartupContext)
         {
             Template.FileSystem = this.fileSystemFactory.GetFileSystem(viewEngineStartupContext, this.Extensions);
-            Template.NamingConvention = new CSharpNamingConvention();
+            Template.NamingConvention = this.namingConvention;
         }
 
         /// <summary>

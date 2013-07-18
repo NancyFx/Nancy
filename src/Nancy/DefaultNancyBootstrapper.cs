@@ -157,9 +157,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets the diagnostics for intialisation
+        /// Gets the diagnostics for initialisation
         /// </summary>
-        /// <returns>IDagnostics implementation</returns>
+        /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
         {
             return this.ApplicationContainer.Resolve<IDiagnostics>();
@@ -217,7 +217,7 @@ namespace Nancy
 
             var whitelist = new Type[] { };
 
-            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
+            container.AutoRegister(AppDomain.CurrentDomain.GetAssemblies().Where(a => !ignoredAssemblies.Any(ia => ia(a))), DuplicateImplementationActions.RegisterMultiple, t => t.Assembly != assembly || whitelist.Any(wt => wt == t));
         }
     }
 }

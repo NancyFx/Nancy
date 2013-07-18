@@ -3,8 +3,10 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.IO;
     using System.Net;
     using System.Linq;
+    using System.Security.Principal;
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
@@ -15,16 +17,17 @@
     /// </summary>
     /// <remarks>
     /// NancyHost uses <see cref="System.Net.HttpListener"/> internally. Therefore, it requires full .net 4.0 profile (not client profile)
-    /// to run. <see cref="Start"/> will launch a thread that will listen for requests and then process them. All processing is done
-    /// within a single thread - self hosting is not intended for production use, but rather as a development server.
-    /// NancyHost needs <see cref="SerializableAttribute"/> in order to be used from another appdomain under mono. Working with 
-    /// AppDomains is necessary if you want to unload the dependencies that come with NancyHost.
+    /// to run. <see cref="Start"/> will launch a thread that will listen for requests and then process them. Each request is processed in 
+    /// its own execution thread. NancyHost needs <see cref="SerializableAttribute"/> in order to be used from another appdomain under 
+    /// mono. Working with AppDomains is necessary if you want to unload the dependencies that come with NancyHost.
     /// </remarks>
     [Serializable]
     public class NancyHost : IDisposable
     {
+        private const int ACCESS_DENIED = 5;
+
         private readonly IList<Uri> baseUriList;
-        private readonly HttpListener listener;
+        private HttpListener listener;
         private readonly INancyEngine engine;
         private readonly HostConfiguration configuration;
 
@@ -69,7 +72,6 @@
         {
             this.configuration = configuration ?? new HostConfiguration();
             this.baseUriList = baseUris;
-            this.listener = new HttpListener();
 
             bootstrapper.Initialise();
             this.engine = bootstrapper.GetEngine();
@@ -113,12 +115,11 @@
         /// </summary>
         public void Start()
         {
-            this.AddPrefixes();
+            this.StartListener();
 
-            listener.Start();
             try
             {
-                listener.BeginGetContext(GotCallback, null);
+                this.listener.BeginGetContext(this.GotCallback, null);
             }
             catch (Exception e)
             {
@@ -128,17 +129,95 @@
             }
         }
 
+        private void StartListener()
+        {
+            if (this.TryStartListener())
+            {
+                return;
+            }
+
+            if (!this.configuration.UrlReservations.CreateAutomatically)
+            {
+                throw new AutomaticUrlReservationCreationFailureException(this.GetPrefixes(), this.GetUser());
+            }
+
+            if (!this.TryAddUrlReservations())
+            {
+                throw new InvalidOperationException("Unable to configure namespace reservation");
+            }
+
+            if (!TryStartListener())
+            {
+                throw new InvalidOperationException("Unable to start listener");
+            }
+        }
+
+        private bool TryStartListener()
+        {
+            try
+            {
+                // if the listener fails to start, it gets disposed; 
+                // so we need a new one, each time.
+                this.listener = new HttpListener();
+                foreach (var prefix in this.GetPrefixes())
+                {
+                    this.listener.Prefixes.Add(prefix);
+                }
+
+                this.listener.Start();
+                
+                return true;
+            }
+            catch (HttpListenerException e)
+            {
+                if (e.ErrorCode == ACCESS_DENIED)
+                {
+                    return false;
+                }
+
+                throw;
+            }
+        }
+
+        private bool TryAddUrlReservations()
+        {
+            var user = this.GetUser();
+
+            foreach (var prefix in this.GetPrefixes())
+            {
+                if (!NetSh.AddUrlAcl(prefix, user))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private string GetUser()
+        {
+            if (!string.IsNullOrWhiteSpace(this.configuration.UrlReservations.User))
+            {
+                return this.configuration.UrlReservations.User;
+            }
+
+            return WindowsIdentity.GetCurrent().Name;
+        }
+
         /// <summary>
         /// Stop listening for incoming requests.
         /// </summary>
         public void Stop()
         {
-            listener.Stop();
+            if (this.listener.IsListening)
+            {
+                listener.Stop();
+            }
         }
 
-        private void AddPrefixes()
+        private IEnumerable<string> GetPrefixes()
         {
-            foreach (var baseUri in baseUriList)
+            foreach (var baseUri in this.baseUriList)
             {
                 var prefix = baseUri.ToString();
 
@@ -147,15 +226,13 @@
                     prefix = prefix.Replace("localhost", "+");
                 }
 
-                listener.Prefixes.Add(prefix);
+                yield return prefix;
             }
         }
 
         private Request ConvertRequestToNancyRequest(HttpListenerRequest request)
         {
-            var asyncResult = request.BeginGetClientCertificate(null, null);
-
-            var baseUri = baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
+            var baseUri = this.baseUriList.FirstOrDefault(uri => uri.IsCaseInsensitiveBaseOf(request.Url));
 
             if (baseUri == null)
             {
@@ -167,7 +244,8 @@
 
             var relativeUrl = baseUri.MakeAppLocalPath(request.Url);
 
-            var nancyUrl = new Url {
+            var nancyUrl = new Url 
+            {
                 Scheme = request.Url.Scheme,
                 HostName = request.Url.Host,
                 Port = request.Url.IsDefaultPort ? null : (int?)request.Url.Port,
@@ -178,11 +256,15 @@
             };
 
             byte[] certificate = null;
-            var x509Certificate = request.EndGetClientCertificate(asyncResult);
 
-            if (x509Certificate != null)
+            if (this.configuration.EnableClientCertificates)
             {
-                certificate = x509Certificate.RawData;
+                var x509Certificate = request.GetClientCertificate();
+
+                if (x509Certificate != null)
+                {
+                    certificate = x509Certificate.RawData;
+                }
             }
 
             return new Request(
@@ -194,7 +276,7 @@
                 certificate);
         }
 
-        private static void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
+        private void ConvertNancyResponseToResponse(Response nancyResponse, HttpListenerResponse response)
         {
             foreach (var header in nancyResponse.Headers)
             {
@@ -212,9 +294,43 @@
             }
             response.StatusCode = (int)nancyResponse.StatusCode;
 
+            if (configuration.AllowChunkedEncoding)
+            {
+                OutputWithDefaultTransferEncoding(nancyResponse, response);
+            }
+            else
+            {
+                OutputWithContentLength(nancyResponse, response);
+            }
+        }
+
+        private static void OutputWithDefaultTransferEncoding(Response nancyResponse, HttpListenerResponse response)
+        {
             using (var output = response.OutputStream)
             {
                 nancyResponse.Contents.Invoke(output);
+            }
+        }
+
+        private static void OutputWithContentLength(Response nancyResponse, HttpListenerResponse response)
+        {
+            byte[] buffer;
+            using (var memoryStream = new MemoryStream())
+            {
+                nancyResponse.Contents.Invoke(memoryStream);
+                buffer = memoryStream.ToArray();
+            }
+
+            response.SendChunked = false;
+            response.ContentLength64 = buffer.Length;
+
+            using (var output = response.OutputStream)
+            {
+                using (var writer = new BinaryWriter(output))
+                {
+                    writer.Write(buffer);
+                    writer.Flush();
+                }
             }
         }
 
@@ -249,9 +365,9 @@
         {
             try
             {
-                var ctx = listener.EndGetContext(ar);
-                listener.BeginGetContext(GotCallback, null);
-                Process(ctx);
+                var ctx = this.listener.EndGetContext(ar);
+                this.listener.BeginGetContext(this.GotCallback, null);
+                this.Process(ctx);
             }
             catch (Exception e)
             {
@@ -259,7 +375,7 @@
 
                 try
                 {
-                    listener.BeginGetContext(GotCallback, null);
+                    this.listener.BeginGetContext(this.GotCallback, null);
                 }
                 catch
                 {
@@ -272,8 +388,8 @@
         {
             try
             {
-                var nancyRequest = ConvertRequestToNancyRequest(ctx.Request);
-                using (var nancyContext = engine.HandleRequest(nancyRequest))
+                var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
+                using (var nancyContext = this.engine.HandleRequest(nancyRequest))
                 {
                     try
                     {

@@ -57,7 +57,7 @@ namespace Nancy.Tests.Functional.Tests
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal("true", result.Body.AsString());
-            Assert.Equal("application/json", result.Context.Response.ContentType);
+            Assert.Equal("application/json; charset=utf-8", result.Context.Response.ContentType);
         }
 
         [Fact]
@@ -71,7 +71,7 @@ namespace Nancy.Tests.Functional.Tests
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
             Assert.Equal("myCallback(true);", result.Body.AsString());
-            Assert.Equal("application/javascript", result.Context.Response.ContentType);
+            Assert.Equal("application/javascript; charset=utf-8", result.Context.Response.ContentType);
         }
     }
 }

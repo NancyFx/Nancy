@@ -263,9 +263,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         /// <summary>
-        /// Gets the diagnostics for intialisation
+        /// Gets the diagnostics for initialisation
         /// </summary>
-        /// <returns>IDagnostics implementation</returns>
+        /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
         {
             return this.FakeDiagnostics ?? new DisabledDiagnostics();
@@ -386,9 +386,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         /// <summary>
-        /// Gets the diagnostics for intialisation
+        /// Gets the diagnostics for initialisation
         /// </summary>
-        /// <returns>IDagnostics implementation</returns>
+        /// <returns>IDiagnostics implementation</returns>
         protected override IDiagnostics GetDiagnostics()
         {
             return new DisabledDiagnostics();

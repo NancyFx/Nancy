@@ -114,6 +114,19 @@
             // Then
             response.Filename.ShouldEqual(Path.GetFileName(this.imagePath));
         }
+
+        [Fact]
+        public void Should_contain_etag_in_response_header()
+        {
+            // Given, when
+            var response =
+                new GenericFileResponse(this.imagePath, imageContentType);
+
+            // Then
+            response.Headers["ETag"].ShouldStartWith("\"");
+            response.Headers["ETag"].ShouldEndWith("\"");
+        }
+
 		
 		private static IEnumerable<byte> GetResponseContents(Response response)
 		{

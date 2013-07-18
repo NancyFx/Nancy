@@ -74,7 +74,7 @@ namespace Nancy.Authentication.Forms
         {
             get
             {
-                if (string.IsNullOrEmpty(this.RedirectUrl))
+                if (!this.DisableRedirect && string.IsNullOrEmpty(this.RedirectUrl))
                 {
                     return false;
                 }

@@ -81,18 +81,15 @@ namespace Nancy
         {
             try
             {
-                var assembly = AppDomainAssemblyTypeScanner.TypesOf<INancyModule>(true).FirstOrDefault().Assembly;
+                //Get all non-nancy assemblies, and select the custom attributes
+                var assembliesInDebug
+                    = AppDomainAssemblyTypeScanner.TypesOf<INancyModule>(ScanMode.ExcludeNancy)
+                                                  .Select(x => x.Assembly.GetCustomAttributes(typeof(DebuggableAttribute), true))
+                                                  .Where(x => x.Length != 0);
 
-                var attributes = assembly.GetCustomAttributes(typeof(DebuggableAttribute), true);
-
-                if (attributes.Length == 0)
-                {
-                    return false;
-                }
-
-                var d = (DebuggableAttribute)attributes[0];
-
-                return d.IsJITTrackingEnabled;
+                //if there are any, then return the IsJITTrackingEnabled
+                //else if the collection is empty it returns false
+                return assembliesInDebug.Any(d => ((DebuggableAttribute)d[0]).IsJITTrackingEnabled);
             }
             catch (Exception)
             {

@@ -100,9 +100,13 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="UrlReservations.cs" />
+    <Compile Include="UacHelper.cs" />
     <Compile Include="FileSystemRootPathProvider.cs" />
     <Compile Include="HostConfiguration.cs" />
     <Compile Include="NancyHost.cs" />
+    <Compile Include="NetSh.cs" />
+    <Compile Include="AutomaticUrlReservationCreationFailureException.cs" />
     <Compile Include="UriExtensions.cs">
       <SubType>Code</SubType>
     </Compile>

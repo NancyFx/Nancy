@@ -4,6 +4,7 @@
     using System.IO;
     using FakeItEasy;
     using global::DotLiquid;
+    using global::DotLiquid.NamingConventions;
     using Nancy.Tests;
     using Xunit;
     using System.Collections.Generic;
@@ -13,11 +14,13 @@
         private readonly IRenderContext renderContext;
         private readonly IFileSystemFactory factory;
         private readonly DotLiquidViewEngine engine;
+        private readonly DotLiquidViewEngine engineCSharp;
 
         public DotLiquidViewEngineFixture()
         {
             this.factory = A.Fake<IFileSystemFactory>();
-            this.engine = new DotLiquidViewEngine(this.factory);
+            this.engine = new DotLiquidViewEngine(this.factory, new RubyNamingConvention());
+            this.engineCSharp = new DotLiquidViewEngine(this.factory, new CSharpNamingConvention());
 
             var cache = A.Fake<IViewCache>();
             A.CallTo(() => cache.GetOrAdd(A<ViewLocationResult>.Ignored, A<Func<ViewLocationResult, Template>>.Ignored))
@@ -73,6 +76,110 @@
                 CreateContext(new[] { location });
 
             this.engine.Initialize(currentStartupContext);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
+
+        [Fact]
+        public void RenderView_with_uppercase_filter_should_return_uppercase_string()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'Test' %}<h1>Hello Mr. {{ name | upcase }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. TEST</h1>");
+        }
+
+        [Fact]
+        public void RenderView_with_lowercase_filter_should_return_lowercase_string()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'Test' %}<h1>Hello Mr. {{ name | downcase }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engine.Initialize(currentStartupContext);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. test</h1>");
+        }
+
+        [Fact]
+        public void RenderView_with_uppercase_filter_should_return_uppercase_string_using_csharp_convention()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'Test' %}<h1>Hello Mr. {{ name | Upcase }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engineCSharp.Initialize(currentStartupContext);
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+            response.Contents.Invoke(stream);
+
+            // Then
+            stream.ShouldEqual("<h1>Hello Mr. TEST</h1>");
+        }
+
+        [Fact]
+        public void RenderView_with_lowercase_filter_should_return_lowercase_string_using_csharp_convention()
+        {
+            // Given
+            var location = new ViewLocationResult(
+                string.Empty,
+                string.Empty,
+                "liquid",
+                () => new StringReader(@"{% assign name = 'Test' %}<h1>Hello Mr. {{ name | Downcase }}</h1>")
+            );
+
+            var currentStartupContext =
+                CreateContext(new[] { location });
+
+            this.engineCSharp.Initialize(currentStartupContext);
 
             var stream = new MemoryStream();
 
@@ -214,7 +321,7 @@
         [Fact]
         public void When_rendering_model_inheriting_drop_should_preserve_camel_case()
         {
-            // Writing the test name is snake_case is slightly ironic, no?
+            // Writing the test name in snake_case is slightly ironic, no?
 
             // Given
             var location = new ViewLocationResult(

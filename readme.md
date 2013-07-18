@@ -77,4 +77,15 @@ Copyright © 2010 Andreas Håkansson, Steven Robbins and contributors
 
 Nancy is licensed under [MIT](http://www.opensource.org/licenses/mit-license.php "Read more about the MIT license form"). Refer to license.txt for more information.
 
+## CI Builds
+
+### TC (.net) 
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt314%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt314&guest=1)
+
+### Travis (Mono 2.x) 
 [![Build Status](https://travis-ci.org/NancyFx/Nancy.png?branch=master)](https://travis-ci.org/NancyFx/Nancy)
+
+### TC (Mono 3.x) 
+[![Build Status](http://teamcity.codebetter.com/app/rest/builds/buildType:%28id:bt596%29/statusIcon)](http://teamcity.codebetter.com/viewType.html?buildTypeId=bt596&guest=1)
+
+

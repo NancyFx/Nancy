@@ -42,13 +42,17 @@ namespace Nancy.Bootstrapper
 
         /// <summary>
         /// The default assemblies for scanning.
-        /// Includes the nancy assembly and anythign referencing a nancy assembly
+        /// Includes the nancy assembly and anything referencing a nancy assembly
         /// </summary>
         public static Func<Assembly, bool>[] DefaultAssembliesToScan = new Func<Assembly, bool>[]
-                                          {
-                                              x => x == nancyAssembly,
-                                              x => x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase))
-                                          };
+        {
+            x => x == nancyAssembly,
+            x =>
+            {
+                return !x.GetName().Name.StartsWith("Nancy.Testing",StringComparison.OrdinalIgnoreCase) &&
+                    x.GetReferencedAssemblies().Any(r => r.Name.StartsWith("Nancy", StringComparison.OrdinalIgnoreCase));
+            }
+        };
 
         /// <summary>
         /// Gets or sets a set of rules for which assemblies are scanned

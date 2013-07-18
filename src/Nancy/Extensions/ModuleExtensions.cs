@@ -4,6 +4,8 @@ namespace Nancy.Extensions
     using System.Diagnostics;
     using System.Linq;
     using System.Text.RegularExpressions;
+
+    using Nancy.ErrorHandling;
     using Nancy.Helpers;
 
     public static class ModuleExtensions
@@ -36,5 +38,40 @@ namespace Nancy.Extensions
             return typeName;
         }
 
+        /// <summary>
+        /// Returns a boolean indicating whether the route is executing, or whether the module is
+        /// being constructed.
+        /// </summary>
+        /// <param name="module">The module instance</param>
+        /// <returns>True if the route is being executed, false if the module is being constructed</returns>
+        public static bool RouteExecuting(this INancyModule module)
+        {
+            return module.Context != null;
+        }
+
+        /// <summary>
+        /// Adds the before delegate to the Before pipeline if the module is not currently executing,
+        /// or executes the delegate directly and returns any response returned if it is.
+        /// Uses <see cref="RouteExecutionEarlyExitException"/>
+        /// </summary>
+        /// <param name="module">Current module</param>
+        /// <param name="beforeDelegate">Delegate to add or execute</param>
+        /// <param name="earlyExitReason">Optional reason for the early exit (if necessary)</param>
+        public static void AddBeforeHookOrExecute(this INancyModule module, Func<NancyContext, Response> beforeDelegate, string earlyExitReason = null)
+        {
+            if (module.RouteExecuting())
+            {
+                var result = beforeDelegate.Invoke(module.Context);
+
+                if (result != null)
+                {
+                    throw new RouteExecutionEarlyExitException(result, earlyExitReason);
+                }
+            }
+            else
+            {
+                module.Before.AddItemToEndOfPipeline(beforeDelegate);
+            }
+        }
     }
 }
