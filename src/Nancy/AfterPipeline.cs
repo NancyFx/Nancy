@@ -1,37 +1,45 @@
 ﻿namespace Nancy
 {
     using System;
-    using System.Linq;
+    using System.Collections.Generic;
+    using System.Threading;
+    using System.Threading.Tasks;
 
-    /// <summary>
-    /// <para>
-    /// A simple pipleline for post-request hooks.
-    /// </para>
-    /// <para>
-    /// Can be implictly cast to/from the post-request hook delegate signature
-    /// (Action NancyContext) for assigning to NancyEngine or for building
-    /// composite pipelines.
-    /// </para>
-    /// </summary>
-    public class AfterPipeline : NamedPipelineBase<Action<NancyContext>>
+    public class AfterPipeline : AsyncNamedPipelineBase<Func<NancyContext, CancellationToken, Task>, Action<NancyContext>>
     {
+        private static readonly Task completeTask;
+
+        static AfterPipeline()
+        {
+            var tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(new object());
+            completeTask = tcs.Task;
+        }
+
         public AfterPipeline()
         {
         }
 
-        public AfterPipeline(int capacity) : base(capacity)
+        public AfterPipeline(int capacity)
+            : base(capacity)
         {
         }
 
-        public static implicit operator Action<NancyContext>(AfterPipeline pipeline)
+        public static implicit operator Func<NancyContext, CancellationToken, Task>(AfterPipeline pipeline)
         {
             return pipeline.Invoke;
         }
 
-        public static implicit operator AfterPipeline(Action<NancyContext> action)
+        public static implicit operator AfterPipeline(Func<NancyContext, CancellationToken, Task> func)
         {
             var pipeline = new AfterPipeline();
-            pipeline.AddItemToEndOfPipeline(action);
+            pipeline.AddItemToEndOfPipeline(func);
+            return pipeline;
+        }
+
+        public static AfterPipeline operator +(AfterPipeline pipeline, Func<NancyContext, CancellationToken, Task> func)
+        {
+            pipeline.AddItemToEndOfPipeline(func);
             return pipeline;
         }
 
@@ -51,12 +59,106 @@
             return pipelineToAddTo;
         }
 
-        public void Invoke(NancyContext context)
+        public Task Invoke(NancyContext context, CancellationToken cancellationToken)
         {
-            foreach (var pipelineItem in this.PipelineDelegates)
+            var tcs = new TaskCompletionSource<object>();
+
+            var enumerator = this.PipelineDelegates.GetEnumerator();
+
+            if (enumerator.MoveNext())
             {
-                pipelineItem.Invoke(context);
+                ExecuteTasksInternal(context, cancellationToken, enumerator, tcs);
             }
+            else
+            {
+                tcs.SetResult(null);
+            }
+
+            return tcs.Task;
+        }
+
+        private static void ExecuteTasksInternal(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task>> enumerator, TaskCompletionSource<object> tcs)
+        {
+            while (true)
+            {
+                var current = enumerator.Current.Invoke(context, cancellationToken);
+
+                if (current.Status == TaskStatus.Created)
+                {
+                    current.Start();
+                }
+
+                if (current.IsCompleted || current.IsFaulted)
+                {
+                    // Observe the exception, even though we ignore it, otherwise
+                    // we will blow up later
+                    var exception = current.Exception;
+
+                    if (enumerator.MoveNext())
+                    {
+                        continue;
+                    }
+
+                    if (current.IsFaulted)
+                    {
+                        tcs.SetException(current.Exception);
+                    }
+                    else
+                    {
+                        tcs.SetResult(null);
+                    }
+
+                    break;
+                }
+
+                current.ContinueWith(ExecuteTasksContinuation(context, cancellationToken, enumerator, tcs), TaskContinuationOptions.ExecuteSynchronously);
+                break;
+            }
+        }
+
+        private static Action<Task> ExecuteTasksContinuation(NancyContext context, CancellationToken cancellationToken, IEnumerator<Func<NancyContext, CancellationToken, Task>> enumerator, TaskCompletionSource<object> tcs)
+        {
+            return current =>
+            {
+                // Observe the exception, even though we ignore it, otherwise
+                // we will blow up later
+                var exception = current.Exception;
+
+                if (enumerator.MoveNext())
+                {
+                    ExecuteTasksInternal(context, cancellationToken, enumerator, tcs);
+                }
+                else
+                {
+                    tcs.SetResult(null);
+                }
+            };
+        }
+
+        /// <summary>
+        /// Wraps a sync delegate into it's async form
+        /// </summary>
+        /// <param name="syncDelegate">Sync delegate instance</param>
+        /// <returns>Async delegate instance</returns>
+        protected override Func<NancyContext, CancellationToken, Task> Wrap(Action<NancyContext> syncDelegate)
+        {
+            return (ctx, ct) =>
+            {
+                try
+                {
+                    syncDelegate.Invoke(ctx);
+
+                    return completeTask;
+                }
+                catch (Exception e)
+                {
+                    var tcs = new TaskCompletionSource<object>();
+
+                    tcs.SetException(e);
+
+                    return tcs.Task;
+                }
+            };
         }
     }
 }

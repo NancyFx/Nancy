@@ -6,6 +6,8 @@
     using System.Linq;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
@@ -95,7 +97,7 @@
                     continue;
                 }
 
-                var routeDelegate = (Func<dynamic, dynamic>)Delegate.CreateDelegate(typeof(Func<dynamic, dynamic>), this, method.Name);
+                var routeDelegate = WrapFunc((Func<dynamic, dynamic>)Delegate.CreateDelegate(typeof(Func<dynamic, dynamic>), this, method.Name));
 
                 var filter = this.GetFilter(method.Name);
 
@@ -118,6 +120,32 @@
             }
 
             return (Func<NancyContext, bool>)Delegate.CreateDelegate(typeof(Func<NancyContext, bool>), this, method.Name);
+        }
+
+        /// <summary>
+        /// Wraps a sync delegate in a delegate that returns a task
+        /// </summary>
+        /// <param name="syncFunc">Sync delegate</param>
+        /// <returns>Task wrapped version</returns>
+        private static Func<dynamic, CancellationToken, Task<dynamic>> WrapFunc(Func<object, object> syncFunc)
+        {
+            return (p, ct) =>
+            {
+                var tcs = new TaskCompletionSource<dynamic>();
+
+                try
+                {
+                    var result = syncFunc.Invoke(p);
+
+                    tcs.SetResult(result);
+                }
+                catch (Exception e)
+                {
+                    tcs.SetException(e);
+                }
+
+                return tcs.Task;
+            };
         }
 
         /// <summary>

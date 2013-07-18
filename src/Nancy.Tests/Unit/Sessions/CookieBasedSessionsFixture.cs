@@ -3,6 +3,7 @@ namespace Nancy.Tests.Unit.Sessions
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
+    using System.Threading;
     using System.Web;
 
     using Nancy.Cryptography;
@@ -183,9 +184,9 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
             var nancyContext = new NancyContext() { Request = request, Response = response };
-            beforePipeline.Invoke(nancyContext);
+            beforePipeline.Invoke(nancyContext, new CancellationToken());
 
-            afterPipeline.Invoke(nancyContext);
+            afterPipeline.Invoke(nancyContext, new CancellationToken());
 
             response.Cookies.Count.ShouldEqual(0);
         }
@@ -203,10 +204,10 @@ namespace Nancy.Tests.Unit.Sessions
             A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey1=value1")).Returns("key1=value1;");
             var response = A.Fake<Response>();
             var nancyContext = new NancyContext() { Request = request, Response = response };
-            beforePipeline.Invoke(nancyContext);
+            beforePipeline.Invoke(nancyContext, new CancellationToken());
             request.Session["Testing"] = "Test";
 
-            afterPipeline.Invoke(nancyContext);
+            afterPipeline.Invoke(nancyContext, new CancellationToken());
 
             response.Cookies.Count.ShouldEqual(1);
         }
@@ -252,7 +253,7 @@ namespace Nancy.Tests.Unit.Sessions
             var request = CreateRequest("encryptedkey1=value1");
             var nancyContext = new NancyContext() { Request = request };
 
-            beforePipeline.Invoke(nancyContext);
+            beforePipeline.Invoke(nancyContext, new CancellationToken());
 
             A.CallTo(() => fakeFormatter.Deserialize(A<string>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }

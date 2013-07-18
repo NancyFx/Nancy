@@ -3,7 +3,7 @@ namespace Nancy.Tests.Unit.Security
 {
     using System;
     using System.Collections.Generic;
-
+    using System.Threading;
     using FakeItEasy;
     using Nancy.Responses;
     using Nancy.Security;
@@ -49,10 +49,10 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             module.RequiresAuthentication();
 
-            var result = module.Before.Invoke(new NancyContext());
+            var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -65,11 +65,11 @@ namespace Nancy.Tests.Unit.Security
                               {
                                   CurrentUser = GetFakeUser(String.Empty)
                               };
-            
-            var result = module.Before.Invoke(context);
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            var result = module.Before.Invoke(context, new CancellationToken());
+
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -83,9 +83,9 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser("Bob")
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
         [Fact]
@@ -94,10 +94,10 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             module.RequiresClaims(new[] { string.Empty });
 
-            var result = module.Before.Invoke(new NancyContext());
+            var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -110,10 +110,10 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser(String.Empty)
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -122,10 +122,10 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             module.RequiresAnyClaim(new[] { string.Empty });
 
-            var result = module.Before.Invoke(new NancyContext());
+            var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -138,10 +138,10 @@ namespace Nancy.Tests.Unit.Security
                 CurrentUser = GetFakeUser(String.Empty)
             };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -150,10 +150,10 @@ namespace Nancy.Tests.Unit.Security
             var module = new FakeHookedModule(new BeforePipeline());
             module.RequiresValidatedClaims(c => false);
 
-            var result = module.Before.Invoke(new NancyContext());
+            var result = module.Before.Invoke(new NancyContext(), new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -166,10 +166,10 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser(String.Empty)
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Unauthorized);
         }
 
         [Fact]
@@ -182,10 +182,10 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser("username", new string[] {"Claim2", "Claim3"})
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -198,10 +198,10 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser("username")
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -214,10 +214,10 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser("username", new[] {"Claim2"})
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -230,9 +230,9 @@ namespace Nancy.Tests.Unit.Security
                                   CurrentUser = GetFakeUser("username", new[] {"Claim1", "Claim2", "Claim3"})
                               };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
 
@@ -246,10 +246,10 @@ namespace Nancy.Tests.Unit.Security
                 CurrentUser = GetFakeUser("username", new string[] { "Claim2", "Claim3" })
             };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -262,10 +262,10 @@ namespace Nancy.Tests.Unit.Security
                 CurrentUser = GetFakeUser("username")
             };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -278,9 +278,9 @@ namespace Nancy.Tests.Unit.Security
                 CurrentUser = GetFakeUser("username", new[] { "Claim1", "Claim2", "Claim3" })
             };
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
         [Fact]
@@ -292,10 +292,10 @@ namespace Nancy.Tests.Unit.Security
                               {
                                   CurrentUser = GetFakeUser("username")
                               };
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -314,7 +314,7 @@ namespace Nancy.Tests.Unit.Security
                     return true;
                 });
 
-            module.Before.Invoke(context);
+            module.Before.Invoke(context, new CancellationToken());
 
             called.ShouldEqual(true);
         }
@@ -330,9 +330,9 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresValidatedClaims(s => true);
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
         [Fact]
@@ -346,10 +346,10 @@ namespace Nancy.Tests.Unit.Security
 
             module.RequiresValidatedClaims(s => false);
 
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -366,15 +366,15 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps();
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.ShouldBeOfType<RedirectResponse>();
+            result.Result.ShouldNotBeNull();
+            result.Result.ShouldBeOfType<RedirectResponse>();
 
             url.Scheme = "https";
             url.Port = null;
-            result.Headers["Location"].ShouldEqual(url.ToString());
+            result.Result.Headers["Location"].ShouldEqual(url.ToString());
         }
 
         [Fact]
@@ -391,15 +391,15 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps(true, 999);
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.ShouldBeOfType<RedirectResponse>();
+            result.Result.ShouldNotBeNull();
+            result.Result.ShouldBeOfType<RedirectResponse>();
 
             url.Scheme = "https";
             url.Port = 999;
-            result.Headers["Location"].ShouldEqual(url.ToString());
+            result.Result.Headers["Location"].ShouldEqual(url.ToString());
         }
 
         [Fact]
@@ -416,11 +416,11 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps();
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -437,11 +437,11 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps();
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -458,11 +458,11 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps(false);
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -479,11 +479,11 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps(false);
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldNotBeNull();
-            result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
+            result.Result.ShouldNotBeNull();
+            result.Result.StatusCode.ShouldEqual(HttpStatusCode.Forbidden);
         }
 
         [Fact]
@@ -500,10 +500,10 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps();
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
         [Fact]
@@ -520,10 +520,10 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresHttps();
 
             // When
-            var result = module.Before.Invoke(context);
+            var result = module.Before.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
         }
 
         private static IUserIdentity GetFakeUser(string userName, IEnumerable<string> claims = null)

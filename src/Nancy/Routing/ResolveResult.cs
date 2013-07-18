@@ -20,12 +20,12 @@
         /// <summary>
         /// Gets or sets the before module pipeline
         /// </summary>
-        public Func<NancyContext, Response> Before { get; set; }
+        public BeforePipeline Before { get; set; }
 
         /// <summary>
         /// Gets or sets the after module pipeline
         /// </summary>
-        public Action<NancyContext> After { get; set; }
+        public AfterPipeline After { get; set; }
 
         /// <summary>
         /// Gets or sets the on error module pipeline
@@ -37,7 +37,7 @@
             
         }
 
-        public ResolveResult(Route route, DynamicDictionary parameters, Func<NancyContext, Response> before, Action<NancyContext> after, Func<NancyContext, Exception, Response> onError)
+        public ResolveResult(Route route, DynamicDictionary parameters, BeforePipeline before, AfterPipeline after, Func<NancyContext, Exception, Response> onError)
         {
             this.Route = route;
             this.Parameters = parameters;

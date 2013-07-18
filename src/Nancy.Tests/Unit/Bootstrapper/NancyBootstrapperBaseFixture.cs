@@ -8,6 +8,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
     using System.Linq;
     using System.Collections;
     using System.Reflection;
+    using System.Threading;
     using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
@@ -201,13 +202,13 @@ namespace Nancy.Tests.Unit.Bootstrapper
             this.bootstrapper.Initialise();
 
             // When
-            var result = this.bootstrapper.PreRequest.Invoke(context);
+            var result = this.bootstrapper.PreRequest.Invoke(context, new CancellationToken());
 
             // Then
             result.ShouldNotBeNull();
-            result.ContentType.ShouldEqual("image/vnd.microsoft.icon");
-            result.StatusCode = HttpStatusCode.OK;
-            GetBodyBytes(result).SequenceEqual(favicon).ShouldBeTrue();
+            result.Result.ContentType.ShouldEqual("image/vnd.microsoft.icon");
+            result.Result.StatusCode = HttpStatusCode.OK;
+            GetBodyBytes(result.Result).SequenceEqual(favicon).ShouldBeTrue();
         }
 
         [Fact]

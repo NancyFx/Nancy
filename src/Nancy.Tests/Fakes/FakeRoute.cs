@@ -16,9 +16,9 @@ namespace Nancy.Tests.Fakes
         }
 
         public FakeRoute(dynamic response)
-            : base("GET", "/", null, x => response)
+            : base("GET", "/", null, (x,c) => response)
         {
-            this.Action = x => {
+            this.Action = (x,c) => {
                 this.ParametersUsedToInvokeAction = x;
                 this.ActionWasInvoked = true;
                 return response;

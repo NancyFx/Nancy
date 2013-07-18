@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Text;
+    using System.Threading;
     using FakeItEasy;
     using Nancy.Security;
     using Nancy.Tests;
@@ -84,10 +85,10 @@
             };
 
             // When
-            var result = this.hooks.BeforeRequest.Invoke(context);
+            var result = this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
             context.CurrentUser.ShouldBeNull();
         }
 
@@ -104,7 +105,7 @@
             context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
 
             // When
-            this.hooks.AfterRequest.Invoke(context);
+            this.hooks.AfterRequest.Invoke(context, new CancellationToken());
 
             // Then
             context.Response.Headers.TryGetValue("WWW-Authenticate", out wwwAuthenticate);
@@ -130,7 +131,7 @@
             context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
 
             // When
-            hooks.AfterRequest.Invoke(context);
+            hooks.AfterRequest.Invoke(context, new CancellationToken());
 
             // Then
             context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeFalse();
@@ -154,7 +155,7 @@
             context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
 
             // When
-            hooks.AfterRequest.Invoke(context);
+            hooks.AfterRequest.Invoke(context, new CancellationToken());
 
             // Then
             context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeFalse();
@@ -176,7 +177,7 @@
             context.Response = new Response { StatusCode = HttpStatusCode.Unauthorized };
 
             // When
-            hooks.AfterRequest.Invoke(context);
+            hooks.AfterRequest.Invoke(context, new CancellationToken());
 
             // Then
             context.Response.Headers.ContainsKey("WWW-Authenticate").ShouldBeTrue();
@@ -191,10 +192,10 @@
                 "Authorization", new[] { "FooScheme" + " " + EncodeCredentials("foo", "bar") });
 
             // When
-            var result = this.hooks.BeforeRequest.Invoke(context);
+            var result = this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
             context.CurrentUser.ShouldBeNull();
         }
 
@@ -206,10 +207,10 @@
                "Authorization", new[] { "Basic" + " " + "some credentials" });
 
             // When
-            var result = this.hooks.BeforeRequest.Invoke(context);
+            var result = this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
-            result.ShouldBeNull();
+            result.Result.ShouldBeNull();
             context.CurrentUser.ShouldBeNull();
         }
 
@@ -221,7 +222,7 @@
                "Authorization", new[] { "Basic" + " " + EncodeCredentials("foo", "bar") });
 
             // When
-            this.hooks.BeforeRequest.Invoke(context);
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
             A.CallTo(() => config.UserValidator.Validate("foo", "bar")).MustHaveHappened();
@@ -245,7 +246,7 @@
             BasicAuthentication.Enable(fakePipelines, cfg);
 
             // When
-            fakePipelines.BeforeRequest.Invoke(context);
+            fakePipelines.BeforeRequest.Invoke(context, new CancellationToken());
 
             // Then
             context.CurrentUser.ShouldBeSameAs(fakeUser);

@@ -5,8 +5,8 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using System.Threading;
     using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.IO;
 
@@ -46,7 +46,7 @@
         /// </summary>
         /// <param name="environment">Application environment</param>
         /// <returns>Returns result</returns>
-        public Task ProcessRequest(IDictionary<string, object> environment)
+        public Task Invoke(IDictionary<string, object> environment)
         {
             var owinRequestMethod = Get<string>(environment, "owin.RequestMethod");
             var owinRequestScheme = Get<string>(environment, "owin.RequestScheme");
@@ -78,47 +78,71 @@
                     serverClientIp);
 
             var tcs = new TaskCompletionSource<int>();
-            engine.HandleRequest(
+
+            this.engine.HandleRequest(
                 nancyRequest,
-                context =>
-                {
-                    environment["nancy.NancyContext"] = context;
-                    context.Items[RequestEnvironmentKey] = environment;
-                    return context;
-                },
-                context =>
-                {
-                    var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
-                    var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
-
-                    var nancyResponse = context.Response;
-                    environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
-
-                    foreach (var responseHeader in nancyResponse.Headers)
-                    {
-                        owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
-                    }
-
-                    if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
-                    {
-                        owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
-                    }
-
-                    if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
-                    {
-                        owinResponseHeaders["Set-Cookie"] =
-                            nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
-                    }
-
-                    nancyResponse.Contents(owinResponseBody);
-
-                    context.Dispose();
-
-                    tcs.TrySetResult(0);
-
-                }, tcs.SetException);
+                StoreEnvironment(environment),
+                RequestComplete(environment, tcs),
+                tcs.SetException);
 
             return tcs.Task;
+        }
+
+        /// <summary>
+        /// Gets a delegate to store the OWIN environment into the NancyContext
+        /// </summary>
+        /// <param name="environment">OWIN Environment</param>
+        /// <returns>Delegate</returns>
+        private static Func<NancyContext, NancyContext> StoreEnvironment(IDictionary<string, object> environment)
+        {
+            return context =>
+            {
+                environment["nancy.NancyContext"] = context;
+                context.Items[RequestEnvironmentKey] = environment;
+                return context;
+            };
+        }
+
+        /// <summary>
+        /// Gets a delegate to handle converting a nancy response
+        /// to the format required by OWIN and signals that the we are
+        /// now complete.
+        /// </summary>
+        /// <param name="environment">OWIN environment</param>
+        /// <param name="tcs">The task completion source to signal</param>
+        /// <returns>Delegate</returns>
+        private static Action<NancyContext> RequestComplete(IDictionary<string, object> environment, TaskCompletionSource<int> tcs)
+        {
+            return context =>
+            {
+                var owinResponseHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
+                var owinResponseBody = Get<Stream>(environment, "owin.ResponseBody");
+
+                var nancyResponse = context.Response;
+                environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
+
+                foreach (var responseHeader in nancyResponse.Headers)
+                {
+                    owinResponseHeaders[responseHeader.Key] = new[] { responseHeader.Value };
+                }
+
+                if (!string.IsNullOrWhiteSpace(nancyResponse.ContentType))
+                {
+                    owinResponseHeaders["Content-Type"] = new[] { nancyResponse.ContentType };
+                }
+
+                if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
+                {
+                    owinResponseHeaders["Set-Cookie"] =
+                        nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+                }
+
+                nancyResponse.Contents(owinResponseBody);
+
+                context.Dispose();
+
+                tcs.TrySetResult(0);
+            };
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)

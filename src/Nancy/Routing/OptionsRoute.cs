@@ -1,6 +1,9 @@
 ﻿namespace Nancy.Routing
 {
     using System.Collections.Generic;
+    using System.Threading.Tasks;
+
+    using Nancy.Helpers;
 
     /// <summary>
     /// Route that is returned when the path could be matched but, the method was OPTIONS and there was no user defined handler for OPTIONS.
@@ -8,17 +11,17 @@
     public class OptionsRoute : Route
     {
         public OptionsRoute(string path, IEnumerable<string> allowedMethods) 
-            : base("OPTIONS", path, null, x => CreateMethodOptionsResponse(allowedMethods))
+            : base("OPTIONS", path, null, (x,c) => CreateMethodOptionsResponse(allowedMethods))
         {            
         }
 
-        private static Response CreateMethodOptionsResponse(IEnumerable<string> allowedMethods)
+        private static Task<dynamic> CreateMethodOptionsResponse(IEnumerable<string> allowedMethods)
         {
             var response = new Response();
             response.Headers["Allow"] = string.Join(", ", allowedMethods);
             response.StatusCode = HttpStatusCode.OK;
 
-            return response;
+            return TaskHelpers.GetCompletedTask<dynamic>(response);
         }
     }
 }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using Xunit;
 
     public class AfterPipelineFixture
@@ -64,8 +65,10 @@
             pipeline.AddItemToEndOfPipeline(item2);
             pipeline.AddItemToEndOfPipeline(item3);
 
-            Action<NancyContext> func = pipeline;
-            func.Invoke(CreateContext());
+            Action<NancyContext> action = context => { };
+            pipeline += action;
+
+            action.Invoke(CreateContext());
 
             Assert.True(item1Called);
             Assert.True(item2Called);
@@ -77,7 +80,8 @@
         {
             Action<NancyContext> item1 = (r) => { };
 
-            AfterPipeline castPipeline = item1;
+            AfterPipeline castPipeline = new AfterPipeline();
+            castPipeline += item1;
 
             Assert.Equal(1, castPipeline.PipelineDelegates.Count());
             Assert.Same(item1, castPipeline.PipelineDelegates.First());
@@ -101,7 +105,7 @@
             subPipeline += item4;
 
             pipeline.AddItemToEndOfPipeline(subPipeline);
-            pipeline.Invoke(CreateContext());
+            pipeline.Invoke(CreateContext(), new CancellationToken());
 
             Assert.True(item1Called);
             Assert.True(item2Called);

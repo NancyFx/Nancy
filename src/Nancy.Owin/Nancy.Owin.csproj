@@ -64,7 +64,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions.cs" />
-    <Compile Include="HostConfiguration.cs" />
+    <Compile Include="NancyOptions.cs" />
+    <Compile Include="NancyOptionsExtensions.cs" />
     <Compile Include="NancyOwinHost.cs" />
   </ItemGroup>
   <ItemGroup>

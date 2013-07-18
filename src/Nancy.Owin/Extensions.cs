@@ -2,7 +2,8 @@
 namespace Owin
 // ReSharper restore CheckNamespace
 {
-    using Nancy.Bootstrapper;
+    using System;
+
     using Nancy.Owin;
 
     /// <summary>
@@ -10,9 +11,16 @@ namespace Owin
     /// </summary>
     public static class Extensions
     {
-        public static void UseNancy(this IAppBuilder builder, INancyBootstrapper bootstrapper = null, HostConfiguration hostConfiguration = null)
+        public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options = null)
         {
-            builder.Use(typeof(NancyOwinHost), bootstrapper ?? NancyBootstrapperLocator.Bootstrapper, hostConfiguration ?? new HostConfiguration());
+            return builder.Use(typeof(NancyOwinHost), options ?? new NancyOptions());
+        }
+
+        public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
+        {
+            var options = new NancyOptions();
+            configuration(options);
+            return UseNancy(builder, options);
         }
     }
 }
