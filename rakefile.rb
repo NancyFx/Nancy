@@ -119,12 +119,12 @@ task :nuget_package => [:publish] do
     if not File.directory? "#{OUTPUT}/nuget"
         Dir.mkdir("#{OUTPUT}/nuget")
     end
-    nuspecs = FileList["src/**/*.nuspec"]
+    nuspecs = FileList["src/**/Nancy*.nuspec"]
     root = File.dirname(__FILE__)
 
     # Copy all project *.nuspec to nuget build folder before editing
     FileUtils.cp_r nuspecs, "#{OUTPUT}/nuget"
-    nuspecs = FileList["#{OUTPUT}/nuget/*.nuspec"]
+    nuspecs = FileList["#{OUTPUT}/nuget/Nancy*.nuspec"]
 
     # Update the copied *.nuspec files to correct version numbers and other common values
     nuspecs.each do |nuspec|
