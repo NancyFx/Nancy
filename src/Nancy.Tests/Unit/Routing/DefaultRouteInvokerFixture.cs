@@ -104,12 +104,12 @@
         {
             // Given
             var response = new Response();
-            var route = new FakeRoute(c => { throw new RouteExecutionEarlyExitException(response); });
+            var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response); });
             var parameters = new DynamicDictionary();
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             result.ShouldBeSameAs(response);
@@ -120,12 +120,12 @@
         {
             // Given
             var response = new Response();
-            var route = new FakeRoute(c => { throw new RouteExecutionEarlyExitException(response, "Reason Testing"); });
+            var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response, "Reason Testing"); });
             var parameters = new DynamicDictionary();
             var context = new NancyContext { Trace = new RequestTrace(true) };
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             context.Trace.TraceLog.ToString().ShouldContain("Reason Testing");

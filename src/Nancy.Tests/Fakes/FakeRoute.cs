@@ -1,6 +1,8 @@
 namespace Nancy.Tests.Fakes
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using Nancy.Routing;
 
@@ -25,7 +27,7 @@ namespace Nancy.Tests.Fakes
             };
         }
 
-        public FakeRoute(Func<dynamic, dynamic> actionDelegate)
+        public FakeRoute(Func<dynamic, CancellationToken, Task<dynamic>> actionDelegate)
             : base("GET", "/", null, actionDelegate)
         {
             

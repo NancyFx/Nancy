@@ -96,7 +96,7 @@
             var context = new NancyContext { Request = this.optionsRequest, Response = this.response };
             context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "ValidToken";
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
