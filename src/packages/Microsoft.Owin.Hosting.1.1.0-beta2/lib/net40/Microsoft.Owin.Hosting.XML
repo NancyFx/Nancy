@@ -1,0 +1,457 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Owin.Hosting</name>
+    </assembly>
+    <members>
+        <member name="T:Owin.Builder.AppBuilder">
+            <summary>
+            A standard implementation of IAppBuilder 
+            </summary>
+        </member>
+        <member name="M:Owin.Builder.AppBuilder.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Owin.Builder.AppBuilder.#ctor(System.Collections.Generic.IDictionary{System.Tuple{System.Type,System.Type},System.Delegate},System.Collections.Generic.IDictionary{System.String,System.Object})">
+            <summary>
+            
+            </summary>
+            <param name="conversions"></param>
+            <param name="properties"></param>
+        </member>
+        <member name="M:Owin.Builder.AppBuilder.Use(System.Object,System.Object[])">
+            <summary>
+            Adds a middleware node to the OWIN function pipeline. The middleware are
+            invoked in the order they are added: the first middleware passed to Use will
+            be the outermost function, and the last middleware passed to Use will be the
+            innermost.
+            </summary>
+            <param name="middleware">
+            The middleware parameter determines which behavior is being chained into the
+            pipeline. 
+            
+            If the middleware given to Use is a Delegate, then it will be invoked with the "next app" in 
+            the chain as the first parameter. If the delegate takes more than the single argument, 
+            then the additional values must be provided to Use in the args array.
+            
+            If the middleware given to Use is a Type, then the public constructor will be 
+            invoked with the "next app" in the chain as the first parameter. The resulting object
+            must have a public Invoke method. If the object has constructors which take more than
+            the single "next app" argument, then additional values may be provided in the args array.
+            </param>
+            <param name="args">
+            Any additional args passed to Use will be passed as additional values, following the "next app"
+            parameter, when the OWIN call pipeline is build.
+            
+            They are passed as additional parameters if the middleware parameter is a Delegate, or as additional
+            constructor arguments if the middle parameter is a Type.
+            </param>
+            <returns>
+            The IAppBuilder itself is returned. This enables you to chain your use statements together.
+            </returns>
+        </member>
+        <member name="M:Owin.Builder.AppBuilder.New">
+            <summary>
+            The New method creates a new instance of an IAppBuilder. This is needed to create
+            a tree structure in your processing, rather than a linear pipeline. The new instance share the
+            same Properties, but will be created with a new, empty middleware list.
+            
+            To create a tangent pipeline you would first call New, followed by several calls to Use on 
+            the new builder, ending with a call to Build on the new builder. The return value from Build
+            will be the entry-point to your tangent pipeline. This entry-point may now be added to the
+            main pipeline as an argument to a switching middleware, which will either call the tangent
+            pipeline or the "next app", based on something in the request.
+            
+            That said - all of that work is typically hidden by a middleware like Map, which will do that
+            for you.
+            </summary>
+            <returns>The new instance of the IAppBuilder implementation</returns>
+        </member>
+        <member name="M:Owin.Builder.AppBuilder.Build(System.Type)">
+            <summary>
+            The Build is called at the point when all of the middleware should be chained
+            together. This is typically done by the hosting component which created the app builder,
+            and does not need to be called by the startup method if the IAppBuilder is passed in.
+            </summary>
+            <param name="returnType">
+            The Type argument indicates which calling convention should be returned, and
+            is typically typeof(<typeref name="Func&lt;IDictionary&lt;string,object&gt;, Task&gt;"/>) for the OWIN
+            calling convention.
+            </param>
+            <returns>
+            Returns an instance of the pipeline's entry point. This object may be safely cast to the
+            type which was provided
+            </returns>
+        </member>
+        <member name="P:Owin.Builder.AppBuilder.Properties">
+            <summary>
+            Contains arbitrary properties which may added, examined, and modified by
+            components during the startup sequence. 
+            </summary>
+        </member>
+        <member name="T:Owin.Builder.BuilderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.Exception_ConversionTakesOneParameter">
+            <summary>
+              Looks up a localized string similar to Conversion delegate must take one parameter..
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.Exception_MiddlewareNotSupported">
+            <summary>
+              Looks up a localized string similar to The given middleware pattern is not supported: .
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.Exception_NoConstructorFound">
+            <summary>
+              Looks up a localized string similar to No constructor found taking {0} arguments..
+            </summary>
+        </member>
+        <member name="P:Owin.Builder.BuilderResources.Exception_NoConversionExists">
+            <summary>
+              Looks up a localized string similar to No conversion available between {0} and {1}..
+            </summary>
+        </member>
+        <member name="T:Owin.Builder.NotFound">
+            <summary>
+            Simple object used by AppBuilder as seed OWIN callable if the
+            builder.Properties["builder.DefaultApp"] is not set
+            </summary>
+        </member>
+        <member name="T:Owin.Loader.DefaultLoader">
+            <summary>
+            Locates the startup class based on the following convention:
+            AssemblyName.Startup, with a method named Configuration
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor(System.Func{System.String,System.Action{Owin.IAppBuilder}})">
+            <summary>
+            Allows for a fallback loader to be specified.
+            </summary>
+            <param name="next"></param>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.#ctor(System.Func{System.String,System.Action{Owin.IAppBuilder}},System.Func{System.Type,System.Object})">
+            <summary>
+            Allows for a fallback loader and a Dependency Injection activator to be specified.
+            </summary>
+            <param name="next"></param>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.Load(System.String)">
+            <summary>
+            Executes the loader, searching for the entry point by name.
+            </summary>
+            <param name="startupName">The name of the assembly and type entry point</param>
+            <returns></returns>
+        </member>
+        <member name="M:Owin.Loader.DefaultLoader.DotByDot(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="text"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Owin.Loader.LoaderResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Owin.Loader.LoaderResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Owin.Loader.LoaderResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="T:Owin.Loader.NullLoader">
+            <summary>
+            A default fallback loader that does nothing.
+            </summary>
+        </member>
+        <member name="M:Owin.Loader.NullLoader.Load(System.String)">
+            <summary>
+            A placeholder method that always returns null.
+            </summary>
+            <param name="startup"></param>
+            <returns>null.</returns>
+        </member>
+        <member name="P:Owin.Loader.NullLoader.Instance">
+            <summary>
+            A singleton instance of the NullLoader type.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader">
+            <summary>
+            Located and loads the server factory.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader.#ctor(Microsoft.Owin.Hosting.ServerFactory.IServerFactoryActivator)">
+            <summary>
+            Allows for a Dependency Injection activator to be specified.
+            </summary>
+            <param name="activator"></param>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.ServerFactory.ServerFactoryLoader.Load(System.String)">
+            <summary>
+            Executes the loader, searching for the server factory by name.
+            Acceptable inputs:
+            - null, empty, etc.. Scan for an assembly containing the type [Assembly.Name].ServerFactory.
+            - Assembly.Name. Look for type Assembly.Name.ServerFactory in the assembly Assembly.Name.
+            - Assembly.Name.FactoryName.  Look for type Assembly.Name.FactoryName in the assembly Assembly.Name.
+            </summary>
+            <param name="serverName">The name of the assembly and type of the server factory</param>
+            <returns></returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_MissingApplicationEntryPoint">
+            <summary>
+              Looks up a localized string similar to No application entry point found..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterCount">
+            <summary>
+              Looks up a localized string similar to ServerFactory Create method must take two parameters..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerFactoryParameterType">
+            <summary>
+              Looks up a localized string similar to ServerFactory Create second parameter must be of type IDictionary&lt;string,object&gt;..
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Resources.Exception_ServerNotFound">
+            <summary>
+              Looks up a localized string similar to The server factory could not be located for the given input: {0}.
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.WebApp">
+            <summary>
+            These methods are used to load, assemble, and start a web app.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start">
+            <summary>
+            Start a web app using default settings.
+            e.g. Discover the ServerFactory and startup Startup entry points and run at http://localhost:5000/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.Int32)">
+            <summary>
+            Start a web app using default settings and the given port.
+            e.g. Discover the ServerFactory and startup Startup entry points and run at http://localhost:{port}/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.String)">
+            <summary>
+            Start a web app using default settings and the given url.
+            e.g. Discover the ServerFactory and startup Startup entry points and run at the given url.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app with the given options, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using default settings and the given entry point.
+            e.g. Discover the ServerFactory and run at http://localhost:5000/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.Int32,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using default settings and the given port and entry point.
+            e.g. Discover the ServerFactory and run at http://localhost:{port}/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.String,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using default settings and the given url and entry point.
+            e.g. Discover the ServerFactory and run at the given url.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(Microsoft.Owin.Hosting.StartOptions,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using the given settings and entry point, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.IServiceProvider,Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app with the given service provider and options, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start(System.IServiceProvider,Microsoft.Owin.Hosting.StartOptions,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Start a web app using the given service provider, settings, and entry point, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1">
+            <summary>
+            Start a web app using default settings and the given entry point type.
+            e.g. Discover the ServerFactory and run at http://localhost:5000/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(System.Int32)">
+            <summary>
+            Start a web app using default settings and the given port and entry point type.
+            e.g. Discover the ServerFactory and run at http://localhost:{port}/.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(System.String)">
+            <summary>
+            Start a web app using default settings and the given url and entry point type.
+            e.g. Discover the ServerFactory and run at the given url.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app using the given settings and entry point type, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.WebApp.Start``1(System.IServiceProvider,Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Start a web app using the given service provider, settings, and entry point type, using defaults for items not specified.
+            </summary>
+            <returns>An IDisposible instance that can be called to shut down the web app.</returns>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.StartOptions">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.StartOptions.#ctor">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.StartOptions.#ctor(System.String)">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Urls">
+            <summary>
+            A list of url prefixes to listen on. Overrides port.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Port">
+            <summary>
+            A port to listen on.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.AppStartup">
+            <summary>
+            Parameter to locate and load web application startup routine
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.ServerFactory">
+            <summary>
+            Name of the assembly containing the http server implementation
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.StartOptions.Settings">
+            <summary>
+            Optional settings used to override service types and other defaults
+            </summary>
+        </member>
+        <member name="T:Microsoft.Owin.Hosting.Engine.StartContext">
+            <summary>
+            This class contains the relevant application and server state during startup.
+            </summary>
+        </member>
+        <member name="M:Microsoft.Owin.Hosting.Engine.StartContext.#ctor(Microsoft.Owin.Hosting.StartOptions)">
+            <summary>
+            Create a new StartContext with the given options.
+            If the given options do not define any settings, then settings will be loaded from the config.
+            </summary>
+            <param name="options"></param>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Options">
+            <summary>
+            The initial options provided to the constructor.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.ServerFactory">
+            <summary>
+            The factory used to instantiate the server.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Builder">
+            <summary>
+            The IAppBuilder used to construct the OWIN application pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.App">
+            <summary>
+            The constructed OWIN application pipeline.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.Startup">
+            <summary>
+            The application entry point where the pipeline is defined.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.TraceOutput">
+            <summary>
+            A TextWriter for writing diagnostic data to.
+            </summary>
+        </member>
+        <member name="P:Microsoft.Owin.Hosting.Engine.StartContext.EnvironmentData">
+            <summary>
+            A list of keys and their associated values that will be injected by the host into each OWIN request environment.
+            </summary>
+        </member>
+    </members>
+</doc>

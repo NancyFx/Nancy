@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/10/nuspec.xsd">
+  <metadata>
+    <id>Microsoft.Owin</id>
+    <version>1.1.0-beta2</version>
+    <title>Microsoft.Owin</title>
+    <authors>Microsoft</authors>
+    <owners>Microsoft</owners>
+    <licenseUrl>http://www.microsoft.com/web/webpi/eula/aspnetcomponent_enu.htm</licenseUrl>
+    <projectUrl>http://katanaproject.codeplex.com/</projectUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <description>Microsoft.Owin</description>
+    <tags>Microsoft OWIN</tags>
+    <dependencies>
+      <dependency id="Owin" version="1.0" />
+    </dependencies>
+  </metadata>
+</package>

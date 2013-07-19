@@ -1,13 +1,8 @@
 ﻿namespace Nancy.Owin.Tests
 {
-    using System;
-    using System.Threading.Tasks;
     using Microsoft.Owin.Testing;
-
     using Nancy.Tests;
-
     using global::Owin;
-
     using Xunit;
 
     using NancyHttpStatusCode = HttpStatusCode;

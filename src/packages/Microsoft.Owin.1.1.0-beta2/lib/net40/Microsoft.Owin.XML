@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Microsoft.Owin</name>
+    </assembly>
+    <members>
+        <member name="T:Owin.IntegratedPipelineExtensions">
+            <summary>
+            Extension methods used to indicate at which stage in the integrated pipeline prior middleware should run.
+            </summary>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarker(Owin.IAppBuilder,System.String)">
+            <summary>
+            Call after other middleware to specify when they should run in the integrated pipeline.
+            </summary>
+            <param name="app"></param>
+            <param name="stageName">The name of the integrated pipeline in which to run.</param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerAuthenticate(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the Authenticate stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPostAuthenticate(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PostAuthenticate stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerAuthorize(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the Authorize stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPostAuthorize(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PostAuthorize stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerResolveCache(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the ResolveCache stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPostResolveCache(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PostResolveCache stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerMapHandler(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the MapHandler stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPostMapHandler(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PostMapHandler stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerAcquireState(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the AcquireState stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPostAcquireState(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PostAcquireState stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Owin.IntegratedPipelineExtensions.UseStageMarkerPreHandlerExecute(Owin.IAppBuilder)">
+            <summary>
+            Call after other middleware to specify that they should run in the PreHandlerExecute stage or earlier.
+            </summary>
+            <param name="app"></param>
+            <returns>The original IAppBuilder for chaining.</returns>
+        </member>
+        <member name="M:Microsoft.Owin.Logging.ILogger.WriteCore(System.Diagnostics.TraceEventType,System.Int32,System.Object,System.Exception,System.Func{System.Object,System.Exception,System.String})">
+            <summary>
+            Aggregates most logging patterns to a single method.  This must be compatible with the Func representation in the OWIN environment.
+            
+            To check IsEnabled call WriteCore with only TraceEventType and check the return value, no event will be written.
+            </summary>
+            <param name="eventType"></param>
+            <param name="eventId"></param>
+            <param name="state"></param>
+            <param name="exception"></param>
+            <param name="formatter"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.Run(Owin.IAppBuilder,System.Object)">
+            <summary>
+            Attach the given application to the pipeline.  Nothing attached after this point will be executed.
+            </summary>
+            <param name="builder"></param>
+            <param name="app"></param>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.Build(Owin.IAppBuilder)">
+            <summary>
+            The Build is called at the point when all of the middleware should be chained
+            together. May be called to build pipeline branches.
+            </summary>
+            <param name="builder"></param>
+            <returns>The request processing entry point for this section of the pipeline.</returns>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.Build``1(Owin.IAppBuilder)">
+            <summary>
+            The Build is called at the point when all of the middleware should be chained
+            together. May be called to build pipeline branches.
+            </summary>
+            <typeparam name="TApp">The application signature.</typeparam>
+            <param name="builder"></param>
+            <returns>The request processing entry point for this section of the pipeline.</returns>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.BuildNew``1(Owin.IAppBuilder,System.Action{Owin.IAppBuilder})">
+            <summary>
+            Creates a new IAppBuilder instance from the current one and then invokes the configuration callback.
+            </summary>
+            <typeparam name="TApp">The application signature.</typeparam>
+            <param name="builder"></param>
+            <param name="configuration">The callback for configuration.</param>
+            <returns>The request processing entry point for this section of the pipeline.</returns>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.AddSignatureConversion(Owin.IAppBuilder,System.Delegate)">
+            <summary>
+            Adds converters for adapting between disparate application signatures.
+            </summary>
+            <param name="builder"></param>
+            <param name="conversion"></param>
+        </member>
+        <member name="M:Owin.AppBuilderExtensions.UseFunc``1(Owin.IAppBuilder,System.Func{``0,``0})">
+            <summary>
+            Specifies a middleware instance generator of the given type.
+            </summary>
+            <typeparam name="TApp">The application signature.</typeparam>
+            <param name="builder"></param>
+            <param name="middleware">A Func that generates a middleware instance given a reference to the next middleware.</param>
+            <returns></returns>
+        </member>
+    </members>
+</doc>
