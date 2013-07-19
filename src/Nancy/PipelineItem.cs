@@ -1,7 +1,5 @@
 ﻿namespace Nancy
 {
-    using System;
-
     public class PipelineItem<TDelegate>
     {
         public string Name { get; protected set; }
@@ -10,7 +8,7 @@
 
         public PipelineItem(string name, TDelegate @delegate)
         {
-            this.Name = name ?? Guid.NewGuid().ToString();
+            this.Name = name;
             this.Delegate = @delegate;
         }
 

@@ -3,6 +3,7 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System;
     using System.Collections.Specialized;
     using System.IO;
+    using System.Threading.Tasks;
     using System.Web;
     using Nancy.Cookies;
     using FakeItEasy;
@@ -46,7 +47,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(new NancyContext() { Response = new Response() });
 
             // When
-            this.handler.ProcessRequest(this.context);
+            this.handler.ProcessRequest(this.context, ar => { }, new object());
 
             // Then
             A.CallTo(() => this.engine.HandleRequest(A<Request>.That.Matches(x => x.Method.Equals("POST")))).MustHaveHappened();
@@ -68,7 +69,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             SetupRequestProcess(nancyContext);
 
             // When
-            this.handler.ProcessRequest(context);
+            this.handler.ProcessRequest(context, ar => { }, new object());
 
             // Then
             A.CallTo(() => this.response.AddHeader("Set-Cookie", "the first cookie")).MustHaveHappened();
@@ -83,10 +84,14 @@ namespace Nancy.Hosting.Aspnet.Tests
             var nancyContext = new NancyContext() { Response = new Response() };
             nancyContext.Items.Add("Disposable", disposable);
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
-            A.CallTo(() => this.engine.HandleRequest(A<Request>.Ignored)).Returns(nancyContext);
+            A.CallTo(() => this.engine.HandleRequest(
+                                        A<Request>.Ignored,
+                                        A<Action<NancyContext>>.Ignored,
+                                        A<Action<Exception>>.Ignored))
+                                      .Invokes(f => ((Action<NancyContext>)f.Arguments[1]).Invoke(nancyContext));
 
             // When
-            this.handler.ProcessRequest(this.context);
+            var result = this.handler.ProcessRequest(this.context, ar => { }, new object()).Result;
 
             // Then
             A.CallTo(() => disposable.Dispose()).MustHaveHappened(Repeated.Exactly.Once);

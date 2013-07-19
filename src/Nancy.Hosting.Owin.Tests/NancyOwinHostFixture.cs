@@ -329,7 +329,7 @@ namespace Nancy.Tests
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
-            this.host.ProcessRequest(environment).Wait();
+            this.host.Invoke(environment).Wait();
 
             var respHeaders = Get<IDictionary<string, string[]>>(environment, "owin.ResponseHeaders");
 

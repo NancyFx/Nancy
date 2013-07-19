@@ -2,6 +2,7 @@ namespace Nancy.Authentication.Forms.Tests
 {
     using System;
     using System.Linq;
+    using System.Threading;
     using Bootstrapper;
     using Cryptography;
     using FakeItEasy;
@@ -391,7 +392,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
 
-            fakePipelines.BeforeRequest.Invoke(this.context);
+            fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             A.CallTo(() => mockMapper.GetUserFromIdentifier(this.userGuid, this.context))
                 .MustHaveHappened(Repeated.Exactly.Once);
@@ -408,7 +409,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.validCookieValue);
 
-            var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             context.CurrentUser.ShouldBeSameAs(fakeUser);
         }
@@ -424,7 +425,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithInvalidHmac);
 
-            var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             context.CurrentUser.ShouldBeNull();
         }
@@ -440,7 +441,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithEmptyHmac);
 
-            var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             context.CurrentUser.ShouldBeNull();
         }
@@ -456,7 +457,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithNoHmac);
 
-            var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             context.CurrentUser.ShouldBeNull();
         }
@@ -472,7 +473,7 @@ namespace Nancy.Authentication.Forms.Tests
             FormsAuthentication.Enable(fakePipelines, this.config);
             this.context.Request.Cookies.Add(FormsAuthentication.FormsAuthenticationCookieName, this.cookieWithBrokenEncryptedData);
 
-            var result = fakePipelines.BeforeRequest.Invoke(this.context);
+            var result = fakePipelines.BeforeRequest.Invoke(this.context, new CancellationToken());
 
             context.CurrentUser.ShouldBeNull();
         }
@@ -492,7 +493,7 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             // When
-            fakePipelines.AfterRequest.Invoke(queryContext);
+            fakePipelines.AfterRequest.Invoke(queryContext, new CancellationToken());
 
             // Then
             queryContext.Response.Headers["Location"].ShouldEqual("/login?returnUrl=/secure%3ffoo%3dbar");
@@ -514,7 +515,7 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             // When
-            fakePipelines.AfterRequest.Invoke(queryContext);
+            fakePipelines.AfterRequest.Invoke(queryContext, new CancellationToken());
 
             // Then
             queryContext.Response.Headers["Location"].ShouldEqual("/login?next=/secure%3ffoo%3dbar");
@@ -536,7 +537,7 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             // When
-            fakePipelines.AfterRequest.Invoke(queryContext);
+            fakePipelines.AfterRequest.Invoke(queryContext, new CancellationToken());
 
             // Then
             queryContext.Response.Headers["Location"].ShouldEqual("/login?returnUrl=/secure%3ffoo%3dbar");
@@ -558,7 +559,7 @@ namespace Nancy.Authentication.Forms.Tests
             };
 
             // When
-            fakePipelines.AfterRequest.Invoke(queryContext);
+            fakePipelines.AfterRequest.Invoke(queryContext, new CancellationToken());
 
             // Then
             queryContext.Response.Headers["Location"].ShouldEqual("/login?returnUrl=/secure%3ffoo%3dbar");

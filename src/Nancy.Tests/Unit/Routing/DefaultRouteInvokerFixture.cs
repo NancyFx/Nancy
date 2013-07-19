@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-
+    using System.Threading;
     using Nancy.Conventions;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
@@ -32,7 +32,7 @@
             var context = new NancyContext();
 
             // When
-            this.invoker.Invoke(route, parameters, context);
+            this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             Assert.Same(route.ParametersUsedToInvokeAction, parameters);
@@ -47,7 +47,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             Assert.IsType<Response>(result);
@@ -62,7 +62,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             Assert.IsType<Response>(result);
@@ -77,7 +77,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             Assert.IsType<Response>(result);
@@ -93,7 +93,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
 
             // Then
             Assert.IsType<Response>(result);

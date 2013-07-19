@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
+    using System.Threading;
+
     using Fakes;
     using Nancy.Routing;
     using Xunit;
@@ -12,7 +14,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route(null, "", null, x => null));
+                Record.Exception(() => new Route(null, "", null, (x, c) => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -23,7 +25,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("", "/", null, x => null));
+                Record.Exception(() => new Route("", "/", null, (x,c) => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -34,7 +36,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, x => null));
+                Record.Exception(() => new Route("GET", null, null, (x, c) => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -45,7 +47,7 @@
         {
             //Given, When
             var exception =
-                Record.Exception(() => new Route("GET", null, null, x => null));
+                Record.Exception(() => new Route("GET", null, null, (x, c) => null));
 
             // Then
             exception.ShouldBeOfType<ArgumentException>();
@@ -68,7 +70,8 @@
             //Given
             DynamicDictionary capturedParameters = null;
 
-            Func<dynamic, Response> action = x => {
+            Func<dynamic, Response> action = x =>
+            {
                 capturedParameters = x;
                 return null;
             };
@@ -77,10 +80,10 @@
             parameters.foo = 10;
             parameters.bar = "value";
 
-            var route = new Route("GET", "/", null, action);
+            var route = Route.FromSync("GET", "/", null, action);
 
             // When
-            route.Invoke(parameters);
+            route.Invoke(parameters, new CancellationToken());
 
             // Then
             capturedParameters.ShouldBeSameAs((object)parameters);
@@ -93,10 +96,10 @@
             var expectedResponse = new Response();
             Func<object, Response> action = x => expectedResponse;
 
-            var route = new Route("GET", "/", null, action);
+            var route = Route.FromSync("GET", "/", null, action);
 
             // When
-            var response = (Response)route.Invoke(new DynamicDictionary());
+            var response = (Response)route.Invoke(new DynamicDictionary(), new CancellationToken()).Result;
 
             // Then
             response.ShouldBeSameAs(expectedResponse);

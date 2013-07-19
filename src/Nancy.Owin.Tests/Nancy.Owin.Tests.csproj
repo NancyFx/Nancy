@@ -4,13 +4,14 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</ProjectGuid>
+    <ProjectGuid>{34DDDA42-4041-4F92-87A6-F0E8CE12C7E3}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Owin</RootNamespace>
-    <AssemblyName>Nancy.Owin</AssemblyName>
+    <RootNamespace>Nancy.Owin.Tests</RootNamespace>
+    <AssemblyName>Nancy.Owin.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -48,34 +49,60 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Owin">
+    <Reference Include="Microsoft.Owin.Hosting, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Hosting.0.21.0-pre\lib\net40\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Testing, Version=0.21.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Owin.Testing.0.21.0-pre\lib\net40\Microsoft.Owin.Testing.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin.Extensions, Version=0.8.5.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Owin.Extensions.0.8.5\lib\net40\Owin.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin.Types, Version=0.8.5.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Owin.Types.0.8.5\lib\net40\Owin.Types.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <Reference Include="System.Net.Http, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Net.Http.2.0.20710.0\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit, Version=1.9.1.1600, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\xunit.1.9.1\lib\net20\xunit.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Nancy.Tests\ShouldExtensions.cs">
+      <Link>ShouldExtensions.cs</Link>
+    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="Extensions.cs" />
-    <Compile Include="NancyOptions.cs" />
-    <Compile Include="NancyOptionsExtensions.cs" />
-    <Compile Include="NancyOwinHost.cs" />
+    <Compile Include="NancyOwinHostFixture.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy.Owin\Nancy.Owin.csproj">
+      <Project>{D6B2480C-2A52-4D02-9477-D387D7A486E5}</Project>
+      <Name>Nancy.Owin</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
-      <Project>{34576216-0dca-4b0f-a0dc-9075e75a676f}</Project>
-      <Name>Nancy</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

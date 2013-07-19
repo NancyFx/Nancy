@@ -106,6 +106,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
     <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
     <Compile Include="Bootstrapper\BootstrapperException.cs" />
@@ -162,6 +163,7 @@
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="IStaticContentProvider.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
+    <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />
     <Compile Include="ModelBinding\DefaultConverters\DateTimeConverter.cs" />
     <Compile Include="ModelBinding\DefaultConverters\NumericConverter.cs" />

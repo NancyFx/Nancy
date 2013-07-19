@@ -1,7 +1,7 @@
 ﻿namespace Nancy.Tests.Unit.Security
 {
     using System.Linq;
-
+    using System.Threading;
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
@@ -55,7 +55,7 @@
             var context = new NancyContext { Request = this.request, Response = this.response };
             context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "TestingToken";
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
             this.response.Cookies.FirstOrDefault(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).Value.ShouldEqual("TestingToken");
@@ -74,7 +74,7 @@
             csrfStartup.Initialize(this.pipelines);
             var context = new NancyContext { Request = this.request, Response = this.response };
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
@@ -116,7 +116,7 @@
             csrfStartup.Initialize(this.pipelines);
             var context = new NancyContext { Request = this.request, Response = this.response };
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
@@ -136,7 +136,7 @@
             this.request.Cookies.Add(CsrfToken.DEFAULT_CSRF_KEY, HttpUtility.UrlEncode("Testing Token"));
             var context = new NancyContext { Request = this.request, Response = this.response };
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
@@ -148,7 +148,7 @@
         {
             var context = new NancyContext { Request = this.request, Response = this.response };
 
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
             context.Items.ContainsKey(CsrfToken.DEFAULT_CSRF_KEY).ShouldBeTrue();
@@ -165,7 +165,7 @@
             context.Items[CsrfToken.DEFAULT_CSRF_KEY] = "TestingToken";
 
             Csrf.Disable(this.pipelines);
-            this.pipelines.AfterRequest.Invoke(context);
+            this.pipelines.AfterRequest.Invoke(context, new CancellationToken());
 
             this.response.Cookies.Any(c => c.Name == CsrfToken.DEFAULT_CSRF_KEY).ShouldBeFalse();
         }
