@@ -145,6 +145,14 @@
         }
 
         [Fact]
+        public void Should_capture_multiple_parameters()
+        {
+            var result = this.browser.Get("/multipleparameters/file.extension");
+
+            result.Body.AsString().ShouldEqual("Multiple parameters file.extension");
+        }
+
+        [Fact]
         public void Should_capture_regex()
         {
             // Given
@@ -280,6 +288,8 @@
                 Get["/bleh/{test*}/bar"] = _ => "GreedyInMiddle " + _.test;
 
                 Get["/greedy/{test*}/badger/{woo}"] = _ => "GreedyAndCapture " + _.test + " " + _.woo;
+
+                Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
 
                 Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x =>
                 {
