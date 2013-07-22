@@ -145,11 +145,19 @@
         }
 
         [Fact]
-        public void Should_capture_multiple_parameters()
+        public void Should_capture_node_with_multiple_parameters()
         {
             var result = this.browser.Get("/multipleparameters/file.extension");
 
             result.Body.AsString().ShouldEqual("Multiple parameters file.extension");
+        }
+
+        [Fact] 
+        public void Should_capture_node_with_literal()
+        {
+            var result = this.browser.Get("/capturenodewithliteral/file.html");
+
+            result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral file.html");
         }
 
         [Fact]
@@ -290,6 +298,9 @@
                 Get["/greedy/{test*}/badger/{woo}"] = _ => "GreedyAndCapture " + _.test + " " + _.woo;
 
                 Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
+
+                Get["/capturenodewithliteral/{file}.html"] = _ => "CaptureNodeWithLiteral " + _.file + ".html";
+
 
                 Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x =>
                 {
