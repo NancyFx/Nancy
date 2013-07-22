@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Routing.Trie.Nodes
 {
-    using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
     using System.Linq;
@@ -10,11 +9,34 @@
     /// </summary>
     public class CaptureNodeWithMultipleParameters : TrieNode
     {
-        private readonly List<string> parameterNames = new List<string>();
-        private string builtRegex = "";
 
+        /// <summary>
+        /// Captures parameters within segments that contain literals. 
+        ///     i.e:
+        ///         /{file}.{name}
+        ///         /{file}.html
+        ///         /{major}.{minor}.{revision}B{build}
+        /// </summary>
+        /// <param name="parent">The parent node</param>
+        /// <param name="segment">The segment to match upon</param>
+        /// <param name="nodeFactory">The factory</param>
+        public CaptureNodeWithMultipleParameters(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
+            : base(parent, segment, nodeFactory)
+        {
+            this.ExtractParameterNames();
+        }
+
+        private readonly List<string> parameterNames = new List<string>();
+        
+        private string builtRegex = "";
+        
         private static readonly Regex MatchRegex = new Regex(@"({?[^{}]*}?)", RegexOptions.Compiled);
 
+        /// <summary>
+        /// Determines wheter this TrieNode should be used for the given segment.
+        /// </summary>
+        /// <param name="segment">The route segment</param>
+        /// <returns>a boolean</returns>
         public static bool IsMatch(string segment)
         {
             return MatchRegex.Matches(segment).Cast<Group>().Count(g => g.Value != "") > 1;
@@ -26,12 +48,6 @@
         public override int Score
         {
             get { return 10; }
-        }
-
-        public CaptureNodeWithMultipleParameters(TrieNode parent, string segment, ITrieNodeFactory nodeFactory)
-            : base(parent, segment, nodeFactory)
-        {
-            this.ExtractParameterNames();
         }
 
         /// <summary>
