@@ -1,7 +1,8 @@
 namespace Nancy.Routing.Trie
 {
+    using System.Linq;
     using Nancy.Routing.Trie.Nodes;
-
+    
     /// <summary>
     /// Factory for creating the correct type of TrieNode
     /// </summary>
@@ -20,12 +21,14 @@ namespace Nancy.Routing.Trie
                 return new RootNode(this);
             }
 
+            var chars = segment.ToCharArray();
+
             if (segment.StartsWith("(") && segment.EndsWith(")"))
             {
                 return new RegExNode(parent, segment, this);
             }
-
-            if (segment.StartsWith("{") && segment.EndsWith("}"))
+            
+            if (chars.First() == '{' && chars.Last() == '}' && chars.Count(c => c == '{' || c == '}') == 2)
             {
                 return this.GetCaptureNode(parent, segment);
             }
@@ -35,9 +38,9 @@ namespace Nancy.Routing.Trie
                 return new GreedyRegExCaptureNode(parent, segment, this);
             }
 
-            if (CaptureNodeWithLiteral.MatchRegex.IsMatch(segment))
+            if (CaptureNodeWithMultipleParameters.IsMatch(segment))
             {
-              return new CaptureNodeWithLiteral(parent, segment, this);
+                return new CaptureNodeWithMultipleParameters(parent, segment, this);
             }
 
             return new LiteralNode(parent, segment, this);
