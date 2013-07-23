@@ -63,21 +63,26 @@ namespace Nancy.Routing
                                     {
                                         context.Response = completedRouteTask.Result;
 
-                                        ExecutePost(context, cancellationToken, resolveResult.After, tcs);
+                                        if (context.Request.Method.ToUpperInvariant() == "HEAD")
+                                        {
+                                            context.Response = new HeadResponse(context.Response);
+                                        }
+
+                                        ExecutePost(context, cancellationToken, resolveResult.After, resolveResult.OnError, tcs);
                                     },
                                 HandleFaultedTask(context, resolveResult.OnError, tcs));
                             
                             return;
                         }
 
-                        ExecutePost(context, cancellationToken, resolveResult.After, tcs);
+                        ExecutePost(context, cancellationToken, resolveResult.After, resolveResult.OnError, tcs);
                     },
                 HandleFaultedTask(context, resolveResult.OnError, tcs));
 
             return tcs.Task;
         }
 
-        private void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, TaskCompletionSource<Response> tcs)
+        private static void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
         {
             if (postHook == null)
             {
@@ -86,28 +91,44 @@ namespace Nancy.Routing
             }
 
             postHook.Invoke(context, cancellationToken).WhenCompleted(
-                                        t => tcs.SetResult(context.Response),
-                                        t => tcs.SetException(t.Exception),
-                                        false);
+                completedTask => tcs.SetResult(context.Response),
+                completedTask => HandlePostHookFaultedTask(context, onError, completedTask, tcs),
+                false);
         }
 
-        private Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
+        private static void HandlePostHookFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, Task completedTask, TaskCompletionSource<Response> tcs)
+        {
+            var response = ResolveErrorResult(context, onError, completedTask.Exception);
+
+            if (response != null)
+            {
+                context.Response = response;
+
+                tcs.SetResult(response);
+            }
+            else
+            {
+                tcs.SetException(completedTask.Exception);
+            }
+        }
+
+        private static Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
         {
             return task =>
-                {
-                    var response = ResolveErrorResult(context, onError, task.Exception);
+            {
+                var response = ResolveErrorResult(context, onError, task.Exception);
     
-                    if (response != null)
-                    {
-                        context.Response = response;
+                if (response != null)
+                {
+                    context.Response = response;
 
-                        tcs.SetResult(response);
-                    }
-                    else
-                    {
-                        tcs.SetException(task.Exception);
-                    }
-                };
+                    tcs.SetResult(response);
+                }
+                else
+                {
+                    tcs.SetException(task.Exception);
+                }
+            };
         }
 
         private static Task<Response> ExecuteRoutePreReq(NancyContext context, CancellationToken cancellationToken, BeforePipeline resolveResultPreReq)
