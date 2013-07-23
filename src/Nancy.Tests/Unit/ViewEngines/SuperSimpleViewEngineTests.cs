@@ -23,6 +23,20 @@
         }
 
         [Fact]
+        public void Should_evaluate_viewbag_as_dynamic_dictionary_conditional()
+        {
+            const string input = @"@Context.ViewBag.HaveMessage;! @If.Context.ViewBag.HaveMessage;Yay message!@EndIf;";
+            var context = new { ViewBag = (dynamic)new DynamicDictionary() };
+            context.ViewBag.HaveMessage = true;
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"True! Yay message!", output);
+        }
+
+        [Fact]
         public void Should_replace_primitive_model_with_value()
         {
             // Given
