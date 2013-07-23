@@ -403,7 +403,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     var result = string.Empty;
                     foreach (var item in substitutionEnumerable)
                     {
-                        result += ReplaceCurrentMatch(contents, item, host);
+                        var postConditionalResult = PerformConditionalSubstitutions(contents, item, host);
+                        result += ReplaceCurrentMatch(postConditionalResult, item, host);
                     }
 
                     return result;
