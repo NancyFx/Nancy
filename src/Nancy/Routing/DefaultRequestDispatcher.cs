@@ -45,6 +45,8 @@ namespace Nancy.Routing
 
             var resolveResult = this.Resolve(context);
 
+            context.Parameters = resolveResult.Parameters;
+
             var preReqTask = ExecuteRoutePreReq(context, cancellationToken, resolveResult.Before);
 
             preReqTask.WhenCompleted(
