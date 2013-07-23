@@ -29,8 +29,11 @@ namespace Nancy.Tests.Unit.Routing
                 {
                     var tcs = new TaskCompletionSource<Response>();
 
+                    var actionResult =
+                        ((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[2], new CancellationToken());
+
                     var result =
-                        ((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[1], new CancellationToken()).Result;
+                        actionResult.Result;
 
                     tcs.SetResult(result);
 
@@ -64,7 +67,7 @@ namespace Nancy.Tests.Unit.Routing
                 Action = (parameters, token) =>
                              {
                                  capturedExecutionOrder.Add("RouteInvoke");
-                                 return null;
+                                 return CreateResponseTask(null);
                              }
             };
 
@@ -189,10 +192,15 @@ namespace Nancy.Tests.Unit.Routing
             var before = new BeforePipeline();
             before += ctx => null;
 
-            Func<NancyContext, Response> moduleAfterHookResponse = ctx => new Response();
+            var response = new Response();
+
+            Func<NancyContext, Response> moduleAfterHookResponse = ctx => response;
 
             var after = new AfterPipeline();
-            after += ctx => { ctx.Response = moduleAfterHookResponse(ctx); };
+            after += ctx =>
+            {
+                ctx.Response = moduleAfterHookResponse(ctx);
+            };
 
             var route = new FakeRoute();
 
@@ -200,7 +208,7 @@ namespace Nancy.Tests.Unit.Routing
                 route,
                 DynamicDictionary.Empty,
                 before,
-               after,
+                after,
                 null);
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
@@ -212,7 +220,7 @@ namespace Nancy.Tests.Unit.Routing
             this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            context.Response.ShouldBeSameAs(moduleAfterHookResponse);
+            context.Response.ShouldBeSameAs(response);
         }
 
         [Fact]
@@ -679,7 +687,7 @@ namespace Nancy.Tests.Unit.Routing
                 Action = (parameters, ct) =>
                 {
                     capturedExecutionOrder.Add("RouteInvoke");
-                    return null;
+                    return CreateResponseTask(null);
                 }
             };
 
@@ -754,7 +762,7 @@ namespace Nancy.Tests.Unit.Routing
 
             var route = new FakeRoute
             {
-                Action = (parameters, ct) => null
+                Action = (parameters, ct) => CreateResponseTask(null)
             };
 
             var before = new BeforePipeline();
@@ -886,6 +894,16 @@ namespace Nancy.Tests.Unit.Routing
             exception.StackTrace.ShouldContain("BrokenMethod");
         }
 #endif
+
+        private static Task<dynamic> CreateResponseTask(dynamic response)
+        {
+            var tcs =
+                new TaskCompletionSource<dynamic>();
+
+            tcs.SetResult(response);
+
+            return tcs.Task;
+        }
 
         private static Task<dynamic> BrokenMethod()
         {

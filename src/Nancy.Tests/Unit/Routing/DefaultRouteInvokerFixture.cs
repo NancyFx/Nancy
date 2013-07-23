@@ -47,7 +47,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             Assert.IsType<Response>(result);
@@ -62,7 +62,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             Assert.IsType<Response>(result);
@@ -77,7 +77,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             Assert.IsType<Response>(result);
@@ -93,7 +93,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             Assert.IsType<Response>(result);
@@ -109,7 +109,7 @@
             var context = new NancyContext();
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             result.ShouldBeSameAs(response);
@@ -125,7 +125,7 @@
             var context = new NancyContext { Trace = new RequestTrace(true) };
 
             // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context);
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
 
             // Then
             context.Trace.TraceLog.ToString().ShouldContain("Reason Testing");
