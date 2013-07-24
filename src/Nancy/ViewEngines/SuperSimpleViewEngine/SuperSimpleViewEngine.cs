@@ -269,7 +269,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return substitutionObject == null;
             }
 
-            if (substitutionObject.GetType().GetProperty("Value") != null)
+            if (substitutionObject != null && substitutionObject.GetType().GetProperty("Value") != null)
             {
                 object value = ((dynamic)substitutionObject).Value;
                 if (value is bool?)

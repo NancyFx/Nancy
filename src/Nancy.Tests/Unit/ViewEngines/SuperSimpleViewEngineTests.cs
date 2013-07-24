@@ -37,6 +37,19 @@
         }
 
         [Fact]
+        public void Should_not_throw_when_viewbag_property_is_null()
+        {
+            const string input = @"<html><head></head><body>Hey@If.Context.ViewBag.HaveMessage;Yay message!@EndIf;</body></html>";
+            var context = new { ViewBag = (dynamic)new DynamicDictionary() };
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hey</body></html>", output);
+        }
+
+        [Fact]
         public void Should_replace_primitive_model_with_value()
         {
             // Given
