@@ -57,7 +57,7 @@
         /// <returns>A (hot) task of <see cref="Response"/> instance.</returns>
         public Task<dynamic> Invoke(DynamicDictionary parameters, CancellationToken cancellationToken)
         {
-            return this.Action.Invoke(parameters, cancellationToken);
+            return this.Action.Invoke(parameters, cancellationToken); ;
         }
 
         /// <summary>
@@ -91,13 +91,13 @@
         /// <returns>Task wrapped version</returns>
         private static Func<dynamic, CancellationToken, Task<dynamic>> Wrap(Func<object, object> syncFunc)
         {
-            return (p,ct) =>
+            return (parameters, context) =>
                 {
                     var tcs = new TaskCompletionSource<dynamic>();
 
                     try
                     {
-                        var result = syncFunc.Invoke(p);
+                        var result = syncFunc.Invoke(parameters);
 
                         tcs.SetResult(result);
                     }

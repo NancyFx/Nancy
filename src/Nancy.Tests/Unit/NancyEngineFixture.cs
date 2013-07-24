@@ -2,6 +2,8 @@ namespace Nancy.Tests.Unit
 {
     using System;
     using System.Threading;
+    using System.Threading.Tasks;
+
     using FakeItEasy;
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
@@ -25,6 +27,16 @@ namespace Nancy.Tests.Unit
         private readonly IRequestDispatcher requestDispatcher;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
 
+        private static Task<Response> CreateResponseTask(Response response)
+        {
+            var tcs =
+                new TaskCompletionSource<Response>();
+
+            tcs.SetResult(response);
+
+            return tcs.Task;
+        }
+
         public NancyEngineFixture()
         {
             this.resolver = A.Fake<IRouteResolver>();
@@ -35,7 +47,8 @@ namespace Nancy.Tests.Unit
             this.requestDispatcher = A.Fake<IRequestDispatcher>();
             this.diagnosticsConfiguration = new DiagnosticsConfiguration();
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._, A<CancellationToken>._)).Invokes((x) => this.context.Response = new Response());
+            A.CallTo(() => this.requestDispatcher.Dispatch(A<NancyContext>._, A<CancellationToken>._))
+                .Returns(CreateResponseTask(new Response()));
 
             A.CallTo(() => this.statusCodeHandler.HandlesStatusCode(A<HttpStatusCode>.Ignored, A<NancyContext>.Ignored)).Returns(false);
 
@@ -126,7 +139,8 @@ namespace Nancy.Tests.Unit
             // Given
             var request = new Request("GET", "/", "http");
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(this.context, A<CancellationToken>._)).Invokes(x => this.context.Response = this.response);
+            A.CallTo(() => this.requestDispatcher.Dispatch(this.context, A<CancellationToken>._))
+                .Returns(CreateResponseTask(this.response));
 
             // When
             var result = this.engine.HandleRequest(request);

@@ -682,14 +682,11 @@ namespace Nancy.Tests.Unit.Routing
             var after = new AfterPipeline();
             after += ctx => capturedExecutionOrder.Add("Posthook");
 
-            var route = new FakeRoute
+            var route = new FakeRoute((parameters, ct) =>
             {
-                Action = (parameters, ct) =>
-                {
-                    capturedExecutionOrder.Add("RouteInvoke");
-                    return CreateResponseTask(null);
-                }
-            };
+                capturedExecutionOrder.Add("RouteInvoke");
+                return CreateResponseTask(null);
+            });
 
             var resolvedRoute = new ResolveResult(
                 route,
