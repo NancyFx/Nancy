@@ -285,6 +285,36 @@ namespace Nancy.Tests.Unit.Routing
         }
 
         [Fact]
+        public void Should_set_the_context_resolved_route_from_resolve_result()
+        {
+            // Given
+            const string expectedPath = "/the/path";
+
+            var context =
+                new NancyContext
+                {
+                    Request = new FakeRequest("GET", expectedPath)
+                };
+
+            var expectedRoute = new FakeRoute();
+
+            var resolveResult = new ResolveResult(
+               expectedRoute,
+               new DynamicDictionary(),
+               null,
+               null,
+               null);
+
+            A.CallTo(() => this.routeResolver.Resolve(context)).Returns(resolveResult);
+
+            // When
+            this.requestDispatcher.Dispatch(context, new CancellationToken());
+
+            // Then
+            context.ResolvedRoute.ShouldBeSameAs(expectedRoute);
+        }
+
+        [Fact]
         public void Should_invoke_route_resolver_with_context_for_current_request()
         {
             // Given
