@@ -17,9 +17,9 @@
             var engine = GetEngine();
             var request = GetRequest();
 
-            var tcs = new TaskCompletionSource<NancyContext>();
+            var tcs = new TaskCompletionSource<NancyContext>(); 
             var completionTask = tcs.Task;
-
+            
             Console.Write("Running: ");
 
             engine.HandleRequest(request, tcs.SetResult, tcs.SetException);
@@ -42,6 +42,8 @@
             }
 
             Console.WriteLine("\nResult: \n\n{0}", result);
+            Console.WriteLine("\nPress any key to close.");
+            Console.ReadKey();
         }
 
         private static INancyEngine GetEngine()
@@ -58,7 +60,7 @@
             Console.WriteLine("Async Demo");
             Console.WriteLine();
             Console.WriteLine("A long running async request will be executed and until it is complete");
-            Console.WriteLine("a series of '*' characters should appear every 0.5 seconds. If this was");
+            Console.WriteLine("a series of '*' characters should appear every 100 milliseconds. If this was");
             Console.WriteLine("executed syncronously then the main thread would block and no characters");
             Console.WriteLine("would appear.");
             Console.WriteLine();
