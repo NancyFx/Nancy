@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 
-<PropertyGroup Condition="'$(Configuration)' == 'Debug'">
-    <CustomCommands>
-      <!-- Custom commands for Xamarin -->
-      <CustomCommands>
-        <Command type="AfterBuild" command="cp -f &quot;$(SolutionDir)/packages/Nancy.Viewengines.Razor.0.18.0/BuildProviders/Nancy.ViewEngines.Razor.BuildProviders.dll&quot; &quot;$(ProjectDir)/$(OutputPath)/&quot;" />
-        <Command type="AfterBuild" command="cp -f &quot;$(SolutionDir)/packages/Nancy.Viewengines.Razor.0.18.0/lib/Net40/Nancy.ViewEngines.Razor.dll&quot; &quot;$(ProjectDir)/$(OutputPath)/&quot;" />
-      </CustomCommands>
-    </CustomCommands>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-    <PostBuildEvent>
-if $(ConfigurationName) == Debug (
-xcopy /s /y /R "$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll" "$(ProjectDir)$(OutputPath)"
-xcopy /s /y /R "$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\lib\Net40\Nancy.ViewEngines.Razor.dll" "$(ProjectDir)$(OutputPath)"
-)
-	</PostBuildEvent>
-  </PropertyGroup>
+ <Target Name="AfterBuild">
+    <Copy Condition="'$(Configuration)' == 'Debug'" 
+          SourceFiles="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.dll" 
+          DestinationFolder="$(OutDir)" />
+    <Copy Condition="'$(Configuration)' == 'Debug'" 
+          SourceFiles="$(SolutionDir)packages\Nancy.Viewengines.Razor.0.18.0\lib\Net40\Nancy.ViewEngines.Razor.dll" 
+          DestinationFolder="$(OutDir)" />
+ </Target>
 
 </Project>

@@ -16,6 +16,21 @@ if (!$projectRoot) {
     return;
 }
 
+$activeConfig = $project.ConfigurationManager.ActiveConfiguration
+
+if ($activeConfig -and $activeConfig.ConfigurationName.Contains("Debug")) {
+    # Copy the BuildProvider once during install because the AfterBuild target
+    # is not executed when doing a clean build with package restore enabled
+
+    $outputPath = $activeConfig.Properties.Item("OutputPath").Value
+    $buildOutputPath = Join-Path $projectRoot $outputPath
+    $buildProvider = Join-Path $installPath "BuildProviders\Nancy.Viewengines.Razor.BuildProviders.dll"
+    $razor = Join-Path $installPath "lib\net40\Nancy.ViewEngines.Razor.dll"
+
+    Copy-Item $buildProvider $buildOutputPath
+    Copy-Item $razor $buildOutputPath
+}
+
 $destDirectory = $projectRoot
 $fileSystem = Get-VsFileSystem
 
