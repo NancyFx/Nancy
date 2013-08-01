@@ -27,16 +27,6 @@ namespace Nancy.Tests.Unit
         private readonly IRequestDispatcher requestDispatcher;
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
 
-        private static Task<Response> CreateResponseTask(Response response)
-        {
-            var tcs =
-                new TaskCompletionSource<Response>();
-
-            tcs.SetResult(response);
-
-            return tcs.Task;
-        }
-
         public NancyEngineFixture()
         {
             this.resolver = A.Fake<IRouteResolver>();
@@ -576,6 +566,16 @@ namespace Nancy.Tests.Unit
             var result = localEngine.HandleRequest(request);
 
             result.Response.ShouldBeSameAs(localResponse);
+        }
+
+        private static Task<Response> CreateResponseTask(Response response)
+        {
+            var tcs =
+                new TaskCompletionSource<Response>();
+
+            tcs.SetResult(response);
+
+            return tcs.Task;
         }
     }
 }
