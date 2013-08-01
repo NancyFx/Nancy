@@ -1,15 +1,5 @@
 param($installPath, $toolsPath, $package, $project)
 
-. (Join-Path $toolsPath "GetNancyRazorBuildProviderPostBuildCmd.ps1")
-
-# Get the current Post Build Event cmd
-$currentPostBuildCmd = $project.Properties.Item("PostBuildEvent").Value
-
-# Append our post build command if it's not already there
-if (!$currentPostBuildCmd.Contains($NancyRazorBuildProviderPostBuildCmd)) {
-    $project.Properties.Item("PostBuildEvent").Value += $NancyRazorBuildProviderPostBuildCmd
-}
-
 function Get-VsFileSystem {
     $componentModel = Get-VSComponentModel
     $fileSystemProvider = $componentModel.GetService([NuGet.VisualStudio.IFileSystemProvider])

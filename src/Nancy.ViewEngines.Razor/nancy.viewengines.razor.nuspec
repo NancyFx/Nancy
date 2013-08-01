@@ -26,8 +26,8 @@
     <file src="src\Nancy.Viewengines.Razor\web.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\app.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\**\*.cs" target="src" />
+    <file src="src\Nancy.Viewengines.Razor\Nancy.Viewengines.Razor.targets" target="build\net40" />
     <file src="build\binaries\install.ps1" target="Tools\install.ps1" />
     <file src="build\binaries\uninstall.ps1" target="Tools\uninstall.ps1" />
-    <file src="build\binaries\GetNancyRazorBuildProviderPostBuildCmd.ps1" target="Tools\GetNancyRazorBuildProviderPostBuildCmd.ps1" />
   </files>
 </package>
