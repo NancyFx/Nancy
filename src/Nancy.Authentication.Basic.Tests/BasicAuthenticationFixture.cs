@@ -229,6 +229,20 @@
         }
 
         [Fact]
+        public void Pre_request_hook_should_call_user_validator_with_password_in_auth_header_containing_colon()
+        {
+            // Given
+            var context = CreateContextWithHeader(
+                "Authorization", new[] {"Basic" + " " + EncodeCredentials("foo", "bar:baz")});
+
+            // When
+            this.hooks.BeforeRequest.Invoke(context, new CancellationToken());
+
+            // Then
+            A.CallTo(() => config.UserValidator.Validate("foo", "bar:baz")).MustHaveHappened();
+        }
+
+        [Fact]
         public void Should_set_user_in_context_with_valid_username_in_auth_header()
         {
             // Given
