@@ -22,13 +22,15 @@ namespace Nancy.Routing.Trie
             }
 
             var chars = segment.ToCharArray();
+            var start = chars[0];
+            var end = chars[chars.Length - 1];
 
-            if (segment.StartsWith("(") && segment.EndsWith(")"))
+            if (start == '(' && end == ')')
             {
                 return new RegExNode(parent, segment, this);
             }
             
-            if (chars.First() == '{' && chars.Last() == '}' && chars.Count(c => c == '{' || c == '}') == 2)
+            if (start == '{' && end == '}' && chars.Count(c => c == '{' || c == '}') == 2)
             {
                 return this.GetCaptureNode(parent, segment);
             }

@@ -9,6 +9,15 @@
     /// </summary>
     public class CaptureNodeWithMultipleParameters : TrieNode
     {
+        private static readonly Regex MatchRegex = new Regex(@"({?[^{}]*}?)", RegexOptions.Compiled);
+        
+        private readonly List<string> parameterNames = new List<string>();
+        
+        private string builtRegex = string.Empty;
+
+        private const string AssertStart = "^";
+        private const string MatchParameter = "(.*)";
+        private const string AssertEnd = "$";
 
         /// <summary>
         /// Captures parameters within segments that contain literals. 
@@ -25,13 +34,7 @@
         {
             this.ExtractParameterNames();
         }
-
-        private readonly List<string> parameterNames = new List<string>();
         
-        private string builtRegex = "";
-        
-        private static readonly Regex MatchRegex = new Regex(@"({?[^{}]*}?)", RegexOptions.Compiled);
-
         /// <summary>
         /// Determines wheter this TrieNode should be used for the given segment.
         /// </summary>
@@ -39,7 +42,12 @@
         /// <returns>a boolean</returns>
         public static bool IsMatch(string segment)
         {
-            return MatchRegex.Matches(segment).Cast<Group>().Count(g => g.Value != "") > 1;
+            return MatchRegex.Matches(segment).Cast<Group>().Count(g => g.Value != string.Empty) > 1;
+        }
+
+        private static bool IsParameterCapture(Capture match)
+        {
+            return match.Value.StartsWith("{") && match.Value.EndsWith("}");
         }
 
         /// <summary>
@@ -64,7 +72,7 @@
             {
                 match = new SegmentMatch(true);
                 var regexMatch = regex.Match(segment);
-                for (int i = 1; i < regexMatch.Groups.Count; i++)
+                for (var i = 1; i < regexMatch.Groups.Count; i++)
                 {
                     match.CapturedParameters.Add(parameterNames[i - 1], regexMatch.Groups[i].Value);
                 }
@@ -78,20 +86,25 @@
         private void ExtractParameterNames()
         {
             var matches = MatchRegex.Matches(this.RouteDefinitionSegment);
-            builtRegex += "^";
+            this.BuildRegex(AssertStart);
             foreach (Match match in matches)
             {
-                if (match.Value.StartsWith("{") && match.Value.EndsWith("}"))
+                if (IsParameterCapture(match))
                 {
                     parameterNames.Add(match.Value.Trim('{', '}'));
-                    builtRegex += "(.+)";
+                    this.BuildRegex(MatchParameter);
                 }
                 else
                 {
-                    builtRegex += Regex.Escape(match.Value);
+                    this.BuildRegex(Regex.Escape(match.Value));
                 } 
             }
-            builtRegex += "$";
+            this.BuildRegex(AssertEnd);
+        }
+
+        private void BuildRegex(string regexSegment)
+        {
+            this.builtRegex += regexSegment;
         }
     }
 }
