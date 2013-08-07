@@ -3,25 +3,31 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text.RegularExpressions;
-
     using Nancy;
     using Nancy.Helpers;
-
     using Trie;
 
     using MatchResult = Trie.MatchResult;
 
+    /// <summary>
+    /// Default implementation of the <see cref="IRouteResolver"/> interface.
+    /// </summary>
     public class DefaultRouteResolver : IRouteResolver
     {
         private readonly INancyModuleCatalog catalog;
-
         private readonly INancyModuleBuilder moduleBuilder;
-
         private readonly IRouteCache routeCache;
-
         private readonly IRouteResolverTrie trie;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultRouteResolver"/> class, using
+        /// the provided <paramref name="catalog"/>, <paramref name="moduleBuilder"/>,
+        /// <paramref name="routeCache"/> and <paramref name="trie"/>.
+        /// </summary>
+        /// <param name="catalog">A <see cref="INancyModuleCatalog"/> instance.</param>
+        /// <param name="moduleBuilder">A <see cref="INancyModuleBuilder"/> instance.</param>
+        /// <param name="routeCache">A <see cref="IRouteCache"/> instance.</param>
+        /// <param name="trie">A <see cref="IRouteResolverTrie"/> instance.</param>
         public DefaultRouteResolver(INancyModuleCatalog catalog, INancyModuleBuilder moduleBuilder, IRouteCache routeCache, IRouteResolverTrie trie)
         {
             this.catalog = catalog;
@@ -32,11 +38,11 @@
             this.BuildTrie();
         }
 
-        private void BuildTrie()
-        {
-            this.trie.BuildTrie(this.routeCache);
-        }
-
+        /// <summary>
+        /// Gets the route, and the corresponding parameter dictionary from the URL
+        /// </summary>
+        /// <param name="context">Current context</param>
+        /// <returns>Tuple - Item1 being the Route, Item2 being the parameters dictionary, Item3 being the prereq, Item4 being the postreq, Item5 being the error handler</returns>
         public ResolveResult Resolve(NancyContext context)
         {
             var pathDecoded = 
@@ -49,14 +55,14 @@
                 var allowedMethods =
                     this.trie.GetOptions(pathDecoded, context).ToArray();
 
-                if (this.IsOptionsRequest(context))
+                if (IsOptionsRequest(context))
                 {
                     return BuildOptionsResult(allowedMethods, context);
                 }
 
                 return IsMethodNotAllowed(allowedMethods) ? 
                     BuildMethodNotAllowedResult(context, allowedMethods) : 
-                    this.GetNotFoundResult(context);
+                    GetNotFoundResult(context);
             }
 
             // Sort in descending order
@@ -71,7 +77,7 @@
                 }
             }
 
-            return this.GetNotFoundResult(context);
+            return GetNotFoundResult(context);
         }
 
         private static ResolveResult BuildMethodNotAllowedResult(NancyContext context, IEnumerable<string> allowedMethods)
@@ -85,6 +91,16 @@
         private static bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
         {
             return allowedMethods.Any() && !StaticConfiguration.DisableMethodNotAllowedResponses;
+        }
+
+        private static bool IsOptionsRequest(NancyContext context)
+        {
+            return context.Request.Method.Equals("OPTIONS", StringComparison.Ordinal);
+        }
+
+        private void BuildTrie()
+        {
+            this.trie.BuildTrie(this.routeCache);
         }
 
         private static ResolveResult BuildOptionsResult(IEnumerable<string> allowedMethods, NancyContext context)
@@ -101,11 +117,6 @@
                 null,
                 null,
                 null);                        
-        }
-
-        public bool IsOptionsRequest(NancyContext context)
-        {
-            return context.Request.Method.Equals("OPTIONS", StringComparison.Ordinal);
         }
 
         private ResolveResult BuildResult(NancyContext context, MatchResult result)
@@ -126,12 +137,13 @@
 
         private INancyModule GetModuleFromMatchResult(NancyContext context, MatchResult result)
         {
-            var module = this.catalog.GetModule(result.ModuleType, context);
+            var module = 
+                this.catalog.GetModule(result.ModuleType, context);
 
             return this.moduleBuilder.BuildModule(module, context);
         }
 
-        private ResolveResult GetNotFoundResult(NancyContext context)
+        private static ResolveResult GetNotFoundResult(NancyContext context)
         {
             return new ResolveResult
             {
@@ -145,9 +157,12 @@
 
         private static string GetMethod(NancyContext context)
         {
-            var requestedMethod = context.Request.Method;
+            var requestedMethod = 
+                context.Request.Method;
             
-            return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ? "GET" : requestedMethod;
+            return requestedMethod.Equals("HEAD", StringComparison.Ordinal) ?
+                "GET" :
+                requestedMethod;
         }
     }
 }

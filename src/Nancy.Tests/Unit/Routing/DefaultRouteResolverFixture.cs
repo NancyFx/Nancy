@@ -225,6 +225,7 @@
         public void Should_set_allowed_method_on_response_when_returning_405()
         {
             // Given
+            StaticConfiguration.DisableMethodNotAllowedResponses = false;
             var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
             
             // When
