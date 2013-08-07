@@ -1,7 +1,9 @@
 ﻿namespace Nancy.Routing
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
 
     using Nancy;
     using Nancy.Helpers;
@@ -37,17 +39,24 @@
 
         public ResolveResult Resolve(NancyContext context)
         {
-            var pathDecoded = HttpUtility.UrlDecode(context.Request.Path);
+            var pathDecoded = 
+                HttpUtility.UrlDecode(context.Request.Path);
 
             var results = this.trie.GetMatches(GetMethod(context), pathDecoded, context);
 
             if (!results.Any())
             {
+                var allowedMethods =
+                    this.trie.GetOptions(pathDecoded, context).ToArray();
+
                 if (this.IsOptionsRequest(context))
                 {
-                    return this.BuildOptionsResult(context);
+                    return BuildOptionsResult(allowedMethods, context);
                 }
-                return this.GetNotFoundResult(context);
+
+                return IsMethodNotAllowed(allowedMethods) ? 
+                    BuildMethodNotAllowedResult(context, allowedMethods) : 
+                    this.GetNotFoundResult(context);
             }
 
             // Sort in descending order
@@ -65,23 +74,36 @@
             return this.GetNotFoundResult(context);
         }
 
-        private ResolveResult BuildOptionsResult(NancyContext context)
+        private static ResolveResult BuildMethodNotAllowedResult(NancyContext context, IEnumerable<string> allowedMethods)
         {
-            var path = context.Request.Path;
+            var route =
+                new MethodNotAllowedRoute(context.Request.Path, context.Request.Method, allowedMethods);
 
-            var options = this.trie.GetOptions(path, context);
-
-            var optionsResult = new OptionsRoute(path, options);
-
-            return new ResolveResult(
-                            optionsResult,
-                            new DynamicDictionary(), 
-                            null,
-                            null,
-                            null);                        
+            return new ResolveResult(route, new DynamicDictionary(), null, null, null);
         }
 
-        private bool IsOptionsRequest(NancyContext context)
+        private static bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
+        {
+            return allowedMethods.Any();
+        }
+
+        private static ResolveResult BuildOptionsResult(IEnumerable<string> allowedMethods, NancyContext context)
+        {
+            var path = 
+                context.Request.Path;
+
+            var optionsResult = 
+                new OptionsRoute(path, allowedMethods);
+
+            return new ResolveResult(
+                optionsResult,
+                new DynamicDictionary(), 
+                null,
+                null,
+                null);                        
+        }
+
+        public bool IsOptionsRequest(NancyContext context)
         {
             return context.Request.Method.Equals("OPTIONS", StringComparison.Ordinal);
         }

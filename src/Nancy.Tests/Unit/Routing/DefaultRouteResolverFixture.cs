@@ -146,6 +146,42 @@
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
+        [Fact]
+        public void Should_return_405_if_requested_method_is_not_permitted_but_others_are_available()
+        {
+            // Given
+            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+
+            // When
+            var result = localBrowser.Get("/");
+
+            // Then
+            result.StatusCode.ShouldEqual(HttpStatusCode.MethodNotAllowed);
+        }
+
+        [Fact]
+        public void Should_set_allowed_method_on_response_when_returning_405()
+        {
+            // Given
+            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+            
+            // When
+            var result = localBrowser.Get("/");
+
+            // Then
+            result.Headers["Allow"].ShouldEqual("DELETE, POST");
+        }
+
+        private class MethodNotAllowedModule : NancyModule
+        {
+            public MethodNotAllowedModule()
+            {
+                Delete["/"] = x => 200;
+                
+                Post["/"] = x => 200;
+            }
+        }
+
         private class NoRootModule : NancyModule
         {
             public NoRootModule()
