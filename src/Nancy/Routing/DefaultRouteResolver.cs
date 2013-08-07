@@ -84,7 +84,7 @@
 
         private static bool IsMethodNotAllowed(IEnumerable<string> allowedMethods)
         {
-            return allowedMethods.Any();
+            return allowedMethods.Any() && !StaticConfiguration.DisableMethodNotAllowedResponses;
         }
 
         private static ResolveResult BuildOptionsResult(IEnumerable<string> allowedMethods, NancyContext context)

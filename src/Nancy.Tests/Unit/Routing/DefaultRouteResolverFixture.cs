@@ -147,9 +147,10 @@
         }
 
         [Fact]
-        public void Should_return_405_if_requested_method_is_not_permitted_but_others_are_available()
+        public void Should_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_not_disabled()
         {
             // Given
+            StaticConfiguration.DisableMethodNotAllowedResponses = false;
             var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
 
             // When
@@ -157,6 +158,20 @@
 
             // Then
             result.StatusCode.ShouldEqual(HttpStatusCode.MethodNotAllowed);
+        }
+
+        [Fact]
+        public void Should_not_return_405_if_requested_method_is_not_permitted_but_others_are_available_and_disabled()
+        {
+            // Given
+            StaticConfiguration.DisableMethodNotAllowedResponses = true;
+            var localBrowser = new Browser(with => with.Module<MethodNotAllowedModule>());
+
+            // When
+            var result = localBrowser.Get("/");
+
+            // Then
+            result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
         [Fact]
