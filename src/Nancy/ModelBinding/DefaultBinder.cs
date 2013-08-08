@@ -164,7 +164,7 @@ namespace Nancy.ModelBinding
                     }
                 }
 
-                if (bindingExceptions.Any())
+                if (bindingExceptions.Any() && !bindingContext.Configuration.IgnoreErrors)
                 {
                     throw new ModelBindingException(modelType, bindingExceptions);
                 }

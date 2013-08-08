@@ -7,18 +7,14 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.Text;
     using System.Globalization;
     using System.Xml.Serialization;
-
     using FakeItEasy;
     using Fakes;
-    
     using Nancy.IO;
     using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
-    
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
-    
     using Xunit.Extensions;
     using Xunit;
 
@@ -293,6 +289,40 @@ namespace Nancy.Tests.Unit.ModelBinding
                                                                         pe.PropertyName == "AnotherIntProperty"
                                                                         && pe.AttemptedValue == "morebad"
                                                                         && pe.InnerException.Message == "morebad is not a valid value for Int32."));
+        }
+
+        [Fact]
+        public void Should_not_throw_ModelBindingException_if_convertion_of_property_fails_and_ignore_error_is_true()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["IntProperty"] = "badint";
+            context.Request.Form["AnotherIntProperty"] = "morebad";
+
+            var config = new BindingConfig {IgnoreErrors = true};
+
+            // When
+            // Then
+            Assert.DoesNotThrow(() => binder.Bind(context, typeof(TestModel), null, config));
+        }
+
+        [Fact]
+        public void Should_set_remaining_properties_when_one_fails_and_ignore_error_is_enabled()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["IntProperty"] = "badint";
+            context.Request.Form["AnotherIntProperty"] = 10;
+
+            var config = new BindingConfig { IgnoreErrors = true };
+
+            // When
+            var model = binder.Bind(context, typeof(TestModel), null, config) as TestModel;
+            
+            // Then
+            model.AnotherIntProperty.ShouldEqual(10);
         }
 
         [Fact]
