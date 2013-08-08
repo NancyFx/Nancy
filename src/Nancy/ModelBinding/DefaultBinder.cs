@@ -86,7 +86,7 @@ namespace Nancy.ModelBinding
 
                 if (genericType == null)
                 {
-                    throw new ArgumentException("when modeltype is an enumerble it must specify the type", "modelType");
+                    throw new ArgumentException("When modelType is an enumerable it must specify the type.", "modelType");
                 }
             }
 
