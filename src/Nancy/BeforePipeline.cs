@@ -89,16 +89,18 @@
                 if (current.IsCompleted || current.IsFaulted)
                 {
                     var resultTask = current;
-
-                    // Task has already completed, so don't bother with continuations
-                    if (ContinueExecution(current.IsFaulted, current.Result, current.Exception))
+                    if (!current.IsFaulted)
                     {
-                        if (enumerator.MoveNext())
+                        // Task has already completed, so don't bother with continuations
+                        if (ContinueExecution(current.IsFaulted, current.Result, current.Exception))
                         {
-                            continue;
-                        }
+                            if (enumerator.MoveNext())
+                            {
+                                continue;
+                            }
 
-                        resultTask = null;
+                            resultTask = null;
+                        }
                     }
 
                     ExecuteTasksSingleResultFinished(resultTask, tcs);
