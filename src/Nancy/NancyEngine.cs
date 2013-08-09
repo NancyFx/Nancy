@@ -287,7 +287,7 @@
                 {
                     try
                     {
-                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception);
+                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception.InnerException);
 
                         tcs.SetResult(context);
                     }
