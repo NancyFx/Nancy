@@ -261,16 +261,7 @@
 
             preHookTask.WhenCompleted(t =>
                 {
-                    if (t.Result != null)
-                    {
-                        context.Response = t.Result;
-
-                        tcs.SetResult(context);
-
-                        return;
-                    }
-
-                    var dispatchTask = this.dispatcher.Dispatch(context, cancellationToken);
+                    var dispatchTask = t.Result != null ? TaskHelpers.GetCompletedTask(t.Result) : this.dispatcher.Dispatch(context, cancellationToken);
 
                     dispatchTask.WhenCompleted(
                         completedTask =>
@@ -284,7 +275,6 @@
                                 HandleFaultedTask(context, pipelines, tcs));
                         },
                         HandleFaultedTask(context, pipelines, tcs));
-
                 },
                 HandleFaultedTask(context, pipelines, tcs));
 
