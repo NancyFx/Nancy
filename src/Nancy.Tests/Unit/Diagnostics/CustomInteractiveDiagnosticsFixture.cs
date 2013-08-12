@@ -14,6 +14,7 @@
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
+    using Nancy.Tests; //While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
     using Xunit;
 
     public class CustomInteractiveDiagnosticsHookFixture
