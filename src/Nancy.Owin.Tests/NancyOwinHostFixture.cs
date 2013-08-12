@@ -65,7 +65,6 @@ namespace Nancy.Owin.Tests
             this.host.Invoke(this.environment);
 
             ((int)this.environment["owin.ResponseStatusCode"]).ShouldEqual(200);
-            this.environment["owin.ResponseReasonPhrase"].ShouldEqual("OK");
         }
 
         [Fact]
