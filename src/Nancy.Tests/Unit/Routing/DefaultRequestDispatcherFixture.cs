@@ -8,6 +8,8 @@ namespace Nancy.Tests.Unit.Routing
 
     using FakeItEasy;
     using Fakes;
+
+    using Nancy.Helpers;
     using Nancy.Responses.Negotiation;
     using Nancy.Routing;
     using Xunit;
@@ -32,11 +34,14 @@ namespace Nancy.Tests.Unit.Routing
                     var actionResult =
                         ((Route)arg.Arguments[0]).Action.Invoke(arg.Arguments[2], new CancellationToken());
 
-                    var result =
-                        actionResult.Result;
-
-                    tcs.SetResult(result);
-
+                    if (actionResult.IsFaulted)
+                    {
+                        tcs.SetException(actionResult.Exception.InnerException);
+                    }
+                    else
+                    {
+                        tcs.SetResult(actionResult.Result);
+                    }
                     return tcs.Task;
                 });
 
@@ -156,7 +161,8 @@ namespace Nancy.Tests.Unit.Routing
         public void Should_return_response_from_module_before_hook_when_not_null()
         {
             // Given
-            Func<NancyContext, Response> moduleBeforeHookResponse = ctx => new Response();
+            var expectedResponse = new Response();
+            Func<NancyContext, Response> moduleBeforeHookResponse = ctx => expectedResponse;
 
             var before = new BeforePipeline();
             before += moduleBeforeHookResponse;
@@ -182,7 +188,7 @@ namespace Nancy.Tests.Unit.Routing
             this.requestDispatcher.Dispatch(context, new CancellationToken());
 
             // Then
-            context.Response.ShouldBeSameAs(moduleBeforeHookResponse);
+            context.Response.ShouldBeSameAs(expectedResponse);
         }
 
         [Fact]
@@ -720,7 +726,7 @@ namespace Nancy.Tests.Unit.Routing
                 Action = (parameters, ct) =>
                 {
                     capturedExecutionOrder.Add("RouteInvoke");
-                    throw new Exception("RouteInvoke");
+                    return TaskHelpers.GetFaultedTask<dynamic>(new Exception("RouteInvoke"));
                 }
             };
 
@@ -831,7 +837,7 @@ namespace Nancy.Tests.Unit.Routing
             // Given
             var route = new FakeRoute
             {
-                Action = (parameters,ct) => { throw new Exception(); }
+                Action = (parameters,ct) => TaskHelpers.GetFaultedTask<dynamic>(new Exception())
             };
 
             var before = new BeforePipeline();
@@ -845,7 +851,7 @@ namespace Nancy.Tests.Unit.Routing
                 DynamicDictionary.Empty,
                 before,
                 after,
-                (ctx, ex) => { return new Response(); });
+                (ctx, ex) => new Response());
 
             A.CallTo(() => this.routeResolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 

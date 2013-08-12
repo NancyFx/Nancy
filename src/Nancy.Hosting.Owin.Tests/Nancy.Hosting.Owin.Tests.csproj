@@ -81,8 +81,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.13.0\lib\net40\FakeItEasy.dll</HintPath>
+    <Reference Include="FakeItEasy, Version=1.13.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>
@@ -119,10 +120,6 @@
     <Compile Include="NancyOwinHostFixture.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Nancy.Demo.Hosting.Owin\Nancy.Demo.Hosting.Owin.csproj">
-      <Project>{7959D79C-9E2B-4871-9470-6A6B527ABE5E}</Project>
-      <Name>Nancy.Demo.Hosting.Owin</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Nancy.Hosting.Owin\Nancy.Hosting.Owin.csproj">
       <Project>{500B28EA-BFDB-4686-8A7D-5CA38B11EF21}</Project>
       <Name>Nancy.Hosting.Owin</Name>

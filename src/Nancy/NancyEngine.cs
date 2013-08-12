@@ -261,16 +261,7 @@
 
             preHookTask.WhenCompleted(t =>
                 {
-                    if (t.Result != null)
-                    {
-                        context.Response = t.Result;
-
-                        tcs.SetResult(context);
-
-                        return;
-                    }
-
-                    var dispatchTask = this.dispatcher.Dispatch(context, cancellationToken);
+                    var dispatchTask = t.Result != null ? TaskHelpers.GetCompletedTask(t.Result) : this.dispatcher.Dispatch(context, cancellationToken);
 
                     dispatchTask.WhenCompleted(
                         completedTask =>
@@ -284,7 +275,6 @@
                                 HandleFaultedTask(context, pipelines, tcs));
                         },
                         HandleFaultedTask(context, pipelines, tcs));
-
                 },
                 HandleFaultedTask(context, pipelines, tcs));
 
@@ -297,7 +287,7 @@
                 {
                     try
                     {
-                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception);
+                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception.InnerException);
 
                         tcs.SetResult(context);
                     }
@@ -320,7 +310,7 @@
 
         private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)
         {
-            return pipeline.Invoke(context, cancellationToken);
+            return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
         }
 
         private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)

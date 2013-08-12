@@ -89,16 +89,18 @@
                 if (current.IsCompleted || current.IsFaulted)
                 {
                     var resultTask = current;
-
-                    // Task has already completed, so don't bother with continuations
-                    if (ContinueExecution(current.IsFaulted, current.Result, current.Exception))
+                    if (!current.IsFaulted)
                     {
-                        if (enumerator.MoveNext())
+                        // Task has already completed, so don't bother with continuations
+                        if (ContinueExecution(current.IsFaulted, current.Result, current.Exception))
                         {
-                            continue;
-                        }
+                            if (enumerator.MoveNext())
+                            {
+                                continue;
+                            }
 
-                        resultTask = null;
+                            resultTask = null;
+                        }
                     }
 
                     ExecuteTasksSingleResultFinished(resultTask, tcs);
@@ -160,26 +162,26 @@
         /// <summary>
         /// Wraps a sync delegate into it's async form
         /// </summary>
-        /// <param name="syncDelegate">Sync delegate instance</param>
-        /// <returns>Async delegate instance</returns>
-        protected override Func<NancyContext, CancellationToken, Task<Response>> Wrap(Func<NancyContext, Response> syncDelegate)
+        /// <param name="pipelineItem">Sync pipeline item instance</param>
+        /// <returns>Async pipeline item instance</returns>
+        protected override PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>> Wrap(PipelineItem<Func<NancyContext, Response>> pipelineItem)
         {
-            return (ctx, ct) =>
+            var syncDelegate = pipelineItem.Delegate;
+            Func<NancyContext, CancellationToken, Task<Response>> asyncDelegate = (ctx, ct) =>
             {
                 var tcs = new TaskCompletionSource<Response>();
                 try
                 {
                     var result = syncDelegate.Invoke(ctx);
-
                     tcs.SetResult(result);
                 }
                 catch (Exception e)
                 {
                     tcs.SetException(e);
                 }
-
                 return tcs.Task;
             };
+            return new PipelineItem<Func<NancyContext, CancellationToken, Task<Response>>>(pipelineItem.Name, asyncDelegate);
         }
     }
 } 

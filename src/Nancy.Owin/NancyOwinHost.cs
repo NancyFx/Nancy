@@ -5,6 +5,7 @@
     using System.Globalization;
     using System.IO;
     using System.Linq;
+    using System.Net;
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
@@ -52,7 +53,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
-            var owinRequestHost = GetHeader(owinRequestHeaders, "Host");
+            var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
 
             byte[] certificate = null;
             if (this.options.EnableClientCertificates)

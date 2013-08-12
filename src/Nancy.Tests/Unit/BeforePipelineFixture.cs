@@ -58,7 +58,7 @@
 
             var result = pipeline.Invoke(CreateContext(), new CancellationToken());
 
-            Assert.Same(response, result);
+            Assert.Same(response, result.Result);
         }
 
         [Fact]
@@ -73,40 +73,33 @@
 
             var result = pipeline.Invoke(CreateContext(), new CancellationToken());
 
-            Assert.Null(result);
+            Assert.Null(result.Result);
         }
 
         [Fact]
         public void PlusEquals_with_func_add_item_to_end_of_pipeline()
         {
-            Func<NancyContext, Response> item1 = (r) => { return null; };
-            Func<NancyContext, Response> item2 = (r) => { return CreateResponse(); };
-            pipeline.AddItemToEndOfPipeline(item2);
+            pipeline.AddItemToEndOfPipeline(r => CreateResponse());
 
-            pipeline += item1;
+            pipeline += r => null;
 
             Assert.Equal(2, pipeline.PipelineDelegates.Count());
-            Assert.Same(item1, pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
         public void PlusEquals_with_another_pipeline_adds_those_pipeline_items_to_end_of_pipeline()
         {
-            Func<NancyContext, Response> item1 = (r) => { return null; };
-            Func<NancyContext, Response> item2 = (r) => { return CreateResponse(); };
-            pipeline.AddItemToEndOfPipeline(item1);
-            pipeline.AddItemToEndOfPipeline(item2);
-            Func<NancyContext, Response> item3 = (r) => { return null; };
-            Func<NancyContext, Response> item4 = (r) => { return CreateResponse(); };
+            pipeline.AddItemToEndOfPipeline(r => null);
+            pipeline.AddItemToEndOfPipeline(r => CreateResponse());
             var pipeline2 = new BeforePipeline();
-            pipeline2.AddItemToEndOfPipeline(item3);
-            pipeline2.AddItemToEndOfPipeline(item4);
+            pipeline2.AddItemToEndOfPipeline(r => null);
+            pipeline2.AddItemToEndOfPipeline(r => CreateResponse());
 
             pipeline += pipeline2;
 
-            Assert.Equal(4, pipeline.PipelineDelegates.Count());
-            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
-            Assert.Same(item4, pipeline.PipelineDelegates.Last());
+            Assert.Equal(4, pipeline.PipelineItems.Count());
+            Assert.Same(pipeline2.PipelineDelegates.ElementAt(0), pipeline.PipelineDelegates.ElementAt(2));
+            Assert.Same(pipeline2.PipelineDelegates.ElementAt(1), pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
