@@ -10,62 +10,62 @@ namespace Nancy.Owin.Tests
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
-    using Nancy.Owin;
     using Nancy.Tests;
 
     using Xunit;
 
     public class NancyOwinHostFixture
     {
-        private readonly NancyOwinHost host;
         private readonly Dictionary<string, object> environment;
-        private readonly INancyEngine fakeEngine;
         private readonly INancyBootstrapper fakeBootstrapper;
+        private readonly INancyEngine fakeEngine;
+        private readonly NancyOwinHost host;
 
         public NancyOwinHostFixture()
         {
             this.fakeEngine = A.Fake<INancyEngine>();
             this.fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => this.fakeBootstrapper.GetEngine()).Returns(this.fakeEngine);
-            this.host = new NancyOwinHost(null,  new NancyOptions { Bootstrapper = this.fakeBootstrapper });
-            this.environment = new Dictionary<string, object>()
-                                   {
-                                       { "owin.RequestMethod", "GET" },
-                                       { "owin.RequestPath", "/test" },
-                                       { "owin.RequestPathBase", "/root" },
-                                       { "owin.RequestQueryString", "var=value" },
-                                       { "owin.RequestBody", Stream.Null },
-                                       { "owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
-                                       { "owin.RequestScheme", "http" },
-                                       { "owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase) },
-                                       { "owin.ResponseBody", new MemoryStream() },
-                                       { "owin.ResponseReasonPhrase", string.Empty },
-                                       { "owin.Version", "1.0" },
-                                       { "owin.CallCancelled", CancellationToken.None }
-                                   };
+            this.host = new NancyOwinHost(null, new NancyOptions {Bootstrapper = this.fakeBootstrapper});
+            this.environment = new Dictionary<string, object>
+            {
+                {"owin.RequestMethod", "GET"},
+                {"owin.RequestPath", "/test"},
+                {"owin.RequestPathBase", "/root"},
+                {"owin.RequestQueryString", "var=value"},
+                {"owin.RequestBody", Stream.Null},
+                {"owin.RequestHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)},
+                {"owin.RequestScheme", "http"},
+                {"owin.ResponseHeaders", new Dictionary<string, string[]>(StringComparer.OrdinalIgnoreCase)},
+                {"owin.ResponseBody", new MemoryStream()},
+                {"owin.ResponseReasonPhrase", string.Empty},
+                {"owin.Version", "1.0"},
+                {"owin.CallCancelled", CancellationToken.None}
+            };
         }
 
         [Fact]
         public void Should_immediately_invoke_nancy_if_no_request_body_delegate()
         {
             this.host.Invoke(this.environment);
-            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored,  A<Func<NancyContext, NancyContext>>.Ignored,   A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(
+                     () =>
+                         this.fakeEngine.HandleRequest(A<Request>.Ignored,
+                             A<Func<NancyContext, NancyContext>>.Ignored,
+                             A<Action<NancyContext>>.Ignored,
+                             A<Action<Exception>>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
         public void Should_set_return_code_in_response_callback()
         {
-            var fakeResponse = new Response
-            {
-                StatusCode = HttpStatusCode.OK,
-                Contents = s => { }
-            };
-            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var fakeResponse = new Response {StatusCode = HttpStatusCode.OK, Contents = s => { }};
+            var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
             this.host.Invoke(this.environment);
 
             ((int)this.environment["owin.ResponseStatusCode"]).ShouldEqual(200);
-            ((string)this.environment["owin.ResponseReasonPhrase"]).ShouldEqual("OK");  
+            this.environment["owin.ResponseReasonPhrase"].ShouldEqual("OK");
         }
 
         [Fact]
@@ -74,10 +74,10 @@ namespace Nancy.Owin.Tests
             var fakeResponse = new Response
             {
                 StatusCode = HttpStatusCode.OK,
-                Headers = new Dictionary<string, string> { { "TestHeader", "TestValue" } },
+                Headers = new Dictionary<string, string> {{"TestHeader", "TestValue"}},
                 Contents = s => { }
             };
-            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
             this.host.Invoke(this.environment);
@@ -94,16 +94,16 @@ namespace Nancy.Owin.Tests
         {
             var data1 = Encoding.ASCII.GetBytes("Some content");
             var data2 = Encoding.ASCII.GetBytes("Some more content");
-            var fakeResponse = new Response()
+            var fakeResponse = new Response
             {
                 StatusCode = HttpStatusCode.OK,
                 Contents = s =>
-                    {
-                        s.Write(data1, 0, data1.Length);
-                        s.Write(data2, 0, data2.Length);
-                    }
+                {
+                    s.Write(data1, 0, data1.Length);
+                    s.Write(data2, 0, data2.Length);
+                }
             };
-            var fakeContext = new NancyContext { Response = fakeResponse };
+            var fakeContext = new NancyContext {Response = fakeResponse};
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
             this.host.Invoke(this.environment);
@@ -116,14 +116,10 @@ namespace Nancy.Owin.Tests
         public void Should_dispose_context_on_completion_of_body_delegate()
         {
             var data1 = Encoding.ASCII.GetBytes("Some content");
-            var fakeResponse = new Response()
-            {
-                StatusCode = HttpStatusCode.OK,
-                Contents = s => s.Write(data1, 0, data1.Length)
-            };
-            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var fakeResponse = new Response {StatusCode = HttpStatusCode.OK, Contents = s => s.Write(data1, 0, data1.Length)};
+            var fakeContext = new NancyContext {Response = fakeResponse};
             var mockDisposable = A.Fake<IDisposable>();
-            fakeContext.Items.Add("Test",  mockDisposable);
+            fakeContext.Items.Add("Test", mockDisposable);
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
             this.host.Invoke(environment);
@@ -134,10 +130,10 @@ namespace Nancy.Owin.Tests
         [Fact]
         public void Should_set_cookie_with_valid_header()
         {
-            var fakeResponse = new Response() { StatusCode = HttpStatusCode.OK };
+            var fakeResponse = new Response {StatusCode = HttpStatusCode.OK};
             fakeResponse.AddCookie("test", "testvalue");
             fakeResponse.AddCookie("test1", "testvalue1");
-            var fakeContext = new NancyContext() { Response = fakeResponse };
+            var fakeContext = new NancyContext {Response = fakeResponse};
 
             this.SetupFakeNancyCompleteCallback(fakeContext);
 
@@ -156,8 +152,12 @@ namespace Nancy.Owin.Tests
         /// <param name="context">Context to return</param>
         private void SetupFakeNancyCompleteCallback(NancyContext context)
         {
-            A.CallTo(() => this.fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
-                .Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
+            A.CallTo(
+                     () =>
+                         this.fakeEngine.HandleRequest(A<Request>.Ignored,
+                             A<Func<NancyContext, NancyContext>>.Ignored,
+                             A<Action<NancyContext>>.Ignored,
+                             A<Action<Exception>>.Ignored)).Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
@@ -165,6 +165,5 @@ namespace Nancy.Owin.Tests
             object value;
             return env.TryGetValue(key, out value) && value is T ? (T)value : default(T);
         }
-
     }
 }
