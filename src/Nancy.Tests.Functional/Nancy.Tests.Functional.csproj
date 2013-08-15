@@ -88,6 +88,7 @@
     <Compile Include="Modules\RazorWithTracingTestModule.cs" />
     <Compile Include="Modules\JsonpTestModule.cs" />
     <Compile Include="Modules\RazorTestModule.cs" />
+    <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
