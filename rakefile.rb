@@ -19,8 +19,8 @@ end
 desc "Compiles solution and runs unit tests"
 task :default => [:clean, :assembly_info, :compile, :test, :publish, :package]
 
-desc "Executes all MSpec and Xunit tests"
-task :test => [:mspec, :xunit]
+desc "Executes all Xunit tests"
+task :test => [:xunit]
 
 desc "Compiles solution and runs unit tests for Mono"
 task :mono => [:clean, :assembly_info, :compilemono, :testmono]
@@ -58,7 +58,6 @@ xbuild :compilemono => [:assembly_info] do |xb|
     xb.properties = { :configuration => CONFIGURATIONMONO, "TargetFrameworkProfile" => "", "TargetFrameworkVersion" => "v4.0" }
 end
 
-
 desc "Gathers output files and copies them to the output folder"
 task :publish => [:compile] do
 
@@ -68,14 +67,6 @@ task :publish => [:compile] do
     end
 
     FileUtils.cp_r FileList["src/**/#{CONFIGURATION}/*.dll", "src/**/#{CONFIGURATION}/*.pdb", "src/**/*.ps1"].exclude(/obj\//).exclude(/.Tests/), output
-end
-
-desc "Executes MSpec tests"
-mspec :mspec => [:compile] do |mspec|
-    #This is a bit fragile but this is the only mspec assembly at present. 
-    #Fails if passed a FileList of all tests. Need to investigate.
-    mspec.command = "tools/mspec/mspec.exe"
-    mspec.assemblies "src/Nancy.Tests/bin/Release/Nancy.Tests.dll"
 end
 
 desc "Executes xUnit tests"
