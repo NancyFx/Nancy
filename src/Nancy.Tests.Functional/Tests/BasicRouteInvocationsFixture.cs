@@ -9,7 +9,7 @@
 
         public BasicRouteInvocationsFixture()
         {
-            this.browser = new Browser(new DefaultNancyBootstrapper());
+            this.browser = new Browser(with => with.Module<BasicRouteInvocationsModule>());
         }
 
         [Fact]
@@ -26,11 +26,35 @@
         }
 
         [Fact]
-        public void Should_set_response_status_code_to_not_found_when_get_route_did_not_match()
+        public void Should_set_response_status_code_to_not_found_when_get_request_did_not_match()
         {
             // Given
             // When
             var response = this.browser.Get("/invalid");
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
+        [Fact]
+        public void Should_set_default_response_values_for_basic_delete_request()
+        {
+            // Given
+            // When
+            var response = this.browser.Delete("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/html", response.ContentType);
+            Assert.Equal("Default delete root", response.Body.AsString());
+        }
+
+        [Fact]
+        public void Should_set_response_status_code_to_not_found_when_delete_request_did_not_match()
+        {
+            // Given
+            // When
+            var response = this.browser.Delete("/invalid");
 
             // Then
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
