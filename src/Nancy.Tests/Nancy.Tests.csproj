@@ -91,14 +91,9 @@
     </Reference>
     <Reference Include="System">
     </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Web">
-    </Reference>
-    <Reference Include="Machine.Specifications, Version=0.4.9.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\mspec\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
@@ -169,12 +164,7 @@
     <Compile Include="Unit\HttpMultipartFixture.cs" />
     <Compile Include="Unit\IO\RequestStreamFixture.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
-    <Compile Include="Specifications\Handling a HEAD request.cs" />
-    <Compile Include="Specifications\Handling a DELETE request.cs" />
     <Compile Include="ShouldExtensions.cs" />
-    <Compile Include="Specifications\Handling a POST request.cs" />
-    <Compile Include="Specifications\Handling a PUT request.cs" />
-    <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
