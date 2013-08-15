@@ -84,6 +84,30 @@
             Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
+        [Fact]
+        public void Should_set_default_response_values_for_basic_put_request()
+        {
+            // Given
+            // When
+            var response = this.browser.Put("/");
+
+            // Then
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/html", response.ContentType);
+            Assert.Equal("Default put root", response.Body.AsString());
+        }
+
+        [Fact]
+        public void Should_set_response_status_code_to_not_found_when_put_request_did_not_match()
+        {
+            // Given
+            // When
+            var response = this.browser.Put("/invalid");
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+        }
+
         public class BasicRouteInvocationsModule : NancyModule
         {
             public BasicRouteInvocationsModule()
