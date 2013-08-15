@@ -22,34 +22,26 @@
         [Fact]
         public void PlusEquals_with_func_add_item_to_end_of_pipeline()
         {
-            Action<NancyContext> item1 = (r) => { };
-            Action<NancyContext> item2 = (r) => { };
-            pipeline.AddItemToEndOfPipeline(item2);
+            pipeline += r => { };
 
-            pipeline += item1;
-
-            Assert.Equal(2, pipeline.PipelineDelegates.Count());
-            Assert.Same(item1, pipeline.PipelineDelegates.Last());
+            pipeline.PipelineDelegates.ShouldHaveCount(1);
+            Assert.Equal(1, pipeline.PipelineDelegates.Count());
         }
 
         [Fact]
         public void PlusEquals_with_another_pipeline_adds_those_pipeline_items_to_end_of_pipeline()
         {
-            Action<NancyContext> item1 = (r) => { };
-            Action<NancyContext> item2 = (r) => { };
-            pipeline.AddItemToEndOfPipeline(item1);
-            pipeline.AddItemToEndOfPipeline(item2);
-            Action<NancyContext> item3 = (r) => { };
-            Action<NancyContext> item4 = (r) => { };
+            pipeline.AddItemToEndOfPipeline(r => { });
+            pipeline.AddItemToEndOfPipeline(r => { });
             var pipeline2 = new AfterPipeline();
-            pipeline2.AddItemToEndOfPipeline(item3);
-            pipeline2.AddItemToEndOfPipeline(item4);
+            pipeline2.AddItemToEndOfPipeline(r => { });
+            pipeline2.AddItemToEndOfPipeline(r => { });
 
             pipeline += pipeline2;
 
             Assert.Equal(4, pipeline.PipelineItems.Count());
-            Assert.Same(item3, pipeline.PipelineDelegates.ElementAt(2));
-            Assert.Same(item4, pipeline.PipelineDelegates.Last());
+            Assert.Same(pipeline2.PipelineDelegates.ElementAt(0), pipeline.PipelineDelegates.ElementAt(2));
+            Assert.Same(pipeline2.PipelineDelegates.ElementAt(1), pipeline.PipelineDelegates.Last());
         }
 
         [Fact]
@@ -68,7 +60,7 @@
             Action<NancyContext> action = context => { };
             pipeline += action;
 
-            action.Invoke(CreateContext());
+            pipeline.Invoke(CreateContext(), CancellationToken.None);
 
             Assert.True(item1Called);
             Assert.True(item2Called);
@@ -78,13 +70,10 @@
         [Fact]
         public void When_cast_from_func_creates_a_pipeline_with_one_item()
         {
-            Action<NancyContext> item1 = (r) => { };
-
-            AfterPipeline castPipeline = new AfterPipeline();
-            castPipeline += item1;
+            var castPipeline = new AfterPipeline();
+            castPipeline += r => { };
 
             Assert.Equal(1, castPipeline.PipelineDelegates.Count());
-            Assert.Same(item1, castPipeline.PipelineDelegates.First());
         }
 
         [Fact]

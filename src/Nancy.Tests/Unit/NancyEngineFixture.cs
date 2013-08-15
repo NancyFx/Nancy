@@ -9,6 +9,7 @@ namespace Nancy.Tests.Unit
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Extensions;
+    using Nancy.Helpers;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -343,7 +344,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(new NotImplementedException());
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(new NotImplementedException()));
 
             var request = new Request("GET", "/", "http");
 
@@ -367,7 +369,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(new NotImplementedException());
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(new NotImplementedException()));
 
             var request = new Request("GET", "/", "http");
 
@@ -396,7 +399,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(testEx);
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(testEx));
 
             Exception handledException = null;
             NancyContext handledContext = null;
@@ -437,12 +441,11 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolved);
 
-            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).Invokes((x) =>
-            {
-                routeUnderTest.Action.Invoke(DynamicDictionary.Empty, new CancellationToken());
-            });
+            A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._))
+                .Invokes((x) => routeUnderTest.Action.Invoke(DynamicDictionary.Empty, new CancellationToken()));
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(new Exception());
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(new Exception()));
 
             var pipelines = new Pipelines();
             pipelines.OnError.AddItemToStartOfPipeline((ctx, exception) => null);
@@ -473,7 +476,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(expectedException);
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(expectedException));
 
             var pipelines = new Pipelines();
             pipelines.OnError.AddItemToStartOfPipeline((ctx, exception) => null);
@@ -502,7 +506,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(new Exception());
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+             .Returns(TaskHelpers.GetFaultedTask<Response>(new Exception()));
 
             var pipelines = new Pipelines { OnError = null };
             engine.RequestPipelinesFactory = (ctx) => pipelines;
@@ -532,7 +537,8 @@ namespace Nancy.Tests.Unit
 
             A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
 
-            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._)).Throws(expectedException);
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(expectedException));
 
             var pipelines = new Pipelines { OnError = null };
             engine.RequestPipelinesFactory = (ctx) => pipelines;

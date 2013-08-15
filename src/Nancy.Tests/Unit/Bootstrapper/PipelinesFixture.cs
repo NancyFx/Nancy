@@ -50,7 +50,7 @@
             var pipelines = new Pipelines(existing);
 
             // Then
-            pipelines.AfterRequest.PipelineItems.First().Delegate.ShouldBeSameAs(hook);
+            pipelines.AfterRequest.PipelineItems.ShouldHaveCount(1);
         }
 
         [Fact]
@@ -66,7 +66,7 @@
             var pipelines = new Pipelines(existing);
 
             // Then
-            pipelines.BeforeRequest.PipelineItems.First().Delegate.ShouldBeSameAs(hook);
+            pipelines.BeforeRequest.PipelineItems.ShouldHaveCount(1);
         }
 
         [Fact]

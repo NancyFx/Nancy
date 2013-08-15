@@ -83,17 +83,7 @@ namespace Nancy.Hosting.Aspnet
 
         public void EndProcessRequest(IAsyncResult result)
         {
-            var task = (Task<Tuple<NancyContext, HttpContextBase>>)result;
-            if (task.IsFaulted)
-            {
-                var exception = task.Exception;
-                exception.Handle(ex => ex is HttpException);
-            }
-
-            var nancyContext = task.Result.Item1;
-            var httpContext = task.Result.Item2;
-
-            NancyHandler.SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+            NancyHandler.EndProcessRequest((Task<Tuple<NancyContext, HttpContextBase>>)result);
         }
     }
 }
