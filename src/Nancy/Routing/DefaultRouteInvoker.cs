@@ -373,9 +373,12 @@ namespace Nancy.Routing
                 return null;
             }
 
-            var rootException = taskExceptions.GetBaseException();
+            if (taskExceptions.InnerExceptions.Count > 1)
+            {
+                return null;
+            }
 
-            return rootException as RouteExecutionEarlyExitException;
+            return taskExceptions.InnerException as RouteExecutionEarlyExitException;
         }
     }
 }
