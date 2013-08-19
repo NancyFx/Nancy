@@ -53,6 +53,12 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether or not to respond with 405 responses
+        /// </summary>
+        [Description("Disables 405 responses from being sent to the client.")]
+        public static bool DisableMethodNotAllowedResponses { get; set; }
+
+        /// <summary>
         /// Gets or sets a value indicating whether or not to enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.
         /// </summary>
         [Description("Enable case sensitivity in query, parameters (DynamicDictionary) and model binding. Enable this to conform with RFC3986.")]
