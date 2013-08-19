@@ -2,6 +2,7 @@ namespace Nancy.Diagnostics
 {
     using System.Collections.Generic;
     using ModelBinding;
+    using Nancy.Responses;
     using Nancy.Routing;
 
     internal class DiagnosticsModuleBuilder : INancyModuleBuilder
@@ -11,10 +12,10 @@ namespace Nancy.Diagnostics
         private readonly IEnumerable<ISerializer> serializers;
         private readonly IModelBinderLocator modelBinderLocator;
 
-        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IEnumerable<ISerializer> serializers, IModelBinderLocator modelBinderLocator)
+        public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializers = serializers;
+            this.serializers = new[] { new DefaultJsonSerializer() };
             this.modelBinderLocator = modelBinderLocator;
         }
 
