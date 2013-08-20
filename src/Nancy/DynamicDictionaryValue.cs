@@ -255,9 +255,17 @@
 
                 var typeCode = Type.GetTypeCode(binderType);
 
-                if (typeCode == TypeCode.Object) // something went wrong here
+                if (typeCode == TypeCode.Object)
                 {
-                    return false;
+                    if (binderType.IsAssignableFrom(value.GetType()))
+                    {
+                        result = value;
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
 
                 result = Convert.ChangeType(value, typeCode);
