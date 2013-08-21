@@ -117,7 +117,6 @@
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
     <Content Include="Views\defaultlayout.cshtml" />
-    <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\test.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>

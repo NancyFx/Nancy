@@ -122,10 +122,18 @@
             return response;
         }
 
-        private dynamic GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
+        private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
         {
+            var view =
+                renderContext.LocateView("_ViewStart", model);
+
+            if (view == null)
+            {
+                return string.Empty;
+            }
+
             var viewInstance =
-                GetViewInstance(renderContext.LocateView("_ViewStart", model), renderContext, referencingAssembly, model);
+                GetViewInstance(view, renderContext, referencingAssembly, model);
 
             viewInstance.ExecuteView(null, null);
 
