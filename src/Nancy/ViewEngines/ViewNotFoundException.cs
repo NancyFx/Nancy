@@ -30,7 +30,8 @@
             this.InspectedLocations = inspectedLocations;
 
             this.message = String.Format(
-                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}",
+                    "Unable to locate view '{0}'{4}Currently available view engine extensions: {1}{4}Locations inspected: {2}{4}Root path: {3}" +
+                    "If you were expecting raw data back, make sure you set the 'Accept'-header of the request to correct format, for example 'application/json'",
                     this.ViewName,
                     string.Join(",", this.AvailableViewEngineExtensions),
                     string.Join(",", this.InspectedLocations),
