@@ -132,6 +132,11 @@
                 return string.Empty;
             }
 
+            if (!this.Extensions.Any(x => x.Equals(view.Extension, StringComparison.OrdinalIgnoreCase)))
+            {
+                return string.Empty;
+            }
+
             var viewInstance =
                 GetViewInstance(view, renderContext, referencingAssembly, model);
 
