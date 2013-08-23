@@ -46,6 +46,11 @@
             };
 
             this.razorConfiguration = configuration;
+
+            foreach (var renderer in this.viewRenderers)
+            {
+                this.AddDefaultNameSpaces(renderer.Host);
+            }
         }
 
         /// <summary>
@@ -145,7 +150,7 @@
             return viewInstance.Layout ?? string.Empty;
         }
 
-        private RazorTemplateEngine GetRazorTemplateEngine(RazorEngineHost engineHost)
+        private void AddDefaultNameSpaces(RazorEngineHost engineHost)
         {
             engineHost.NamespaceImports.Add("System");
             engineHost.NamespaceImports.Add("System.IO");
@@ -164,15 +169,13 @@
                     }
                 }
             }
-
-            return new RazorTemplateEngine(engineHost);
         }
 
         private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
-            var engine = this.GetRazorTemplateEngine(renderer.Host);
+            var engine = new RazorTemplateEngine(renderer.Host);
 
             var razorResult = engine.GenerateCode(reader, null, null, "roo");
 
@@ -415,7 +418,7 @@
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
         {
-            if (String.IsNullOrWhiteSpace(modelType.Namespace))
+            if (string.IsNullOrWhiteSpace(modelType.Namespace))
             {
                 return;
             }
