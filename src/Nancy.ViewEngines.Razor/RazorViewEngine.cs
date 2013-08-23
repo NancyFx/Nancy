@@ -162,7 +162,10 @@
                 {
                     foreach (var n in namespaces)
                     {
-                        engineHost.NamespaceImports.Add(n);
+                        if (!string.IsNullOrWhiteSpace(n))
+                        {
+                            engineHost.NamespaceImports.Add(n);
+                        }
                     }
                 }
             }
@@ -415,6 +418,11 @@
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
         {
+            if (string.IsNullOrWhiteSpace(modelType.Namespace))
+            {
+                return;
+            }
+
             if (razorResult.GeneratedCode.Namespaces[0].Imports.OfType<CodeNamespaceImport>().Any(x => x.Namespace == modelType.Namespace))
             {
                 return;
