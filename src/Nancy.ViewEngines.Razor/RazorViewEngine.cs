@@ -22,6 +22,7 @@
         private readonly IRazorConfiguration razorConfiguration;
         private readonly IEnumerable<IRazorViewRenderer> viewRenderers;
         private readonly object compileLock = new object();
+        private readonly object namespaceImportLock = new object();
 
         /// <summary>
         /// Gets the extensions file extensions that are supported by the view engine.
@@ -147,8 +148,11 @@
 
         private RazorTemplateEngine GetRazorTemplateEngine(RazorEngineHost engineHost)
         {
-            engineHost.NamespaceImports.Add("System");
-            engineHost.NamespaceImports.Add("System.IO");
+            lock (this.namespaceImportLock)
+            {
+                engineHost.NamespaceImports.Add("System");
+                engineHost.NamespaceImports.Add("System.IO");
+            }
 
             if (this.razorConfiguration != null)
             {
@@ -157,7 +161,7 @@
                 {
                     foreach (var n in namespaces)
                     {
-                        if (!string.IsNullOrWhiteSpace(n))
+                        lock (this.namespaceImportLock)
                         {
                             engineHost.NamespaceImports.Add(n);
                         }
@@ -415,11 +419,6 @@
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
         {
-            if (String.IsNullOrWhiteSpace(modelType.Namespace))
-            {
-                return;
-            }
-
             if (razorResult.GeneratedCode.Namespaces[0].Imports.OfType<CodeNamespaceImport>().Any(x => x.Namespace == modelType.Namespace))
             {
                 return;
