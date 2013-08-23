@@ -13,8 +13,6 @@
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.Responses;
-    using Nancy.Localization;
-    using Nancy.ViewEngines.Razor.CSharp;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -82,23 +80,39 @@
 
             response.Contents = stream =>
             {
-                var writer = new StreamWriter(stream);
-                var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                var writer = 
+                    new StreamWriter(stream);
+
+                var view = 
+                    this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+
                 view.ExecuteView(null, null);
+
                 var body = view.Body;
                 var sectionContents = view.SectionContents;
-                var root = !view.HasLayout;
-                var layout = view.Layout;
+
+                var layout = view.HasLayout ? 
+                    view.Layout :
+                    GetViewStartLayout(model, renderContext, referencingAssembly);
+
+                var root = 
+                    string.IsNullOrWhiteSpace(layout);
 
                 while (!root)
                 {
-                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view = 
+                        this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+
                     view.ExecuteView(body, sectionContents);
 
                     body = view.Body;
                     sectionContents = view.SectionContents;
+
+                    layout = view.HasLayout ?
+                        view.Layout :
+                        GetViewStartLayout(model, renderContext, referencingAssembly);
+
                     root = !view.HasLayout;
-                    layout = view.Layout;
                 }
 
                 writer.Write(body);
@@ -106,6 +120,29 @@
             };
 
             return response;
+        }
+
+        private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
+        {
+            var view =
+                renderContext.LocateView("_ViewStart", model);
+
+            if (view == null)
+            {
+                return string.Empty;
+            }
+
+            if (!this.Extensions.Any(x => x.Equals(view.Extension, StringComparison.OrdinalIgnoreCase)))
+            {
+                return string.Empty;
+            }
+
+            var viewInstance =
+                GetViewInstance(view, renderContext, referencingAssembly, model);
+
+            viewInstance.ExecuteView(null, null);
+
+            return viewInstance.Layout ?? string.Empty;
         }
 
         private RazorTemplateEngine GetRazorTemplateEngine(RazorEngineHost engineHost)
@@ -427,7 +464,6 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             if (this.viewRenderers == null)
