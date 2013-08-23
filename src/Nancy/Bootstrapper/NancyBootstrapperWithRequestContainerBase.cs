@@ -35,7 +35,7 @@ namespace Nancy.Bootstrapper
         }
 
         /// <summary>
-        /// Get all NancyModule implementation instances
+        /// Get all <see cref="INancyModule"/> implementation instances
         /// </summary>
         /// <param name="context">The current context</param>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="INancyModule"/> instances.</returns>

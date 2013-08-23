@@ -622,7 +622,7 @@
 
         private ViewLocationResult FindView(string viewName)
         {
-            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "cshtml", "vbhtml" }).First(r => r.Name == viewName);
+            var location = this.fileSystemViewLocationProvider.GetLocatedViews(new[] { "cshtml", "vbhtml" }).FirstOrDefault(r => r.Name == viewName);
             return location;
         }
     }
