@@ -3,10 +3,11 @@ namespace Nancy.Hosting.Aspnet.Tests
     using System;
     using System.Collections.Specialized;
     using System.IO;
-    using System.Threading.Tasks;
     using System.Web;
     using Nancy.Cookies;
     using FakeItEasy;
+
+    using Nancy.Helpers;
     using Nancy.Hosting.Aspnet;
     using Xunit;
 
@@ -47,9 +48,8 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.request.HttpMethod).Returns("POST");
             A.CallTo(() => this.engine.HandleRequest(
                                         A<Request>.Ignored,
-                                        A<Action<NancyContext>>.Ignored,
-                                        A<Action<Exception>>.Ignored))
-                                      .Invokes(f => ((Action<NancyContext>)f.Arguments[1]).Invoke(nancyContext));
+                                        A<Func<NancyContext, NancyContext>>.Ignored))
+                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
 
             // When
             var task = this.handler.ProcessRequest(this.context, ar => { }, new object());
@@ -58,7 +58,7 @@ namespace Nancy.Hosting.Aspnet.Tests
             // Then
             A.CallTo(() => this.engine.HandleRequest(A<Request>
                 .That
-                .Matches(x => x.Method.Equals("POST")), A<Action<NancyContext>>.Ignored, A<Action<Exception>>.Ignored))
+                .Matches(x => x.Method.Equals("POST")), A<Func<NancyContext, NancyContext>>.Ignored))
                 .MustHaveHappened();
         }
 
@@ -96,9 +96,8 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             A.CallTo(() => this.engine.HandleRequest(
                                         A<Request>.Ignored,
-                                        A<Action<NancyContext>>.Ignored,
-                                        A<Action<Exception>>.Ignored))
-                                      .Invokes(f => ((Action<NancyContext>)f.Arguments[1]).Invoke(nancyContext));
+                                        A<Func<NancyContext, NancyContext>>.Ignored))
+                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
 
             // When
             var task = this.handler.ProcessRequest(this.context, ar => { }, new object());
@@ -115,9 +114,8 @@ namespace Nancy.Hosting.Aspnet.Tests
             A.CallTo(() => this.request.HttpMethod).Returns("GET");
             A.CallTo(() => this.engine.HandleRequest(
                                         A<Request>.Ignored,
-                                        A<Action<NancyContext>>.Ignored,
-                                        A<Action<Exception>>.Ignored))
-                                      .Invokes(f => ((Action<NancyContext>)f.Arguments[1]).Invoke(nancyContext));
+                                        A<Func<NancyContext, NancyContext>>.Ignored))
+                                      .Returns(TaskHelpers.GetCompletedTask(nancyContext));
         }
     }
 }
