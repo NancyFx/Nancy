@@ -54,7 +54,8 @@ namespace Nancy.Owin.Tests
             this.host.Invoke(this.environment);
             A.CallTo(() =>  this.fakeEngine.HandleRequest(
                     A<Request>.Ignored,
-                    A<Func<NancyContext, NancyContext>>.Ignored))
+                    A<Func<NancyContext, NancyContext>>.Ignored,
+                    (CancellationToken)this.environment["owin.CallCancelled"]))
              .MustHaveHappened(Repeated.Exactly.Once);
         }
 
@@ -177,8 +178,9 @@ namespace Nancy.Owin.Tests
         {
             A.CallTo(() => this.fakeEngine.HandleRequest(
                 A<Request>.Ignored,
-                A<Func<NancyContext, NancyContext>>.Ignored))
-                .Returns(TaskHelpers.GetCompletedTask(context));
+                A<Func<NancyContext, NancyContext>>.Ignored,
+                A<CancellationToken>.Ignored))
+             .Returns(TaskHelpers.GetCompletedTask(context));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)

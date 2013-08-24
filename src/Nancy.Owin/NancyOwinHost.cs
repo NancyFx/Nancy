@@ -86,7 +86,8 @@
                 nancyRequest,
                 StoreEnvironment(environment),
                 RequestComplete(environment, this.options.PerformPassThrough, this.next, tcs), 
-                RequestErrored(tcs));
+                RequestErrored(tcs),
+                owinCallCancelled);
 
             return tcs.Task;
         }
