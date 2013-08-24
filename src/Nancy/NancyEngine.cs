@@ -70,10 +70,8 @@
         /// <value>An <see cref="IPipelines"/> instance.</value>
         public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
-        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
+        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
         {
-            // TODO - replace continuations with a fast continue from the pipeline spike
-
             var tcs = new TaskCompletionSource<NancyContext>();
 
             if (request == null)
@@ -96,12 +94,9 @@
                 return tcs.Task;
             }
 
-            var pipelines =
-                this.RequestPipelinesFactory.Invoke(context);
+            var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            // TODO - potentially get this passed in so requests can be cancelled
-            var cancellationToken = new CancellationToken();
-            context.Items["CANCELLATION_TOKEN"] = cancellationToken; // So we get disposed when the request is complete
+            context.Items["CANCELLATION_TOKEN"] = cancellationToken;
 
             var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 

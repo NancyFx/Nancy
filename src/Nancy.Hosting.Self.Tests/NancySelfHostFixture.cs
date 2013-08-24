@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Self.Tests
     using System;
     using System.IO;
     using System.Net;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using FakeItEasy;
@@ -67,7 +68,7 @@ namespace Nancy.Hosting.Self.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored,A<CancellationToken>.Ignored))
                 .Invokes(f => nancyRequest = (Request)f.Arguments[0])
                 .ReturnsLazily(c => TaskHelpers.GetCompletedTask(new NancyContext { Request = (Request)c.Arguments[0], Response = new Response() }));
 
