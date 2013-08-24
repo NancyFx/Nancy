@@ -70,61 +70,7 @@
         /// <value>An <see cref="IPipelines"/> instance.</value>
         public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/>.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        public NancyContext HandleRequest(Request request)
-        {
-            return this.HandleRequest(request, context => context);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/> async.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
-        public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            this.HandleRequest(request, null, onComplete, onError);
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/>.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="preRequest">Delegate to call before the request is processed</param>
-        /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-        private NancyContext HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
-        {
-            var task = this.HandleRequestInternal(request, preRequest);
-
-            task.Wait();
-
-            if (task.IsFaulted)
-            {
-                throw task.Exception ?? new Exception("Request task faulted");
-            }
-
-            return task.Result;
-        }
-
-        /// <summary>
-        /// Handles an incoming <see cref="Request"/> async.
-        /// </summary>
-        /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-        /// <param name="preRequest">Pre request hook from the host</param>
-        /// <param name="onComplete">Delegate to call when the request is complete</param>
-        /// <param name="onError">Deletate to call when any errors occur</param>
-        public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
-        {
-            this.HandleRequestInternal(request, preRequest)
-                .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
-        }
-
-        private Task<NancyContext> HandleRequestInternal(Request request, Func<NancyContext, NancyContext> preRequest)
+        public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
         {
             // TODO - replace continuations with a fast continue from the pipeline spike
 

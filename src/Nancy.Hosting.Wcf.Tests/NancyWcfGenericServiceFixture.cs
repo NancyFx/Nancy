@@ -2,6 +2,8 @@ namespace Nancy.Hosting.Wcf.Tests
 {
     using Bootstrapper;
     using FakeItEasy;
+
+    using Nancy.Helpers;
     using Nancy.Tests;
     using Nancy.Tests.xUnitExtensions;
     using System;
@@ -10,6 +12,10 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Web;
+    using Bootstrapper;
+    using FakeItEasy;
+    using Nancy.Tests;
+    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     /// <remarks>
@@ -46,8 +52,9 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
@@ -79,8 +86,9 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request) f.Arguments[0]);
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
@@ -157,8 +165,9 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeEngine = A.Fake<INancyEngine>();
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0]);            
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When 
@@ -200,10 +209,9 @@ namespace Nancy.Hosting.Wcf.Tests
                 StatusCode = Nancy.HttpStatusCode.NotModified
             };
 
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
-                .Invokes((f) => nancyRequest = (Request)f.Arguments[0])
-                .Returns(context);
-
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
+                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When a request is made and responded to with a status of 304 Not Modified

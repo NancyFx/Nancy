@@ -10,6 +10,7 @@ namespace Nancy.Owin.Tests
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
+    using Nancy.Helpers;
     using Nancy.Tests;
 
     using Xunit;
@@ -47,13 +48,14 @@ namespace Nancy.Owin.Tests
         [Fact]
         public void Should_immediately_invoke_nancy_if_no_request_body_delegate()
         {
+            var fakeResponse = new Response { StatusCode = HttpStatusCode.OK, Contents = s => { } };
+            var fakeContext = new NancyContext { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
             this.host.Invoke(this.environment);
-            A.CallTo(
-                     () =>
-                         this.fakeEngine.HandleRequest(A<Request>.Ignored,
-                             A<Func<NancyContext, NancyContext>>.Ignored,
-                             A<Action<NancyContext>>.Ignored,
-                             A<Action<Exception>>.Ignored)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() =>  this.fakeEngine.HandleRequest(
+                    A<Request>.Ignored,
+                    A<Func<NancyContext, NancyContext>>.Ignored))
+             .MustHaveHappened(Repeated.Exactly.Once);
         }
 
         [Fact]
@@ -173,12 +175,10 @@ namespace Nancy.Owin.Tests
         /// <param name="context">Context to return</param>
         private void SetupFakeNancyCompleteCallback(NancyContext context)
         {
-            A.CallTo(
-                     () =>
-                         this.fakeEngine.HandleRequest(A<Request>.Ignored,
-                             A<Func<NancyContext, NancyContext>>.Ignored,
-                             A<Action<NancyContext>>.Ignored,
-                             A<Action<Exception>>.Ignored)).Invokes((i => ((Action<NancyContext>)i.Arguments[2]).Invoke(context)));
+            A.CallTo(() => this.fakeEngine.HandleRequest(
+                A<Request>.Ignored,
+                A<Func<NancyContext, NancyContext>>.Ignored))
+                .Returns(TaskHelpers.GetCompletedTask(context));
         }
 
         private static T Get<T>(IDictionary<string, object> env, string key)
