@@ -5,6 +5,8 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.Net;
     using System.ServiceModel;
     using System.ServiceModel.Web;
+    using System.Threading;
+
     using Bootstrapper;
     using FakeItEasy;
 
@@ -47,7 +49,7 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(f => nancyRequest = (Request)f.Arguments[0])
                 .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
@@ -81,7 +83,7 @@ namespace Nancy.Hosting.Wcf.Tests
             // Given
             Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(f => nancyRequest = (Request)f.Arguments[0])
                 .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
@@ -160,7 +162,7 @@ namespace Nancy.Hosting.Wcf.Tests
             var fakeEngine = A.Fake<INancyEngine>();
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
 
-            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored))
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(f => nancyRequest = (Request)f.Arguments[0])
                 .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);

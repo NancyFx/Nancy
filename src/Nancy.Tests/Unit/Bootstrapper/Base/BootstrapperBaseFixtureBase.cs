@@ -2,6 +2,7 @@
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
+    using System.Threading;
     using System.Threading.Tasks;
 
     using Nancy.Bootstrapper;
@@ -105,7 +106,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
-            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest)
+            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }
