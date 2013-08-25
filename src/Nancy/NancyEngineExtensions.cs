@@ -1,6 +1,7 @@
 namespace Nancy
 {
     using System;
+    using System.Threading;
 
     using Nancy.Helpers;
 
@@ -26,7 +27,7 @@ namespace Nancy
         /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
         public static NancyContext HandleRequest(this INancyEngine nancyEngine, Request request, Func<NancyContext, NancyContext> preRequest)
         {
-            var task = nancyEngine.HandleRequest(request, preRequest);
+            var task = nancyEngine.HandleRequest(request, preRequest, CancellationToken.None);
             task.Wait();
             if (task.IsFaulted)
             {
@@ -48,7 +49,8 @@ namespace Nancy
             Request request,
             Func<NancyContext, NancyContext> preRequest,
             Action<NancyContext> onComplete,
-            Action<Exception> onError)
+            Action<Exception> onError,
+            CancellationToken cancellationToken)
         {
             if (nancyEngine == null)
             {
@@ -56,7 +58,7 @@ namespace Nancy
             }
 
             nancyEngine
-                .HandleRequest(request, preRequest)
+                .HandleRequest(request, preRequest, cancellationToken)
                 .WhenCompleted(t => onComplete(t.Result), t => onError(t.Exception));
 
             //this.HandleRequest(request, null, onComplete, onError);
@@ -75,7 +77,7 @@ namespace Nancy
             Action<NancyContext> onComplete,
             Action<Exception> onError)
         {
-            HandleRequest(nancyEngine, request, null, onComplete, onError);
+            HandleRequest(nancyEngine, request, null, onComplete, onError, CancellationToken.None);
         }
     }
 }
