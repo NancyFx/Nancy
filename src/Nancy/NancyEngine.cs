@@ -96,8 +96,6 @@
 
             var pipelines = this.RequestPipelinesFactory.Invoke(context);
 
-            context.Items["CANCELLATION_TOKEN"] = cancellationToken;
-
             var task = this.InvokeRequestLifeCycle(context, cancellationToken, pipelines);
 
             task.WhenCompleted(
