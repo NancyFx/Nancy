@@ -133,6 +133,16 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_add_leading_slash_to_route_if_missing()
+        {
+            var moduleWithBasePath = new FakeNancyModuleWithBasePath();
+
+            moduleWithBasePath.Get["test"] = d => null;
+
+            moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/fake/test");
+        }
+
+        [Fact]
         public void Should_store_two_routes_when_registering_single_get_method()
         {
             var moduleWithBasePath = new CustomNancyModule();
