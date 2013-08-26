@@ -314,15 +314,15 @@ namespace Nancy
 
                 if (string.IsNullOrEmpty(parentPath))
                 {
-                    return string.Format("/{0}", relativePath);
+                    return string.Concat("/", relativePath);
                 }
 
                 if (string.IsNullOrEmpty(relativePath))
                 {
-                    return string.Format("/{0}", parentPath);
+                    return string.Concat("/", parentPath);
                 }
 
-                return string.Format("/{0}/{1}", parentPath, relativePath);
+                return string.Concat("/", parentPath, "/", relativePath);
             }
         }
 
