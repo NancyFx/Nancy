@@ -78,6 +78,10 @@
   <ItemGroup>
     <Reference Include="Microsoft.CSharp">
     </Reference>
+    <Reference Include="Nustache.Core, Version=1.13.8.22, Culture=neutral, PublicKeyToken=efd6f3d8f76ecd9f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
+    </Reference>
     <Reference Include="System">
     </Reference>
     <Reference Include="System.Data">
@@ -116,6 +120,7 @@
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
+    <Content Include="packages.config" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
