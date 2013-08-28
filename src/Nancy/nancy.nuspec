@@ -17,6 +17,7 @@
   <files>
     <file src="build\binaries\Nancy.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.XML" target="lib\net40" />
     <file src="src\Nancy\**\*.cs" target="src" />
   </files>
 </package>
