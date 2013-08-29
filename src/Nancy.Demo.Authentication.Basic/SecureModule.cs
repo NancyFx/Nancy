@@ -7,7 +7,7 @@
 		public SecureModule()
 			: base("/secure")
 		{
-            this.RequiresAuthentication();
+            		this.RequiresAuthentication();
 
 			Get["/"] = x =>
 			{
