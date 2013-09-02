@@ -3,7 +3,6 @@ namespace Nancy.Bootstrapper
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Reflection;
 
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
@@ -71,6 +70,7 @@ namespace Nancy.Bootstrapper
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     RouteResolverTrie = typeof(RouteResolverTrie),
                     TrieNodeFactory = typeof(TrieNodeFactory),
+                    ResponseNegotiator = typeof(DefaultResponseNegotiator)
                 };
             }
         }
@@ -149,6 +149,8 @@ namespace Nancy.Bootstrapper
 
         public Type TrieNodeFactory { get; set; }
 
+        public Type ResponseNegotiator { get; set; }
+
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
         /// </summary>
@@ -221,7 +223,8 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
                 new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
-                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
+                new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory),
+                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator) 
             };
         }
 

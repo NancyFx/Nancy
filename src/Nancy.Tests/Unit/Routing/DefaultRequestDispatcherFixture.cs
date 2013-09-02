@@ -20,12 +20,14 @@ namespace Nancy.Tests.Unit.Routing
         private readonly IRouteResolver routeResolver;
         private readonly IRouteInvoker routeInvoker;
         private readonly IList<IResponseProcessor> responseProcessors;
+        private readonly IResponseNegotiator responseNegotiator;
 
         public DefaultRequestDispatcherFixture()
         {
             this.responseProcessors = new List<IResponseProcessor>();
             this.routeResolver = A.Fake<IRouteResolver>();
             this.routeInvoker = A.Fake<IRouteInvoker>();
+            this.responseNegotiator = A.Fake<IResponseNegotiator>();
 
             A.CallTo(() => this.routeInvoker.Invoke(A<Route>._, A<CancellationToken>._, A<DynamicDictionary>._, A<NancyContext>._)).ReturnsLazily(arg =>
                 {
@@ -45,8 +47,11 @@ namespace Nancy.Tests.Unit.Routing
                     return tcs.Task;
                 });
 
-            this.requestDispatcher =
-                new DefaultRequestDispatcher(this.routeResolver, this.responseProcessors, this.routeInvoker);
+            this.requestDispatcher = new DefaultRequestDispatcher(
+                this.routeResolver,
+                this.responseProcessors,
+                this.routeInvoker,
+                this.responseNegotiator);
 
             var resolvedRoute = new ResolveResult
             {

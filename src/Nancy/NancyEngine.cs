@@ -11,6 +11,7 @@
     using Nancy.Cookies;
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
+    using Nancy.Responses.Negotiation;
     using Nancy.Routing;
 
     using Nancy.Helpers;
@@ -29,6 +30,7 @@
         private readonly DiagnosticsConfiguration diagnosticsConfiguration;
         private readonly IEnumerable<IStatusCodeHandler> statusCodeHandlers;
         private readonly IStaticContentProvider staticContentProvider;
+        private readonly IResponseNegotiator responseNegotiator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyEngine"/> class.
@@ -39,7 +41,15 @@
         /// <param name="requestTracing">The request tracing instance.</param>
         /// <param name="diagnosticsConfiguration"></param>
         /// <param name="staticContentProvider">The provider to use for serving static content</param>
-        public NancyEngine(IRequestDispatcher dispatcher, INancyContextFactory contextFactory, IEnumerable<IStatusCodeHandler> statusCodeHandlers, IRequestTracing requestTracing, DiagnosticsConfiguration diagnosticsConfiguration, IStaticContentProvider staticContentProvider)
+        /// <param name="responseNegotiator"></param>
+        public NancyEngine(
+            IRequestDispatcher dispatcher,
+            INancyContextFactory contextFactory,
+            IEnumerable<IStatusCodeHandler> statusCodeHandlers,
+            IRequestTracing requestTracing,
+            DiagnosticsConfiguration diagnosticsConfiguration,
+            IStaticContentProvider staticContentProvider,
+            IResponseNegotiator responseNegotiator)
         {
             if (dispatcher == null)
             {
@@ -62,6 +72,7 @@
             this.requestTracing = requestTracing;
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.staticContentProvider = staticContentProvider;
+            this.responseNegotiator = responseNegotiator;
         }
 
         /// <summary>
@@ -281,7 +292,7 @@
             return tcs.Task;
         }
 
-        private static Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
+        private Action<Task> HandleFaultedTask(NancyContext context, IPipelines pipelines, TaskCompletionSource<NancyContext> tcs)
         {
             return t =>
                 {
@@ -313,7 +324,7 @@
             return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
         }
 
-        private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
+        private void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
         {
             try
             {
@@ -322,14 +333,14 @@
                     throw new RequestExecutionException(ex);
                 }
 
-                var onErrorResponse = pipeline.Invoke(context, ex);
+                var onErrorResult = pipeline.Invoke(context, ex);
 
-                if (onErrorResponse == null)
+                if (onErrorResult == null)
                 {
                     throw new RequestExecutionException(ex);
                 }
 
-                context.Response = onErrorResponse;
+                context.Response = this.responseNegotiator.NegotiateResponse(onErrorResult, context);
             }
             catch (Exception e)
             {

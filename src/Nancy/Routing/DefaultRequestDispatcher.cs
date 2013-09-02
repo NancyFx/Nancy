@@ -19,6 +19,7 @@ namespace Nancy.Routing
         private readonly IRouteResolver routeResolver;
         private readonly IEnumerable<IResponseProcessor> responseProcessors;
         private readonly IRouteInvoker routeInvoker;
+        private readonly IResponseNegotiator responseNegotiator;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultRequestDispatcher"/> class, with
@@ -27,11 +28,17 @@ namespace Nancy.Routing
         /// <param name="routeResolver"></param>
         /// <param name="responseProcessors"></param>
         /// <param name="routeInvoker"></param>
-        public DefaultRequestDispatcher(IRouteResolver routeResolver, IEnumerable<IResponseProcessor> responseProcessors, IRouteInvoker routeInvoker)
+        /// <param name="responseNegotiator"></param>
+        public DefaultRequestDispatcher(
+            IRouteResolver routeResolver,
+            IEnumerable<IResponseProcessor> responseProcessors,
+            IRouteInvoker routeInvoker,
+            IResponseNegotiator responseNegotiator)
         {
             this.routeResolver = routeResolver;
             this.responseProcessors = responseProcessors;
             this.routeInvoker = routeInvoker;
+            this.responseNegotiator = responseNegotiator;
         }
 
         /// <summary>
@@ -83,7 +90,7 @@ namespace Nancy.Routing
             return tcs.Task;
         }
 
-        private static void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
+        private void ExecutePost(NancyContext context, CancellationToken cancellationToken, AfterPipeline postHook, Func<NancyContext, Exception, dynamic> onError, TaskCompletionSource<Response> tcs)
         {
             if (postHook == null)
             {
@@ -93,11 +100,10 @@ namespace Nancy.Routing
 
             postHook.Invoke(context, cancellationToken).WhenCompleted(
                 completedTask => tcs.SetResult(context.Response),
-                completedTask => HandlePostHookFaultedTask(context, onError, completedTask, tcs),
-                false);
+                completedTask => HandlePostHookFaultedTask(context, onError, completedTask, tcs));
         }
 
-        private static void HandlePostHookFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, Task completedTask, TaskCompletionSource<Response> tcs)
+        private void HandlePostHookFaultedTask(NancyContext context, Func<NancyContext, Exception, dynamic> onError, Task completedTask, TaskCompletionSource<Response> tcs)
         {
             var response = ResolveErrorResult(context, onError, completedTask.Exception);
 
@@ -113,23 +119,9 @@ namespace Nancy.Routing
             }
         }
 
-        private static Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, Response> onError, TaskCompletionSource<Response> tcs)
+        private Action<Task<Response>> HandleFaultedTask(NancyContext context, Func<NancyContext, Exception, dynamic> onError, TaskCompletionSource<Response> tcs)
         {
-            return task =>
-            {
-                var response = ResolveErrorResult(context, onError, task.Exception);
-    
-                if (response != null)
-                {
-                    context.Response = response;
-
-                    tcs.SetResult(response);
-                }
-                else
-                {
-                    tcs.SetException(task.Exception);
-                }
-            };
+            return task => this.HandlePostHookFaultedTask(context, onError, task, tcs);
         }
 
         private static Task<Response> ExecuteRoutePreReq(NancyContext context, CancellationToken cancellationToken, BeforePipeline resolveResultPreReq)
@@ -142,11 +134,15 @@ namespace Nancy.Routing
             return resolveResultPreReq.Invoke(context, cancellationToken);
         }
 
-        private static Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, Response> resolveResultOnError, Exception exception)
+        private Response ResolveErrorResult(NancyContext context, Func<NancyContext, Exception, dynamic> resolveResultOnError, Exception exception)
         {
             if (resolveResultOnError != null)
             {
-                return resolveResultOnError.Invoke(context, exception);
+                var result = resolveResultOnError.Invoke(context, exception);
+                if (result != null)
+                {
+                    return this.responseNegotiator.NegotiateResponse(result, context);
+                }
             }
 
             return null;

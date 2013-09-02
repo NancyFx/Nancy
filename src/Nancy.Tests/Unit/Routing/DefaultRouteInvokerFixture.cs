@@ -1,11 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading;
-    using Nancy.Conventions;
+
+    using FakeItEasy;
+
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
@@ -20,7 +20,12 @@
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>()));
+            var negotiator = A.Fake<IResponseNegotiator>();
+
+            A.CallTo(() => negotiator.NegotiateResponse(A<object>.Ignored, A<NancyContext>.Ignored))
+                .Returns(new Response());
+
+            this.invoker = new DefaultRouteInvoker(negotiator);
         }
 
         [Fact]
