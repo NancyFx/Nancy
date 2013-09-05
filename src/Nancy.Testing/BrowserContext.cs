@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Cryptography.X509Certificates;
 
     using Nancy.Helpers;
 
@@ -44,6 +45,11 @@
         /// Gets or sets the user host address
         /// </summary>
         string IBrowserContextValues.UserHostAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ClientCertificate
+        /// </summary>
+        X509Certificate2 IBrowserContextValues.ClientCertificate { get; set; }
 
         /// <summary>
         /// Gets or sets the body string
@@ -152,6 +158,24 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
+        }
+
+        /// <summary>
+        /// Sets the ClientCertificate
+        /// </summary>
+        /// <param name="certificate2">the certificate</param>
+        public void ClientCertificate(X509Certificate2 certificate2)
+        {
+            this.Values.ClientCertificate = certificate2;
+        }
+
+        /// <summary>
+        /// Sets the ClientCertificate
+        /// </summary>
+        /// <param name="certificate">the certificate in bytes</param>
+        public void ClientCertificate(byte[] certificate)
+        {
+            this.Values.ClientCertificate = new X509Certificate2(certificate);
         }
 
         private IBrowserContextValues Values

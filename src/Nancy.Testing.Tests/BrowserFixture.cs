@@ -4,6 +4,7 @@ namespace Nancy.Testing.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Linq;
 
@@ -310,6 +311,16 @@ namespace Nancy.Testing.Tests
 
             result.Body.AsString().ShouldEqual("ajax");
         }
+
+
+        [Fact]
+        public void Should_add_certificate()
+        {
+            var result = browser.Get("/cert", with => with.ClientCertificate(A.Dummy<X509Certificate2>()));
+
+            result.Context.Request.ClientCertificate.ShouldNotBeNull();
+        }
+
 
         [Fact]
         public void Should_add_forms_authentication_cookie_to_the_request()

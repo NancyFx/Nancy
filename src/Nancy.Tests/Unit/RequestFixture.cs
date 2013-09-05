@@ -628,7 +628,7 @@ namespace Nancy.Tests.Unit
             var memory = CreateRequestStream();
 
             // When
-            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), memory, "http", sb.ToString());
+            var request = new Request("GET", "/", new Dictionary<string, IEnumerable<string>>(), memory, "http", query: sb.ToString());
 
             // Then
             ((IEnumerable<string>)request.Query.GetDynamicMemberNames()).Count().ShouldEqual(StaticConfiguration.RequestQueryFormMultipartLimit);
