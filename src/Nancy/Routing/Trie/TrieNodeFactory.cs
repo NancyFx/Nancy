@@ -45,6 +45,11 @@ namespace Nancy.Routing.Trie
 
         private TrieNode GetCaptureNode(TrieNode parent, string segment)
         {
+            if (segment.Contains(":"))
+            {
+                return new CaptureNodeWithConstraint(parent, segment, this);
+            }
+
             if (segment.EndsWith("?}"))
             {
                 return new OptionalCaptureNode(parent, segment, this);
