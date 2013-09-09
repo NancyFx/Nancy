@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.IO;
 
+    using Nancy.Helpers;
+
     /// <summary>
     /// Defines the context that a <see cref="Browser"/> instance should run under.
     /// </summary>
@@ -95,7 +97,7 @@
                 "{0}{1}={2}",
                 this.Values.FormValues.Length == 0 ? String.Empty : "&",
                 key,
-                value);
+                HttpUtility.UrlEncode(value));
         }
 
         /// <summary>
@@ -139,9 +141,9 @@
         {
             this.Values.QueryString += String.Format(
                 "{0}{1}={2}",
-                this.Values.QueryString.Length == 0 ? "?" : "&", 
+                this.Values.QueryString.Length == 0 ? "?" : "&",
                 key,
-                value);
+                HttpUtility.UrlEncode(value));
         }
 
         /// <summary>

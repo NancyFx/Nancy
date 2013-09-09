@@ -338,6 +338,30 @@ namespace Nancy.Testing.Tests
             cookieValue.ShouldEqual(cookieContents);
         }
 
+        [Fact]
+        public void Should_encode_form()
+        {
+            var result = browser.Post("/encoded", with =>
+            {
+                with.HttpRequest();
+                with.FormValue("name", "john++");
+            });
+
+            result.Body.AsString().ShouldEqual("john++");
+        }
+
+        [Fact]
+        public void Should_encode_querystring()
+        {
+            var result = browser.Post("/encodedquerystring", with =>
+            {
+                with.HttpRequest();
+                with.Query("name", "john++");
+            });
+
+            result.Body.AsString().ShouldEqual("john++");
+        }
+
         public class EchoModel
         {
             public string SomeString { get; set; }
@@ -399,6 +423,10 @@ namespace Nancy.Testing.Tests
                 Get["/type"] = _ => this.Request.Url.Scheme.ToLower();
 
                 Get["/ajax"] = _ => this.Request.IsAjaxRequest() ? "ajax" : "not-ajax";
+
+                Post["/encoded"] = parameters => (string)this.Request.Form.name;
+
+                Post["/encodedquerystring"] = parameters => (string)this.Request.Query.name;
             }
 
         }
