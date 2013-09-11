@@ -20,6 +20,7 @@
   <files>
     <file src="build\binaries\Nancy.Authentication.Basic.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Authentication.Basic.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Authentication.Basic.XML" target="lib\net40" />
     <file src="src\Nancy.Authentication.Basic\**\*.cs" target="src" />
   </files>
 </package>

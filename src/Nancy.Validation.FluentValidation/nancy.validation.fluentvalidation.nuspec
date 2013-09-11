@@ -20,6 +20,7 @@
   <files>
     <file src="build\binaries\Nancy.Validation.FluentValidation.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Validation.FluentValidation.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Validation.FluentValidation.XML" target="lib\net40" />
     <file src="src\Nancy.Validation.FluentValidation\**\*.cs" target="src" />
   </files>
 </package>
