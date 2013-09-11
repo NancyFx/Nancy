@@ -21,8 +21,10 @@
   <files>
     <file src="build\binaries\Nancy.Viewengines.Razor.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Viewengines.Razor.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.XML" target="lib\net40" />
     <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.dll" target="BuildProviders" />
     <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.pdb" target="BuildProviders" />
+    <file src="build\binaries\Nancy.Viewengines.Razor.BuildProviders.XML" target="BuildProviders" />
     <file src="src\Nancy.Viewengines.Razor\web.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\app.config.transform" target="content" />
     <file src="src\Nancy.Viewengines.Razor\**\*.cs" target="src" />

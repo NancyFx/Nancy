@@ -20,6 +20,7 @@
   <files>
     <file src="build\binaries\Nancy.Encryption.MachineKey.dll" target="lib\net40" />
     <file src="build\binaries\Nancy.Encryption.MachineKey.pdb" target="lib\net40" />
+    <file src="build\binaries\Nancy.Encryption.MachineKey.XML" target="lib\net40" />
     <file src="src\Nancy.Encryption.MachineKey\**\*.cs" target="src" />
   </files>
 </package>
