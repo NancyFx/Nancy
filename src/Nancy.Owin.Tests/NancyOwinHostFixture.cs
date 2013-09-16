@@ -150,7 +150,8 @@ namespace Nancy.Owin.Tests
         {
             //Given
             var respHeaders = Get<IDictionary<string, string[]>>(this.environment, "owin.ResponseHeaders");
-            respHeaders.Add("Set-Cookie", new[] { "other=othervalue; path=/" });
+            const string middlewareSetCookie = "other=othervalue; path=/";
+            respHeaders.Add("Set-Cookie", new[] { middlewareSetCookie });
 
             var fakeResponse = new Response { StatusCode = HttpStatusCode.OK };
             fakeResponse.AddCookie("test", "testvalue");
@@ -162,8 +163,8 @@ namespace Nancy.Owin.Tests
 
             //Then
             respHeaders["Set-Cookie"].Length.ShouldEqual(2);
-            (respHeaders["Set-Cookie"][0] == "other=othervalue; path=/").ShouldBeTrue();
-            (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][0] == middlewareSetCookie).ShouldBeTrue();
+            (respHeaders["Set-Cookie"][1] == "test=testvalue; path=/").ShouldBeTrue();
         }
 
         /// <summary>
