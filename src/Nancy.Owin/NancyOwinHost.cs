@@ -127,8 +127,13 @@
 
                         if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
                         {
-                            owinResponseHeaders["Set-Cookie"] =
-                                nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+                            const string setCookieHeaderKey = "Set-Cookie";
+                            string[] setCookieHeader = owinResponseHeaders.ContainsKey(setCookieHeaderKey)
+                                                           ? owinResponseHeaders[setCookieHeaderKey]
+                                                           : new string[0];
+                            owinResponseHeaders[setCookieHeaderKey] = setCookieHeader
+                                .Concat(nancyResponse.Cookies.Select(cookie => cookie.ToString()))
+                                .ToArray();
                         }
 
                         nancyResponse.Contents(owinResponseBody);
