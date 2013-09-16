@@ -9,7 +9,6 @@
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
-    using Nancy.Bootstrapper;
     using Nancy.IO;
     using Helpers;
 
@@ -24,6 +23,9 @@
 
         private readonly INancyEngine engine;
 
+        /// <summary>
+        /// The request environment key
+        /// </summary>
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
