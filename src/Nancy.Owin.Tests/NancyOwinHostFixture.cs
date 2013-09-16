@@ -145,6 +145,27 @@ namespace Nancy.Owin.Tests
             (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_append_setcookie_headers()
+        {
+            //Given
+            var respHeaders = Get<IDictionary<string, string[]>>(this.environment, "owin.ResponseHeaders");
+            respHeaders.Add("Set-Cookie", new[] { "other=othervalue; path=/" });
+
+            var fakeResponse = new Response { StatusCode = HttpStatusCode.OK };
+            fakeResponse.AddCookie("test", "testvalue");
+            var fakeContext = new NancyContext { Response = fakeResponse };
+            this.SetupFakeNancyCompleteCallback(fakeContext);
+
+            //When
+            this.host.Invoke(this.environment).Wait();
+
+            //Then
+            respHeaders["Set-Cookie"].Length.ShouldEqual(2);
+            (respHeaders["Set-Cookie"][0] == "other=othervalue; path=/").ShouldBeTrue();
+            (respHeaders["Set-Cookie"][1] == "test1=testvalue1; path=/").ShouldBeTrue();
+        }
+
         /// <summary>
         /// Sets the fake nancy engine to execute the complete callback with the given context
         /// </summary>
