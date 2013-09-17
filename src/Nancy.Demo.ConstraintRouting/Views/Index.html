@@ -1,0 +1,106 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+    <style>
+        table {
+            border-collapse: collapse;
+        }
+
+        table, th, td {
+            border: 1px solid black;
+            padding: 2px 3px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Constraint Routing</h1>
+    <table>
+        Constraint
+    </table>
+    <table>
+        <thead>
+            <tr>
+                <th>Constraint</th>
+                <th>Description</th>
+                <th>Expression</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>alpha</td>
+                <td>Matches uppercase or lowercase Latin alphabet characters (a-z, A-Z)</td>
+                <td>{x:alpha}</td>
+                <td><a href="/alphaConstraint/foo">Success</a> <a href="/alphaConstraint/1">Failure</a></td>
+            </tr>
+            <tr>
+                <td>bool</td>
+                <td>Matches a Boolean value.</td>
+                <td>{x:bool}</td>
+                <td><a href="/boolConstraint/true">Success</a> <a href="/boolConstraint/foo">Failure</a></td>
+            </tr>
+            <tr>
+                <td>datetime</td>
+                <td>Matches a <strong>DateTime</strong> value.</td>
+                <td>{x:datetime}</td>
+                <td><a href="/datetimeConstraint/1-1-2010">Success</a> <a href="/datetimeConstraint/foo">Failure</a></td>
+            </tr>
+            <tr>
+                <td>decimal</td>
+                <td>Matches a decimal value.</td>
+                <td>{x:decimal}</td>
+                <td><a href="/decimalConstraint/1.5555555555555555555555555555">Success</a> <a href="/decimalConstraint/foo">Failure</a></td>
+            </tr>
+            <tr>
+                <td>guid</td>
+                <td>Matches a GUID value.</td>
+                <td>{x:guid}</td>
+                <td><a href="/guidConstraint/7439018c-5057-46c1-95f9-d9b75d4d1647">Success</a> <a href="/guidConstraint/7439018c-5057-46c1-95f9-d9b75d4d1647d">Failure</a></td>
+            </tr>
+            <tr>
+                <td>int</td>
+                <td>Matches a integer value.</td>
+                <td>{x:int}</td>
+                <td><a href="/intConstraint/1">Success</a> <a href="/intConstraint/foo">Failure</a></td>
+            </tr>
+            <tr>
+                <td>length</td>
+                <td>Matches a string with the specified length or within a specified range of lengths.</td>
+                <td>{x:length(6)}<br>{x:length(1,20)}</td>
+                <td><a href="/lengthConstraint/foobar">Success</a> <a href="/lengthConstraint/foobarfoobarfoobarfoobar">Failure</a></td>
+            </tr>
+            <tr>
+                <td>max</td>
+                <td>Matches an integer with a maximum value.</td>
+                <td>{x:max(6)}</td>
+                <td><a href="/maxConstraint/5">Success</a> <a href="/maxConstraint/20">Failure</a></td>
+            </tr>
+            <tr>
+                <td>maxlength</td>
+                <td>Matches a string with a maximum length.</td>
+                <td>{x:maxlength(10)}</td>
+                <td><a href="/maxlengthConstraint/foobar">Success</a> <a href="/maxlengthConstraint/foobarfoobar">Failure</a></td>
+            </tr>
+            <tr>
+                <td>min</td>
+                <td>Matches an integer with a minimum value.</td>
+                <td>{x:min(4)}</td>
+                <td><a href="/minConstraint/5">Success</a> <a href="/minConstraint/2">Failure</a></td>
+            </tr>
+            <tr>
+                <td>minlength</td>
+                <td>Matches a string with a minimum length.</td>
+                <td>{x:minlength(4)}</td>
+                <td><a href="/minlengthConstraint/foobar">Success</a> <a href="/minlengthConstraint/foo">Failure</a></td>
+            </tr>
+            <tr>
+                <td>range</td>
+                <td>Matches an integer within a range of values.</td>
+                <td>{x:range(10,20)}</td>
+                <td><a href="/rangeConstraint/15">Success</a> <a href="/rangeConstraint/25">Failure</a></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
