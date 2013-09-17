@@ -295,16 +295,34 @@ namespace Nancy
 
             protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, dynamic> value)
             {
-                var fullPath = String.Concat(this.parentModule.ModulePath, path);
+                var fullPath = GetFullPath(path);
 
                 this.parentModule.routes.Add(Route.FromSync(this.method, fullPath, condition, value));
             }
 
             protected void AddRoute(string path, Func<NancyContext, bool> condition, Func<dynamic, CancellationToken, Task<dynamic>> value)
             {
-                var fullPath = String.Concat(this.parentModule.ModulePath, path);
+                var fullPath = GetFullPath(path);
 
                 this.parentModule.routes.Add(new Route(this.method, fullPath, condition, value));
+            }
+
+            private string GetFullPath(string path)
+            {
+                var relativePath = path.Trim('/');
+                var parentPath = this.parentModule.ModulePath.Trim('/');
+
+                if (string.IsNullOrEmpty(parentPath))
+                {
+                    return string.Concat("/", relativePath);
+                }
+
+                if (string.IsNullOrEmpty(relativePath))
+                {
+                    return string.Concat("/", parentPath);
+                }
+
+                return string.Concat("/", parentPath, "/", relativePath);
             }
         }
 
