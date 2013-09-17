@@ -9,7 +9,6 @@
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
-    using Nancy.Bootstrapper;
     using Nancy.IO;
     using Helpers;
 
@@ -24,6 +23,9 @@
 
         private readonly INancyEngine engine;
 
+        /// <summary>
+        /// The request environment key
+        /// </summary>
         public const string RequestEnvironmentKey = "OWIN_REQUEST_ENVIRONMENT";
 
         /// <summary>
@@ -93,7 +95,9 @@
         /// now complete.
         /// </summary>
         /// <param name="environment">OWIN environment</param>
+        /// <param name="next">A delegate that represents the next stage in OWIN pipeline</param>
         /// <param name="tcs">The task completion source to signal</param>
+        /// <param name="performPassThrough">A delegate that determines if pass through should be performed</param>
         /// <returns>Delegate</returns>
         private static Action<NancyContext> RequestComplete(
             IDictionary<string, object> environment,
@@ -123,8 +127,13 @@
 
                         if (nancyResponse.Cookies != null && nancyResponse.Cookies.Count != 0)
                         {
-                            owinResponseHeaders["Set-Cookie"] =
-                                nancyResponse.Cookies.Select(cookie => cookie.ToString()).ToArray();
+                            const string setCookieHeaderKey = "Set-Cookie";
+                            string[] setCookieHeader = owinResponseHeaders.ContainsKey(setCookieHeaderKey)
+                                                           ? owinResponseHeaders[setCookieHeaderKey]
+                                                           : new string[0];
+                            owinResponseHeaders[setCookieHeaderKey] = setCookieHeader
+                                .Concat(nancyResponse.Cookies.Select(cookie => cookie.ToString()))
+                                .ToArray();
                         }
 
                         nancyResponse.Contents(owinResponseBody);
