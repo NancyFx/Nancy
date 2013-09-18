@@ -99,10 +99,10 @@
         public void Should_resolve_datetime_constraint()
         {
             var dateTime = new DateTime(2010, 1, 2, 3, 4, 5, 6);
-            var urlEncodeDateTime = HttpUtility.UrlEncode(dateTime.ToString("dd MM yyyy hh:mm:ss.f", CultureInfo.InvariantCulture));
+            var urlEncodeDateTime = HttpUtility.UrlEncode(dateTime.ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture));
             var result = this.browser.Get("/datetimeConstraint/" + urlEncodeDateTime);
 
-            result.Body.AsString().ShouldEqual("02-01-2010 03:04:05");
+            result.Body.AsString().ShouldEqual("2010-01-02 03:04:05");
         }
 
         [Fact]
@@ -287,7 +287,7 @@
 
                 Get["/alphaConstraint/{value:alpha}"] = _ => "AlphaConstraint";
 
-                Get["/datetimeConstraint/{value:datetime}"] = _ => DateTime.Parse(_.value).ToString("dd-MM-yyyy hh:mm:ss", CultureInfo.InvariantCulture);
+                Get["/datetimeConstraint/{value:datetime}"] = _ => DateTime.Parse(_.value).ToString("yyyy-MM-dd hh:mm:ss", CultureInfo.InvariantCulture);
 
                 Get["/minConstraint/{value:min(4)}"] = _ => "MinConstraint";
 
