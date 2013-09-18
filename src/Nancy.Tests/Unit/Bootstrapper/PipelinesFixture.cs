@@ -73,7 +73,7 @@
         public void Should_clone_error_hooks_when_created_with_existing_pipeline()
         {
             // Given
-            Func<NancyContext, Exception, Response> hook = (ctx, ex) => null;
+            Func<NancyContext, Exception, dynamic> hook = (ctx, ex) => null;
 
             var existing = new Pipelines();
             existing.OnError.AddItemToEndOfPipeline(hook);
