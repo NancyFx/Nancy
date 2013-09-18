@@ -33,7 +33,11 @@
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
-                x => this.GetCompiledTemplate<dynamic>(x.Contents.Invoke()));
+                x =>
+                {
+                    using (var reader = x.Contents.Invoke())
+                        return this.GetCompiledTemplate<dynamic>(reader);
+                });
 
             var view = viewFactory.Invoke();
 

@@ -67,7 +67,8 @@
                 // Or to parse here and store it in the cache before passing it back in not
                 if (viewLocation != null)
                 {
-                    return viewLocation.Contents.Invoke().ReadToEnd();
+                    using (var reader = viewLocation.Contents.Invoke())
+                        return reader.ReadToEnd();
                 }
             }
             throw new liquid.Exceptions.FileSystemException("Template file {0} not found", new[] { templateName });

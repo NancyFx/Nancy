@@ -59,7 +59,11 @@
             return new HtmlResponse(contents: s =>
             {
                 var writer = new StreamWriter(s);
-                var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr => vr.Contents.Invoke().ReadToEnd());
+                var templateContents = renderContext.ViewCache.GetOrAdd(viewLocationResult, vr =>
+                {
+                    using (var reader = vr.Contents.Invoke())
+                        return reader.ReadToEnd();
+                });
 
                 writer.Write(this.viewEngine.Render(templateContents, model, new NancyViewEngineHost(renderContext)));
                 writer.Flush();
