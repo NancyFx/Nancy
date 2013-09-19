@@ -2,7 +2,9 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.IO;
+    using System.Reflection;
     using System.Security.Cryptography.X509Certificates;
 
     using Nancy.Helpers;
@@ -161,11 +163,24 @@
         }
 
         /// <summary>
-        /// Sets the ClientCertificate
+        /// Sets the ClientCertificate to a default embedded certificate
         /// </summary>
-        /// <param name="certificate2">the certificate</param>
-        public void ClientCertificate(X509Certificate2 certificate2)
+        public void Certificate()
         {
+            X509Certificate2 certificate2;
+
+            using (
+                var pkcs12 =
+                    Assembly.GetAssembly(typeof (BrowserContext))
+                            .GetManifestResourceStream("Nancy.Testing.Resources.Nancy Testing Cert.pfx"))
+            {
+                using (var br = new BinaryReader(pkcs12))
+                {
+                    certificate2 = new X509Certificate2(br.ReadBytes((int)pkcs12.Length), "nancy",
+                                                        X509KeyStorageFlags.Exportable);
+                }
+            }
+
             this.Values.ClientCertificate = certificate2;
         }
 
@@ -173,9 +188,33 @@
         /// Sets the ClientCertificate
         /// </summary>
         /// <param name="certificate">the certificate in bytes</param>
-        public void ClientCertificate(byte[] certificate)
+        public void Certificate(byte[] certificate)
         {
             this.Values.ClientCertificate = new X509Certificate2(certificate);
+        }
+
+        /// <summary>
+        /// Find a certificate in a store on the computer.
+        /// </summary>
+        /// <param name="storeLocation">The location of the store (LocalMachine, CurrentUser)</param>
+        /// <param name="storeName">The name of the store (e.q. My)</param>
+        /// <param name="findType">By which field you want to find the certificate (Commonname, Thumbprint, etc)</param>
+        /// <param name="findBy">The Comonname or thumbprint you are looking for</param>
+        public void Certificate(StoreLocation storeLocation, StoreName storeName, X509FindType findType, object findBy)
+        {
+            var store = new X509Store(storeName, storeLocation);
+
+            store.Open(OpenFlags.ReadOnly);
+            var certificatesFound = store.Certificates.Find(findType, findBy, false);
+
+            if (certificatesFound.Count > 0)
+            {
+                this.Values.ClientCertificate = certificatesFound[0];
+            }
+            else
+            {
+                throw new InvalidOperationException("No certificates found in " + storeLocation + " " + storeName + " with a " + findType + " that looks like \"" + findBy + "\"");
+            }
         }
 
         private IBrowserContextValues Values

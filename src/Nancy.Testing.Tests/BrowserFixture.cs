@@ -312,11 +312,23 @@ namespace Nancy.Testing.Tests
             result.Body.AsString().ShouldEqual("ajax");
         }
 
+        [Fact]
+        public void Should_throw_an_exception_when_the_cert_couldnt_be_found()
+        {
+            var exception = Record.Exception(() =>
+            {
+                var result = browser.Get("/ajax",
+                                         with =>
+                                         with.Certificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "aa aa aa"));
+            });
+
+            exception.ShouldBeOfType<InvalidOperationException>();
+        }
 
         [Fact]
         public void Should_add_certificate()
         {
-            var result = browser.Get("/cert", with => with.ClientCertificate(A.Dummy<X509Certificate2>()));
+            var result = browser.Get("/cert", with => with.Certificate());
 
             result.Context.Request.ClientCertificate.ShouldNotBeNull();
         }
