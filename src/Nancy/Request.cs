@@ -37,22 +37,11 @@ namespace Nancy
         /// Initializes a new instance of the <see cref="Request"/> class.
         /// </summary>
         /// <param name="method">The HTTP data transfer method used by the client.</param>
-        /// <param name="path">The path of the requested resource, relative to the "Nancy root". This shold not not include the scheme, host name, or query portion of the URI.</param>
+        /// <param name="url">The <see cref="Url"/>url of the requested resource</param>
         /// <param name="headers">The headers that was passed in by the client.</param>
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
-        /// <param name="scheme">The HTTP scheme that was used by the client.</param>
-        /// <param name="query">The querystring data that was sent by the client.</param>
         /// <param name="ip"></param>
-        /// <param name="clientCertificate"></param>
-        public Request(string method, string path, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string scheme, string query = null, string ip = null, X509Certificate2 clientCertificate = null)
-            : this(method, new Url { Path = path, Scheme = scheme, Query = query ?? String.Empty }, body, headers, ip)
-        {
-            if (clientCertificate != null)
-            {
-                this.ClientCertificate = clientCertificate;
-            }
-        }
-
+        /// <param name="certificate"></param>
         public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
         {
             if (String.IsNullOrEmpty(method))
