@@ -42,7 +42,7 @@
                 foreach (var prefix in prefixes)
                 {
                     var command = NetSh.GetParameters(prefix, user);
-                    stringBuilder.AppendLine(command.ToString());
+                    stringBuilder.AppendLine(string.Format("netsh {0}", command));
                 }
 
                 return stringBuilder.ToString();
