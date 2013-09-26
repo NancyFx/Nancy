@@ -13,6 +13,8 @@ namespace Nancy.ErrorHandling
     /// </summary>
     public class DefaultStatusCodeHandler : IStatusCodeHandler
     {
+        private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = true;</code> to enable.";
+
         private readonly IDictionary<HttpStatusCode, string> errorPages;
 
         private readonly IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
@@ -115,7 +117,7 @@ namespace Nancy.ErrorHandling
 
         private static string PopulateErrorInfo(HttpStatusCode httpStatusCode, NancyContext context, string templateContents)
         {
-            return templateContents.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : context.GetExceptionDetails());
+            return templateContents.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : context.GetExceptionDetails());
         }
     }
 }
