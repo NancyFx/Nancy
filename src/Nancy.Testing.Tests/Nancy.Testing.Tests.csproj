@@ -124,6 +124,7 @@
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="BrowserResponseExtensionsTests.cs" />
     <Compile Include="CaseSensitivityFixture.cs" />
+    <Compile Include="TestingViewFactoryGetModelTests.cs" />
     <Compile Include="ConfigurableBootstrapperDependenciesTests.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
@@ -149,6 +150,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="ViewFactoryTest.sshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
@@ -172,6 +176,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
