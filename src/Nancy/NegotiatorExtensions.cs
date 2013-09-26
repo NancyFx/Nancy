@@ -206,6 +206,11 @@
             return negotiator;
         }
 
+        public static Negotiator Negotiate(this NancyContext context)
+        {
+            return new Negotiator(context);
+        }
+
         private static Tuple<string, string> GetTuple(object header)
         {
             var properties = header.GetType()

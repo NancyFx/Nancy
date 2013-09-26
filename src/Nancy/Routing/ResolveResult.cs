@@ -30,7 +30,7 @@
         /// <summary>
         /// Gets or sets the on error module pipeline
         /// </summary>
-        public Func<NancyContext, Exception, Response> OnError { get; set; }
+        public Func<NancyContext, Exception, dynamic> OnError { get; set; }
 
         public ResolveResult()
         {

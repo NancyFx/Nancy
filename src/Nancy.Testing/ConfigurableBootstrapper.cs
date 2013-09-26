@@ -1616,6 +1616,20 @@ namespace Nancy.Testing
                 return this;
             }
 
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator(IResponseNegotiator responseNegotiator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResponseNegotiator), responseNegotiator));
+
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator<T>() where T : IResponseNegotiator
+            {
+                this.bootstrapper.configuration.ResponseNegotiator = typeof(T);
+                return this;
+            }
+
             public ConfigurableBootstrapperConfigurator ApplicationStartup(Action<TinyIoCContainer, IPipelines> action)
             {
                 this.bootstrapper.applicationStartupActions.Add(action);
