@@ -8,6 +8,8 @@
     /// </summary>
     public class NancyRazorErrorView : NancyRazorViewBase
     {
+        private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = true;</code> to enable.";
+        
         private static string template;
 
         /// <summary>
@@ -39,7 +41,7 @@
         /// </summary>
         public override void Execute()
         {
-            base.WriteLiteral(Template.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? String.Empty : this.Message));
+            base.WriteLiteral(Template.Replace("[DETAILS]", StaticConfiguration.DisableErrorTraces ? DisableErrorTracesTrueMessage : this.Message));
         }
 
         private static string LoadResource(string filename)
