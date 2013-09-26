@@ -4,36 +4,36 @@
 
     public class TestingViewFactoryGetModelTests
     {
-        private readonly BrowserResponse response;
+        private readonly BrowserResponse _response;
         private readonly Browser _browser;
 
         public TestingViewFactoryGetModelTests()
         {
-            this._browser = new Browser(with => 
+            this._browser = new Browser(with =>
             {
                 with.Module<TestingViewFactoryTestModule>();
                 with.ViewFactory<TestingViewFactory>();
             });
 
-            this.response = this._browser.Get("/testingViewFactory");
+            this._response = this._browser.Get("/testingViewFactory");
         }
 
         [Fact]
         public void should_return_model_of_correct_type()
         {
-            Assert.IsType<ViewFactoryTestModel>(this.response.GetModel<ViewFactoryTestModel>());
+            Assert.IsType<ViewFactoryTestModel>(this._response.GetModel<ViewFactoryTestModel>());
         }
 
         [Fact]
         public void should_set_model()
         {
-            Assert.NotNull(this.response.GetModel<ViewFactoryTestModel>());
+            Assert.NotNull(this._response.GetModel<ViewFactoryTestModel>());
         }
 
         [Fact]
         public void should_set_values_correct_on_the_model()
         {
-            var model = this.response.GetModel<ViewFactoryTestModel>();
+            var model = this._response.GetModel<ViewFactoryTestModel>();
             Assert.Equal("A value", model.AString);
             Assert.Equal("Another value", model.ComplexModel.AnotherString);
         }
@@ -41,7 +41,7 @@
         [Fact]
         public void should_set_the_view_name()
         {
-            Assert.Equal("ViewFactoryTest.sshtml", response.GetViewName());
+            Assert.Equal("ViewFactoryTest.sshtml", _response.GetViewName());
         }
 
         [Fact]
@@ -54,14 +54,9 @@
         [Fact]
         public void should_set_the_module_name()
         {
-            Assert.Equal("TestingViewFactoryTest", response.GetModuleName());
+            Assert.Equal("TestingViewFactoryTest", _response.GetModuleName());
         }
 
-        [Fact]
-        public void should_set_the_module_path_to_empty_for_modules_in_root_catalog()
-        {
-            Assert.Equal(string.Empty, response.GetModulePath());
-        }
     }
 
     // Test module for TestingViewFactory
@@ -76,15 +71,14 @@
 
         private static ViewFactoryTestModel GetModel()
         {
-            var model = new ViewFactoryTestModel
+            return new ViewFactoryTestModel
             {
                 AString = "A value",
-                ComplexModel = new CompositeTestModel {AnotherString = "Another value"}
+                ComplexModel = new CompositeTestModel { AnotherString = "Another value" }
             };
-            return model;
         }
     }
-
+    
     public class ViewFactoryTestModel
     {
         public string AString { get; set; }

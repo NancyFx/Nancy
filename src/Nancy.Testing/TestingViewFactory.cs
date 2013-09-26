@@ -33,6 +33,8 @@
             viewLocationContext.Context.Items["###ViewModel###"] = model;
             viewLocationContext.Context.Items["###ViewName###"] = viewName;
             viewLocationContext.Context.Items["###ModuleName###"] = viewLocationContext.ModuleName;
+            
+            //TODO: Cannot get hold of the module path?
             viewLocationContext.Context.Items["###ModulePath###"] = viewLocationContext.ModulePath;
 
             return this.defaultViewFactory.RenderView(viewName, model, viewLocationContext);
@@ -63,8 +65,7 @@
         /// <returns>the name of the view</returns>
         public static string GetViewName(this BrowserResponse response)
         {
-            var value = (string)response.Context.Items["###ViewName###"];
-            return string.IsNullOrEmpty(value) ? string.Empty : value;
+            return GetContextValue(response, "###ViewName###");
         }
 
         /// <summary>
@@ -74,8 +75,7 @@
         /// <returns>the name of the module</returns>
         public static string GetModuleName(this BrowserResponse response)
         {
-            var value = (string)response.Context.Items["###ModuleName###"];
-            return string.IsNullOrEmpty(value) ? string.Empty : value;
+            return GetContextValue(response, "###ModuleName###");
         }
 
         /// <summary>
@@ -85,10 +85,13 @@
         /// <returns>the name of the module</returns>
         public static string GetModulePath(this BrowserResponse response)
         {
-            var value = (string)response.Context.Items["###ModulePath###"];
-            return string.IsNullOrEmpty(value) ? string.Empty : value;
+            return GetContextValue(response, "###ModulePath###");
         }
 
+        private static string GetContextValue(BrowserResponse response, string key)
+        {
+            var value = (string)response.Context.Items[key];
+            return string.IsNullOrEmpty(value) ? string.Empty : value;
+        }
     }
-
 }
