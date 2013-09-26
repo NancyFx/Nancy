@@ -339,6 +339,18 @@ namespace Nancy.ModelBinding
         }
 
         /// <summary>
+        /// Bind the incoming request to an existing instance
+        /// </summary>
+        /// <typeparam name="TModel">Model type</typeparam>
+        /// <param name="module">Current module</param>
+        /// <param name="instance">The class instance to bind properties to</param>
+        /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
+        public static TModel BindTo<TModel>(this INancyModule module, TModel instance, BindingConfig configuration)
+        {
+            return module.BindTo(instance, configuration, NoBlacklistedProperties);
+        }
+
+        /// <summary>
         /// Bind the incoming request to an existing instance and validate
         /// </summary>
         /// <typeparam name="TModel">Model type</typeparam>
@@ -363,6 +375,7 @@ namespace Nancy.ModelBinding
         /// <param name="configuration">The <see cref="BindingConfig"/> that should be applied during binding.</param>
         /// <param name="blacklistedProperties">Expressions that tell which property should be ignored</param>
         /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
+        /// <example>this.BindToAndValidate(person, config, p =&gt; p.Name, p =&gt; p.Age)</example>
         public static TModel BindToAndValidate<TModel>(this INancyModule module, TModel instance, BindingConfig configuration, params Expression<Func<TModel, object>>[] blacklistedProperties)
         {
             var model = module.BindTo(instance, configuration, blacklistedProperties.ParseBlacklistedPropertiesExpressionTree());
