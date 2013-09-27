@@ -32,7 +32,7 @@ namespace Nancy.Demo.Authentication.Forms.Ajax
                     var authResponse = this.LoginWithoutRedirect(guid.Value);
                     result.IsSuccess = true;
                     result.Message = "Login successful for " + input.Username + "!";
-                    result.AuthToken = authResponse.Cookies[0].EncodedValue;
+                    result.AuthToken = authResponse.Cookies[0].Value;
                 }                
                 
                 return response;                
