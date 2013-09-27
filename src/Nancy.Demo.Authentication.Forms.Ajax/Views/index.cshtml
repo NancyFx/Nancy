@@ -16,8 +16,8 @@
 
         <h3>Login</h3>
         <form id="loginForm">
-            <p><label>Username<input type="text" name="Username"/></label></p>
-            <p><label>Password<input type="text" name="Password"/></label></p>
+            <p><label>Username<input type="text" name="Username" id="Username" /></label></p>
+            <p><label>Password<input type="text" name="Password" id="Password" /></label></p>
             <input type="submit" text="Log in" />
         </form>        
         <p id="StatusText"></p>
@@ -29,16 +29,20 @@
         <p><a href="~/secure">Try to enter the "Secure Zone"!</a></p>
         
         <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.3.1/jquery.cookie.js"></script>
+
         <script>
             $('#loginForm').submit(tryLogon);
             
             function tryLogon(event)
             {
                 event.preventDefault();
+                var username = $('#Username').val();
+                var password = $('#Password').val();
                 $.ajax({
-                    url: '/login',
+                    url: 'login',
                     type: "POST",
-                    data: { AccessCode: accessCode }
+                    data: { UserName:username,Password:password }
                 })
                 .done(function (response) {
                     if (response.IsSuccess) { $.cookie('_ncfa', response.AuthToken); }

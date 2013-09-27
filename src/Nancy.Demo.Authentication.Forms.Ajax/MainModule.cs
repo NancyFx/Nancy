@@ -1,17 +1,15 @@
-using System;
-
-using Nancy;
+using Nancy.ModelBinding;
 using Nancy.Authentication.Forms;
 using Nancy.Demo.Authentication.Forms.Ajax.Models;
-using Nancy.Extensions;
 
 namespace Nancy.Demo.Authentication.Forms.Ajax
-{
+{    
+
     public class MainModule : NancyModule
     {
         public MainModule()
         {
-            this.Get["/"] = x =>
+            Get["/"] = x =>
             {
                 var model = new IndexModel();
 
@@ -23,26 +21,24 @@ namespace Nancy.Demo.Authentication.Forms.Ajax
                 return this.View["index",model];
             };
             
-            this.Post["/login"] = x => {
-                var userGuid = UserDatabase.ValidateUser((string)this.Request.Form.Username, (string)this.Request.Form.Password);
+            Post["/login"] = x => {                
+                var input = this.Bind<LoginRequestModel>();
+                var guid = UserDatabase.ValidateUser((string)this.Request.Form.Username, (string)this.Request.Form.Password);
 
-                if (userGuid == null)
-                {
-                    return this.Context.GetRedirect("~/login?error=true&username=" + (string)this.Request.Form.Username);
-                }
+                var result = new LoginResponseModel{ Message = "Login failed" };
+                var response = Response.AsJson(result);
 
-                DateTime? expiry = null;
-                if (this.Request.Form.RememberMe.HasValue)
-                {
-                    expiry = DateTime.Now.AddDays(7);
-                }
-
-                return this.LoginAndRedirect(userGuid.Value, expiry);
+                if(guid.HasValue) {
+                    var authResponse = this.LoginWithoutRedirect(guid.Value);
+                    result.IsSuccess = true;
+                    result.Message = "Login successful for " + input.Username + "!";
+                    result.AuthToken = authResponse.Cookies[0].EncodedValue;
+                }                
+                
+                return response;                
             };
 
-            this.Get["/logout"] = x => {
-                return this.LogoutAndRedirect("~/");
-            };
+            this.Get["/logout"] = x => this.LogoutAndRedirect("~/");
         }
     }
 }
