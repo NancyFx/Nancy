@@ -1,0 +1,51 @@
+﻿@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<dynamic>
+<html>
+<head>
+    <title>Forms Authentication Demo</title>    
+</head>
+    <body>
+        
+        <h1>Nancy FormsAuthentication AJAX demo</h1>
+        <h3>Status</h3>
+        @if (Model.IsLoggedIn) {
+            <p>You are logged in as <b>@Model.User.Username</b></p>            
+        } else {
+            <p>You are not logged in :(</p>                        
+        }
+        <hr/>
+
+        <h3>Login</h3>
+        <form id="loginForm">
+            <p><label>Username<input type="text" name="Username"/></label></p>
+            <p><label>Password<input type="text" name="Password"/></label></p>
+            <input type="submit" text="Log in" />
+        </form>        
+        <p id="StatusText"></p>
+        <hr/>
+
+        <h3>Links</h3>
+        <a href="#" onClick="window.location.reload();return false;">Reload this page</a>
+        <p><a href="~/logout">Log out</a></p>
+        <p><a href="~/secure">Try to enter the "Secure Zone"!</a></p>
+        
+        <script src="http://code.jquery.com/jquery-1.10.1.min.js"></script>
+        <script>
+            $('#loginForm').submit(tryLogon);
+            
+            function tryLogon(event)
+            {
+                event.preventDefault();
+                $.ajax({
+                    url: '/login',
+                    type: "POST",
+                    data: { AccessCode: accessCode }
+                })
+                .done(function (response) {
+                    if (response.IsSuccess) { $.cookie('_ncfa', response.AuthToken); }
+                    $('#StatusText').text(response.Message);
+                })
+                .fail(function (msg) { $('#StatusText').text('Network failure: ' + msg.statusText); })
+            };            
+        </script>
+    </body>
+</html>
