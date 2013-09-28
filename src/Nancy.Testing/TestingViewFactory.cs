@@ -8,7 +8,7 @@
     /// </summary>
     public class TestingViewFactory : IViewFactory
     {
-        private readonly DefaultViewFactory defaultViewFactory;
+        private readonly DefaultViewFactory decoratedViewFactory;
 
         /// <summary>
         /// Creates the view based on the view factory sent to the constructor
@@ -16,7 +16,7 @@
         /// <param name="viewFactory">the view factory that is decorated</param>
         public TestingViewFactory(DefaultViewFactory viewFactory)
         {
-            this.defaultViewFactory = viewFactory;
+            this.decoratedViewFactory = viewFactory;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@
             //TODO: Cannot get hold of the module path?
             viewLocationContext.Context.Items["###ModulePath###"] = viewLocationContext.ModulePath;
 
-            return this.defaultViewFactory.RenderView(viewName, model, viewLocationContext);
+            return this.decoratedViewFactory.RenderView(viewName, model, viewLocationContext);
         }
     }
 
@@ -90,6 +90,9 @@
 
         private static string GetContextValue(BrowserResponse response, string key)
         {
+            if (!response.Context.Items.ContainsKey(key))
+                return string.Empty;
+
             var value = (string)response.Context.Items[key];
             return string.IsNullOrEmpty(value) ? string.Empty : value;
         }

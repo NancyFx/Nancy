@@ -124,7 +124,8 @@
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="BrowserResponseExtensionsTests.cs" />
     <Compile Include="CaseSensitivityFixture.cs" />
-    <Compile Include="TestingViewFactoryGetModelTests.cs" />
+    <Compile Include="TestingViewExtensions\ModulePathExtensionMethodTests.cs" />
+    <Compile Include="TestingViewExtensions\GetModelExtententionsTests.cs" />
     <Compile Include="ConfigurableBootstrapperDependenciesTests.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
     <Compile Include="ContextExtensionsTests.cs" />
@@ -133,6 +134,7 @@
     <Compile Include="QueryWrapperTests.cs" />
     <Compile Include="AssertExtensionsTests.cs" />
     <Compile Include="BrowserFixture.cs" />
+    <Compile Include="TestingViewExtensions\TestingViewFactoryTestModule.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Authentication.Forms\Nancy.Authentication.Forms.csproj">
@@ -150,7 +152,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
-    <None Include="ViewFactoryTest.sshtml">
+    <None Include="TestingViewExtensions\ViewFactoryTest.sshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
