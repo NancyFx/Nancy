@@ -258,7 +258,7 @@
     <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultStatusCodeHandler.cs" />
-    <Compile Include="IStatusHandler.cs" />
+    <Compile Include="IStatusCodeHandler.cs" />
     <Compile Include="ErrorPipeline.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootstrapper.cs" />
