@@ -3,11 +3,12 @@
     public class TestingViewFactoryTestModule : NancyModule
     {
         private const string VIEW_PATH = "TestingViewExtensions/ViewFactoryTest.sshtml";
+
         public TestingViewFactoryTestModule()
         {
             this.Get["/testingViewFactoryNoModel"] = _ => this.View[VIEW_PATH];
             this.Get["/testingViewFactory"] = _ => this.View[VIEW_PATH, GetModel()];
-            this.Get["/testingViewFactoryNoViewName"] = _ => this.View[GetModel()];
+            this.Get["/testingViewFactoryNoViewName"] = _ => { return GetModel(); };
         }
 
         private static ViewFactoryTestModel GetModel()

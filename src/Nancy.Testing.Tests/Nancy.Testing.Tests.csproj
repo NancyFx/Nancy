@@ -124,7 +124,8 @@
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="BrowserResponseExtensionsTests.cs" />
     <Compile Include="CaseSensitivityFixture.cs" />
-    <Compile Include="TestingViewExtensions\ModulePathExtensionMethodTests.cs" />
+    <Compile Include="TestingViewExtensions\GetModulePathExtensionMethodTests.cs" />
+    <Compile Include="TestingViewExtensions\GetViewNameExtensionTests.cs" />
     <Compile Include="TestingViewExtensions\GetModelExtententionsTests.cs" />
     <Compile Include="ConfigurableBootstrapperDependenciesTests.cs" />
     <Compile Include="ConfigurableBootstrapperFixture.cs" />
