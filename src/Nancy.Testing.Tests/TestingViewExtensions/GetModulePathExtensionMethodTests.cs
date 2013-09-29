@@ -2,27 +2,10 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
 {
     using Xunit;
 
-    public class TestModuleWithLongModulePath : NancyModule
-    {
-        public TestModuleWithLongModulePath()
-            : base("/a/long/path")
-        {
-            this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
-        }
-    }
-
-    public class ModuleWithoutModulePath : NancyModule
-    {
-        public ModuleWithoutModulePath()
-        {
-            this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
-        }
-    }
-    
     public class GetModulePathExtensionMethodTests
     {
         [Fact]
-        public void GetModulePath_should_get_the_module_path_for_modules_with_module_path()
+        public void should_get_the_module_path_for_modules_with_module_path()
         {
             // Arrange
             var browser = new Browser(with =>
@@ -53,6 +36,23 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
 
             // Assert
             Assert.Equal("", response.GetModulePath());
+        }
+
+        internal class TestModuleWithLongModulePath : NancyModule
+        {
+            public TestModuleWithLongModulePath()
+                : base("/a/long/path")
+            {
+                this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
+            }
+        }
+
+        internal class ModuleWithoutModulePath : NancyModule
+        {
+            public ModuleWithoutModulePath()
+            {
+                this.Get["/getModulePath"] = _ => this.View["TestingViewExtensions/ViewFactoryTest.sshtml"];
+            }
         }
     }
 }

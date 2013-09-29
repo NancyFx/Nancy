@@ -33,8 +33,6 @@
             viewLocationContext.Context.Items["###ViewModel###"] = model;
             viewLocationContext.Context.Items["###ViewName###"] = viewName;
             viewLocationContext.Context.Items["###ModuleName###"] = viewLocationContext.ModuleName;
-            
-            //TODO: Cannot get hold of the module path?
             viewLocationContext.Context.Items["###ModulePath###"] = viewLocationContext.ModulePath;
 
             return this.decoratedViewFactory.RenderView(viewName, model, viewLocationContext);

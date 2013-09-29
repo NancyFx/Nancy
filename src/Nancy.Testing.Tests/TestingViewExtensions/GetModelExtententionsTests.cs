@@ -15,16 +15,15 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             });
 
         }
-
         [Fact]
-        public void GetModel_should_return_null_when_model_is_not_set()
+        public void should_return_null_when_model_is_not_set()
         {
             var response = this._browser.Get("/testingViewFactoryNoModel");
             Assert.Null(response.GetModel<ViewFactoryTestModel>());
         }
         
         [Fact]
-        public void GetModel_should_not_return_null_when_model_is_set()
+        public void should_not_return_null_when_model_is_set()
         {
             var response = this._browser.Get("/testingViewFactory");
             Assert.NotNull(response.GetModel<ViewFactoryTestModel>());
@@ -43,9 +42,14 @@ namespace Nancy.Testing.Tests.TestingViewExtensions
             var response = this._browser.Get("/testingViewFactory");
             var model = response.GetModel<ViewFactoryTestModel>();
             Assert.Equal("A value", model.AString);
+        }
+
+        [Fact]
+        public void should_set_values_correct_on_a_complex_model()
+        {
+            var response = this._browser.Get("/testingViewFactory");
+            var model = response.GetModel<ViewFactoryTestModel>();
             Assert.Equal("Another value", model.ComplexModel.AnotherString);
         }
     }
-
-
 }
