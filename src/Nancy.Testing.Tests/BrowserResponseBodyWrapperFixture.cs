@@ -41,7 +41,7 @@
                 Contents = stream =>
                 {
                     var writer = new StreamWriter(stream);
-                    writer.Write("<div>Outer and <div id='#bar'>inner</div></div>");
+                    writer.Write("<div>Outer and <div id='bar'>inner</div></div>");
                     writer.Flush();
                 }
             });

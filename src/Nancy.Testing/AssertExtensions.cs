@@ -25,7 +25,10 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldExist(this QueryWrapper query)
         {
-            Asserts.True(query.Any());
+            if (!query.Any())
+            {
+                throw new AssertException("The selector did not match any elements in the document.");
+            }
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -35,7 +38,11 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldNotExist(this QueryWrapper query)
         {
-            Asserts.False(query.Any());
+            if (query.Any())
+            {
+                var message = string.Format("The selector matched {0} element(s) in the document.", query.Count());
+                throw new AssertException(message);
+            }
 
             return new AndConnector<QueryWrapper>(query);
         }
@@ -73,6 +80,8 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldBeOfClass(this QueryWrapper query, string className)
         {
+            query.ShouldExist();
+
             foreach (var node in query)
             {
                 node.ShouldBeOfClass(className);
@@ -96,6 +105,8 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
+            query.ShouldExist();
+
             foreach (var node in query)
             {
                 node.ShouldContain(contents, comparisonType);
@@ -129,6 +140,8 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name)
         {
+            query.ShouldExist();
+
             foreach (var node in query)
             {
                 node.ShouldContainAttribute(name);
@@ -142,6 +155,8 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldContainAttribute(this QueryWrapper query, string name, string value, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
+            query.ShouldExist();
+
             foreach (var node in query)
             {
                 node.ShouldContainAttribute(name, value);
