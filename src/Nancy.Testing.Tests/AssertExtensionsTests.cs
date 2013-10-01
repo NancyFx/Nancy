@@ -165,6 +165,19 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void ShouldContain_ZeroElements_ShouldThrowAssert()
+        {
+            // Given
+            var query = this.query["#missing"];
+
+            // When
+            var result = Record.Exception(() => query.ShouldContain("Anything"));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
         public void ShouldContain_SingleElementThatContainsText_ShouldNotThrowAssert()
         {
             // Given

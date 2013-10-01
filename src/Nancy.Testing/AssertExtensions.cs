@@ -96,6 +96,8 @@ namespace Nancy.Testing
         /// </summary>
         public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
+            Asserts.True(query.Any());
+
             foreach (var node in query)
             {
                 node.ShouldContain(contents, comparisonType);
