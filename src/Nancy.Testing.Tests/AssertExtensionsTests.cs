@@ -168,10 +168,10 @@ namespace Nancy.Testing.Tests
         public void ShouldContain_ZeroElements_ShouldThrowAssert()
         {
             // Given
-            var query = this.query["#missing"];
+            var queryWrapper = this.query["#missing"];
 
             // When
-            var result = Record.Exception(() => query.ShouldContain("Anything"));
+            var result = Record.Exception(() => queryWrapper.ShouldContain("Anything"));
 
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
@@ -237,6 +237,32 @@ namespace Nancy.Testing.Tests
 
             // When
             var result = Record.Exception(() => htmlNodes.ShouldContain("Test"));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
+        public void ShouldContainAttribute_ZeroElements_ShouldThrowAssert()
+        {
+            // Given
+            var queryWrapper = this.query["#missing"];
+
+            // When
+            var result = Record.Exception(() => queryWrapper.ShouldContainAttribute("nope"));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
+        public void ShouldContainAttribute_ZeroElementsNameAndValue_ShouldThrowAssert()
+        {
+            // Given
+            var queryWrapper = this.query["#missing"];
+
+            // When
+            var result = Record.Exception(() => queryWrapper.ShouldContainAttribute("nope", "nope"));
 
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
