@@ -113,6 +113,19 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void ShouldBeClass_ZeroElements_ShouldThrowAssert()
+        {
+            // Given
+            var queryWrapper = this.query["#missing"];
+
+            // When
+            var result = Record.Exception(() => queryWrapper.ShouldBeOfClass("nope"));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
         public void ShouldBeClass_SingleElementNotThatClass_ShouldThrowAssert()
         {
             // Given
