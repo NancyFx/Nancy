@@ -34,7 +34,7 @@
         {
             if (!this.factories.Any())
             {
-                throw new ModelValidationException("No model validator factory could be located. Please ensure you have a Nancy.Validation.* NuGet package installed.");
+                throw new ModelValidationException("No model validator factory could be located. Please ensure that you have an appropriate validation package installed, such as one of the Nancy.Validation packages.");
             }
 
             return cachedValidators.GetOrAdd(type, CreateValidator);
