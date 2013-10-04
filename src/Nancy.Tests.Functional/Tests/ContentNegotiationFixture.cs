@@ -147,6 +147,39 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Should_set_status_description_on_response()
+        {
+            // Given
+            var module = new ConfigurableNancyModule(with =>
+            {
+                with.Get("/customStatus", (x, m) =>
+                {
+                    var context =
+                        new NancyContext { NegotiationContext = new NegotiationContext() };
+
+                    var negotiator =
+                        new Negotiator(context);
+                    negotiator.WithStatusDescription("The test is passing!");
+
+                    return negotiator;
+                });
+            });
+
+            var brower = new Browser(with =>
+            {
+                with.ResponseProcessor<TestProcessor>();
+
+                with.Module(module);
+            });
+
+            // When
+            var response = brower.Get("/customStatus");
+
+            // Then
+            Assert.Equal("The test is passing!", response.StatusDescription);  
+        }
+
+        [Fact]
         public void Should_add_negotiated_content_headers_to_response()
         {
           // Given
