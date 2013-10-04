@@ -142,6 +142,12 @@ namespace Nancy.Hosting.Aspnet
             {
                 context.Response.ContentType = response.ContentType;
             }
+
+            if (response.ReasonPhrase != null)
+            {
+                context.Response.StatusDescription = response.ReasonPhrase;
+            }
+
             context.Response.StatusCode = (int)response.StatusCode;
             response.Contents.Invoke(context.Response.OutputStream);
         }

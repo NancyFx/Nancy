@@ -288,10 +288,16 @@
                 response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
+            if (nancyResponse.ReasonPhrase != null)
+            {
+                response.StatusDescription = nancyResponse.ReasonPhrase;
+            }
+
             if (nancyResponse.ContentType != null)
             {
                 response.ContentType = nancyResponse.ContentType;
             }
+
             response.StatusCode = (int)nancyResponse.StatusCode;
 
             if (configuration.AllowChunkedEncoding)

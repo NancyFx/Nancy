@@ -83,6 +83,15 @@
         }
 
         /// <summary>
+        /// Gets the description of the HTTP status code.
+        /// </summary>
+        /// <value>The HTTP status code description.</value>
+        public string ReasonPhrase
+        {
+            get { return this.Context.Response.ReasonPhrase; }
+        }
+
+        /// <summary>
         /// Gets the cookies from the response
         /// </summary>
         public IEnumerable<INancyCookie> Cookies
