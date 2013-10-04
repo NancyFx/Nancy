@@ -53,6 +53,12 @@ namespace Nancy
         /// <value>A <see cref="HttpStatusCode"/> value.</value>
         public HttpStatusCode StatusCode { get; set; }
 
+        /// <summary>
+        /// Gets or sets a text description of the HTTP status code returned to the client.
+        /// </summary>
+        /// <value>The HTTP status code description.</value>
+        public string StatusDescription { get; set; }
+
         public IList<INancyCookie> Cookies { get; private set; }
         
         public Response AddCookie(string name, string value)
