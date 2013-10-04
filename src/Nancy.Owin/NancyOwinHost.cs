@@ -115,6 +115,11 @@
                     {
                         environment["owin.ResponseStatusCode"] = (int)nancyResponse.StatusCode;
 
+                        if (nancyResponse.StatusDescription != null)
+                        {
+                            environment["owin.ResponseReasonPhrase"] = nancyResponse.StatusDescription;
+                        }
+
                         foreach (var responseHeader in nancyResponse.Headers)
                         {
                             owinResponseHeaders[responseHeader.Key] = new[] {responseHeader.Value};
