@@ -229,6 +229,11 @@ namespace Nancy.Routing
                 response.StatusCode = negotiator.NegotiationContext.StatusCode.Value;
             }
 
+            if (negotiator.NegotiationContext.StatusDescription != null)
+            {
+                response.StatusDescription = negotiator.NegotiationContext.StatusDescription;
+            }
+
             foreach (var cookie in negotiator.NegotiationContext.Cookies)
             {
                 response.Cookies.Add(cookie);
