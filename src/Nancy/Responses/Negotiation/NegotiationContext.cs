@@ -68,6 +68,12 @@
         /// </summary>
         /// <value>A <see cref="HttpStatusCode"/> value.</value>
         public HttpStatusCode? StatusCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a text description of the HTTP status code returned to the client.
+        /// </summary>
+        /// <value>The HTTP status code description.</value>
+        public string StatusDescription { get; set; }
         
         /// <summary>
         /// Gets or sets the view name if one is required.
