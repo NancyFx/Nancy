@@ -163,9 +163,9 @@
                 webResponse.ContentType = nancyResponse.ContentType;
             }
 
-            if (nancyResponse.StatusDescription != null)
+            if (nancyResponse.ReasonPhrase != null)
             {
-                webResponse.StatusDescription = nancyResponse.StatusDescription;
+                webResponse.StatusDescription = nancyResponse.ReasonPhrase;
             }
 
             webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;

@@ -147,19 +147,19 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
-        public void Should_set_status_description_on_response()
+        public void Should_set_reason_phrase_on_response()
         {
             // Given
             var module = new ConfigurableNancyModule(with =>
             {
-                with.Get("/customStatus", (x, m) =>
+                with.Get("/customPhrase", (x, m) =>
                 {
                     var context =
                         new NancyContext { NegotiationContext = new NegotiationContext() };
 
                     var negotiator =
                         new Negotiator(context);
-                    negotiator.WithStatusDescription("The test is passing!");
+                    negotiator.WithReasonPhrase("The test is passing!");
 
                     return negotiator;
                 });
@@ -173,10 +173,10 @@ namespace Nancy.Tests.Functional.Tests
             });
 
             // When
-            var response = brower.Get("/customStatus");
+            var response = brower.Get("/customPhrase");
 
             // Then
-            Assert.Equal("The test is passing!", response.StatusDescription);  
+            Assert.Equal("The test is passing!", response.ReasonPhrase);  
         }
 
         [Fact]

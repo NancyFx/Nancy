@@ -57,7 +57,7 @@ namespace Nancy
         /// Gets or sets a text description of the HTTP status code returned to the client.
         /// </summary>
         /// <value>The HTTP status code description.</value>
-        public string StatusDescription { get; set; }
+        public string ReasonPhrase { get; set; }
 
         public IList<INancyCookie> Cookies { get; private set; }
         

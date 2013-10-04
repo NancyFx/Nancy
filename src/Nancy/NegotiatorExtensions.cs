@@ -198,11 +198,11 @@
         /// Sets the description of the status code that should be assigned to the final response.
         /// </summary>
         /// <param name="negotiator">Negotiator object</param>
-        /// <param name="description">The status code description that should be used.</param>
+        /// <param name="reasonPhrase">The status code description that should be used.</param>
         /// <returns>Updated negotiator object</returns>
-        public static Negotiator WithStatusDescription(this Negotiator negotiator, string description)
+        public static Negotiator WithReasonPhrase(this Negotiator negotiator, string reasonPhrase)
         {
-            negotiator.NegotiationContext.StatusDescription = description;
+            negotiator.NegotiationContext.ReasonPhrase = reasonPhrase;
             return negotiator;
         }
 

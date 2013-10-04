@@ -288,9 +288,9 @@
                 response.Headers.Add(HttpResponseHeader.SetCookie, nancyCookie.ToString());
             }
 
-            if (nancyResponse.StatusDescription != null)
+            if (nancyResponse.ReasonPhrase != null)
             {
-                response.StatusDescription = nancyResponse.StatusDescription;
+                response.StatusDescription = nancyResponse.ReasonPhrase;
             }
 
             if (nancyResponse.ContentType != null)
