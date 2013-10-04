@@ -162,6 +162,12 @@
             {
                 webResponse.ContentType = nancyResponse.ContentType;
             }
+
+            if (nancyResponse.ReasonPhrase != null)
+            {
+                webResponse.StatusDescription = nancyResponse.ReasonPhrase;
+            }
+
             webResponse.StatusCode = (System.Net.HttpStatusCode)nancyResponse.StatusCode;
         }
 
