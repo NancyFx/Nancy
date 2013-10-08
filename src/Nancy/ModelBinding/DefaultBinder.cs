@@ -440,6 +440,7 @@ namespace Nancy.ModelBinding
             {
 
                 var indexindexes = context.RequestData.Keys.Select(IsMatch)
+                                           .Where(i => i != -1)
                                            .OrderBy(i => i)
                                            .Distinct()
                                            .Select((k, i) => new KeyValuePair<int, int>(i, k))
