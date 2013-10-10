@@ -247,29 +247,15 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    //if the instance specified in the binder contains the n-th element use that otherwise make a new one.
-                    object genericTypeInstance;
-                    if (model.Count > count)
+                    if (o.GetType().IsValueType)
                     {
-                        genericTypeInstance = model[count];
+                        HandleValueTypeCollectionElement(model, count, o);
                     }
                     else
                     {
-                        genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
-                        model.Add(genericTypeInstance);
+                        HandleReferenceTypeCollectionElement(bindingContext, model, count, o);
                     }
 
-                    foreach (var modelProperty in bindingContext.ValidModelProperties)
-                    {
-                        var existingValue =
-                            modelProperty.GetValue(genericTypeInstance, null);
-
-                        if (IsDefaultValue(existingValue, modelProperty.PropertyType) ||
-                            bindingContext.Configuration.Overwrite)
-                        {
-                            CopyValue(modelProperty, o, genericTypeInstance);
-                        }
-                    }
                     count++;
                 }
             }
@@ -284,6 +270,42 @@ namespace Nancy.ModelBinding
                     {
                         CopyValue(modelProperty, bodyDeserializedModel, bindingContext.Model);
                     }
+                }
+            }
+        }
+
+        private static void HandleValueTypeCollectionElement(IList model, int count, object o)
+        {
+            // If the instance specified in the binder contains the n-th element use that 
+            if (model.Count > count)
+            {
+                return;
+            }
+
+            model.Add(o);
+        }
+
+        private static void HandleReferenceTypeCollectionElement(BindingContext bindingContext, IList model, int count, object o)
+        {
+            // If the instance specified in the binder contains the n-th element use that otherwise make a new one.
+            object genericTypeInstance;
+            if (model.Count > count)
+            {
+                genericTypeInstance = model[count];
+            }
+            else
+            {
+                genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
+                model.Add(genericTypeInstance);
+            }
+
+            foreach (var modelProperty in bindingContext.ValidModelProperties)
+            {
+                var existingValue = modelProperty.GetValue(genericTypeInstance, null);
+
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
+                {
+                    CopyValue(modelProperty, o, genericTypeInstance);
                 }
             }
         }
