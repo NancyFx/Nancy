@@ -88,12 +88,10 @@
         /// <returns>The model for the provided <paramref name="mediaRange"/> if it has been mapped, otherwise the <see cref="DefaultModel"/> will be returned.</returns>
         public dynamic GetModelForMediaRange(MediaRange mediaRange)
         {
-            var matching =
-                this.MediaRangeModelMappings.Any(
-                    m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype));
+            var matching = this.MediaRangeModelMappings.Any(m => mediaRange.Matches(m.Key));
 
             return matching ?
-                this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
+                this.MediaRangeModelMappings.First(m => mediaRange.Matches(m.Key)).Value.Invoke() :
                 this.DefaultModel;
         }
     }
