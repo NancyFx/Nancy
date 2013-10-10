@@ -310,8 +310,11 @@ namespace Nancy
                         if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out temp))
                         {
                             quality = temp;
-                            break;
                         }
+                    }
+                    else
+                    {
+                        mediaRange += ";" + trimmedValue;
                     }
                 }
 
