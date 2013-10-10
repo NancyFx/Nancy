@@ -190,6 +190,7 @@
     <Compile Include="Unit\RequestHeadersFixture.cs" />
     <Compile Include="Unit\ResponseExtensionsFixture.cs" />
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
+    <Compile Include="Unit\Responses\Negotiation\MediaRangeFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
     <Compile Include="Unit\Responses\TextResponseFixture.cs" />
