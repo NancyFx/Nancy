@@ -288,11 +288,11 @@ namespace Nancy.ModelBinding
             }
         }
 
-        private static void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
+        private static void CopyValue(PropertyInfo modelProperty, object source, object destination)
         {
-            var newValue = modelProperty.GetValue(bodyDeserializedModel, null);
+            var newValue = modelProperty.GetValue(source, null);
 
-            modelProperty.SetValue(model, newValue, null);
+            modelProperty.SetValue(destination, newValue, null);
         }
 
         private static bool IsDefaultValue(object existingValue, Type propertyType)
