@@ -1290,6 +1290,38 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.ShouldNotBeSameAs(existing);
         }
 
+        [Fact]
+        public void Should_bind_to_valuetype_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(1);
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (int)binder.Bind(context, typeof(int), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldEqual(1);
+        }
+
+        [Fact]
+        public void Should_bind_ienumerable_model__of_valuetype_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (IEnumerable<int>)binder.Bind(context, typeof(IEnumerable<int>), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldEqualSequence(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
