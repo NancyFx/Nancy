@@ -35,6 +35,7 @@ namespace Nancy.Session
             get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
             set
             {
+                if (this[key] == value) return;
                 dictionary[key] = value;
                 MarkAsChanged();
             }
