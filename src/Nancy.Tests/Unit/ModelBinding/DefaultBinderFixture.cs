@@ -1290,6 +1290,22 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.ShouldNotBeSameAs(existing);
         }
 
+        [Fact]
+        public void Should_bind_to_valuetype_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(1);
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (int)binder.Bind(context, typeof(int), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldEqual(1);
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
