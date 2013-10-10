@@ -230,8 +230,16 @@ namespace Nancy.ModelBinding
 
         private static void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
         {
-            if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable() ||
-                bodyDeserializedModel.GetType().IsArray())
+            var bodyDeserializedModelType = bodyDeserializedModel.GetType();
+
+            if (bodyDeserializedModelType.IsValueType)
+            {
+                bindingContext.Model = bodyDeserializedModel;
+                return;
+            }
+
+            if (bodyDeserializedModelType.IsCollection() || bodyDeserializedModelType.IsEnumerable() ||
+                bodyDeserializedModelType.IsArray())
             {
                 var count = 0;
 
