@@ -230,8 +230,16 @@ namespace Nancy.ModelBinding
 
         private static void UpdateModelWithDeserializedModel(object bodyDeserializedModel, BindingContext bindingContext)
         {
-            if (bodyDeserializedModel.GetType().IsCollection() || bodyDeserializedModel.GetType().IsEnumerable() ||
-                bodyDeserializedModel.GetType().IsArray())
+            var bodyDeserializedModelType = bodyDeserializedModel.GetType();
+
+            if (bodyDeserializedModelType.IsValueType)
+            {
+                bindingContext.Model = bodyDeserializedModel;
+                return;
+            }
+
+            if (bodyDeserializedModelType.IsCollection() || bodyDeserializedModelType.IsEnumerable() ||
+                bodyDeserializedModelType.IsArray())
             {
                 var count = 0;
 
@@ -239,29 +247,15 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    //if the instance specified in the binder contains the n-th element use that otherwise make a new one.
-                    object genericTypeInstance;
-                    if (model.Count > count)
+                    if (o.GetType().IsValueType)
                     {
-                        genericTypeInstance = model[count];
+                        HandleValueTypeCollectionElement(model, count, o);
                     }
                     else
                     {
-                        genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
-                        model.Add(genericTypeInstance);
+                        HandleReferenceTypeCollectionElement(bindingContext, model, count, o);
                     }
 
-                    foreach (var modelProperty in bindingContext.ValidModelProperties)
-                    {
-                        var existingValue =
-                            modelProperty.GetValue(genericTypeInstance, null);
-
-                        if (IsDefaultValue(existingValue, modelProperty.PropertyType) ||
-                            bindingContext.Configuration.Overwrite)
-                        {
-                            CopyValue(modelProperty, o, genericTypeInstance);
-                        }
-                    }
                     count++;
                 }
             }
@@ -280,11 +274,47 @@ namespace Nancy.ModelBinding
             }
         }
 
-        private static void CopyValue(PropertyInfo modelProperty, object bodyDeserializedModel, object model)
+        private static void HandleValueTypeCollectionElement(IList model, int count, object o)
         {
-            var newValue = modelProperty.GetValue(bodyDeserializedModel, null);
+            // If the instance specified in the binder contains the n-th element use that 
+            if (model.Count > count)
+            {
+                return;
+            }
 
-            modelProperty.SetValue(model, newValue, null);
+            model.Add(o);
+        }
+
+        private static void HandleReferenceTypeCollectionElement(BindingContext bindingContext, IList model, int count, object o)
+        {
+            // If the instance specified in the binder contains the n-th element use that otherwise make a new one.
+            object genericTypeInstance;
+            if (model.Count > count)
+            {
+                genericTypeInstance = model[count];
+            }
+            else
+            {
+                genericTypeInstance = Activator.CreateInstance(bindingContext.GenericType);
+                model.Add(genericTypeInstance);
+            }
+
+            foreach (var modelProperty in bindingContext.ValidModelProperties)
+            {
+                var existingValue = modelProperty.GetValue(genericTypeInstance, null);
+
+                if (IsDefaultValue(existingValue, modelProperty.PropertyType) || bindingContext.Configuration.Overwrite)
+                {
+                    CopyValue(modelProperty, o, genericTypeInstance);
+                }
+            }
+        }
+
+        private static void CopyValue(PropertyInfo modelProperty, object source, object destination)
+        {
+            var newValue = modelProperty.GetValue(source, null);
+
+            modelProperty.SetValue(destination, newValue, null);
         }
 
         private static bool IsDefaultValue(object existingValue, Type propertyType)
@@ -440,6 +470,7 @@ namespace Nancy.ModelBinding
             {
 
                 var indexindexes = context.RequestData.Keys.Select(IsMatch)
+                                           .Where(i => i != -1)
                                            .OrderBy(i => i)
                                            .Distinct()
                                            .Select((k, i) => new KeyValuePair<int, int>(i, k))

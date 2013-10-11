@@ -195,6 +195,7 @@
     <Compile Include="Responses\Negotiation\JsonProcessor.cs" />
     <Compile Include="Responses\Negotiation\MatchResult.cs" />
     <Compile Include="Responses\Negotiation\MediaRange.cs" />
+    <Compile Include="Responses\Negotiation\MediaRangeParameters.cs" />
     <Compile Include="Responses\Negotiation\MediaType.cs" />
     <Compile Include="Responses\Negotiation\NegotiationContext.cs" />
     <Compile Include="Responses\Negotiation\Negotiator.cs" />
