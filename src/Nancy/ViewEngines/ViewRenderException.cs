@@ -15,13 +15,13 @@ namespace Nancy.ViewEngines.Razor
 		{
 		}
 
-        /// <summary>
-        /// Create an instance of <see cref="ViewRenderException"/>
-        /// </summary>
-        /// <param name="msg">A description of the rendering problem</param>
-        /// <param name="innerException">The exception that is the cause of the current exception.</param>
-        public ViewRenderException(string msg, Exception innerException) : base(msg, innerException)
-        {
-        }
+		/// <summary>
+		/// Create an instance of <see cref="ViewRenderException"/>
+		/// </summary>
+		/// <param name="msg">A description of the rendering problem</param>
+		/// <param name="innerException">The exception that is the cause of the current exception.</param>
+		public ViewRenderException(string msg, Exception innerException) : base(msg, innerException)
+		{
+		}
 	}
 }
