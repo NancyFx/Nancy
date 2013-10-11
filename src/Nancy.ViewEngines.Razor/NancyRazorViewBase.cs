@@ -369,9 +369,9 @@
             {
                 this.Execute();
             }
-            catch (NullReferenceException)
+            catch (NullReferenceException e)
             {
-                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null");
+                throw new ViewRenderException("Unable to render the view.  Most likely the Model, or a property on the Model, is null", e);
             }
 
             this.Body = this.contents.ToString();
@@ -384,9 +384,9 @@
                 {
                     section.Value.Invoke();
                 }
-                catch (NullReferenceException)
+                catch (NullReferenceException e)
                 {
-                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key));
+                    throw new ViewRenderException(string.Format("A null reference was encountered while rendering the section {0}.  Does the section require a model? (maybe it wasn't passed in)", section.Key), e);
                 }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
