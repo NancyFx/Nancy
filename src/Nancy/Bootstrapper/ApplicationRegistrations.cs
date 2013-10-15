@@ -38,7 +38,7 @@
         }
 
         /// <summary>
-        /// Scans for the implementation of <typeparamref name="T"/> and registers it.
+        /// Scans for the implementation of <typeparamref name="TRegistration"/> and registers it.
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to scan for and register as.</typeparam>
         public void Register<TRegistration>()
