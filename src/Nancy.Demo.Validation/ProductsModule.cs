@@ -1,6 +1,5 @@
 ﻿namespace Nancy.Demo.Validation
 {
-    using System;
     using ModelBinding;
     using Models;
     using Nancy.Validation;
@@ -9,20 +8,21 @@
     {
         public ProductsModule() : base("/products")
         {
-            Get["/"] = parameters => {
+            Get["/"] = parameters =>
+            {
                 return "Products module";
             };
 
-            Get["/poke"] = parameters => {
-
+            Get["/poke"] = parameters =>
+            {
                 var validator = 
                     this.ValidatorLocator.GetValidatorForType(typeof(Product));
 
                 return this.Response.AsJson(validator.Description);
             };
 
-            Post["/"] = parameters => {
-
+            Post["/"] = parameters =>
+            {
                 Product model = this.Bind();
                 var result = this.Validate(model);
 
