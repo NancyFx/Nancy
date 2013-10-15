@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Helpers
 {
     using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     public static class TaskHelpers
@@ -32,7 +31,6 @@
             // If we've already completed, just run the correct delegate
             if (task.IsCompleted)
             {
-                Debug.WriteLine("Fast Path");
                 if (task.IsFaulted)
                 {
                     onFaulted.Invoke(task);
@@ -43,7 +41,6 @@
                 return;
             }
 
-            Debug.WriteLine("Slow Path");
             // Not complete yet, so set normal continuation
             task.ContinueWith(
                 onComplete,
