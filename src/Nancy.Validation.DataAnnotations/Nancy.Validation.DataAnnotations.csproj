@@ -119,6 +119,8 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IDataAnnotationsValidatorAdapterFactory.cs" />
+    <Compile Include="PropertyValidator.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="DataAnnotationsValidatableObjectValidatorAdapter.cs" />
     <Compile Include="DataAnnotationsValidator.cs" />

@@ -13,18 +13,28 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="RequiredValidatorAdapter"/> class.
         /// </summary>
-        /// <param name="attribute">The attribute.</param>
-        /// <param name="descriptor">The descriptor.</param>
-        public RequiredValidatorAdapter(RequiredAttribute attribute, PropertyDescriptor descriptor)
-            : base("Required", attribute, descriptor)
+        public RequiredValidatorAdapter() : base("Required")
         {
+        }
+
+        /// <summary>
+        /// Gets a boolean that indicates if the adapter can handle the
+        /// provided <param name="attribute">.</param>
+        /// </summary>
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
+        /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
+        public override bool CanHandle(ValidationAttribute attribute)
+        {
+            return attribute.GetType() == typeof(RequiredAttribute);
         }
 
         /// <summary>
         /// Gets the the rules the adapter provides.
         /// </summary>
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
+        /// <param name="descriptor">A <see cref="PropertyDescriptor"/> instance for the property that is being validated.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        public override IEnumerable<ModelValidationRule> GetRules()
+        public override IEnumerable<ModelValidationRule> GetRules(ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
             yield return new NotNullValidationRule(attribute.FormatErrorMessage, new[] { descriptor.Name });
             yield return new NotEmptyValidationRule(attribute.FormatErrorMessage, new[] { descriptor.Name });
