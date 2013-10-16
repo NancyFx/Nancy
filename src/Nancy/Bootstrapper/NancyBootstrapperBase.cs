@@ -370,6 +370,12 @@
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
+            // Only dispose if we're initialised, prevents possible issue with recursive disposing.
+            if (!this.initialised)
+            {
+                return;
+            }
+
             var container = this.ApplicationContainer as IDisposable;
 
             if (container == null)
