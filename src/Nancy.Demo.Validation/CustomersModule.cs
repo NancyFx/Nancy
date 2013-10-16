@@ -17,6 +17,14 @@ namespace Nancy.Demo.Validation
                 return View["Customers", model];
             };
 
+            Get["/poke"] = parameters =>
+            {
+                var validator =
+                    this.ValidatorLocator.GetValidatorForType(typeof(Customer));
+
+                return this.Response.AsJson(validator.Description);
+            };
+
             Post["/"] = x =>
             {
                 Customer model = this.Bind();
