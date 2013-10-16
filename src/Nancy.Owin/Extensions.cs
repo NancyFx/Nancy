@@ -20,7 +20,7 @@ namespace Owin
 
             if (appDisposing.HasValue)
             {
-                appDisposing.Value.Register(() => nancyOptions.Bootstrapper.Dispose());
+                appDisposing.Value.Register(nancyOptions.Bootstrapper.Dispose);
             }
 
             return builder.Use(typeof(NancyOwinHost), nancyOptions);
