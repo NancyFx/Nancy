@@ -13,7 +13,7 @@
         /// <summary>
         /// Validates the specified instance.
         /// </summary>
-        /// <param name="instance">The instance.</param>
+        /// <param name="instance">The instance that should be validated.</param>
         /// <returns>A ValidationResult with the result of the validation.</returns>
         ModelValidationResult Validate(object instance);
     }
