@@ -19,9 +19,11 @@
     /// </summary>
     [ServiceContract]
     [ServiceBehavior(InstanceContextMode = InstanceContextMode.Single, ConcurrencyMode = ConcurrencyMode.Multiple)]
-    public class NancyWcfGenericService
+    public class NancyWcfGenericService : IDisposable
     {
         private readonly INancyEngine engine;
+        private readonly INancyBootstrapper bootstrapper;
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyWcfGenericService"/> class with a default bootstrapper.
@@ -37,6 +39,7 @@
         /// <param name="bootstrapper">An <see cref="INancyBootstrapper"/> instance, that should be used to handle the requests.</param>
         public NancyWcfGenericService(INancyBootstrapper bootstrapper)
         {
+            this.bootstrapper = bootstrapper;
             bootstrapper.Initialise();
             this.engine = bootstrapper.GetEngine();
         }
@@ -66,6 +69,11 @@
                         nancyContext.Dispose();
                     }, 
                     nancyContext.Response.ContentType ?? "none/none"); // Stupid WCF forces us to specify a content type
+        }
+
+        public void Dispose()
+        {
+            this.bootstrapper.Dispose();
         }
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody, OperationContext context)
