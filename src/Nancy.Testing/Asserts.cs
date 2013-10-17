@@ -9,20 +9,44 @@
     /// </summary>
     public static class Asserts
     {
-        public static void Contains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
+        public static void AnyContains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
         {
-            comparer =
-                comparer ?? new AssertEqualityComparer<T>();
+            comparer = comparer ?? new AssertEqualityComparer<T>();
 
+            AnyContains(expected, actual, value => comparer.Equals(expected, value));
+        }
+
+        public static void AnyContains<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        {
             if (actual != null)
             {
-                if (actual.Any(value => comparer.Equals(expected, value)))
+                if (actual.Any(comparer))
                 {
                     return;
                 }
             }
 
             throw new AssertException("The expected value was not found in the collection.");
+        }
+
+        public static void AllContains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
+        {
+            comparer = comparer ?? new AssertEqualityComparer<T>();
+
+            AllContains(expected, actual, value => comparer.Equals(expected, value));
+        }
+
+        public static void AllContains<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        {
+            if (actual != null)
+            {
+                if (actual.All(comparer))
+                {
+                    return;
+                }
+            }
+
+            throw new AssertException("All elements in the collection did not contain the expected value.");
         }
 
         public static void Contains(string expected, string actual, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
