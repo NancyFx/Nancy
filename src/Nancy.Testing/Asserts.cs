@@ -9,14 +9,14 @@
     /// </summary>
     public static class Asserts
     {
-        public static void AnyContains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
+        public static void Contains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
         {
             comparer = comparer ?? new AssertEqualityComparer<T>();
 
-            AnyContains(expected, actual, value => comparer.Equals(expected, value));
+            Any(expected, actual, value => comparer.Equals(expected, value));
         }
 
-        public static void AnyContains<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        public static void Any<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
         {
             if (actual != null)
             {
@@ -29,14 +29,7 @@
             throw new AssertException("The expected value was not found in the collection.");
         }
 
-        public static void AllContains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
-        {
-            comparer = comparer ?? new AssertEqualityComparer<T>();
-
-            AllContains(expected, actual, value => comparer.Equals(expected, value));
-        }
-
-        public static void AllContains<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        public static void All<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
         {
             if (actual != null)
             {
@@ -118,7 +111,7 @@
                 throw new AssertException("The collection was null.");
             }
 
-            if (values.Count() == 0)
+            if (!values.Any())
             {
                 throw new AssertException("The collection contained no values.");
             }
