@@ -178,13 +178,26 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void ShouldContain_ZeroElements_ShouldThrowAssert()
+        public void AllShouldContain_ZeroElements_ShouldThrowAssert()
         {
             // Given
             var queryWrapper = this.query["#missing"];
 
             // When
-            var result = Record.Exception(() => queryWrapper.ShouldContain("Anything"));
+            var result = Record.Exception(() => queryWrapper.AllShouldContain("Anything"));
+
+            // Then
+            Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
+        public void AnyShouldContain_ZeroElements_ShouldThrowAssert()
+        {
+            // Given
+            var queryWrapper = this.query["#missing"];
+
+            // When
+            var result = Record.Exception(() => queryWrapper.AnyShouldContain("Anything"));
 
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
@@ -230,29 +243,55 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
-        public void ShouldContain_MultipleElementsAllContainingText_ShouldntThrowAssert()
+        public void AllShouldContain_MultipleElementsAllContainingText_ShouldntThrowAssert()
         {
             // Given
             var htmlNodes = this.query["span"];
 
             // When
-            var result = Record.Exception(() => htmlNodes.ShouldContain("contents"));
+            var result = Record.Exception(() => htmlNodes.AllShouldContain("contents"));
 
             // Then
             Assert.Null(result);
         }
 
         [Fact]
-        public void ShouldContain_MultipleElementsOneNotContainingText_ShouldThrowAssert()
+        public void AnyShouldContain_MultipleElementsAllContainingText_ShouldntThrowAssert()
+        {
+            // Given
+            var htmlNodes = this.query["span"];
+
+            // When
+            var result = Record.Exception(() => htmlNodes.AnyShouldContain("contents"));
+
+            // Then
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public void AllShouldContain_MultipleElementsOneNotContainingText_ShouldThrowAssert()
         {
             // Given
             var htmlNodes = this.query["div"];
 
             // When
-            var result = Record.Exception(() => htmlNodes.ShouldContain("Test"));
+            var result = Record.Exception(() => htmlNodes.AllShouldContain("Test"));
 
             // Then
             Assert.IsAssignableFrom<AssertException>(result);
+        }
+
+        [Fact]
+        public void AnyShouldContain_MultipleElementsOneNotContainingText_ShouldntThrowAssert()
+        {
+            // Given
+            var htmlNodes = this.query["div"];
+
+            // When
+            var result = Record.Exception(() => htmlNodes.AnyShouldContain("Test"));
+
+            // Then
+            Assert.Null(result);
         }
 
         [Fact]
