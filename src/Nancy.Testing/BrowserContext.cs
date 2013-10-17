@@ -164,6 +164,7 @@
 
         /// <summary>
         /// Sets the ClientCertificate to a default embedded certificate
+        /// <remarks>The default certificate is embedded using the Nancy.Testing.Nancy Testing Cert.pfx resource name (secured with password "nancy")</remarks>
         /// </summary>
         public void Certificate()
         {
@@ -194,12 +195,21 @@
         }
 
         /// <summary>
+        /// Sets the ClientCertificate
+        /// </summary>
+        /// <param name="certificate">the certificate</param>
+        public void Certificate(X509Certificate2 certificate)
+        {
+            this.Values.ClientCertificate = certificate;
+        }
+
+        /// <summary>
         /// Find a certificate in a store on the computer.
         /// </summary>
         /// <param name="storeLocation">The location of the store (LocalMachine, CurrentUser)</param>
         /// <param name="storeName">The name of the store (e.q. My)</param>
         /// <param name="findType">By which field you want to find the certificate (Commonname, Thumbprint, etc)</param>
-        /// <param name="findBy">The Comonname or thumbprint you are looking for</param>
+        /// <param name="findBy">The "Common name" or "thumbprint" you are looking for</param>
         public void Certificate(StoreLocation storeLocation, StoreName storeName, X509FindType findType, object findBy)
         {
             var store = new X509Store(storeName, storeLocation);
@@ -207,14 +217,14 @@
             store.Open(OpenFlags.ReadOnly);
             var certificatesFound = store.Certificates.Find(findType, findBy, false);
 
-            if (certificatesFound.Count > 0)
+            if (certificatesFound.Count <= 0)
             {
-                this.Values.ClientCertificate = certificatesFound[0];
+                throw new InvalidOperationException(
+                    String.Format("No certificates found in {0} {1} with a {2} that looks like \"{3}\"", storeLocation,
+                                  storeName, findType, findBy));
             }
-            else
-            {
-                throw new InvalidOperationException("No certificates found in " + storeLocation + " " + storeName + " with a " + findType + " that looks like \"" + findBy + "\"");
-            }
+            
+            this.Values.ClientCertificate = certificatesFound[0];
         }
 
         private IBrowserContextValues Values

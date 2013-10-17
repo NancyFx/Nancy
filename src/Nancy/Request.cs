@@ -40,8 +40,8 @@ namespace Nancy
         /// <param name="url">The <see cref="Url"/>url of the requested resource</param>
         /// <param name="headers">The headers that was passed in by the client.</param>
         /// <param name="body">The <see cref="Stream"/> that represents the incoming HTTP body.</param>
-        /// <param name="ip"></param>
-        /// <param name="certificate"></param>
+        /// <param name="ip">The client's IP address</param>
+        /// <param name="certificate">The client's certificate when present.</param>
         public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
         {
             if (String.IsNullOrEmpty(method))
