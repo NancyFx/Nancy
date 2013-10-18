@@ -13,6 +13,7 @@ namespace Nancy.Testing
     using Nancy.ErrorHandling;
     using Nancy.ModelBinding;
     using Nancy.Routing;
+    using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie;
     using Nancy.Security;
     using Nancy.TinyIoc;
@@ -1613,6 +1614,18 @@ namespace Nancy.Testing
             public ConfigurableBootstrapperConfigurator TrieNodeFactory<T>() where T : ITrieNodeFactory
             {
                 this.bootstrapper.configuration.TrieNodeFactory = typeof(T);
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator RouteConstraint<T>() where T : IRouteConstraint
+            {
+                this.bootstrapper.configuration.RouteConstraints = new List<Type> { typeof(T) };
+                return this;
+            }
+
+            public ConfigurableBootstrapperConfigurator RouteConstraints(params Type[] types)
+            {
+                this.bootstrapper.configuration.RouteConstraints = new List<Type>(types);
                 return this;
             }
 

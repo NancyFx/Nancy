@@ -10,6 +10,7 @@
     using Nancy.Diagnostics;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
+    using Nancy.Routing.Constraints;
     using Nancy.Testing;
     using Nancy.Tests; //While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
     using Xunit;
@@ -36,10 +37,10 @@
             private readonly IRequestTracing requestTracing;
             private readonly NancyInternalConfiguration configuration;
             private readonly IModelBinderLocator modelBinderLocator;
-            private readonly IEnumerable<IResponseProcessor> responseProcessors;
+            private readonly IEnumerable<IRouteConstraint> routeconstraints;
             private readonly ICultureService cultureService;
 
-            public FakeDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, ICultureService cultureService)
+            public FakeDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteConstraint> routeConstraints, ICultureService cultureService)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -47,13 +48,13 @@
                 this.requestTracing = requestTracing;
                 this.configuration = configuration;
                 this.modelBinderLocator = modelBinderLocator;
-                this.responseProcessors = responseProcessors;
+                this.routeconstraints = routeConstraints;
                 this.cultureService = cultureService;
             }
 
             public void Initialize(IPipelines pipelines)
             {
-                DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.requestTracing, this.configuration, this.modelBinderLocator, this.responseProcessors, this.cultureService);
+                DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.requestTracing, this.configuration, this.modelBinderLocator, this.routeconstraints, this.cultureService);
             }
         }
 
