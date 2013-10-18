@@ -136,6 +136,7 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="Conventions\StaticContentHelper.cs" />
     <Compile Include="Conventions\StaticContentsConventions.cs" />
+    <Compile Include="Conventions\StaticContentsConventionsExtensions.cs" />
     <Compile Include="Conventions\StaticDirectoryContent.cs" />
     <Compile Include="Conventions\StaticFileContent.cs" />
     <Compile Include="Culture\DefaultCultureService.cs" />
