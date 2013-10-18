@@ -77,7 +77,11 @@
                 // Set the parsed template
                 parsed = renderContext.ViewCache.GetOrAdd(
                     viewLocationResult,
-                    x => Template.Parse(viewLocationResult.Contents.Invoke().ReadToEnd()));
+                    x =>
+                    {
+                        using (var reader = viewLocationResult.Contents.Invoke())
+                            return Template.Parse(reader.ReadToEnd());
+                    });
 
                 hashedModel = Hash.FromAnonymousObject(new
                 {

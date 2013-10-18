@@ -49,7 +49,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return "[ERR!]";
             }
 
-            return viewLocationResult.Contents.Invoke().ReadToEnd();
+            using(var reader = viewLocationResult.Contents.Invoke())
+                return reader.ReadToEnd();
         }
 
         /// <summary>

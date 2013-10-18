@@ -59,7 +59,9 @@
                 return "[ERR!]";
             }
 
-            var templateContent = viewLocationResult.Contents.Invoke().ReadToEnd();
+            string templateContent;
+            using (var reader = viewLocationResult.Contents.Invoke())
+                templateContent = reader.ReadToEnd();
 
             if (viewLocationResult.Name.ToLower() == "master" && validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
             {
@@ -68,7 +70,8 @@
 
             if (!validExtensions.Any(x => x.Equals(viewLocationResult.Extension, StringComparison.OrdinalIgnoreCase)))
             {
-                return viewLocationResult.Contents.Invoke().ReadToEnd();
+                using (var reader = viewLocationResult.Contents.Invoke())
+                    return reader.ReadToEnd();
             }
 
             return parser.Transform(templateContent);
