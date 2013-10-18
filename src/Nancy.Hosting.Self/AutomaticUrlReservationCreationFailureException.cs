@@ -35,8 +35,8 @@
                 stringBuilder.AppendLine("The Nancy self host was unable to start, as no namespace reservation existed for the provided url(s).");
                 stringBuilder.AppendLine();
 
-                stringBuilder.AppendLine("Please either enable CreateNamespaceReservations on the HostConfiguration provided to the NancyHost,");
-                stringBuilder.AppendLine("or create the reservations manually with the (elevated) command(s):");
+                stringBuilder.AppendLine("Please either enable UrlReservations.CreateAutomatically on the HostConfiguration provided to ");
+                stringBuilder.AppendLine("the NancyHost, or create the reservations manually with the (elevated) command(s):");
                 stringBuilder.AppendLine();
 
                 foreach (var prefix in prefixes)
