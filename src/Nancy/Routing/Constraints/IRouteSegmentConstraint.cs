@@ -2,7 +2,7 @@
 {
     using Nancy.Routing.Trie;
 
-    public interface IRouteConstraint
+    public interface IRouteSegmentConstraint
     {
         bool Matches(string constraint);
 

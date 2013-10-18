@@ -11,11 +11,11 @@ namespace Nancy.Routing.Trie
     /// </summary>
     public class TrieNodeFactory : ITrieNodeFactory
     {
-        private readonly IEnumerable<IRouteConstraint> routeConstraints;
+        private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
 
-        public TrieNodeFactory(IEnumerable<IRouteConstraint> routeConstraints)
+        public TrieNodeFactory(IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
         {
-            this.routeConstraints = routeConstraints;
+            this.routeSegmentConstraints = routeSegmentConstraints;
         }
 
         /// <summary>
@@ -62,7 +62,7 @@ namespace Nancy.Routing.Trie
         {
             if (segment.Contains(":"))
             {
-                return new CaptureNodeWithConstraint(parent, segment, this, routeConstraints);
+                return new CaptureNodeWithConstraint(parent, segment, this, routeSegmentConstraints);
             }
 
             if (segment.EndsWith("?}"))

@@ -1,23 +1,23 @@
 ﻿namespace Nancy.Routing.Constraints
 {
-    public class MaxLengthRouteConstraint : ParameterizedRouteConstraint<string>
+    public class MinLengthRouteSegmentConstraint : ParameterizedRouteSegmentConstraint<string>
     {
         public override string Name
         {
-            get { return "maxlength"; }
+            get { return "minlength"; }
         }
 
         protected override bool TryMatch(string segment, string[] parameters, out string matchedValue)
         {
-            int maxLength;
+            int minLength;
 
-            if (!this.TryParseInt(parameters[0], out maxLength))
+            if (!this.TryParseInt(parameters[0], out minLength))
             {
                 matchedValue = null;
                 return false;
             }
 
-            if (segment.Length > maxLength)
+            if (segment.Length < minLength)
             {
                 matchedValue = null;
                 return false;

@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Routing.Constraints
 {
-    public class MaxRouteConstraint : ParameterizedRouteConstraint<int>
+    public class MaxRouteSegmentConstraint : ParameterizedRouteSegmentConstraint<int>
     {
         public override string Name
         {

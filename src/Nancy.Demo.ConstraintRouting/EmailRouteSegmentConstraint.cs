@@ -2,7 +2,7 @@
 {
     using Nancy.Routing.Constraints;
 
-    public class EmailRouteConstraint : RouteConstraintBase<string>
+    public class EmailRouteSegmentConstraint : RouteSegmentConstraintBase<string>
     {
         public override string Name
         {

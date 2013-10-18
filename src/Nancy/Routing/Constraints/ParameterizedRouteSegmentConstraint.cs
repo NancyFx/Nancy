@@ -3,7 +3,7 @@
     using System.Globalization;
     using System.Linq;
 
-    public abstract class ParameterizedRouteConstraint<T> : RouteConstraintBase<T>
+    public abstract class ParameterizedRouteSegmentConstraint<T> : RouteSegmentConstraintBase<T>
     {
         public override bool Matches(string constraint)
         {

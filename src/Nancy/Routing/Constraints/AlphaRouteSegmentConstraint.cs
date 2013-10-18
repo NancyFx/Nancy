@@ -2,7 +2,7 @@
 {
     using System.Linq;
 
-    public class AlphaRouteConstraint : RouteConstraintBase<string>
+    public class AlphaRouteSegmentConstraint : RouteSegmentConstraintBase<string>
     {
         public override string Name
         {

@@ -2,7 +2,7 @@
 {
     using System.Globalization;
 
-    public class DecimalRouteConstraint : RouteConstraintBase<decimal>
+    public class DecimalRouteSegmentConstraint : RouteSegmentConstraintBase<decimal>
     {
         public override string Name
         {

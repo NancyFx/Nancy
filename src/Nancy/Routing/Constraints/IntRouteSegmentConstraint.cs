@@ -2,7 +2,7 @@
 {
     using System.Globalization;
 
-    public class IntRouteConstraint : RouteConstraintBase<long>
+    public class IntRouteSegmentConstraint : RouteSegmentConstraintBase<long>
     {
         public override string Name
         {

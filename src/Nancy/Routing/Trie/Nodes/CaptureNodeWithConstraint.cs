@@ -10,7 +10,7 @@
     /// </summary>
     public class CaptureNodeWithConstraint : TrieNode
     {
-        private readonly IEnumerable<IRouteConstraint> routeConstraints;
+        private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private string parameterName;
         private string constraint;
 
@@ -22,10 +22,10 @@
             get { return 1000; }
         }
 
-        public CaptureNodeWithConstraint(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteConstraint> routeConstraints)
+        public CaptureNodeWithConstraint(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
             : base(parent, segment, nodeFactory)
         {
-            this.routeConstraints = routeConstraints;
+            this.routeSegmentConstraints = routeSegmentConstraints;
             this.ExtractParameterName();
         }
 
@@ -36,13 +36,13 @@
         /// <returns>A <see cref="SegmentMatch"/> instance representing the result of the match</returns>
         public override SegmentMatch Match(string segment)
         {
-            var routeConstraint = routeConstraints.FirstOrDefault(x => x.Matches(constraint));
-            if (routeConstraint == null)
+            var routeSegmentConstraint = routeSegmentConstraints.FirstOrDefault(x => x.Matches(constraint));
+            if (routeSegmentConstraint == null)
             {
                 return SegmentMatch.NoMatch;
             }
 
-            return routeConstraint.GetMatch(this.constraint, segment, this.parameterName);
+            return routeSegmentConstraint.GetMatch(this.constraint, segment, this.parameterName);
         }
 
         private void ExtractParameterName()

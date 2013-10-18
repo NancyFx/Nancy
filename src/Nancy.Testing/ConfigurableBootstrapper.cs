@@ -1617,15 +1617,15 @@ namespace Nancy.Testing
                 return this;
             }
 
-            public ConfigurableBootstrapperConfigurator RouteConstraint<T>() where T : IRouteConstraint
+            public ConfigurableBootstrapperConfigurator RouteSegmentConstraint<T>() where T : IRouteSegmentConstraint
             {
-                this.bootstrapper.configuration.RouteConstraints = new List<Type> { typeof(T) };
+                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type> { typeof(T) };
                 return this;
             }
 
-            public ConfigurableBootstrapperConfigurator RouteConstraints(params Type[] types)
+            public ConfigurableBootstrapperConfigurator RouteSegmentConstraints(params Type[] types)
             {
-                this.bootstrapper.configuration.RouteConstraints = new List<Type>(types);
+                this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type>(types);
                 return this;
             }
 

@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Routing.Constraints
 {
-    public class LengthRouteConstraint : ParameterizedRouteConstraint<string>
+    public class LengthRouteSegmentConstraint : ParameterizedRouteSegmentConstraint<string>
     {
         public override string Name
         {

@@ -37,10 +37,10 @@
             private readonly IRequestTracing requestTracing;
             private readonly NancyInternalConfiguration configuration;
             private readonly IModelBinderLocator modelBinderLocator;
-            private readonly IEnumerable<IRouteConstraint> routeconstraints;
+            private readonly IEnumerable<IRouteSegmentConstraint> routeconstraints;
             private readonly ICultureService cultureService;
 
-            public FakeDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteConstraint> routeConstraints, ICultureService cultureService)
+            public FakeDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -48,7 +48,7 @@
                 this.requestTracing = requestTracing;
                 this.configuration = configuration;
                 this.modelBinderLocator = modelBinderLocator;
-                this.routeconstraints = routeConstraints;
+                this.routeconstraints = routeSegmentConstraints;
                 this.cultureService = cultureService;
             }
 

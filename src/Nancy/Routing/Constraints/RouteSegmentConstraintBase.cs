@@ -4,7 +4,7 @@
 
     using Nancy.Routing.Trie;
 
-    public abstract class RouteConstraintBase<T> : IRouteConstraint
+    public abstract class RouteSegmentConstraintBase<T> : IRouteSegmentConstraint
     {
         public abstract string Name { get; }
 

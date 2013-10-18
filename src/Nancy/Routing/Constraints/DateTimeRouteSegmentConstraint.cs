@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class DateTimeRouteConstraint : RouteConstraintBase<DateTime>
+    public class DateTimeRouteSegmentConstraint : RouteSegmentConstraintBase<DateTime>
     {
         public override string Name
         {

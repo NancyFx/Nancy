@@ -90,7 +90,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="ConstraintRoutingModule.cs" />
-    <Compile Include="EmailRouteConstraint.cs" />
+    <Compile Include="EmailRouteSegmentConstraint.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp" />

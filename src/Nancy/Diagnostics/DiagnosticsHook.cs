@@ -28,7 +28,7 @@ namespace Nancy.Diagnostics
 
         internal const string ItemsKey = "DIAGS_REQUEST";
 
-        public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteConstraint> routeConstraints, ICultureService cultureService)
+        public static void Enable(DiagnosticsConfiguration diagnosticsConfiguration, IPipelines pipelines, IEnumerable<IDiagnosticsProvider> providers, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService)
         {
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
@@ -38,7 +38,7 @@ namespace Nancy.Diagnostics
                 diagnosticsModuleCatalog,
                 new DiagnosticsModuleBuilder(rootPathProvider, modelBinderLocator),
                 diagnosticsRouteCache,
-                new RouteResolverTrie(new TrieNodeFactory(routeConstraints)));
+                new RouteResolverTrie(new TrieNodeFactory(routeSegmentConstraints)));
 
             var serializer = new DefaultObjectSerializer();
 

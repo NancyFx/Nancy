@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class GuidRouteConstraint : RouteConstraintBase<Guid>
+    public class GuidRouteSegmentConstraint : RouteSegmentConstraintBase<Guid>
     {
         public override string Name
         {
