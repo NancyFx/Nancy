@@ -29,6 +29,8 @@
             Get["/maxlengthConstraint/{value:maxlength(10)}"] = _ => "Value " + _.value + " is a string with length less than 10.";
 
             Get["/lengthConstraint/{value:length(1, 20)}"] = _ => "Value " + _.value + " is a string with length between 1 and 20.";
+
+            Get["/emailConstraint/{value:email}"] = _ => "Value " + _.value + " is an e-mail address (according to @jchannon).";
         }
     }
 }
