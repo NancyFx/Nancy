@@ -106,13 +106,13 @@ namespace Nancy.Testing
         [Obsolete("This method has a ambiguous name and will be removed. Use ShouldContainAll instead.")]
         public static AndConnector<QueryWrapper> ShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
-            return query.ShouldContainAll(contents, comparisonType);
+            return query.AllShouldContain(contents, comparisonType);
         }
 
         /// <summary>
         /// Asserts that every node contains the specified text
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldContainAll(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> AllShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             query.ShouldExist();
 
@@ -124,7 +124,7 @@ namespace Nancy.Testing
         /// <summary>
         /// Asserts that any node contains the specified text
         /// </summary>
-        public static AndConnector<QueryWrapper> ShouldContainAny(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
+        public static AndConnector<QueryWrapper> AnyShouldContain(this QueryWrapper query, string contents, StringComparison comparisonType = StringComparison.InvariantCulture)
         {
             query.ShouldExist();
 

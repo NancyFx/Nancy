@@ -51,9 +51,9 @@
 
             // Then
 #if __MonoCS__
-            AssertExtensions.ShouldContainAll(result, "inner", System.StringComparison.OrdinalIgnoreCase);
+            AssertExtensions.AllShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
 #else
-            result.ShouldContainAll("inner");
+            result.AllShouldContain("inner");
 #endif
         }
     }
