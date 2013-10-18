@@ -11,18 +11,35 @@
     {
         public static void Contains<T>(T expected, IEnumerable<T> actual, IEqualityComparer<T> comparer = null)
         {
-            comparer =
-                comparer ?? new AssertEqualityComparer<T>();
+            comparer = comparer ?? new AssertEqualityComparer<T>();
 
+            Any(expected, actual, value => comparer.Equals(expected, value));
+        }
+
+        public static void Any<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        {
             if (actual != null)
             {
-                if (actual.Any(value => comparer.Equals(expected, value)))
+                if (actual.Any(comparer))
                 {
                     return;
                 }
             }
 
             throw new AssertException("The expected value was not found in the collection.");
+        }
+
+        public static void All<T>(T expected, IEnumerable<T> actual, Func<T, bool> comparer)
+        {
+            if (actual != null)
+            {
+                if (actual.All(comparer))
+                {
+                    return;
+                }
+            }
+
+            throw new AssertException("All elements in the collection did not contain the expected value.");
         }
 
         public static void Contains(string expected, string actual, StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
@@ -94,7 +111,7 @@
                 throw new AssertException("The collection was null.");
             }
 
-            if (values.Count() == 0)
+            if (!values.Any())
             {
                 throw new AssertException("The collection contained no values.");
             }
