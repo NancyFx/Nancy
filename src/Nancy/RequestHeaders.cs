@@ -351,15 +351,16 @@ namespace Nancy
                 yield break;
             }
 
-            string[] cookieStrings;
-            int equalPos;
             foreach (var cookie in cookies)
             {
-                cookieStrings = cookie.Split(';');
+                var cookieStrings = cookie.Split(';');
                 foreach (var cookieString in cookieStrings)
                 {
-                    equalPos = cookieString.IndexOf('=');
-                    if (equalPos >= 0) yield return new NancyCookie(cookieString.Substring(0, equalPos).TrimStart(), cookieString.Substring(equalPos+1).TrimEnd());
+                    var equalPos = cookieString.IndexOf('=');
+                    if (equalPos >= 0)
+                    {
+                        yield return new NancyCookie(cookieString.Substring(0, equalPos).TrimStart(), cookieString.Substring(equalPos+1).TrimEnd());
+                    }
                 }
             }
         }
