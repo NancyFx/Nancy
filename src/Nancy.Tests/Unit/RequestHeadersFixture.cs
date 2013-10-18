@@ -804,6 +804,22 @@
             ValidateCookie(headers.Cookie.Last(), "name", "value");
         }
 
+        [Fact]
+        public void Should_parse_cookie_headers_when_delimited_by_semicolon()
+        {
+          // Given
+          var rawValues = new[] { "foo=bar", "name=value ; third=  something=stuff  " };
+          var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
+
+          // When
+          var headers = new RequestHeaders(rawHeaders);
+
+          // Then
+          ValidateCookie(headers.Cookie.ElementAt(0), "foo", "bar");
+          ValidateCookie(headers.Cookie.ElementAt(1), "name", "value");
+          ValidateCookie(headers.Cookie.ElementAt(2), "third", "  something=stuff");
+        }
+
         [Theory]
         [InlineData("cookie")]
         [InlineData("COokIE")]
