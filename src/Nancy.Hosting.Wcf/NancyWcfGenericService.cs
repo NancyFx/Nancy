@@ -70,9 +70,13 @@
 
         private static Request CreateNancyRequestFromIncomingWebRequest(IncomingWebRequestContext webRequest, Stream requestBody, OperationContext context)
         {
-            var address =
-                ((RemoteEndpointMessageProperty)
-                 OperationContext.Current.IncomingMessageProperties[RemoteEndpointMessageProperty.Name]);
+            string ip = null;
+
+            object remoteEndpointProperty;
+            if (OperationContext.Current.IncomingMessageProperties.TryGetValue(RemoteEndpointMessageProperty.Name, out remoteEndpointProperty))
+            {
+                ip = ((RemoteEndpointMessageProperty)remoteEndpointProperty).Address;
+            }
 
             var baseUri =
                 GetUrlAndPathComponents(webRequest.UriTemplateMatch.BaseUri);
@@ -116,7 +120,7 @@
                 nancyUrl,
                 RequestStream.FromStream(requestBody, expectedRequestLength, false),
                 webRequest.Headers.ToDictionary(),
-                address.Address, 
+                ip, 
                 certificate);
         }
 
