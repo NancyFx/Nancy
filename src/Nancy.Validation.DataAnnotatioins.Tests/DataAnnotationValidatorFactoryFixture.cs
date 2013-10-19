@@ -1,43 +1,37 @@
-﻿//namespace Nancy.Validation.DataAnnotatioins.Tests
-//{
-//    using System.ComponentModel.DataAnnotations;
-//    using Nancy.Tests;
-//    using Nancy.Validation.DataAnnotations;
-//    using Xunit;
+﻿namespace Nancy.Validation.DataAnnotatioins.Tests
+{
+    using System;
+    using System.Data;
 
-//    public class DataAnnotationValidatorFactoryFixture
-//    {
-//        private readonly DataAnnotationsValidatorFactory subject;
+    using FakeItEasy;
+    using Nancy.Tests;
+    using Nancy.Validation.DataAnnotations;
+    using Xunit;
 
-//        public DataAnnotationValidatorFactoryFixture()
-//        {
-//            this.subject = new DataAnnotationsValidatorFactory();
-//        }
+    public class DataAnnotationValidatorFactoryFixture
+    {
+        private readonly DataAnnotationsValidatorFactory subject;
 
-//        [Fact]
-//        public void Should_provide_null_validator_when_no_rules_exist()
-//        {
-//            // Given, When
-//            var result = this.subject.Create(typeof(string));
+        public DataAnnotationValidatorFactoryFixture()
+        {
+            var factory =
+                A.Fake<IPropertyValidatorFactory>();
 
-//            // Then
-//            result.ShouldBeNull();
-//        }
+            var adapter =
+                A.Fake<IValidatableObjectAdapter>();
 
-//        [Fact]
-//        public void Should_provide_non_null_validator_when_validation_exists()
-//        {
-//            // Given, When
-//            var result = this.subject.Create(typeof(TestModel));
+            this.subject = 
+                new DataAnnotationsValidatorFactory(factory, adapter);
+        }
 
-//            // Then
-//            result.ShouldNotBeNull();
-//        }
+        [Fact]
+        public void Should_provide_null_validator_when_no_rules_exist()
+        {
+            // Given, When
+            var result = this.subject.Create(typeof(string));
 
-//        private class TestModel
-//        {
-//            [Required]
-//            public string FirstName { get; set; }
-//        }
-//    }
-//}
+            // Then
+            result.ShouldBeNull();
+        }
+    }
+}

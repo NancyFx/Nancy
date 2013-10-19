@@ -81,7 +81,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy">
-      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -109,6 +109,7 @@
     </Compile>
     <Compile Include="DataAnnotationValidatorFactoryFixture.cs" />
     <Compile Include="DataAnnotationValidatorFixture.cs" />
+    <Compile Include="PropertyValidatorFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
