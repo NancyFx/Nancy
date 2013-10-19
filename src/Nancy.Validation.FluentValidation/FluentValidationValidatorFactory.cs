@@ -26,7 +26,7 @@
         /// Creates a fluent validation <see cref="IValidator"/> instance for the given type.
         /// </summary>
         /// <param name="type">The type.</param>
-        /// <returns>An <see cref="IValidator"/> instance. If no data annotation rules were found for the specified <paramref name="type"/> then <see langword="null"/> is returned.</returns>
+        /// <returns>An <see cref="IValidator"/> instance. If no fluent validation rules were found for the specified <paramref name="type"/> then <see langword="null"/> is returned.</returns>
         public IModelValidator Create(Type type)
         {
             var validatorType =
