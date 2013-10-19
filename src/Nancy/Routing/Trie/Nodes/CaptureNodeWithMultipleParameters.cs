@@ -55,7 +55,7 @@
         /// </summary>
         public override int Score
         {
-            get { return 10; }
+            get { return 100; }
         }
 
         /// <summary>
