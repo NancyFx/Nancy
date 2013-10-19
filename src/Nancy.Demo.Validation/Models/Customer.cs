@@ -8,7 +8,7 @@
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required, OddLengthString]
         public string Name { get; set; }
 
         [Range(typeof(DateTime), "1/1/2000", "1/1/3000", ErrorMessage = "Value for {0} must be between {1} and {2}")]
