@@ -18,6 +18,8 @@
 
             Get["/datetimeConstraint/{value:datetime}"] = _ => "Value " + _.value + " is a date time.";
 
+            Get["/customDatetimeConstraint/{value:datetime(yyyy-MM-dd)}"] = _ => "Value " + _.value + " is a date time with format 'yyyy-MM-dd'.";
+
             Get["/minConstraint/{value:min(4)}"] = _ => "Value " + _.value + " is an integer greater than 4.";
 
             Get["/maxConstraint/{value:max(6)}"] = _ => "Value " + _.value + " is an integer less than 6.";

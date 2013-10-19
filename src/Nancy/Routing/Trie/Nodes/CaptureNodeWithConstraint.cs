@@ -50,7 +50,7 @@
             var segmentSplit = this.RouteDefinitionSegment.Trim('{', '}').Split(':');
 
             this.parameterName = segmentSplit[0];
-            this.constraint = segmentSplit[1].ToLowerInvariant();
+            this.constraint = segmentSplit[1];
         }
     }
 }
