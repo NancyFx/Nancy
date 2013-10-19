@@ -8,7 +8,7 @@
     /// Validates a specified property against a set of Data Annotation <see cref="ValidationAttribute"/>
     /// and <see cref="IDataAnnotationsValidatorAdapter"/> instances.
     /// </summary>
-    public class PropertyValidator
+    public class PropertyValidator : IPropertyValidator
     {
         /// <summary>
         /// Gets or sets the <see cref="IDataAnnotationsValidatorAdapter"/> instances that should be associated with

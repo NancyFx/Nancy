@@ -120,6 +120,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="DefaultPropertyValidatorFactory.cs" />
+    <Compile Include="IPropertyValidator.cs" />
     <Compile Include="IPropertyValidatorFactory.cs" />
     <Compile Include="IValidatableObjectAdapter.cs" />
     <Compile Include="PropertyValidator.cs" />

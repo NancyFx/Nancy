@@ -13,7 +13,7 @@
         /// Gets the <see cref="PropertyValidator"/> instances for the specified <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The <see cref="Type"/> that the validators should be retrieved for.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="PropertyValidator"/> objects.</returns>
-        IEnumerable<PropertyValidator> GetValidators(Type type);
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="IPropertyValidator"/> objects.</returns>
+        IEnumerable<IPropertyValidator> GetValidators(Type type);
     }
 }

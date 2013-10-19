@@ -11,7 +11,7 @@
     {
         private ModelValidationDescriptor descriptor;
         private readonly IValidatableObjectAdapter validatableObjectAdapter;
-        private readonly IEnumerable<PropertyValidator> validators;
+        private readonly IEnumerable<IPropertyValidator> validators;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidator"/> class.

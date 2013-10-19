@@ -26,8 +26,8 @@
         /// Gets the <see cref="PropertyValidator"/> instances for the specified <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The <see cref="Type"/> that the validators should be retrieved for.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="PropertyValidator"/> objects.</returns>
-        public IEnumerable<PropertyValidator> GetValidators(Type type)
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="IPropertyValidator"/> objects.</returns>
+        public IEnumerable<IPropertyValidator> GetValidators(Type type)
         {
             var typeDescriptor =
                 new AssociatedMetadataTypeTypeDescriptionProvider(type).GetTypeDescriptor(type);
@@ -36,7 +36,7 @@
                 typeDescriptor.GetProperties();
 
             var results =
-                new List<PropertyValidator>();
+                new List<IPropertyValidator>();
 
             foreach (PropertyDescriptor descriptor in propertyDescriptors)
             {
