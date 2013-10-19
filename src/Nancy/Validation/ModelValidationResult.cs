@@ -10,6 +10,17 @@
     {
         public static readonly ModelValidationResult Valid = new ModelValidationResult();
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
+        /// </summary>
+        /// <param name="errors">The errors.</param>
+        public ModelValidationResult(IEnumerable<ModelValidationError> errors)
+        {
+            this.Errors = errors == null
+                ? new List<ModelValidationError>().AsReadOnly()
+                : errors.ToList().AsReadOnly();
+        }
+
         private ModelValidationResult()
             : this(null)
         {
@@ -28,17 +39,6 @@
         public bool IsValid
         {
             get { return !Errors.Any(); }
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
-        /// </summary>
-        /// <param name="errors">The errors.</param>
-        public ModelValidationResult(IEnumerable<ModelValidationError> errors)
-        {
-            this.Errors = errors == null
-                ? new List<ModelValidationError>().AsReadOnly()
-                : errors.ToList().AsReadOnly();
         }
 
         /// <summary>
