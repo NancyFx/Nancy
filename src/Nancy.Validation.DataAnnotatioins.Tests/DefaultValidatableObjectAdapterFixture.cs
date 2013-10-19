@@ -76,7 +76,7 @@
                 this.ValidatedWasInvoked = true;
                 this.InstanceBeingValidated = validationContext.ObjectInstance;
                 
-                return this.ExpectedResults;
+                return this.ExpectedResults ?? Enumerable.Empty<ValidationResult>();
             }
         }
     }
