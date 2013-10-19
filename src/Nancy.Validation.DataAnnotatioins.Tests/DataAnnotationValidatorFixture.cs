@@ -1,4 +1,4 @@
-﻿//namespace Nancy.Validation.DataAnnotatioins.Tests
+﻿//namespace Nancy.Validation.DataAnnotations.Tests
 //{
 //    using System.ComponentModel.DataAnnotations;
 //    using System.Linq;

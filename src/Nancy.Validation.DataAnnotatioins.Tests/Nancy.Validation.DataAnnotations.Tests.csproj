@@ -8,8 +8,8 @@
     <ProjectGuid>{8F9F910D-416E-4B28-BE59-D76670405F56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Validation.DataAnnotatioins.Tests</RootNamespace>
-    <AssemblyName>Nancy.Validation.DataAnnotatioins.Tests</AssemblyName>
+    <RootNamespace>Nancy.Validation.DataAnnotations.Tests</RootNamespace>
+    <AssemblyName>Nancy.Validation.DataAnnotations.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>

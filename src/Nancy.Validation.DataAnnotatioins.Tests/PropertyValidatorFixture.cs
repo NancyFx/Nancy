@@ -1,4 +1,4 @@
-﻿namespace Nancy.Validation.DataAnnotatioins.Tests
+﻿namespace Nancy.Validation.DataAnnotations.Tests
 {
     using System.Collections.Generic;
     using System.ComponentModel;
