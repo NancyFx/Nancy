@@ -37,10 +37,19 @@
             private readonly IRequestTracing requestTracing;
             private readonly NancyInternalConfiguration configuration;
             private readonly IModelBinderLocator modelBinderLocator;
-            private readonly IEnumerable<IRouteSegmentConstraint> routeconstraints;
+            private readonly IEnumerable<IResponseProcessor> responseProcessors;
+            private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
             private readonly ICultureService cultureService;
 
-            public FakeDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints, ICultureService cultureService)
+            public FakeDiagnostics(
+                DiagnosticsConfiguration diagnosticsConfiguration,
+                IRootPathProvider rootPathProvider,
+                IRequestTracing requestTracing,
+                NancyInternalConfiguration configuration,
+                IModelBinderLocator modelBinderLocator,
+                IEnumerable<IResponseProcessor> responseProcessors,
+                IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
+                ICultureService cultureService)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -48,13 +57,23 @@
                 this.requestTracing = requestTracing;
                 this.configuration = configuration;
                 this.modelBinderLocator = modelBinderLocator;
-                this.routeconstraints = routeSegmentConstraints;
+                this.responseProcessors = responseProcessors;
+                this.routeSegmentConstraints = routeSegmentConstraints;
                 this.cultureService = cultureService;
             }
 
             public void Initialize(IPipelines pipelines)
             {
-                DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.requestTracing, this.configuration, this.modelBinderLocator, this.routeconstraints, this.cultureService);
+                DiagnosticsHook.Enable(this.diagnosticsConfiguration,
+                    pipelines,
+                    this.diagnosticProviders,
+                    this.rootPathProvider,
+                    this.requestTracing,
+                    this.configuration,
+                    this.modelBinderLocator,
+                    this.responseProcessors,
+                    this.routeSegmentConstraints,
+                    this.cultureService);
             }
         }
 
