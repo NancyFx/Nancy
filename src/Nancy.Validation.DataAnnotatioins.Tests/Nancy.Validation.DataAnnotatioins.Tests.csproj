@@ -110,6 +110,7 @@
     <Compile Include="DataAnnotationsValidatorFixture.cs" />
     <Compile Include="DataAnnotationValidatorFactoryFixture.cs" />
     <Compile Include="DataAnnotationValidatorFixture.cs" />
+    <Compile Include="DefaultValidatableObjectAdapterFixture.cs" />
     <Compile Include="PropertyValidatorFixture.cs" />
   </ItemGroup>
   <ItemGroup>
