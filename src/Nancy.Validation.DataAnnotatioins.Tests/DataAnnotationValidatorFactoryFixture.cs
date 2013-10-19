@@ -1,8 +1,5 @@
 ﻿namespace Nancy.Validation.DataAnnotatioins.Tests
 {
-    using System;
-    using System.Data;
-
     using FakeItEasy;
     using Nancy.Tests;
     using Nancy.Validation.DataAnnotations;

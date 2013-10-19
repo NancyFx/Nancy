@@ -107,6 +107,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DataAnnotationsValidatorFixture.cs" />
     <Compile Include="DataAnnotationValidatorFactoryFixture.cs" />
     <Compile Include="DataAnnotationValidatorFixture.cs" />
     <Compile Include="PropertyValidatorFixture.cs" />
