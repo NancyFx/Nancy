@@ -14,7 +14,7 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="DataAnnotationsValidatorAdapter"/> class.
         /// </summary>
-        /// /// <param name="factory">The <see cref="IPropertyValidatorFactory"/> instance that should be used by the factory.</param>
+        /// <param name="factory">The <see cref="IPropertyValidatorFactory"/> instance that should be used by the factory.</param>
         /// <param name="validatableObjectAdapter">The <see cref="validatableObjectAdapter"/> instance that should be used by the factory.</param>
         public DataAnnotationsValidatorFactory(IPropertyValidatorFactory factory, IValidatableObjectAdapter validatableObjectAdapter)
         {
@@ -32,9 +32,9 @@
             var validator = 
                 new DataAnnotationsValidator(type, this.factory, this.validatableObjectAdapter);
 
-            return validator.Description.Rules.Any()
-                ? validator
-                : null;
+            return validator.Description.Rules.Any() ?
+                validator :
+                null;
         }
     }
 }

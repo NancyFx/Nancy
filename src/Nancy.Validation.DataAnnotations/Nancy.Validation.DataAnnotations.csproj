@@ -119,10 +119,12 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="IDataAnnotationsValidatorAdapterFactory.cs" />
+    <Compile Include="DefaultPropertyValidatorFactory.cs" />
+    <Compile Include="IPropertyValidatorFactory.cs" />
+    <Compile Include="IValidatableObjectAdapter.cs" />
     <Compile Include="PropertyValidator.cs" />
     <Compile Include="Registrations.cs" />
-    <Compile Include="DataAnnotationsValidatableObjectValidatorAdapter.cs" />
+    <Compile Include="DefaultValidatableObjectAdapter.cs" />
     <Compile Include="DataAnnotationsValidator.cs" />
     <Compile Include="DataAnnotationsValidatorAdapter.cs" />
     <Compile Include="DataAnnotationsValidatorFactory.cs" />

@@ -11,12 +11,13 @@
     public class PropertyValidator
     {
         /// <summary>
-        /// 
+        /// Gets or sets the <see cref="IDataAnnotationsValidatorAdapter"/> instances that should be associated with
+        /// each of the <see cref="ValidationAttribute"/> that are specified for the property that is being validated.
         /// </summary>
         public IDictionary<ValidationAttribute, IEnumerable<IDataAnnotationsValidatorAdapter>> AttributeAdaptors { get; set; }
 
         /// <summary>
-        /// 
+        /// Gets or sets the <see cref="PropertyDescriptor"/> for the property that is being validated.
         /// </summary>
         public PropertyDescriptor Descriptor { get; set; }
 

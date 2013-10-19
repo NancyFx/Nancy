@@ -59,9 +59,8 @@
 
         private ModelValidationDescriptor GetModelValidationDescriptor()
         {
-            var rules = this.validators
-                .SelectMany(x => x.GetRules())
-                .Union(this.validatableObjectAdapter.GetRules());
+            var rules = 
+                this.validators.SelectMany(x => x.GetRules());
 
             return new ModelValidationDescriptor(rules);
         }

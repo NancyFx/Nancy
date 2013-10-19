@@ -9,12 +9,6 @@
     public interface IValidatableObjectAdapter
     {
         /// <summary>
-        /// Gets the the rules the adapter provides.
-        /// </summary>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        IEnumerable<ModelValidationRule> GetRules();
-
-        /// <summary>
         /// Validates the given instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
