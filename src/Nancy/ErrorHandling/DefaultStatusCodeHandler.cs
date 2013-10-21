@@ -19,7 +19,7 @@ namespace Nancy.ErrorHandling
 
         private readonly IDictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>> expansionDelegates;
 
-        private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError};
+        private readonly HttpStatusCode[] supportedStatusCodes = new[] { HttpStatusCode.NotFound, HttpStatusCode.InternalServerError, HttpStatusCode.NotAcceptable};
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultStatusCodeHandler"/> type.
@@ -29,12 +29,14 @@ namespace Nancy.ErrorHandling
             this.errorPages = new Dictionary<HttpStatusCode, string>
                 {
                     { HttpStatusCode.NotFound, LoadResource("404.html") },
+                    { HttpStatusCode.NotAcceptable, LoadResource("406.html") },
                     { HttpStatusCode.InternalServerError, LoadResource("500.html") },
                 };
 
             this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
                 {
-                    { HttpStatusCode.InternalServerError, PopulateErrorInfo}
+                    { HttpStatusCode.InternalServerError, PopulateErrorInfo},
+                    { HttpStatusCode.NotAcceptable, PopulateErrorInfo}
                 };
         }
 

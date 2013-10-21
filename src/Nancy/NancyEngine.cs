@@ -14,6 +14,7 @@
     using Nancy.Routing;
 
     using Nancy.Helpers;
+    using Nancy.ViewEngines;
 
     /// <summary>
     /// Default engine for handling Nancy <see cref="Request"/>s.
@@ -336,6 +337,12 @@
             catch (Exception e)
             {
                 context.Response = new Response { StatusCode = HttpStatusCode.InternalServerError };
+
+                if (e.InnerException is ViewNotFoundException)
+                {
+                    context.Response.StatusCode = HttpStatusCode.NotAcceptable;
+                }
+
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }
