@@ -164,16 +164,22 @@ namespace Nancy.Json
                 return c.ConvertFrom(obj);
             }
 
-            /*
-             * Take care of the special case whereas in JSON an empty string ("") really means 
-             * an empty value 
-             * (see: https://bugzilla.novell.com/show_bug.cgi?id=328836)
-             */
+
             if ((type.IsGenericType) && (type.GetGenericTypeDefinition() == typeof(Nullable<>)))
             {
+                /*
+                 * Take care of the special case whereas in JSON an empty string ("") really means 
+                 * an empty value 
+                 * (see: https://bugzilla.novell.com/show_bug.cgi?id=328836)
+                 */
                 string s = obj as String;
-                if (String.IsNullOrEmpty(s))
-                    return null;
+                if (s != null)
+                {
+                    if (s == string.Empty)
+                        return null;
+                }
+                else //It is not string at all, convert to Nullable<> type, from int to uint for example
+                    return Convert.ChangeType (obj, type.GetGenericArguments ()[0]);
             }
 
             return Convert.ChangeType(obj, type);
