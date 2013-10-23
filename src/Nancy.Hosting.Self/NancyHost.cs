@@ -30,6 +30,7 @@
         private HttpListener listener;
         private readonly INancyEngine engine;
         private readonly HostConfiguration configuration;
+        private readonly INancyBootstrapper bootstrapper;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyHost"/> class for the specfied <paramref name="baseUris"/>.
@@ -70,6 +71,7 @@
         /// <param name="baseUris">The <see cref="Uri"/>s that the host will listen to.</param>
         public NancyHost(INancyBootstrapper bootstrapper, HostConfiguration configuration, params Uri[] baseUris)
         {
+            this.bootstrapper = bootstrapper;
             this.configuration = configuration ?? new HostConfiguration();
             this.baseUriList = baseUris;
 
@@ -108,6 +110,8 @@
         public void Dispose()
         {
             this.Stop();
+
+            this.bootstrapper.Dispose();
         }
 
         /// <summary>

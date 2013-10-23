@@ -3,6 +3,7 @@ namespace Owin
 // ReSharper restore CheckNamespace
 {
     using System;
+    using System.Threading;
 
     using Nancy.Owin;
 
@@ -13,7 +14,16 @@ namespace Owin
     {
         public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options = null)
         {
-            return builder.Use(typeof(NancyOwinHost), options ?? new NancyOptions());
+            var nancyOptions = options ?? new NancyOptions();
+
+            var appDisposing = builder.Properties["host.OnAppDisposing"] as CancellationToken?;
+
+            if (appDisposing.HasValue)
+            {
+                appDisposing.Value.Register(nancyOptions.Bootstrapper.Dispose);
+            }
+
+            return builder.Use(typeof(NancyOwinHost), nancyOptions);
         }
 
         public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
