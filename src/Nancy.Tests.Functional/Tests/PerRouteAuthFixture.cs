@@ -59,6 +59,20 @@
         }
 
         [Fact]
+        public void Should_allow_if_claims_correct_case_insensitively()
+        {
+            var browser = new Browser(with =>
+            {
+                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("TEST", "TEST2"));
+                with.Module<PerRouteAuthModule>();
+            });
+
+            var result = browser.Get("/requiresclaims");
+
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        [Fact]
         public void Should_deny_if_anyclaims_not_found()
         {
             var browser = new Browser(with =>
