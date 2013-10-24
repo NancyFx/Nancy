@@ -2,7 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.IO;
+    using System.Reflection;
+    using System.Security.Cryptography.X509Certificates;
 
     using Nancy.Helpers;
 
@@ -44,6 +47,11 @@
         /// Gets or sets the user host address
         /// </summary>
         string IBrowserContextValues.UserHostAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ClientCertificate
+        /// </summary>
+        X509Certificate2 IBrowserContextValues.ClientCertificate { get; set; }
 
         /// <summary>
         /// Gets or sets the body string
@@ -152,6 +160,71 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
+        }
+
+        /// <summary>
+        /// Sets the ClientCertificate to a default embedded certificate
+        /// <remarks>The default certificate is embedded using the Nancy.Testing.Nancy Testing Cert.pfx resource name (secured with password "nancy")</remarks>
+        /// </summary>
+        public void Certificate()
+        {
+            X509Certificate2 certificate2;
+
+            using (
+                var pkcs12 =
+                    Assembly.GetAssembly(typeof (BrowserContext))
+                            .GetManifestResourceStream("Nancy.Testing.Resources.Nancy Testing Cert.pfx"))
+            {
+                using (var br = new BinaryReader(pkcs12))
+                {
+                    certificate2 = new X509Certificate2(br.ReadBytes((int)pkcs12.Length), "nancy",
+                                                        X509KeyStorageFlags.Exportable);
+                }
+            }
+
+            this.Values.ClientCertificate = certificate2;
+        }
+
+        /// <summary>
+        /// Sets the ClientCertificate
+        /// </summary>
+        /// <param name="certificate">the certificate in bytes</param>
+        public void Certificate(byte[] certificate)
+        {
+            this.Values.ClientCertificate = new X509Certificate2(certificate);
+        }
+
+        /// <summary>
+        /// Sets the ClientCertificate
+        /// </summary>
+        /// <param name="certificate">the certificate</param>
+        public void Certificate(X509Certificate2 certificate)
+        {
+            this.Values.ClientCertificate = certificate;
+        }
+
+        /// <summary>
+        /// Find a certificate in a store on the computer.
+        /// </summary>
+        /// <param name="storeLocation">The location of the store (LocalMachine, CurrentUser)</param>
+        /// <param name="storeName">The name of the store (e.q. My)</param>
+        /// <param name="findType">By which field you want to find the certificate (Commonname, Thumbprint, etc)</param>
+        /// <param name="findBy">The "Common name" or "thumbprint" you are looking for</param>
+        public void Certificate(StoreLocation storeLocation, StoreName storeName, X509FindType findType, object findBy)
+        {
+            var store = new X509Store(storeName, storeLocation);
+
+            store.Open(OpenFlags.ReadOnly);
+            var certificatesFound = store.Certificates.Find(findType, findBy, false);
+
+            if (certificatesFound.Count <= 0)
+            {
+                throw new InvalidOperationException(
+                    String.Format("No certificates found in {0} {1} with a {2} that looks like \"{3}\"", storeLocation,
+                                  storeName, findType, findBy));
+            }
+            
+            this.Values.ClientCertificate = certificatesFound[0];
         }
 
         private IBrowserContextValues Values

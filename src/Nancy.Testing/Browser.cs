@@ -202,7 +202,11 @@ namespace Nancy.Testing
             var requestStream =
                 RequestStream.FromStream(contextValues.Body, 0, true);
 
-            return new Request(method, path, contextValues.Headers, requestStream, contextValues.Protocol, contextValues.QueryString, contextValues.UserHostAddress);
+            var certBytes = (contextValues.ClientCertificate == null) ?
+                new byte[] {} :
+                contextValues.ClientCertificate.GetRawCertData();
+
+            return new Request(method, new Url { Path = path, Scheme = contextValues.Protocol, Query = contextValues.QueryString ?? string.Empty }, requestStream, contextValues.Headers, contextValues.UserHostAddress, certBytes);
         }
     }
 }

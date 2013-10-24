@@ -60,9 +60,8 @@ namespace Nancy.Tests.Unit
             };
 
             // When
-            var request = new Request("POST", "/", headers, CreateRequestStream(stream), "http");
-
-
+            var request = new Request("POST", new Url { Path = "/" }, CreateRequestStream(stream), headers);
+            
             // Then
             var fileValue = request.Files.Single().Value;
             var actualBytes = new byte[fileValue.Length];
@@ -91,7 +90,7 @@ namespace Nancy.Tests.Unit
             };
 
             // When
-            var request = new Request("POST", "/", headers, CreateRequestStream(stream), "http");
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(stream), headers);
 
 
             // Then
@@ -122,7 +121,7 @@ namespace Nancy.Tests.Unit
             };
 
             // When
-            var request = new Request("POST", "/", headers, CreateRequestStream(stream), "http");
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(stream), headers);
 
 
             // Then
@@ -150,9 +149,8 @@ namespace Nancy.Tests.Unit
             };
 
             // When
-            var request = new Request("POST", "/", headers, CreateRequestStream(stream), "http");
-
-
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(stream), headers);
+            
             // Then
             var fileValue = request.Files.Single().Value;
             var actualBytes = new byte[fileValue.Length];
