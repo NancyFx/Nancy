@@ -12,7 +12,11 @@ namespace Nancy.Tests.Unit
         public HeadResponseFixture()
         {
             this.headers = new Dictionary<string, string> { { "Test", "Value " } };
-            this.response = new Response { ContentType = "application/json", Headers = headers, StatusCode = HttpStatusCode.ResetContent };
+            this.response = "This is the content";
+
+            this.response.ContentType = "application/json";
+            this.response.Headers = headers;
+            this.response.StatusCode = HttpStatusCode.ResetContent;
         }
 
         [Fact]
@@ -53,6 +57,17 @@ namespace Nancy.Tests.Unit
 
             // Then
             head.GetStringContentsFromResponse().ShouldBeEmpty();
+        }
+
+        [Fact]
+        public void Should_set_content_length()
+        {
+            // Given, When
+            var head = new HeadResponse(this.response);
+            
+            // Then
+            head.Headers.ContainsKey("Content-Length").ShouldBeTrue();
+            head.Headers["Content-Length"].ShouldNotEqual("0");
         }
     }
 }
