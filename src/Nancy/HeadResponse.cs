@@ -18,13 +18,13 @@
         /// The full response to create the head response from.
         /// </param>
         public HeadResponse(Response response)
-		{
-		    this.Contents = GetStringContents(string.Empty);
-			this.ContentType = response.ContentType;
-		    this.Headers = response.Headers;
-			this.StatusCode = response.StatusCode;
+        {
+            this.Contents = GetStringContents(string.Empty);
+            this.ContentType = response.ContentType;
+            this.Headers = response.Headers;
+            this.StatusCode = response.StatusCode;
             this.CheckAndSetContentLength(response);
-		}
+        }
 
         private void CheckAndSetContentLength(Response response)
         {
