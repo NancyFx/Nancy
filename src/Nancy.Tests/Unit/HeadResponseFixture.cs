@@ -69,5 +69,18 @@ namespace Nancy.Tests.Unit
             head.Headers.ContainsKey("Content-Length").ShouldBeTrue();
             head.Headers["Content-Length"].ShouldNotEqual("0");
         }
+
+        [Fact]
+        public void Should_not_overwrite_content_length()
+        {
+            // Given, When
+            this.response.Headers.Add("Content-Length", "foo");
+            var head = new HeadResponse(this.response);
+
+            // Then
+            head.Headers.ContainsKey("Content-Length").ShouldBeTrue();
+            head.Headers["Content-Length"].ShouldEqual("foo");
+        }
+
     }
 }
