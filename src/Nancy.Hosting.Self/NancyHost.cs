@@ -331,8 +331,12 @@
                 buffer = memoryStream.ToArray();
             }
 
+            var contentLength = (nancyResponse.Headers.ContainsKey("Content-Length")) ? 
+                Convert.ToInt64(nancyResponse.Headers["Content-Length"]) :
+                buffer.Length;
+
             response.SendChunked = false;
-            response.ContentLength64 = buffer.Length;
+            response.ContentLength64 = contentLength;
 
             using (var output = response.OutputStream)
             {
