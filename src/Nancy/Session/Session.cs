@@ -1,5 +1,6 @@
 namespace Nancy.Session
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
 
@@ -21,7 +22,11 @@ namespace Nancy.Session
 
         public void DeleteAll()
         {
-            if (Count > 0) { MarkAsChanged(); }
+            if (Count > 0)
+            {
+                MarkAsChanged();
+            }
+
             dictionary.Clear();            
         }
 
@@ -35,11 +40,15 @@ namespace Nancy.Session
             get { return dictionary.ContainsKey(key) ? dictionary[key] : null; }
             set
             {
-                if (!this[key].Equals(value))
+                var existingValue = this[key] ?? new Object();
+
+                if (existingValue.Equals(value))
                 {
-                    this.dictionary[key] = value;
-                    this.MarkAsChanged();
+                    return;
                 }
+
+                dictionary[key] = value;
+                MarkAsChanged();
             }
         }
 
