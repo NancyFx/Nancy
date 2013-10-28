@@ -12,18 +12,30 @@ namespace Owin
     /// </summary>
     public static class Extensions
     {
+        private const string AppDisposingKey = "host.OnAppDisposing";
+
         public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options = null)
         {
             var nancyOptions = options ?? new NancyOptions();
 
-            var appDisposing = builder.Properties["host.OnAppDisposing"] as CancellationToken?;
+            HookDisposal(builder, nancyOptions);
+
+            return builder.Use(typeof(NancyOwinHost), nancyOptions);
+        }
+
+        private static void HookDisposal(IAppBuilder builder, NancyOptions nancyOptions)
+        {
+            if (!builder.Properties.ContainsKey(AppDisposingKey))
+            {
+                return;
+            }
+
+            var appDisposing = builder.Properties[AppDisposingKey] as CancellationToken?;
 
             if (appDisposing.HasValue)
             {
                 appDisposing.Value.Register(nancyOptions.Bootstrapper.Dispose);
             }
-
-            return builder.Use(typeof(NancyOwinHost), nancyOptions);
         }
 
         public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
