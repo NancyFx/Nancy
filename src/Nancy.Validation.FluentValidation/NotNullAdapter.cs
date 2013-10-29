@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="NotNullValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class NotNullAdapter : AdapterBase<INotNullValidator>
+    public class NotNullAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

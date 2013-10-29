@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="ExclusiveBetweenValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class ExclusiveBetweenAdapter : AdapterBase<ExclusiveBetweenValidator>
+    public class ExclusiveBetweenAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

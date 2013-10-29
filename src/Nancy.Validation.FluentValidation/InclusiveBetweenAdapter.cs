@@ -10,7 +10,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="InclusiveBetweenValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class InclusiveBetweenAdapter : AdapterBase<InclusiveBetweenValidator>
+    public class InclusiveBetweenAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

@@ -8,7 +8,7 @@ namespace Nancy.Validation.FluentValidation
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="ExactLengthValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class ExactLengthAdapater : AdapterBase<ExactLengthValidator>
+    public class ExactLengthAdapater : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

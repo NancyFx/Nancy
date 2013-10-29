@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="ILengthValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class LengthAdapter : AdapterBase<ILengthValidator>
+    public class LengthAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

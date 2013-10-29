@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="IRegularExpressionValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class RegularExpressionAdapter : AdapterBase<IRegularExpressionValidator>
+    public class RegularExpressionAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

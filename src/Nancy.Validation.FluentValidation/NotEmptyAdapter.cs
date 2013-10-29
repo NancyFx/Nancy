@@ -8,7 +8,7 @@ namespace Nancy.Validation.FluentValidation
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="INotEmptyValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class NotEmptyAdapter : AdapterBase<INotEmptyValidator>
+    public class NotEmptyAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

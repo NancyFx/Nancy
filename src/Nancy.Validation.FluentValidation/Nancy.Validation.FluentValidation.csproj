@@ -107,7 +107,6 @@
     <Compile Include="EqualAdapter.cs" />
     <Compile Include="ExactLengthAdapater.cs" />
     <Compile Include="ExclusiveBetweenAdapter.cs" />
-    <Compile Include="FluentAdapter.cs" />
     <Compile Include="FluentValidationValidator.cs" />
     <Compile Include="FluentValidationValidatorFactory.cs" />
     <Compile Include="GreaterThanAdapter.cs" />

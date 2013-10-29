@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="GreaterThanOrEqualValidator"/> and the Nancy validation rules.
     /// </summary>
-    public class GreaterThanOrEqualAdapter : AdapterBase<GreaterThanOrEqualValidator>
+    public class GreaterThanOrEqualAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

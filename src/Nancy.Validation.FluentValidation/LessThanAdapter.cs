@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="LessThanAdapter"/> and the Nancy validation rules.
     /// </summary>
-    public class LessThanAdapter : AdapterBase<LessThanValidator>
+    public class LessThanAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

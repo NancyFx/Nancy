@@ -8,7 +8,7 @@
     /// <summary>
     /// Adapter between the Fluent Validation <see cref="EqualAdapter"/> and the Nancy validation rules.
     /// </summary>
-    public class EqualAdapter : AdapterBase<EqualValidator>
+    public class EqualAdapter : AdapterBase
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {

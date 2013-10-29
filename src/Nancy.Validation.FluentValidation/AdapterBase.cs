@@ -8,8 +8,7 @@
     /// <summary>
     /// Defines the core functionality of an adapter between Fluent Validation validators and Nancy validation rules.
     /// </summary>
-    /// <typeparam name="T">The type of the Fluent Validation validator that is being mapped. Has to inherit from <see cref="IPropertyValidator"/>.</typeparam>
-    public abstract class AdapterBase<T> : IFluentAdapter where T : IPropertyValidator
+    public abstract class AdapterBase
     {
         public abstract bool CanHandle(IPropertyValidator validator, NancyContext context);
 
