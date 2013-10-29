@@ -15,154 +15,169 @@
         [Fact]
         public void Should_resolve_root()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("Root");
         }
 
         [Fact]
         public void Should_resolve_correct_route_based_on_method()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Post("/");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("PostRoot");
         }
 
         [Fact]
         public void Should_resolve_single_literal()
         {
-            // Given
-            // When
+
+            //Given, When
             var result = this.browser.Get("/foo");
 
-            // Then
+            //Then
+
             result.Body.AsString().ShouldEqual("SingleLiteral");
         }
 
         [Fact]
         public void Should_resolve_multi_literal()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/foo/bar/baz");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("MultipleLiteral");
         }
 
         [Fact]
         public void Should_resolve_single_capture()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/foo/testing/plop");
 
-            // Then
+            //Then
+
             result.Body.AsString().ShouldEqual("Captured testing");
         }
 
         [Fact]
         public void Should_resolve_optional_capture_with_optional_specified()
         {
-            // Given
-            // When
+
+            //Given, When
             var result = this.browser.Get("/moo/hoo/moo");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("OptionalCapture hoo");
         }
 
         [Fact]
         public void Should_resolve_optional_capture_with_optional_not_specified()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/moo/moo");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("OptionalCapture default");
         }
 
         [Fact]
         public void Should_resolve_optional_capture_with_default_with_optional_specified()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/boo/badger/laa");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault badger");
         }
 
         [Fact]
         public void Should_resolve_optional_capture_with_default_with_optional_not_specified()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/boo/laa");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("OptionalCaptureWithDefault test");
         }
 
         [Fact]
         public void Should_capture_greedy_on_end()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/bleh/this/is/some/stuff");
 
-            // Then
+            //Then
+
             result.Body.AsString().ShouldEqual("GreedyOnEnd this/is/some/stuff");
         }
 
         [Fact]
         public void Should_capture_greedy_in_middle()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/bleh/this/is/some/stuff/bar");
 
-            // Then
+            //Then
+
             result.Body.AsString().ShouldEqual("GreedyInMiddle this/is/some/stuff");
         }
 
         [Fact]
         public void Should_capture_greedy_and_normal_capture()
         {
-            // Given
-            // When
+            //Given, When
             var result = this.browser.Get("/greedy/this/is/some/stuff/badger/blah");
 
-            // Then
+            //Then
             result.Body.AsString().ShouldEqual("GreedyAndCapture this/is/some/stuff blah");
+        }
+
+        [Fact]
+        public void Should_capture_node_with_multiple_parameters()
+        {
+            //Given, When
+            var result = this.browser.Get("/multipleparameters/file.extension");
+
+            //Then
+            result.Body.AsString().ShouldEqual("Multiple parameters file.extension");
+        }
+
+        [Fact] 
+        public void Should_capture_node_with_literal()
+        {
+            //Given, When
+            var result = this.browser.Get("/capturenodewithliteral/file.html");
+
+            //Then
+            result.Body.AsString().ShouldEqual("CaptureNodeWithLiteral file.html");
         }
 
         [Fact]
         public void Should_capture_regex()
         {
-            // Given
-            // When
+           //Given, When
             var result = this.browser.Get("/regex/123/moo");
 
-            // Then
+            //Then
+
             result.Body.AsString().ShouldEqual("RegEx 123 moo");
         }
 
         [Fact]
         public void Should_handle_head_requests()
         {
-            // Given
-            // When
+
+            //Given, When
             var result = this.browser.Head("/");
 
-            // Then
+            //Then
+
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
             result.Body.AsString().ShouldEqual(string.Empty);
         }
@@ -170,11 +185,12 @@
         [Fact]
         public void Should_handle_options_requests()
         {
-            // Given
-            // When
+
+            //Given, When
             var result = this.browser.Options("/");
 
-            // Then
+            //Then
+
             result.StatusCode.ShouldEqual(HttpStatusCode.OK);
             result.Headers["Allow"].ShouldContain("GET");
             result.Headers["Allow"].ShouldContain("POST");
@@ -183,13 +199,15 @@
         [Fact]
         public void Should_return_404_if_no_root_found_when_requesting_it()
         {
-            // Given
+
+            //Given
             var localBrowser = new Browser(with => with.Module<NoRootModule>());
 
-            // When
+            //When
             var result = localBrowser.Get("/");
 
-            // Then
+            //Then
+
             result.StatusCode.ShouldEqual(HttpStatusCode.NotFound);
         }
 
@@ -280,6 +298,11 @@
                 Get["/bleh/{test*}/bar"] = _ => "GreedyInMiddle " + _.test;
 
                 Get["/greedy/{test*}/badger/{woo}"] = _ => "GreedyAndCapture " + _.test + " " + _.woo;
+
+                Get["/multipleparameters/{file}.{extension}"] = _ => "Multiple parameters " + _.file + "." + _.extension;
+
+                Get["/capturenodewithliteral/{file}.html"] = _ => "CaptureNodeWithLiteral " + _.file + ".html";
+
 
                 Get[@"/regex/(?<foo>\d{2,4})/{bar}"] = x =>
                 {

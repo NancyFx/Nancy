@@ -46,7 +46,7 @@ namespace Nancy.Tests
         }
 
         [Fact]
-        public void Deleting_an_key_should_mark_it_as_changed()
+        public void Deleting_a_key_should_mark_it_as_changed()
         {
             // Given
             var session = new Session(new Dictionary<string, object> { { "key", 1 } });
@@ -69,6 +69,32 @@ namespace Nancy.Tests
 
             // Then
             session.HasChanged.ShouldBeTrue();
+        }
+
+        [Fact]
+        public void Setting_a_key_with_the_same_value_should_not_mark_it_as_changed()
+        {
+          // Given
+          var session = new Session(new Dictionary<string, object> { { "key", "SomeValue" } } );
+
+          // When
+          session["key"] = "SomeValue";
+
+          // Then
+          session.HasChanged.ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Setting_a_key_with_a_different_value_should_mark_it_as_changed()
+        {
+          // Given
+          var session = new Session(new Dictionary<string, object> { { "key", "SomeValue" } });
+
+          // When
+          session["key"] = "SomeValue2";
+
+          // Then
+          session.HasChanged.ShouldBeTrue();
         }
     }
 }

@@ -1,9 +1,11 @@
 ﻿namespace Nancy.Bootstrapper
 {
+    using System;
+
     /// <summary>
     /// Bootstrapper for the Nancy Engine
     /// </summary>
-    public interface INancyBootstrapper
+    public interface INancyBootstrapper : IDisposable
     {
         /// <summary>
         /// Initialise the bootstrapper. Must be called prior to GetEngine.

@@ -2,6 +2,7 @@
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Cryptography.X509Certificates;
 
     /// <summary>
     /// Provides an API ontop of <see cref="BrowserContext"/> for extracting values.
@@ -46,5 +47,10 @@
         /// Gets or sets the user host address
         /// </summary>
         string UserHostAddress { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ClientCertificate
+        /// </summary>
+        X509Certificate2 ClientCertificate { get; set; }
     }
 }

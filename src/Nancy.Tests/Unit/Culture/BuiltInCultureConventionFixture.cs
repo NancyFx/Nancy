@@ -355,14 +355,14 @@
 
 
             var context = new NancyContext();
-            context.Request = new Request("POST", "/", headers, RequestStream.FromStream(memory), "http");
+            context.Request = new Request("POST", new Url {Path = "/", Scheme = "http" }, RequestStream.FromStream(memory), headers);
             return context;
         }
 
         private NancyContext CreateContextRequest(string path, IDictionary<string, IEnumerable<string>> cultureHeaders = null)
         {
             var context = new NancyContext();
-            var request = new Request("GET", path, cultureHeaders, null, "http");
+            var request = new Request("GET", new Url{ Path = path, Scheme = "http" }, null, cultureHeaders);
             context.Request = request;
             return context;
         }

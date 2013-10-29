@@ -22,7 +22,7 @@
         }
 
         public FakeRequest(string method, string path, IDictionary<string, IEnumerable<string>> headers, RequestStream body, string protocol, string query)
-            : base(method, path, headers, body, protocol, query)
+            : base(method, new Url { Path = path, Query = query, Scheme = protocol }, body, headers)
         {
         }
     }

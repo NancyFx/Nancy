@@ -391,7 +391,7 @@ namespace Nancy.Tests.Unit.Sessions
                 headers.Add("cookie", new[] { CookieBasedSessions.GetCookieName()+ "=" + HttpUtility.UrlEncode(sessionValue) });
             }
 
-            var request = new Request("GET", "http://goku.power:9001/", headers, CreateRequestStream(), "http");
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Port = 9001, BasePath = "goku.power" }, CreateRequestStream(), headers);
 
             if (load)
             {

@@ -4,6 +4,7 @@ namespace Nancy.Testing.Tests
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Security.Cryptography.X509Certificates;
     using System.Text;
     using System.Linq;
 
@@ -292,28 +293,60 @@ namespace Nancy.Testing.Tests
                     "/session",
                     with => with.HttpRequest());
 
+            //Then
             result.Body.AsString().ShouldEqual("Current session value is: I've created a session!");
         }
 
         [Fact]
         public void Should_be_able_to_not_specify_delegate_for_basic_http_request()
         {
+            //Given, When
             var result = browser.Get("/type");
 
+            //Then
             result.Body.AsString().ShouldEqual("http");
         }
 
         [Fact]
         public void Should_add_ajax_header()
         {
+            //Given, When
             var result = browser.Get("/ajax", with => with.AjaxRequest());
 
+            //Then
             result.Body.AsString().ShouldEqual("ajax");
         }
 
         [Fact]
+        public void Should_throw_an_exception_when_the_cert_couldnt_be_found()
+        {
+            //Given, When
+            var exception = Record.Exception(() =>
+            {
+                var result = browser.Get("/ajax",
+                                         with =>
+                                         with.Certificate(StoreLocation.CurrentUser, StoreName.My, X509FindType.FindByThumbprint, "aa aa aa"));
+            });
+
+            //Then
+            exception.ShouldBeOfType<InvalidOperationException>();
+        }
+
+        [Fact]
+        public void Should_add_certificate()
+        {
+            //Given, When
+            var result = browser.Get("/cert", with => with.Certificate());
+
+            //Then
+            result.Context.Request.ClientCertificate.ShouldNotBeNull();
+        }
+
+
+        [Fact]
         public void Should_add_forms_authentication_cookie_to_the_request()
         {
+            //Given
             var userId = A.Dummy<Guid>();
 
             var formsAuthConfig = new FormsAuthenticationConfiguration()
@@ -327,6 +360,7 @@ namespace Nancy.Testing.Tests
             var hmacString = Convert.ToBase64String(hmacBytes);
             var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
 
+            //When
             var response = browser.Get("/cookie", (with) =>
             {
                 with.HttpRequest();
@@ -335,30 +369,36 @@ namespace Nancy.Testing.Tests
 
             var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
             var cookieValue = HttpUtility.UrlDecode(cookie.Value);
+            
+            //Then
             cookieValue.ShouldEqual(cookieContents);
         }
 
         [Fact]
         public void Should_encode_form()
         {
+            //Given, When
             var result = browser.Post("/encoded", with =>
             {
                 with.HttpRequest();
                 with.FormValue("name", "john++");
             });
 
+            //Then
             result.Body.AsString().ShouldEqual("john++");
         }
 
         [Fact]
         public void Should_encode_querystring()
         {
+            //Given, When
             var result = browser.Post("/encodedquerystring", with =>
             {
                 with.HttpRequest();
                 with.Query("name", "john++");
             });
 
+            //Then
             result.Body.AsString().ShouldEqual("john++");
         }
 
