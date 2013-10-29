@@ -6,7 +6,7 @@
     using global::FluentValidation.Validators;
 
     /// <summary>
-    /// Adapter between the Fluent Validation <see cref="ILengthValidator"/> and the Nancy validation rules.
+    /// Adapter between the Fluent Validation <see cref="LengthValidator"/> and the Nancy validation rules.
     /// </summary>
     public class LengthAdapter : AdapterBase
     {

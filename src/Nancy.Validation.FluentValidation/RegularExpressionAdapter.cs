@@ -6,7 +6,7 @@
     using global::FluentValidation.Validators;
 
     /// <summary>
-    /// Adapter between the Fluent Validation <see cref="IRegularExpressionValidator"/> and the Nancy validation rules.
+    /// Adapter between the Fluent Validation <see cref="RegularExpressionValidator"/> and the Nancy validation rules.
     /// </summary>
     public class RegularExpressionAdapter : AdapterBase
     {

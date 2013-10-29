@@ -6,7 +6,7 @@
     using global::FluentValidation.Validators;
 
     /// <summary>
-    /// Adapter between the Fluent Validation <see cref="IEmailValidator"/> and the Nancy validation rules.
+    /// Adapter between the Fluent Validation <see cref="EmailValidator"/> and the Nancy validation rules.
     /// </summary>
     public class EmailAdapter : AdapterBase
     {

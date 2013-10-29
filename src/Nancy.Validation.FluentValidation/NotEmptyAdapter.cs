@@ -6,7 +6,7 @@ namespace Nancy.Validation.FluentValidation
     using global::FluentValidation.Validators;
 
     /// <summary>
-    /// Adapter between the Fluent Validation <see cref="INotEmptyValidator"/> and the Nancy validation rules.
+    /// Adapter between the Fluent Validation <see cref="NotEmptyValidator"/> and the Nancy validation rules.
     /// </summary>
     public class NotEmptyAdapter : AdapterBase
     {
