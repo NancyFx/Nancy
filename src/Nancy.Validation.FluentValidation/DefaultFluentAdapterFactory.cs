@@ -31,7 +31,7 @@ namespace Nancy.Validation.FluentValidation
         public IFluentAdapter Create(PropertyRule rule, IPropertyValidator propertyValidator)
         {
             var adapter =
-                this.adapters.SingleOrDefault(x => x.CanHandle(propertyValidator, null));
+                this.adapters.SingleOrDefault(x => x.CanHandle(propertyValidator));
 
             return adapter;
         }

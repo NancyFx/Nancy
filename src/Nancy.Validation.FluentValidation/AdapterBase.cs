@@ -10,7 +10,7 @@
     /// </summary>
     public abstract class AdapterBase : IFluentAdapter
     {
-        public abstract bool CanHandle(IPropertyValidator validator, NancyContext context);
+        public abstract bool CanHandle(IPropertyValidator validator);
 
         /// <summary>
         /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.

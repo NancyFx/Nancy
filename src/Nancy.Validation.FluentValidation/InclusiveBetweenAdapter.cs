@@ -12,7 +12,7 @@
     /// </summary>
     public class InclusiveBetweenAdapter : AdapterBase
     {
-        public override bool CanHandle(IPropertyValidator validator, NancyContext context)
+        public override bool CanHandle(IPropertyValidator validator)
         {
             return validator is InclusiveBetweenValidator;
         }

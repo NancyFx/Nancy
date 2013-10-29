@@ -11,7 +11,7 @@
     /// </summary>
     public interface IFluentAdapter
     {
-        bool CanHandle(IPropertyValidator validator, NancyContext context);
+        bool CanHandle(IPropertyValidator validator);
 
         /// <summary>
         /// Gets the <see cref="ModelValidationRule"/>'s for the Fluent Validation validator.

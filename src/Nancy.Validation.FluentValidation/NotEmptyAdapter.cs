@@ -10,7 +10,7 @@ namespace Nancy.Validation.FluentValidation
     /// </summary>
     public class NotEmptyAdapter : AdapterBase
     {
-        public override bool CanHandle(IPropertyValidator validator, NancyContext context)
+        public override bool CanHandle(IPropertyValidator validator)
         {
             return validator is NotEmptyValidator;
         }
