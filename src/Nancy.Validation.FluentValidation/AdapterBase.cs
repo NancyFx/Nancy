@@ -8,7 +8,7 @@
     /// <summary>
     /// Defines the core functionality of an adapter between Fluent Validation validators and Nancy validation rules.
     /// </summary>
-    public abstract class AdapterBase
+    public abstract class AdapterBase : IFluentAdapter
     {
         public abstract bool CanHandle(IPropertyValidator validator, NancyContext context);
 
