@@ -1,8 +1,6 @@
 ﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using System.Security.Cryptography.X509Certificates;
-
     using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
 

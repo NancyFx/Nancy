@@ -1,10 +1,8 @@
 ﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-
-    using global::FluentValidation.Internal;
-
     using Nancy.Validation.Rules;
+    using global::FluentValidation.Internal;
     using global::FluentValidation.Validators;
 
     /// <summary>
