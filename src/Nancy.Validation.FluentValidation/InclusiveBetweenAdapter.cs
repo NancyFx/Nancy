@@ -1,8 +1,10 @@
 ﻿namespace Nancy.Validation.FluentValidation
 {
     using System.Collections.Generic;
-    using Nancy.Validation.Rules;
+
     using global::FluentValidation.Internal;
+
+    using Nancy.Validation.Rules;
     using global::FluentValidation.Validators;
 
     /// <summary>
@@ -10,32 +12,28 @@
     /// </summary>
     public class InclusiveBetweenAdapter : AdapterBase<InclusiveBetweenValidator>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="InclusiveBetweenAdapter"/> class for the specified
-        /// <paramref name="rule"/> and <paramref name="validator"/>.
-        /// </summary>
-        /// <param name="rule">The fluent validation <see cref="PropertyRule"/> that is being mapped.</param>
-        /// <param name="validator">The <see cref="PropertyRule"/> of the rule.</param>
-        public InclusiveBetweenAdapter(PropertyRule rule, InclusiveBetweenValidator validator)
-            : base(rule, validator)
+        public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {
+            return validator is InclusiveBetweenValidator;
         }
 
         /// <summary>
         /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        public override IEnumerable<ModelValidationRule> GetRules()
+        public override IEnumerable<ModelValidationRule> GetRules(PropertyRule rule, IPropertyValidator validator)
         {
-            yield return new ComparisonValidationRule(FormatMessage,
-                GetMemberNames(),
+            yield return new ComparisonValidationRule(
+                base.FormatMessage(rule, validator),
+                base.GetMemberNames(rule),
                 ComparisonOperator.GreaterThanOrEqual,
-                this.Validator.From);
+                ((InclusiveBetweenValidator)validator).From);
 
-            yield return new ComparisonValidationRule(FormatMessage,
-                GetMemberNames(),
+            yield return new ComparisonValidationRule(
+                base.FormatMessage(rule, validator),
+                base.GetMemberNames(rule),
                 ComparisonOperator.LessThanOrEqual,
-                this.Validator.To);
+                ((InclusiveBetweenValidator)validator).To);
         }
     }
 }

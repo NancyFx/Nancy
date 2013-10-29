@@ -98,6 +98,21 @@
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TRegistration"></typeparam>
+        public void RegisterAll<TRegistration>()
+        {
+            var implementations = AppDomainAssemblyTypeScanner
+                .TypesOf<TRegistration>();
+
+            var registration =
+                new CollectionTypeRegistration(typeof(TRegistration), implementations);
+
+            this.collectionRegistrations.Add(registration);
+        }
+
+        /// <summary>
         /// Scans for a <see cref="Type"/> that implements <typeparamref name="TRegistration"/>. If found, then it
         /// will be used for the registration, else it will use <paramref name="defaultImplementation"/>.
         /// </summary>

@@ -10,27 +10,22 @@
     /// </summary>
     public class LessThanAdapter : AdapterBase<LessThanValidator>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LessThanAdapter"/> class for the specified
-        /// <paramref name="rule"/> and <paramref name="validator"/>.
-        /// </summary>
-        /// <param name="rule">The fluent validation <see cref="PropertyRule"/> that is being mapped.</param>
-        /// <param name="validator">The <see cref="PropertyRule"/> of the rule.</param>
-        public LessThanAdapter(PropertyRule rule, LessThanValidator validator)
-            : base(rule, validator)
+        public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {
+            return validator is LessThanValidator;
         }
 
         /// <summary>
         /// Get the <see cref="ModelValidationRule"/> instances that are mapped from the fluent validation rule.
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
-        public override IEnumerable<ModelValidationRule> GetRules()
+        public override IEnumerable<ModelValidationRule> GetRules(PropertyRule rule, IPropertyValidator validator)
         {
-            yield return new ComparisonValidationRule(FormatMessage,
-                GetMemberNames(),
+            yield return new ComparisonValidationRule(
+                base.FormatMessage(rule, validator),
+                base.GetMemberNames(rule),
                 ComparisonOperator.LessThan,
-                this.Validator.ValueToCompare);
+                ((LessThanValidator)validator).ValueToCompare);
         }
     }
 }

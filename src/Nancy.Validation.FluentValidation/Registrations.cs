@@ -2,6 +2,8 @@ namespace Nancy.Validation.FluentValidation
 {
     using Bootstrapper;
 
+    using global::FluentValidation.Validators;
+
     /// <summary>
     /// Application registrations for Fluent Validation types.
     /// </summary>
@@ -16,6 +18,7 @@ namespace Nancy.Validation.FluentValidation
             this.Register<IModelValidator>(typeof(FluentValidationValidator));
             this.Register<IModelValidatorFactory>(typeof(FluentValidationValidatorFactory));
             this.Register<IFluentAdapterFactory>(typeof(DefaultFluentAdapterFactory));
+            this.RegisterAll<IFluentAdapter>();
         }
     }
 }
