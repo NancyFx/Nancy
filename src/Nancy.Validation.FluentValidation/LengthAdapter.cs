@@ -12,7 +12,7 @@
     {
         public override bool CanHandle(IPropertyValidator validator, NancyContext context)
         {
-            return validator is ILengthValidator;
+            return validator is LengthValidator;
         }
 
         /// <summary>
