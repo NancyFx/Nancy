@@ -235,7 +235,7 @@ namespace Nancy
                 return;
             }
 
-            var boundary = Regex.Match(contentType, @"boundary=(?<token>[^\n\; ]*)").Groups["token"].Value;
+            var boundary = Regex.Match(contentType, @"boundary=""?(?<token>[^\n\;\"" ]*)").Groups["token"].Value;
             var multipart = new HttpMultipart(this.Body, boundary);
 
             var formValues =
