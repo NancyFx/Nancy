@@ -10,6 +10,11 @@
     /// </summary>
     public class NotNullAdapter : AdapterBase
     {
+        /// <summary>
+        /// Gets whether or not the adapter can handle the provided <see cref="IPropertyValidator"/> instance.
+        /// </summary>
+        /// <param name="validator">The <see cref="IPropertyValidator"/> instance to check for compatability with the adapter.</param>
+        /// <returns><see langword="true" /> if the adapter can handle the validator, otherwise <see langword="false" />.</returns>
         public override bool CanHandle(IPropertyValidator validator)
         {
             return validator is NotNullValidator;
