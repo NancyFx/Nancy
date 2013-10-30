@@ -31,7 +31,7 @@ namespace Nancy.Validation.FluentValidation
             var adapter =
                 this.adapters.SingleOrDefault(x => x.CanHandle(propertyValidator));
 
-            return adapter;
+            return adapter ?? new FallbackAdapter();
         }
     }
 }
