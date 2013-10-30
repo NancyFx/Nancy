@@ -101,6 +101,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="AdapterBase.cs" />
+    <Compile Include="FallbackAdapter.cs" />
     <Compile Include="Registrations.cs" />
     <Compile Include="DefaultFluentAdapterFactory.cs" />
     <Compile Include="EmailAdapter.cs" />
