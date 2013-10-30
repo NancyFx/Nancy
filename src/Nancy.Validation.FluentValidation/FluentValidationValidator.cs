@@ -89,7 +89,7 @@ namespace Nancy.Validation.FluentValidation
 
         private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
         {
-            return this.factory.Create(rule, propertyValidator).GetRules(rule, propertyValidator);
+            return this.factory.Create(propertyValidator).GetRules(rule, propertyValidator);
         }
     }
 }
