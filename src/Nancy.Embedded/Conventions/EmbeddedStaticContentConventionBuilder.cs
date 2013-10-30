@@ -28,7 +28,12 @@
         /// <returns>A <see cref="EmbeddedFileResponse"/> instance for the requested embedded static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string contentPath = null, params string[] allowedExtensions)
         {
-            return (ctx, root) =>
+                if (!requestedPath.StartsWith("/"))
+                {
+                    requestedPath = string.Concat("/", requestedPath);
+                }
+                
+                return (ctx, root) =>
                 {
                     var path =
                         HttpUtility.UrlDecode(ctx.Request.Path);
@@ -43,11 +48,6 @@
 
                     var pathWithoutFilename =
                         GetPathWithoutFilename(fileName, path);
-
-                    if (!requestedPath.StartsWith("/"))
-                    {
-                        requestedPath = string.Concat("/", requestedPath);
-                    }
 
                     if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
                     {
