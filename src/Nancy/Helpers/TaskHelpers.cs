@@ -1,7 +1,6 @@
 ﻿namespace Nancy.Helpers
 {
     using System;
-    using System.Diagnostics;
     using System.Threading.Tasks;
 
     public static class TaskHelpers
@@ -20,12 +19,18 @@
             return tcs.Task;
         }
 
+        public static Task<T> GetFaultedTask<T>(Exception exception)
+        {
+            var tcs = new TaskCompletionSource<T>();
+            tcs.SetException(exception);
+            return tcs.Task;
+        }
+
         public static void WhenCompleted<T>(this Task<T> task, Action<Task<T>> onComplete, Action<Task<T>> onFaulted, bool execSync = false)
         {
             // If we've already completed, just run the correct delegate
             if (task.IsCompleted)
             {
-                Debug.WriteLine("Fast Path");
                 if (task.IsFaulted)
                 {
                     onFaulted.Invoke(task);
@@ -36,7 +41,6 @@
                 return;
             }
 
-            Debug.WriteLine("Slow Path");
             // Not complete yet, so set normal continuation
             task.ContinueWith(
                 onComplete,

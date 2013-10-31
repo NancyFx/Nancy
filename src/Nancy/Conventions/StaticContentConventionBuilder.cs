@@ -71,6 +71,32 @@ namespace Nancy.Conventions
             };
         }
 
+        /// <summary>
+        /// Adds a directory-based convention for static convention.
+        /// </summary>
+        /// <param name="requestedFile">The file that should be matched with the request.</param>
+        /// <param name="contentFile">The file that should be served when the requested path is matched.</param>
+        public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)
+        {
+            return (ctx, root) =>
+            {
+
+                var path =
+                    ctx.Request.Path;
+
+                if (!path.Equals(requestedFile, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedFile, "'")));
+                    return null;
+                }
+
+                var responseFactory =
+                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] { }));
+
+                return responseFactory.Invoke(ctx);
+            };
+        }
+
         private static string GetSafeFileName(string path)
         {
             try
@@ -95,26 +121,6 @@ namespace Nancy.Conventions
             }
 
             return contentPath;
-        }
-
-        public static Func<NancyContext, string, Response> AddFile(string requestedFile, string contentFile)
-        {
-            return (ctx, root) => {
-
-                var path =
-                    ctx.Request.Path;
-
-                if (!path.Equals(requestedFile, StringComparison.OrdinalIgnoreCase))
-                {
-                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[StaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedFile, "'")));
-                    return null;
-                }
-
-                var responseFactory =
-                    ResponseFactoryCache.GetOrAdd(new ResponseFactoryCacheKey(path, root), BuildContentDelegate(ctx, root, requestedFile, contentFile, new string[] { }));
-
-                return responseFactory.Invoke(ctx);
-            };
         }
 
         private static Func<ResponseFactoryCacheKey, Func<NancyContext, Response>> BuildContentDelegate(NancyContext context, string applicationRootPath, string requestedPath, string contentPath, string[] allowedExtensions)

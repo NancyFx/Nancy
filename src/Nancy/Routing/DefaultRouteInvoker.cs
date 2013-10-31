@@ -229,6 +229,11 @@ namespace Nancy.Routing
                 response.StatusCode = negotiator.NegotiationContext.StatusCode.Value;
             }
 
+            if (negotiator.NegotiationContext.ReasonPhrase != null)
+            {
+                response.ReasonPhrase = negotiator.NegotiationContext.ReasonPhrase;
+            }
+
             foreach (var cookie in negotiator.NegotiationContext.Cookies)
             {
                 response.Cookies.Add(cookie);
@@ -373,9 +378,12 @@ namespace Nancy.Routing
                 return null;
             }
 
-            var rootException = taskExceptions.GetBaseException();
+            if (taskExceptions.InnerExceptions.Count > 1)
+            {
+                return null;
+            }
 
-            return rootException as RouteExecutionEarlyExitException;
+            return taskExceptions.InnerException as RouteExecutionEarlyExitException;
         }
     }
 }

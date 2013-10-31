@@ -27,8 +27,8 @@
             var values = headers.Values.ToList();
 
             // Then
-            values.Count().ShouldEqual(2);
-            values.First().Count().ShouldEqual(2);
+            values.ShouldHaveCount(2);
+            values.First().ShouldHaveCount(2);
             values.First().First().ShouldEqual("text/plain");
             values.First().Last().ShouldEqual("text/html");
             values.Last().First().ShouldEqual("utf-8");
@@ -51,7 +51,7 @@
             var keys = headers.Keys.ToList();
 
             // Then
-            keys.Count().ShouldEqual(2);
+            keys.ShouldHaveCount(2);
             keys.First().ShouldEqual("accept");
             keys.Last().ShouldEqual("charset");
         }
@@ -83,7 +83,7 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("text/plain");
             headers[1].Item1.ShouldEqual("text/ninja");
         }
@@ -99,7 +99,7 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("text/plain");
             headers[1].Item1.ShouldEqual("text/ninja");
         }
@@ -115,7 +115,7 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("text/plain");
             headers[0].Item2.ShouldEqual(0.3m);
         }
@@ -131,7 +131,7 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("text/plain");
             headers[0].Item2.ShouldEqual(1m);
         }
@@ -147,10 +147,26 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
-            headers.FirstOrDefault(t => t.Item1 == "text/plain" && t.Item2 == 1.0m).ShouldNotBeNull();
-            headers.FirstOrDefault(t => t.Item1 == "text/ninja" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.ShouldHaveCount(2);
+            headers.ShouldHave(t => t.Item1 == "text/plain" && t.Item2 == 1.0m);
+            headers.ShouldHave(t => t.Item1 == "text/ninja" && t.Item2 == 1.0m);
         }
+
+        [Fact]
+        public void Should_not_strip_additional_accept_header_parameters()
+        {
+            // Given
+            var values = new[] { "text/plain, text/ninja;q=0.3;a=1;b=2" };
+            var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", values } };
+
+            // When
+            var headers = new RequestHeaders(rawHeaders).Accept.ToList();
+
+            // Then
+            headers.ShouldHaveCount(2);
+            headers.ShouldHave(t => t.Item1 == "text/plain" && t.Item2 == 1.0m);
+            headers.ShouldHave(t => t.Item1 == "text/ninja;a=1;b=2" && t.Item2 == 0.3m);
+         }
 
         [Fact]
         public void Should_sort_accept_header_values_decending_based_on_quality()
@@ -163,7 +179,7 @@
             var headers = new RequestHeaders(rawHeaders).Accept.ToList();
 
             // Then
-            headers.Count.ShouldEqual(3);
+            headers.ShouldHaveCount(3);
             headers[0].Item1.ShouldEqual("text/ninja");
             headers[1].Item1.ShouldEqual("text/html");
             headers[2].Item1.ShouldEqual("text/plain");
@@ -210,7 +226,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("utf-8");
             headers[1].Item1.ShouldEqual("iso-8859-5");
         }
@@ -226,7 +242,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("utf-8");
             headers[1].Item1.ShouldEqual("iso-8859-5");
         }
@@ -242,7 +258,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("utf-8");
             headers[0].Item2.ShouldEqual(0.3m);
         }
@@ -258,7 +274,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("utf-8");
             headers[0].Item2.ShouldEqual(1m);
         }
@@ -274,9 +290,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
-            headers.FirstOrDefault(t => t.Item1 == "utf-8" && t.Item2 == 1.0m).ShouldNotBeNull();
-            headers.FirstOrDefault(t => t.Item1 == "iso-8859-5" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.ShouldHaveCount(2);
+            headers.ShouldHave(t => t.Item1 == "utf-8" && t.Item2 == 1.0m);
+            headers.ShouldHave(t => t.Item1 == "iso-8859-5" && t.Item2 == 1.0m);
         }
 
         [Fact]
@@ -290,7 +306,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptCharset.ToList();
 
             // Then
-            headers.Count.ShouldEqual(3);
+            headers.ShouldHaveCount(3);
             headers[0].Item1.ShouldEqual("iso-8859-5");
             headers[1].Item1.ShouldEqual("iso-8859-15");
             headers[2].Item1.ShouldEqual("utf-8");
@@ -337,7 +353,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].ShouldEqual("compress");
             headers[1].ShouldEqual("sdch");
         }
@@ -353,7 +369,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].ShouldEqual("compress");
             headers[1].ShouldEqual("sdch");
         }
@@ -371,7 +387,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptEncoding.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].ShouldEqual("compress");
             headers[1].ShouldEqual("sdch");
         }
@@ -386,7 +402,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(0);
+            headers.ShouldHaveCount(0);
         }
 
         [Fact]
@@ -400,7 +416,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("en-US");
             headers[1].Item1.ShouldEqual("sv-SE");
         }
@@ -416,7 +432,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].Item1.ShouldEqual("en-US");
             headers[1].Item1.ShouldEqual("sv-SE");
         }
@@ -432,7 +448,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("en-US");
             headers[0].Item2.ShouldEqual(0.3m);
         }
@@ -448,7 +464,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(1);
+            headers.ShouldHaveCount(1);
             headers[0].Item1.ShouldEqual("en-US");
             headers[0].Item2.ShouldEqual(1m);
         }
@@ -464,9 +480,9 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
-            headers.FirstOrDefault(t => t.Item1 == "en-US" && t.Item2 == 1.0m).ShouldNotBeNull();
-            headers.FirstOrDefault(t => t.Item1 == "sv-SE" && t.Item2 == 1.0m).ShouldNotBeNull();
+            headers.ShouldHaveCount(2);
+            headers.ShouldHave(t => t.Item1 == "en-US" && t.Item2 == 1.0m);
+            headers.ShouldHave(t => t.Item1 == "sv-SE" && t.Item2 == 1.0m);
         }
 
         [Fact]
@@ -480,7 +496,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(3);
+            headers.ShouldHaveCount(3);
             headers[0].Item1.ShouldEqual("da");
             headers[1].Item1.ShouldEqual("sv-SE");
             headers[2].Item1.ShouldEqual("en-US");
@@ -499,7 +515,7 @@
             var headers = new RequestHeaders(rawHeaders).AcceptLanguage.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
         }
         
         [Fact]
@@ -788,6 +804,22 @@
             ValidateCookie(headers.Cookie.Last(), "name", "value");
         }
 
+        [Fact]
+        public void Should_parse_cookie_headers_when_delimited_by_semicolon()
+        {
+          // Given
+          var rawValues = new[] { "foo=bar", "name=value ; third=  something=stuff  " };
+          var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Cookie", rawValues } };
+
+          // When
+          var headers = new RequestHeaders(rawHeaders);
+
+          // Then
+          ValidateCookie(headers.Cookie.ElementAt(0), "foo", "bar");
+          ValidateCookie(headers.Cookie.ElementAt(1), "name", "value");
+          ValidateCookie(headers.Cookie.ElementAt(2), "third", "  something=stuff");
+        }
+
         [Theory]
         [InlineData("cookie")]
         [InlineData("COokIE")]
@@ -903,7 +935,7 @@
             var headers = new RequestHeaders(rawHeaders).IfMatch.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].ShouldEqual("xyzzy");
             headers[1].ShouldEqual("c3piozzzz");
         }
@@ -1021,7 +1053,7 @@
             var headers = new RequestHeaders(rawHeaders).IfNoneMatch.ToList();
 
             // Then
-            headers.Count.ShouldEqual(2);
+            headers.ShouldHaveCount(2);
             headers[0].ShouldEqual("xyzzy");
             headers[1].ShouldEqual("c3piozzzz");
         }
@@ -2029,9 +2061,9 @@
         [Theory]
         [InlineData("text/html;q=0.8", "text/html", 0.8)]
         [InlineData("application/javascript;q=0.9,text/html;q=0.2,text/text", "text/html", 0.2)]
-        [InlineData("application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 1.0)]
-        [InlineData("application/xhtml+xml; q=0.2; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.2)]
-        [InlineData("application/xhtml+xml; q=.7; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml", 0.7)]
+        [InlineData("application/xhtml+xml; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml;profile=\"http://www.wapforum. org/xhtml\"", 1.0)]
+        [InlineData("application/xhtml+xml; q=0.2; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml;profile=\"http://www.wapforum. org/xhtml\"", 0.2)]
+        [InlineData("application/xhtml+xml; q=.7; profile=\"http://www.wapforum. org/xhtml\"", "application/xhtml+xml;profile=\"http://www.wapforum. org/xhtml\"", 0.7)]
         public void Should_retrieve_weighting_for_accept_headers(string header, string typeToCheck, double weighting)
         {
             var rawHeaders = new Dictionary<string, IEnumerable<string>> { { "Accept", new[] { header } } };

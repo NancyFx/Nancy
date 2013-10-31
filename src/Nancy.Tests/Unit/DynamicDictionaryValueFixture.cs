@@ -968,5 +968,19 @@
             //Then
             Assert.Equal(expected, actual);
         }
+
+        [Fact]
+        public void Should_be_able_to_cast_to_arbitrary_object()
+        {
+            //Given
+            dynamic value = new DynamicDictionaryValue(new EventArgs());
+
+            //When
+            //Then
+            Assert.DoesNotThrow(() =>
+            {
+                EventArgs e = (EventArgs)value;
+            });
+        }
     }
 }

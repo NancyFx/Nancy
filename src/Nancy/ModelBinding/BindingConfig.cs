@@ -24,17 +24,24 @@
         public static BindingConfig Default = new BindingConfig();
 
         /// <summary>
-        /// Gets or sets whether the binder is allowed to overwrite properties that does not have a default value.
-        /// </summary>
-        /// <returns><see langword="true" /> if the binder is allowed to overwrite non-default values, otherwise <see langword="false" />.</returns>
-        public bool Overwrite { get; set; }
-
-        /// <summary>
         /// Gets or sets whether the binder should be happy once it has bound to the request body. In this case,
         /// request and context parameters will not be bound to. If there is no body and this option is enabled,
         /// no binding will take place at all.
         /// </summary>
-        /// <returns><see langword="true" /> if the binder will stop once the body has been bound, otherwise <see langword="false" />.</returns>
+        /// <value><see langword="true" /> if the binder will stop once the body has been bound, otherwise <see langword="false" />.</value>
         public bool BodyOnly { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether binding error should be ignored and the binder should continue with the next property.
+        /// </summary>
+        /// <remarks>Setting this property to <see langword="true" /> means that no <see cref="ModelBindingException"/> will be thrown if an error occurs.</remarks>
+        /// <value><see langword="true" />If the binder should ignore errors, otherwise <see langword="false" />.</value>
+        public bool IgnoreErrors { get; set; }
+
+        /// <summary>
+        /// Gets or sets whether the binder is allowed to overwrite properties that does not have a default value.
+        /// </summary>
+        /// <value><see langword="true" /> if the binder is allowed to overwrite non-default values, otherwise <see langword="false" />.</value>
+        public bool Overwrite { get; set; }
     }
 }

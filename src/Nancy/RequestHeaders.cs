@@ -310,8 +310,11 @@ namespace Nancy
                         if (decimal.TryParse(stringValue, NumberStyles.Number, CultureInfo.InvariantCulture, out temp))
                         {
                             quality = temp;
-                            break;
                         }
+                    }
+                    else
+                    {
+                        mediaRange += ";" + trimmedValue;
                     }
                 }
 
@@ -345,12 +348,21 @@ namespace Nancy
         {
             if (cookies == null)
             {
-                return Enumerable.Empty<INancyCookie>();
+                yield break;
             }
 
-            return from cookie in cookies
-                   let pair = cookie.Split('=')
-                   select new NancyCookie(pair[0], pair[1]);
+            foreach (var cookie in cookies)
+            {
+                var cookieStrings = cookie.Split(';');
+                foreach (var cookieString in cookieStrings)
+                {
+                    var equalPos = cookieString.IndexOf('=');
+                    if (equalPos >= 0)
+                    {
+                        yield return new NancyCookie(cookieString.Substring(0, equalPos).TrimStart(), cookieString.Substring(equalPos+1).TrimEnd());
+                    }
+                }
+            }
         }
 
         private IEnumerable<string> GetValue(string name)

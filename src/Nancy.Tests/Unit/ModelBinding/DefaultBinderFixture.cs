@@ -7,18 +7,14 @@ namespace Nancy.Tests.Unit.ModelBinding
     using System.Text;
     using System.Globalization;
     using System.Xml.Serialization;
-
     using FakeItEasy;
     using Fakes;
-    
     using Nancy.IO;
     using Nancy.Json;
     using Nancy.ModelBinding;
     using Nancy.ModelBinding.DefaultBodyDeserializers;
     using Nancy.ModelBinding.DefaultConverters;
-    
     using Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers;
-    
     using Xunit.Extensions;
     using Xunit;
 
@@ -296,6 +292,40 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_not_throw_ModelBindingException_if_convertion_of_property_fails_and_ignore_error_is_true()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["IntProperty"] = "badint";
+            context.Request.Form["AnotherIntProperty"] = "morebad";
+
+            var config = new BindingConfig {IgnoreErrors = true};
+
+            // When
+            // Then
+            Assert.DoesNotThrow(() => binder.Bind(context, typeof(TestModel), null, config));
+        }
+
+        [Fact]
+        public void Should_set_remaining_properties_when_one_fails_and_ignore_error_is_enabled()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["IntProperty"] = "badint";
+            context.Request.Form["AnotherIntProperty"] = 10;
+
+            var config = new BindingConfig { IgnoreErrors = true };
+
+            // When
+            var model = binder.Bind(context, typeof(TestModel), null, config) as TestModel;
+            
+            // Then
+            model.AnotherIntProperty.ShouldEqual(10);
+        }
+
+        [Fact]
         public void Should_ignore_indexer_properties()
         {
             // Given
@@ -318,7 +348,7 @@ namespace Nancy.Tests.Unit.ModelBinding
             binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
 
             // Then
-            validProperties.ShouldEqual(9);
+            validProperties.ShouldEqual(10);
         }
 
         [Fact]
@@ -650,7 +680,40 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.First().IntProperty.ShouldEqual(1);
             result.Last().IntProperty.ShouldEqual(12);
         }
-        
+
+
+        [Fact]
+        public void Should_be_able_to_bind_more_than_once_should_ignore_non_list_properties_when_binding_to_a_list()
+        {
+            // Given
+            var typeConverters = new ITypeConverter[] { new CollectionConverter(), new FallbackConverter() };
+            var binder = this.GetBinder(typeConverters);
+
+            var context = CreateContextWithHeader("Content-Type", new[] { "application/x-www-form-urlencoded" });
+
+            context.Request.Form["StringProperty"] = "Test";
+            context.Request.Form["IntProperty"] = "3";
+
+            context.Request.Form["NestedIntProperty[0]"] = "1";
+            context.Request.Form["NestedStringProperty[0]"] = "one";
+
+            context.Request.Form["NestedIntProperty[1]"] = "2";
+            context.Request.Form["NestedStringProperty[1]"] = "two";
+
+            // When
+            var result = (TestModel)binder.Bind(context, typeof(TestModel), null, BindingConfig.Default);
+            var result2 = (List<AnotherTestModel>)binder.Bind(context, typeof(List<AnotherTestModel>), null, BindingConfig.Default);
+
+            // Then
+            result.StringProperty.ShouldEqual("Test");
+            result.IntProperty.ShouldEqual(3);
+
+            result2.First().NestedIntProperty.ShouldEqual(1);
+            result2.First().NestedStringProperty.ShouldEqual("one");
+            result2.Last().NestedIntProperty.ShouldEqual(2);
+            result2.Last().NestedStringProperty.ShouldEqual("two");
+        }
+
         [Fact]
         public void Should_bind_more_than_10_multiple_Form_properties_to_list_starting_with_jagged_ids()
         {
@@ -1227,6 +1290,38 @@ namespace Nancy.Tests.Unit.ModelBinding
             result.ShouldNotBeSameAs(existing);
         }
 
+        [Fact]
+        public void Should_bind_to_valuetype_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(1);
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (int)binder.Bind(context, typeof(int), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldEqual(1);
+        }
+
+        [Fact]
+        public void Should_bind_ienumerable_model__of_valuetype_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (IEnumerable<int>)binder.Bind(context, typeof(IEnumerable<int>), null, BindingConfig.Default);
+
+            // Then
+            result.ShouldEqualSequence(new[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 });
+        }
+
         private IBinder GetBinder(IEnumerable<ITypeConverter> typeConverters = null, IEnumerable<IBodyDeserializer> bodyDeserializers = null, IFieldNameConverter nameConverter = null, BindingDefaults bindingDefaults = null)
         {
             var converters = typeConverters ?? new ITypeConverter[] { new DateTimeConverter(), new NumericConverter(), new FallbackConverter() };
@@ -1299,6 +1394,15 @@ namespace Nancy.Tests.Unit.ModelBinding
                 get { return 0; }
                 set { }
             }
+
+            public List<AnotherTestModel> Models { get; set; }
+        }
+
+        public class AnotherTestModel
+        {
+            public string NestedStringProperty { get; set; }
+            public int NestedIntProperty { get; set; }
+            public double NestedDoubleProperty { get; set; }
         }
     }
 

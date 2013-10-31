@@ -68,6 +68,12 @@
         /// </summary>
         /// <value>A <see cref="HttpStatusCode"/> value.</value>
         public HttpStatusCode? StatusCode { get; set; }
+
+        /// <summary>
+        /// Gets or sets a text description of the HTTP status code returned to the client.
+        /// </summary>
+        /// <value>The HTTP status code description.</value>
+        public string ReasonPhrase { get; set; }
         
         /// <summary>
         /// Gets or sets the view name if one is required.
@@ -82,12 +88,10 @@
         /// <returns>The model for the provided <paramref name="mediaRange"/> if it has been mapped, otherwise the <see cref="DefaultModel"/> will be returned.</returns>
         public dynamic GetModelForMediaRange(MediaRange mediaRange)
         {
-            var matching =
-                this.MediaRangeModelMappings.Any(
-                    m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype));
+            var matching = this.MediaRangeModelMappings.Any(m => mediaRange.Matches(m.Key));
 
             return matching ?
-                this.MediaRangeModelMappings.First(m => mediaRange.Type.Matches(m.Key.Type) && mediaRange.Subtype.Matches(m.Key.Subtype)).Value.Invoke() :
+                this.MediaRangeModelMappings.First(m => mediaRange.Matches(m.Key)).Value.Invoke() :
                 this.DefaultModel;
         }
     }

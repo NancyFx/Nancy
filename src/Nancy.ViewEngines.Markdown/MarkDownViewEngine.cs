@@ -98,8 +98,9 @@ namespace Nancy.ViewEngines.Markdown
         /// </param>
         public string ConvertMarkdown(ViewLocationResult viewLocationResult)
         {
-            string content =
-                viewLocationResult.Contents().ReadToEnd();
+            string content;
+            using (var reader = viewLocationResult.Contents.Invoke())
+                content = reader.ReadToEnd();
 
             if (content.StartsWith("<!DOCTYPE html>"))
             {

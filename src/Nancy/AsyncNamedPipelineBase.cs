@@ -325,8 +325,8 @@
         /// <summary>
         /// Wraps a sync delegate into it's async form
         /// </summary>
-        /// <param name="syncDelegate">Sync delegate instance</param>
-        /// <returns>Async delegate instance</returns>
-        protected abstract TAsyncDelegate Wrap(TSyncDelegate syncDelegate);
+        /// <param name="syncDelegate">Sync pipeline instance</param>
+        /// <returns>Async pipeline instance</returns>
+        protected abstract PipelineItem<TAsyncDelegate> Wrap(PipelineItem<TSyncDelegate> syncDelegate);
     }
 }

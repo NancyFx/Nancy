@@ -50,6 +50,21 @@ namespace Nancy.Hosting.Aspnet
             return tcs.Task;
         }
 
+        public static void EndProcessRequest(Task<Tuple<NancyContext, HttpContextBase>> task)
+        {
+            if (task.IsFaulted)
+            {
+                var exception = task.Exception;
+                exception.Handle(ex => ex is HttpException);
+            }
+
+            var nancyContext = task.Result.Item1;
+            var httpContext = task.Result.Item2;
+
+            NancyHandler.SetNancyResponseToHttpResponse(httpContext, nancyContext.Response);
+            nancyContext.Dispose();
+        }
+
         private static Request CreateNancyRequest(HttpContextBase context)
         {
             var incomingHeaders = context.Request.Headers.ToDictionary();
@@ -127,8 +142,14 @@ namespace Nancy.Hosting.Aspnet
             {
                 context.Response.ContentType = response.ContentType;
             }
+
+            if (response.ReasonPhrase != null)
+            {
+                context.Response.StatusDescription = response.ReasonPhrase;
+            }
+
             context.Response.StatusCode = (int)response.StatusCode;
-            response.Contents.Invoke(context.Response.OutputStream);         
+            response.Contents.Invoke(context.Response.OutputStream);
         }
 
         private static void SetHttpResponseHeaders(HttpContextBase context, Response response)

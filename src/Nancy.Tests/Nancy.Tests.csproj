@@ -83,21 +83,17 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.13.0\lib\net40\FakeItEasy.dll</HintPath>
+    <Reference Include="FakeItEasy, Version=1.13.1.0, Culture=neutral, PublicKeyToken=eff28e2146d5fd2c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp">
     </Reference>
     <Reference Include="System">
     </Reference>
-    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core">
     </Reference>
     <Reference Include="System.Web">
-    </Reference>
-    <Reference Include="Machine.Specifications, Version=0.4.9.0, Culture=neutral, PublicKeyToken=null">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\dependencies\mspec\Machine.Specifications.dll</HintPath>
     </Reference>
     <Reference Include="System.Xml">
     </Reference>
@@ -168,13 +164,7 @@
     <Compile Include="Unit\HttpMultipartFixture.cs" />
     <Compile Include="Unit\IO\RequestStreamFixture.cs" />
     <Compile Include="Unit\JsonFormatterExtensionsFixtures.cs" />
-    <Compile Include="Specifications\Handling a HEAD request.cs" />
-    <Compile Include="Specifications\Handling a DELETE request.cs" />
-    <Compile Include="Specifications\Handling a GET request.cs" />
     <Compile Include="ShouldExtensions.cs" />
-    <Compile Include="Specifications\Handling a POST request.cs" />
-    <Compile Include="Specifications\Handling a PUT request.cs" />
-    <Compile Include="Specifications\RequestSpec.cs" />
     <Compile Include="Unit\Bootstrapper\NancyBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperBootstrapperBaseFixture.cs" />
     <Compile Include="Unit\DynamicDictionaryValueFixture.cs" />
@@ -200,9 +190,11 @@
     <Compile Include="Unit\RequestHeadersFixture.cs" />
     <Compile Include="Unit\ResponseExtensionsFixture.cs" />
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
+    <Compile Include="Unit\Responses\Negotiation\MediaRangeFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
     <Compile Include="Unit\Responses\StreamResponseFixture.cs" />
     <Compile Include="Unit\Responses\TextResponseFixture.cs" />
+    <Compile Include="Unit\Routing\ConstraintNodeRouteResolverFixture.cs" />
     <Compile Include="Unit\Routing\DefaultNancyModuleBuilderFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRequestDispatcherFixture.cs" />
     <Compile Include="Unit\Routing\DefaultRouteCacheProviderFixture.cs" />

@@ -43,8 +43,11 @@ namespace Nancy.Demo.MarkdownViewEngine.Modules
             var views = this.viewLocationProvider.GetLocatedViews(new[] { "md", "markdown" });
             var model = views.Select(x =>
             {
-                var markdown = x.Contents().ReadToEnd();
-                return new BlogModel(markdown);
+                using (var reader = x.Contents())
+                {
+                    var markdown = reader.ReadToEnd();
+                    return new BlogModel(markdown);
+                }
             })
             .Where(x => x.BlogDate.Date <= DateTime.Today) //Allow for future posts to be lined up but don't show
             .OrderByDescending(x => x.BlogDate)

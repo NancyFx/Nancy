@@ -41,7 +41,7 @@
                 Contents = stream =>
                 {
                     var writer = new StreamWriter(stream);
-                    writer.Write("<div>Outer and <div id='#bar'>inner</div></div>");
+                    writer.Write("<div>Outer and <div id='bar'>inner</div></div>");
                     writer.Flush();
                 }
             });
@@ -51,9 +51,9 @@
 
             // Then
 #if __MonoCS__
-            AssertExtensions.ShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
+            AssertExtensions.AllShouldContain(result, "inner", System.StringComparison.OrdinalIgnoreCase);
 #else
-            result.ShouldContain("inner");
+            result.AllShouldContain("inner");
 #endif
         }
     }

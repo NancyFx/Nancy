@@ -13,8 +13,6 @@
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.Responses;
-    using Nancy.Localization;
-    using Nancy.ViewEngines.Razor.CSharp;
 
     /// <summary>
     /// View engine for rendering razor views.
@@ -48,6 +46,11 @@
             };
 
             this.razorConfiguration = configuration;
+
+            foreach (var renderer in this.viewRenderers)
+            {
+                this.AddDefaultNameSpaces(renderer.Host);
+            }
         }
 
         /// <summary>
@@ -82,23 +85,39 @@
 
             response.Contents = stream =>
             {
-                var writer = new StreamWriter(stream);
-                var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                var writer = 
+                    new StreamWriter(stream);
+
+                var view = 
+                    this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+
                 view.ExecuteView(null, null);
+
                 var body = view.Body;
                 var sectionContents = view.SectionContents;
-                var root = !view.HasLayout;
-                var layout = view.Layout;
+
+                var layout = view.HasLayout ? 
+                    view.Layout :
+                    GetViewStartLayout(model, renderContext, referencingAssembly);
+
+                var root = 
+                    string.IsNullOrWhiteSpace(layout);
 
                 while (!root)
                 {
-                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view = 
+                        this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+
                     view.ExecuteView(body, sectionContents);
 
                     body = view.Body;
                     sectionContents = view.SectionContents;
+
+                    layout = view.HasLayout ?
+                        view.Layout :
+                        GetViewStartLayout(model, renderContext, referencingAssembly);
+
                     root = !view.HasLayout;
-                    layout = view.Layout;
                 }
 
                 writer.Write(body);
@@ -108,7 +127,30 @@
             return response;
         }
 
-        private RazorTemplateEngine GetRazorTemplateEngine(RazorEngineHost engineHost)
+        private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
+        {
+            var view =
+                renderContext.LocateView("_ViewStart", model);
+
+            if (view == null)
+            {
+                return string.Empty;
+            }
+
+            if (!this.Extensions.Any(x => x.Equals(view.Extension, StringComparison.OrdinalIgnoreCase)))
+            {
+                return string.Empty;
+            }
+
+            var viewInstance =
+                GetViewInstance(view, renderContext, referencingAssembly, model);
+
+            viewInstance.ExecuteView(null, null);
+
+            return viewInstance.Layout ?? string.Empty;
+        }
+
+        private void AddDefaultNameSpaces(RazorEngineHost engineHost)
         {
             engineHost.NamespaceImports.Add("System");
             engineHost.NamespaceImports.Add("System.IO");
@@ -120,19 +162,20 @@
                 {
                     foreach (var n in namespaces)
                     {
-                        engineHost.NamespaceImports.Add(n);
+                        if (!string.IsNullOrWhiteSpace(n))
+                        {
+                            engineHost.NamespaceImports.Add(n);
+                        }
                     }
                 }
             }
-
-            return new RazorTemplateEngine(engineHost);
         }
 
         private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
 
-            var engine = this.GetRazorTemplateEngine(renderer.Host);
+            var engine = new RazorTemplateEngine(renderer.Host);
 
             var razorResult = engine.GenerateCode(reader, null, null, "roo");
 
@@ -375,6 +418,11 @@
 
         private static void AddModelNamespace(GeneratorResults razorResult, Type modelType)
         {
+            if (string.IsNullOrWhiteSpace(modelType.Namespace))
+            {
+                return;
+            }
+
             if (razorResult.GeneratedCode.Namespaces[0].Imports.OfType<CodeNamespaceImport>().Any(x => x.Namespace == modelType.Namespace))
             {
                 return;
@@ -397,7 +445,10 @@
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
-                x => this.GetCompiledViewFactory(x.Extension, x.Contents.Invoke(), referencingAssembly, passedModelType, viewLocationResult));
+                x => {
+                    using(var reader = x.Contents.Invoke())
+                        return this.GetCompiledViewFactory(x.Extension, reader, referencingAssembly, passedModelType, viewLocationResult);
+                });
 
             var view = viewFactory.Invoke();
 
@@ -419,7 +470,6 @@
         /// <summary>
         /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
         /// </summary>
-        /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
             if (this.viewRenderers == null)

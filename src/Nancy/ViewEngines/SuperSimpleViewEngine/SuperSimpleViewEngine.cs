@@ -275,6 +275,16 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return substitutionObject == null;
             }
 
+            if (substitutionObject != null && substitutionObject.GetType().GetProperty("Value") != null)
+            {
+                object value = ((dynamic)substitutionObject).Value;
+
+                if (value is bool?)
+                {
+                    substitutionObject = value;
+                }
+            }
+
             var predicateResult = false;
             var substitutionBool = substitutionObject as bool?;
             if (substitutionBool != null)
@@ -440,7 +450,8 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     var result = string.Empty;
                     foreach (var item in substitutionEnumerable)
                     {
-                        result += ReplaceCurrentMatch(contents, item, host);
+                        var postConditionalResult = PerformConditionalSubstitutions(contents, item, host);
+                        result += ReplaceCurrentMatch(postConditionalResult, item, host);
                     }
 
                     return result;

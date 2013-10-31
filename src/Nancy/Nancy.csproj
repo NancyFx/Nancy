@@ -38,6 +38,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\Nancy.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -46,8 +47,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Release\Nancy.XML</DocumentationFile>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoDebug|AnyCPU'">
@@ -67,6 +67,7 @@
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
     <Optimize>false</Optimize>
+    <DocumentationFile>bin\MonoDebug\Nancy.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'MonoRelease|AnyCPU'">
     <OutputPath>bin\MonoRelease\</OutputPath>
@@ -84,6 +85,7 @@
     <CodeAnalysisRuleDirectories>;C:\Program Files (x86)\Microsoft Visual Studio 10.0\Team Tools\Static Analysis Tools\FxCop\\Rules</CodeAnalysisRuleDirectories>
     <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\MonoRelease\Nancy.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.CSharp">
@@ -134,6 +136,7 @@
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="Conventions\StaticContentHelper.cs" />
     <Compile Include="Conventions\StaticContentsConventions.cs" />
+    <Compile Include="Conventions\StaticContentsConventionsExtensions.cs" />
     <Compile Include="Conventions\StaticDirectoryContent.cs" />
     <Compile Include="Conventions\StaticFileContent.cs" />
     <Compile Include="Culture\DefaultCultureService.cs" />
@@ -193,6 +196,7 @@
     <Compile Include="Responses\Negotiation\JsonProcessor.cs" />
     <Compile Include="Responses\Negotiation\MatchResult.cs" />
     <Compile Include="Responses\Negotiation\MediaRange.cs" />
+    <Compile Include="Responses\Negotiation\MediaRangeParameters.cs" />
     <Compile Include="Responses\Negotiation\MediaType.cs" />
     <Compile Include="Responses\Negotiation\NegotiationContext.cs" />
     <Compile Include="Responses\Negotiation\Negotiator.cs" />
@@ -225,8 +229,9 @@
     <Compile Include="Routing\Trie\NodeData.cs" />
     <Compile Include="Routing\Trie\NodeDataExtensions.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNode.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithConstraint.cs" />
     <Compile Include="Routing\Trie\Nodes\CaptureNodeWithDefaultValue.cs" />
-    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithLiteral.cs" />
+    <Compile Include="Routing\Trie\Nodes\CaptureNodeWithMultipleParameters.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyRegExCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\GreedyCaptureNode.cs" />
     <Compile Include="Routing\Trie\Nodes\LiteralNode.cs" />
@@ -255,7 +260,7 @@
     <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultStatusCodeHandler.cs" />
-    <Compile Include="IStatusHandler.cs" />
+    <Compile Include="IStatusCodeHandler.cs" />
     <Compile Include="ErrorPipeline.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Bootstrapper\INancyBootstrapper.cs" />

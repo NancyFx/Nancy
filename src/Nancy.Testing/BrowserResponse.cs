@@ -50,6 +50,15 @@
         }
 
         /// <summary>
+        /// Gets the content-type of the response.
+        /// </summary>
+        /// <value>A string containing the content-type.</value>
+        public string ContentType
+        {
+            get { return this.Context.Response.ContentType; }
+        }
+
+        /// <summary>
         /// Gets the context that the <see cref="Browser"/> was invoked with.
         /// </summary>
         /// <value>A <see cref="NancyContext"/> instance.</value>
@@ -71,6 +80,15 @@
         public HttpStatusCode StatusCode
         {
             get { return this.Context.Response.StatusCode; }
+        }
+
+        /// <summary>
+        /// Gets the description of the HTTP status code.
+        /// </summary>
+        /// <value>The HTTP status code description.</value>
+        public string ReasonPhrase
+        {
+            get { return this.Context.Response.ReasonPhrase; }
         }
 
         /// <summary>

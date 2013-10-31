@@ -138,27 +138,26 @@
         /// <summary>
         /// Wraps a sync delegate into it's async form
         /// </summary>
-        /// <param name="syncDelegate">Sync delegate instance</param>
-        /// <returns>Async delegate instance</returns>
-        protected override Func<NancyContext, CancellationToken, Task> Wrap(Action<NancyContext> syncDelegate)
+        /// <param name="pipelineItem">Sync pipeline item instance</param>
+        /// <returns>Async pipeline item instance</returns>
+        protected override PipelineItem<Func<NancyContext, CancellationToken, Task>> Wrap(PipelineItem<Action<NancyContext>> pipelineItem)
         {
-            return (ctx, ct) =>
+            var syncDelegate = pipelineItem.Delegate;
+            Func<NancyContext, CancellationToken, Task> asyncDelegate = (ctx, ct) =>
             {
                 try
                 {
                     syncDelegate.Invoke(ctx);
-
                     return completeTask;
                 }
                 catch (Exception e)
                 {
                     var tcs = new TaskCompletionSource<object>();
-
                     tcs.SetException(e);
-
                     return tcs.Task;
                 }
             };
+            return new PipelineItem<Func<NancyContext, CancellationToken, Task>>(pipelineItem.Name, asyncDelegate);
         }
     }
 }

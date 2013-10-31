@@ -1,13 +1,7 @@
 namespace Nancy.Tests.Unit.Bootstrapper
 {
-    using System;
     using System.Linq;
-    using System.Reflection;
-
     using FakeItEasy;
-
-    using Machine.Specifications;
-
     using Nancy.Bootstrapper;
     using Nancy.ModelBinding;
 

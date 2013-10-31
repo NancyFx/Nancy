@@ -261,16 +261,7 @@
 
             preHookTask.WhenCompleted(t =>
                 {
-                    if (t.Result != null)
-                    {
-                        context.Response = t.Result;
-
-                        tcs.SetResult(context);
-
-                        return;
-                    }
-
-                    var dispatchTask = this.dispatcher.Dispatch(context, cancellationToken);
+                    var dispatchTask = t.Result != null ? TaskHelpers.GetCompletedTask(t.Result) : this.dispatcher.Dispatch(context, cancellationToken);
 
                     dispatchTask.WhenCompleted(
                         completedTask =>
@@ -284,7 +275,6 @@
                                 HandleFaultedTask(context, pipelines, tcs));
                         },
                         HandleFaultedTask(context, pipelines, tcs));
-
                 },
                 HandleFaultedTask(context, pipelines, tcs));
 
@@ -297,7 +287,9 @@
                 {
                     try
                     {
-                        InvokeOnErrorHook(context, pipelines.OnError, t.Exception);
+                        var flattenedException = FlattenException(t.Exception);
+
+                        InvokeOnErrorHook(context, pipelines.OnError, flattenedException);
 
                         tcs.SetResult(context);
                     }
@@ -320,7 +312,7 @@
 
         private Task InvokePostRequestHook(NancyContext context, CancellationToken cancellationToken, AfterPipeline pipeline)
         {
-            return pipeline.Invoke(context, cancellationToken);
+            return pipeline == null ? TaskHelpers.GetCompletedTask() : pipeline.Invoke(context, cancellationToken);
         }
 
         private static void InvokeOnErrorHook(NancyContext context, ErrorPipeline pipeline, Exception ex)
@@ -347,6 +339,32 @@
                 context.Items[ERROR_KEY] = e.ToString();
                 context.Items[ERROR_EXCEPTION] = e;
             }
+        }
+
+        private static Exception FlattenException(Exception exception)
+        {
+            if (exception is AggregateException)
+            {
+                var aggregateException = exception as AggregateException;
+
+                var flattenedAggregateException = aggregateException.Flatten();
+
+                //If we have more than one exception in the AggregateException
+                //we have to send all exceptions back in order not to swallow any exceptions.
+                if (flattenedAggregateException.InnerExceptions.Count > 1)
+                {
+                    return flattenedAggregateException;
+                }
+
+                return flattenedAggregateException.InnerException;
+            }
+
+            if (exception != null && exception.InnerException != null)
+            {
+                return FlattenException(exception.InnerException);
+            }
+
+            return exception;
         }
     }
 }

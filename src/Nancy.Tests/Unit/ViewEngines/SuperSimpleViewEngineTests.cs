@@ -22,6 +22,65 @@
             this.viewEngine = new SuperSimpleViewEngine(Enumerable.Empty<ISuperSimpleViewEngineMatcher>());
         }
 
+
+        [Fact]
+        public void Should_evaluate_current_conditional_inside_each()
+        {
+            // Given
+            const string input = @"<html><head></head><body><ul>@Each.Users;<li>@Current.Name says:@If.IsGreekCitizen;<b>Yay Greece!</b>@EndIf;@IfNot.IsGreekCitizen;<b>Boo Greece!</b>@EndIf;</li>@EndEach;</ul></body></html>";
+            dynamic model = new ExpandoObject();
+            model.Users = new List<object>() { new { Name = "Bob", IsGreekCitizen = true }, new { Name = "Malin", IsGreekCitizen = false } };
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body><ul><li>Bob says:<b>Yay Greece!</b></li><li>Malin says:<b>Boo Greece!</b></li></ul></body></html>", output);
+        }
+
+        [Fact]
+        public void Should_not_evaluate_current_conditional_from_outside_each()
+        {
+            // Given
+            const string input = @"<html><head></head><body>@If.HasUsers;Yay Users!@EndIf<ul>@Each.Users;<li>@Current.Name:@If.IsGreekCitizen;<b>Yay Greece!</b>@EndIf;</li>@EndEach;</ul>@IfNot.HasUsers;Yay Users!@EndIf</body></html>";
+            dynamic model = new ExpandoObject();
+            model.Users = new List<object>() { new { Name = "Bob", IsGreekCitizen = true }, new { Name = "Malin", IsGreekCitizen = false } };
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Yay Users!<ul><li>Bob:<b>Yay Greece!</b></li><li>Malin:</li></ul></body></html>", output);
+        }
+
+
+        [Fact]
+        public void Should_evaluate_viewbag_as_dynamic_dictionary_conditional()
+        {
+            const string input = @"@Context.ViewBag.HaveMessage;! @If.Context.ViewBag.HaveMessage;Yay message!@EndIf;";
+            var context = new { ViewBag = (dynamic)new DynamicDictionary() };
+            context.ViewBag.HaveMessage = true;
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"True! Yay message!", output);
+        }
+
+        [Fact]
+        public void Should_not_throw_when_viewbag_property_is_null()
+        {
+            const string input = @"<html><head></head><body>Hey@If.Context.ViewBag.HaveMessage;Yay message!@EndIf;</body></html>";
+            var context = new { ViewBag = (dynamic)new DynamicDictionary() };
+
+            ((FakeViewEngineHost)this.fakeHost).Context = context;
+
+            var output = viewEngine.Render(input, null, this.fakeHost);
+
+            Assert.Equal(@"<html><head></head><body>Hey</body></html>", output);
+        }
+
         [Fact]
         public void Should_replace_primitive_model_with_value()
         {

@@ -5,7 +5,6 @@
     using System.Linq;
     using System.Text;
     using System.Globalization;
-
     using Nancy.Bootstrapper;
     using ViewEngines;
 
