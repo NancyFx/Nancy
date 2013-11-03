@@ -7,7 +7,7 @@ namespace Nancy
     using Nancy.Responses;
 
     /// <summary>
-    /// 
+    /// Containing extensions for the <see cref="Response"/> object.
     /// </summary>
     public static class ResponseExtensions
     {
