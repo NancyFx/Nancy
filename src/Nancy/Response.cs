@@ -102,6 +102,16 @@ namespace Nancy
             return new Response { Contents = streamFactory };
         }
 
+        /// <summary>
+        /// Implicitly cast a <see cref="DynamicDictionaryValue"/> instance to a <see cref="Response"/> instance.
+        /// </summary>
+        /// <param name="value">The <see cref="DynamicDictionaryValue"/> instance that is being cast from.</param>
+        /// <returns>A <see cref="Response"/> instnace.</returns>
+        public static implicit operator Response(DynamicDictionaryValue value)
+        {
+            return new Response { Contents = GetStringContents((string)value) };
+        }
+
         protected static Action<Stream> GetStringContents(string contents)
         {
             return stream =>
