@@ -71,6 +71,7 @@ namespace Nancy
         /// <param name="name">The name of the cookie.</param>
         /// <param name="value">The value of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
+        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(string name, string value)
         {
             return AddCookie(name, value, null, null, null);
@@ -83,6 +84,7 @@ namespace Nancy
         /// <param name="value">The value of the cookie.</param>
         /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
+        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(string name, string value, DateTime? expires)
         {
             return AddCookie(name, value, expires, null, null);
@@ -97,6 +99,7 @@ namespace Nancy
         /// <param name="domain">The domain of the cookie.</param>
         /// <param name="path">The path of the cookie.</param>
         /// <returns>The <see cref="Response"/> instance.</returns>
+        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(string name, string value, DateTime? expires, string domain, string path)
         {
             return AddCookie(new NancyCookie(name, value){ Expires = expires, Domain = domain, Path = path });
@@ -107,6 +110,7 @@ namespace Nancy
         /// </summary>
         /// <param name="nancyCookie">A <see cref="INancyCookie"/> instance.</param>
         /// <returns></returns>
+        [Obsolete("This method has been replaced with Response.WithCookie and will be removed in a subsequent release.")]
         public Response AddCookie(INancyCookie nancyCookie)
         {
             Cookies.Add(nancyCookie);
