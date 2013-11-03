@@ -3,6 +3,10 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Implementation of <see cref="ModelValidationRule"/> for comparing two values using a
+    /// provided <see cref="ComparisonOperator"/>.
+    /// </summary>
     public class ComparisonValidationRule : ModelValidationRule
     {
         /// <summary>
@@ -10,8 +14,8 @@
         /// </summary>
         /// <param name="errorMessageFormatter">The error message formatter.</param>
         /// <param name="memberNames">The member names.</param>
-        /// <param name="operator">The @operator.</param>
-        /// <param name="value">The value.</param>
+        /// <param name="operator">The <see cref="ComparisonOperator"/> that should be used when comparing values.</param>
+        /// <param name="value">Gets the value to compare against.</param>
         public ComparisonValidationRule(Func<string, string> errorMessageFormatter, IEnumerable<string> memberNames, ComparisonOperator @operator, object value)
             : base("Comparison", errorMessageFormatter, memberNames)
         {
@@ -20,12 +24,13 @@
         }
 
         /// <summary>
-        /// Gets the operator.
+        /// The <see cref="ComparisonOperator"/> that should be used when comparing values.
         /// </summary>
+        /// <value>A <see cref="ComparisonOperator"/> value.</value>
         public ComparisonOperator Operator { get; private set; }
 
         /// <summary>
-        /// Gets the value.
+        /// Gets the value to compare against.
         /// </summary>
         public object Value { get; private set; }
     }
