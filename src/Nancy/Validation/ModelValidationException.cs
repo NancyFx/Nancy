@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Exeption that is thrown during problems with model validation.
+    /// Exception that is thrown during problems with model validation.
     /// </summary>
     public class ModelValidationException : Exception
     {
