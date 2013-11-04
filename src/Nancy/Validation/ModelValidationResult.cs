@@ -26,7 +26,7 @@
         public ModelValidationResult(IEnumerable<ModelValidationError> errors)
         {
             this.Errors = (errors == null) ?
-                new List<ModelValidationError>().AsReadOnly() :
+                Enumerable.Empty<ModelValidationError>() :
                 errors.ToList().AsReadOnly();
         }
 
