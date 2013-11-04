@@ -31,17 +31,6 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
-        /// </summary>
-        /// <param name="errors">The errors.</param>
-        public ModelValidationResult(IEnumerable<ModelValidationError> errors)
-        {
-            this.Errors = (errors == null) ?
-                Enumerable.Empty<ModelValidationError>() :
-                errors.ToList().AsReadOnly();
-        }
-
-        /// <summary>
         /// Gets the errors.
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/> that contains the <see cref="ModelValidationError"/> instances.</value>
