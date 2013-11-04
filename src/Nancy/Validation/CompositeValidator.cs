@@ -22,7 +22,7 @@
         public CompositeValidator(IEnumerable<IModelValidator> validators)
         {
             var modelValidators = 
-                validators as IModelValidator[] ?? validators.ToArray();
+                validators.ToArray();
 
             this.Description = CreateCompositeDescription(modelValidators);
             this.validators = modelValidators;
