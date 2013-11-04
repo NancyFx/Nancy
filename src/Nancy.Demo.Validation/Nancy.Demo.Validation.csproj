@@ -115,6 +115,8 @@
     <Compile Include="Database\DB.cs" />
     <Compile Include="MainModule.cs" />
     <Compile Include="Models\Customer.cs" />
+    <Compile Include="Models\OddLengthStringAttribute.cs" />
+    <Compile Include="Models\OddLengthStringAttributeAdapter.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="ProductsModule.cs" />
     <Compile Include="ValidationBootstrapper.cs" />

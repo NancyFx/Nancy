@@ -8,8 +8,8 @@
     <ProjectGuid>{8F9F910D-416E-4B28-BE59-D76670405F56}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Nancy.Validation.DataAnnotatioins.Tests</RootNamespace>
-    <AssemblyName>Nancy.Validation.DataAnnotatioins.Tests</AssemblyName>
+    <RootNamespace>Nancy.Validation.DataAnnotations.Tests</RootNamespace>
+    <AssemblyName>Nancy.Validation.DataAnnotations.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <PublishUrl>publish\</PublishUrl>
@@ -81,7 +81,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy">
-      <HintPath>..\..\dependencies\fakeiteasy\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.13.1\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -107,8 +107,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DataAnnotationsValidatorFixture.cs" />
     <Compile Include="DataAnnotationValidatorFactoryFixture.cs" />
     <Compile Include="DataAnnotationValidatorFixture.cs" />
+    <Compile Include="DefaultValidatableObjectAdapterFixture.cs" />
+    <Compile Include="PropertyValidatorFixture.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy.Validation.DataAnnotations\Nancy.Validation.DataAnnotations.csproj">
