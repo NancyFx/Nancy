@@ -1,6 +1,5 @@
 namespace Nancy.Validation.FluentValidation
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using global::FluentValidation;
@@ -90,7 +89,7 @@ namespace Nancy.Validation.FluentValidation
 
         private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)
         {
-            return this.factory.Create(rule, propertyValidator).GetRules();
+            return this.factory.Create(propertyValidator).GetRules(rule, propertyValidator);
         }
     }
 }
