@@ -1,44 +1,58 @@
-﻿//namespace Nancy.Validation.FluentValidation.Tests
-//{
-//    using FakeItEasy;
-//    using Nancy.Tests;
-//    using Xunit;
-//    using global::FluentValidation;
+﻿namespace Nancy.Validation.FluentValidation.Tests
+{
+    using FakeItEasy;
+    using Nancy.Tests;
+    using Xunit;
+    using global::FluentValidation;
 
-//    public class FluentValidationValidatorFactoryFixture
-//    {
-//        [Fact]
-//        public void Should_return_instance_when_validator_was_found_for_type()
-//        {
-//            // Given
-//            var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
+    public class FluentValidationValidatorFactoryFixture
+    {
+        private readonly FluentValidationValidatorFactory factory;
 
-//            // When
-//            var instance = factory.Create(typeof(ClassUnderTest));
+        public FluentValidationValidatorFactoryFixture()
+        {
+            var adapterFactory = 
+                A.Fake<IFluentAdapterFactory>();
 
-//            // Then
-//            instance.ShouldNotBeNull();
-//        }
+            var validators = 
+                new IValidator[] {new ClassUnderTestValidator(), new NeverBeUsedTestValidator()};
 
-//        [Fact]
-//        public void Should_return_null_when_no_validator_was_found_for_type()
-//        {
-//            // Given
-//            var factory = new FluentValidationValidatorFactory(A.Fake<IFluentAdapterFactory>());
+            this.factory = 
+                new FluentValidationValidatorFactory(adapterFactory, validators);
+        }
 
-//            // When
-//            var instance = factory.Create(typeof(string));
+        [Fact]
+        public void Should_return_instance_when_validator_was_found_for_type()
+        {
+            // Given
+            // When
+            var instance = this.factory.Create(typeof(ClassUnderTest));
 
-//            // Then
-//            instance.ShouldBeNull();
-//        }
+            // Then
+            instance.ShouldNotBeNull();
+        }
 
-//        public class ClassUnderTest
-//        {
-//        }
+        [Fact]
+        public void Should_return_null_when_no_validator_was_found_for_type()
+        {
+            // Given
+            // When
+            var instance = this.factory.Create(typeof(string));
 
-//        public class ClassUnderTestValidator : AbstractValidator<ClassUnderTest>
-//        {
-//        }
-//    }
-//}
+            // Then
+            instance.ShouldBeNull();
+        }
+
+        public class ClassUnderTest
+        {
+        }
+
+        public class ClassUnderTestValidator : AbstractValidator<ClassUnderTest>
+        {
+        }
+
+        public class NeverBeUsedTestValidator : AbstractValidator<int>
+        {
+        }
+    }
+}
