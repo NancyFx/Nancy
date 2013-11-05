@@ -41,7 +41,7 @@
             {
                 var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
             
-                serializer.RegisterConverters(JsonSettings.Converters);
+                serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
                 serializer.Serialize(model, writer);
             }

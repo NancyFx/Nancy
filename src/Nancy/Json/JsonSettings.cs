@@ -25,6 +25,8 @@ namespace Nancy.Json
 
         public static IList<JavaScriptConverter> Converters { get; set; }
 
+        public static IList<JavaScriptPrimitiveConverter> PrimitiveConverters { get; set; }
+
         static JsonSettings()
         {
             MaxJsonLength = 102400;
@@ -34,6 +36,7 @@ namespace Nancy.Json
                              {
                                  new TimeSpanConverter(),
                              };
+            PrimitiveConverters = new List<JavaScriptPrimitiveConverter>();
         }
     }
 }

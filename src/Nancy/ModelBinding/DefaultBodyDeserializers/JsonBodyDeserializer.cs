@@ -35,7 +35,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         public object Deserialize(string contentType, Stream bodyStream, BindingContext context)
         {
             var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
-            serializer.RegisterConverters(JsonSettings.Converters);
+            serializer.RegisterConverters(JsonSettings.Converters, JsonSettings.PrimitiveConverters);
 
             bodyStream.Position = 0;
             string bodyText;

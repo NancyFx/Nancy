@@ -136,6 +136,20 @@ namespace Nancy.Json
 				return;
 			}
 
+			JavaScriptPrimitiveConverter jscp = serializer.GetPrimitiveConverter (valueType);
+
+			if (jscp != null) {
+				obj = jscp.Serialize (obj, serializer);
+
+				if (obj == null || DBNull.Value.Equals (obj)) {
+					// Recurse in order that there be one place in the code that handles null values.
+					SerializeValueImpl (obj, output);
+					return;
+				}
+
+				valueType = obj.GetType ();
+			}
+
 			TypeCode typeCode = Type.GetTypeCode (valueType);
 			switch (typeCode) {
 				case TypeCode.String:
