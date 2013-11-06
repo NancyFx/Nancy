@@ -214,10 +214,13 @@ namespace Nancy.Tests.Unit
         [Fact]
         public void Should_implicitly_cast_uri_to_url()
         {
+            //Given
             var uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text");
 
+            //When
             Url result = uri;
 
+            //Then
             Assert.Equal("https", result.Scheme);
             Assert.Equal("www.nancyfx.org",result.HostName);
             Assert.Equal(1234, result.Port);
