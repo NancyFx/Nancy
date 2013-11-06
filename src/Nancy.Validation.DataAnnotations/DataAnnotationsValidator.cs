@@ -38,8 +38,9 @@
         /// Validates the specified instance.
         /// </summary>
         /// <param name="instance">The instance that should be validated.</param>
-        /// <returns>A <see cref="ModelValidationResult"/> with the result of the validation.</returns>
-        public ModelValidationResult Validate(object instance)
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
+        /// <returns>A ValidationResult with the result of the validation.</returns>
+        public ModelValidationResult Validate(object instance, NancyContext context)
         {
             var errors = 
                 new List<ModelValidationError>();

@@ -33,11 +33,11 @@
             var subject = new CompositeValidator(fakeValidators);
 
             // When
-            subject.Validate("blah");
+            subject.Validate("blah", new NancyContext());
 
             // Then
-            A.CallTo(() => fakeValidators[0].Validate(A<object>.Ignored)).MustHaveHappened();
-            A.CallTo(() => fakeValidators[1].Validate(A<object>.Ignored)).MustHaveHappened();
+            A.CallTo(() => fakeValidators[0].Validate(A<object>._, A<NancyContext>._)).MustHaveHappened();
+            A.CallTo(() => fakeValidators[1].Validate(A<object>._, A<NancyContext>._)).MustHaveHappened();
         }
     }
 }

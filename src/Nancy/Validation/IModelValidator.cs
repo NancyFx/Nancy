@@ -14,7 +14,8 @@
         /// Validates the specified instance.
         /// </summary>
         /// <param name="instance">The instance that should be validated.</param>
+        /// <param name="context">The <see cref="NancyContext"/> of the current request.</param>
         /// <returns>A ValidationResult with the result of the validation.</returns>
-        ModelValidationResult Validate(object instance);
+        ModelValidationResult Validate(object instance, NancyContext context);
     }
 }
