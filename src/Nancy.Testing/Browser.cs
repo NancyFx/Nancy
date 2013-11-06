@@ -195,10 +195,10 @@ namespace Nancy.Testing
             return this.HandleRequest("PUT", url, browserContext);
         }
 
-        private BrowserResponse HandleRequest(string method, Url path, Action<BrowserContext> browserContext)
+        private BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var request =
-                CreateRequest(method, path, browserContext ?? this.DefaultBrowserContext);
+                CreateRequest(method, url, browserContext ?? this.DefaultBrowserContext);
 
             var response = new BrowserResponse(this.engine.HandleRequest(request), this);
 
@@ -279,7 +279,7 @@ namespace Nancy.Testing
             contextValues.Body = new MemoryStream(bodyBytes);
         }
 
-        private Request CreateRequest(string method, Url path, Action<BrowserContext> browserContext)
+        private Request CreateRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var context =
                 new BrowserContext();
@@ -300,11 +300,11 @@ namespace Nancy.Testing
                 new byte[] { } :
                 contextValues.ClientCertificate.GetRawCertData();
 
-            var url = path;
-            url.Scheme = string.IsNullOrWhiteSpace(path.Scheme) ? contextValues.Protocol : path.Scheme;
-            url.Query = string.IsNullOrWhiteSpace(path.Query) ? (contextValues.QueryString ?? string.Empty) : path.Query;
+            var requestUrl = url;
+            requestUrl.Scheme = string.IsNullOrWhiteSpace(url.Scheme) ? contextValues.Protocol : url.Scheme;
+            requestUrl.Query = string.IsNullOrWhiteSpace(url.Query) ? (contextValues.QueryString ?? string.Empty) : url.Query;
 
-            return new Request(method, url, requestStream, contextValues.Headers, contextValues.UserHostAddress, certBytes);
+            return new Request(method, requestUrl, requestStream, contextValues.Headers, contextValues.UserHostAddress, certBytes);
         }
     }
 }
