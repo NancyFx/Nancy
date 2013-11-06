@@ -37,7 +37,7 @@
         public ModelValidationResult Validate(object instance, NancyContext context)
         {
             var errors = validators
-                .Select(v => v.Validate(instance, null))
+                .Select(v => v.Validate(instance, context))
                 .Where(r => r != null)
                 .SelectMany(r => r.Errors)
                 .ToArray();
