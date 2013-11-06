@@ -146,6 +146,27 @@ namespace Nancy
             return new Uri(url.ToString(), UriKind.Absolute);
         }
 
+        /// <summary>
+        /// Casts a <see cref="Uri"/> instance to a <see cref="Url"/> instance
+        /// </summary>
+        /// <param name="uri">The instance that should be cast.</param>
+        /// <returns>An <see cref="Url"/> representation of the <paramref name="uri"/>.</returns>
+        public static implicit operator Url(Uri uri)
+        {
+            var url = new Url
+            {
+                BasePath = string.Join("/", uri.Segments),
+                Fragment = uri.Fragment,
+                HostName = uri.Host,
+                Path = uri.LocalPath,
+                Port = uri.Port,
+                Query = uri.Query,
+                Scheme = uri.Scheme
+            };
+
+            return url;
+        }
+
         private static string GetFragment(string fragment)
         {
             return (string.IsNullOrEmpty(fragment)) ? string.Empty : string.Concat("#", fragment);

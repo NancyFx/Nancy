@@ -209,7 +209,18 @@ namespace Nancy.Testing
 
         private BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
-            return HandleRequest(method, new Url() { Path = path }, browserContext);
+            Url url;
+
+            if (Uri.IsWellFormedUriString(path, UriKind.Absolute))
+            {
+                url = new Uri(path);
+            }
+            else
+            {
+                url = new Url { Path = path };
+            }
+
+            return HandleRequest(method, url, browserContext);
         }
 
         private void DefaultBrowserContext(BrowserContext context)
