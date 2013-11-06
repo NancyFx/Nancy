@@ -42,7 +42,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.validatorFactory.GetValidators(typeof(ModelUnderTest))).MustHaveHappened();
@@ -55,7 +55,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.propertyValidator1.Validate(instance)).MustHaveHappened();
@@ -69,7 +69,7 @@
             var instance = new ModelUnderTest();
 
             // When
-            this.validator.Validate(instance);
+            this.validator.Validate(instance, new NancyContext());
 
             // Then
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).MustHaveHappened();
@@ -89,7 +89,7 @@
             A.CallTo(() => this.propertyValidator2.Validate(instance)).Returns(new[] { result2, result3 });
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Errors.Count().ShouldEqual(3);
@@ -108,7 +108,7 @@
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).Returns(new[] { result });
 
             // When
-            var results = this.validator.Validate(instance);
+            var results = this.validator.Validate(instance, new NancyContext());
 
             // Then
             results.Errors.Count().ShouldEqual(1);
@@ -125,7 +125,6 @@
 
             A.CallTo(() => this.propertyValidator1.GetRules()).Returns(new[] { rule1 });
             A.CallTo(() => this.propertyValidator2.GetRules()).Returns(new[] { rule2, rule3 });
-
 
             // When
             var descriptor = this.validator.Description;
