@@ -155,8 +155,6 @@ namespace Nancy
         {
             var url = new Url
             {
-                BasePath = string.Join("/", uri.Segments),
-                Fragment = uri.Fragment,
                 HostName = uri.Host,
                 Path = uri.LocalPath,
                 Port = uri.Port,
