@@ -211,21 +211,26 @@ namespace Nancy.Tests.Unit
             result.IsAbsoluteUri.ShouldBeTrue();
         }
 
-        [Fact]
-        public void Should_implicitly_cast_uri_to_url()
+        [Theory]
+        [InlineData("https://www.nancyfx.org:1234/base?foo=some%20text", "https", "www.nancyfx.org", 1234, "/base", "?foo=some%20text")]
+        [InlineData("http://nancyfx.org", "http", "nancyfx.org", 80, "/", "")]
+        [InlineData("http://nancyfx.org?foo=some%20text", "http", "nancyfx.org", 80, "/", "?foo=some%20text")]
+        [InlineData("https://nancyfx.org/base/admin/area?foo=some%20text", "https", "nancyfx.org", 443, "/base/admin/area", "?foo=some%20text")]
+        [InlineData("http://nancyfx.org/base/admin/area", "http", "nancyfx.org", 80, "/base/admin/area", "")]
+        public void Should_implicitly_cast_uri_to_url(string fullurl, string scheme, string host, int port, string path, string query)
         {
             //Given
-            var uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text");
+            var uri = new Uri(fullurl);
 
             //When
             Url result = uri;
 
             //Then
-            Assert.Equal("https", result.Scheme);
-            Assert.Equal("www.nancyfx.org",result.HostName);
-            Assert.Equal(1234, result.Port);
-            Assert.Equal("/base", result.Path);
-            Assert.Equal("?foo=some%20text", result.Query);
+            Assert.Equal(scheme, result.Scheme);
+            Assert.Equal(host,result.HostName);
+            Assert.Equal(port, result.Port);
+            Assert.Equal(path, result.Path);
+            Assert.Equal(query, result.Query);
         }
 
         [Theory]
