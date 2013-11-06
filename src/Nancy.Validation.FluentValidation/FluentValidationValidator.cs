@@ -1,5 +1,6 @@
 namespace Nancy.Validation.FluentValidation
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using global::FluentValidation;
@@ -20,9 +21,11 @@ namespace Nancy.Validation.FluentValidation
         /// specified <see cref="IValidator"/>.
         /// </summary>
         /// <param name="validator">The Fluent Validation validator that should be used.</param>
-        /// <param name="factory"> </param>
-        public FluentValidationValidator(IValidator validator, IFluentAdapterFactory factory)
-        {
+        /// <param name="factory">Factory for creating adapters for the type that is being validated.</param>
+        /// <param name="modelType">The type of the model that is being validated.</param>
+        public FluentValidationValidator(IValidator validator, IFluentAdapterFactory factory, Type modelType)
+         {
+            this.ModelType = modelType;
             this.validator = validator;
             this.factory = factory;
         }
@@ -35,6 +38,11 @@ namespace Nancy.Validation.FluentValidation
         {
             get { return CreateDescriptor(); }
         }
+
+        /// <summary>
+        /// The type of the model that is being validated by the validator.
+        /// </summary>
+        public Type ModelType { get; private set; }
 
         /// <summary>
         /// Validates the specified instance.
@@ -78,7 +86,7 @@ namespace Nancy.Validation.FluentValidation
                 }
             }
 
-            return new ModelValidationDescriptor(rules);
+            return new ModelValidationDescriptor(rules, this.ModelType);
         }
 
         private static IEnumerable<ModelValidationError> GetErrors(ValidationResult results)

@@ -119,9 +119,9 @@
         public void Should_return_descriptor_with_rules_from_all_validators()
         {
             // Given
-            var rule1 = new ModelValidationRule(string.Empty, s => string.Empty);
-            var rule2 = new ModelValidationRule(string.Empty, s => string.Empty);
-            var rule3 = new ModelValidationRule(string.Empty, s => string.Empty);
+            var rule1 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "One" });
+            var rule2 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "Two" });
+            var rule3 = new ModelValidationRule(string.Empty, s => string.Empty, new[] { "Three" });
 
             A.CallTo(() => this.propertyValidator1.GetRules()).Returns(new[] { rule1 });
             A.CallTo(() => this.propertyValidator2.GetRules()).Returns(new[] { rule2, rule3 });
@@ -131,9 +131,6 @@
 
             // Then
             descriptor.Rules.Count().ShouldEqual(3);
-            descriptor.Rules.Contains(rule1).ShouldBeTrue();
-            descriptor.Rules.Contains(rule2).ShouldBeTrue();
-            descriptor.Rules.Contains(rule3).ShouldBeTrue();
         }
 
         public class ModelUnderTest
