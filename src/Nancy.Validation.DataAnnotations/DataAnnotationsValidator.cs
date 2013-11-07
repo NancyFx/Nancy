@@ -21,6 +21,7 @@
         /// <param name="validatableObjectAdapter">The <see cref="validatableObjectAdapter"/> instance that should be used by the validator.</param>
         public DataAnnotationsValidator(Type typeForValidation, IPropertyValidatorFactory factory, IValidatableObjectAdapter validatableObjectAdapter)
         {
+            this.ModelType = typeForValidation;
             this.validatableObjectAdapter = validatableObjectAdapter;
             this.validators = factory.GetValidators(typeForValidation);
         }
@@ -33,6 +34,11 @@
         {
             get { return this.descriptor ?? (this.descriptor = GetModelValidationDescriptor()); }
         }
+
+        /// <summary>
+        /// Gets the <see cref="System.Type"/> of the model that is being validated by the validator.
+        /// </summary>
+        public Type ModelType { get; private set; }
 
         /// <summary>
         /// Validates the specified instance.
@@ -63,7 +69,7 @@
             var rules = 
                 this.validators.SelectMany(x => x.GetRules());
 
-            return new ModelValidationDescriptor(rules);
+            return new ModelValidationDescriptor(rules, this.ModelType);
         }
     }
 }

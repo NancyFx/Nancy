@@ -54,7 +54,7 @@
 
             return (validators.Length == 1) ? 
                 validators[0] : 
-                new CompositeValidator(validators);
+                new CompositeValidator(validators, type);
         }
     }
 }

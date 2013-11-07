@@ -36,7 +36,7 @@
                 GetValidatorInstance(type);
 
             return (instance != null) ?
-                new FluentValidationValidator(instance, this.adapterFactory) :
+                new FluentValidationValidator(instance, this.adapterFactory, type) :
                 null;
         }
 

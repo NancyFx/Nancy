@@ -1,5 +1,7 @@
 ﻿namespace Nancy.Validation
 {
+    using System;
+
     /// <summary>
     /// Provides a way to validate a type as well as a description to use for client-side validation.
     /// </summary>
@@ -9,6 +11,11 @@
         /// Gets the description of the validator.
         /// </summary>
         ModelValidationDescriptor Description { get; }
+
+        /// <summary>
+        /// Gets the <see cref="Type"/> of the model that is being validated by the validator.
+        /// </summary>
+        Type ModelType { get; }
 
         /// <summary>
         /// Validates the specified instance.
