@@ -47,7 +47,7 @@ end
 
 desc "Compile solution file"
 msbuild :compile => [:assembly_info] do |msb|
-    msb.properties = { :configuration => CONFIGURATION, "VisualStudioVersion" => ENV['VS110COMNTOOLS'] ? "11.0" : "10.0" }
+    msb.properties = { :configuration => CONFIGURATION, "VisualStudioVersion" => get_vs_version() }
     msb.targets :Clean, :Build
     msb.solution = SOLUTION_FILE
 end
@@ -239,6 +239,10 @@ def get_assembly_version(file)
   end
 
   ''
+end
+
+def get_vs_version()
+  return ENV['VS120COMNTOOLS'] ? "12.0" : ENV['VS110COMNTOOLS'] ? "11.0" : "10.0"
 end
 
 $nancy_version = get_assembly_version SHARED_ASSEMBLY_INFO
