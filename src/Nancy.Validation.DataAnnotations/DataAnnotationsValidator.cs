@@ -36,7 +36,7 @@
         }
 
         /// <summary>
-        /// The type of the model that is being validated by the validator.
+        /// Gets the <see cref="System.Type"/> of the model that is being validated by the validator.
         /// </summary>
         public Type ModelType { get; private set; }
 

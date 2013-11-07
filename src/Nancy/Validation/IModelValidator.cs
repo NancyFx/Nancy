@@ -13,7 +13,7 @@
         ModelValidationDescriptor Description { get; }
 
         /// <summary>
-        /// The type of the model that is being validated by the validator.
+        /// Gets the <see cref="Type"/> of the model that is being validated by the validator.
         /// </summary>
         Type ModelType { get; }
 
