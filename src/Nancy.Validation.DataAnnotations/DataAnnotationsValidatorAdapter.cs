@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     /// <summary>
     /// A default implementation of an <see cref="IDataAnnotationsValidatorAdapter"/>.
@@ -64,7 +65,10 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, attribute.FormatErrorMessage);
+                yield return new ModelValidationError(result.MemberNames, x =>
+                {
+                    return string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage));
+                });
             }
         }
     }

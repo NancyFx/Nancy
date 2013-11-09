@@ -81,9 +81,9 @@
             // Given
             var instance = new ModelUnderTest();
 
-            var result1 = new ModelValidationError(string.Empty, x => string.Empty);
-            var result2 = new ModelValidationError(string.Empty, x => string.Empty);
-            var result3 = new ModelValidationError(string.Empty, x => string.Empty);
+            var result1 = new ModelValidationError("Foo", x => string.Empty);
+            var result2 = new ModelValidationError("Bar", x => string.Empty);
+            var result3 = new ModelValidationError("Baz", x => string.Empty);
 
             A.CallTo(() => this.propertyValidator1.Validate(instance)).Returns(new[] { result1 });
             A.CallTo(() => this.propertyValidator2.Validate(instance)).Returns(new[] { result2, result3 });
@@ -93,9 +93,6 @@
 
             // Then
             results.Errors.Count().ShouldEqual(3);
-            results.Errors.Contains(result1).ShouldBeTrue();
-            results.Errors.Contains(result2).ShouldBeTrue();
-            results.Errors.Contains(result3).ShouldBeTrue();
         }
 
         [Fact]
@@ -103,7 +100,7 @@
         {
             // Given
             var instance = new ModelUnderTest();
-            var result = new ModelValidationError(string.Empty, x => string.Empty);
+            var result = new ModelValidationError("Foo", x => string.Empty);
 
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).Returns(new[] { result });
 
@@ -112,7 +109,7 @@
 
             // Then
             results.Errors.Count().ShouldEqual(1);
-            results.Errors.Contains(result).ShouldBeTrue();
+            results.Errors.Keys.Contains("Foo").ShouldBeTrue();
         }
 
         [Fact]
