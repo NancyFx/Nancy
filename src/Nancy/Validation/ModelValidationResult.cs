@@ -20,7 +20,7 @@
         /// </summary>
         /// <param name="errors">The <see cref="ModelValidationError"/> instances that makes up the result.</param>
         public ModelValidationResult(IEnumerable<ModelValidationError> errors)
-            : this(GetModelValidationErrorDictionary(errors.ToArray()))
+            : this(GetModelValidationErrorDictionary((errors ?? Enumerable.Empty<ModelValidationError>()).ToArray()))
         {
         }
 
