@@ -25,9 +25,9 @@
         }
 
         /// <summary>
-        /// 
+        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
         /// </summary>
-        /// <param name="errors"></param>
+        /// <param name="errors">The <see cref="ModelValidationError"/> instances that makes up the result, grouped by member name.</param>
         public ModelValidationResult(IDictionary<string, IList<ModelValidationError>> errors)
         {
             this.Errors = errors;
