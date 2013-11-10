@@ -806,6 +806,19 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
+        <member name="M:FakeItEasy.Configuration.FakeConfigurationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Configuration.FakeConfigurationException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
         <member name="T:FakeItEasy.Configuration.IFakeConfigurationManager">
             <summary>
             Handles the configuration of fake object given an expression specifying
@@ -971,6 +984,33 @@
             <exception cref="T:System.ArgumentException">The specified object is not a faked object.</exception>
             <exception cref="T:System.ArgumentNullException">The fakedObject parameter was null.</exception>
         </member>
+        <member name="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue">
+            <summary>
+            Access all types in all assemblies in the same directory as the FakeItEasy assembly.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Core.ITypeCatalogue">
+            <summary>
+            Provides a set of types that are available.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.ITypeCatalogue.GetAvailableTypes">
+            <summary>
+            Gets a collection of available types.
+            </summary>
+            <returns>The available types.</returns>
+        </member>
+        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue"/> class.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.GetAvailableTypes">
+            <summary>
+            Gets a collection of available types.
+            </summary>
+            <returns>The available types.</returns>
+        </member>
         <member name="T:FakeItEasy.Core.ArgumentInfo">
             <summary>
             Represents an argument and a dummy value to use for that argument.
@@ -998,6 +1038,12 @@
         <member name="P:FakeItEasy.Core.ArgumentInfo.ResolvedValue">
             <summary>
             Gets the resolved value.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Core.ArgumentValueFormatter.RangedFormatter">
+            <summary>
+            Holds a formatter as well as the distance between a type to be formatted
+            and the type for which the formatted is registered.
             </summary>
         </member>
         <member name="T:FakeItEasy.Core.CallInterceptedEventArgs">
@@ -1297,6 +1343,19 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
+        <member name="M:FakeItEasy.Core.FakeCreationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Core.FakeCreationException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
+        </member>
         <member name="T:FakeItEasy.Core.FakeManager">
             <content>Auto fake property rule.</content>
             <summary>
@@ -1560,6 +1619,19 @@
             <param name="typeOfFake">The type the fake object represents.</param>
             <param name="fakeObject">The fake object to configure.</param>
         </member>
+        <member name="T:FakeItEasy.Core.TypeCatalogueInstanceProvider">
+            <summary>
+            Provides instances from type catalogues.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.TypeCatalogueInstanceProvider.InstantiateAllOfType``1">
+            <summary>
+            Gets an instance per type in the catalogue that is a descendant
+            of the specified type.
+            </summary>
+            <typeparam name="T">The type of instances to get.</typeparam>
+            <returns>A sequence of instances of the specified type.</returns>
+        </member>
         <member name="T:FakeItEasy.Core.WrappedObjectRule">
             <summary>
             A call rule that applies to any call and just delegates the
@@ -1750,7 +1822,7 @@
         </member>
         <member name="P:FakeItEasy.Creation.CastleDynamicProxy.DynamicProxyResources.ProxyTypeWithNoDefaultConstructorMessage">
             <summary>
-              Looks up a localized string similar to No default constructor was found on the type {0}..
+              Looks up a localized string similar to No usable default constructor was found on the type {0}..
             </summary>
         </member>
         <member name="T:FakeItEasy.Creation.DefaultFakeAndDummyManager">
@@ -1956,6 +2028,19 @@
             </summary>
             <param name="reasonForFailure">
             The reason the proxy generation failed.
+            </param>
+        </member>
+        <member name="M:FakeItEasy.Creation.ProxyGeneratorResult.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Creation.ProxyGeneratorResult"/> class. 
+            Creates a new instance representing a failed proxy
+            generation attempt due to an exception being caught.
+            </summary>
+            <param name="reasonForFailure">
+            The reason the proxy generation failed.
+            </param>
+            <param name="exception">
+            The exception thrown from the creation attempt.
             </param>
         </member>
         <member name="M:FakeItEasy.Creation.ProxyGeneratorResult.#ctor(System.Object,FakeItEasy.Creation.ICallInterceptedEventRaiser)">
@@ -2178,7 +2263,7 @@
         </member>
         <member name="P:FakeItEasy.ExceptionMessages.NoDefaultConstructorMessage">
             <summary>
-              Looks up a localized string similar to Can not generate fake object for the class since no default constructor was found, specify a constructor call..
+              Looks up a localized string similar to Can not generate fake object for the class since no usable default constructor was found, specify a constructor call..
             </summary>
         </member>
         <member name="P:FakeItEasy.ExceptionMessages.NoMoreRecordedCalls">
@@ -2253,6 +2338,19 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:FakeItEasy.ExpectationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
         </member>
         <member name="T:FakeItEasy.Expressions.ICallExpressionParser">
             <summary>
@@ -3136,6 +3234,13 @@
             Provides methods for creating recorders for self initializing fakes.
             </summary>
         </member>
+        <member name="M:FakeItEasy.Recorders.FileRecorder(System.String)">
+            <summary>
+            Gets a recorder that records to and loads calls from the specified file.
+            </summary>
+            <param name="fileName">The file to use for recording.</param>
+            <returns>A recorder instance.</returns>
+        </member>
         <member name="T:FakeItEasy.Repeated">
             <summary>
             Provides syntax for specifying the number of times a call must have been repeated when asserting on 
@@ -3243,6 +3348,35 @@
             </summary>
             <param name="calls">The calls to save.</param>
         </member>
+        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.#ctor(System.String,FakeItEasy.IFileSystem)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.SelfInitializedFakes.FileStorage"/> class.
+            </summary>
+            <param name="fileName">Name of the file.</param>
+            <param name="fileSystem">The file system.</param>
+        </member>
+        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.Load">
+            <summary>
+            Loads the recorded calls for the specified recording.
+            </summary>
+            <returns>
+            The recorded calls for the recording with the specified id.
+            </returns>
+        </member>
+        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.Save(System.Collections.Generic.IEnumerable{FakeItEasy.SelfInitializedFakes.CallData})">
+            <summary>
+            Saves the specified calls as the recording with the specified id,
+            overwriting any previous recording.
+            </summary>
+            <param name="calls">The calls to save.</param>
+        </member>
+        <member name="T:FakeItEasy.SelfInitializedFakes.FileStorage.Factory">
+            <summary>
+            A factory responsible for creating instances of FileStorage.
+            </summary>
+            <param name="fileName">The file name of the storage.</param>
+            <returns>A FileStorage instance.</returns>
+        </member>
         <member name="T:FakeItEasy.SelfInitializedFakes.ISelfInitializingFakeRecorder">
             <summary>
             An interface for recorders that provides stored responses for self initializing fakes.
@@ -3288,6 +3422,19 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
+        </member>
+        <member name="M:FakeItEasy.SelfInitializedFakes.RecordingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.SelfInitializedFakes.RecordingException"/> class.
+            </summary>
+            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
+            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
+            <exception cref="T:System.ArgumentNullException">
+            The <paramref name="info"/> parameter is null.
+            </exception>
+            <exception cref="T:System.Runtime.Serialization.SerializationException">
+            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
+            </exception>
         </member>
         <member name="T:FakeItEasy.SelfInitializedFakes.RecordingManager">
             <summary>
@@ -3382,18 +3529,6 @@
         <member name="T:FakeItEasy.UnderTestAttribute">
             <summary>
             Used to tag fields and properties that will be initialized as a SUT through the Fake.Initialize-method.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.SerializableAttribute">
-            <summary>
-            Fixes so that existing Serializable-attributes are omitted in the compilation
-            of the silverlight project.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.NonSerializedAttribute">
-            <summary>
-            Fixes so that existing NonSerialized-attributes are omitted in the compilation
-            of the silverlight project.
             </summary>
         </member>
     </members>
