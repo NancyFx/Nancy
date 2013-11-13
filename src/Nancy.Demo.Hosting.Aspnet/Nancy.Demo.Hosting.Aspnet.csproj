@@ -116,6 +116,7 @@
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
+    <Content Include="Views\nustachePartial.nustache" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>

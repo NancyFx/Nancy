@@ -73,9 +73,15 @@
                     var writer =
                         new StreamWriter(stream);
 
-                    template.Render(model, writer, null);
+                    template.Render(model, writer, new TemplateLocator(name => this.GetPartial(renderContext, name, model)));
                 }
             };
+        }
+
+        Template GetPartial(IRenderContext renderContext, string name, dynamic model)
+        {
+            var view = renderContext.LocateView(name, model);
+            return this.GetOrCompileTemplate(view, renderContext);
         }
     }
 }
