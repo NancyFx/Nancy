@@ -239,7 +239,7 @@ namespace Nancy
             var multipart = new HttpMultipart(this.Body, boundary);
 
             var formValues =
-                new NameValueCollection();
+                new NameValueCollection(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
 
             foreach (var httpMultipartBoundary in multipart.GetBoundaries())
             {
