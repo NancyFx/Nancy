@@ -78,7 +78,7 @@
             };
         }
 
-        Template GetPartial(IRenderContext renderContext, string name, dynamic model)
+        private Template GetPartial(IRenderContext renderContext, string name, dynamic model)
         {
             var view = renderContext.LocateView(name, model);
             return this.GetOrCompileTemplate(view, renderContext);
