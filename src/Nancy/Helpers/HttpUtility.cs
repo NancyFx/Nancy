@@ -43,9 +43,9 @@ namespace Nancy.Helpers
         sealed class HttpQSCollection : NameValueCollection
         {
             public HttpQSCollection()
-                : base(StaticConfiguration.CaseSensitive ?
-                    StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
-            { }
+                : base(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase)
+            {
+            }
 
             public override string ToString()
             {
