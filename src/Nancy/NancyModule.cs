@@ -309,8 +309,8 @@ namespace Nancy
 
             private string GetFullPath(string path)
             {
-                var relativePath = path.Trim('/');
-                var parentPath = this.parentModule.ModulePath.Trim('/');
+                var relativePath = (path ?? "").Trim('/');
+                var parentPath = (this.parentModule.ModulePath ?? "").Trim('/');
 
                 if (string.IsNullOrEmpty(parentPath))
                 {
