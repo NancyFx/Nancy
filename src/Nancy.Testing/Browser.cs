@@ -209,9 +209,9 @@ namespace Nancy.Testing
 
         private BrowserResponse HandleRequest(string method, string path, Action<BrowserContext> browserContext)
         {
-            var url = Uri.IsWellFormedUriString(path, UriKind.Absolute) ? 
-                            (Url)new Uri(path) : 
-                            new Url {Path = path};
+            var url = Uri.IsWellFormedUriString(path, UriKind.Relative)
+                          ? new Url {Path = path}
+                          : (Url)new Uri(path);
 
             return HandleRequest(method, url, browserContext);
         }
