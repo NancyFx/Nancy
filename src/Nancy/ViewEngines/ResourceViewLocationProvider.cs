@@ -58,6 +58,7 @@
 
             return this.resourceAssemblyProvider
                 .GetAssembliesToScan()
+                .Union(RootNamespaces.Keys)
                 .Where(x => !Ignore.Contains(x))
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
         }
