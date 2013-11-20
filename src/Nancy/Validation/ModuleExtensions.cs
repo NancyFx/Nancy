@@ -38,7 +38,7 @@
                                                ? module.ModelValidationResult
                                                : result;
 
-            return result;
+            return module.ModelValidationResult;
         }
     }
 }
