@@ -23,7 +23,7 @@
                 ModelValidationResult.Valid :
                 validator.Validate(instance, module.Context);
 
-            if (result.Errors.Any() && module.ModelValidationResult.Errors.Any())
+            if (module.ModelValidationResult.Errors.Any())
             {
                 foreach (var modelValidationError in result.Errors)
                 {
@@ -34,7 +34,7 @@
                 }
             }
 
-            module.ModelValidationResult = result.Errors.Any() && module.ModelValidationResult.Errors.Any()
+            module.ModelValidationResult = module.ModelValidationResult.Errors.Any()
                                                ? module.ModelValidationResult
                                                : result;
 
