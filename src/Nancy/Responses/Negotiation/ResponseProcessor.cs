@@ -5,7 +5,7 @@
     using System.Linq;
 
     /// <summary>
-    /// 
+    /// Processes negotiated responses of model type <see cref="Response"/>.
     /// </summary>
     public class ResponseProcessor : IResponseProcessor
     {
@@ -33,7 +33,7 @@
             return new ProcessorMatch
             {
                 ModelResult = (model is Response) ? MatchResult.ExactMatch : MatchResult.NoMatch,
-                RequestedContentTypeResult = (requestedMediaRange == "text/html") ? MatchResult.ExactMatch : MatchResult.NoMatch
+                RequestedContentTypeResult = MatchResult.DontCare
             };
         }
 
