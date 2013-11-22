@@ -200,6 +200,7 @@
     <Compile Include="Responses\Negotiation\NegotiationContext.cs" />
     <Compile Include="Responses\Negotiation\Negotiator.cs" />
     <Compile Include="Responses\Negotiation\ProcessorMatch.cs" />
+    <Compile Include="Responses\Negotiation\ResponseProcessor.cs" />
     <Compile Include="Responses\Negotiation\ViewProcessor.cs" />
     <Compile Include="Responses\Negotiation\XmlProcessor.cs" />
     <Compile Include="Responses\NotAcceptableResponse.cs" />
