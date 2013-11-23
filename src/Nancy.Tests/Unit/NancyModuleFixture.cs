@@ -203,6 +203,27 @@ namespace Nancy.Tests.Unit
             moduleWithBasePath.Routes.Last().Description.Path.ShouldEqual("/Test1");
         }
 
+        [Fact]
+        public void Should_not_throw_when_null_passed_as_modulepath()
+        {
+            // Given
+            var moduleWithNullPath = new CustomModulePathModule(null);
+
+            // Then
+            Assert.DoesNotThrow(() =>
+            {
+                moduleWithNullPath.Post["/Test1"] = d => null;
+            });
+        }
+
+        public class CustomModulePathModule : NancyModule
+        {
+            public CustomModulePathModule(string modulePath)
+                : base(modulePath)
+            {
+            }
+        }
+
         public class CustomNancyModule : NancyModule
         {
             public new CustomRouteBuilder Get
