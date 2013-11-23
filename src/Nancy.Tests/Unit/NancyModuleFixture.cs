@@ -216,7 +216,7 @@ namespace Nancy.Tests.Unit
             });
         }
 
-        public class CustomModulePathModule : NancyModule
+        private class CustomModulePathModule : NancyModule
         {
             public CustomModulePathModule(string modulePath)
                 : base(modulePath)
@@ -224,7 +224,7 @@ namespace Nancy.Tests.Unit
             }
         }
 
-        public class CustomNancyModule : NancyModule
+        private class CustomNancyModule : NancyModule
         {
             public new CustomRouteBuilder Get
             {
