@@ -413,7 +413,7 @@
 
         private bool MoveStreamOutOfMemoryIfExpectedLengthExceedSwitchLength(long expectedLength)
         {
-			if ((expectedLength >= this.thresholdLength) && !this.disableStreamSwitching)
+            if ((expectedLength >= this.thresholdLength) && !this.disableStreamSwitching)
             {
                 this.MoveStreamContentsToFileStream();
                 return true;
