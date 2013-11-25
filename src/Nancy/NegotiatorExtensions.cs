@@ -183,6 +183,32 @@
         }
 
         /// <summary>
+        /// Sets the <see cref="Response"/> to use for a particular media range.
+        /// Will also add the MediaRange to the allowed list
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="range">Range to match against</param>
+        /// <param name="response">A <see cref="Response"/> object</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithMediaRangeResponse(this Negotiator negotiator, MediaRange range, Response response)
+        {
+            return negotiator.WithMediaRangeResponse(range, () => response);
+        }
+
+        /// <summary>
+        /// Sets the <see cref="Response"/> to use for a particular media range.
+        /// Will also add the MediaRange to the allowed list
+        /// </summary>
+        /// <param name="negotiator">Negotiator object</param>
+        /// <param name="range">Range to match against</param>
+        /// <param name="responseFactory">Factory for returning the <see cref="Response"/> object</param>
+        /// <returns>Updated negotiator object</returns>
+        public static Negotiator WithMediaRangeResponse(this Negotiator negotiator, MediaRange range, Func<Response> responseFactory)
+        {
+            return negotiator.WithMediaRangeModel(range, responseFactory);
+        }
+
+        /// <summary>
         /// Sets the status code that should be assigned to the final response.
         /// </summary>
         /// <param name="negotiator">Negotiator object</param>
