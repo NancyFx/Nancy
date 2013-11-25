@@ -1,5 +1,8 @@
 ﻿namespace Nancy.Routing.Constraints
 {
+    /// <summary>
+    /// Constraint for <see cref="int"/> route segments with value within a specified range.
+    /// </summary>
     public class RangeRouteSegmentConstraint : ParameterizedRouteSegmentConstraintBase<int>
     {
         public override string Name

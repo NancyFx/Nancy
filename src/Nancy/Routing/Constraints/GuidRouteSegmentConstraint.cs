@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Constraint for <see cref="Guid"/> route segments.
+    /// </summary>
     public class GuidRouteSegmentConstraint : RouteSegmentConstraintBase<Guid>
     {
         public override string Name

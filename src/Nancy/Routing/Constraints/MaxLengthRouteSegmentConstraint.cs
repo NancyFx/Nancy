@@ -1,5 +1,8 @@
 ﻿namespace Nancy.Routing.Constraints
 {
+    /// <summary>
+    /// Constraint for route segments with a maximum length.
+    /// </summary>
     public class MaxLengthRouteSegmentConstraint : ParameterizedRouteSegmentConstraintBase<string>
     {
         public override string Name

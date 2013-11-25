@@ -214,7 +214,7 @@
     <Compile Include="Responses\TextResponse.cs" />
     <Compile Include="Routing\Constraints\AlphaRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\BoolRouteSegmentConstraint.cs" />
-    <Compile Include="Routing\Constraints\CustomDateTimeRouteSegmenConstraint.cs" />
+    <Compile Include="Routing\Constraints\CustomDateTimeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\DateTimeRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\DecimalRouteSegmentConstraint.cs" />
     <Compile Include="Routing\Constraints\GuidRouteSegmentConstraint.cs" />

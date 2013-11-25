@@ -2,6 +2,9 @@
 {
     using System.Globalization;
 
+    /// <summary>
+    /// Constraint for <see cref="decimal"/> route segments.
+    /// </summary>
     public class DecimalRouteSegmentConstraint : RouteSegmentConstraintBase<decimal>
     {
         public override string Name

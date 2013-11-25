@@ -2,6 +2,9 @@
 {
     using System.Linq;
 
+    /// <summary>
+    /// Constraint for alphabetical route segments.
+    /// </summary>
     public class AlphaRouteSegmentConstraint : RouteSegmentConstraintBase<string>
     {
         public override string Name

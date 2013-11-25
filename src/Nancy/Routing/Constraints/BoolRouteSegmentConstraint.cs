@@ -1,5 +1,8 @@
 ﻿namespace Nancy.Routing.Constraints
 {
+    /// <summary>
+    /// Constraint for <see cref="bool"/> route segments.
+    /// </summary>
     public class BoolRouteSegmentConstraint : RouteSegmentConstraintBase<bool>
     {
         public override string Name

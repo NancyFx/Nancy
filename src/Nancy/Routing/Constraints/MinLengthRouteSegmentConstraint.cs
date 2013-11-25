@@ -1,5 +1,8 @@
 ﻿namespace Nancy.Routing.Constraints
 {
+    /// <summary>
+    /// Constraint for route segments with a minimum length.
+    /// </summary>
     public class MinLengthRouteSegmentConstraint : ParameterizedRouteSegmentConstraintBase<string>
     {
         public override string Name

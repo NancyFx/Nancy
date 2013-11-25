@@ -3,7 +3,10 @@
     using System;
     using System.Globalization;
 
-    public class CustomDateTimeRouteSegmenConstraint : ParameterizedRouteSegmentConstraintBase<DateTime>
+    /// <summary>
+    /// Constraint for <see cref="DateTime"/> route segments with custom format.
+    /// </summary>
+    public class CustomDateTimeRouteSegmentConstraint : ParameterizedRouteSegmentConstraintBase<DateTime>
     {
         public override string Name
         {

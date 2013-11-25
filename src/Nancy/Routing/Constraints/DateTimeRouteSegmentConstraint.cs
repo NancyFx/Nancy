@@ -2,6 +2,9 @@
 {
     using System;
 
+    /// <summary>
+    /// Constraint for <see cref="DateTime"/> route segments.
+    /// </summary>
     public class DateTimeRouteSegmentConstraint : RouteSegmentConstraintBase<DateTime>
     {
         public override string Name

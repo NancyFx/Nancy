@@ -2,6 +2,9 @@
 {
     using System.Globalization;
 
+    /// <summary>
+    /// Constraint for <see cref="long"/> route segments.
+    /// </summary>
     public class IntRouteSegmentConstraint : RouteSegmentConstraintBase<long>
     {
         public override string Name
