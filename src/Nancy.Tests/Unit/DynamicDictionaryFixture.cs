@@ -1104,5 +1104,15 @@ namespace Nancy.Tests.Unit
             // Then
             result.ShouldBeFalse();
         }
+
+        [Fact]
+        public void Should_remove_natural_key()
+        {
+            // Given
+            var input = new DynamicDictionary();
+            input.Add("a-b-c", "hello");
+            input.Remove("a-b-c");
+            input.ContainsKey("abc").ShouldBeFalse();           
+        }
     }
 }

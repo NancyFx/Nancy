@@ -181,7 +181,6 @@
         /// <param name="value">The object to use as the value of the element to add.</param>
         public void Add(string key, dynamic value)
         {
-            key = GetNeutralKey(key);
             this[key] = value;
         }
 
@@ -191,8 +190,7 @@
         /// <param name="item">The object to add to the <see cref="DynamicDictionary"/>.</param>
         public void Add(KeyValuePair<string, dynamic> item)
         {
-            string key = GetNeutralKey(item.Key);
-            this[key] = item.Value;
+            this[item.Key] = item.Value;
         }
 
         /// <summary>
@@ -283,6 +281,7 @@
         /// <param name="key">The key of the element to remove.</param>
         public bool Remove(string key)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.Remove(key);
         }
 
