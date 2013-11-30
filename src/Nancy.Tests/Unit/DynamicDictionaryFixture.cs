@@ -1111,7 +1111,11 @@ namespace Nancy.Tests.Unit
             // Given
             var input = new DynamicDictionary();
             input.Add("a-b-c", "hello");
+
+            //when
             input.Remove("a-b-c");
+
+            //then
             input.ContainsKey("abc").ShouldBeFalse();           
         }
     }
