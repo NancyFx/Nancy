@@ -34,7 +34,7 @@
         public void Should_return_invalid_if_any_errors_exist()
         {
             // Given
-            var subject = new ModelValidationResult(new[] { new ModelValidationError("blah", s => "blah") });
+            var subject = new ModelValidationResult(new[] { new ModelValidationError("blah", "blah") });
 
             // When
             var result = subject.IsValid;

@@ -81,9 +81,9 @@
             // Given
             var instance = new ModelUnderTest();
 
-            var result1 = new ModelValidationError("Foo", x => string.Empty);
-            var result2 = new ModelValidationError("Bar", x => string.Empty);
-            var result3 = new ModelValidationError("Baz", x => string.Empty);
+            var result1 = new ModelValidationError("Foo", string.Empty);
+            var result2 = new ModelValidationError("Bar", string.Empty);
+            var result3 = new ModelValidationError("Baz", string.Empty);
 
             A.CallTo(() => this.propertyValidator1.Validate(instance)).Returns(new[] { result1 });
             A.CallTo(() => this.propertyValidator2.Validate(instance)).Returns(new[] { result2, result3 });
@@ -100,7 +100,7 @@
         {
             // Given
             var instance = new ModelUnderTest();
-            var result = new ModelValidationError("Foo", x => string.Empty);
+            var result = new ModelValidationError("Foo", string.Empty);
 
             A.CallTo(() => this.validatableObjectAdapter.Validate(instance)).Returns(new[] { result });
 

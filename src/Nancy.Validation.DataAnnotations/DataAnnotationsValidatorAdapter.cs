@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Validation.DataAnnotations
 {
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -65,10 +66,7 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, x =>
-                {
-                    return string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage));
-                });
+                yield return new ModelValidationError(result.MemberNames, string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage)));
             }
         }
     }

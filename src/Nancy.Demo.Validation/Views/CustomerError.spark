@@ -9,7 +9,7 @@
         <h2>${k}</h2>
         <ul>
           <for each="var e in Model.Errors[k]">
-            <li>${e.GetMessage()}</li>
+            <li>${e}</li>
           </for>
         </ul>
       </for>
