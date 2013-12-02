@@ -3,9 +3,12 @@ namespace Nancy
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    using Nancy.Cookies;
     using Nancy.Responses;
 
+    /// <summary>
+    /// Containing extensions for the <see cref="Response"/> object.
+    /// </summary>
     public static class ResponseExtensions
     {
         /// <summary>
@@ -35,6 +38,58 @@ namespace Nancy
             }
 
             return response.WithHeader("Content-Disposition", "attachment; filename=" + actualFilename);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="INancyCookie"/> to the response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <returns>The <see cref="Response"/> instance.</returns>
+        public static Response WithCookie(this Response response, string name, string value)
+        {
+            return WithCookie(response, name, value, null, null, null);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="INancyCookie"/> to the response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <returns>The <see cref="Response"/> instance.</returns>
+        public static Response WithCookie(this Response response, string name, string value, DateTime? expires)
+        {
+            return WithCookie(response, name, value, expires, null, null);
+        }
+
+        /// <summary>
+        /// Adds a <see cref="INancyCookie"/> to the response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="name">The name of the cookie.</param>
+        /// <param name="value">The value of the cookie.</param>
+        /// <param name="expires">The expiration date of the cookie. Can be <see langword="null" /> if it should never expire.</param>
+        /// <param name="domain">The domain of the cookie.</param>
+        /// <param name="path">The path of the cookie.</param>
+        /// <returns>The <see cref="Response"/> instance.</returns>
+        public static Response WithCookie(this Response response, string name, string value, DateTime? expires, string domain, string path)
+        {
+            return WithCookie(response, new NancyCookie(name, value) { Expires = expires, Domain = domain, Path = path });
+        }
+
+        /// <summary>
+        /// Adds a <see cref="INancyCookie"/> to the response.
+        /// </summary>
+        /// <param name="response">Response object</param>
+        /// <param name="nancyCookie">A <see cref="INancyCookie"/> instance.</param>
+        /// <returns></returns>
+        public static Response WithCookie(this Response response, INancyCookie nancyCookie)
+        {
+            response.Cookies.Add(nancyCookie);
+            return response;
         }
 
         /// <summary>

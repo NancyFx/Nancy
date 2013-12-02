@@ -5,7 +5,6 @@ namespace Nancy.Tests.Functional.Tests
     using System.IO;
     using System.Linq;
     using Cookies;
-    using Nancy.ErrorHandling;
     using Nancy.IO;
     using Nancy.Responses.Negotiation;
     using Nancy.Testing;
@@ -612,11 +611,30 @@ namespace Nancy.Tests.Functional.Tests
         [Fact]
         public void Should_not_try_and_serve_view_with_invalid_name()
         {
+            // Given
             var browser = new Browser(with => with.Module<NegotiationModule>());
 
+            // When
             var result = Record.Exception(() => browser.Get("/invalid-view-name"));
 
+            // Then
             Assert.True(result.ToString().Contains("Unable to locate view"));
+        }
+
+        [Fact]
+        public void Should_return_response_negotiated_based_on_media_range()
+        {
+            // Given
+            var browser = new Browser(with => with.Module<NegotiationModule>());
+
+            // When
+            var result = browser.Get("/negotiate", with =>
+            {
+                with.Accept("text/html");
+            });
+
+            // Then
+            Assert.Equal(HttpStatusCode.SeeOther, result.StatusCode);
         }
 
         private static Func<dynamic, NancyModule, dynamic> CreateNegotiatedResponse(Action<Negotiator> action = null)
@@ -669,8 +687,6 @@ namespace Nancy.Tests.Functional.Tests
 
         public class NullProcessor : IResponseProcessor
         {
-            private const string ResponseTemplate = "{0}\n{1}";
-
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
                 get
@@ -696,8 +712,6 @@ namespace Nancy.Tests.Functional.Tests
 
         public class ModelProcessor : IResponseProcessor
         {
-            private const string ResponseTemplate = "{0}\n{1}";
-
             public IEnumerable<Tuple<string, MediaRange>> ExtensionMappings
             {
                 get
@@ -725,7 +739,17 @@ namespace Nancy.Tests.Functional.Tests
         {
             public NegotiationModule()
             {
-                Get["/invalid-view-name"] = _ => this.GetModel();
+                Get["/invalid-view-name"] = _ =>
+                {
+                    return this.GetModel();
+                };
+
+                Get["/negotiate"] = parameters =>
+                {
+                    return Negotiate
+                        .WithMediaRangeResponse("text/html", Response.AsRedirect("/"))
+                        .WithMediaRangeModel("application/json", new { Name = "Nancy" });
+                };
             }
 
             private IEnumerable<Foo> GetModel()

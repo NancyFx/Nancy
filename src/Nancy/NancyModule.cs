@@ -116,7 +116,7 @@ namespace Nancy
         /// A <see cref="T:System.String" /> containing the root path of the module or <see langword="null" /> 
         /// if no root path should be used.</value><remarks>All routes will be relative to this root path.
         /// </remarks>
-        public string ModulePath { get; private set; }
+        public string ModulePath { get; protected set; }
 
         /// <summary>
         /// Gets all declared routes by the module.
@@ -309,8 +309,8 @@ namespace Nancy
 
             private string GetFullPath(string path)
             {
-                var relativePath = path.Trim('/');
-                var parentPath = this.parentModule.ModulePath.Trim('/');
+                var relativePath = (path ?? string.Empty).Trim('/');
+                var parentPath = (this.parentModule.ModulePath ?? string.Empty).Trim('/');
 
                 if (string.IsNullOrEmpty(parentPath))
                 {

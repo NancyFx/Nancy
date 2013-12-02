@@ -3,6 +3,9 @@
     using System;
     using System.IO;
 
+    /// <summary>
+    /// Containing extensions for the <see cref="Stream"/> object.
+    /// </summary>
     public static class StreamExtensions
     {
         /// <summary>

@@ -21,22 +21,6 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Gets or sets a value indicating whether Nancy should disable caching
-        /// </summary>
-        [Obsolete("DisableCaches is now obsolete, please see the StaticConfiguration.Caching properties for more finely grained control", true)]
-        public static bool DisableCaches
-        {
-            get
-            {
-                return disableCaches ?? (bool)(disableCaches = IsRunningDebug);
-            }
-            set
-            {
-                disableCaches = value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a value indicating whether or not to disable traces in error messages
         /// </summary>
         [Description("Disables trace output in the default 500 error pages.")]

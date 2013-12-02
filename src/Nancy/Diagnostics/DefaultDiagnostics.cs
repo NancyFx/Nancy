@@ -3,6 +3,8 @@
     using System.Collections.Generic;
     using ModelBinding;
     using Nancy.Bootstrapper;
+    using Nancy.Routing.Constraints;
+
     using Responses.Negotiation;
     using Nancy.Culture;
 
@@ -17,10 +19,20 @@
         private readonly IRequestTracing requestTracing;
         private readonly NancyInternalConfiguration configuration;
         private readonly IModelBinderLocator modelBinderLocator;
-        private readonly IEnumerable<IResponseProcessor> responseProcessors;
+        private readonly IEnumerable<IResponseProcessor> responseProcessors; 
+        private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private readonly ICultureService cultureService;
 
-        public DefaultDiagnostics(DiagnosticsConfiguration diagnosticsConfiguration, IEnumerable<IDiagnosticsProvider> diagnosticProviders, IRootPathProvider rootPathProvider, IRequestTracing requestTracing, NancyInternalConfiguration configuration, IModelBinderLocator modelBinderLocator, IEnumerable<IResponseProcessor> responseProcessors, ICultureService cultureService)
+        public DefaultDiagnostics(
+            DiagnosticsConfiguration diagnosticsConfiguration,
+            IEnumerable<IDiagnosticsProvider> diagnosticProviders,
+            IRootPathProvider rootPathProvider,
+            IRequestTracing requestTracing,
+            NancyInternalConfiguration configuration,
+            IModelBinderLocator modelBinderLocator,
+            IEnumerable<IResponseProcessor> responseProcessors,
+            IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
+            ICultureService cultureService)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -29,6 +41,7 @@
             this.configuration = configuration;
             this.modelBinderLocator = modelBinderLocator;
             this.responseProcessors = responseProcessors;
+            this.routeSegmentConstraints = routeSegmentConstraints;
             this.cultureService = cultureService;
         }
 
@@ -38,7 +51,16 @@
         /// <param name="pipelines">Application pipelines</param>
         public void Initialize(IPipelines pipelines)
         {
-            DiagnosticsHook.Enable(this.diagnosticsConfiguration, pipelines, this.diagnosticProviders, this.rootPathProvider, this.requestTracing, this.configuration, this.modelBinderLocator, this.responseProcessors, this.cultureService);
+            DiagnosticsHook.Enable(this.diagnosticsConfiguration,
+                pipelines,
+                this.diagnosticProviders,
+                this.rootPathProvider,
+                this.requestTracing,
+                this.configuration,
+                this.modelBinderLocator,
+                this.responseProcessors,
+                this.routeSegmentConstraints,
+                this.cultureService);
         }
     }
 }

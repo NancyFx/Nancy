@@ -141,6 +141,7 @@
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />
     <Compile Include="Unit\FormatterExtensionsFixture.cs" />
+    <Compile Include="Unit\Helpers\HttpUtilityFixture.cs" />
     <Compile Include="Unit\MimeTypesFixture.cs" />
     <Compile Include="Unit\ModelBinding\ModelBindingExceptionFixture.cs" />
     <Compile Include="Unit\ModelBinding\PropertyBindingExceptionFixture.cs" />

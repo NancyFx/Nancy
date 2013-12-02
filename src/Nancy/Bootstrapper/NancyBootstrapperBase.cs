@@ -100,7 +100,7 @@
                     this.modules 
                     ?? 
                     (this.modules = AppDomainAssemblyTypeScanner
-                                        .TypesOf<INancyModule>(true)
+                                        .TypesOf<INancyModule>(ScanMode.ExcludeNancy)
                                         .NotOfType<DiagnosticModule>()
                                         .Select(t => new ModuleRegistration(t))
                                         .ToArray());
@@ -136,7 +136,7 @@
         {
             get
             {
-                return AppDomainAssemblyTypeScanner.TypesOf<ITypeConverter>(true);
+                return AppDomainAssemblyTypeScanner.TypesOf<ITypeConverter>(ScanMode.ExcludeNancy);
             }
         }
 
@@ -145,7 +145,7 @@
         /// </summary>
         protected virtual IEnumerable<Type> BodyDeserializers
         {
-            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(true); }
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IBodyDeserializer>(ScanMode.ExcludeNancy); }
         }
 
         /// <summary>

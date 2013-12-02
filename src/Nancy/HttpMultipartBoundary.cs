@@ -62,8 +62,8 @@ namespace Nancy
 
                 if (header.StartsWith("Content-Disposition", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    this.Name = Regex.Match(header, @"name=""(?<name>[^\""]*)", RegexOptions.IgnoreCase).Groups["name"].Value;
-                    this.Filename = Regex.Match(header, @"filename=""(?<filename>[^\""]*)", RegexOptions.IgnoreCase).Groups["filename"].Value;
+                    this.Name = Regex.Match(header, @"name=""?(?<name>[^\""]*)", RegexOptions.IgnoreCase).Groups["name"].Value;
+                    this.Filename = Regex.Match(header, @"filename=""?(?<filename>[^\""]*)", RegexOptions.IgnoreCase).Groups["filename"].Value;
                 }
 
                 if (header.StartsWith("Content-Type", StringComparison.InvariantCultureIgnoreCase))

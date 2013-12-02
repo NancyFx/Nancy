@@ -2,12 +2,12 @@ namespace Nancy.Extensions
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
     using System.Text.RegularExpressions;
-
     using Nancy.ErrorHandling;
-    using Nancy.Helpers;
 
+    /// <summary>
+    /// Containing extensions for <see cref="INancyModule"/> implementations.
+    /// </summary>
     public static class ModuleExtensions
     {
         /// <summary>

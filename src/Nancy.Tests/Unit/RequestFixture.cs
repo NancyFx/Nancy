@@ -252,6 +252,110 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_respect_case_insensitivity_when_extracting_form_data_from_body_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = false;
+            const string bodyContent = "key=value&key=value&KEY=VALUE";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, memory, headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,value,VALUE");
+            ((string)request.Form.KEY).ShouldEqual("value,value,VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_sensitivity_when_extracting_form_data_from_body_when_content_type_is_x_www_form_urlencoded()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = true;
+            const string bodyContent = "key=value&key=value&KEY=VALUE";
+            var memory = CreateRequestStream();
+            var writer = new StreamWriter(memory);
+            writer.Write(bodyContent);
+            writer.Flush();
+            memory.Position = 0;
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "application/x-www-form-urlencoded" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, memory, headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,value");
+            ((string)request.Form.KEY).ShouldEqual("VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_insensitivity_when_extracting_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = false;
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                {
+                    { "key", "value" },
+                    { "KEY", "VALUE" }
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value,VALUE");
+            ((string)request.Form.KEY).ShouldEqual("value,VALUE");
+        }
+
+        [Fact]
+        public void Should_respect_case_sensitivity_when_extracting_form_data_from_body_when_content_type_is_multipart_form_data()
+        {
+            // Given
+            StaticConfiguration.CaseSensitive = true;
+            var memory =
+                new MemoryStream(BuildMultipartFormValues(new Dictionary<string, string>(StringComparer.InvariantCulture)
+                {
+                    { "key", "value" },
+                    { "KEY", "VALUE" }
+                }));
+
+            var headers =
+                new Dictionary<string, IEnumerable<string>>
+                {
+                    { "content-type", new[] { "multipart/form-data; boundary=----NancyFormBoundary" } }
+                };
+
+            // When
+            var request = new Request("POST", new Url { Path = "/", Scheme = "http" }, CreateRequestStream(memory), headers);
+
+            // Then
+            ((string)request.Form.key).ShouldEqual("value");
+            ((string)request.Form.KEY).ShouldEqual("VALUE");
+        }
+
+        [Fact]
         public void Should_set_extracted_files_to_files_collection_when_body_content_type_is_multipart_form_data()
         {
             // Given

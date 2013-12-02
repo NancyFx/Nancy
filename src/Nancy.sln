@@ -81,7 +81,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnota
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.FluentValidation", "Nancy.Validation.FluentValidation\Nancy.Validation.FluentValidation.csproj", "{01230F2A-D108-480C-B834-8CE0569FD3B3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotatioins.Tests", "Nancy.Validation.DataAnnotatioins.Tests\Nancy.Validation.DataAnnotatioins.Tests.csproj", "{8F9F910D-416E-4B28-BE59-D76670405F56}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.DataAnnotations.Tests", "Nancy.Validation.DataAnnotatioins.Tests\Nancy.Validation.DataAnnotations.Tests.csproj", "{8F9F910D-416E-4B28-BE59-D76670405F56}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Validation.FluentValidation.Tests", "Nancy.Validation.FluentValidation.Tests\Nancy.Validation.FluentValidation.Tests.csproj", "{FBC35268-377B-4DBE-87E3-B22D1314BEC6}"
 EndProject

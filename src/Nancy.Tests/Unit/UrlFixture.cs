@@ -212,6 +212,28 @@ namespace Nancy.Tests.Unit
         }
 
         [Theory]
+        [InlineData("https://www.nancyfx.org:1234/base?foo=some%20text", "https", "www.nancyfx.org", 1234, "/base", "?foo=some%20text")]
+        [InlineData("http://nancyfx.org", "http", "nancyfx.org", 80, "/", "")]
+        [InlineData("http://nancyfx.org?foo=some%20text", "http", "nancyfx.org", 80, "/", "?foo=some%20text")]
+        [InlineData("https://nancyfx.org/base/admin/area?foo=some%20text", "https", "nancyfx.org", 443, "/base/admin/area", "?foo=some%20text")]
+        [InlineData("http://nancyfx.org/base/admin/area", "http", "nancyfx.org", 80, "/base/admin/area", "")]
+        public void Should_implicitly_cast_uri_to_url(string fullurl, string scheme, string host, int port, string path, string query)
+        {
+            //Given
+            var uri = new Uri(fullurl);
+
+            //When
+            Url result = uri;
+
+            //Then
+            Assert.Equal(scheme, result.Scheme);
+            Assert.Equal(host,result.HostName);
+            Assert.Equal(port, result.Port);
+            Assert.Equal(path, result.Path);
+            Assert.Equal(query, result.Query);
+        }
+
+        [Theory]
         [InlineData("https")]
         [InlineData("Https")]
         [InlineData("httPs")]

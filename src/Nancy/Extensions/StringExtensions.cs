@@ -8,6 +8,9 @@ namespace Nancy.Extensions
     using Nancy.Helpers;
     using Routing;
 
+    /// <summary>
+    /// Containing extensions for the <see cref="string"/> object.
+    /// </summary>
     public static class StringExtensions
     {
         /// <summary>

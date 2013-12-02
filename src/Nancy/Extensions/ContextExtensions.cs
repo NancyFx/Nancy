@@ -1,12 +1,11 @@
-using System;
-using System.Text;
-
 namespace Nancy.Extensions
 {
+    using System;
+    using System.Text;
     using Nancy.Responses;
 
     /// <summary>
-    /// Containing extensions for the NancyContext object
+    /// Containing extensions for the <see cref="NancyContext"/> object
     /// </summary>
     public static class ContextExtensions
     {

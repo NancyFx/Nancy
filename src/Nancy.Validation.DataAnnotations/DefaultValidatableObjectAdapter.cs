@@ -5,30 +5,21 @@
     using System.ComponentModel.DataAnnotations;
 
     /// <summary>
-    /// An adapter for an <see cref="IValidatableObject"/>.
+    /// Default adapter for models that implements the <see cref="IValidatableObject"/> interface.
     /// </summary>
-    public class DataAnnotationsValidatableObjectValidatorAdapter : IDataAnnotationsValidatorAdapter
+    public class DefaultValidatableObjectAdapter : IValidatableObjectAdapter
     {
-        /// <summary>
-        /// Gets the rules.
-        /// </summary>
-        /// <returns></returns>
-        public IEnumerable<ModelValidationRule> GetRules()
-        {
-            yield return new ModelValidationRule("Self", s => string.Format("{0} is invalid.", s));
-        }
-
         /// <summary>
         /// Validates the specified instance.
         /// </summary>
         /// <param name="instance">The instance.</param>
-        /// <returns></returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance, containing <see cref="ModelValidationError"/> objects.</returns>
         public IEnumerable<ModelValidationError> Validate(object instance)
         {
-            var context = 
+            var context =
                 new ValidationContext(instance, null, null);
 
-            var result = 
+            var result =
                 ((IValidatableObject)instance).Validate(context);
 
             return result.Select(r => new ModelValidationError(r.MemberNames, s => r.ErrorMessage));

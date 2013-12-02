@@ -28,41 +28,41 @@
         /// <returns>A <see cref="EmbeddedFileResponse"/> instance for the requested embedded static contents if it was found, otherwise <see langword="null"/>.</returns>
         public static Func<NancyContext, string, Response> AddDirectory(string requestedPath, Assembly assembly, string contentPath = null, params string[] allowedExtensions)
         {
+            if (!requestedPath.StartsWith("/"))
+            {
+                requestedPath = string.Concat("/", requestedPath);
+            }
+                
             return (ctx, root) =>
+            {
+                var path =
+                    HttpUtility.UrlDecode(ctx.Request.Path);
+
+                var fileName =
+                    Path.GetFileName(path);
+
+                if (string.IsNullOrEmpty(fileName))
                 {
-                    var path =
-                        HttpUtility.UrlDecode(ctx.Request.Path);
+                    return null;
+                }
 
-                    var fileName =
-                        Path.GetFileName(path);
+                var pathWithoutFilename =
+                    GetPathWithoutFilename(fileName, path);
 
-                    if (string.IsNullOrEmpty(fileName))
-                    {
-                        return null;
-                    }
+                if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'")));
+                    return null;
+                }
 
-                    var pathWithoutFilename =
-                        GetPathWithoutFilename(fileName, path);
+                contentPath =
+                    GetContentPath(requestedPath, contentPath);
 
-                    if (!requestedPath.StartsWith("/"))
-                    {
-                        requestedPath = string.Concat("/", requestedPath);
-                    }
+                var responseFactory =
+                    ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, requestedPath, contentPath, assembly, allowedExtensions));
 
-                    if (!pathWithoutFilename.StartsWith(requestedPath, StringComparison.OrdinalIgnoreCase))
-                    {
-                        ctx.Trace.TraceLog.WriteLog(x => x.AppendLine(string.Concat("[EmbeddedStaticContentConventionBuilder] The requested resource '", path, "' does not match convention mapped to '", requestedPath, "'")));
-                        return null;
-                    }
-
-                    contentPath =
-                        GetContentPath(requestedPath, contentPath);
-
-                    var responseFactory =
-                        ResponseFactoryCache.GetOrAdd(path, BuildContentDelegate(ctx, requestedPath, contentPath, assembly, allowedExtensions));
-
-                    return responseFactory.Invoke();
-                };
+                return responseFactory.Invoke();
+            };
         }
 
         private static Func<string, Func<Response>> BuildContentDelegate(NancyContext context, string requestedPath, string contentPath, Assembly assembly, string[] allowedExtensions)

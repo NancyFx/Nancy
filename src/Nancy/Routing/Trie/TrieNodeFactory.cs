@@ -1,6 +1,9 @@
 namespace Nancy.Routing.Trie
 {
     using System.Linq;
+    using System.Collections.Generic;
+
+    using Nancy.Routing.Constraints;
     using Nancy.Routing.Trie.Nodes;
     
     /// <summary>
@@ -8,6 +11,13 @@ namespace Nancy.Routing.Trie
     /// </summary>
     public class TrieNodeFactory : ITrieNodeFactory
     {
+        private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
+
+        public TrieNodeFactory(IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
+        {
+            this.routeSegmentConstraints = routeSegmentConstraints;
+        }
+
         /// <summary>
         /// Gets the correct Trie node type for the given segment
         /// </summary>
@@ -52,7 +62,7 @@ namespace Nancy.Routing.Trie
         {
             if (segment.Contains(":"))
             {
-                return new CaptureNodeWithConstraint(parent, segment, this);
+                return new CaptureNodeWithConstraint(parent, segment, this, routeSegmentConstraints);
             }
 
             if (segment.EndsWith("?}"))

@@ -1,6 +1,6 @@
-﻿namespace Nancy.Validation.DataAnnotatioins.Tests
+﻿namespace Nancy.Validation.DataAnnotations.Tests
 {
-    using System.ComponentModel.DataAnnotations;
+    using FakeItEasy;
     using Nancy.Tests;
     using Nancy.Validation.DataAnnotations;
     using Xunit;
@@ -11,7 +11,14 @@
 
         public DataAnnotationValidatorFactoryFixture()
         {
-            this.subject = new DataAnnotationsValidatorFactory();
+            var factory =
+                A.Fake<IPropertyValidatorFactory>();
+
+            var adapter =
+                A.Fake<IValidatableObjectAdapter>();
+
+            this.subject = 
+                new DataAnnotationsValidatorFactory(factory, adapter);
         }
 
         [Fact]
@@ -22,22 +29,6 @@
 
             // Then
             result.ShouldBeNull();
-        }
-
-        [Fact]
-        public void Should_provide_non_null_validator_when_validation_exists()
-        {
-            // Given, When
-            var result = this.subject.Create(typeof(TestModel));
-
-            // Then
-            result.ShouldNotBeNull();
-        }
-
-        private class TestModel
-        {
-            [Required]
-            public string FirstName { get; set; }
         }
     }
 }
