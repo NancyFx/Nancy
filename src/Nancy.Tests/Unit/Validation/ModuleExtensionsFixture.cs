@@ -53,7 +53,7 @@
         {
             // Given
             var validator = A.Fake<IModelValidator>();
-            A.CallTo(() => validator.Validate(A<object>.Ignored, A<NancyContext>._)).Returns(new ModelValidationResult(new[] { new ModelValidationError("blah", s => "blah") }));
+            A.CallTo(() => validator.Validate(A<object>.Ignored, A<NancyContext>._)).Returns(new ModelValidationResult(new[] { new ModelValidationError("blah", "blah") }));
             A.CallTo(() => validatorLocator.GetValidatorForType(A<Type>.Ignored)).Returns(validator);
 
             // When

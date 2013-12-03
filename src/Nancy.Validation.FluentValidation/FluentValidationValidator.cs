@@ -93,7 +93,7 @@ namespace Nancy.Validation.FluentValidation
         {
             return results.IsValid ? 
                 Enumerable.Empty<ModelValidationError>() :
-                results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, s => error.ErrorMessage));
+                results.Errors.Select(error => new ModelValidationError(new[] { error.PropertyName }, error.ErrorMessage));
         }
 
         private IEnumerable<ModelValidationRule> GetValidationRule(PropertyRule rule, IPropertyValidator propertyValidator)

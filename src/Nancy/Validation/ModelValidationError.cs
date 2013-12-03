@@ -4,11 +4,30 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// A validation error.
+    /// Represents a model validation error.
     /// </summary>
     public class ModelValidationError
     {
-        private readonly Func<string, string> errorMessageFormatter;
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModelValidationError"/> class.
+        /// </summary>
+        /// <param name="memberName">Name of the member that the error describes.</param>
+        /// <param name="errorMessage"></param>
+        public ModelValidationError(string memberName, string errorMessage)
+            : this(new[] { memberName }, errorMessage)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ModelValidationError"/> class.
+        /// </summary>
+        /// <param name="memberNames">The member names that the error describes.</param>
+        /// <param name="errorMessage"></param>
+        public ModelValidationError(IEnumerable<string> memberNames, string errorMessage)
+        {
+            this.MemberNames = memberNames;
+            this.ErrorMessage = errorMessage;
+        }
 
         /// <summary>
         /// Gets the member names that are a part of the error.
@@ -17,34 +36,18 @@
         public IEnumerable<string> MemberNames { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelValidationError"/> class.
+        /// 
         /// </summary>
-        /// <param name="memberName">Name of the member.</param>
-        /// <param name="errorMessageFormatter">The error message formatter.</param>
-        public ModelValidationError(string memberName, Func<string, string> errorMessageFormatter)
-            : this(new[] { memberName }, errorMessageFormatter)
-        {
-        }
+        public string ErrorMessage { get; private set; }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ModelValidationError"/> class.
+        /// Implictly cast a validation error to a string.
         /// </summary>
-        /// <param name="memberNames">The member names.</param>
-        /// <param name="errorMessageFormatter">The error message formatter.</param>
-        public ModelValidationError(IEnumerable<string> memberNames, Func<string, string> errorMessageFormatter)
+        /// <param name="error">The <see cref="ModelValidationError"/> that should be cast.</param>
+        /// <returns>A <see cref="string"/> containing the validation error description.</returns>
+        public static implicit operator string(ModelValidationError error)
         {
-            this.MemberNames = memberNames;
-            this.errorMessageFormatter = errorMessageFormatter;
-        }
-
-        /// <summary>
-        /// Gets the error message.
-        /// </summary>
-        /// <param name="displayName">The display name.</param>
-        /// <returns>The error message.</returns>
-        public string GetMessage(string displayName)
-        {
-            return errorMessageFormatter(displayName);
+            return error.ErrorMessage;
         }
     }
 }

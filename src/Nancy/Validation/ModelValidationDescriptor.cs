@@ -37,7 +37,7 @@
         /// <summary>
         /// Gets the rules.
         /// </summary>
-        /// <value>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</value>
+        /// <value>An <see cref="IDictionary{TKey,TValue}"/> instance that contains <see cref="ModelValidationRule"/> instances grouped by property name.</value>
         public IDictionary<string, IList<ModelValidationRule>> Rules { get; private set; }
 
         private static IDictionary<string, IList<ModelValidationRule>> GetModelValidationRuleDictionary(IEnumerable<ModelValidationRule> rules)

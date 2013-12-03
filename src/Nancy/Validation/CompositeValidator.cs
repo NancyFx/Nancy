@@ -48,7 +48,7 @@
                 .Select(v => v.Validate(instance, context))
                 .Where(r => r != null)
                 .SelectMany(r => r.Errors)
-                .ToArray();
+                .ToDictionary(x => x.Key, x => x.Value); ;
 
             return (!errors.Any()) ?
                 ModelValidationResult.Valid :

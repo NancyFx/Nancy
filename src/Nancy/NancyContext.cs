@@ -96,7 +96,7 @@ namespace Nancy
         /// </summary>
         public ModelValidationResult ModelValidationResult
         {
-            get { return this.modelValidationResult ?? new ModelValidationResult(null); }
+            get { return this.modelValidationResult ?? ModelValidationResult.Valid; }
             set { this.modelValidationResult = value; }
         }
 

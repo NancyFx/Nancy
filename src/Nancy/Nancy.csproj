@@ -152,6 +152,7 @@
     <Compile Include="Diagnostics\NullLog.cs" />
     <Compile Include="DisabledStaticContentProvider.cs" />
     <Compile Include="ErrorHandling\RouteExecutionEarlyExitException.cs" />
+    <Compile Include="Extensions\ModelValidationErrorExtensions.cs" />
     <Compile Include="Extensions\StreamExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Diagnostics\DefaultRequestTracing.cs" />
