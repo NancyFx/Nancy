@@ -345,6 +345,23 @@ namespace Nancy.Tests.Functional.Tests
         }
 
         [Fact]
+        public void Should_respond_with_notacceptable_when_no_processor_can_process_media_range()
+        {
+            // Given
+            var browser = new Browser(with =>
+            {
+                with.ResponseProcessor<NullProcessor>();
+                with.Module<NegotiationModule>();
+            });
+
+            // When
+            var response = browser.Get("/invalid-view-name", with => with.Accept("foo/bar"));
+
+            // Then
+            Assert.Equal(HttpStatusCode.NotAcceptable, response.StatusCode);
+        }
+
+        [Fact]
         public void Should_return_that_contains_default_model_when_no_media_range_specific_model_was_declared()
         {
             // Given
