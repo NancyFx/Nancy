@@ -44,6 +44,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="HomeModule.cs" />
     <Compile Include="AdminModule.cs" />
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Program.cs" />
@@ -66,15 +67,16 @@
       <Name>Nancy</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <EmbeddedResource Include="Views\Account\index.html" />
     <EmbeddedResource Include="Views\Admin\index.html" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Content\face.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Views\index.html" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
