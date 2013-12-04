@@ -1,13 +1,16 @@
-namespace Nancy.Tests.Unit.ViewEngines
+namespace Nancy.Embedded.Tests.Unit
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
+
     using FakeItEasy;
+
     using Nancy.Embedded;
-    using Nancy.ViewEngines;
+    using Nancy.Tests;
+
     using Xunit;
 
     public class EmbeddedViewLocationProviderFixture

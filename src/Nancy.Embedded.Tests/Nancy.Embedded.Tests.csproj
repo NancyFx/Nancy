@@ -57,6 +57,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Unit\DefaultResourceReaderFixture.cs" />
     <Compile Include="Unit\EmbeddedStaticContentConventionBuilderFixture.cs" />
     <Compile Include="Unit\EmbeddedViewLocationProviderFixture.cs" />
   </ItemGroup>

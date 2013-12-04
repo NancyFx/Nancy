@@ -121,6 +121,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Owin.Tests", "Nancy.O
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.ConstraintRouting", "Nancy.Demo.ConstraintRouting\Nancy.Demo.ConstraintRouting.csproj", "{972C2D45-49B6-4109-9A3A-0C8BC9225B95}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Nancy.Demo.Embedded", "Nancy.Demo.Embedded\Nancy.Demo.Embedded.csproj", "{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -801,6 +803,18 @@ Global
 		{972C2D45-49B6-4109-9A3A-0C8BC9225B95}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{972C2D45-49B6-4109-9A3A-0C8BC9225B95}.Release|Any CPU.Build.0 = Release|Any CPU
 		{972C2D45-49B6-4109-9A3A-0C8BC9225B95}.Release|x86.ActiveCfg = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoDebug|Any CPU.Build.0 = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoDebug|x86.ActiveCfg = Debug|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoRelease|Any CPU.Build.0 = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.MonoRelease|x86.ActiveCfg = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -862,6 +876,7 @@ Global
 		{F56F3983-0C34-4AEC-B418-A8AFFA63F1C4} = {4A24657F-9695-437B-9702-2541ED280628}
 		{B6929D0B-5104-4C7E-979D-F4914E813FA6} = {4A24657F-9695-437B-9702-2541ED280628}
 		{972C2D45-49B6-4109-9A3A-0C8BC9225B95} = {4A24657F-9695-437B-9702-2541ED280628}
+		{9E484DE7-8C8A-431C-8A68-B42F6AFC5818} = {4A24657F-9695-437B-9702-2541ED280628}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Nancy.Demo.Hosting.Aspnet\Nancy.Demo.Hosting.Aspnet.csproj
