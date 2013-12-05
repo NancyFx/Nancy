@@ -28,14 +28,6 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedViewLocationProvider"/> class.
         /// </summary>
-        public EmbeddedViewLocationProvider() 
-            : this(new DefaultResourceReader(), new ResourceAssemblyProvider())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedViewLocationProvider"/> class.
-        /// </summary>
         /// <param name="resourceReader">An <see cref="IResourceReader"/> instance that should be used when extracting embedded views.</param>
         /// <param name="resourceAssemblyProvider">An <see cref="IResourceAssemblyProvider"/> instance that should be used to determine which assemblies to scan for embedded views.</param>
         public EmbeddedViewLocationProvider(IResourceReader resourceReader, IResourceAssemblyProvider resourceAssemblyProvider)
