@@ -2,9 +2,9 @@
 {
     using Nancy;
 
-    public class HomeModule : NancyModule
+    public class AccountModule : NancyModule
     {
-        public HomeModule()
+        public AccountModule() : base("/account")
         {
             this.Get["/"] = _ => this.View["index"];
         }
