@@ -14,8 +14,8 @@
         /// </summary>
         public Registrations()
         {
-            this.Register<IResourceAssemblyProvider>(new ResourceAssemblyProvider());
-            this.Register<IResourceReader>(new DefaultResourceReader());
+            this.Register<IResourceAssemblyProvider>(typeof(ResourceAssemblyProvider));
+            this.Register<IResourceReader>(typeof(DefaultResourceReader));
             this.Register<IViewLocationProvider>(typeof(EmbeddedViewLocationProvider));
         }
     }
