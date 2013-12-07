@@ -1155,6 +1155,30 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResourceReader"/>.
+            /// </summary>
+            /// <param name="resourceReader">The <see cref="IResourceReader"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResourceReader(IResourceReader resourceReader)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResourceReader), resourceReader));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IResourceReader"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IResourceReader"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResourceReader<T>() where T : IResourceReader
+            {
+                this.bootstrapper.configuration.ResourceReader = typeof(T);
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteDescriptionProvider"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteDescriptionProvider"/> that the bootstrapper should use.</typeparam>

@@ -69,6 +69,7 @@ namespace Nancy.Bootstrapper
                     CultureService = typeof(DefaultCultureService),
                     TextResource = typeof(ResourceBasedTextResource),
                     ResourceAssemblyProvider = typeof(ResourceAssemblyProvider),
+                    ResourceReader = typeof(DefaultResourceReader),
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     RouteResolverTrie = typeof(RouteResolverTrie),
                     TrieNodeFactory = typeof(TrieNodeFactory),
@@ -144,6 +145,8 @@ namespace Nancy.Bootstrapper
         public Type TextResource { get; set; }
 
         public Type ResourceAssemblyProvider { get; set; }
+
+        public Type ResourceReader { get; set; }
 
         public Type StaticContentProvider { get; set; }
 
@@ -223,6 +226,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(ICultureService), this.CultureService),
                 new TypeRegistration(typeof(ITextResource), this.TextResource), 
                 new TypeRegistration(typeof(IResourceAssemblyProvider), this.ResourceAssemblyProvider), 
+                new TypeRegistration(typeof(IResourceReader), this.ResourceReader), 
                 new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
                 new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 

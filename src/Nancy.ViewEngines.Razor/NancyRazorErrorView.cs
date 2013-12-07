@@ -8,7 +8,7 @@
     /// </summary>
     public class NancyRazorErrorView : NancyRazorViewBase
     {
-        private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = true;</code> to enable.";
+        private const string DisableErrorTracesTrueMessage = "Error details are currently disabled. Please set <code>StaticConfiguration.DisableErrorTraces = false;</code> to enable.";
         
         private static string template;
 

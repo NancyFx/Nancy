@@ -24,7 +24,7 @@ While you're working away in your branch it's quite possible that your upstream 
 1. `git pull upstream master`
 1. `git checkout myBranch`
 1. `git rebase master myBranch`
-1. `git push origin master` - (optional) this this makes sure your remote master is up to date
+1. `git push origin master` - (optional) this makes sure your remote master is up to date
 
 This ensures that your history is "clean" i.e. you have one branch off from master followed by your changes in a straight line. Failing to do this ends up with several "messy" merges in your history, which we don't want. This is the reason why you should always work in a branch and you should never be working in, or sending pull requests from, master.
 

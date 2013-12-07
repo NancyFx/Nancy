@@ -22,7 +22,7 @@
             var result =
                 ((IValidatableObject)instance).Validate(context);
 
-            return result.Select(r => new ModelValidationError(r.MemberNames, s => r.ErrorMessage));
+            return result.Select(r => new ModelValidationError(r.MemberNames, r.ErrorMessage));
         }
     }
 }
