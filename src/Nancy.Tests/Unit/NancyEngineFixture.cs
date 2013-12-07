@@ -13,6 +13,8 @@ namespace Nancy.Tests.Unit
     using Nancy.Helpers;
     using Nancy.Routing;
     using Nancy.Tests.Fakes;
+    using Nancy.ViewEngines;
+
     using Xunit;
     using Nancy.Culture;
 
@@ -355,6 +357,32 @@ namespace Nancy.Tests.Unit
 
             // Then
             result.Response.StatusCode.ShouldEqual(HttpStatusCode.InternalServerError);
+        }
+
+        [Fact]
+        public void Should_set_status_code_to_406_if_view_not_found()
+        {
+            // Given
+            var resolvedRoute = new ResolveResult(
+                new FakeRoute(),
+                DynamicDictionary.Empty,
+                null,
+                null,
+                null);
+
+            A.CallTo(() => resolver.Resolve(A<NancyContext>.Ignored)).Returns(resolvedRoute);
+
+            A.CallTo(() => this.requestDispatcher.Dispatch(context, A<CancellationToken>._))
+                .Returns(TaskHelpers.GetFaultedTask<Response>(new ViewNotFoundException("omg! view not found!")));
+
+            var request = new Request("GET", "/", "http");
+
+            // When
+            var result = this.engine.HandleRequest(request);
+
+            // Then
+            result.Response.StatusCode.ShouldEqual(HttpStatusCode.NotAcceptable);
+            result.GetExceptionDetails().ShouldContain("ViewNotFoundException");
         }
 
         [Fact]

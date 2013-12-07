@@ -127,6 +127,7 @@
     <Compile Include="NancyRazorViewBase.cs" />
     <Compile Include="NonEncodedHtmlString.cs" />
     <Compile Include="RazorConfigurationSection.cs" />
+    <Compile Include="RazorLayoutNotFoundException.cs" />
     <Compile Include="RazorViewEngine.cs" />
     <Compile Include="RazorViewEngineApplicationStartupRegistrations.cs" />
     <Compile Include="UrlHelpers.cs" />

@@ -4,6 +4,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     using FakeItEasy;
     using Nancy.Bootstrapper;
@@ -198,17 +200,7 @@
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
-            public NancyContext HandleRequest(Request request)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
+            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
             {
                 throw new NotImplementedException();
             }

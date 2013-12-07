@@ -29,12 +29,14 @@ namespace Nancy.ErrorHandling
             this.errorPages = new Dictionary<HttpStatusCode, string>
                 {
                     { HttpStatusCode.NotFound, LoadResource("404.html") },
+                    { HttpStatusCode.NotAcceptable, LoadResource("406.html") },
                     { HttpStatusCode.InternalServerError, LoadResource("500.html") },
                 };
 
             this.expansionDelegates = new Dictionary<HttpStatusCode, Func<HttpStatusCode, NancyContext, string, string>>
                 {
-                    { HttpStatusCode.InternalServerError, PopulateErrorInfo}
+                    { HttpStatusCode.InternalServerError, PopulateErrorInfo},
+                    { HttpStatusCode.NotAcceptable, PopulateErrorInfo}
                 };
         }
 

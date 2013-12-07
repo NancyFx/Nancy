@@ -120,5 +120,18 @@ namespace Nancy.Tests.Unit.ErrorHandling
             // Then
             memoryStream.CanRead.ShouldBeTrue();
         }
+
+        [Fact]
+        public void Should_handle_not_acceptable()
+        {
+            // Given
+            var context = new NancyContext();
+
+            // When
+            this.statusCodeHandler.Handle(HttpStatusCode.NotAcceptable, context);
+
+            // Then
+            context.Response.Contents.ShouldNotBeNull();
+        }
     }
 }

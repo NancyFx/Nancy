@@ -317,6 +317,21 @@
         }
 
         [Fact]
+        public void Should_blow_up_gracefully_when_a_layout_is_not_found()
+        {
+            // Given
+            var location = FindView("ViewThatUsesLayoutThatDoesNotExist");
+
+            var stream = new MemoryStream();
+
+            // When
+            var response = this.engine.RenderView(location, null, this.renderContext);
+
+            // Then
+            typeof(RazorLayoutNotFoundException).ShouldBeThrownBy(() => response.Contents.Invoke(stream));
+        }
+
+        [Fact]
         public void Should_be_able_to_render_view_with_model_and_layout_to_stream()
         {
             // Given
