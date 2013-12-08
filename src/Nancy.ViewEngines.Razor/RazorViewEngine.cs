@@ -189,44 +189,18 @@
             var outputAssemblyName = 
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var modelType = 
-                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
-
-            var assemblies = new List<string>
+            string[] assemblies;
+            try
             {
-                GetAssemblyPath(typeof(System.Runtime.CompilerServices.CallSite)),
-                GetAssemblyPath(typeof(IHtmlString)),
-                GetAssemblyPath(Assembly.GetExecutingAssembly()),
-                GetAssemblyPath(modelType)
-            };
-
-            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
-
-            if (referencingAssembly != null)
-            {
-                assemblies.Add(GetAssemblyPath(referencingAssembly));
+                assemblies = this.GetReferencedAssemblies(viewRenderer, razorResult, referencingAssembly, passedModelType);
             }
-            
-            if (this.razorConfiguration != null)
+            catch (Exception ex)
             {
-                var assemblyNames = this.razorConfiguration.GetAssemblyNames();
-                if (assemblyNames != null)
-                {
-                    assemblies.AddRange(assemblyNames.Select(Assembly.Load).Select(GetAssemblyPath));
-                }
-
-                if (this.razorConfiguration.AutoIncludeModelNamespace)
-                {
-                    AddModelNamespace(razorResult, modelType);
-                }
+                return () => new NancyRazorErrorView(ex.ToString());
             }
-
-            assemblies = assemblies
-                .Union(viewRenderer.Assemblies)
-                .ToList();
 
             var compilerParameters = 
-                new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
+                new CompilerParameters(assemblies, outputAssemblyName);
 
             CompilerResults results;
             lock (this.compileLock)
@@ -280,6 +254,46 @@
             }
 
             return () => (INancyRazorView)Activator.CreateInstance(type);
+        }
+
+        private string[] GetReferencedAssemblies(IRazorViewRenderer viewRenderer, GeneratorResults razorResult,
+            Assembly referencingAssembly, Type passedModelType)
+        {
+            var modelType =
+                FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
+
+            var assemblies = new List<string>
+            {
+                GetAssemblyPath(typeof (System.Runtime.CompilerServices.CallSite)),
+                GetAssemblyPath(typeof (IHtmlString)),
+                GetAssemblyPath(Assembly.GetExecutingAssembly()),
+                GetAssemblyPath(modelType)
+            };
+
+            assemblies.AddRange(AppDomainAssemblyTypeScanner.Assemblies.Select(GetAssemblyPath));
+
+            if (referencingAssembly != null)
+            {
+                assemblies.Add(GetAssemblyPath(referencingAssembly));
+            }
+
+            if (this.razorConfiguration != null)
+            {
+                var assemblyNames = this.razorConfiguration.GetAssemblyNames();
+                if (assemblyNames != null)
+                {
+                    assemblies.AddRange(assemblyNames.Select(Assembly.Load).Select(GetAssemblyPath));
+                }
+
+                if (this.razorConfiguration.AutoIncludeModelNamespace)
+                {
+                    AddModelNamespace(razorResult, modelType);
+                }
+            }
+
+            return assemblies
+                .Union(viewRenderer.Assemblies)
+                .ToArray();
         }
 
         private string[] GetCompilationSource(CodeDomProvider provider, CodeCompileUnit generatedCode)
