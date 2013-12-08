@@ -105,8 +105,20 @@ namespace Nancy
                 GetPort(this.Port) +
                 GetCorrectPath(this.BasePath) +
                 GetCorrectPath(this.Path) +
-                this.Query +
+                GetQuery(this.Query) +
                 GetFragment(this.Fragment);
+        }
+
+        private static string GetQuery(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return string.Empty;
+            }
+
+            return query.StartsWith("?", StringComparison.OrdinalIgnoreCase) ?
+                query :
+                string.Concat("?", query);
         }
 
         /// <summary>
