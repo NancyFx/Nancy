@@ -16,7 +16,7 @@
         /// <returns>A <see cref="ModelValidationResult"/> instance.</returns>
         public static ModelValidationResult Validate<T>(this INancyModule module, T instance)
         {
-            var validator = 
+            var validator =
                 module.ValidatorLocator.GetValidatorForType(typeof(T));
 
             var result = (validator == null) ?
@@ -25,13 +25,8 @@
 
             if (module.ModelValidationResult.Errors.Any())
             {
-                foreach (var modelValidationError in result.Errors)
-                {
-                    foreach (var memberName in modelValidationError.MemberNames)
-                    {
-                        module.ModelValidationResult = module.ModelValidationResult.AddError(memberName, modelValidationError.GetMessage(memberName));
-                    }
-                }
+                module.ModelValidationResult.Errors =
+                    module.ModelValidationResult.Errors.Concat(result.Errors).ToDictionary(key => key.Key, val => val.Value);
             }
 
             module.ModelValidationResult = module.ModelValidationResult.Errors.Any()
