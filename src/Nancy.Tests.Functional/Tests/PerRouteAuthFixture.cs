@@ -1,12 +1,11 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System.Collections.Generic;
-
     using Nancy.Security;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
-
     using Xunit;
+    using Xunit.Extensions;
 
     public class PerRouteAuthFixture
     {
@@ -58,18 +57,34 @@
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
         }
 
-        [Fact]
-        public void Should_allow_if_claims_correct_case_insensitively()
+        [Theory]
+        [PropertyData("Claims")]
+        public void Should_allow_if_claims_correct_case_insensitively(params string[] claims)
         {
             var browser = new Browser(with =>
             {
-                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser("TEST", "TEST2"));
+                with.RequestStartup((t, p, c) => c.CurrentUser = new FakeUser(claims));
                 with.Module<PerRouteAuthModule>();
             });
 
             var result = browser.Get("/requiresclaims");
 
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+        }
+
+        public static IEnumerable<object[]> Claims
+        {
+            get
+            {
+                yield return new object[] { new[] { "TEST", "TEST2" } };
+                yield return new object[] { new[] { "TEST", "test2" } };
+                yield return new object[] { new[] { "test", "TEST2" } };
+                yield return new object[] { new[] { "test", "test2" } };
+                yield return new object[] { new[] { "Test", "Test2" } };
+                yield return new object[] { new[] { "TesT", "TesT2" } };
+                yield return new object[] { new[] { "TEsT", "TEsT2" } };
+                yield return new object[] { new[] { "TeSt", "TeSt2" } };
+            }
         }
 
         [Fact]
