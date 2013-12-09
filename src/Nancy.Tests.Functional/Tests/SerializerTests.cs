@@ -22,7 +22,7 @@
         public void Should_Serialize_To_ISO8601()
         {
             //Given
-            var result = browser.Get("/serializer/20131225", with =>
+            var result = browser.Get("/serializer/20131225121030", with =>
             {
                 with.Accept("application/json");
             });
@@ -31,7 +31,7 @@
             //Then
             var model = result.Body.AsString();
             
-            Assert.Equal("{\"CreatedOn\":\"2013-12-25T00:00:00\"}", model);
+            Assert.Equal("{\"CreatedOn\":\"2013-12-25T12:10:30\"}", model);
         }
     }
 }

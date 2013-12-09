@@ -10,7 +10,7 @@
             Get["/serializer/{date}"] = parameters =>
             {
                 var stringparamDate = (string)parameters.date;
-                var dateParsed = DateTime.ParseExact(stringparamDate, "yyyyMMdd", CultureInfo.InvariantCulture);
+                var dateParsed = DateTime.ParseExact(stringparamDate, "yyyyMMddHHmmss", CultureInfo.InvariantCulture);
                 return new FakeSerializerModel() { CreatedOn = dateParsed };
             };
         }
