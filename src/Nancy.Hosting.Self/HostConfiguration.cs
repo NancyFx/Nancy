@@ -46,6 +46,16 @@
         /// </summary>
         public bool EnableClientCertificates { get; set; }
 
+        /// <summary>
+        /// Gets or sets a property that determines the concurrency mode of the host.
+        /// When set to Multiple the host will process all incoming requests on
+        /// multiple threads.
+        /// When set to Single the host will process all incoming requests on the
+        /// same thread (treating them all sequential).
+        /// Defaults to Multiple.
+        /// </summary>
+        public ConcurrencyMode ConcurrencyMode { get; set; }
+
         public HostConfiguration()
         {
             this.RewriteLocalhost = true;
@@ -57,6 +67,7 @@
                     Debug.Write(message);
                 };
             this.EnableClientCertificates = false;
+            this.ConcurrencyMode = ConcurrencyMode.Multiple;
         }
     }
 }
