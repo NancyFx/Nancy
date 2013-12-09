@@ -1,6 +1,8 @@
 ﻿namespace Nancy.Tests.Functional.Tests
 {
     using System;
+
+    using Nancy.Json;
     using Nancy.Testing;
     using Nancy.Tests.Functional.Modules;
     using Xunit;
@@ -13,7 +15,11 @@
         public SerializerTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                    configuration => configuration.Modules(new Type[] { typeof(SerializerTestModule) }));
+                configuration =>
+                {
+                    configuration.Modules(new Type[] {typeof (SerializerTestModule)});
+                    configuration.ApplicationStartup((container, pipelines) => JsonSettings.ISO8601DateFormat = true);
+                });
 
             this.browser = new Browser(bootstrapper);
         }
@@ -21,12 +27,11 @@
         [Fact]
         public void Should_Serialize_To_ISO8601()
         {
-            //Given
+            //Given & When
             var result = browser.Get("/serializer/20131225121030", with =>
             {
                 with.Accept("application/json");
             });
-            //When
 
             //Then
             var model = result.Body.AsString();
