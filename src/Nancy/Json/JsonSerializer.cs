@@ -42,27 +42,26 @@ namespace Nancy.Json
         static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         static readonly MethodInfo serializeGenericDictionary = typeof(JsonSerializer).GetMethod("SerializeGenericDictionary", BindingFlags.NonPublic | BindingFlags.Instance);
 
-		Dictionary <object, bool> objectCache;
-		JavaScriptSerializer serializer;
-		JavaScriptTypeResolver typeResolver;
-		int recursionLimit;
-		int maxJsonLength;
-		int recursionDepth;
-        bool retainCasing;
-        
-		
-		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
-		
-		public JsonSerializer (JavaScriptSerializer serializer)
-		{
-			if (serializer == null)
-				throw new ArgumentNullException ("serializer");
-			this.serializer = serializer;
-			typeResolver = serializer.TypeResolver;
-			recursionLimit = serializer.RecursionLimit;
-			maxJsonLength = serializer.MaxJsonLength;
-            retainCasing = serializer.RetainCasing;
-		}
+        Dictionary<object, bool> objectCache;
+        JavaScriptSerializer serializer;
+        JavaScriptTypeResolver typeResolver;
+        int recursionLimit;
+        int maxJsonLength;
+        int recursionDepth;
+
+
+
+        Dictionary<Type, MethodInfo> serializeGenericDictionaryMethods;
+
+        public JsonSerializer(JavaScriptSerializer serializer)
+        {
+            if (serializer == null)
+                throw new ArgumentNullException("serializer");
+            this.serializer = serializer;
+            typeResolver = serializer.TypeResolver;
+            recursionLimit = serializer.RecursionLimit;
+            maxJsonLength = serializer.MaxJsonLength;
+        }
 
 		public void Serialize (object obj, StringBuilder output)
 		{
