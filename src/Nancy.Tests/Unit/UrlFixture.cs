@@ -155,6 +155,24 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
+        public void Should_append_question_mark_to_querystring_when_missing()
+        {
+            // Given
+            this.url.Scheme = "https";
+            this.url.HostName = "www.nancyfx.org";
+            this.url.Port = 1234;
+            this.url.BasePath = "/base";
+            this.url.Path = "/";
+            this.url.Query = "foo=some%20text";
+
+            // When
+            var result = this.url.ToString();
+
+            // Then
+            result.ShouldEndWith("https://www.nancyfx.org:1234/base?foo=some%20text");
+        }
+
+        [Fact]
         public void Should_append_fragment_when_converting_to_string()
         {
             // Given
