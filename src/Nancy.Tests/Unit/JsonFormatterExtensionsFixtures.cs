@@ -41,7 +41,7 @@ namespace Nancy.Tests.Unit
             {
                 response.Contents(stream);
 
-                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("{\"FirstName\":\"Andy\",\"LastName\":\"Pike\"}");
+                Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual("{\"firstName\":\"Andy\",\"lastName\":\"Pike\"}");
             }
         }
 

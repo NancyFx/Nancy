@@ -33,6 +33,7 @@ namespace Nancy.Json
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
     
@@ -339,7 +340,7 @@ namespace Nancy.Json
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = mi.Name;
+				name = ConvertToCamelCase(mi);
 				if (getMethod != null)
 					member = getMethod;
 				else
@@ -350,8 +351,13 @@ namespace Nancy.Json
 					first = false;
 			}
 		}
-		
-		void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
+
+        private static string ConvertToCamelCase<T>(T mi) where T: MemberInfo
+        {
+            return mi.Name.Substring(0, 1).ToLowerInvariant() + mi.Name.Substring(1);
+        }
+
+        void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
 		{
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, "[");
 			bool first = true;
