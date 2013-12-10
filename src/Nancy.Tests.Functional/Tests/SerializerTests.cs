@@ -15,11 +15,7 @@
         public SerializerTests()
         {
             this.bootstrapper = new ConfigurableBootstrapper(
-                configuration =>
-                {
-                    configuration.Modules(new Type[] {typeof (SerializerTestModule)});
-                    configuration.ApplicationStartup((container, pipelines) => JsonSettings.ISO8601DateFormat = true);
-                });
+                configuration => configuration.Modules(new Type[] {typeof (SerializerTestModule)}));
 
             this.browser = new Browser(bootstrapper);
         }
