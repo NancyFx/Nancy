@@ -1,14 +1,15 @@
 namespace Nancy.Hosting.Wcf.Tests
 {
-    using System;
-    using System.IO;
-    using System.Net;
-    using System.ServiceModel;
-    using System.ServiceModel.Web;
     using Bootstrapper;
     using FakeItEasy;
     using Nancy.Tests;
     using Nancy.Tests.xUnitExtensions;
+    using System;
+    using System.IO;
+    using System.Linq;
+    using System.Net;
+    using System.ServiceModel;
+    using System.ServiceModel.Web;
     using Xunit;
 
     /// <remarks>
@@ -180,6 +181,51 @@ namespace Nancy.Hosting.Wcf.Tests
             Assert.Equal(56297, nancyRequest.Url.Port);
             Assert.Equal("localhost", nancyRequest.Url.HostName);
             Assert.Equal("http", nancyRequest.Url.Scheme);
+        }
+
+        [SkippableFact]
+        public void Should_not_have_content_type_header_for_not_modified_responses()
+        {
+            // Given
+            Request nancyRequest = null;
+            var fakeEngine = A.Fake<INancyEngine>();
+            var fakeBootstrapper = A.Fake<INancyBootstrapper>();
+            var fakeNotModifiedResponse = A.Fake<Response>();
+
+            // Context sends back a 304 Not Modified
+            var context = new NancyContext();
+            context.Response = new Response()
+            {
+                ContentType = null,
+                StatusCode = Nancy.HttpStatusCode.NotModified
+            };
+
+            A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored))
+                .Invokes((f) => nancyRequest = (Request)f.Arguments[0])
+                .Returns(context);
+
+            A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
+
+            // When a request is made and responded to with a status of 304 Not Modified
+            System.Net.WebResponse response = null;
+            using (CreateAndOpenWebServiceHost(fakeBootstrapper)) 
+            {
+                var request = WebRequest.Create(new Uri(BaseUri, "notmodified"));
+                request.Method = "GET";
+                try 
+                {
+                    request.GetResponse();
+                }
+                catch (WebException notModifiedEx) 
+                {
+                    // Will throw because it returns 304
+                    response = notModifiedEx.Response;
+                }
+            }
+
+            // Then
+            Assert.NotNull(response);
+            Assert.False(response.Headers.AllKeys.Any(header => header == "Content-Type"));
         }
 
         private static WebServiceHost CreateAndOpenWebServiceHost(INancyBootstrapper nancyBootstrapper = null, Uri baseUri = null)
