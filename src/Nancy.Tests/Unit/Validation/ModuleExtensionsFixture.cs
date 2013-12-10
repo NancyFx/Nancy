@@ -92,6 +92,30 @@
             A.CallTo(() => validator.Validate(model, A<NancyContext>._)).MustHaveHappened();
         }
 
+        [Fact]
+        public void Should_add_errors_to_existing_module_errors()
+        {
+            //Given
+            subject.ModelValidationResult =
+                new ModelValidationResult(new[] { new ModelValidationError("FirstName", "Please enter a name") });
+            
+            var model = new FakeModel();
+            
+            var validator = A.Fake<IModelValidator>();
+            
+            A.CallTo(() => validatorLocator.GetValidatorForType(A<Type>.Ignored)).Returns(validator);
+            
+            A.CallTo(() => validator.Validate(model, A<NancyContext>._))
+             .Returns(
+                 new ModelValidationResult(new[] { new ModelValidationError("LastName", "Please enter a last name") }));
+
+            // When
+            subject.Validate(model);
+
+            // Then
+            subject.ModelValidationResult.Errors.ShouldHaveCount(2);
+        }
+
         private class FakeModel
         {
         }
