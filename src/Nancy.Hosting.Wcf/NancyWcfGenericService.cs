@@ -68,7 +68,7 @@
                         nancyContext.Response.Contents(stream);
                         nancyContext.Dispose();
                     }, 
-                    nancyContext.Response.ContentType ?? "");
+                    nancyContext.Response.ContentType ?? string.Empty);
         }
 
         public void Dispose()
