@@ -62,15 +62,15 @@ namespace Nancy.Json
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false, false);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false, true);
 
         public JavaScriptSerializer()
-            : this(null, false, 102400, 100, false, false)
+            : this(null, false, 102400, 100, false, true)
         {
         }
 
         public JavaScriptSerializer(JavaScriptTypeResolver resolver)
-            : this(resolver, false, 102400, 100, false, false)
+            : this(resolver, false, 102400, 100, false, true)
         {
         }
 #endif

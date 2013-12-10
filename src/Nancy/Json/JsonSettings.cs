@@ -39,7 +39,7 @@ namespace Nancy.Json
 
         static JsonSettings()
         {
-            ISO8601DateFormat = false;
+            ISO8601DateFormat = true;
             MaxJsonLength = 102400;
             MaxRecursions = 100;
             DefaultCharset = "utf-8";
