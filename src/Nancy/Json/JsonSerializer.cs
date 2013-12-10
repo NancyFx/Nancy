@@ -340,7 +340,7 @@ namespace Nancy.Json
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = ConvertToCamelCase(mi);
+				name = ConvertToCamelCase(mi.Name);
 				if (getMethod != null)
 					member = getMethod;
 				else
@@ -352,9 +352,9 @@ namespace Nancy.Json
 			}
 		}
 
-        private static string ConvertToCamelCase<T>(T mi) where T: MemberInfo
+        private static string ConvertToCamelCase(string str)
         {
-            return mi.Name.Substring(0, 1).ToLowerInvariant() + mi.Name.Substring(1);
+            return str.Substring(0, 1).ToLowerInvariant() + str.Substring(1);
         }
 
         void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
