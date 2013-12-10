@@ -68,7 +68,7 @@
                         nancyContext.Response.Contents(stream);
                         nancyContext.Dispose();
                     }, 
-                    nancyContext.Response.ContentType ?? ""); // Stupid WCF forces us to specify a content type
+                    nancyContext.Response.ContentType ?? "");
         }
 
         public void Dispose()
