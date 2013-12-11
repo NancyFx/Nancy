@@ -37,7 +37,7 @@ namespace Nancy.Hosting.Aspnet
             if (configurationBootstrapperType != null)
             {
                 var bootstrapperType =
-                    Type.GetType(configurationBootstrapperType.Name + ", " + configurationBootstrapperType.Assembly);
+                    Type.GetType(string.Concat(configurationBootstrapperType.Name, ", ", configurationBootstrapperType.Assembly));
 
                 return Activator.CreateInstance(bootstrapperType) as INancyBootstrapper;
             }
