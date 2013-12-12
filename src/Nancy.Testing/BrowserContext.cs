@@ -81,6 +81,17 @@
         /// <summary>
         /// Adds a body to the HTTP request.
         /// </summary>
+        /// <param name="body">A string that should be used as the HTTP request body.</param>
+        /// <param name="contentType">Content type of the HTTP request body.</param>
+        public void Body(string body, string contentType)
+        {
+            this.Values.BodyString = body;
+            this.Header("Content-Type", contentType);
+        }
+
+        /// <summary>
+        /// Adds a body to the HTTP request.
+        /// </summary>
         /// <param name="body">A stream that should be used as the HTTP request body.</param>
         /// <param name="contentType">Content type of the HTTP request body. Defaults to 'application/octet-stream'</param>
         public void Body(Stream body, string contentType = null)
