@@ -104,6 +104,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="ConcurrencyMode.cs" />
     <Compile Include="UrlReservations.cs" />
     <Compile Include="UacHelper.cs" />
     <Compile Include="FileSystemRootPathProvider.cs" />

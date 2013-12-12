@@ -7,6 +7,7 @@
     using System.Net;
     using System.Linq;
     using System.Security.Principal;
+    using System.Threading;
     using IO;
     using Nancy.Bootstrapper;
     using Nancy.Extensions;
@@ -28,6 +29,11 @@
 
         private readonly IList<Uri> baseUriList;
         private HttpListener listener;
+        private Thread thread;
+        private bool shouldContinue;
+        private int requestsInProcess;
+        private ManualResetEventSlim listenEndedEvent;
+        private ManualResetEventSlim allRequestsProcessedEvent;
         private readonly INancyEngine engine;
         private readonly HostConfiguration configuration;
         private readonly INancyBootstrapper bootstrapper;
@@ -112,6 +118,17 @@
             this.Stop();
 
             this.bootstrapper.Dispose();
+
+            if (this.listenEndedEvent != null)
+            {
+                this.listenEndedEvent.Dispose();
+                this.listenEndedEvent = null;
+            }
+            if (this.allRequestsProcessedEvent != null)
+            {
+                this.allRequestsProcessedEvent.Dispose();
+                this.allRequestsProcessedEvent = null;
+            }
         }
 
         /// <summary>
@@ -121,16 +138,12 @@
         {
             this.StartListener();
 
-            try
-            {
-                this.listener.BeginGetContext(this.GotCallback, null);
-            }
-            catch (Exception e)
-            {
-                this.configuration.UnhandledExceptionCallback.Invoke(e);
-
-                throw;
-            }
+            this.allRequestsProcessedEvent = new ManualResetEventSlim(true);
+            this.listenEndedEvent = new ManualResetEventSlim(true);
+            shouldContinue = true;
+            requestsInProcess = 0;
+            thread = new Thread(Listen);
+            thread.Start();
         }
 
         private void StartListener()
@@ -213,9 +226,26 @@
         /// </summary>
         public void Stop()
         {
+            shouldContinue = false;
             if (this.listener.IsListening)
             {
                 listener.Stop();
+            }
+
+            // Wait for listener thread to end.
+            if (this.listenEndedEvent != null)
+            {
+                this.listenEndedEvent.Wait();
+                this.listenEndedEvent.Dispose();
+                this.listenEndedEvent = null;
+            }
+
+            // Make sure all requests are processed.
+            if (this.allRequestsProcessedEvent != null)
+            {
+                this.allRequestsProcessedEvent.Wait();
+                this.allRequestsProcessedEvent.Dispose();
+                this.allRequestsProcessedEvent = null;
             }
         }
 
@@ -375,33 +405,61 @@
                 contentLength;
         }
 
-        private void GotCallback(IAsyncResult ar)
+        private void Listen()
         {
             try
             {
-                var ctx = this.listener.EndGetContext(ar);
-                this.listener.BeginGetContext(this.GotCallback, null);
-                this.Process(ctx);
-            }
-            catch (Exception e)
-            {
-                this.configuration.UnhandledExceptionCallback.Invoke(e);
+                this.listenEndedEvent.Reset();
 
-                try
+                while (shouldContinue)
                 {
-                    this.listener.BeginGetContext(this.GotCallback, null);
-                }
-                catch
-                {
-                    this.configuration.UnhandledExceptionCallback.Invoke(e);
+                    HttpListenerContext requestContext;
+                    try
+                    {
+                        requestContext = listener.GetContext();
+                        if (!shouldContinue)
+                        {
+                            break;
+                        }
+
+                        if (configuration.ConcurrencyMode == ConcurrencyMode.Single)
+                        {
+                            this.Process(requestContext);
+                        }
+                        else
+                        {
+                            ThreadPool.QueueUserWorkItem(new WaitCallback(ProcessCallback), requestContext);
+                        }
+                    }
+                    catch (HttpListenerException)
+                    {
+                        // this will be thrown when listener is closed while waiting for a request
+                        break;
+                    }
+                    catch (Exception e)
+                    {
+                        this.configuration.UnhandledExceptionCallback.Invoke(e);
+                    }
                 }
             }
+            finally
+            {
+                this.listenEndedEvent.Set();
+            }
+        }
+
+        private void ProcessCallback(object ctx)
+        {
+            Process(ctx as HttpListenerContext);
         }
 
         private void Process(HttpListenerContext ctx)
         {
             try
             {
+                Interlocked.Increment(ref requestsInProcess);
+                this.allRequestsProcessedEvent.Reset();
+
                 var nancyRequest = this.ConvertRequestToNancyRequest(ctx.Request);
                 using (var nancyContext = this.engine.HandleRequest(nancyRequest))
                 {
@@ -418,6 +476,13 @@
             catch (Exception e)
             {
                 this.configuration.UnhandledExceptionCallback.Invoke(e);
+            }
+            finally
+            {
+                if (Interlocked.Decrement(ref requestsInProcess) == 0)
+                {
+                    this.allRequestsProcessedEvent.Set();
+                }
             }
         }
     }
