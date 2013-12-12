@@ -234,5 +234,19 @@
             Assert.Equal(1, pipeline.Items.Count());
             Assert.Same(item1, pipeline.Items.First());
         }
+        
+        [Fact]
+        public void Should_be_able_to_add_unnamed_item_to_end_of_pipeline()
+        {
+        	Action<string> firstAction = r => { };
+        	Action<string> secondAction = r => { };
+        	
+        	pipeline.AddItemToEndOfPipeline(firstAction);
+        	pipeline.AddItemToEndOfPipeline(secondAction);
+
+            Assert.Equal(2, pipeline.PipelineDelegates.Count());
+            Assert.Equal(firstAction, pipeline.PipelineDelegates.First());
+            Assert.Equal(secondAction, pipeline.PipelineDelegates.Last());
+        }
     }
 }
