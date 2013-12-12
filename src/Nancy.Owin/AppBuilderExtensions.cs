@@ -10,7 +10,7 @@ namespace Owin
     /// <summary>
     /// OWIN extensions for Nancy
     /// </summary>
-    public static class Extensions
+    public static class AppBuilderExtensions
     {
         private const string AppDisposingKey = "host.OnAppDisposing";
 
