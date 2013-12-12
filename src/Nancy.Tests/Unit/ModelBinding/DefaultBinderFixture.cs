@@ -1078,6 +1078,23 @@ namespace Nancy.Tests.Unit.ModelBinding
         }
 
         [Fact]
+        public void Should_bind_string_array_model_from_body()
+        {
+            //Given
+            var binder = this.GetBinder(null, new List<IBodyDeserializer> { new JsonBodyDeserializer() });
+            var body = serializer.Serialize(new[] { "Test","AnotherTest"});
+
+            var context = CreateContextWithHeaderAndBody("Content-Type", new[] { "application/json" }, body);
+
+            // When
+            var result = (string[])binder.Bind(context, typeof(string[]), null, BindingConfig.Default);
+
+            // Then
+            result.First().ShouldEqual("Test");
+            result.Last().ShouldEqual("AnotherTest");
+        }
+
+        [Fact]
         public void Should_bind_ienumerable_model_from_body()
         {
             //Given
