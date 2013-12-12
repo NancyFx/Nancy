@@ -13,26 +13,32 @@
         [Fact]
         public void Should_camel_case_property_names_by_default()
         {
+            // Given
             var sut = new DefaultJsonSerializer();
             var input = new { FirstName = "Joe", lastName = "Doe" };
   
+            // When
             var output = new MemoryStream(); 
             sut.Serialize("application/json", input, output);
             var actual = Encoding.UTF8.GetString(output.ToArray());
 
+            // Then
             actual.ShouldEqual("{\"firstName\":\"Joe\",\"lastName\":\"Doe\"}");
         }
 
         [Fact]
         public void Should_camel_case_field_names_be_default()
         {
+            // Given
             var sut = new DefaultJsonSerializer();
             var input = new PersonWithFields { firstName = "Joe", LastName = "Doe" };
 
+            // When
             var output = new MemoryStream();
             sut.Serialize("application/json", input, output);
             var actual = Encoding.UTF8.GetString(output.ToArray());
 
+            // Then
             actual.ShouldEqual("{\"firstName\":\"Joe\",\"lastName\":\"Doe\"}");
         }
 
@@ -42,12 +48,16 @@
             JsonSettings.RetainCasing = true;
             try
             {
+                // Given
                 var sut = new DefaultJsonSerializer();
                 var input = new {FirstName = "Joe", lastName = "Doe"};
 
+                // When
                 var output = new MemoryStream();
                 sut.Serialize("application/json", input, output);
                 var actual = Encoding.UTF8.GetString(output.ToArray());
+
+                // Then
                 actual.ShouldEqual("{\"FirstName\":\"Joe\",\"lastName\":\"Doe\"}");
             }
             finally
