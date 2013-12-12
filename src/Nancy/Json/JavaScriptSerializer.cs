@@ -45,7 +45,7 @@ namespace Nancy.Json
         List<IEnumerable<JavaScriptConverter>> _converterList;
         int _maxJsonLength;
         int _recursionLimit;
-        private bool _retainCasing;
+        bool _retainCasing;
         JavaScriptTypeResolver _typeResolver;
 
 #if NET_3_5
