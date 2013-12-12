@@ -14,6 +14,12 @@ namespace Owin
     {
         private const string AppDisposingKey = "host.OnAppDisposing";
 
+        /// <summary>
+        /// Adds Nancy to the OWIN pipeline.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="options">The Nancy options.</param>
+        /// <returns>IAppBuilder.</returns>
         public static IAppBuilder UseNancy(this IAppBuilder builder, NancyOptions options = null)
         {
             var nancyOptions = options ?? new NancyOptions();
@@ -21,6 +27,19 @@ namespace Owin
             HookDisposal(builder, nancyOptions);
 
             return builder.Use(typeof(NancyOwinHost), nancyOptions);
+        }
+
+        /// <summary>
+        /// Adds Nancy to the OWIN pipeline.
+        /// </summary>
+        /// <param name="builder">The application builder.</param>
+        /// <param name="configuration">A configuration builder action.</param>
+        /// <returns>IAppBuilder.</returns>
+        public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
+        {
+            var options = new NancyOptions();
+            configuration(options);
+            return UseNancy(builder, options);
         }
 
         private static void HookDisposal(IAppBuilder builder, NancyOptions nancyOptions)
@@ -36,13 +55,6 @@ namespace Owin
             {
                 appDisposing.Value.Register(nancyOptions.Bootstrapper.Dispose);
             }
-        }
-
-        public static IAppBuilder UseNancy(this IAppBuilder builder, Action<NancyOptions> configuration)
-        {
-            var options = new NancyOptions();
-            configuration(options);
-            return UseNancy(builder, options);
         }
     }
 }
