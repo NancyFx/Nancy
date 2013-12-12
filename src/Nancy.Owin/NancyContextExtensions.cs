@@ -17,11 +17,7 @@
             object environment;
             if (context.Items.TryGetValue(NancyOwinHost.RequestEnvironmentKey, out environment))
             {
-                var owinEnvironment = environment as IDictionary<string, object>;
-                if (owinEnvironment != null)
-                {
-                    return owinEnvironment;
-                }
+                return environment as IDictionary<string, object>;
             }
 
             return null;
