@@ -87,8 +87,15 @@ namespace Nancy.Routing
         private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
         {
             var isResponse = (CastResultToResponse(result) != null);
+            if (isResponse)
+            {
+                return ProcessAsRealResponse(result, context);
+            }
 
-            return (isResponse) ? ProcessAsRealResponse(result, context) : this.negotiator.NegotiateResponse(result, context);
+            context.WriteTraceLog(sb =>
+                sb.AppendLine("[DefaultRouteInvoker] Processing as negotiation"));
+
+            return this.negotiator.NegotiateResponse(result, context);
         }
 
         private static Response CastResultToResponse(dynamic result)

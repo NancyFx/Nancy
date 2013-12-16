@@ -8,9 +8,9 @@
         /// <summary>
         /// Negotiates the response based on the given result and context.
         /// </summary>
-        /// <param name="result">The route result.</param>
+        /// <param name="routeResult">The route result.</param>
         /// <param name="context">The context.</param>
         /// <returns>A <see cref="Response"/>.</returns>
-        Response NegotiateResponse(object result, NancyContext context);
+        Response NegotiateResponse(object routeResult, NancyContext context);
     }
 }
