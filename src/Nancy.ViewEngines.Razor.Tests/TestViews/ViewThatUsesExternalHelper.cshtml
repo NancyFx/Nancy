@@ -1,0 +1,12 @@
+﻿@{
+    Layout = "SimplyLayout";
+}
+
+<div>ViewThatUsesHelper</div>
+
+@test("className")
+
+@helper test(string className)
+{
+    <p class="@className"></p>
+}

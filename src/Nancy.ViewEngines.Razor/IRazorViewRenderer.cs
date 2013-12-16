@@ -3,7 +3,6 @@
     using System;
     using System.CodeDom.Compiler;
     using System.Collections.Generic;
-    using System.Web.Razor;
     using System.Web.Razor.Generator;
 
     /// <summary>
@@ -29,7 +28,7 @@
         /// <summary>
         /// Gets the host.
         /// </summary>
-        RazorEngineHost Host { get; }
+        NancyRazorEngineHost GetHost(string viewLocation);
 
         /// <summary>
         /// Gets the provider that is used to generate code.

@@ -2,10 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.IO;
     using System.Text;
-    using Nancy.Helpers;
 
     /// <summary>
     /// Default base class for nancy razor views
@@ -148,7 +146,7 @@
         /// <param name="value">The value.</param>
         public virtual void Write(object value)
         {
-            WriteLiteral(HtmlEncode(value));
+            WriteLiteral(NancyPageBuilder.HtmlEncode(value));
         }
 
         /// <summary>
@@ -162,87 +160,14 @@
 
         public virtual void WriteAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
         {
-            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            var attributeValue = NancyPageBuilder.BuildAttribute(name, prefix, suffix, values);
             this.WriteLiteral(attributeValue);
         }
 
         public virtual void WriteAttributeTo(TextWriter writer, string name, Tuple<string, int> prefix, Tuple<string, int> suffix, params AttributeValue[] values)
         {
-            var attributeValue = this.BuildAttribute(name, prefix, suffix, values);
+            var attributeValue = NancyPageBuilder.BuildAttribute(name, prefix, suffix, values);
             this.WriteLiteralTo(writer, attributeValue);
-        }
-
-        private string BuildAttribute(string name, Tuple<string, int> prefix, Tuple<string, int> suffix,
-                                      params AttributeValue[] values)
-        {
-            var writtenAttribute = false;
-            var attributeBuilder = new StringBuilder(prefix.Item1);
-
-            foreach (var value in values)
-            {
-                if (this.ShouldWriteValue(value.Value.Item1))
-                {
-                    var stringValue = this.GetStringValue(value);
-                    var valuePrefix = value.Prefix.Item1;
-
-                    if (!string.IsNullOrEmpty(valuePrefix))
-                    {
-                        attributeBuilder.Append(valuePrefix);
-                    }
-
-                    attributeBuilder.Append(stringValue);
-                    writtenAttribute = true;
-                }
-            }
-
-            attributeBuilder.Append(suffix.Item1);
-
-            var renderAttribute = writtenAttribute || values.Length == 0;
-
-            if (renderAttribute)
-            {
-                return attributeBuilder.ToString();
-            }
-
-            return string.Empty;
-        }
-
-        private string GetStringValue(AttributeValue value)
-        {
-            if (value.IsLiteral)
-            {
-                return (string)value.Value.Item1;
-            }
-
-            if (value.Value.Item1 is IHtmlString)
-            {
-                return ((IHtmlString)value.Value.Item1).ToHtmlString();
-            }
-
-            if (value.Value.Item1 is DynamicDictionaryValue)
-            {
-                var dynamicValue = (DynamicDictionaryValue)value.Value.Item1;
-                return dynamicValue.HasValue ? dynamicValue.Value.ToString() : string.Empty;
-            }
-
-            return value.Value.Item1.ToString();
-        }
-
-        private bool ShouldWriteValue(object value)
-        {
-            if (value == null)
-            {
-                return false;
-            }
-
-            if (value is bool)
-            {
-                var boolValue = (bool) value;
-
-                return boolValue;
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -252,7 +177,7 @@
         /// <param name="value">The value that should be written.</param>
         public virtual void WriteTo(TextWriter writer, object value)
         {
-            writer.Write(HtmlEncode(value));
+            writer.Write(NancyPageBuilder.HtmlEncode(value));
         }
 
         /// <summary>
@@ -390,23 +315,6 @@
                 }
                 this.SectionContents.Add(section.Key, this.contents.ToString());
             }
-        }
-
-        /// <summary>
-        /// Html encodes an object if required
-        /// </summary>
-        /// <param name="value">Object to potentially encode</param>
-        /// <returns>String representation, encoded if necessary</returns>
-        private static string HtmlEncode(object value)
-        {
-            if (value == null)
-            {
-                return null;
-            }
-
-            var str = value as IHtmlString;
-
-            return str != null ? str.ToHtmlString() : HttpUtility.HtmlEncode(Convert.ToString(value, CultureInfo.CurrentCulture));
         }
     }
 }

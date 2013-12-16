@@ -14,6 +14,8 @@
     /// </summary>
     public class CSharpRazorViewRenderer : IRazorViewRenderer, IDisposable
     {
+        private readonly IRazorEngineHostFactory engineHostFactory;
+
         /// <summary>
         /// Gets the assemblies.
         /// </summary>
@@ -27,15 +29,10 @@
             get { return "cshtml"; }
         }
 
-        
-
-        /// <summary>/// <summary>
+        /// <summary>
         /// Gets the <see cref="SetBaseTypeCodeGenerator"/> that should be used with the renderer.
         /// </summary>
         public Type ModelCodeGenerator { get; private set; }
-        /// Gets the host.
-        /// </summary>
-        public RazorEngineHost Host { get; private set; }
 
         /// <summary>
         /// Gets the provider that is used to generate code.
@@ -45,8 +42,9 @@
         /// <summary>
         /// Initializes a new instance of the <see cref="CSharpRazorViewRenderer"/> class.
         /// </summary>
-        public CSharpRazorViewRenderer()
+        public CSharpRazorViewRenderer(IRazorEngineHostFactory engineHostFactory)
         {
+            this.engineHostFactory = engineHostFactory;
             this.Assemblies = new List<string>
             {
                 typeof(Microsoft.CSharp.RuntimeBinder.Binder).GetAssemblyPath()
@@ -55,10 +53,18 @@
             this.ModelCodeGenerator = typeof(CSharpModelCodeGenerator);
 
             this.Provider = new CSharpCodeProvider();
+        }
 
-            this.Host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
+        /// <summary>
+        /// Get the host
+        /// </summary>
+        public NancyRazorEngineHost GetHost(string viewLocation)
+        {
+            var host = this.engineHostFactory.Create(new CSharpRazorCodeLanguage(), viewLocation);
 
-            this.Host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
+            host.NamespaceImports.Add("Microsoft.CSharp.RuntimeBinder");
+
+            return host;
         }
 
         /// <summary>

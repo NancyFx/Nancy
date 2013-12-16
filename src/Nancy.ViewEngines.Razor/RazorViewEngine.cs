@@ -39,18 +39,14 @@
         /// <param name="configuration">The <see cref="IRazorConfiguration"/> that should be used by the engine.</param>
         public RazorViewEngine(IRazorConfiguration configuration)
         {
+            var hostFactory = new NancyRazorEngineHostFactory();
             this.viewRenderers = new List<IRazorViewRenderer>
             {
-                new CSharp.CSharpRazorViewRenderer(),
-                new VisualBasic.VisualBasicRazorViewRenderer()
+                new CSharp.CSharpRazorViewRenderer(hostFactory),
+                new VisualBasic.VisualBasicRazorViewRenderer(hostFactory)
             };
 
             this.razorConfiguration = configuration;
-
-            foreach (var renderer in this.viewRenderers)
-            {
-                this.AddDefaultNameSpaces(renderer.Host);
-            }
         }
 
         /// <summary>
@@ -174,8 +170,8 @@
         private Func<INancyRazorView> GetCompiledViewFactory(string extension, TextReader reader, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
             var renderer = this.viewRenderers.First(x => x.Extension.Equals(extension, StringComparison.OrdinalIgnoreCase));
-
-            var engine = new RazorTemplateEngine(renderer.Host);
+            var engine = new RazorTemplateEngine(renderer.GetHost(viewLocationResult.Location));
+            this.AddDefaultNameSpaces(engine.Host);
 
             var razorResult = engine.GenerateCode(reader, null, null, "roo");
 

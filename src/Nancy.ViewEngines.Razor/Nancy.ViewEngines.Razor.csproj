@@ -120,11 +120,16 @@
     <Compile Include="IHtmlString.cs" />
     <Compile Include="INancyRazorView.cs" />
     <Compile Include="IRazorConfiguration.cs" />
+    <Compile Include="IRazorEngineHostFactory.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="NancyPageBuilder.cs" />
+    <Compile Include="NancyRazorCodeEngineHost.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
+    <Compile Include="NancyRazorEngineHostFactory.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
+    <Compile Include="NancyRazorCodeBase.cs" />
     <Compile Include="NonEncodedHtmlString.cs" />
     <Compile Include="RazorConfigurationSection.cs" />
     <Compile Include="RazorViewEngine.cs" />

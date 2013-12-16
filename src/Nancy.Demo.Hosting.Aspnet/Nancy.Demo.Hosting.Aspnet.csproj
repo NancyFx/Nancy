@@ -116,6 +116,8 @@
     <Content Include="Views\razor-layout-error.cshtml" />
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
+    <Content Include="App_Code\CodeHelper.cshtml" />
+    <Content Include="Views\razor-helpers.cshtml" />
     <Content Include="Views\nustachePartial.nustache" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
@@ -172,6 +174,10 @@
       <Project>{A1A9E636-A37C-4170-B2E4-99D4F69B415D}</Project>
       <Name>Nancy.ViewEngines.Nustache</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Nancy.ViewEngines.Razor.BuildProviders\Nancy.ViewEngines.Razor.BuildProviders.csproj">
+      <Project>{edf3e264-2d0f-4440-99ff-45d279a598a9}</Project>
+      <Name>Nancy.ViewEngines.Razor.BuildProviders</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Nancy.ViewEngines.Razor\Nancy.ViewEngines.Razor.csproj">
       <Project>{2c6f51df-015c-4db6-b44c-0e5e4f25e2a9}</Project>
       <Name>Nancy.ViewEngines.Razor</Name>
@@ -191,7 +197,6 @@
     <None Include="Views\anon.spark" />
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
-    <None Include="Views\razor-strong.vbhtml" />
     <None Include="Views\dot.liquid" />
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />

@@ -11,7 +11,7 @@
     [BuildProviderAppliesTo(BuildProviderAppliesTo.Code | BuildProviderAppliesTo.Web)]
     public class NancyCSharpRazorBuildProvider : BuildProvider
     {
-        private readonly RazorEngineHost host;
+        private RazorEngineHost host;
 
         private readonly CompilerType compilerType;
 
@@ -23,8 +23,6 @@
         public NancyCSharpRazorBuildProvider()
         {
             this.compilerType = this.GetDefaultCompilerTypeForLanguage("C#");
-
-            this.host = new NancyRazorEngineHost(new CSharpRazorCodeLanguage());
         }
 
         /// <summary>
@@ -57,11 +55,24 @@
             return results.CompiledAssembly.GetType(string.Format(CultureInfo.CurrentCulture, "{0}.{1}", new object[] { this.host.DefaultNamespace, this.host.DefaultClassName }));
         }
 
+        private RazorEngineHost Host
+        {
+            get
+            {
+                if (this.host == null)
+                {
+                    this.host = new NancyRazorEngineHostFactory().Create(new CSharpRazorCodeLanguage(), this.VirtualPath);
+                }
+
+                return this.host;
+            }
+        }
+
         private CodeCompileUnit GetGeneratedCode()
         {
             if (this.generatedCode == null)
             {
-                var engine = new RazorTemplateEngine(this.host);
+                var engine = new RazorTemplateEngine(this.Host);
                 GeneratorResults results;
                 using (var reader = this.OpenReader())
                 {
