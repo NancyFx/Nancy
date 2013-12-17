@@ -1,11 +1,11 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
     using System.Threading;
-    using Nancy.Conventions;
+
+    using FakeItEasy;
+
     using Nancy.Diagnostics;
     using Nancy.ErrorHandling;
     using Nancy.Responses.Negotiation;
@@ -13,14 +13,17 @@
     using Nancy.Tests.Fakes;
 
     using Xunit;
+    using Xunit.Extensions;
 
     public class DefaultRouteInvokerFixture
     {
         private readonly DefaultRouteInvoker invoker;
+        private readonly IResponseNegotiator responseNegotiator;
 
         public DefaultRouteInvokerFixture()
         {
-            this.invoker = new DefaultRouteInvoker(new DefaultResponseNegotiator(Enumerable.Empty<IResponseProcessor>(), new AcceptHeaderCoercionConventions(new List<Func<IEnumerable<Tuple<string, decimal>>, NancyContext, IEnumerable<Tuple<string, decimal>>>>())));
+            this.responseNegotiator = A.Fake<IResponseNegotiator>();
+            this.invoker = new DefaultRouteInvoker(responseNegotiator);
         }
 
         [Fact]
@@ -171,6 +174,40 @@
 
             // Then
             context.Trace.TraceLog.ToString().ShouldContain("Reason Testing");
+        }
+
+        [Fact]
+        public void Should_invoke_response_negotiator_if_route_result_is_not_response()
+        {
+            // Given
+            var model = new Person { FirstName = "First", LastName = "Last" };
+            var route = new FakeRoute(model);
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext { Trace = new RequestTrace(true) };
+
+            // When
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(model, context)).MustHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(200)]
+        [InlineData("Hello")]
+        [InlineData(HttpStatusCode.OK)]
+        public void Should_not_invoke_response_negotiator_if_route_result_can_be_converted_to_response(object response)
+        {
+            // Given
+            var route = new FakeRoute(response);
+            var parameters = new DynamicDictionary();
+            var context = new NancyContext { Trace = new RequestTrace(true) };
+
+            // When
+            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
+
+            // Then
+            A.CallTo(() => this.responseNegotiator.NegotiateResponse(A<object>.Ignored, context)).MustNotHaveHappened();
         }
     }
 }
