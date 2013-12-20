@@ -367,23 +367,24 @@ namespace Nancy.ModelBinding
         {
             var destinationType = modelProperty.PropertyType;
 
-            var typeConverter =
-                context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(destinationType, context));
+            var typeConverter = context.TypeConverters
+                                       .OrderBy(x => x.Order)
+                                       .FirstOrDefault(c => c.CanConvertTo(destinationType, context));
 
-            if (typeConverter != null)
+            try
             {
-                try
+                if (typeConverter != null)
                 {
                     SetPropertyValue(modelProperty, context.Model, typeConverter.Convert(stringValue, destinationType, context));
                 }
-                catch (Exception e)
+                else if (destinationType == typeof(string))
                 {
-                    throw new PropertyBindingException(modelProperty.Name, stringValue, e);
+                    SetPropertyValue(modelProperty, context.Model, stringValue);
                 }
             }
-            else if (destinationType == typeof(string))
+            catch (Exception e)
             {
-                SetPropertyValue(modelProperty, context.Model, stringValue);
+                throw new PropertyBindingException(modelProperty.Name, stringValue, e);
             }
         }
 
@@ -393,21 +394,21 @@ namespace Nancy.ModelBinding
 
             var typeConverter =
                 context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(destinationType, context));
-
-            if (typeConverter != null)
+            
+            try
             {
-                try
+                if (typeConverter != null)
                 {
                     SetPropertyValue(modelProperty, genericInstance, typeConverter.Convert(stringValue, destinationType, context));
                 }
-                catch (Exception e)
+                else if (destinationType == typeof(string))
                 {
-                    throw new PropertyBindingException(modelProperty.Name, stringValue, e);
+                    SetPropertyValue(modelProperty, context.Model, stringValue);
                 }
             }
-            else if (destinationType == typeof(string))
+            catch (Exception e)
             {
-                SetPropertyValue(modelProperty, context.Model, stringValue);
+                throw new PropertyBindingException(modelProperty.Name, stringValue, e);
             }
         }
 

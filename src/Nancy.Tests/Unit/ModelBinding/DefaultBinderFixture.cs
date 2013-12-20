@@ -311,18 +311,39 @@ namespace Nancy.Tests.Unit.ModelBinding
         public void Should_set_remaining_properties_when_one_fails_and_ignore_error_is_enabled()
         {
             // Given
-            var binder = this.GetBinder(typeConverters: new[] { new FallbackConverter() });
-            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            var binder = this.GetBinder(typeConverters: new[] {new FallbackConverter()});
+            var context = new NancyContext {Request = new FakeRequest("GET", "/")};
             context.Request.Form["IntProperty"] = "badint";
             context.Request.Form["AnotherIntProperty"] = 10;
 
-            var config = new BindingConfig { IgnoreErrors = true };
+            var config = new BindingConfig {IgnoreErrors = true};
 
             // When
-            var model = binder.Bind(context, typeof(TestModel), null, config) as TestModel;
-            
+            var model = binder.Bind(context, typeof (TestModel), null, config) as TestModel;
+
             // Then
             model.AnotherIntProperty.ShouldEqual(10);
+        }
+
+        [Fact]
+        public void Should_throw_ModelBindingException_if_convertion_of_a_property_fails_with_bad_date()
+        {
+            // Given
+            var binder = this.GetBinder(typeConverters: new ITypeConverter[] { new FallbackConverter(), new DateTimeConverter() });
+            var context = new NancyContext { Request = new FakeRequest("GET", "/") };
+            context.Request.Form["DateProperty"] = "baddate";
+
+            // Then
+            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel), null, new BindingConfig()))
+                .ShouldMatch(exception => 
+                             exception.BoundType == typeof (TestModel)
+                             && exception.PropertyBindingExceptions.Any(pe =>
+                                                                        pe.PropertyName == "DateProperty"
+                                                                        && pe.AttemptedValue == "baddate"
+                                                                        &&
+                                                                        pe.InnerException.Message ==
+                                                                        "The string was not recognized as a valid DateTime. There is an unknown word starting at index 0."));
+
         }
 
         [Fact]

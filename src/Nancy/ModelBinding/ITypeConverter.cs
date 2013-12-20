@@ -8,6 +8,8 @@ namespace Nancy.ModelBinding
     /// </summary>
     public interface ITypeConverter
     {
+        int Order { get; }
+
         /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>

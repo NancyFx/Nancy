@@ -14,6 +14,8 @@ namespace Nancy.ModelBinding.DefaultConverters
         private readonly MethodInfo enumerableToArrayMethod = typeof(Enumerable).GetMethod("ToArray", BindingFlags.Public | BindingFlags.Static);
         private readonly MethodInfo enumerableToListMethod = typeof(Enumerable).GetMethod("ToList", BindingFlags.Public | BindingFlags.Static);
 
+        public int Order { get { return 0; } }
+
         /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>
@@ -65,7 +67,10 @@ namespace Nancy.ModelBinding.DefaultConverters
             var genericType = destinationType.GetGenericArguments().First();
             var returnCollection = Activator.CreateInstance(destinationType);
 
-            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(genericType, context));
+            var converter = context.TypeConverters
+                                   .OrderBy(x => x.Order)
+                                   .FirstOrDefault(c => c.CanConvertTo(genericType, context));
+
             if (converter == null)
             {
                 return null;
@@ -90,7 +95,9 @@ namespace Nancy.ModelBinding.DefaultConverters
                 return null;
             }
 
-            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(elementType, context));
+            var converter = context.TypeConverters
+                                   .OrderBy(x => x.Order)
+                                   .FirstOrDefault(c => c.CanConvertTo(elementType, context));
 
             if (converter == null)
             {
@@ -111,7 +118,9 @@ namespace Nancy.ModelBinding.DefaultConverters
         {
             var genericType = destinationType.GetGenericArguments().First();
 
-            var converter = context.TypeConverters.FirstOrDefault(c => c.CanConvertTo(genericType, context));
+            var converter = context.TypeConverters
+                                   .OrderBy(x => x.Order)
+                                   .FirstOrDefault(c => c.CanConvertTo(genericType, context));
 
             if (converter == null)
             {

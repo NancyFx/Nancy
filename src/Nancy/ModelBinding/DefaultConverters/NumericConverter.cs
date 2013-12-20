@@ -8,6 +8,8 @@
     /// </summary>
     public class NumericConverter : ITypeConverter
     {
+        public int Order { get { return 0; } }
+
         /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>

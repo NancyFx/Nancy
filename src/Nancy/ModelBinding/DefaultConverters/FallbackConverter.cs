@@ -9,6 +9,8 @@ namespace Nancy.ModelBinding.DefaultConverters
     /// </summary>
     public class FallbackConverter : ITypeConverter
     {
+        public int Order { get { return int.MaxValue; } }
+
         /// <summary>
         /// Whether the converter can convert to the destination type
         /// </summary>
