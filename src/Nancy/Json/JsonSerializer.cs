@@ -354,6 +354,8 @@ namespace Nancy.Json
 
         private static string ConvertToCamelCase(string str)
         {
+            if (String.IsNullOrEmpty(str))
+                return String.Empty;
             return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
         }
 
