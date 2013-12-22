@@ -222,7 +222,6 @@
             Assert.Equal(@"<html><head></head><body>Yay Users!<ul><li>Bob:<b>Yay Greece!</b></li><li>Malin:</li></ul></body></html>", output);
         }
 
-
         [Fact]
         public void Should_evaluate_viewbag_as_dynamic_dictionary_conditional()
         {
@@ -1117,7 +1116,6 @@
 
             Assert.Equal("Hello Frank!<div id='header'>\r\nHeader\r\n</div><div id='footer'>\r\nFooter\r\n</div>", result);
         }
-
 
         [Fact]
         public void Should_stuffrender_block_when_ifnot_statement_returns_false()
