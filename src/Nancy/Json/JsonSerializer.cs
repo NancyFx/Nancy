@@ -354,7 +354,7 @@ namespace Nancy.Json
 
         private static string ConvertToCamelCase(string str)
         {
-            return str.Substring(0, 1).ToLowerInvariant() + str.Substring(1);
+            return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
         }
 
         void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
