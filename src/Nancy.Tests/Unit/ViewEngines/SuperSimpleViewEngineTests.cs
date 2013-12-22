@@ -214,6 +214,27 @@
         }
 
         [Fact]
+        public void Should_evaluate_multiple_nested_conditionals()
+        {
+            // Given
+            const string input =
+                @"<html><head></head><body>@If.SayHello;Hey @If.ShowName;@Model.Name@If.Zalgo; HE COMES@EndIf;!@EndIf; Bye!@EndIf</body></html>";
+            var model = new
+            {
+                Name = "Bob",
+                SayHello = true,
+                ShowName = true,
+                Zalgo = true
+            };
+
+            // When
+            var output = viewEngine.Render(input, model, this.fakeHost);
+
+            // Then
+            Assert.Equal(@"<html><head></head><body>Hey Bob HE COMES! Bye!</body></html>", output);
+        }
+
+        [Fact]
         public void Should_evaluate_current_conditional_inside_each()
         {
             // Given
