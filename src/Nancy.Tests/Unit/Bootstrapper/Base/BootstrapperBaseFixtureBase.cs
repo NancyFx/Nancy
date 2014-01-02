@@ -2,6 +2,9 @@
 namespace Nancy.Tests.Unit.Bootstrapper.Base
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     using Nancy.Bootstrapper;
     using Nancy.Routing;
     using Xunit;
@@ -103,6 +106,11 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
 
+            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
+            {
+                throw new NotImplementedException();
+            }
+
             public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {
                 if (resolver == null)
@@ -123,32 +131,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 this.resolver = resolver;
                 this.routeCache = routeCache;
                 this.contextFactory = contextFactory;
-            }
-
-            /// <summary>
-            /// Handles an incoming <see cref="Request"/>.
-            /// </summary>
-            /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-            /// <returns>A <see cref="NancyContext"/> instance containing the request/response context.</returns>
-            public NancyContext HandleRequest(Request request)
-            {
-                throw new NotImplementedException();
-            }
-
-            /// <summary>
-            /// Handles an incoming <see cref="Request"/> async.
-            /// </summary>
-            /// <param name="request">An <see cref="Request"/> instance, containing the information about the current request.</param>
-            /// <param name="onComplete">Delegate to call when the request is complete</param>
-            /// <param name="onError">Deletate to call when any errors occur</param>
-            public void HandleRequest(Request request, Action<NancyContext> onComplete, Action<Exception> onError)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, Action<NancyContext> onComplete, Action<Exception> onError)
-            {
-                throw new NotImplementedException();
             }
         }
     }

@@ -6,6 +6,7 @@
     using System.IO;
     using System.Linq;
     using System.Net;
+    using System.Threading;
     using System.Threading.Tasks;
     using System.Security.Cryptography.X509Certificates;
 
@@ -55,6 +56,7 @@
             var owinRequestPath = Get<string>(environment, "owin.RequestPath");
             var owinRequestQueryString = Get<string>(environment, "owin.RequestQueryString");
             var owinRequestBody = Get<Stream>(environment, "owin.RequestBody");
+            var owinCallCancelled = Get<CancellationToken>(environment, "owin.CallCancelled");
             var owinRequestHost = GetHeader(owinRequestHeaders, "Host") ?? Dns.GetHostName();
 
             byte[] certificate = null;
@@ -84,7 +86,8 @@
                 nancyRequest,
                 StoreEnvironment(environment),
                 RequestComplete(environment, this.options.PerformPassThrough, this.next, tcs), 
-                RequestErrored(tcs));
+                RequestErrored(tcs),
+                owinCallCancelled);
 
             return tcs.Task;
         }
@@ -94,10 +97,11 @@
         /// to the format required by OWIN and signals that the we are
         /// now complete.
         /// </summary>
-        /// <param name="environment">OWIN environment</param>
-        /// <param name="next">A delegate that represents the next stage in OWIN pipeline</param>
-        /// <param name="tcs">The task completion source to signal</param>
-        /// <param name="performPassThrough">A delegate that determines if pass through should be performed</param>
+        /// <param name="environment">OWIN environment.</param>
+        /// <param name="next">The next stage in the OWIN pipeline.</param>
+        /// <param name="tcs">The task completion source to signal.</param>
+        /// <param name="performPassThrough">A predicate that will allow the caller to determine if the request passes through to the 
+        /// next stage in the owin pipeline.</param>
         /// <returns>Delegate</returns>
         private static Action<NancyContext> RequestComplete(
             IDictionary<string, object> environment,
