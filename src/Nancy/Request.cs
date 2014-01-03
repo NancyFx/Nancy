@@ -195,7 +195,7 @@ namespace Nancy
                     cookieValue = parts[1];
                 }
 
-                cookieDictionary[cookieName] = cookieValue;
+                cookieDictionary[cookieName] = Helpers.HttpUtility.UrlDecode(parts[1]);
             }
 
             return cookieDictionary;
