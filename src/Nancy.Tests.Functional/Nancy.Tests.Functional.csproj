@@ -92,6 +92,7 @@
     <Compile Include="Tests\AbsoluteUrlTests.cs" />
     <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
+    <Compile Include="Tests\CookieTests.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
     <Compile Include="Tests\TracingSmokeTests.cs" />
