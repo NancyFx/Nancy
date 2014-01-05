@@ -14,8 +14,7 @@
 
         /// <summary>
         /// Enables Csrf token generation.
-        /// This is disabled by default. Enabling it is just a single line in the bootstrapper app startup:
-        /// Csrf.Enable(pipelines);
+        /// This is disabled by default.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         public static void Enable(IPipelines pipelines)
