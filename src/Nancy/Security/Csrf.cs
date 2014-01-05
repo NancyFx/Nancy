@@ -14,7 +14,7 @@
 
         /// <summary>
         /// Enables Csrf token generation.
-        /// This is enabled automatically so there should be no reason to call this manually.
+        /// This is disabled by default.
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
         public static void Enable(IPipelines pipelines)
