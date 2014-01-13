@@ -81,50 +81,65 @@
                 }
             }
 
-            var response = new HtmlResponse();
+            var renderResult = RenderViewBody(viewLocationResult, model, renderContext, referencingAssembly);
 
-            response.Contents = stream =>
+            var response = new HtmlResponse
             {
-                var writer = 
-                    new StreamWriter(stream);
-
-                var view = 
-                    this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
-
-                view.ExecuteView(null, null);
-
-                var body = view.Body;
-                var sectionContents = view.SectionContents;
-
-                var layout = view.HasLayout ? 
-                    view.Layout :
-                    GetViewStartLayout(model, renderContext, referencingAssembly);
-
-                var root = 
-                    string.IsNullOrWhiteSpace(layout);
-
-                while (!root)
+                StatusCode = renderResult.StatusCode,
+                Contents = stream =>
                 {
-                    view = 
-                        this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
-
-                    view.ExecuteView(body, sectionContents);
-
-                    body = view.Body;
-                    sectionContents = view.SectionContents;
-
-                    layout = view.HasLayout ?
-                        view.Layout :
-                        GetViewStartLayout(model, renderContext, referencingAssembly);
-
-                    root = !view.HasLayout;
+                    var writer = new StreamWriter(stream);
+                    writer.Write(renderResult.Body);
+                    writer.Flush();
                 }
-
-                writer.Write(body);
-                writer.Flush();
             };
 
             return response;
+        }
+
+        private NancyRazorBuildViewBodyResult RenderViewBody(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
+        {
+            var view =
+                this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+
+            var statusCode = (view is NancyRazorErrorView)
+                ? HttpStatusCode.InternalServerError
+                : HttpStatusCode.OK;
+
+            view.ExecuteView(null, null);
+
+            var body = view.Body;
+            var sectionContents = view.SectionContents;
+
+            var layout = view.HasLayout
+                ? view.Layout
+                : GetViewStartLayout(model, renderContext, referencingAssembly);
+
+            var root =
+                string.IsNullOrWhiteSpace(layout);
+
+            while (!root)
+            {
+                view =
+                    this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+
+                statusCode = (view is NancyRazorErrorView)
+                    ? HttpStatusCode.InternalServerError
+                    : statusCode;
+
+                view.ExecuteView(body, sectionContents);
+
+                body = view.Body;
+                sectionContents = view.SectionContents;
+
+                layout = view.HasLayout
+                    ? view.Layout
+                    : GetViewStartLayout(model, renderContext, referencingAssembly);
+
+                root = !view.HasLayout;
+            }
+
+            return new NancyRazorBuildViewBodyResult(statusCode, body);
         }
 
         private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)

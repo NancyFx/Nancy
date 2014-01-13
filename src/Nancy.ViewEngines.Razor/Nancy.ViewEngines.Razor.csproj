@@ -122,6 +122,7 @@
     <Compile Include="IRazorConfiguration.cs" />
     <Compile Include="IRazorViewRenderer.cs" />
     <Compile Include="CSharp\NancyCSharpRazorCodeParser.cs" />
+    <Compile Include="NancyRazorBuildViewBodyResult.cs" />
     <Compile Include="NancyRazorEngineHost.cs" />
     <Compile Include="NancyRazorErrorView.cs" />
     <Compile Include="NancyRazorViewBase.cs" />
