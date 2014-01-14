@@ -162,7 +162,7 @@ namespace Nancy
         /// Casts the current <see cref="string"/> instance to a <see cref="Url"/> instance.
         /// </summary>
         /// <param name="url">The instance that should be cast.</param>
-        /// <returns>A <see cref="Url"/> representation of the <paramref name="url"/>.</returns>
+        /// <returns>An <see cref="Url"/> representation of the <paramref name="url"/>.</returns>
         public static implicit operator Url(string url)
         {
             return new Uri(url);
