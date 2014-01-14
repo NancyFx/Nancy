@@ -192,7 +192,26 @@ namespace Nancy.Tests.Unit
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_and_from_string()
+        public void Should_implicitliy_cast_from_string()
+        {
+            // Given
+            string urlAsString = "https://www.nancyfx.org:1234/base?foo=some%20text#anchor";
+
+            // When
+            Url result = urlAsString;
+
+            // Then
+            result.Scheme.ShouldEqual("https");
+            result.HostName.ShouldEqual("www.nancyfx.org");
+            result.Port.ShouldEqual(1234);
+            result.BasePath.ShouldBeNull();
+            result.Path.ShouldEqual("/base");
+            result.Query.ShouldEqual("?foo=some%20text");
+            //result.Fragment.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_implicitliy_cast_to_string()
         {
             // Given
             this.url.Scheme = "https";
@@ -208,11 +227,29 @@ namespace Nancy.Tests.Unit
 
             // Then
             result.ShouldEqual("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
-            "https://www.nancyfx.org:1234/base?foo=some%20text#anchor".ShouldEqual(result);
         }
 
         [Fact]
-        public void Should_implicitliy_cast_to_and_from_uri()
+        public void Should_implicitliy_cast_from_uri()
+        {
+            // Given
+            Uri uri = new Uri("https://www.nancyfx.org:1234/base?foo=some%20text#anchor");
+
+            // When
+            Url result = uri;
+
+            // Then
+            result.Scheme.ShouldEqual("https");
+            result.HostName.ShouldEqual("www.nancyfx.org");
+            result.Port.ShouldEqual(1234);
+            result.BasePath.ShouldBeNull();
+            result.Path.ShouldEqual("/base");
+            result.Query.ShouldEqual("?foo=some%20text");
+            //result.Fragment.ShouldBeNull();
+        }
+
+        [Fact]
+        public void Should_implicitliy_cast_to_uri()
         {
             // Given
             this.url.Scheme = "https";
@@ -228,7 +265,6 @@ namespace Nancy.Tests.Unit
 
             // Then
             result.ToString().ShouldEqual("https://www.nancyfx.org:1234/base?foo=some text#anchor");
-            "https://www.nancyfx.org:1234/base?foo=some text#anchor".ShouldEqual(result.ToString());
         }
 
         [Fact]
