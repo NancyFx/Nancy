@@ -189,6 +189,7 @@
     <Compile Include="Unit\DefaultResponseFormatterFixture.cs" />
     <Compile Include="Unit\RequestHeadersFixture.cs" />
     <Compile Include="Unit\ResponseExtensionsFixture.cs" />
+    <Compile Include="Unit\Responses\DefaultJsonSerializerFixture.cs" />
     <Compile Include="Unit\Responses\EmbeddedFileResponseFixture.cs" />
     <Compile Include="Unit\Responses\Negotiation\MediaRangeFixture.cs" />
     <Compile Include="Unit\Responses\RedirectResponseFixture.cs" />
