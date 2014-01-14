@@ -48,7 +48,7 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
-
+        bool retainCasing;
         
 		
 		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
@@ -61,6 +61,7 @@ namespace Nancy.Json
 			typeResolver = serializer.TypeResolver;
 			recursionLimit = serializer.RecursionLimit;
 			maxJsonLength = serializer.MaxJsonLength;
+            retainCasing = serializer.RetainCasing;
 		}
 
 		public void Serialize (object obj, StringBuilder output)
@@ -339,7 +340,7 @@ namespace Nancy.Json
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = mi.Name;
+				name = retainCasing ? mi.Name : ConvertToCamelCase(mi.Name);
 				if (getMethod != null)
 					member = getMethod;
 				else
@@ -350,8 +351,15 @@ namespace Nancy.Json
 					first = false;
 			}
 		}
-		
-		void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
+
+        private static string ConvertToCamelCase(string str)
+        {
+            if (String.IsNullOrEmpty(str))
+                return String.Empty;
+            return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
+        }
+
+        void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
 		{
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, "[");
 			bool first = true;
