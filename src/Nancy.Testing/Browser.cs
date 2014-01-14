@@ -41,7 +41,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a DELETE requests against Nancy.
+        /// Performs a DELETE request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -52,7 +52,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a DELETE requests against Nancy.
+        /// Performs a DELETE request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -63,7 +63,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a GET requests against Nancy.
+        /// Performs a GET request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -74,7 +74,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a GET requests against Nancy.
+        /// Performs a GET request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -85,7 +85,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a HEAD requests against Nancy.
+        /// Performs a HEAD request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -96,7 +96,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a HEAD requests against Nancy.
+        /// Performs a HEAD request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -107,7 +107,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a OPTIONS requests against Nancy.
+        /// Performs a OPTIONS request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -118,7 +118,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a OPTIONS requests against Nancy.
+        /// Performs a OPTIONS request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -129,7 +129,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a PATCH requests against Nancy.
+        /// Performs a PATCH request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -140,7 +140,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a PATCH requests against Nancy.
+        /// Performs a PATCH request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -151,7 +151,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a POST requests against Nancy.
+        /// Performs a POST request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -162,7 +162,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a POST requests against Nancy.
+        /// Performs a POST request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -173,7 +173,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Performs a PUT requests against Nancy.
+        /// Performs a PUT request against Nancy.
         /// </summary>
         /// <param name="path">The path that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
@@ -185,7 +185,7 @@ namespace Nancy.Testing
 
 
         /// <summary>
-        /// Performs a PUT requests against Nancy.
+        /// Performs a PUT request against Nancy.
         /// </summary>
         /// <param name="url">The url that is being requested.</param>
         /// <param name="browserContext">An closure for providing browser context for the request.</param>
