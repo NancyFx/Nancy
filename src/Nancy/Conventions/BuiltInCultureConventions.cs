@@ -21,7 +21,7 @@
         static BuiltInCultureConventions()
         {
             CultureNames = new HashSet<string>(
-                                    CultureInfo.GetCultures(CultureTypes.SpecificCultures).Select(c => c.Name),
+                                    CultureInfo.GetCultures(CultureTypes.AllCultures).Select(c => c.Name),
                                     StringComparer.OrdinalIgnoreCase);
         }
 
