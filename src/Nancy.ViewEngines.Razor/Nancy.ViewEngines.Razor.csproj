@@ -133,12 +133,7 @@
     <Compile Include="VisualBasic\NancyVisualBasicRazorCodeParser.cs" />
     <Compile Include="VisualBasic\VisualBasicModelCodeGenerator.cs" />
     <Compile Include="VisualBasic\VisualBasicRazorViewRenderer.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Nancy\Nancy.csproj">
-      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
-      <Name>Nancy</Name>
-    </ProjectReference>
+    <Compile Include="EncodedHtmlString.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\CompilationError.html" />
@@ -176,4 +171,10 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <ItemGroup>
+    <ProjectReference Include="..\Nancy\Nancy.csproj">
+      <Project>{34576216-0DCA-4B0F-A0DC-9075E75A676F}</Project>
+      <Name>Nancy</Name>
+    </ProjectReference>
+  </ItemGroup>
 </Project>
