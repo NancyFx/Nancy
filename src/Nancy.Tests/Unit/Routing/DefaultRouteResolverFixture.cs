@@ -253,6 +253,40 @@
             result.Headers["Allow"].ShouldEqual("DELETE, POST");
         }
 
+        [Fact]
+        public void Should_match_root_to_greedy_when_only_greedy_route()
+        {
+            var localBrowser = new Browser(with => with.Module<GreedyModule>());
+
+            // When
+            var result = localBrowser.Get("/");
+
+            //Then
+            result.Body.AsString().ShouldEqual("GREEDY");
+        }
+
+        [Fact]
+        public void Should_match_anything_to_greedy_when_only_greedy_route() {
+            var localBrowser = new Browser(with => with.Module<GreedyModule>());
+
+            // When
+            var result = localBrowser.Get("/anything");
+
+            //Then
+            result.Body.AsString().ShouldEqual("GREEDY");
+        }
+
+        [Fact]
+        public void Should_match_literal_to_literal_when_overriding_greedy_route() {
+            var localBrowser = new Browser(with => with.Module<GreedyModule>());
+
+            // When
+            var result = localBrowser.Get("/whatever");
+
+            //Then
+            result.Body.AsString().ShouldEqual("GREEDY OVERRIDE");
+        }
+
         private class MethodNotAllowedModule : NancyModule
         {
             public MethodNotAllowedModule()
@@ -260,6 +294,15 @@
                 Delete["/"] = x => 200;
                 
                 Post["/"] = x => 200;
+            }
+        }
+
+        private class GreedyModule : NancyModule
+        {
+            public GreedyModule()
+            {
+                Get["/whatever"] = _ => "GREEDY OVERRIDE";
+                Get["{all*}"] = _ => "GREEDY";
             }
         }
 
