@@ -98,6 +98,7 @@
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />
     <Compile Include="Tests\ManualStaticContentTests.cs" />
+    <Compile Include="Tests\PartialViewTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +147,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\_PartialTest.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_LayoutPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\RazorPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
