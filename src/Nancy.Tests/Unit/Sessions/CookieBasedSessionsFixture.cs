@@ -26,19 +26,24 @@ namespace Nancy.Tests.Unit.Sessions
         private readonly IEncryptionProvider fakeEncryptionProvider;
         private readonly CookieBasedSessions cookieStore;
         private readonly IHmacProvider fakeHmacProvider;
+        private readonly IObjectSerializer fakeObjectSerializer;
 
         private RijndaelEncryptionProvider rijndaelEncryptionProvider;
 
         private DefaultHmacProvider defaultHmacProvider;
 
+        private IObjectSerializer defaultObjectSerializer;
+
         public CookieBasedSessionsFixture()
         {
             this.fakeEncryptionProvider = A.Fake<IEncryptionProvider>();
             this.fakeHmacProvider = A.Fake<IHmacProvider>();
-            this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, new Fakes.FakeObjectSerializer());
+            this.fakeObjectSerializer = new Fakes.FakeObjectSerializer();
+            this.cookieStore = new CookieBasedSessions(this.fakeEncryptionProvider, this.fakeHmacProvider, this.fakeObjectSerializer);
 
             this.rijndaelEncryptionProvider = new RijndaelEncryptionProvider(new PassphraseKeyGenerator("password", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
             this.defaultHmacProvider = new DefaultHmacProvider(new PassphraseKeyGenerator("anotherpassword", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 }, 1000));
+            this.defaultObjectSerializer = new DefaultObjectSerializer();
         }
 
         [Fact]
@@ -76,7 +81,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             response.Cookies.Count.ShouldEqual(1);
             var cookie = response.Cookies.First();
-            cookie.Name.ShouldEqual(CookieBasedSessions.GetCookieName());
+            cookie.Name.ShouldEqual(this.cookieStore.CookieName);
             cookie.Value.ShouldEqual("encrypted=key1=val1;key2=val2;");
             cookie.Expires.ShouldBeNull();
             cookie.Path.ShouldBeNull();
@@ -271,7 +276,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             response.Cookies.Count.ShouldEqual(1);
             var cookie = response.Cookies.First();
-            cookie.Name.ShouldEqual(CookieBasedSessions.GetCookieName());
+            cookie.Name.ShouldEqual(store.CookieName);
             cookie.Value.ShouldNotBeNull();
             cookie.Value.ShouldNotBeEmpty();
         }
@@ -332,7 +337,7 @@ namespace Nancy.Tests.Unit.Sessions
             inputValue = HttpUtility.UrlEncode(inputValue);
             var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
-            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+            request.Cookies.Add(store.CookieName, inputValue);
 
             var result = store.Load(request);
 
@@ -347,7 +352,7 @@ namespace Nancy.Tests.Unit.Sessions
             inputValue = HttpUtility.UrlEncode(inputValue);
             var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
-            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+            request.Cookies.Add(store.CookieName, inputValue);
 
             var result = store.Load(request);
 
@@ -361,7 +366,7 @@ namespace Nancy.Tests.Unit.Sessions
             inputValue = HttpUtility.UrlEncode(inputValue);
             var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
-            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+            request.Cookies.Add(store.CookieName, inputValue);
 
             var result = store.Load(request);
 
@@ -375,11 +380,88 @@ namespace Nancy.Tests.Unit.Sessions
             inputValue = HttpUtility.UrlEncode(inputValue);
             var store = new CookieBasedSessions(this.rijndaelEncryptionProvider, this.defaultHmacProvider, new DefaultObjectSerializer());
             var request = new Request("GET", "/", "http");
-            request.Cookies.Add(CookieBasedSessions.GetCookieName(), inputValue);
+            request.Cookies.Add(store.CookieName, inputValue);
 
             var result = store.Load(request);
 
             result.Count.ShouldEqual(0);
+        }
+
+        [Fact]
+        public void Should_use_CookieName_when_config_provides_cookiename_value()
+        {
+            //Given
+            var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
+            var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
+            {
+              CookieName = "NamedCookie",
+              Serializer = this.fakeObjectSerializer
+            };
+            var store = new CookieBasedSessions(storeConfig);
+
+            //When
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>
+                                        {
+                                            {"key1", "val1"},
+                                        });
+            session["key2"] = "val2";
+            store.Save(session, response);
+
+            //Then
+            response.Cookies.ShouldHave(c => c.Name == storeConfig.CookieName);
+        }
+
+        [Fact]
+        public void Should_set_Domain_when_config_provides_domain_value()
+        {
+            //Given
+            var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
+            var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
+            {
+              Domain = ".nancyfx.org",
+              Serializer = this.fakeObjectSerializer
+            };
+            var store = new CookieBasedSessions(storeConfig);
+
+            //When
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>
+                                        {
+                                            {"key1", "val1"},
+                                        });
+            session["key2"] = "val2";
+            store.Save(session, response);
+
+            //Then
+            var cookie = response.Cookies.First(c => c.Name == storeConfig.CookieName);
+            cookie.Domain.ShouldEqual(storeConfig.Domain);
+        }
+
+        [Fact]
+        public void Should_set_Path_when_config_provides_path_value()
+        {
+            //Given
+            var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
+            var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
+            {
+              Path = "/",
+              Serializer = this.fakeObjectSerializer
+            };
+            var store = new CookieBasedSessions(storeConfig);
+
+            //When
+            var response = new Response();
+            var session = new Session(new Dictionary<string, object>
+                                          {
+                                              {"key1", "val1"},
+                                          });
+            session["key2"] = "val2";
+            store.Save(session, response);
+
+            //Then
+            var cookie = response.Cookies.First(c => c.Name == storeConfig.CookieName);
+            cookie.Path.ShouldEqual(storeConfig.Path);
         }
 
         private Request CreateRequest(string sessionValue, bool load = true)
@@ -388,7 +470,7 @@ namespace Nancy.Tests.Unit.Sessions
 
             if (!string.IsNullOrEmpty(sessionValue))
             {
-                headers.Add("cookie", new[] { CookieBasedSessions.GetCookieName()+ "=" + HttpUtility.UrlEncode(sessionValue) });
+                headers.Add("cookie", new[] { this.cookieStore.CookieName+ "=" + HttpUtility.UrlEncode(sessionValue) });
             }
 
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Port = 9001, BasePath = "goku.power" }, CreateRequestStream(), headers);
