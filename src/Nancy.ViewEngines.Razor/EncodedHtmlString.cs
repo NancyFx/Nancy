@@ -1,8 +1,8 @@
-using System;
-using Nancy.Helpers;
-
 namespace Nancy.ViewEngines.Razor
 {
+    using System;
+    using Nancy.Helpers;
+
     /// <summary>
     /// An html string that is encoded.
     /// </summary>
@@ -13,15 +13,15 @@ namespace Nancy.ViewEngines.Razor
         /// </summary>
         public static readonly EncodedHtmlString Empty = new EncodedHtmlString(string.Empty);
 
-        private readonly Lazy<string> encoderFactory;
+        private readonly string encodedValue;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EncodedHtmlString"/> class.
         /// </summary>
-        /// <param name="value">The value.</param>
+        /// <param name="value">The encoded value.</param>
         public EncodedHtmlString(string value)
         {
-            encoderFactory = new Lazy<string>(() => HttpUtility.HtmlEncode(value));
+            encodedValue = HttpUtility.HtmlEncode(value);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Nancy.ViewEngines.Razor
         /// <returns>An HTML-encoded string.</returns>
         public string ToHtmlString()
         {
-            return encoderFactory.Value;
+            return encodedValue;
         }
 
         public static implicit operator EncodedHtmlString(string value)
