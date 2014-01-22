@@ -213,7 +213,7 @@ namespace Nancy.Hosting.Wcf.Tests
 
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
                 .Invokes(f => nancyRequest = (Request)f.Arguments[0])
-                .Returns(TaskHelpers.GetCompletedTask(new NancyContext()));
+                .Returns(TaskHelpers.GetCompletedTask(context));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When a request is made and responded to with a status of 304 Not Modified
