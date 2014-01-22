@@ -20,7 +20,7 @@ namespace Nancy.Tests.Functional.Modules
             {
                 this.ViewBag.Name = "Bob";
 
-                var serialized = this.ViewBag.Serializable();
+                var serialized = this.ViewBag.ToDictionary();
 
                 return serialized;
             };
