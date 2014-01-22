@@ -194,26 +194,25 @@ namespace Nancy.Hosting.Wcf.Tests
         public void Should_not_have_content_type_header_for_not_modified_responses()
         {
             // Given
-            Request nancyRequest = null;
             var fakeEngine = A.Fake<INancyEngine>();
             var fakeBootstrapper = A.Fake<INancyBootstrapper>();
-            var fakeNotModifiedResponse = A.Fake<Response>();
 
             // Context sends back a 304 Not Modified
-            var context = new NancyContext();
-            context.Response = new Response()
+            var context = new NancyContext
             {
-                ContentType = null,
-                StatusCode = Nancy.HttpStatusCode.NotModified
+                Response = new Response
+                {
+                    ContentType = null,
+                    StatusCode = Nancy.HttpStatusCode.NotModified
+                }
             };
 
             A.CallTo(() => fakeEngine.HandleRequest(A<Request>.Ignored, A<Func<NancyContext, NancyContext>>.Ignored, A<CancellationToken>.Ignored))
-                .Invokes(f => nancyRequest = (Request)f.Arguments[0])
                 .Returns(TaskHelpers.GetCompletedTask(context));
             A.CallTo(() => fakeBootstrapper.GetEngine()).Returns(fakeEngine);
 
             // When a request is made and responded to with a status of 304 Not Modified
-            System.Net.WebResponse response = null;
+            WebResponse response = null;
             using (CreateAndOpenWebServiceHost(fakeBootstrapper)) 
             {
                 var request = WebRequest.Create(new Uri(BaseUri, "notmodified"));
@@ -250,7 +249,7 @@ namespace Nancy.Hosting.Wcf.Tests
             {
                 host.Open();
             }
-            catch (System.ServiceModel.AddressAccessDeniedException)
+            catch (AddressAccessDeniedException)
             {
                 throw new SkipException("Skipped due to no Administrator access - please see test fixture for more information.");
             }
