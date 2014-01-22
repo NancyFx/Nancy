@@ -18,10 +18,10 @@ namespace Nancy.Testing.Tests
                 new DefaultHmacProvider(new PassphraseKeyGenerator("UberSuperSecure", new byte[] { 1, 2, 3, 4, 5, 6, 7, 8 })));
 
             this.config = new CookieBasedSessionsConfiguration()
-                              {
-                                  CryptographyConfiguration = cryptographyConfiguration,
-                                  Serializer = A.Fake<IObjectSerializer>()
-                              };
+            {
+                CryptographyConfiguration = cryptographyConfiguration,
+                Serializer = A.Fake<IObjectSerializer>()
+            };
         }
 
         [Fact]

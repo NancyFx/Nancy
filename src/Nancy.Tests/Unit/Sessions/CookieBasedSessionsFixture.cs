@@ -394,8 +394,8 @@ namespace Nancy.Tests.Unit.Sessions
             var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
             var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
             {
-              CookieName = "NamedCookie",
-              Serializer = this.fakeObjectSerializer
+                CookieName = "NamedCookie",
+                Serializer = this.fakeObjectSerializer
             };
             var store = new CookieBasedSessions(storeConfig);
 
@@ -419,8 +419,8 @@ namespace Nancy.Tests.Unit.Sessions
             var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
             var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
             {
-              Domain = ".nancyfx.org",
-              Serializer = this.fakeObjectSerializer
+                Domain = ".nancyfx.org",
+                Serializer = this.fakeObjectSerializer
             };
             var store = new CookieBasedSessions(storeConfig);
 
@@ -445,8 +445,8 @@ namespace Nancy.Tests.Unit.Sessions
             var cryptoConfig = new CryptographyConfiguration(this.fakeEncryptionProvider, this.fakeHmacProvider);
             var storeConfig = new CookieBasedSessionsConfiguration(cryptoConfig)
             {
-              Path = "/",
-              Serializer = this.fakeObjectSerializer
+                Path = "/",
+                Serializer = this.fakeObjectSerializer
             };
             var store = new CookieBasedSessions(storeConfig);
 

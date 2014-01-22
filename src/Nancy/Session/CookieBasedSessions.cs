@@ -73,7 +73,7 @@ namespace Nancy.Session
         {
             if (pipelines == null)
             {
-              throw new ArgumentNullException("pipelines");
+                throw new ArgumentNullException("pipelines");
             }
 
             var sessionStore = new CookieBasedSessions(configuration);
@@ -152,8 +152,8 @@ namespace Nancy.Session
 
             var cookie = new NancyCookie(this.currentConfiguration.CookieName, cookieData, true)
             {
-              Domain = this.currentConfiguration.Domain,
-              Path = this.currentConfiguration.Path
+                Domain = this.currentConfiguration.Domain,
+                Path = this.currentConfiguration.Path
             };
             response.WithCookie(cookie);
         }

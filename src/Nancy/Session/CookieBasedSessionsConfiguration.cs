@@ -59,7 +59,7 @@ namespace Nancy.Session
             {
                 if (string.IsNullOrEmpty(this.CookieName))
                 {
-                  return false;
+                    return false;
                 }
 
                 if (this.Serializer == null)
