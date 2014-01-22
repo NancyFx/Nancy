@@ -32,7 +32,7 @@
             //Then
             var model = result.Body.AsString();
             
-            Assert.Equal("{\"CreatedOn\":\"2013-12-25T12:10:30\"}", model);
+            Assert.Equal("{\"createdOn\":\"2013-12-25T12:10:30\"}", model);
         }
     }
 }

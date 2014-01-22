@@ -82,7 +82,7 @@ namespace Nancy.Json
 
             this.RetainCasing = retainCasing;
 
-            _iso8601DateFormat = iso86001DateFormat;
+            _iso8601DateFormat = iso8601DateFormat;
         }
 
 

@@ -48,6 +48,7 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
+        bool retainCasing;
         bool iso8601DateFormat;
         
 		
@@ -61,6 +62,7 @@ namespace Nancy.Json
 			typeResolver = serializer.TypeResolver;
 			recursionLimit = serializer.RecursionLimit;
 			maxJsonLength = serializer.MaxJsonLength;
+            retainCasing = serializer.RetainCasing;
 		    iso8601DateFormat = serializer.ISO8601DateFormat;
 		}
 
