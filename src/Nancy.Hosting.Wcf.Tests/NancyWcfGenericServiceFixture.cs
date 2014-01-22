@@ -14,10 +14,6 @@ namespace Nancy.Hosting.Wcf.Tests
     using System.ServiceModel.Web;
     using System.Threading;
 
-    using Bootstrapper;
-    using FakeItEasy;
-    using Nancy.Tests;
-    using Nancy.Tests.xUnitExtensions;
     using Xunit;
 
     /// <remarks>
