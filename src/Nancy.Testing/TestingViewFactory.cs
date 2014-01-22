@@ -10,6 +10,7 @@
     {
         private readonly DefaultViewFactory decoratedViewFactory;
 
+
         /// <summary>
         /// Creates the view based on the view factory sent to the constructor
         /// </summary>
@@ -30,69 +31,35 @@
         public Response RenderView(string viewName, dynamic model, ViewLocationContext viewLocationContext)
         {
             // Intercept and store interesting stuff
-            viewLocationContext.Context.Items["###ViewModel###"] = model;
-            viewLocationContext.Context.Items["###ViewName###"] = viewName;
-            viewLocationContext.Context.Items["###ModuleName###"] = viewLocationContext.ModuleName;
-            viewLocationContext.Context.Items["###ModulePath###"] = viewLocationContext.ModulePath;
+            viewLocationContext.Context.Items[TestingViewContextKeys.VIEWMODEL] = model;
+            viewLocationContext.Context.Items[TestingViewContextKeys.VIEWNAME] = viewName;
+            viewLocationContext.Context.Items[TestingViewContextKeys.MODULENAME] = viewLocationContext.ModuleName;
+            viewLocationContext.Context.Items[TestingViewContextKeys.MODULEPATH] = viewLocationContext.ModulePath;
 
             return this.decoratedViewFactory.RenderView(viewName, model, viewLocationContext);
         }
     }
 
     /// <summary>
-    /// Extension methods for easy access of the properties
-    /// stored in the view context by the testing view factory
+    /// The key names for where the testing view context data is stored
     /// </summary>
-    public static class TestingViewBrowserResponseExtensions
+    public static class TestingViewContextKeys
     {
         /// <summary>
-        /// Get the model on the view
+        ///  The key in ViewLocationContext.Item for the view model
         /// </summary>
-        /// <typeparam name="TType">the type of the model</typeparam>
-        /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
-        /// <returns>a model of the <typeparam name="TType">type</typeparam></returns>
-        public static TType GetModel<TType>(this BrowserResponse response)
-        {
-            return (TType)response.Context.Items["###ViewModel###"];
-        }
-
+        public const string VIEWMODEL = "__Nancy_Testing_ViewModel";
         /// <summary>
-        /// Returns the name of the view
+        ///  The key in ViewLocationContext.Item for the view name
         /// </summary>
-        /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
-        /// <returns>the name of the view</returns>
-        public static string GetViewName(this BrowserResponse response)
-        {
-            return GetContextValue(response, "###ViewName###");
-        }
-
+        public const string VIEWNAME = "__Nancy_Testing_ViewName";
         /// <summary>
-        /// Returns the name of the module
+        ///  The key in ViewLocationContext.Item for the model name
         /// </summary>
-        /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
-        /// <returns>the name of the module</returns>
-        public static string GetModuleName(this BrowserResponse response)
-        {
-            return GetContextValue(response, "###ModuleName###");
-        }
-
+        public const string MODULENAME = "__Nancy_Testing_ModuleName";
         /// <summary>
-        /// Returns the name of the module
+        ///  The key in ViewLocationContext.Item for the module path        
         /// </summary>
-        /// <param name="response">The <see cref="BrowserResponse"/> that the assert should be made on.</param>
-        /// <returns>the name of the module</returns>
-        public static string GetModulePath(this BrowserResponse response)
-        {
-            return GetContextValue(response, "###ModulePath###");
-        }
-
-        private static string GetContextValue(BrowserResponse response, string key)
-        {
-            if (!response.Context.Items.ContainsKey(key))
-                return string.Empty;
-
-            var value = (string)response.Context.Items[key];
-            return string.IsNullOrEmpty(value) ? string.Empty : value;
-        }
+        public const string MODULEPATH = "__Nancy_Testing_ModulePath";
     }
 }
