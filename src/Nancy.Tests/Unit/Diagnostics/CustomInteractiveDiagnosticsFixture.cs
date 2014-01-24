@@ -127,7 +127,7 @@
             // When
             var result = browser.Get(diagsConfig.Path + "/interactive/providers/", with =>
                 {
-                    with.Cookie(DiagsCookieName, this.GetSessionCookieValue("password"));
+                    with.Cookie(DiagsCookieName, Nancy.Helpers.HttpUtility.UrlEncode(this.GetSessionCookieValue("password")));
                 });
 
             // Then should see our fake provider and not the default testing provider
