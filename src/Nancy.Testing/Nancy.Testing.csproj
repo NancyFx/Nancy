@@ -117,6 +117,8 @@
     <Compile Include="BrowserResponseBodyWrapper.cs" />
     <Compile Include="BrowserResponseBodyWrapperExtensions.cs" />
     <Compile Include="BrowserResponseExtensions.cs" />
+    <Compile Include="TestingViewBrowserResponseExtensions.cs" />
+    <Compile Include="TestingViewFactory.cs" />
     <Compile Include="ConfigurableBootstrapper.cs" />
     <Compile Include="DocumentWrapper.cs" />
     <Compile Include="NancyContextExtensions.cs" />
