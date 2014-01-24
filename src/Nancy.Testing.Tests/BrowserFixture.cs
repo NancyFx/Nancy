@@ -368,7 +368,7 @@ namespace Nancy.Testing.Tests
             });
 
             var cookie = response.Cookies.Single(c => c.Name == FormsAuthentication.FormsAuthenticationCookieName);
-            var cookieValue = HttpUtility.UrlDecode(cookie.Value);
+            var cookieValue = cookie.Value;
             
             //Then
             cookieValue.ShouldEqual(cookieContents);

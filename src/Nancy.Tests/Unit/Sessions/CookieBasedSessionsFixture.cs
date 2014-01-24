@@ -147,8 +147,8 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_load_properly_decode_the_url_safe_session()
         {
-            var request = CreateRequest("encryptedkey+1=val%3d1;");
-            A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey+1=val%3d1;")).Returns("key+1=val%3d1;");
+            var request = CreateRequest(Nancy.Helpers.HttpUtility.UrlEncode("encryptedkey+1=val%3D1;"));
+            A.CallTo(() => this.fakeEncryptionProvider.Decrypt("encryptedkey+1=val%3D1;")).Returns("key+1=val%3D1;");
 
             var session = cookieStore.Load(request);
 
