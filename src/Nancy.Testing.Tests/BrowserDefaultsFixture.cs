@@ -9,141 +9,141 @@
     public class BrowserDefaultsFixture
     {
         private string _expected;
-        private CaptureRequetModule _captureRequetModule;
+        private CaptureRequestModule captureRequestModule;
  
         public BrowserDefaultsFixture()
         {
             // Given
             _expected = "application/json";
-            _captureRequetModule = new CaptureRequetModule();
+            this.captureRequestModule = new CaptureRequestModule();
         }
 
         [Fact]
         public void Should_pass_default_headers_in_get_request_when_using_configurable_bootstrapper_ctor()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Get("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
 
         [Fact]
         public void Should_pass_default_headers_in_post_request_when_using_configurable_bootstrapper_ctor()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Post("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_put_request_when_using_configurable_bootstrapper_ctor()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Put("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_patch_request_when_using_configurable_bootstrapper_ctor()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Patch("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_delete_request_when_using_configurable_bootstrapper_ctor()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Delete("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
 
         [Fact]
         public void Should_pass_default_headers_in_get_request_when_using_inancybootstrapper_ctor()
         {
             // Gvien
-            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(_captureRequetModule));
+            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(_expected));
             // When
             sut.Get("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
 
         [Fact]
         public void Should_pass_default_headers_in_post_request_when_using_inancybootstrapper_ctor()
         {
             // Gvien
-            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(_captureRequetModule));
+            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(_expected));
             // When
             sut.Post("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_put_request_when_using_inancybootstrapper_ctor()
         {
             // Gvien
-            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(_captureRequetModule));
+            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(_expected));
             // When
             sut.Put("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_patch_request_when_using_inancybootstrapper_ctor()
         {
             // Gvien
-            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(_captureRequetModule));
+            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(_expected));
             // When
             sut.Patch("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_delete_request_when_using_inancybootstrapper_ctor()
         {
             // Gvien
-            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(_captureRequetModule));
+            var bootstrapper = new ConfigurableBootstrapper(with => with.Module(this.captureRequestModule));
             var sut = new Browser(bootstrapper, defaults: to => to.Accept(_expected));
             // When
             sut.Delete("/");
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
 
         [Fact]
         public void Should_pass_both_defaults_and_request_specific_context_through()
         {
             // Gvien
-            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            var sut = new Browser(with => with.Module(this.captureRequestModule), defaults: to => to.Accept(_expected));
             // When
             sut.Get("/", with => with.Query("testKey", "testValue"));
             // Then
-            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);            
-            Assert.Equal(this._captureRequetModule.CapturedRequest.Query.testKey.Value, "testValue");
+            this.captureRequestModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);            
+            Assert.Equal(this.captureRequestModule.CapturedRequest.Query.testKey.Value, "testValue");
         }
 
-        public class CaptureRequetModule : NancyModule
+        public class CaptureRequestModule : NancyModule
         {
             public Request CapturedRequest;
 
-            public CaptureRequetModule()
+            public CaptureRequestModule()
             {
                 Get["/"] = _ => this.CaptureRequest();
                 Post["/"] = _ => this.CaptureRequest();
