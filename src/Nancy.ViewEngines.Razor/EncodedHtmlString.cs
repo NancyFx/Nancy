@@ -36,5 +36,10 @@ namespace Nancy.ViewEngines.Razor
         {
             return new EncodedHtmlString(value);
         }
+
+        public static implicit operator string(EncodedHtmlString encoded)
+        {
+            return encoded.encodedValue;
+        }
     }
 }
