@@ -10,21 +10,21 @@
     {
         private string _expected;
         private CaptureRequetModule _captureRequetModule;
-        private Browser _sut;
-
+ 
         public BrowserDefaultsFixture()
         {
             // Given
             _expected = "application/json";
             _captureRequetModule = new CaptureRequetModule();
-            _sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
         }
 
         [Fact]
         public void Should_pass_default_headers_in_get_request_when_using_configurable_bootstrapper_ctor()
         {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
             // When
-            _sut.Get("/");
+            sut.Get("/");
             // Then
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
@@ -32,32 +32,40 @@
         [Fact]
         public void Should_pass_default_headers_in_post_request_when_using_configurable_bootstrapper_ctor()
         {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
             // When
-            _sut.Post("/");
+            sut.Post("/");
             // Then
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_put_request_when_using_configurable_bootstrapper_ctor()
         {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
             // When
-            _sut.Put("/");
+            sut.Put("/");
             // Then
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_patch_request_when_using_configurable_bootstrapper_ctor()
         {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
             // When
-            _sut.Patch("/");
+            sut.Patch("/");
             // Then
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
         [Fact]
         public void Should_pass_default_headers_in_delete_request_when_using_configurable_bootstrapper_ctor()
         {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
             // When
-            _sut.Delete("/");
+            sut.Delete("/");
             // Then
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
