@@ -41,7 +41,7 @@ namespace Nancy.Testing
             this.bootstrapper = bootstrapper;
             this.bootstrapper.Initialise();
             this.engine = this.bootstrapper.GetEngine();
-            this.defaultBrowserContext = defaults ?? (to => { });
+            this.defaultBrowserContext = defaults ?? this.DefaultBrowserContext;
         }
 
         /// <summary>
@@ -202,7 +202,7 @@ namespace Nancy.Testing
         private BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var request =
-                CreateRequest(method, url, browserContext ?? this.DefaultBrowserContext);
+                CreateRequest(method, url, browserContext ?? (with => {}));
 
             var response = new BrowserResponse(this.engine.HandleRequest(request), this);
 
