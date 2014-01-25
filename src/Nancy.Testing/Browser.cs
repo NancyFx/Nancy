@@ -14,6 +14,7 @@ namespace Nancy.Testing
     /// </summary>
     public class Browser : IHideObjectMembers
     {
+        private readonly Action<BrowserContext> defaultBrowserContext;
         private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
 
@@ -24,9 +25,11 @@ namespace Nancy.Testing
         /// provided <see cref="ConfigurableBootstrapper"/> configuration.
         /// </summary>
         /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
-        public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action)
+        /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
+        public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action, Action<BrowserContext> defaults = null)
             : this(new ConfigurableBootstrapper(action))
         {
+            this.defaultBrowserContext = defaults ?? (to => { });
         }
 
         /// <summary>
@@ -279,6 +282,7 @@ namespace Nancy.Testing
 
             this.SetCookies(context);
 
+            defaultBrowserContext.Invoke(context);
             browserContext.Invoke(context);
 
             var contextValues =
