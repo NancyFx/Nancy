@@ -127,6 +127,18 @@
             _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);
         }
 
+        [Fact]
+        public void Should_pass_both_defaults_and_request_specific_context_through()
+        {
+            // Gvien
+            var sut = new Browser(with => with.Module(_captureRequetModule), defaults: to => to.Accept(_expected));
+            // When
+            sut.Get("/", with => with.Query("testKey", "testValue"));
+            // Then
+            _captureRequetModule.CapturedRequest.Headers.Accept.First().Item1.ShouldEqual(_expected);            
+            Assert.Equal(this._captureRequetModule.CapturedRequest.Query.testKey.Value, "testValue");
+        }
+
         public class CaptureRequetModule : NancyModule
         {
             public Request CapturedRequest;
