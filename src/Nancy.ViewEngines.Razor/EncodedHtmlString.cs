@@ -21,7 +21,7 @@ namespace Nancy.ViewEngines.Razor
         /// <param name="value">The encoded value.</param>
         public EncodedHtmlString(string value)
         {
-            encodedValue = HttpUtility.HtmlEncode(value);
+            this.encodedValue = HttpUtility.HtmlEncode(value);
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace Nancy.ViewEngines.Razor
         /// <returns>An HTML-encoded string.</returns>
         public string ToHtmlString()
         {
-            return encodedValue;
+            return this.encodedValue;
         }
 
         public static implicit operator EncodedHtmlString(string value)
