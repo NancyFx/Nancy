@@ -32,11 +32,21 @@ namespace Nancy.ViewEngines.Razor
             return this.encodedValue;
         }
 
+        /// <summary>
+        /// Implicitly cast a string to an <see cref="EncodedHtmlString"/> instance.
+        /// </summary>
+        /// <param name="value">The string that should be encoded.</param>
+        /// <returns>An <see cref="EncodedHtmlString"/> instance</returns>
         public static implicit operator EncodedHtmlString(string value)
         {
             return new EncodedHtmlString(value);
         }
 
+        /// <summary>
+        /// Implicitly cast an <see cref="EncodedHtmlString"/> instance to a string.
+        /// </summary>
+        /// <param name="encoded">The <see cref="EncodedHtmlString"/> instance.</param>
+        /// <returns>A string containing the encoded value.</returns>
         public static implicit operator string(EncodedHtmlString encoded)
         {
             return encoded.encodedValue;
