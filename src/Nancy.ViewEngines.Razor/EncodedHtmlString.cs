@@ -1,6 +1,5 @@
 namespace Nancy.ViewEngines.Razor
 {
-    using System;
     using Nancy.Helpers;
 
     /// <summary>
