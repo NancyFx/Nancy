@@ -27,20 +27,21 @@ namespace Nancy.Testing
         /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
         /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
         public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action, Action<BrowserContext> defaults = null)
-            : this(new ConfigurableBootstrapper(action))
+            : this(new ConfigurableBootstrapper(action), defaults)
         {
-            this.defaultBrowserContext = defaults ?? (to => { });
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Browser"/> class.
         /// </summary>
         /// <param name="bootstrapper">A <see cref="INancyBootstrapper"/> instance that determines the Nancy configuration that should be used by the browser.</param>
-        public Browser(INancyBootstrapper bootstrapper)
+        /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
+        public Browser(INancyBootstrapper bootstrapper, Action<BrowserContext> defaults = null)
         {
             this.bootstrapper = bootstrapper;
             this.bootstrapper.Initialise();
             this.engine = this.bootstrapper.GetEngine();
+            this.defaultBrowserContext = defaults ?? (to => { });
         }
 
         /// <summary>
