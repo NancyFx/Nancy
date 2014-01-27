@@ -47,6 +47,7 @@ namespace Nancy.Json
         int _recursionLimit;
         bool _retainCasing;
         JavaScriptTypeResolver _typeResolver;
+        bool _iso8601DateFormat;
 
 #if NET_3_5
         internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 2097152, 100);
@@ -61,24 +62,27 @@ namespace Nancy.Json
         {
         }
 #else
-        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false);
+        internal static readonly JavaScriptSerializer DefaultSerializer = new JavaScriptSerializer(null, false, 102400, 100, false, true);
 
         public JavaScriptSerializer()
-            : this(null, false, 102400, 100, false)
+            : this(null, false, 102400, 100, false, true)
         {
         }
 
         public JavaScriptSerializer(JavaScriptTypeResolver resolver)
-            : this(resolver, false, 102400, 100, false)
+            : this(resolver, false, 102400, 100, false, true)
         {
         }
 #endif
-        public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing)
+        public JavaScriptSerializer(JavaScriptTypeResolver resolver, bool registerConverters, int maxJsonLength, int recursionLimit, bool retainCasing, bool iso8601DateFormat)
         {
             _typeResolver = resolver;
             _maxJsonLength = maxJsonLength;
             _recursionLimit = recursionLimit;
+
             this.RetainCasing = retainCasing;
+
+            _iso8601DateFormat = iso8601DateFormat;
         }
 
 
@@ -104,6 +108,12 @@ namespace Nancy.Json
             {
                 _recursionLimit = value;
             }
+        }
+
+        public bool ISO8601DateFormat
+        {
+            get { return _iso8601DateFormat; }
+            set { _iso8601DateFormat = value; }
         }
 
         internal JavaScriptTypeResolver TypeResolver
@@ -242,6 +252,7 @@ namespace Nancy.Json
 
         static readonly Type typeofObject = typeof(object);
         static readonly Type typeofGenList = typeof(List<>);
+        
 
         object ConvertToList(ArrayList col, Type type)
         {

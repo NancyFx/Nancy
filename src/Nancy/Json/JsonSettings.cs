@@ -32,8 +32,14 @@ namespace Nancy.Json
         /// </summary>
         public static bool RetainCasing { get; set; }
 
+        /// <summary>
+        /// Serialized date format
+        /// </summary>
+        public static bool ISO8601DateFormat { get; set; }
+
         static JsonSettings()
         {
+            ISO8601DateFormat = true;
             MaxJsonLength = 102400;
             MaxRecursions = 100;
             DefaultCharset = "utf-8";
