@@ -145,14 +145,20 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 return new Tuple<bool, object>(false, null);
             }
 
-            if (!typeof(IDynamicMetaObjectProvider).IsAssignableFrom(model.GetType()))
+            if (model is IDictionary<string, object>)
+            {
+                return DynamicDictionaryPropertyEvaluator(model, propertyName);
+            }
+
+            if (!(model is IDynamicMetaObjectProvider))
             {
                 return StandardTypePropertyEvaluator(model, propertyName);
             }
 
-            if (typeof(IDictionary<string, object>).IsAssignableFrom(model.GetType()))
+            var dynamicModel = model as DynamicDictionaryValue;
+            if (dynamicModel != null)
             {
-                return DynamicDictionaryPropertyEvaluator(model, propertyName);
+                return GetPropertyValue(dynamicModel.Value, propertyName);
             }
 
             throw new ArgumentException("model must be a standard type or implement IDictionary<string, object>", "model");

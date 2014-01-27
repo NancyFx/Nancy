@@ -1183,6 +1183,30 @@
             // Then
             A.CallTo(() => extension.Invoke(A<string>._, A<object>._, this.fakeHost)).MustHaveHappened();
         }
+
+        [Fact]
+        public void Should_pass_context_nested_dictionary_to_matchers()
+        {
+            // Given
+            const string keyConst = "TestKey";
+            const string valueConst = "testvalue";
+
+            var dict = new Dictionary<string, object> { { keyConst, valueConst } };
+            var context = this.fakeHost.Context as FakeViewEngineHost.FakeContext;
+            context.ViewBag.Nested = new
+            {
+                Dictionary = dict
+            };
+
+            var input = string.Format(@"<html><head></head><body>@Context.ViewBag.Nested.Dictionary.{0}</body></html>", keyConst);
+            var engine = new SuperSimpleViewEngine();
+
+            // When
+            var result = engine.Render(input, null, this.fakeHost);
+
+            // Then
+            Assert.Equal(string.Format("<html><head></head><body>{0}</body></html>", valueConst), result);
+        }
     }
 
     public class User
