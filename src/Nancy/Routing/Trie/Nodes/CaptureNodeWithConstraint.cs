@@ -19,7 +19,7 @@
         /// </summary>
         public override int Score
         {
-            get { return 1000; }
+            get { return 2000; }
         }
 
         public CaptureNodeWithConstraint(TrieNode parent, string segment, ITrieNodeFactory nodeFactory, IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints)
