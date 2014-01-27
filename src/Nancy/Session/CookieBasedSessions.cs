@@ -118,7 +118,7 @@ namespace Nancy.Session
             // TODO - configurable path?
             var encryptedData = this.encryptionProvider.Encrypt(sb.ToString());
             var hmacBytes = this.hmacProvider.GenerateHmac(encryptedData);
-            var cookieData = String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData);
+            var cookieData = HttpUtility.UrlEncode(String.Format("{0}{1}", Convert.ToBase64String(hmacBytes), encryptedData));
 
             var cookie = new NancyCookie(cookieName, cookieData, true);
             response.AddCookie(cookie);
