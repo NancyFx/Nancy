@@ -754,7 +754,7 @@ namespace Nancy.Testing
             }
 
             /// <summary>
-            /// Disables the auto registration behavior of the bootstrapper
+            /// Enables the auto registration behavior of the bootstrapper
             /// </summary>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator EnableAutoRegistration()
