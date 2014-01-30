@@ -27,7 +27,7 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_be_valid_with_all_properties_set()
         {
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeTrue();
         }
@@ -35,9 +35,9 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_not_be_valid_with_empty_cookiename()
         {
-            config.CookieName = "";
+            this.config.CookieName = "";
 
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeFalse();
         }
@@ -45,9 +45,9 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_not_be_valid_with_null_serializer()
         {
-            config.Serializer = null;
+            this.config.Serializer = null;
 
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeFalse();
         }
@@ -55,9 +55,9 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_not_be_valid_with_null_cryptography_configuration()
         {
-            config.CryptographyConfiguration = null;
+            this.config.CryptographyConfiguration = null;
 
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeFalse();
         }
@@ -65,9 +65,9 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_not_be_valid_with_null_encryption_provider()
         {
-            config.CryptographyConfiguration = new CryptographyConfiguration(null, config.CryptographyConfiguration.HmacProvider);
+            this.config.CryptographyConfiguration = new CryptographyConfiguration(null, this.config.CryptographyConfiguration.HmacProvider);
 
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeFalse();
         }
@@ -75,9 +75,9 @@ namespace Nancy.Testing.Tests
         [Fact]
         public void Should_not_be_valid_with_null_hmac_provider()
         {
-            config.CryptographyConfiguration = new CryptographyConfiguration(config.CryptographyConfiguration.EncryptionProvider, null); 
+            this.config.CryptographyConfiguration = new CryptographyConfiguration(this.config.CryptographyConfiguration.EncryptionProvider, null);
 
-            var result = config.IsValid;
+            var result = this.config.IsValid;
 
             result.ShouldBeFalse();
         }
