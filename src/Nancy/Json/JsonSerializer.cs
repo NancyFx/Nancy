@@ -336,19 +336,18 @@ namespace Nancy.Json
 		{
 			MemberInfo member;
 			MethodInfo getMethod;
-			string name;
 			
-			foreach (T mi in members) {
+			foreach (T mi in members) 
+            {
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = retainCasing ? mi.Name : ConvertToCamelCase(mi.Name);
 				if (getMethod != null)
 					member = getMethod;
 				else
 					member = mi;
 
-				WriteDictionaryEntry (output, first, name, GetMemberValue (obj, member));
+				WriteDictionaryEntry (output, first, mi.Name, GetMemberValue (obj, member));
 				if (first)
 					first = false;
 			}
@@ -414,7 +413,9 @@ namespace Nancy.Json
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');
 
-			WriteValue (output, key);
+		    key = retainCasing ? key : ConvertToCamelCase(key);
+
+            WriteValue(output, key);
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, ':');
 			SerializeValue (value, output);
 		}
