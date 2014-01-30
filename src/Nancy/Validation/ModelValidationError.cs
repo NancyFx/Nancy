@@ -49,5 +49,14 @@
         {
             return error.ErrorMessage;
         }
+
+        /// <summary>
+        /// Returns the <see cref="ErrorMessage"/>.
+        /// </summary>
+        /// <returns>A string containing the error message.</returns>
+        public override string ToString()
+        {
+            return this.ErrorMessage;
+        }
     }
 }
