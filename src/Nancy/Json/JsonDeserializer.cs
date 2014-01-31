@@ -290,6 +290,7 @@ namespace Nancy.Json
 
 		JavaScriptSerializer serializer;
 		JavaScriptTypeResolver typeResolver;
+        bool retainCasing;
 		int maxJsonLength;
 		int currentPosition;
 		int recursionLimit;
@@ -311,6 +312,7 @@ namespace Nancy.Json
 			this.maxJsonLength = serializer.MaxJsonLength;
 			this.recursionLimit = serializer.RecursionLimit;
 			this.typeResolver = serializer.TypeResolver;
+		    this.retainCasing = serializer.RetainCasing;
 			this.modes = new Stack <JsonMode> ();
 			this.currentKey = new Stack <string> ();
 			this.returnValue = new Stack <object> ();
@@ -888,7 +890,9 @@ namespace Nancy.Json
 			
 			if (String.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: key is null, empty or not a string.");
-			
+
+		    key = retainCasing ? key : key.ToPascalCase();
+
 			currentKey.Push (key);
 			Dictionary <string, object> dict = PeekObject () as Dictionary <string, object>;
 			if (dict == null)

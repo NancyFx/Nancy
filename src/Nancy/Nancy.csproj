@@ -165,6 +165,7 @@
     <Compile Include="Diagnostics\DiagnosticsViewRenderer.cs" />
     <Compile Include="Helpers\CacheHelpers.cs" />
     <Compile Include="IStaticContentProvider.cs" />
+    <Compile Include="Json\StringExtensions.cs" />
     <Compile Include="Localization\TextResourceFinder.cs" />
     <Compile Include="Helpers\TaskHelpers.cs" />
     <Compile Include="ModelBinding\BindingConfig.cs" />

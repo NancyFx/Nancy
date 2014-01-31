@@ -353,13 +353,6 @@ namespace Nancy.Json
 			}
 		}
 
-        private static string ConvertToCamelCase(string str)
-        {
-            if (String.IsNullOrEmpty(str))
-                return String.Empty;
-            return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
-        }
-
         void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
 		{
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, "[");
@@ -413,7 +406,7 @@ namespace Nancy.Json
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');
 
-		    key = retainCasing ? key : ConvertToCamelCase(key);
+		    key = retainCasing ? key : key.ToCamelCase();
 
             WriteValue(output, key);
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, ':');
