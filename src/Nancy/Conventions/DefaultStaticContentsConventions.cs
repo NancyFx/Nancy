@@ -16,7 +16,8 @@ namespace Nancy.Conventions
         {
             conventions.StaticContentsConventions = new List<Func<NancyContext, string, Response>>
             {
-                StaticContentConventionBuilder.AddDirectory("Content")
+                StaticContentConventionBuilder.AddDirectory("Content"),
+                StaticContentConventionBuilder.AddDirectory("Scripts")
             };
         }
 

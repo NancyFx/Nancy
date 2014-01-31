@@ -6,6 +6,7 @@
     using Nancy.Testing;
 
     using Xunit;
+    using Xunit.Sdk;
 
     public class ManualStaticContentTests
     {
@@ -29,13 +30,28 @@
         public void Should_serve_valid_static_content()
         {
             var response = browser.Get(
-                @"/Content/smiley.png", 
+                @"/Content/smiley.png",
                 with =>
-                    {
-                        with.HttpRequest();
-                    });
+                {
+                    with.HttpRequest();
+                });
 
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("image/png", response.ContentType);
+        }
+
+        [Fact]
+        public void Should_serve_static_content_from_Script_folder()
+        {
+            var response = browser.Get(
+                @"/Scripts/script.js",
+                with =>
+                {
+                    with.HttpRequest();
+                });
+
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/x-javascript", response.ContentType);
         }
 
         [Fact]

@@ -1,0 +1,2 @@
+﻿var myFunc = function () { };
+myFunc();
