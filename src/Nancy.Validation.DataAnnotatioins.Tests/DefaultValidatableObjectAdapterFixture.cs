@@ -63,6 +63,19 @@
             results.Count().ShouldEqual(2);
         }
 
+        [Fact]
+        public void Should_not_return_errors_if_model_not_implements_IValidatableObject()
+        {
+            // Given
+            var instance = new ModelNotImplementingIValidatableObject();
+
+            // When
+            var result = this.validator.Validate(instance);
+
+            // Then
+            result.Count().ShouldEqual(0);
+        }
+
         public class ModelUnderTest : IValidatableObject
         {
             public object InstanceBeingValidated { get; set; }
@@ -78,6 +91,11 @@
                 
                 return this.ExpectedResults ?? Enumerable.Empty<ValidationResult>();
             }
+        }
+
+        public class ModelNotImplementingIValidatableObject
+        {
+            public int Value { get; set; }
         }
     }
 }
