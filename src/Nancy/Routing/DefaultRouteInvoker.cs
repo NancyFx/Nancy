@@ -91,20 +91,15 @@ namespace Nancy.Routing
 
         private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
         {
-            var isResponse = (CastResultToResponse(result) != null);
-
-            return (isResponse) ? ProcessAsRealResponse(result, context) : this.ProcessAsNegotiator(result, context);
-        }
-
-        private static Response CastResultToResponse(dynamic result)
-        {
-            try
+            var response = result as Response;
+            if (response != null)
             {
-                return (Response)result;
+                context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as real response"));
+                return response;
             }
-            catch
+            else
             {
-                return null;
+                return this.ProcessAsNegotiator(result, context);
             }
         }
 
@@ -121,13 +116,6 @@ namespace Nancy.Routing
                     yield return new Tuple<IResponseProcessor, ProcessorMatch>(processor, result);
                 }
             }
-        }
-
-        private static Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
-        {
-            context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as real response"));
-
-            return (Response)routeResult;
         }
 
         private static Response NegotiateResponse(
