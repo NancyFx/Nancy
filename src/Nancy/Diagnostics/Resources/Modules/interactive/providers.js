@@ -54,7 +54,7 @@
         },
 
         showMethods: function () {
-            this.router.navigate(this.model.Name, true);
+            this.router.navigate(this.model.name, true);
         }
     });
 })(diagnostics.module("provider"))
