@@ -64,6 +64,8 @@ namespace Nancy.Json
     using System.IO;
     using System.Text;
 
+    using Nancy.Extensions;
+
 	internal sealed class JsonDeserializer
 	{
 		/* Universal error constant */
