@@ -57,7 +57,7 @@
             {
                 get
                 {
-                    return "<h1>Templated Results</h1><p>{{model.Result}}</p>";
+                    return "<h1>Templated Results</h1><p>{{model.result}}</p>";
                 }
             }
 
@@ -74,7 +74,7 @@
                 return string.Format("Hello {0}, you are {1} years old!", myName, myAge);
             }
 
-            [Template("<h1>Templated Results</h1><p>{{model.Result}}</p>")]
+            [Template("<h1>Templated Results</h1><p>{{model.result}}</p>")]
             [Description("Simple test method that takes a name and an age and returns a result with a template.")]
             public string SayHelloWithAge2(string myName, int myAge)
             {
