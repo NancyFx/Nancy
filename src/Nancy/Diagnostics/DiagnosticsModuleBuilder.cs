@@ -15,7 +15,7 @@ namespace Nancy.Diagnostics
         public DiagnosticsModuleBuilder(IRootPathProvider rootPathProvider, IModelBinderLocator modelBinderLocator)
         {
             this.rootPathProvider = rootPathProvider;
-            this.serializers = new[] { new DefaultJsonSerializer() };
+            this.serializers = new[] { new DefaultJsonSerializer { RetainCasing = false } };
             this.modelBinderLocator = modelBinderLocator;
         }
 

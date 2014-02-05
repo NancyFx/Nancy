@@ -27,7 +27,7 @@
         }
 
         [Fact]
-        public void Should_camel_case_field_names_be_default()
+        public void Should_camel_case_field_names_by_default()
         {
             // Given
             var sut = new DefaultJsonSerializer();
@@ -59,6 +59,30 @@
 
                 // Then
                 actual.ShouldEqual("{\"FirstName\":\"Joe\",\"lastName\":\"Doe\"}");
+            }
+            finally
+            {
+                JsonSettings.RetainCasing = false;
+            }
+        }
+
+        [Fact]
+        public void Should_camel_case_property_names_if_local_override_is_set()
+        {
+            JsonSettings.RetainCasing = true;
+            try
+            {
+                // Given
+                var sut = new DefaultJsonSerializer { RetainCasing = false };
+                var input = new { FirstName = "Joe", lastName = "Doe" };
+
+                // When
+                var output = new MemoryStream();
+                sut.Serialize("application/json", input, output);
+                var actual = Encoding.UTF8.GetString(output.ToArray());
+
+                // Then
+                actual.ShouldEqual("{\"firstName\":\"Joe\",\"lastName\":\"Doe\"}");
             }
             finally
             {
