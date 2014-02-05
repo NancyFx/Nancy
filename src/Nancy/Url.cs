@@ -26,6 +26,20 @@ namespace Nancy
         }
 
         /// <summary>
+        /// Represents a ULR made up of component parts
+        /// </summary>
+        /// <param name="url">a string representing the url</param>
+        public Url(string url)
+        {
+            var uri = new Uri(url);
+            this.HostName = uri.Host;
+            this.Path = uri.LocalPath;
+            this.Port = uri.Port;
+            this.Query = uri.Query;
+            this.Scheme = uri.Scheme;
+        }
+
+        /// <summary>
         /// Gets or sets the HTTP protocol used by the client.
         /// </summary>
         /// <value>The protocol.</value>
