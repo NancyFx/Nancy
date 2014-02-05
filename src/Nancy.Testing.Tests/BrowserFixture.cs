@@ -342,6 +342,15 @@ namespace Nancy.Testing.Tests
             result.Context.Request.ClientCertificate.ShouldNotBeNull();
         }
 
+        [Fact]
+        public void Should_change_scheme_to_https_when_HttpsRequest_is_called_on_the_context()
+        {
+            //Given, When
+            var result = browser.Get("/", with => with.HttpsRequest());
+
+            //Then
+            result.Context.Request.Url.Scheme.ShouldEqual("https");
+        }
 
         [Fact]
         public void Should_add_forms_authentication_cookie_to_the_request()

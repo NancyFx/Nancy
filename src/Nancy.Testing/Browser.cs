@@ -294,7 +294,7 @@ namespace Nancy.Testing
                 contextValues.ClientCertificate.GetRawCertData();
 
             var requestUrl = url;
-            requestUrl.Scheme = string.IsNullOrWhiteSpace(url.Scheme) ? contextValues.Protocol : url.Scheme;
+            requestUrl.Scheme = string.IsNullOrWhiteSpace(contextValues.Protocol) ? requestUrl.Scheme : contextValues.Protocol;
             requestUrl.Query = string.IsNullOrWhiteSpace(url.Query) ? (contextValues.QueryString ?? string.Empty) : url.Query;
 
             return new Request(method, requestUrl, requestStream, contextValues.Headers, contextValues.UserHostAddress, certBytes);
