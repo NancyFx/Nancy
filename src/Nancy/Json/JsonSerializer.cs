@@ -50,8 +50,8 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
-        bool retainCasing;
-        bool iso8601DateFormat;
+		bool retainCasing;
+		bool iso8601DateFormat;
         
 		
 		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
@@ -64,8 +64,8 @@ namespace Nancy.Json
 			typeResolver = serializer.TypeResolver;
 			recursionLimit = serializer.RecursionLimit;
 			maxJsonLength = serializer.MaxJsonLength;
-            retainCasing = serializer.RetainCasing;
-		    iso8601DateFormat = serializer.ISO8601DateFormat;
+			retainCasing = serializer.RetainCasing;
+			iso8601DateFormat = serializer.ISO8601DateFormat;
 		}
 
 		public void Serialize (object obj, StringBuilder output)
