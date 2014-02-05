@@ -141,7 +141,7 @@ namespace Nancy.Json
 
 			TypeCode typeCode = Type.GetTypeCode (valueType);
 			switch (typeCode) {
-				case TypeCode.string:
+				case TypeCode.String:
 					WriteValue (output, (string)obj);
                                         return;
 					

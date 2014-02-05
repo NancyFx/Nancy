@@ -105,7 +105,7 @@
                     }
                     else if (TType == typeof (string))
                     {
-                        return (T)Convert.ChangeType(value, TypeCode.string, CultureInfo.InvariantCulture);
+                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
                     }
                 }
                 catch

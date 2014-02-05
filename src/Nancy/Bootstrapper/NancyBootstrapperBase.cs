@@ -285,12 +285,12 @@
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
                     {
-                        if (ctx.Request == null || String.IsNullOrEmpty(ctx.Request.Path))
+                        if (ctx.Request == null || string.IsNullOrEmpty(ctx.Request.Path))
                         {
                             return null;
                         }
 
-                        if (String.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
+                        if (string.Equals(ctx.Request.Path, "/favicon.ico", StringComparison.InvariantCultureIgnoreCase))
                         {
                             var response = new Response
                                 {
@@ -429,7 +429,7 @@
         /// <summary>
         /// Hides ToString from the overrides list
         /// </summary>
-        /// <returns>String representation</returns>
+        /// <returns>string representation</returns>
         public override sealed string ToString()
         {
             return base.ToString();

@@ -202,7 +202,7 @@ namespace Nancy.Json
 			NULL,
 			TRUE,
 			FALSE,
-			string,
+			String,
 			KEY,
 			MAX
 		};
@@ -493,7 +493,7 @@ namespace Nancy.Json
 			decimal decimalValue;
 			double doubleValue;
 			
-			if (jsonType != JsonType.string)
+			if (jsonType != JsonType.String)
 			{
 				s = s.Trim();
 			}
@@ -542,7 +542,7 @@ namespace Nancy.Json
 						converted = false;
 					break;
 
-				case JsonType.string:
+				case JsonType.String:
 					if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal))
 					{
 						int tzCharIndex = s.IndexOfAny(new char[] {'+', '-'}, 7);
@@ -668,12 +668,12 @@ namespace Nancy.Json
 				case SB: /* string begin " or ' */
 					buffer.Length = 0;
 					quoteChar = ch;
-					jsonType = JsonType.string;
+					jsonType = JsonType.String;
 					state = ST;
 					break;
 
 				case KB: /* unquoted key name begin */
-					jsonType = JsonType.string;
+					jsonType = JsonType.String;
 					state = UK;
 					break;
 
@@ -781,7 +781,7 @@ namespace Nancy.Json
 								break;
 
 							case JsonMode.NONE: /* A stand-alone string */
-								jsonType = JsonType.string;
+								jsonType = JsonType.String;
 								state = IV; /* the rest of input is invalid */
 								if (ParseBuffer (out result))
 									PushObject (result);

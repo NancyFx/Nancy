@@ -88,7 +88,7 @@ namespace Nancy.Testing.Tests
         public void Should_be_able_to_send_json_in_body()
         {
             // Given
-            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+            var model = new EchoModel { SomeString = "Some string", SomeInt = 29, SomeBoolean = true };
 
             // When
             var result = browser.Post("/", with =>
@@ -109,7 +109,7 @@ namespace Nancy.Testing.Tests
         public void Should_be_able_to_send_xml_in_body()
         {
             // Given
-            var model = new EchoModel { SomeString = "Some String", SomeInt = 29, SomeBoolean = true };
+            var model = new EchoModel { SomeString = "Some string", SomeInt = 29, SomeBoolean = true };
 
             // When
             var result = browser.Post("/", with =>
@@ -358,7 +358,7 @@ namespace Nancy.Testing.Tests
             var encryptedId = formsAuthConfig.CryptographyConfiguration.EncryptionProvider.Encrypt(userId.ToString());
             var hmacBytes = formsAuthConfig.CryptographyConfiguration.HmacProvider.GenerateHmac(encryptedId);
             var hmacString = Convert.ToBase64String(hmacBytes);
-            var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
+            var cookieContents = string.Format("{1}{0}", encryptedId, hmacString);
 
             //When
             var response = browser.Get("/cookie", (with) =>
