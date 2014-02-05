@@ -427,7 +427,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="contents">Contents of the @Each block</param>
         /// <param name="item">Current item from the @Each enumerable</param>
         /// <param name="host">View engine host</param>
-        /// <returns>String result of the expansion of the @Each.</returns>
+        /// <returns>string result of the expansion of the @Each.</returns>
         private static string ReplaceCurrentMatch(string contents, object item, IViewEngineHost host)
         {
             return EachItemSubstitutionRegEx.Replace(
@@ -619,7 +619,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 		/// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
-        /// <returns>Master page name or String.Empty</returns>
+        /// <returns>Master page name or string.Empty</returns>
         private static string GetMasterPageName(string template)
         {
             using (var stringReader = new StringReader(template))

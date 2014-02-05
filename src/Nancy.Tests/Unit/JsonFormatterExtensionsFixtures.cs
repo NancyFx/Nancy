@@ -63,7 +63,7 @@ namespace Nancy.Tests.Unit
 			using (var stream = new MemoryStream())
 			{
 				response.Contents(stream);
-				Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.String""}");
+				Encoding.UTF8.GetString(stream.ToArray()).ShouldEqual(@"{""type"":""System.string""}");
 			}
 		}
 

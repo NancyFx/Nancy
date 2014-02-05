@@ -6,7 +6,7 @@
 
     public class HttpContextLifetimeProvider : TinyIoCContainer.ITinyIoCObjectLifetimeProvider
     {
-        private readonly string _KeyName = String.Format("TinyIoC.HttpContext.{0}", Guid.NewGuid());
+        private readonly string _KeyName = string.Format("TinyIoC.HttpContext.{0}", Guid.NewGuid());
 
         public object GetObject()
         {

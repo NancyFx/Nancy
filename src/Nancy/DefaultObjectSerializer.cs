@@ -16,7 +16,7 @@ namespace Nancy
         {
             if (sourceObject == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             var formatter = new BinaryFormatter();

@@ -17,12 +17,12 @@ namespace Nancy
         public Url()
         {
             this.Scheme = "http";
-            this.HostName = String.Empty;
+            this.HostName = string.Empty;
             this.Port = null;
-            this.BasePath = String.Empty;
-            this.Path = String.Empty;
-            this.Query = String.Empty;
-            this.Fragment = String.Empty;
+            this.BasePath = string.Empty;
+            this.Path = string.Empty;
+            this.Query = string.Empty;
+            this.Fragment = string.Empty;
         }
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace Nancy
             get { return this.basePath; }
             set
             {
-                if (String.IsNullOrEmpty(value))
+                if (string.IsNullOrEmpty(value))
                 {
                     return;
                 }
@@ -153,7 +153,7 @@ namespace Nancy
         /// </summary>
         /// <param name="url">The instance that should be cast.</param>
         /// <returns>A <see cref="string"/> representation of the <paramref name="url"/>.</returns>
-        public static implicit operator String(Url url)
+        public static implicit operator string(Url url)
         {
             return url.ToString();
         }

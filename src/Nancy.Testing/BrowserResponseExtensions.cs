@@ -24,7 +24,7 @@ namespace Nancy.Testing
 
             if (!response.Headers["Location"].Equals(location, stringComparer))
             {
-                throw new AssertException(String.Format("Location should have been: {0}, but was {1}", location, response.Headers["Location"]));
+                throw new AssertException(string.Format("Location should have been: {0}, but was {1}", location, response.Headers["Location"]));
             }
         }
 

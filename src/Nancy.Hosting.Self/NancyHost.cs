@@ -240,7 +240,7 @@
 
             if (baseUri == null)
             {
-                throw new InvalidOperationException(String.Format("Unable to locate base URI for request: {0}",request.Url));
+                throw new InvalidOperationException(string.Format("Unable to locate base URI for request: {0}",request.Url));
             }
 
             var expectedRequestLength =

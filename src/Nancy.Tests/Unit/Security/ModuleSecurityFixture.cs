@@ -63,7 +63,7 @@ namespace Nancy.Tests.Unit.Security
 
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser(String.Empty)
+                                  CurrentUser = GetFakeUser(string.Empty)
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -107,7 +107,7 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresClaims(new[] { string.Empty });
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser(String.Empty)
+                                  CurrentUser = GetFakeUser(string.Empty)
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -135,7 +135,7 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresAnyClaim(new[] { string.Empty });
             var context = new NancyContext
             {
-                CurrentUser = GetFakeUser(String.Empty)
+                CurrentUser = GetFakeUser(string.Empty)
             };
 
             var result = module.Before.Invoke(context, new CancellationToken());
@@ -163,7 +163,7 @@ namespace Nancy.Tests.Unit.Security
             module.RequiresValidatedClaims(c => false);
             var context = new NancyContext
                               {
-                                  CurrentUser = GetFakeUser(String.Empty)
+                                  CurrentUser = GetFakeUser(string.Empty)
                               };
 
             var result = module.Before.Invoke(context, new CancellationToken());

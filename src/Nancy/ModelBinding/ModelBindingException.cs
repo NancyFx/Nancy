@@ -29,7 +29,7 @@ namespace Nancy.ModelBinding
         /// <param name="propertyName">the property name, which failed to bind</param>
         /// <param name="innerException">the original exception, thrown while binding the property</param>
         public ModelBindingException(Type boundType, IEnumerable<PropertyBindingException> propertyBindingExceptions = null)
-            : base(String.Format(ExceptionMessage, boundType))
+            : base(string.Format(ExceptionMessage, boundType))
         {
             if (boundType == null)
             {

@@ -60,11 +60,11 @@ namespace Nancy.Cryptography
             }
             catch (FormatException)
             {
-                return String.Empty;
+                return string.Empty;
             }
             catch (CryptographicException)
             {
-                return String.Empty;
+                return string.Empty;
             }
         }
     }

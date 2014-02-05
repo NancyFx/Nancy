@@ -222,7 +222,7 @@ namespace Nancy.Authentication.Forms
             var cookieValue = DecryptAndValidateAuthenticationCookie(context.Request.Cookies[formsAuthenticationCookieName], configuration);
 
             Guid returnGuid;
-            if (String.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
+            if (string.IsNullOrEmpty(cookieValue) || !Guid.TryParse(cookieValue, out returnGuid))
             {
                 return Guid.Empty;
             }
@@ -263,7 +263,7 @@ namespace Nancy.Authentication.Forms
         /// <returns>Nancy cookie instance</returns>
         private static INancyCookie BuildLogoutCookie(FormsAuthenticationConfiguration configuration)
         {
-            var cookie = new NancyCookie(formsAuthenticationCookieName, String.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
+            var cookie = new NancyCookie(formsAuthenticationCookieName, string.Empty, true, configuration.RequiresSSL) { Expires = DateTime.Now.AddDays(-1) };
 
             if(!string.IsNullOrEmpty(configuration.Domain))
             {
@@ -290,7 +290,7 @@ namespace Nancy.Authentication.Forms
             var hmacBytes = GenerateHmac(encryptedCookie, configuration);
             var hmacString = Convert.ToBase64String(hmacBytes);
 
-            return String.Format("{1}{0}", encryptedCookie, hmacString);
+            return string.Format("{1}{0}", encryptedCookie, hmacString);
         }
 
         /// <summary>

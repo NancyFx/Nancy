@@ -463,7 +463,7 @@
         {
             //Given
             dynamic value = new DynamicDictionaryValue(null);
-            String actual = value;
+            string actual = value;
 
             //Then
             Assert.Null(actual);

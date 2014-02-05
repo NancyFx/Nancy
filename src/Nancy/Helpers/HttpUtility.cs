@@ -246,7 +246,7 @@ namespace Nancy.Helpers
             if (bytes == null)
                 return null;
             if (count == 0)
-                return String.Empty;
+                return string.Empty;
 
             if (bytes == null)
                 throw new ArgumentNullException("bytes");
@@ -386,8 +386,8 @@ namespace Nancy.Helpers
             if (s == null)
                 return null;
 
-            if (s == String.Empty)
-                return String.Empty;
+            if (s == string.Empty)
+                return string.Empty;
 
             bool needEncode = false;
             int len = s.Length;
@@ -419,7 +419,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (bytes.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             return Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, 0, bytes.Length));
         }
@@ -430,7 +430,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (bytes.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             return Encoding.ASCII.GetString(UrlEncodeToBytes(bytes, offset, count));
         }
@@ -534,7 +534,7 @@ namespace Nancy.Helpers
 #endif
             }
 
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
 #if NET_4_0
 				HttpEncoder.Current.HtmlDecode (s, output);
@@ -575,7 +575,7 @@ namespace Nancy.Helpers
 #endif
             }
 
-            if (!String.IsNullOrEmpty(s))
+            if (!string.IsNullOrEmpty(s))
             {
 #if NET_4_0
 				HttpEncoder.Current.HtmlEncode (s, output);
@@ -604,8 +604,8 @@ namespace Nancy.Helpers
 
 		public static string JavaScriptStringEncode (string value, bool addDoubleQuotes)
 		{
-			if (String.IsNullOrEmpty (value))
-				return addDoubleQuotes ? "\"\"" : String.Empty;
+			if (string.IsNullOrEmpty (value))
+				return addDoubleQuotes ? "\"\"" : string.Empty;
 
 			int len = value.Length;
 			bool needEncode = false;

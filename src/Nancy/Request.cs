@@ -44,7 +44,7 @@ namespace Nancy
         /// <param name="certificate">The client's certificate when present.</param>
         public Request(string method, Url url, RequestStream body = null, IDictionary<string, IEnumerable<string>> headers = null, string ip = null, byte[] certificate = null)
         {
-            if (String.IsNullOrEmpty(method))
+            if (string.IsNullOrEmpty(method))
             {
                 throw new ArgumentOutOfRangeException("method");
             }
@@ -59,7 +59,7 @@ namespace Nancy
                 throw new ArgumentNullException("url.Path");
             }
 
-            if (String.IsNullOrEmpty(url.Scheme))
+            if (string.IsNullOrEmpty(url.Scheme))
             {
                 throw new ArgumentOutOfRangeException("url.Scheme");
             }
@@ -83,7 +83,7 @@ namespace Nancy
                 this.ClientCertificate = new X509Certificate2(certificate);
             }
 
-            if (String.IsNullOrEmpty(this.Url.Path))
+            if (string.IsNullOrEmpty(this.Url.Path))
             {
                 this.Url.Path = "/";
             }

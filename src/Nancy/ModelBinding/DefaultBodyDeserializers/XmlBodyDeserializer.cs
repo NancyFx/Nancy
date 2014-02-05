@@ -17,7 +17,7 @@ namespace Nancy.ModelBinding.DefaultBodyDeserializers
         /// <returns>True if supported, false otherwise</returns>
         public bool CanDeserialize(string contentType, BindingContext context)
         {
-            if (String.IsNullOrEmpty(contentType))
+            if (string.IsNullOrEmpty(contentType))
             {
                 return false;
             }

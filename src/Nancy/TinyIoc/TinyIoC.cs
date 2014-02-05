@@ -457,7 +457,7 @@ namespace Nancy.TinyIoc
                 if (_sourceType != cacheKey._sourceType)
                     return false;
 
-                if (!String.Equals(_methodName, cacheKey._methodName, StringComparison.Ordinal))
+                if (!string.Equals(_methodName, cacheKey._methodName, StringComparison.Ordinal))
                     return false;
 
                 if (_genericTypes.Length != cacheKey._genericTypes.Length)
@@ -531,12 +531,12 @@ namespace Nancy.TinyIoc
         private const string ERROR_TEXT = "Unable to resolve type: {0}";
 
         public TinyIoCResolutionException(Type type)
-            : base(String.Format(ERROR_TEXT, type.FullName))
+            : base(string.Format(ERROR_TEXT, type.FullName))
         {
         }
 
         public TinyIoCResolutionException(Type type, Exception innerException)
-            : base(String.Format(ERROR_TEXT, type.FullName), innerException)
+            : base(string.Format(ERROR_TEXT, type.FullName), innerException)
         {
         }
     }
@@ -546,12 +546,12 @@ namespace Nancy.TinyIoc
         private const string REGISTER_ERROR_TEXT = "Cannot register type {0} - abstract classes or interfaces are not valid implementation types for {1}.";
 
         public TinyIoCRegistrationTypeException(Type type, string factory)
-            : base(String.Format(REGISTER_ERROR_TEXT, type.FullName, factory))
+            : base(string.Format(REGISTER_ERROR_TEXT, type.FullName, factory))
         {
         }
 
         public TinyIoCRegistrationTypeException(Type type, string factory, Exception innerException)
-            : base(String.Format(REGISTER_ERROR_TEXT, type.FullName, factory), innerException)
+            : base(string.Format(REGISTER_ERROR_TEXT, type.FullName, factory), innerException)
         {
         }
     }
@@ -562,22 +562,22 @@ namespace Nancy.TinyIoc
         private const string GENERIC_CONSTRAINT_ERROR_TEXT = "Type {1} is not valid for a registration of type {0}";
 
         public TinyIoCRegistrationException(Type type, string method)
-            : base(String.Format(CONVERT_ERROR_TEXT, type.FullName, method))
+            : base(string.Format(CONVERT_ERROR_TEXT, type.FullName, method))
         {
         }
 
         public TinyIoCRegistrationException(Type type, string method, Exception innerException)
-            : base(String.Format(CONVERT_ERROR_TEXT, type.FullName, method), innerException)
+            : base(string.Format(CONVERT_ERROR_TEXT, type.FullName, method), innerException)
         {
         }
 
         public TinyIoCRegistrationException(Type registerType, Type implementationType)
-            : base(String.Format(GENERIC_CONSTRAINT_ERROR_TEXT, registerType.FullName, implementationType.FullName))
+            : base(string.Format(GENERIC_CONSTRAINT_ERROR_TEXT, registerType.FullName, implementationType.FullName))
         {
         }
 
         public TinyIoCRegistrationException(Type registerType, Type implementationType, Exception innerException)
-            : base(String.Format(GENERIC_CONSTRAINT_ERROR_TEXT, registerType.FullName, implementationType.FullName), innerException)
+            : base(string.Format(GENERIC_CONSTRAINT_ERROR_TEXT, registerType.FullName, implementationType.FullName), innerException)
         {
         }
     }
@@ -587,12 +587,12 @@ namespace Nancy.TinyIoc
         private const string ERROR_TEXT = "Unable to instantiate {0} - referenced object has been reclaimed";
 
         public TinyIoCWeakReferenceException(Type type)
-            : base(String.Format(ERROR_TEXT, type.FullName))
+            : base(string.Format(ERROR_TEXT, type.FullName))
         {
         }
 
         public TinyIoCWeakReferenceException(Type type, Exception innerException)
-            : base(String.Format(ERROR_TEXT, type.FullName), innerException)
+            : base(string.Format(ERROR_TEXT, type.FullName), innerException)
         {
         }
     }
@@ -602,12 +602,12 @@ namespace Nancy.TinyIoc
         private const string ERROR_TEXT = "Unable to resolve constructor for {0} using provided Expression.";
 
         public TinyIoCConstructorResolutionException(Type type)
-            : base(String.Format(ERROR_TEXT, type.FullName))
+            : base(string.Format(ERROR_TEXT, type.FullName))
         {
         }
 
         public TinyIoCConstructorResolutionException(Type type, Exception innerException)
-            : base(String.Format(ERROR_TEXT, type.FullName), innerException)
+            : base(string.Format(ERROR_TEXT, type.FullName), innerException)
         {
         }
 
@@ -627,12 +627,12 @@ namespace Nancy.TinyIoc
         private const string ERROR_TEXT = "Duplicate implementation of type {0} found ({1}).";
 
         public TinyIoCAutoRegistrationException(Type registerType, IEnumerable<Type> types)
-            : base(String.Format(ERROR_TEXT, registerType, GetTypesString(types)))
+            : base(string.Format(ERROR_TEXT, registerType, GetTypesString(types)))
         {
         }
 
         public TinyIoCAutoRegistrationException(Type registerType, IEnumerable<Type> types, Exception innerException)
-            : base(String.Format(ERROR_TEXT, registerType, GetTypesString(types)), innerException)
+            : base(string.Format(ERROR_TEXT, registerType, GetTypesString(types)), innerException)
         {
         }
 
@@ -948,7 +948,7 @@ namespace Nancy.TinyIoc
                 if (lifetimeProvider == null)
                     throw new ArgumentNullException("lifetimeProvider", "lifetimeProvider is null.");
 
-                if (String.IsNullOrEmpty(errorString))
+                if (string.IsNullOrEmpty(errorString))
                     throw new ArgumentException("errorString is null or empty.", "errorString");
 
                 var currentFactory = instance._Container.GetCurrentFactory(instance._Registration);
@@ -1420,7 +1420,7 @@ namespace Nancy.TinyIoc
 //#else
                 if (!registrationType.IsAssignableFrom(type))
 //#endif
-					throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
+					throw new ArgumentException(string.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
             if (implementationTypes.Count() != implementationTypes.Distinct().Count())
             {
@@ -3006,7 +3006,7 @@ namespace Nancy.TinyIoc
                 Type = type;
                 Name = name;
 
-                _hashCode = String.Concat(Type.FullName, "|", Name).GetHashCode();
+                _hashCode = string.Concat(Type.FullName, "|", Name).GetHashCode();
             }
 
             public override bool Equals(object obj)
@@ -3019,7 +3019,7 @@ namespace Nancy.TinyIoc
                 if (Type != typeRegistration.Type)
                     return false;
 
-                if (String.Compare(Name, typeRegistration.Name, StringComparison.Ordinal) != 0)
+                if (string.Compare(Name, typeRegistration.Name, StringComparison.Ordinal) != 0)
                     return false;
 
                 return true;
@@ -3239,11 +3239,11 @@ namespace Nancy.TinyIoc
 
             // Fail if requesting named resolution and settings set to fail if unresolved
             // Or bubble up if we have a parent
-            if (!String.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
+            if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
                 return (_Parent != null) ? _Parent.CanResolveInternal(registration, parameters, options) : false;
 
             // Attemped unnamed fallback container resolution if relevant and requested
-            if (!String.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
+            if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
                 if (_RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
                 {
@@ -3308,9 +3308,9 @@ namespace Nancy.TinyIoc
 
             // 3 parameter func with string as first parameter (name) and IDictionary<string, object> as second (parameters)
 //#if NETFX_CORE
-//			if ((genericType == typeof(Func<,,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string) && type.GetTypeInfo().GenericTypeArguments[1] == typeof(IDictionary<String, object>)))
+//			if ((genericType == typeof(Func<,,>) && type.GetTypeInfo().GenericTypeArguments[0] == typeof(string) && type.GetTypeInfo().GenericTypeArguments[1] == typeof(IDictionary<string, object>)))
 //#else
-            if ((genericType == typeof(Func<,,>) && type.GetGenericArguments()[0] == typeof(string) && type.GetGenericArguments()[1] == typeof(IDictionary<String, object>)))
+            if ((genericType == typeof(Func<,,>) && type.GetGenericArguments()[0] == typeof(string) && type.GetGenericArguments()[1] == typeof(IDictionary<string, object>)))
 //#endif
                 return true;
 
@@ -3396,11 +3396,11 @@ namespace Nancy.TinyIoc
             }
 
             // Fail if requesting named resolution and settings set to fail if unresolved
-            if (!String.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
+            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
                 throw new TinyIoCResolutionException(registration.Type);
 
             // Attemped unnamed fallback container resolution if relevant and requested
-            if (!String.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
+            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
                 if (_RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
                 {
@@ -3476,13 +3476,13 @@ namespace Nancy.TinyIoc
                 Type returnType = genericArguments[1];
 
 //#if NETFX_CORE
-//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 1 && mi.GetParameters()[0].GetType() == typeof(String));
+//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 1 && mi.GetParameters()[0].GetType() == typeof(string));
 //#else
-                MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(String) });
+                MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(string) });
 //#endif
                 resolveMethod = resolveMethod.MakeGenericMethod(returnType);
 
-                ParameterExpression[] resolveParameters = new ParameterExpression[] { Expression.Parameter(typeof(String), "name") };
+                ParameterExpression[] resolveParameters = new ParameterExpression[] { Expression.Parameter(typeof(string), "name") };
                 var resolveCall = Expression.Call(Expression.Constant(this), resolveMethod, resolveParameters);
 
                 var resolveLambda = Expression.Lambda(resolveCall, resolveParameters).Compile();
@@ -3503,9 +3503,9 @@ namespace Nancy.TinyIoc
                 var parameters = Expression.Parameter(typeof(IDictionary<string, object>), "parameters");
 
 //#if NETFX_CORE
-//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 2 && mi.GetParameters()[0].GetType() == typeof(String) && mi.GetParameters()[1].GetType() == typeof(NamedParameterOverloads));
+//				MethodInfo resolveMethod = typeof(TinyIoCContainer).GetTypeInfo().GetDeclaredMethods("Resolve").First(mi => mi.GetParameters().Length == 2 && mi.GetParameters()[0].GetType() == typeof(string) && mi.GetParameters()[1].GetType() == typeof(NamedParameterOverloads));
 //#else
-                MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(String), typeof(NamedParameterOverloads) });
+                MethodInfo resolveMethod = typeof(TinyIoCContainer).GetMethod("Resolve", new Type[] { typeof(string), typeof(NamedParameterOverloads) });
 //#endif
                 resolveMethod = resolveMethod.MakeGenericMethod(returnType);
 

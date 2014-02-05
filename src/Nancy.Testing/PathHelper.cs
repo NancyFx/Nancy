@@ -38,7 +38,7 @@ namespace Nancy.Testing
 
             return
                 parts.Take(parts.Length - levels).Aggregate(
-                    (p1, p2) => String.Format("{0}{1}{2}", p1, Path.DirectorySeparatorChar, p2));
+                    (p1, p2) => string.Format("{0}{1}{2}", p1, Path.DirectorySeparatorChar, p2));
         }
     }
 }

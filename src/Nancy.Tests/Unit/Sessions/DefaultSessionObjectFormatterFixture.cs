@@ -60,7 +60,7 @@ namespace Nancy.Tests.Unit.Sessions
         [Fact]
         public void Should_return_null_when_deserializing_empty_string()
         {
-            var input = String.Empty;
+            var input = string.Empty;
 
             var output = this.serializer.Deserialize(input);
 

@@ -92,7 +92,7 @@
             var tokenKeyValue =
                 this.RenderContext.GetCsrfToken();
 
-            return new NonEncodedHtmlString(String.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
+            return new NonEncodedHtmlString(string.Format("<input type=\"hidden\" name=\"{0}\" value=\"{1}\"/>", tokenKeyValue.Key, tokenKeyValue.Value));
         }
 
         /// <summary>

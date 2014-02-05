@@ -44,7 +44,7 @@ namespace Nancy.Cryptography
         /// Create a hmac from the given data using the given passPhrase
         /// </summary>
         /// <param name="data">Data to create hmac from</param>
-        /// <returns>String representation of the hmac</returns>
+        /// <returns>string representation of the hmac</returns>
         public byte[] GenerateHmac(string data)
         {
             return this.GenerateHmac(Encoding.UTF8.GetBytes(data));

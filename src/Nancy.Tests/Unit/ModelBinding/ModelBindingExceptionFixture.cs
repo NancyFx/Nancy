@@ -54,7 +54,7 @@
             var exception = new ModelBindingException(typeof (string));
 
             //then
-            exception.Message.ShouldEqual(String.Format("Unable to bind to type: {0}", typeof(string)));
+            exception.Message.ShouldEqual(string.Format("Unable to bind to type: {0}", typeof(string)));
         }
     }
 }

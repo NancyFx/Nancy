@@ -138,7 +138,7 @@
             var hmacBytes = this.cryptoConfig.HmacProvider.GenerateHmac(encryptedSession);
             var hmacString = Convert.ToBase64String(hmacBytes);
 
-            return String.Format("{1}{0}", encryptedSession, hmacString);
+            return string.Format("{1}{0}", encryptedSession, hmacString);
         }
     }
 }

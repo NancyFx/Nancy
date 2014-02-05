@@ -40,7 +40,7 @@ namespace Nancy.Hosting.Self
 
         private static bool SegmentEquals(string segment1, string segment2)
         {
-            return String.Equals(AppendSlashIfNeeded(segment1), AppendSlashIfNeeded(segment2), StringComparison.InvariantCultureIgnoreCase);
+            return string.Equals(AppendSlashIfNeeded(segment1), AppendSlashIfNeeded(segment2), StringComparison.InvariantCultureIgnoreCase);
         }
 
         private static bool ZipCompare(this IEnumerable<string> source1, IEnumerable<string> source2, Func<string, string, bool> comparison)

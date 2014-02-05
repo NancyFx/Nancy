@@ -85,7 +85,7 @@ namespace Nancy.Tests.Fakes
         /// <summary>
         /// Get the anti forgery token form element
         /// </summary>
-        /// <returns>String containin the form element</returns>
+        /// <returns>string containin the form element</returns>
         public string AntiForgeryToken()
         {
             return "CSRF";

@@ -165,7 +165,7 @@ namespace Nancy.Testing
 
             var hmacString = Convert.ToBase64String(hmacBytes);
 
-            var cookieContents = String.Format("{1}{0}", encryptedId, hmacString);
+            var cookieContents = string.Format("{1}{0}", encryptedId, hmacString);
 
             Cookie(browserContext, FormsAuthentication.FormsAuthenticationCookieName, cookieContents);
         }

@@ -101,7 +101,7 @@
 
                 var filter = this.GetFilter(method.Name);
 
-                var fullPath = String.Concat(this.ModulePath, attribute.Path);
+                var fullPath = string.Concat(this.ModulePath, attribute.Path);
 
                 routes.Add(new Route(attribute.Method.ToUpper(), fullPath, filter, routeDelegate));
             }

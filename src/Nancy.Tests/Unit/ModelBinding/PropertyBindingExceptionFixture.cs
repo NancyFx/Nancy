@@ -30,7 +30,7 @@
             var exception = new PropertyBindingException(PROPERTY_NAME, ATTEMPTED_VALUE);
 
             //then
-            exception.Message.ShouldEqual(String.Format("Unable to bind property: {0}; Attempted value: {1}", PROPERTY_NAME, ATTEMPTED_VALUE));
+            exception.Message.ShouldEqual(string.Format("Unable to bind property: {0}; Attempted value: {1}", PROPERTY_NAME, ATTEMPTED_VALUE));
         }
     }
 }

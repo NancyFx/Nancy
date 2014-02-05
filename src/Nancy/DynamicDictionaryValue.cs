@@ -105,7 +105,7 @@
                     }
                     else if (TType == typeof (string))
                     {
-                        return (T)Convert.ChangeType(value, TypeCode.String, CultureInfo.InvariantCulture);
+                        return (T)Convert.ChangeType(value, TypeCode.string, CultureInfo.InvariantCulture);
                     }
                 }
                 catch
@@ -211,7 +211,7 @@
         /// Provides implementation for type conversion operations. Classes derived from the <see cref="T:System.Dynamic.DynamicObject"/> class can override this method to specify dynamic behavior for operations that convert an object from one type to another.
         /// </summary>
         /// <returns><c>true</c> if the operation is successful; otherwise, <c>false</c>. If this method returns <c>false</c>, the run-time binder of the language determines the behavior. (In most cases, a language-specific run-time exception is thrown.)</returns>
-        /// <param name="binder">Provides information about the conversion operation. The binder.Type property provides the type to which the object must be converted. For example, for the statement (String)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Type returns the <see cref="T:System.String"/> type. The binder.Explicit property provides information about the kind of conversion that occurs. It returns true for explicit conversion and false for implicit conversion.</param><param name="result">The result of the type conversion operation.</param>
+        /// <param name="binder">Provides information about the conversion operation. The binder.Type property provides the type to which the object must be converted. For example, for the statement (string)sampleObject in C# (CType(sampleObject, Type) in Visual Basic), where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Type returns the <see cref="T:System.string"/> type. The binder.Explicit property provides information about the kind of conversion that occurs. It returns true for explicit conversion and false for implicit conversion.</param><param name="result">The result of the type conversion operation.</param>
         public override bool TryConvert(ConvertBinder binder, out object result)
         {
             result = null;
@@ -222,7 +222,7 @@
             }
 
             var binderType = binder.Type;
-            if (binderType == typeof(String))
+            if (binderType == typeof(string))
             {
                 result = Convert.ToString(value);
                 return true;
@@ -572,10 +572,10 @@
         }
 
         /// <summary>
-        /// Converts the value of this instance to an equivalent <see cref="T:System.String"/> using the specified culture-specific formatting information.
+        /// Converts the value of this instance to an equivalent <see cref="T:System.string"/> using the specified culture-specific formatting information.
         /// </summary>
         /// <returns>
-        /// A <see cref="T:System.String"/> instance equivalent to the value of this instance.
+        /// A <see cref="T:System.string"/> instance equivalent to the value of this instance.
         /// </returns>
         /// <param name="provider">An <see cref="T:System.IFormatProvider"/> interface implementation that supplies culture-specific formatting information. </param><filterpriority>2</filterpriority>
         public string ToString(IFormatProvider provider)

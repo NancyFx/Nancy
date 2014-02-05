@@ -167,7 +167,7 @@ namespace Nancy.ViewEngines.Spark
 
         private static bool CompareViewPaths(string storedViewPath, string requestedViewPath)
         {
-            return String.Equals(storedViewPath, requestedViewPath, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(storedViewPath, requestedViewPath, StringComparison.OrdinalIgnoreCase);
         }
 
         private static string ConvertPath(string path)

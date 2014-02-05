@@ -47,7 +47,7 @@
 
         private void TerminateBoundary()
         {
-            var endBoundary = String.Format("\r\n--{0}--\r\n", this.boundaryName);
+            var endBoundary = string.Format("\r\n--{0}--\r\n", this.boundaryName);
 
             var encodedHeaders =
                 Encoding.ASCII.GetBytes(endBoundary);
@@ -113,7 +113,7 @@
                 builder.Append("--" + this.boundary);
                 builder.Append(CRLF);  
                 builder.AppendFormat(@"Content-Disposition: form-data; name=""{0}""", name);
-                if (!String.IsNullOrWhiteSpace(filename))
+                if (!string.IsNullOrWhiteSpace(filename))
                 {
                     builder.AppendFormat(@"; filename=""{0}""", filename);
                 }

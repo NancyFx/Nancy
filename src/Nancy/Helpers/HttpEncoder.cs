@@ -120,12 +120,12 @@ namespace Nancy.Helpers
 #endif
  void HeaderNameValueEncode(string headerName, string headerValue, out string encodedHeaderName, out string encodedHeaderValue)
         {
-            if (String.IsNullOrEmpty(headerName))
+            if (string.IsNullOrEmpty(headerName))
                 encodedHeaderName = headerName;
             else
                 encodedHeaderName = EncodeHeaderString(headerName);
 
-            if (String.IsNullOrEmpty(headerValue))
+            if (string.IsNullOrEmpty(headerValue))
                 encodedHeaderValue = headerValue;
             else
                 encodedHeaderValue = EncodeHeaderString(headerValue);
@@ -149,7 +149,7 @@ namespace Nancy.Helpers
                 ch = input[i];
 
                 if ((ch < 32 && ch != 9) || ch == 127)
-                    StringBuilderAppend(String.Format("%{0:x2}", (int)ch), ref sb);
+                    StringBuilderAppend(string.Format("%{0:x2}", (int)ch), ref sb);
             }
 
             if (sb != null)
@@ -164,7 +164,7 @@ namespace Nancy.Helpers
 			if (output == null)
 				throw new ArgumentNullException ("output");
 
-			if (String.IsNullOrEmpty (value))
+			if (string.IsNullOrEmpty (value))
 				return;
 
 			output.Write (HtmlAttributeEncode (value));
@@ -196,16 +196,16 @@ namespace Nancy.Helpers
 			var cfg = HttpRuntime.Section;
 			string typeName = cfg.EncoderType;
 
-			if (String.Compare (typeName, "System.Web.Util.HttpEncoder", StringComparison.OrdinalIgnoreCase) == 0)
+			if (string.Compare (typeName, "System.Web.Util.HttpEncoder", StringComparison.OrdinalIgnoreCase) == 0)
 				return Default;
 			
 			Type t = Type.GetType (typeName, false);
 			if (t == null)
-				throw new ConfigurationErrorsException (String.Format ("Could not load type '{0}'.", typeName));
+				throw new ConfigurationErrorsException (string.Format ("Could not load type '{0}'.", typeName));
 			
 			if (!typeof (HttpEncoder).IsAssignableFrom (t))
 				throw new ConfigurationErrorsException (
-					String.Format ("'{0}' is not allowed here because it does not extend class 'System.Web.Util.HttpEncoder'.", typeName)
+					string.Format ("'{0}' is not allowed here because it does not extend class 'System.Web.Util.HttpEncoder'.", typeName)
 				);
 
 			return Activator.CreateInstance (t, false) as HttpEncoder;
@@ -218,7 +218,7 @@ namespace Nancy.Helpers
 #endif
  string UrlPathEncode(string value)
         {
-            if (String.IsNullOrEmpty(value))
+            if (string.IsNullOrEmpty(value))
                 return value;
 
             MemoryStream result = new MemoryStream();
@@ -258,7 +258,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (s.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             bool needEncode = false;
             for (int i = 0; i < s.Length; i++)
@@ -331,14 +331,14 @@ namespace Nancy.Helpers
         internal static string HtmlAttributeEncode(string s)
         {
 #if NET_4_0
-			if (String.IsNullOrEmpty (s))
-				return String.Empty;
+			if (string.IsNullOrEmpty (s))
+				return string.Empty;
 #else
             if (s == null)
                 return null;
 
             if (s.Length == 0)
-                return String.Empty;
+                return string.Empty;
 #endif
             bool needEncode = false;
             for (int i = 0; i < s.Length; i++)
@@ -391,7 +391,7 @@ namespace Nancy.Helpers
                 return null;
 
             if (s.Length == 0)
-                return String.Empty;
+                return string.Empty;
 
             if (s.IndexOf('&') == -1)
                 return s;

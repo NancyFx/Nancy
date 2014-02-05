@@ -12,7 +12,7 @@ namespace Yarrrr
     {
         public static string ToSentenceCase(this string input)
         {
-            return String.Format("{0}{1}", input.Substring(0, 1).ToUpper(), input.Substring(1));
+            return string.Format("{0}{1}", input.Substring(0, 1).ToUpper(), input.Substring(1));
         }
     
         private static readonly Dictionary<string, string> lowerSubstitutions;

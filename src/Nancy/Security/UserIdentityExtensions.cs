@@ -18,7 +18,7 @@
         {
             return
                 user != null
-                && !String.IsNullOrWhiteSpace(user.UserName);
+                && !string.IsNullOrWhiteSpace(user.UserName);
         }
 
         /// <summary>

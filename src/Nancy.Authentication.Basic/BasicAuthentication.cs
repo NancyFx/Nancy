@@ -82,7 +82,7 @@
                 {
                     if (context.Response.StatusCode == HttpStatusCode.Unauthorized && SendAuthenticateResponseHeader(context, configuration))
                     {
-                        context.Response.Headers["WWW-Authenticate"] = String.Format("{0} realm=\"{1}\"", SCHEME, configuration.Realm);
+                        context.Response.Headers["WWW-Authenticate"] = string.Format("{0} realm=\"{1}\"", SCHEME, configuration.Realm);
                     }
                 };
         }
@@ -123,7 +123,7 @@
                 var encodedUserPass = authorization.Substring(SCHEME.Length).Trim();
                 var userPass = Encoding.UTF8.GetString(Convert.FromBase64String(encodedUserPass));
 
-                return String.IsNullOrWhiteSpace(userPass) ? null : userPass.Split(new[] {':'}, 2);
+                return string.IsNullOrWhiteSpace(userPass) ? null : userPass.Split(new[] {':'}, 2);
             }
             catch (FormatException)
             {

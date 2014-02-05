@@ -13,7 +13,7 @@ namespace Nancy.ViewEngines.Razor.CSharp
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {
-            return String.Format(
+            return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0}<{1}>",
                 context.Host.DefaultBaseClass,

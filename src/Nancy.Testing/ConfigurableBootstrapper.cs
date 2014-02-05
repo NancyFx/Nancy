@@ -188,7 +188,7 @@ namespace Nancy.Testing
 
         private static string GetSafePathExtension(string name)
         {
-            return Path.GetExtension(name) ?? String.Empty;
+            return Path.GetExtension(name) ?? string.Empty;
         }
 
         private IEnumerable<Type> Resolve<T>()

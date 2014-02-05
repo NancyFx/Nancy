@@ -131,7 +131,7 @@ namespace Nancy.Json
 
 				if (typeResolver != null) {
 					string typeId = typeResolver.ResolveTypeId (valueType);
-					if (!String.IsNullOrEmpty (typeId))
+					if (!string.IsNullOrEmpty (typeId))
 						result [JavaScriptSerializer.SerializedTypeNameKey] = typeId;
 				}
 
@@ -141,7 +141,7 @@ namespace Nancy.Json
 
 			TypeCode typeCode = Type.GetTypeCode (valueType);
 			switch (typeCode) {
-				case TypeCode.String:
+				case TypeCode.string:
 					WriteValue (output, (string)obj);
                                         return;
 					
@@ -320,7 +320,7 @@ namespace Nancy.Json
 			bool first = true;
 			if (typeResolver != null) {
 				string typeId = typeResolver.ResolveTypeId (type);
-				if (!String.IsNullOrEmpty (typeId)) {
+				if (!string.IsNullOrEmpty (typeId)) {
 					WriteDictionaryEntry (output, first, JavaScriptSerializer.SerializedTypeNameKey, typeId);
 					first = false;
 				}
@@ -356,9 +356,9 @@ namespace Nancy.Json
 
         private static string ConvertToCamelCase(string str)
         {
-            if (String.IsNullOrEmpty(str))
-                return String.Empty;
-            return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
+            if (string.IsNullOrEmpty(str))
+                return string.Empty;
+            return string.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
         }
 
         void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
@@ -455,7 +455,7 @@ namespace Nancy.Json
 					return;
 
 				default:
-					throw new InvalidOperationException (String.Format ("Invalid type code for enum: {0}", typeCode));
+					throw new InvalidOperationException (string.Format ("Invalid type code for enum: {0}", typeCode));
 			}
 		}
 
@@ -537,7 +537,7 @@ namespace Nancy.Json
 
 		void WriteValue (StringBuilder output, string value)
 		{
-			if (String.IsNullOrEmpty (value)) {
+			if (string.IsNullOrEmpty (value)) {
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, "\"\"");
 				return;
 			}

@@ -69,7 +69,7 @@ namespace Nancy.ErrorHandling
                 return;
             }
 
-            if (String.IsNullOrEmpty(errorPage))
+            if (string.IsNullOrEmpty(errorPage))
             {
                 return;
             }
@@ -102,7 +102,7 @@ namespace Nancy.ErrorHandling
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(String.Format("Nancy.ErrorHandling.Resources.{0}", filename));
+            var resourceStream = typeof(INancyEngine).Assembly.GetManifestResourceStream(string.Format("Nancy.ErrorHandling.Resources.{0}", filename));
 
             if (resourceStream == null)
             {

@@ -180,7 +180,7 @@ namespace Nancy.ModelBinding
 
         private bool BindingValueIsValid(string bindingValue, object existingValue, PropertyInfo modelProperty, BindingContext bindingContext)
         {
-            return (!String.IsNullOrEmpty(bindingValue) &&
+            return (!string.IsNullOrEmpty(bindingValue) &&
                     (IsDefaultValue(existingValue, modelProperty.PropertyType) ||
                      bindingContext.Configuration.Overwrite));
         }
@@ -490,9 +490,9 @@ namespace Nancy.ModelBinding
                     return propertyValue ?? string.Empty;
                 }
                 
-                return String.Empty;
+                return string.Empty;
             }
-            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : String.Empty;
+            return context.RequestData.ContainsKey(propertyName) ? context.RequestData[propertyName] : string.Empty;
         }
 
         private object DeserializeRequestBody(BindingContext context)
@@ -521,7 +521,7 @@ namespace Nancy.ModelBinding
         {
             if (context == null || context.Request == null)
             {
-                return String.Empty;
+                return string.Empty;
             }
 
             var contentType =

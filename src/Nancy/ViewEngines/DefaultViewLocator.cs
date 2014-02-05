@@ -150,7 +150,7 @@
         {
             var viewExtension = GetExtensionFromViewName(viewName);
 
-            var supportedViewExtensions = String.IsNullOrEmpty(viewExtension)
+            var supportedViewExtensions = string.IsNullOrEmpty(viewExtension)
                                               ? GetSupportedViewExtensions()
                                               : new[] { viewExtension };
 
@@ -238,7 +238,7 @@
         {
             var extension = Path.GetExtension(viewName);
 
-            return !String.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
+            return !string.IsNullOrEmpty(extension) ? extension.Substring(1) : extension;
         }
 
         private bool IsValidViewName(string viewName)

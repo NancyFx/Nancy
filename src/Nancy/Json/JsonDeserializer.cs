@@ -202,7 +202,7 @@ namespace Nancy.Json
 			NULL,
 			TRUE,
 			FALSE,
-			STRING,
+			string,
 			KEY,
 			MAX
 		};
@@ -493,7 +493,7 @@ namespace Nancy.Json
 			decimal decimalValue;
 			double doubleValue;
 			
-			if (jsonType != JsonType.STRING)
+			if (jsonType != JsonType.string)
 			{
 				s = s.Trim();
 			}
@@ -524,25 +524,25 @@ namespace Nancy.Json
 					break;
 
 				case JsonType.TRUE:
-					if (String.Compare (s, "true", StringComparison.Ordinal) == 0)
+					if (string.Compare (s, "true", StringComparison.Ordinal) == 0)
 						result = true;
 					else
 						converted = false;
 					break;
 
 				case JsonType.FALSE:
-					if (String.Compare (s, "false", StringComparison.Ordinal) == 0)
+					if (string.Compare (s, "false", StringComparison.Ordinal) == 0)
 						result = false;
 					else
 						converted = false;
 					break;
 
 				case JsonType.NULL:
-					if (String.Compare (s, "null", StringComparison.Ordinal) != 0)
+					if (string.Compare (s, "null", StringComparison.Ordinal) != 0)
 						converted = false;
 					break;
 
-				case JsonType.STRING:
+				case JsonType.string:
 					if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal))
 					{
 						int tzCharIndex = s.IndexOfAny(new char[] {'+', '-'}, 7);
@@ -559,7 +559,7 @@ namespace Nancy.Json
 					break;
 
 				default:
-					throw new InvalidOperationException (String.Format ("Internal error: unexpected JsonType ({0})", jsonType));
+					throw new InvalidOperationException (string.Format ("Internal error: unexpected JsonType ({0})", jsonType));
 					
 			}
 
@@ -668,12 +668,12 @@ namespace Nancy.Json
 				case SB: /* string begin " or ' */
 					buffer.Length = 0;
 					quoteChar = ch;
-					jsonType = JsonType.STRING;
+					jsonType = JsonType.string;
 					state = ST;
 					break;
 
 				case KB: /* unquoted key name begin */
-					jsonType = JsonType.STRING;
+					jsonType = JsonType.string;
 					state = UK;
 					break;
 
@@ -781,7 +781,7 @@ namespace Nancy.Json
 								break;
 
 							case JsonMode.NONE: /* A stand-alone string */
-								jsonType = JsonType.STRING;
+								jsonType = JsonType.string;
 								state = IV; /* the rest of input is invalid */
 								if (ParseBuffer (out result))
 									PushObject (result);
@@ -886,7 +886,7 @@ namespace Nancy.Json
 			if (key != null)
 				key = key.Trim ();
 			
-			if (String.IsNullOrEmpty (key))
+			if (string.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: key is null, empty or not a string.");
 			
 			currentKey.Push (key);
@@ -915,7 +915,7 @@ namespace Nancy.Json
 			else
 				key = currentKey.Pop ();
 
-			if (String.IsNullOrEmpty (key))
+			if (string.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: object is a dictionary, but no key present.");
 			
 			dict [key] = o;

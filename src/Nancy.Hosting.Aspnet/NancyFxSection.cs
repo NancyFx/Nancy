@@ -21,11 +21,11 @@ namespace Nancy.Hosting.Aspnet
         public class BootstrapperElement : ConfigurationElement
         {
             [ConfigurationProperty("type", DefaultValue = "", IsRequired = true)]
-            public String Type
+            public string Type
             {
                 get
                 {
-                    return (String)this["type"];
+                    return (string)this["type"];
                 }
                 set
                 {
@@ -34,11 +34,11 @@ namespace Nancy.Hosting.Aspnet
             }
 
             [ConfigurationProperty("assembly", DefaultValue = "", IsRequired = true)]
-            public String Assembly
+            public string Assembly
             {
                 get
                 {
-                    return (String)this["assembly"];
+                    return (string)this["assembly"];
                 }
                 set
                 {

@@ -46,7 +46,7 @@
 
         private static string LoadResource(string filename)
         {
-            var resourceStream = typeof(NancyRazorErrorView).Assembly.GetManifestResourceStream(String.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
+            var resourceStream = typeof(NancyRazorErrorView).Assembly.GetManifestResourceStream(string.Format("Nancy.ViewEngines.Razor.Resources.{0}", filename));
 
             if (resourceStream == null)
             {

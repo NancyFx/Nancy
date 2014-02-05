@@ -13,7 +13,7 @@
 
         protected override string ResolveType(CodeGeneratorContext context, string baseType)
         {
-            return String.Format(
+            return string.Format(
                 CultureInfo.InvariantCulture,
                 "{0}(Of {1})",
                 context.Host.DefaultBaseClass,

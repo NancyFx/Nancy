@@ -79,7 +79,7 @@
         /// We could just use the same method as .net does but
         /// like a lot of useful things in .net, it's internal.
         /// </summary>
-        /// <param name="data">String of hex bytes</param>
+        /// <param name="data">string of hex bytes</param>
         /// <returns>Actual byte array</returns>
         private static byte[] HexStringToByteArray(string data)
         {

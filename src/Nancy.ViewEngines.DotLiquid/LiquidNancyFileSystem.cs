@@ -57,7 +57,7 @@
                     // The template name does not end with a valid extension, try all the possibilities
                     foreach (string extension in extensions)
                     {
-                        viewLocation = renderContext.LocateView(String.Concat(templateName, ".", extension), null);
+                        viewLocation = renderContext.LocateView(string.Concat(templateName, ".", extension), null);
                         if (viewLocation != null) break;
                     }
                 }
