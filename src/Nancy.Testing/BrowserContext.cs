@@ -20,7 +20,7 @@
         public BrowserContext()
         {
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
-            this.Values.Protocol = "http";
+            this.Values.Protocol = String.Empty;
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
             this.Values.FormValues = String.Empty;
