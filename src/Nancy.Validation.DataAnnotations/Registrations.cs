@@ -14,7 +14,6 @@ namespace Nancy.Validation.DataAnnotations
         public Registrations()
         {
             this.Register<IModelValidator>(typeof(DataAnnotationsValidator));
-            this.Register<IModelValidatorFactory>(typeof(DataAnnotationsValidatorFactory));
             this.RegisterAll<IDataAnnotationsValidatorAdapter>();
             this.RegisterWithDefault<IPropertyValidatorFactory>(typeof(DefaultPropertyValidatorFactory));
             this.RegisterWithDefault<IValidatableObjectAdapter>(typeof(DefaultValidatableObjectAdapter));
