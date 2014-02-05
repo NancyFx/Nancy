@@ -338,7 +338,7 @@ namespace Nancy.Json
 			MethodInfo getMethod;
 			
 			foreach (T mi in members) 
-            {
+			{
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
@@ -406,9 +406,9 @@ namespace Nancy.Json
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');
 
-		    key = retainCasing ? key : key.ToCamelCase();
+			key = retainCasing ? key : key.ToCamelCase();
 
-            WriteValue(output, key);
+			WriteValue(output, key);
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, ':');
 			SerializeValue (value, output);
 		}
