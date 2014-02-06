@@ -47,6 +47,12 @@
                 <td><a href="/datetimeConstraint/1-1-2010">Success</a> <a href="/datetimeConstraint/foo">Failure</a></td>
             </tr>
             <tr>
+                <td>datetime</td>
+                <td>Matches a <strong>DateTime</strong> value with a custom format.</td>
+                <td>{x:datetime(yyyy-MM-dd)}</td>
+                <td><a href="/customDatetimeConstraint/2013-02-03">Success</a> <a href="/customDatetimeConstraint/2013-23-02">Failure</a></td>
+            </tr>
+            <tr>
                 <td>decimal</td>
                 <td>Matches a decimal value.</td>
                 <td>{x:decimal}</td>
@@ -99,6 +105,12 @@
                 <td>Matches an integer within a range of values.</td>
                 <td>{x:range(10,20)}</td>
                 <td><a href="/rangeConstraint/15">Success</a> <a href="/rangeConstraint/25">Failure</a></td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>Matches an e-mail address (according to @jchannon).</td>
+                <td>{x:email}</td>
+                <td><a href="/emailConstraint/mail@domain.com">Success</a> <a href="/emailConstraint/maild@asdsacom">Failure</a></td>
             </tr>
         </tbody>
     </table>

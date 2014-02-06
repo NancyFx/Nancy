@@ -9,6 +9,8 @@
 
     public class DefaultJsonSerializer : ISerializer
     {
+        private bool? retainCasing;
+
         /// <summary>
         /// Whether the serializer can serialize the content type
         /// </summary>
@@ -29,6 +31,17 @@
         }
 
         /// <summary>
+        /// Set to true to retain the casing used in the C# code in produced JSON.
+        /// Set to false to use camelCasig in the produced JSON.
+        /// False by default.
+        /// </summary>
+        public bool RetainCasing
+        {
+            get { return retainCasing.HasValue ? retainCasing.Value : JsonSettings.RetainCasing; }
+            set { retainCasing = value; }
+        }
+
+        /// <summary>
         /// Serialize the given model with the given contentType
         /// </summary>
         /// <param name="contentType">Content type to serialize into</param>
@@ -39,7 +52,7 @@
         {
             using (var writer = new StreamWriter(new UnclosableStreamWrapper(outputStream)))
             {
-                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions);
+                var serializer = new JavaScriptSerializer(null, false, JsonSettings.MaxJsonLength, JsonSettings.MaxRecursions, RetainCasing, JsonSettings.ISO8601DateFormat);
             
                 serializer.RegisterConverters(JsonSettings.Converters);
 

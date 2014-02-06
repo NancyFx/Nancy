@@ -64,6 +64,8 @@ namespace Nancy.Json
     using System.IO;
     using System.Text;
 
+    using Nancy.Extensions;
+
 	internal sealed class JsonDeserializer
 	{
 		/* Universal error constant */
@@ -290,6 +292,7 @@ namespace Nancy.Json
 
 		JavaScriptSerializer serializer;
 		JavaScriptTypeResolver typeResolver;
+		bool retainCasing;
 		int maxJsonLength;
 		int currentPosition;
 		int recursionLimit;
@@ -311,6 +314,7 @@ namespace Nancy.Json
 			this.maxJsonLength = serializer.MaxJsonLength;
 			this.recursionLimit = serializer.RecursionLimit;
 			this.typeResolver = serializer.TypeResolver;
+			this.retainCasing = serializer.RetainCasing;
 			this.modes = new Stack <JsonMode> ();
 			this.currentKey = new Stack <string> ();
 			this.returnValue = new Stack <object> ();
@@ -495,7 +499,7 @@ namespace Nancy.Json
 			
 			if (jsonType != JsonType.STRING)
 			{
-				s = s.TrimEnd(new[] { '\n', '\r' });
+				s = s.Trim();
 			}
 
 			switch (jsonType) {
@@ -543,17 +547,19 @@ namespace Nancy.Json
 					break;
 
 				case JsonType.STRING:
-                    if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal)) {
-                        int tzCharIndex = s.IndexOfAny(new char[] { '+', '-' }, 7);
-                        long javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
-                        DateTime time = new DateTime((javaScriptTicks * 10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
-                        if (tzCharIndex > 0) {
-                            time = time.ToLocalTime();
-                        }
-                        result = time;
-                    }
-                    else
-                        result = s;
+					if (s.StartsWith("/Date(", StringComparison.Ordinal) && s.EndsWith(")/", StringComparison.Ordinal))
+					{
+						int tzCharIndex = s.IndexOfAny(new char[] {'+', '-'}, 7);
+						long javaScriptTicks = Convert.ToInt64(s.Substring(6, (tzCharIndex > 0) ? tzCharIndex - 6 : s.Length - 8));
+						DateTime time = new DateTime((javaScriptTicks*10000) + JsonSerializer.InitialJavaScriptDateTicks, DateTimeKind.Utc);
+						if (tzCharIndex > 0)
+						{
+							time = time.ToLocalTime();
+						}
+						result = time;
+					}
+					else
+						result = s;
 					break;
 
 				default:
@@ -886,7 +892,9 @@ namespace Nancy.Json
 			
 			if (String.IsNullOrEmpty (key))
 				throw new InvalidOperationException ("Internal error: key is null, empty or not a string.");
-			
+
+			key = retainCasing ? key : key.ToPascalCase();
+
 			currentKey.Push (key);
 			Dictionary <string, object> dict = PeekObject () as Dictionary <string, object>;
 			if (dict == null)

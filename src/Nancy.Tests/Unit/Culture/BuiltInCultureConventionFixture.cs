@@ -3,10 +3,8 @@
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using System.Threading;
-    using FakeItEasy;
+
     using Nancy.Conventions;
     using Nancy.IO;
     using Xunit;
@@ -72,6 +70,7 @@
         }
 
         [Theory]
+        [InlineData("/nl", "nl")]
         [InlineData("/en-GB", "en-GB")]
         [InlineData("/en-GB/product", "en-GB")]
         public void Should_return_culture_if_first_path_parameter_valid_culture(string path, string expected)
@@ -142,7 +141,7 @@
             var headers =
                 new Dictionary<string, IEnumerable<string>>
                 {
-                    { "Accept-Language", new[] { "en-GB;q=0.8", "de-DE;q=0.7" } }
+                    { "Accept-Language", new[] { "en-GB;q=0.8", "de-DE;q=0.7", "nl;q=0.5", "es;q=0.4" } }
                 };
 
             var context = CreateContextRequest("/", headers);
@@ -326,6 +325,8 @@
         [InlineData("en-GB")]
         [InlineData("de-DE")]
         [InlineData("en-US")]
+        [InlineData("nl")]
+        [InlineData("es")]
 #if !__MonoCS__
         [InlineData("iu-Latn-CA")]
 #endif

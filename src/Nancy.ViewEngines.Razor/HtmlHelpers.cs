@@ -2,7 +2,6 @@
 {
     using System;
     using System.IO;
-    using System.Linq.Expressions;
     using Nancy.Security;
 
     /// <summary>
@@ -62,7 +61,7 @@
         {
             var view = this.RenderContext.LocateView(viewName, modelForPartial);
 
-            var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext);
+            var response = this.Engine.RenderView(view, modelForPartial, this.RenderContext, true);
             Action<Stream> action = response.Contents;
             var mem = new MemoryStream();
 

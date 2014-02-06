@@ -10,6 +10,7 @@
     using System.Text;
     using System.Web.Razor;
     using System.Web.Razor.Parser.SyntaxTree;
+
     using Nancy.Bootstrapper;
     using Nancy.Helpers;
     using Nancy.Responses;
@@ -70,6 +71,19 @@
         /// <returns>A response.</returns>
         public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext)
         {
+            return RenderView(viewLocationResult, model, renderContext, false);
+        }
+
+        /// <summary>
+        /// Renders the view.
+        /// </summary>
+        /// <param name="viewLocationResult">A <see cref="ViewLocationResult"/> instance, containing information on how to get the view template.</param>
+        /// <param name="model">The model that should be passed into the view</param>
+        /// <param name="renderContext">The render context.</param>
+        /// <param name="isPartial">Used by HtmlHelpers to declare a view as partial</param>
+        /// <returns>A response.</returns>
+        public Response RenderView(ViewLocationResult viewLocationResult, dynamic model, IRenderContext renderContext, bool isPartial)
+        {
             Assembly referencingAssembly = null;
 
             if (model != null)
@@ -85,37 +99,30 @@
 
             response.Contents = stream =>
             {
-                var writer = 
+                var writer =
                     new StreamWriter(stream);
 
-                var view = 
-                    this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
+                var view = this.GetViewInstance(viewLocationResult, renderContext, referencingAssembly, model);
 
                 view.ExecuteView(null, null);
 
                 var body = view.Body;
                 var sectionContents = view.SectionContents;
 
-                var layout = view.HasLayout ? 
-                    view.Layout :
-                    GetViewStartLayout(model, renderContext, referencingAssembly);
+                var layout = view.HasLayout ? view.Layout : GetViewStartLayout(model, renderContext, referencingAssembly, isPartial);
 
-                var root = 
-                    string.IsNullOrWhiteSpace(layout);
+                var root = string.IsNullOrWhiteSpace(layout);
 
                 while (!root)
                 {
-                    view = 
-                        this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
+                    view = this.GetViewInstance(renderContext.LocateView(layout, model), renderContext, referencingAssembly, model);
 
                     view.ExecuteView(body, sectionContents);
 
                     body = view.Body;
                     sectionContents = view.SectionContents;
 
-                    layout = view.HasLayout ?
-                        view.Layout :
-                        GetViewStartLayout(model, renderContext, referencingAssembly);
+                    layout = view.HasLayout ? view.Layout : GetViewStartLayout(model, renderContext, referencingAssembly, isPartial);
 
                     root = !view.HasLayout;
                 }
@@ -127,10 +134,14 @@
             return response;
         }
 
-        private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly)
+        private string GetViewStartLayout(dynamic model, IRenderContext renderContext, Assembly referencingAssembly, bool isPartial)
         {
-            var view =
-                renderContext.LocateView("_ViewStart", model);
+            if (isPartial)
+            {
+                return string.Empty;
+            }
+
+            var view = renderContext.LocateView("_ViewStart", model);
 
             if (view == null)
             {
@@ -142,8 +153,7 @@
                 return string.Empty;
             }
 
-            var viewInstance =
-                GetViewInstance(view, renderContext, referencingAssembly, model);
+            var viewInstance = GetViewInstance(view, renderContext, referencingAssembly, model);
 
             viewInstance.ExecuteView(null, null);
 
@@ -158,15 +168,15 @@
             if (this.razorConfiguration != null)
             {
                 var namespaces = this.razorConfiguration.GetDefaultNamespaces();
-                if (namespaces != null)
+
+                if (namespaces == null)
                 {
-                    foreach (var n in namespaces)
-                    {
-                        if (!string.IsNullOrWhiteSpace(n))
-                        {
-                            engineHost.NamespaceImports.Add(n);
-                        }
-                    }
+                    return;
+                }
+
+                foreach (var n in namespaces.Where(n => !string.IsNullOrWhiteSpace(n)))
+                {
+                    engineHost.NamespaceImports.Add(n);
                 }
             }
         }
@@ -186,10 +196,10 @@
 
         private Func<INancyRazorView> GenerateRazorViewFactory(IRazorViewRenderer viewRenderer, GeneratorResults razorResult, Assembly referencingAssembly, Type passedModelType, ViewLocationResult viewLocationResult)
         {
-            var outputAssemblyName = 
+            var outputAssemblyName =
                 Path.Combine(Path.GetTempPath(), String.Format("Temp_{0}.dll", Guid.NewGuid().ToString("N")));
 
-            var modelType = 
+            var modelType =
                 FindModelType(razorResult.Document, passedModelType, viewRenderer.ModelCodeGenerator);
 
             var assemblies = new List<string>
@@ -206,7 +216,7 @@
             {
                 assemblies.Add(GetAssemblyPath(referencingAssembly));
             }
-            
+
             if (this.razorConfiguration != null)
             {
                 var assemblyNames = this.razorConfiguration.GetAssemblyNames();
@@ -225,7 +235,7 @@
                 .Union(viewRenderer.Assemblies)
                 .ToList();
 
-            var compilerParameters = 
+            var compilerParameters =
                 new CompilerParameters(assemblies.ToArray(), outputAssemblyName);
 
             CompilerResults results;
@@ -253,7 +263,7 @@
                                         "Error compiling template: <strong>{0}</strong><br/><br/>Errors:<br/>{1}<br/><br/>Details:<br/>{2}<br/><br/>Compilation Source:<br/><pre><code>{3}</code></pre>",
                                         fullTemplateName,
                                         errorMessages,
-                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2), 
+                                        templateLines.Aggregate((s1, s2) => s1 + "<br/>" + s2),
                                         compilationSource.Aggregate((s1, s2) => s1 + "<br/>Line " + lineNumber++ + ":\t" + s2));
 
                 return () => new NancyRazorErrorView(errorDetails);
@@ -380,7 +390,7 @@
             }
 
             throw new NotSupportedException(string.Format(
-                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}", 
+                                                "Unable to discover CLR Type for model by the name of {0}.\n\nTry using a fully qualified type name and ensure that the assembly is added to the configuration file.\n\nAppDomain Assemblies:\n\t{1}.\n\nCurrent ADATS assemblies:\n\t{2}.\n\nAssemblies in directories\n\t{3}",
                                                 discoveredModelType,
                                                 AppDomain.CurrentDomain.GetAssemblies().Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
                                                 AppDomainAssemblyTypeScanner.Assemblies.Select(a => a.FullName).Aggregate((n1, n2) => n1 + "\n\t" + n2),
@@ -445,8 +455,9 @@
         {
             var viewFactory = renderContext.ViewCache.GetOrAdd(
                 viewLocationResult,
-                x => {
-                    using(var reader = x.Contents.Invoke())
+                x =>
+                {
+                    using (var reader = x.Contents.Invoke())
                         return this.GetCompiledViewFactory(x.Extension, reader, referencingAssembly, passedModelType, viewLocationResult);
                 });
 

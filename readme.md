@@ -6,16 +6,17 @@ Nancy is designed to handle `DELETE`, `GET`, `HEAD`, `OPTIONS`, `POST`, `PUT` an
 **your** code and **your** application.
 
 Write your application
-
-    public class Module : NancyModule
+```csharp
+public class Module : NancyModule
+{
+    public Module()
     {
-        public Module()
-        {
-            Get["/greet/{name}"] = x => {
-                return string.Concat("Hello ", x.name);
-            };
-        }
+        Get["/greet/{name}"] = x => {
+            return string.Concat("Hello ", x.name);
+        };
     }
+}
+```
 
 Compile, run and enjoy the simple, elegant design!
 

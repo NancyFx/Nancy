@@ -199,6 +199,21 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
             result.ListOfComplexObjectsProperty[1].Value2.ShouldEqual("four");
         }
 
+        [Fact]
+        public void Should_Deserialize_Signed_And_Unsigned_Nullable_Numeric_Types()
+        {
+            //Given
+            const string json = "{F1: 1, F2: 2, F3: 3}";
+
+            //When
+            var model = this.serializer.Deserialize<ModelWithNullables> (json);
+
+            //Should
+            Assert.Equal (1, model.F1);
+            Assert.Equal ((uint)2, model.F2);
+            Assert.Equal ((uint)3, model.F3);
+        }
+
 #if !__MonoCS__
         [Fact]
         public void Should_Serialize_Doubles_In_Different_Cultures()
@@ -348,4 +363,12 @@ namespace Nancy.Tests.Unit.ModelBinding.DefaultBodyDeserializers
 
         public double Longitude { get; set; }
     }
+
+    public class ModelWithNullables 
+    {
+        public int? F1 { get; set; } 
+        public uint F2 { get; set; } 
+        public uint? F3 { get; set; } 
+    }
+
 }

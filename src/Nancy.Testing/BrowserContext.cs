@@ -20,7 +20,7 @@
         public BrowserContext()
         {
             this.Values.Headers = new Dictionary<string, IEnumerable<string>>();
-            this.Values.Protocol = "http";
+            this.Values.Protocol = String.Empty;
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
             this.Values.FormValues = String.Empty;
@@ -76,6 +76,17 @@
         public void Body(string body)
         {
             this.Values.BodyString = body;
+        }
+
+        /// <summary>
+        /// Adds a body to the HTTP request.
+        /// </summary>
+        /// <param name="body">A string that should be used as the HTTP request body.</param>
+        /// <param name="contentType">Content type of the HTTP request body.</param>
+        public void Body(string body, string contentType)
+        {
+            this.Values.BodyString = body;
+            this.Header("Content-Type", contentType);
         }
 
         /// <summary>

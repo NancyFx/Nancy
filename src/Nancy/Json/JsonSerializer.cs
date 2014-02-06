@@ -35,8 +35,10 @@ namespace Nancy.Json
     using System.IO;
     using System.Reflection;
     using System.Text;
-    
-    internal sealed class JsonSerializer
+
+    using Nancy.Extensions;
+
+	internal sealed class JsonSerializer
 	{
         internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
         static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -48,7 +50,8 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
-
+		bool retainCasing;
+		bool iso8601DateFormat;
         
 		
 		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
@@ -61,6 +64,8 @@ namespace Nancy.Json
 			typeResolver = serializer.TypeResolver;
 			recursionLimit = serializer.RecursionLimit;
 			maxJsonLength = serializer.MaxJsonLength;
+			retainCasing = serializer.RetainCasing;
+			iso8601DateFormat = serializer.ISO8601DateFormat;
 		}
 
 		public void Serialize (object obj, StringBuilder output)
@@ -333,25 +338,24 @@ namespace Nancy.Json
 		{
 			MemberInfo member;
 			MethodInfo getMethod;
-			string name;
 			
-			foreach (T mi in members) {
+			foreach (T mi in members) 
+			{
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = mi.Name;
 				if (getMethod != null)
 					member = getMethod;
 				else
 					member = mi;
 
-				WriteDictionaryEntry (output, first, name, GetMemberValue (obj, member));
+				WriteDictionaryEntry (output, first, mi.Name, GetMemberValue (obj, member));
 				if (first)
 					first = false;
 			}
 		}
-		
-		void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
+
+        void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
 		{
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, "[");
 			bool first = true;
@@ -404,7 +408,9 @@ namespace Nancy.Json
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');
 
-			WriteValue (output, key);
+			key = retainCasing ? key : key.ToCamelCase();
+
+			WriteValue(output, key);
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, ':');
 			SerializeValue (value, output);
 		}
@@ -472,27 +478,37 @@ namespace Nancy.Json
 
 		void WriteValue (StringBuilder output, DateTime value)
 		{
-            DateTime time = value.ToUniversalTime();
+		    if (this.iso8601DateFormat)
+		    {
+                StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("s", CultureInfo.InvariantCulture), "\""));
+		    }
+		    else
+		    {
+		        DateTime time = value.ToUniversalTime();
 
-            string suffix = "";
-            if (value.Kind != DateTimeKind.Utc) {
-                TimeSpan localTZOffset;
-                if (value > time) {
-                    localTZOffset = value - time;
-                    suffix = "+";
-                }
-                else {
-                    localTZOffset = time - value;
-                    suffix = "-";
-                }
-                suffix += localTZOffset.ToString("hhmm");
-            }
+		        string suffix = "";
+		        if (value.Kind != DateTimeKind.Utc)
+		        {
+		            TimeSpan localTZOffset;
+		            if (value > time)
+		            {
+		                localTZOffset = value - time;
+		                suffix = "+";
+		            }
+		            else
+		            {
+		                localTZOffset = time - value;
+		                suffix = "-";
+		            }
+		            suffix += localTZOffset.ToString("hhmm");
+		        }
 
-            if (time < MinimumJavaScriptDate)
-                time = MinimumJavaScriptDate;
+		        if (time < MinimumJavaScriptDate)
+		            time = MinimumJavaScriptDate;
 
-            long ticks = (time.Ticks - InitialJavaScriptDateTicks) / (long)10000;
-            StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
+		        long ticks = (time.Ticks - InitialJavaScriptDateTicks)/(long)10000;
+		        StringBuilderExtensions.AppendCount(output, maxJsonLength, "\"\\/Date(" + ticks + suffix + ")\\/\"");
+		    }
 		}
 
 		void WriteValue (StringBuilder output, IConvertible value)

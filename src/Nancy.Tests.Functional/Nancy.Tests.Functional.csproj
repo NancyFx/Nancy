@@ -89,15 +89,18 @@
     <Compile Include="Modules\RazorWithTracingTestModule.cs" />
     <Compile Include="Modules\JsonpTestModule.cs" />
     <Compile Include="Modules\RazorTestModule.cs" />
+    <Compile Include="Modules\SerializerTestModule.cs" />
     <Compile Include="Tests\AbsoluteUrlTests.cs" />
     <Compile Include="Tests\BasicRouteInvocationsFixture.cs" />
     <Compile Include="Tests\ContentNegotiationFixture.cs" />
     <Compile Include="Tests\MethodRewriteFixture.cs" />
     <Compile Include="Tests\PerRouteAuthFixture.cs" />
+    <Compile Include="Tests\SerializerTests.cs" />
     <Compile Include="Tests\TracingSmokeTests.cs" />
     <Compile Include="Tests\JsonpTests.cs" />
     <Compile Include="Tests\ModelBindingTests.cs" />
     <Compile Include="Tests\ManualStaticContentTests.cs" />
+    <Compile Include="Tests\PartialViewTests.cs" />
     <Compile Include="Tests\ViewBagTests.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -146,6 +149,15 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="Views\_PartialTest.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_LayoutPage.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\_ViewStart.cshtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Views\RazorPage.cshtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

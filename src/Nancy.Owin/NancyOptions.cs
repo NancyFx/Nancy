@@ -3,6 +3,9 @@
     using System;
     using Nancy.Bootstrapper;
 
+    /// <summary>
+    /// Options for hosting Nancy with OWIN.
+    /// </summary>
     public class NancyOptions
     {
         private INancyBootstrapper bootstrapper;

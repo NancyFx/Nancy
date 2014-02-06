@@ -281,6 +281,7 @@
         /// <param name="key">The key of the element to remove.</param>
         public bool Remove(string key)
         {
+            key = GetNeutralKey(key);
             return this.dictionary.Remove(key);
         }
 

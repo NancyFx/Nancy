@@ -247,7 +247,7 @@ namespace Nancy.ModelBinding
                 {
                     var model = (IList)bindingContext.Model;
 
-                    if (o.GetType().IsValueType)
+                    if (o.GetType().IsValueType || o.GetType() == typeof(string))
                     {
                         HandleValueTypeCollectionElement(model, count, o);
                     }

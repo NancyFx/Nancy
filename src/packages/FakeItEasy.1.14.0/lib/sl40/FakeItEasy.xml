@@ -84,6 +84,28 @@
             <param name="callSpecification">An expression where the configured member is called.</param>
             <returns>A configuration object.</returns>
         </member>
+        <member name="T:FakeItEasy.A`1">
+            <summary>
+            Provides an API entry point for constraining arguments of fake object calls.
+            </summary>
+            <typeparam name="T">The type of argument to validate.</typeparam>
+        </member>
+        <member name="P:FakeItEasy.A`1.That">
+            <summary>
+            Gets an argument constraint object that will be used to constrain a method call argument.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.A`1._">
+            <summary>
+            Gets a constraint that considers any value of an argument as valid.
+            </summary>
+            <remarks>This is a shortcut for the "Ignored"-property.</remarks>
+        </member>
+        <member name="P:FakeItEasy.A`1.Ignored">
+            <summary>
+            Gets a constraint that considers any value of an argument as valid.
+            </summary>
+        </member>
         <member name="T:FakeItEasy.Any">
             <summary>
             Provides configuration for any (not a specific) call on a faked object.
@@ -112,6 +134,255 @@
             <param name="objA">The object A.</param>
             <param name="objB">The object B.</param>
             <returns>True if the objects are the same reference.</returns>
+        </member>
+        <member name="T:FakeItEasy.ArgumentCollection">
+            <summary>
+              A collection of method arguments.
+            </summary>
+        </member>
+        <member name="F:FakeItEasy.ArgumentCollection.arguments">
+            <summary>
+              The arguments this collection contains.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ArgumentCollection.#ctor(System.Object[],System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+              Initializes a new instance of the <see cref="T:FakeItEasy.ArgumentCollection"/> class.
+            </summary>
+            <param name="arguments">The arguments.</param>
+            <param name="argumentNames">The argument names.</param>
+        </member>
+        <member name="M:FakeItEasy.ArgumentCollection.#ctor(System.Object[],System.Reflection.MethodInfo)">
+            <summary>
+              Initializes a new instance of the <see cref="T:FakeItEasy.ArgumentCollection"/> class.
+            </summary>
+            <param name="arguments">The arguments.</param>
+            <param name="method">The method.</param>
+        </member>
+        <member name="M:FakeItEasy.ArgumentCollection.GetEnumerator">
+            <summary>
+              Returns an enumerator that iterates through the collection or arguments.
+            </summary>
+            <returns>
+              A <see cref = "T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
+            </returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentCollection.Get``1(System.Int32)">
+            <summary>
+              Gets the argument at the specified index.
+            </summary>
+            <typeparam name = "T">The type of the argument to get.</typeparam>
+            <param name = "index">The index of the argument.</param>
+            <returns>The argument at the specified index.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentCollection.Get``1(System.String)">
+            <summary>
+              Gets the argument with the specified name.
+            </summary>
+            <typeparam name = "T">The type of the argument to get.</typeparam>
+            <param name = "argumentName">The name of the argument.</param>
+            <returns>The argument with the specified name.</returns>
+        </member>
+        <member name="P:FakeItEasy.ArgumentCollection.Empty">
+            <summary>
+              Gets an empty ArgumentList.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ArgumentCollection.Count">
+            <summary>
+              Gets the number of arguments in the list.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ArgumentCollection.ArgumentNames">
+            <summary>
+              Gets the names of the arguments in the list.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ArgumentCollection.Item(System.Int32)">
+            <summary>
+              Gets the argument at the specified index.
+            </summary>
+            <param name = "argumentIndex">The index of the argument to get.</param>
+            <returns>The argument at the specified index.</returns>
+        </member>
+        <member name="T:FakeItEasy.ArgumentConstraintExtensions">
+            <summary>
+            Provides validation extensions for <see cref="T:FakeItEasy.IArgumentConstraintManager`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNull``1(FakeItEasy.IArgumentConstraintManager{``0})">
+            <summary>
+            Constrains an argument so that it must be null (Nothing in VB).
+            </summary>
+            <typeparam name="T">The type of the argument.</typeparam>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+            <summary>
+            Constrains the string argument to contain the specified text.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The string the argument string should contain.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains``1(FakeItEasy.IArgumentConstraintManager{``0},System.Object)">
+            <summary>
+            Constrains the sequence so that it must contain the specified value.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The value the collection should contain.</param>
+            <typeparam name="T">The type of sequence.</typeparam>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.StartsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+            <summary>
+            Constrains the string so that it must start with the specified value.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The value the string should start with.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.EndsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+            <summary>
+            Constrains the string so that it must end with the specified value.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The value the string should end with.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNullOrEmpty(FakeItEasy.IArgumentConstraintManager{System.String})">
+            <summary>
+            Constrains the string so that it must be null or empty.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsGreaterThan``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+            <summary>
+            Constrains argument value so that it must be greater than the specified value.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The value the string should start with.</param>
+            <typeparam name="T">The type of argument to constrain.</typeparam>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameSequenceAs``1(FakeItEasy.IArgumentConstraintManager{``0},System.Collections.IEnumerable)">
+            <summary>
+            The tested argument collection should contain the same elements as the
+            as the specified collection.
+            </summary>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The sequence to test against.</param>
+            <typeparam name="T">The type of argument to constrain.</typeparam>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEmpty``1(FakeItEasy.IArgumentConstraintManager{``0})">
+            <summary>
+            Tests that the IEnumerable contains no items.
+            </summary>
+            <typeparam name="T">The type of argument.</typeparam>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEqualTo``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+            <summary>
+            Tests that the passed in argument is equal to the specified value.
+            </summary>
+            <typeparam name="T">The type of the argument.</typeparam>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The value to compare to.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameAs``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+            <summary>
+            Tests that the passed in argument is the same instance (reference) as the specified value.
+            </summary>
+            <typeparam name="T">The type of the argument.</typeparam>
+            <param name="manager">The constraint manager to match the constraint.</param>
+            <param name="value">The reference to compare to.</param>
+            <returns>A dummy argument value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsInstanceOf``1(FakeItEasy.IArgumentConstraintManager{``0},System.Type)">
+            <summary>
+            Constrains the argument to be of the specified type.
+            </summary>
+            <typeparam name="T">The type of argument in the method signature.</typeparam>
+            <param name="manager">The constraint manager.</param>
+            <param name="type">The type to constrain the argument with.</param>
+            <returns>A dummy value.</returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String)">
+            <summary>
+            Constrains the argument with a predicate.
+            </summary>
+            <param name="scope">
+            The constraint manager.
+            </param>
+            <param name="predicate">
+            The predicate that should constrain the argument.
+            </param>
+            <param name="description">
+            A human readable description of the constraint.
+            </param>
+            <typeparam name="T">
+            The type of argument in the method signature.
+            </typeparam>
+            <returns>
+            A dummy argument value.
+            </returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+            <summary>
+            Constrains the argument with a predicate.
+            </summary>
+            <param name="manager">
+            The constraint manager.
+            </param>
+            <param name="predicate">
+            The predicate that should constrain the argument.
+            </param>
+            <param name="descriptionFormat">
+            A human readable description of the constraint format string.
+            </param>
+            <param name="args">
+            Arguments for the format string.
+            </param>
+            <typeparam name="T">
+            The type of argument in the method signature.
+            </typeparam>
+            <returns>
+            A dummy argument value.
+            </returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+            <summary>
+            Constrains the argument with a predicate.
+            </summary>
+            <param name="scope">
+            The constraint manager.
+            </param>
+            <param name="predicate">
+            The predicate that should constrain the argument.
+            </param>
+            <typeparam name="T">
+            The type of argument in the method signature.
+            </typeparam>
+            <returns>
+            A dummy argument value.
+            </returns>
+        </member>
+        <member name="M:FakeItEasy.ArgumentConstraintExtensions.NullCheckedMatches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
+            <summary>
+            Constrains the argument to be not null (Nothing in VB) and to match
+            the specified predicate.
+            </summary>
+            <typeparam name="T">The type of the argument to constrain.</typeparam>
+            <param name="manager">The constraint manager.</param>
+            <param name="predicate">The predicate that constrains non null values.</param>
+            <param name="descriptionWriter">An action that writes a description of the constraint
+            to the output.</param>
+            <returns>A dummy argument value.</returns>
         </member>
         <member name="T:FakeItEasy.ArgumentValueFormatter`1">
             <summary>
@@ -169,6 +440,53 @@
             registered for the same type the one with the highest
             priority is used.
             </summary>
+        </member>
+        <member name="T:FakeItEasy.CommonExtensions">
+            <summary>
+            Provides extension methods for the common uses.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.CommonExtensions.FormatInvariant(System.String,System.Object[])">
+            <summary>
+            Replaces the format item in a specified System.String with the text equivalent
+            of the value of a corresponding System.Object instance in a specified array using
+            invariant culture as <see cref="T:System.IFormatProvider"/>.
+            </summary>
+            <param name="format">A composite format string.</param>
+            <param name="arguments">An <see cref="T:System.Object"/> array containing zero or more objects to format.</param>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="M:FakeItEasy.CommonExtensions.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Gets an enumerable of tuples where the first value of each tuple is a value
+            from the first collection and the second value of each tuple is the value at the same position
+            from the second collection.
+            </summary>
+            <typeparam name="TFirst">The type of values in the first collection.</typeparam>
+            <typeparam name="TSecond">The type of values in the second collection.</typeparam>
+            <param name="firstCollection">The first of the collections to combine.</param>
+            <param name="secondCollection">The second of the collections to combine.</param>
+            <returns>An enumerable of tuples.</returns>
+        </member>
+        <member name="M:FakeItEasy.CommonExtensions.ToCollectionString``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String},System.String)">
+            <summary>
+            Joins the collection to a string.
+            </summary>
+            <typeparam name="T">The type of items in the collection.</typeparam>
+            <param name="items">The items to join.</param>
+            <param name="stringConverter">A function that converts from an item to a string value.</param>
+            <param name="separator">Separator to insert between each item.</param>
+            <returns>A string representation of the collection.</returns>
+        </member>
+        <member name="M:FakeItEasy.CommonExtensions.FirstFromEachKey``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Gets a dictionary containing the first element from the sequence that has a key specified by the key selector.
+            </summary>
+            <typeparam name="T">The type of items in the sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <param name="sequence">The sequence.</param>
+            <param name="keySelector">The key selector.</param>
+            <returns>A dictionary.</returns>
         </member>
         <member name="T:FakeItEasy.Configuration.BuildableCallRule">
             <summary>
@@ -262,24 +580,36 @@
             </summary>
             <value></value>
         </member>
-        <member name="T:FakeItEasy.Configuration.IAnyCallConfigurationWithReturnTypeSpecified`1">
+        <member name="T:FakeItEasy.Configuration.IAnyCallConfigurationWithNoReturnTypeSpecified">
             <summary>
-            Aggregate of IReturnValueArgumentValidationConfiguration&lt;T&gt; and IWhereConfiguration&lt;IAnyCallConfigurationWithReturnTypeSpecified&lt;T&gt;&gt;.
+            Configuration for any call to a faked object.
             </summary>
-            <typeparam name="T">The type of fake object that is configured.</typeparam>
         </member>
-        <member name="T:FakeItEasy.Configuration.IReturnValueArgumentValidationConfiguration`1">
+        <member name="T:FakeItEasy.Configuration.IWhereConfiguration`1">
             <summary>
-            Configures a call that returns a value and allows the use to
-            specify validations for arguments.
+            Provides a way to configure predicates for when a call should be applied.
             </summary>
-            <typeparam name="TMember">The type of the member.</typeparam>
+            <typeparam name="T">The type of fake object that is going to be configured..</typeparam>
         </member>
-        <member name="T:FakeItEasy.Configuration.IReturnValueConfiguration`1">
+        <member name="M:FakeItEasy.Configuration.IWhereConfiguration`1.Where(System.Func{FakeItEasy.Core.IFakeObjectCall,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
             <summary>
-            Configures a call that returns a value.
+            Applies a predicate to constrain which calls will be considered for interception.
             </summary>
-            <typeparam name="TMember">The type of the member.</typeparam>
+            <param name="predicate">A predicate for a fake object call.</param>
+            <param name="descriptionWriter">An action that writes a description of the predicate
+            to the output.</param>
+            <returns>The configuration object.</returns>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IVoidArgumentValidationConfiguration">
+            <summary>
+            Provides configuration methods for methods that does not have a return value and
+            allows the use to specify validations for arguments.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IVoidConfiguration">
+            <summary>
+            Provides configuration methods for methods that does not have a return value.
+            </summary>
         </member>
         <member name="T:FakeItEasy.Configuration.IExceptionThrowerConfiguration">
             <summary>
@@ -345,6 +675,33 @@
             <param name="action">The action to invoke.</param>
             <returns>A configuration object.</returns>
         </member>
+        <member name="T:FakeItEasy.Configuration.ICallBaseConfiguration">
+            <summary>
+            Configuration that lets you specify that a fake object call should call it's base method.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Configuration.ICallBaseConfiguration.CallsBaseMethod">
+            <summary>
+            When the configured method or methods are called the call
+            will be delegated to the base method of the faked method.
+            </summary>
+            <returns>A configuration object.</returns>
+            <exception cref="T:System.InvalidOperationException">The fake object is of an abstract type or an interface
+            and no base method exists.</exception>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IOutAndRefParametersConfiguration">
+            <summary>
+            Lets the developer configure output values of out and ref parameters.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Configuration.IOutAndRefParametersConfiguration.AssignsOutAndRefParameters(System.Object[])">
+            <summary>
+            Specifies output values for out and ref parameters. Specify the values in the order
+            the ref and out parameters has in the configured call, any non out and ref parameters are ignored.
+            </summary>
+            <param name="values">The values.</param>
+            <returns>A configuration object.</returns>
+        </member>
         <member name="T:FakeItEasy.Configuration.IAssertConfiguration">
             <summary>
             Allows the developer to assert on a call that's configured.
@@ -360,27 +717,10 @@
             <exception cref="T:FakeItEasy.ExpectationException">The call has not been called a number of times
             that passes the repeat constraint.</exception>
         </member>
-        <member name="T:FakeItEasy.Configuration.ICallBaseConfiguration">
+        <member name="M:FakeItEasy.Configuration.IVoidConfiguration.DoesNothing">
             <summary>
-            Configuration that lets you specify that a fake object call should call it's base method.
+            Configures the specified call to do nothing when called.
             </summary>
-        </member>
-        <member name="M:FakeItEasy.Configuration.ICallBaseConfiguration.CallsBaseMethod">
-            <summary>
-            When the configured method or methods are called the call
-            will be delegated to the base method of the faked method.
-            </summary>
-            <returns>A configuration object.</returns>
-            <exception cref="T:System.InvalidOperationException">The fake object is of an abstract type or an interface
-            and no base method exists.</exception>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IReturnValueConfiguration`1.ReturnsLazily(System.Func{FakeItEasy.Core.IFakeObjectCall,`0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <param name="valueProducer">A function that produces the return value.</param>
             <returns>A configuration object.</returns>
         </member>
         <member name="T:FakeItEasy.Configuration.IArgumentValidationConfiguration`1">
@@ -394,394 +734,6 @@
             Configures the call to be accepted when the specified predicate returns true.
             </summary>
             <param name="argumentsPredicate">The argument predicate.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IWhereConfiguration`1">
-            <summary>
-            Provides a way to configure predicates for when a call should be applied.
-            </summary>
-            <typeparam name="T">The type of fake object that is going to be configured..</typeparam>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IWhereConfiguration`1.Where(System.Func{FakeItEasy.Core.IFakeObjectCall,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
-            <summary>
-            Applies a predicate to constrain which calls will be considered for interception.
-            </summary>
-            <param name="predicate">A predicate for a fake object call.</param>
-            <param name="descriptionWriter">An action that writes a description of the predicate
-            to the output.</param>
-            <returns>The configuration object.</returns>
-        </member>
-        <member name="T:FakeItEasy.A`1">
-            <summary>
-            Provides an API entry point for constraining arguments of fake object calls.
-            </summary>
-            <typeparam name="T">The type of argument to validate.</typeparam>
-        </member>
-        <member name="P:FakeItEasy.A`1.That">
-            <summary>
-            Gets an argument constraint object that will be used to constrain a method call argument.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.A`1._">
-            <summary>
-            Gets a constraint that considers any value of an argument as valid.
-            </summary>
-            <remarks>This is a shortcut for the "Ignored"-property.</remarks>
-        </member>
-        <member name="P:FakeItEasy.A`1.Ignored">
-            <summary>
-            Gets a constraint that considers any value of an argument as valid.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.ExceptionMessages">
-            <summary>
-              A strongly-typed resource class, for looking up localized strings, etc.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ResourceManager">
-            <summary>
-              Returns the cached ResourceManager instance used by this class.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.Culture">
-            <summary>
-              Overrides the current thread's CurrentUICulture property for all
-              resource lookups using this strongly typed resource class.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ApplicatorNotSetExceptionMessage">
-            <summary>
-              Looks up a localized string similar to The Apply method of the ExpressionInterceptor may no be called before the Applicator property has been set..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ArgumentNameDoesNotExist">
-            <summary>
-              Looks up a localized string similar to The specified argument name does not exist in the ArgumentList..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ArgumentsForConstructorOnInterfaceType">
-            <summary>
-              Looks up a localized string similar to Arguments for constructor was specified when generating proxy of interface type..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ArgumentValidationDefaultMessage">
-            <summary>
-              Looks up a localized string similar to An argument validation was not configured correctly..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.CalledTooFewTimesMessage">
-            <summary>
-              Looks up a localized string similar to The method &apos;{0}&apos; was called too few times, expected #{1} times but was called #{2} times..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.CalledTooManyTimesMessage">
-            <summary>
-              Looks up a localized string similar to The method &apos;{0}&apos; was called too many times, expected #{1} times but was called #{2} times..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.CanNotGenerateFakeMessage">
-             <summary>
-               Looks up a localized string similar to Can not create fake of the type &apos;{0}&apos;, it&apos;s not registered in the current container and the current IProxyGenerator can not generate the fake.
-            
-            The following constructors failed:
-            {1}.
-             </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.ConfiguringNonFakeObjectExceptionMessage">
-            <summary>
-              Looks up a localized string similar to Error when accessing FakeObject, the specified argument is of the type &apos;{0}&apos; which is not faked..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.CreatingExpressionCallMatcherWithNonMethodOrPropertyExpression">
-            <summary>
-              Looks up a localized string similar to An ExpressionCallMatcher can only be created for expressions that represents a method call or a property getter..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.FailedToGenerateFakeWithArgumentsForConstructorPattern">
-             <summary>
-               Looks up a localized string similar to 
-            
-              The current proxy generator failed to create a proxy with the specified arguments for the constructor:
-            
-              Reason for failure:
-                - {0}
-              
-            .
-             </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.FailedToGenerateProxyPattern">
-             <summary>
-               Looks up a localized string similar to FakeItEasy failed to create fake object of type &quot;{0}&quot;.
-            
-            1. The type is not registered in the current IFakeObjectContainer.
-            2. The current IProxyGenerator failed to generate a proxy for the following reason:
-            
-            {1}.
-             </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.FakeCreationExceptionDefaultMessage">
-            <summary>
-              Looks up a localized string similar to Unable to create fake object..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.FakingNonAbstractClassWithArgumentsForConstructor">
-            <summary>
-              Looks up a localized string similar to Only abstract classes can be faked using the A.Fake-method that takes an enumerable of objects as arguments for constructor, use the overload that takes an expression instead..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.MemberAccessorNotCorrectExpressionType">
-            <summary>
-              Looks up a localized string similar to The member accessor expression must be a lambda expression with a MethodCallExpression or MemberAccessExpression as its body..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.MemberCanNotBeIntercepted">
-            <summary>
-              Looks up a localized string similar to The specified method can not be configured since it can not be intercepted by the current IProxyGenerator..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.MethodMissmatchWhenPlayingBackRecording">
-            <summary>
-              Looks up a localized string similar to The method of the call did not match the method of the recorded call, the recorded sequence is no longer valid..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NoConstructorMatchingArguments">
-            <summary>
-              Looks up a localized string similar to No constructor matching the specified arguments was found on the type {0}..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NoDefaultConstructorMessage">
-            <summary>
-              Looks up a localized string similar to Can not generate fake object for the class since no default constructor was found, specify a constructor call..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NoMoreRecordedCalls">
-            <summary>
-              Looks up a localized string similar to All the recorded calls has been applied, the recorded sequence is no longer valid..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NonConstructorExpressionMessage">
-            <summary>
-              Looks up a localized string similar to Only expression of the type ExpressionType.New (constructor calls) are accepted..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NowCalledDirectly">
-            <summary>
-              Looks up a localized string similar to The Now-method on the event raise is not meant to be called directly, only use it to register to an event on a fake object that you want to be raised..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.NumberOfOutAndRefParametersDoesNotMatchCall">
-            <summary>
-              Looks up a localized string similar to The number of values for out and ref parameters specified does not match the number of out and ref parameters in the call..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.OrderedAssertionsAlreadyOpen">
-            <summary>
-              Looks up a localized string similar to A scope for ordered assertions is already opened, close that scope before opening another one..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.SpecifiedCallIsNotToFakedObject">
-            <summary>
-              Looks up a localized string similar to The specified call is not made on a fake object..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.TypeCanNotBeProxied">
-            <summary>
-              Looks up a localized string similar to The current fake proxy generator can not create proxies of the type {0}..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.UnableToCreateDummyPattern">
-            <summary>
-              Looks up a localized string similar to FakeItEasy was unable to create dummy of type &quot;{0}&quot;, register it in the current IFakeObjectContainer to enable this..
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.WasCalledWrongNumberOfTimes">
-            <summary>
-              Looks up a localized string similar to Expected to find call {0} the number of times specified by the predicate &apos;{1}&apos; but found it {2} times among the calls:.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ExceptionMessages.WrongNumberOfArgumentNamesMessage">
-            <summary>
-              Looks up a localized string similar to The number of argument names does not match the number of arguments..
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Raise`1">
-            <summary>
-            A class exposing an event handler to attach to an event of a faked object
-            in order to raise that event.
-            </summary>
-            <typeparam name="TEventArgs">The type of the event args.</typeparam>
-        </member>
-        <member name="T:FakeItEasy.Core.IEventRaiserArguments">
-            <summary>
-            Used by the event raising rule of fake objects to get the event arguments used in
-            a call to Raise.With.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Core.IEventRaiserArguments.Sender">
-            <summary>
-            Gets the sender of the event.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Core.IEventRaiserArguments.EventArguments">
-            <summary>
-            Gets the event arguments of the event.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Raise`1.Now(System.Object,`0)">
-            <summary>
-            Register this event handler to an event on a faked object in order to raise that event.
-            </summary>
-            <param name="sender">The sender of the event.</param>
-            <param name="e">Event args for the event.</param>
-        </member>
-        <member name="P:FakeItEasy.Raise`1.Go">
-            <summary>
-            Gets a generic event handler to attach to the event to raise.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Fake`1">
-            <summary>
-            Represents a fake object that provides an API for configuring a faked object, exposed by the
-            FakedObject-property.
-            </summary>
-            <typeparam name="T">The type of the faked object.</typeparam>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IStartConfiguration`1">
-            <summary>
-            Provides methods for configuring a fake object.
-            </summary>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.CallsTo``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Configures the behavior of the fake object when a call that matches the specified
-            call happens.
-            </summary>
-            <typeparam name="TMember">The type of the return value of the member.</typeparam>
-            <param name="callSpecification">An expression that specifies the calls to configure.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.CallsTo(System.Linq.Expressions.Expression{System.Action{`0}})">
-            <summary>
-            Configures the behavior of the fake object when a call that matches the specified
-            call happens.
-            </summary>
-            <param name="callSpecification">An expression that specifies the calls to configure.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.AnyCall">
-            <summary>
-            Configures the behavior of the fake object when a call is made to any method on the
-            object.
-            </summary>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Fake`1.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Fake`1"/> class. 
-            Creates a new fake object.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Fake`1.#ctor(System.Action{FakeItEasy.Creation.IFakeOptionsBuilder{`0}})">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Fake`1"/> class. 
-            Creates a new fake object using the specified options.
-            </summary>
-            <param name="options">
-            Options used to create the fake object.
-            </param>
-        </member>
-        <member name="M:FakeItEasy.Fake`1.CallsTo(System.Linq.Expressions.Expression{System.Action{`0}})">
-            <summary>
-            Configures calls to the specified member.
-            </summary>
-            <param name="callSpecification">An expression specifying the call to configure.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Fake`1.CallsTo``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
-            <summary>
-            Configures calls to the specified member.
-            </summary>
-            <typeparam name="TMember">The type of value the member returns.</typeparam>
-            <param name="callSpecification">An expression specifying the call to configure.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Fake`1.AnyCall">
-            <summary>
-            Configures any call to the fake object.
-            </summary>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="P:FakeItEasy.Fake`1.FakedObject">
-            <summary>
-            Gets the faked object.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Fake`1.RecordedCalls">
-            <summary>
-            Gets all calls made to the faked object.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue">
-            <summary>
-            Access all types in all assemblies in the same directory as the FakeItEasy assembly.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Core.ITypeCatalogue">
-            <summary>
-            Provides a set of types that are available.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Core.ITypeCatalogue.GetAvailableTypes">
-            <summary>
-            Gets a collection of available types.
-            </summary>
-            <returns>The available types.</returns>
-        </member>
-        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue"/> class.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.GetAvailableTypes">
-            <summary>
-            Gets a collection of available types.
-            </summary>
-            <returns>The available types.</returns>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IAnyCallConfigurationWithNoReturnTypeSpecified">
-            <summary>
-            Configuration for any call to a faked object.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IVoidArgumentValidationConfiguration">
-            <summary>
-            Provides configuration methods for methods that does not have a return value and
-            allows the use to specify validations for arguments.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IVoidConfiguration">
-            <summary>
-            Provides configuration methods for methods that does not have a return value.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Configuration.IOutAndRefParametersConfiguration">
-            <summary>
-            Lets the developer configure output values of out and ref parameters.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IOutAndRefParametersConfiguration.AssignsOutAndRefParameters(System.Object[])">
-            <summary>
-            Specifies output values for out and ref parameters. Specify the values in the order
-            the ref and out parameters has in the configured call, any non out and ref parameters are ignored.
-            </summary>
-            <param name="values">The values.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.Configuration.IVoidConfiguration.DoesNothing">
-            <summary>
-            Configures the specified call to do nothing when called.
-            </summary>
             <returns>A configuration object.</returns>
         </member>
         <member name="M:FakeItEasy.Configuration.IAnyCallConfigurationWithNoReturnTypeSpecified.WithReturnType``1">
@@ -854,19 +806,6 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
-        <member name="M:FakeItEasy.Configuration.FakeConfigurationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Configuration.FakeConfigurationException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">
-            The <paramref name="info"/> parameter is null.
-            </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">
-            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
-            </exception>
-        </member>
         <member name="T:FakeItEasy.Configuration.IFakeConfigurationManager">
             <summary>
             Handles the configuration of fake object given an expression specifying
@@ -895,6 +834,34 @@
             interfaces.
             </summary>
         </member>
+        <member name="T:FakeItEasy.Configuration.IAnyCallConfigurationWithReturnTypeSpecified`1">
+            <summary>
+            Aggregate of IReturnValueArgumentValidationConfiguration&lt;T&gt; and IWhereConfiguration&lt;IAnyCallConfigurationWithReturnTypeSpecified&lt;T&gt;&gt;.
+            </summary>
+            <typeparam name="T">The type of fake object that is configured.</typeparam>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IReturnValueArgumentValidationConfiguration`1">
+            <summary>
+            Configures a call that returns a value and allows the use to
+            specify validations for arguments.
+            </summary>
+            <typeparam name="TMember">The type of the member.</typeparam>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IReturnValueConfiguration`1">
+            <summary>
+            Configures a call that returns a value.
+            </summary>
+            <typeparam name="TMember">The type of the member.</typeparam>
+        </member>
+        <member name="M:FakeItEasy.Configuration.IReturnValueConfiguration`1.ReturnsLazily(System.Func{FakeItEasy.Core.IFakeObjectCall,`0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <returns>A configuration object.</returns>
+        </member>
         <member name="T:FakeItEasy.Configuration.IRecordingConfiguration">
             <summary>
             Configurations for when a configured call is recorded.
@@ -904,6 +871,36 @@
             <summary>
             Provides configuration from VisualBasic.
             </summary>
+        </member>
+        <member name="T:FakeItEasy.Configuration.IStartConfiguration`1">
+            <summary>
+            Provides methods for configuring a fake object.
+            </summary>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+        </member>
+        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.CallsTo``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Configures the behavior of the fake object when a call that matches the specified
+            call happens.
+            </summary>
+            <typeparam name="TMember">The type of the return value of the member.</typeparam>
+            <param name="callSpecification">An expression that specifies the calls to configure.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.CallsTo(System.Linq.Expressions.Expression{System.Action{`0}})">
+            <summary>
+            Configures the behavior of the fake object when a call that matches the specified
+            call happens.
+            </summary>
+            <param name="callSpecification">An expression that specifies the calls to configure.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.Configuration.IStartConfiguration`1.AnyCall">
+            <summary>
+            Configures the behavior of the fake object when a call is made to any method on the
+            object.
+            </summary>
+            <returns>A configuration object.</returns>
         </member>
         <member name="T:FakeItEasy.Configuration.RecordedCallRule">
             <summary>
@@ -959,6 +956,21 @@
             <param name="fakeObjectCall">The call to match.</param>
             <returns>True if the call matches the predicate.</returns>
         </member>
+        <member name="T:FakeItEasy.Configure">
+            <summary>
+            Provides configuration of faked objects.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Configure.Fake``1(``0)">
+            <summary>
+            Gets a configuration for the specified faked object.
+            </summary>
+            <typeparam name="TFake">The type of the fake.</typeparam>
+            <param name="fakedObject">The faked object to configure.</param>
+            <returns>A configuration object.</returns>
+            <exception cref="T:System.ArgumentException">The specified object is not a faked object.</exception>
+            <exception cref="T:System.ArgumentNullException">The fakedObject parameter was null.</exception>
+        </member>
         <member name="T:FakeItEasy.Core.ArgumentInfo">
             <summary>
             Represents an argument and a dummy value to use for that argument.
@@ -986,6 +998,12 @@
         <member name="P:FakeItEasy.Core.ArgumentInfo.ResolvedValue">
             <summary>
             Gets the resolved value.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Core.ArgumentValueFormatter.RangedFormatter">
+            <summary>
+            Holds a formatter as well as the distance between a type to be formatted
+            and the type for which the formatted is registered.
             </summary>
         </member>
         <member name="T:FakeItEasy.Core.CallInterceptedEventArgs">
@@ -1285,19 +1303,6 @@
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
         </member>
-        <member name="M:FakeItEasy.Core.FakeCreationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Core.FakeCreationException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">
-            The <paramref name="info"/> parameter is null.
-            </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">
-            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
-            </exception>
-        </member>
         <member name="T:FakeItEasy.Core.FakeManager">
             <content>Auto fake property rule.</content>
             <summary>
@@ -1476,6 +1481,32 @@
             <param name="fakeManager">The fake object.</param>
             <param name="rule">The rule to add.</param>
         </member>
+        <member name="T:FakeItEasy.Core.ICompletedFakeObjectCall">
+            <summary>
+            Represents a completed call to a fake object.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Core.ICompletedFakeObjectCall.ReturnValue">
+            <summary>
+            Gets the value set to be returned from the call.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Core.IEventRaiserArguments">
+            <summary>
+            Used by the event raising rule of fake objects to get the event arguments used in
+            a call to Raise.With.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Core.IEventRaiserArguments.Sender">
+            <summary>
+            Gets the sender of the event.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Core.IEventRaiserArguments.EventArguments">
+            <summary>
+            Gets the event arguments of the event.
+            </summary>
+        </member>
         <member name="T:FakeItEasy.Core.IInterceptionListener">
             <summary>
             Represents a listener for fake object calls, can be plugged into a
@@ -1499,100 +1530,6 @@
             </summary>
             <param name="interceptedCall">The intercepted call.</param>
             <param name="ruleThatWasApplied">The rule that was applied to the call.</param>
-        </member>
-        <member name="T:FakeItEasy.Creation.IProxyGenerator">
-            <summary>
-            An interface to be implemented by classes that can generate proxies for FakeItEasy.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Creation.IProxyGenerator.GenerateProxy(System.Type,System.Collections.Generic.IEnumerable{System.Type},System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{System.Reflection.Emit.CustomAttributeBuilder})">
-            <summary>
-            Generates a proxy of the specified type and returns a result object containing information
-            about the success of the generation and the proxy if it was generated.
-            </summary>
-            <param name="typeOfProxy">The type of proxy to generate.</param>
-            <param name="additionalInterfacesToImplement">Interfaces to be implemented by the proxy.</param>
-            <param name="argumentsForConstructor">Arguments to pass to the constructor of the type in <paramref name="typeOfProxy" />.</param>
-            <param name="customAttributeBuilders">The custom attribute builders.</param>
-            <returns>A result containing the generated proxy.</returns>
-        </member>
-        <member name="M:FakeItEasy.Creation.IProxyGenerator.GenerateProxy(System.Type,System.Collections.Generic.IEnumerable{System.Type},System.Collections.Generic.IEnumerable{System.Object})">
-            <summary>
-            Generates a proxy of the specified type and returns a result object containing information
-            about the success of the generation and the proxy if it was generated.
-            </summary>
-            <param name="typeOfProxy">The type of proxy to generate.</param>
-            <param name="additionalInterfacesToImplement">Interfaces to be implemented by the proxy.</param>
-            <param name="argumentsForConstructor">Arguments to pass to the constructor of the type in <paramref name="typeOfProxy" />.</param>
-            <returns>A result containing the generated proxy.</returns>
-        </member>
-        <member name="M:FakeItEasy.Creation.IProxyGenerator.MethodCanBeInterceptedOnInstance(System.Reflection.MethodInfo,System.Object,System.String@)">
-            <summary>
-            Gets a value indicating whether the specified member can be intercepted by the proxy generator.
-            </summary>
-            <param name="method">The member to test.</param>
-            <param name="callTarget">The instance the method will be called on.</param>
-            <param name="failReason">The reason the method can not be intercepted.</param>
-            <returns>True if the member can be intercepted.</returns>
-        </member>
-        <member name="T:FakeItEasy.Creation.ICallInterceptedEventRaiser">
-            <summary>
-            An object that raises an event every time a call to a proxy has been intercepted.
-            </summary>
-        </member>
-        <member name="E:FakeItEasy.Creation.ICallInterceptedEventRaiser.CallWasIntercepted">
-            <summary>
-            Raised when a call is intercepted.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Core.ICompletedFakeObjectCall">
-            <summary>
-            Represents a completed call to a fake object.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Core.ICompletedFakeObjectCall.ReturnValue">
-            <summary>
-            Gets the value set to be returned from the call.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.IOutputWriter">
-            <summary>
-            Represents a text writer that writes to the output.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IOutputWriter.Write(System.String)">
-            <summary>
-            Writes the specified value to the output.
-            </summary>
-            <param name="value">The value to write.</param>
-            <returns>The writer for method chaining.</returns>
-        </member>
-        <member name="M:FakeItEasy.IOutputWriter.WriteArgumentValue(System.Object)">
-            <summary>
-            Formats the specified argument value as a string and writes
-            it to the output.
-            </summary>
-            <param name="value">The value to write.</param>
-            <returns>The writer for method chaining.</returns>
-        </member>
-        <member name="M:FakeItEasy.IOutputWriter.Indent">
-            <summary>
-            Indents the writer.
-            </summary>
-            <returns>A disposable that will unindent the writer when disposed.</returns>
-        </member>
-        <member name="T:FakeItEasy.Core.TypeCatalogueInstanceProvider">
-            <summary>
-            Provides instances from type catalogues.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Core.TypeCatalogueInstanceProvider.InstantiateAllOfType``1">
-            <summary>
-            Gets an instance per type in the catalogue that is a descendant
-            of the specified type.
-            </summary>
-            <typeparam name="T">The type of instances to get.</typeparam>
-            <returns>A sequence of instances of the specified type.</returns>
         </member>
         <member name="T:FakeItEasy.Core.MethodInfoManager">
             <summary>
@@ -1666,6 +1603,51 @@
             to null its infinitely valid.
             </summary>
             <value></value>
+        </member>
+        <member name="T:FakeItEasy.Creation.IProxyGenerator">
+            <summary>
+            An interface to be implemented by classes that can generate proxies for FakeItEasy.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Creation.IProxyGenerator.GenerateProxy(System.Type,System.Collections.Generic.IEnumerable{System.Type},System.Collections.Generic.IEnumerable{System.Object},System.Collections.Generic.IEnumerable{System.Reflection.Emit.CustomAttributeBuilder})">
+            <summary>
+            Generates a proxy of the specified type and returns a result object containing information
+            about the success of the generation and the proxy if it was generated.
+            </summary>
+            <param name="typeOfProxy">The type of proxy to generate.</param>
+            <param name="additionalInterfacesToImplement">Interfaces to be implemented by the proxy.</param>
+            <param name="argumentsForConstructor">Arguments to pass to the constructor of the type in <paramref name="typeOfProxy" />.</param>
+            <param name="customAttributeBuilders">The custom attribute builders.</param>
+            <returns>A result containing the generated proxy.</returns>
+        </member>
+        <member name="M:FakeItEasy.Creation.IProxyGenerator.GenerateProxy(System.Type,System.Collections.Generic.IEnumerable{System.Type},System.Collections.Generic.IEnumerable{System.Object})">
+            <summary>
+            Generates a proxy of the specified type and returns a result object containing information
+            about the success of the generation and the proxy if it was generated.
+            </summary>
+            <param name="typeOfProxy">The type of proxy to generate.</param>
+            <param name="additionalInterfacesToImplement">Interfaces to be implemented by the proxy.</param>
+            <param name="argumentsForConstructor">Arguments to pass to the constructor of the type in <paramref name="typeOfProxy" />.</param>
+            <returns>A result containing the generated proxy.</returns>
+        </member>
+        <member name="M:FakeItEasy.Creation.IProxyGenerator.MethodCanBeInterceptedOnInstance(System.Reflection.MethodInfo,System.Object,System.String@)">
+            <summary>
+            Gets a value indicating whether the specified member can be intercepted by the proxy generator.
+            </summary>
+            <param name="method">The member to test.</param>
+            <param name="callTarget">The instance the method will be called on.</param>
+            <param name="failReason">The reason the method can not be intercepted.</param>
+            <returns>True if the member can be intercepted.</returns>
+        </member>
+        <member name="T:FakeItEasy.Creation.ICallInterceptedEventRaiser">
+            <summary>
+            An object that raises an event every time a call to a proxy has been intercepted.
+            </summary>
+        </member>
+        <member name="E:FakeItEasy.Creation.ICallInterceptedEventRaiser.CallWasIntercepted">
+            <summary>
+            Raised when a call is intercepted.
+            </summary>
         </member>
         <member name="T:FakeItEasy.Creation.CastleDynamicProxy.CastleInvocationCallAdapter">
             <summary>
@@ -1774,7 +1756,7 @@
         </member>
         <member name="P:FakeItEasy.Creation.CastleDynamicProxy.DynamicProxyResources.ProxyTypeWithNoDefaultConstructorMessage">
             <summary>
-              Looks up a localized string similar to No default constructor was found on the type {0}..
+              Looks up a localized string similar to No usable default constructor was found on the type {0}..
             </summary>
         </member>
         <member name="T:FakeItEasy.Creation.DefaultFakeAndDummyManager">
@@ -1982,6 +1964,19 @@
             The reason the proxy generation failed.
             </param>
         </member>
+        <member name="M:FakeItEasy.Creation.ProxyGeneratorResult.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Creation.ProxyGeneratorResult"/> class. 
+            Creates a new instance representing a failed proxy
+            generation attempt due to an exception being caught.
+            </summary>
+            <param name="reasonForFailure">
+            The reason the proxy generation failed.
+            </param>
+            <param name="exception">
+            The exception thrown from the creation attempt.
+            </param>
+        </member>
         <member name="M:FakeItEasy.Creation.ProxyGeneratorResult.#ctor(System.Object,FakeItEasy.Creation.ICallInterceptedEventRaiser)">
             <summary>
             Initializes a new instance of the <see cref="T:FakeItEasy.Creation.ProxyGeneratorResult"/> class. 
@@ -2016,6 +2011,267 @@
             <summary>
             Gets the reason for failure when the generation was not successful.
             </summary>
+        </member>
+        <member name="T:FakeItEasy.IOutputWriter">
+            <summary>
+            Represents a text writer that writes to the output.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.IOutputWriter.Write(System.String)">
+            <summary>
+            Writes the specified value to the output.
+            </summary>
+            <param name="value">The value to write.</param>
+            <returns>The writer for method chaining.</returns>
+        </member>
+        <member name="M:FakeItEasy.IOutputWriter.WriteArgumentValue(System.Object)">
+            <summary>
+            Formats the specified argument value as a string and writes
+            it to the output.
+            </summary>
+            <param name="value">The value to write.</param>
+            <returns>The writer for method chaining.</returns>
+        </member>
+        <member name="M:FakeItEasy.IOutputWriter.Indent">
+            <summary>
+            Indents the writer.
+            </summary>
+            <returns>A disposable that will unindent the writer when disposed.</returns>
+        </member>
+        <member name="T:FakeItEasy.DummyDefinition`1">
+            <summary>
+            Represents a definition of how a fake object of the type T should
+            be created.
+            </summary>
+            <typeparam name="T">The type of fake.</typeparam>
+        </member>
+        <member name="T:FakeItEasy.IDummyDefinition">
+            <summary>
+            Represents a definition of how dummies of the specified type should be created.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.IDummyDefinition.CreateDummy">
+            <summary>
+            Creates the fake.
+            </summary>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="P:FakeItEasy.IDummyDefinition.ForType">
+            <summary>
+            Gets the type of fake object the definition is for.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.DummyDefinition`1.FakeItEasy#IDummyDefinition#CreateDummy">
+            <summary>
+            Creates the dummy.
+            </summary>
+            <returns>The dummy object.</returns>
+        </member>
+        <member name="M:FakeItEasy.DummyDefinition`1.CreateDummy">
+            <summary>
+            Creates the dummy.
+            </summary>
+            <returns>The dummy object.</returns>
+        </member>
+        <member name="P:FakeItEasy.DummyDefinition`1.ForType">
+            <summary>
+            Gets the type the definition is for.
+            </summary>
+            <value>For type.</value>
+        </member>
+        <member name="T:FakeItEasy.ExceptionMessages">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ApplicatorNotSetExceptionMessage">
+            <summary>
+              Looks up a localized string similar to The Apply method of the ExpressionInterceptor may no be called before the Applicator property has been set..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ArgumentNameDoesNotExist">
+            <summary>
+              Looks up a localized string similar to The specified argument name does not exist in the ArgumentList..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ArgumentsForConstructorOnInterfaceType">
+            <summary>
+              Looks up a localized string similar to Arguments for constructor was specified when generating proxy of interface type..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ArgumentValidationDefaultMessage">
+            <summary>
+              Looks up a localized string similar to An argument validation was not configured correctly..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.CalledTooFewTimesMessage">
+            <summary>
+              Looks up a localized string similar to The method &apos;{0}&apos; was called too few times, expected #{1} times but was called #{2} times..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.CalledTooManyTimesMessage">
+            <summary>
+              Looks up a localized string similar to The method &apos;{0}&apos; was called too many times, expected #{1} times but was called #{2} times..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.CanNotGenerateFakeMessage">
+             <summary>
+               Looks up a localized string similar to Can not create fake of the type &apos;{0}&apos;, it&apos;s not registered in the current container and the current IProxyGenerator can not generate the fake.
+            
+            The following constructors failed:
+            {1}.
+             </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.ConfiguringNonFakeObjectExceptionMessage">
+            <summary>
+              Looks up a localized string similar to Error when accessing FakeObject, the specified argument is of the type &apos;{0}&apos; which is not faked..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.CreatingExpressionCallMatcherWithNonMethodOrPropertyExpression">
+            <summary>
+              Looks up a localized string similar to An ExpressionCallMatcher can only be created for expressions that represents a method call or a property getter..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.FailedToGenerateFakeWithArgumentsForConstructorPattern">
+             <summary>
+               Looks up a localized string similar to 
+            
+              The current proxy generator failed to create a proxy with the specified arguments for the constructor:
+            
+              Reason for failure:
+                - {0}
+              
+            .
+             </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.FailedToGenerateProxyPattern">
+             <summary>
+               Looks up a localized string similar to FakeItEasy failed to create fake object of type &quot;{0}&quot;.
+            
+            1. The type is not registered in the current IFakeObjectContainer.
+            2. The current IProxyGenerator failed to generate a proxy for the following reason:
+            
+            {1}.
+             </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.FakeCreationExceptionDefaultMessage">
+            <summary>
+              Looks up a localized string similar to Unable to create fake object..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.FakingNonAbstractClassWithArgumentsForConstructor">
+            <summary>
+              Looks up a localized string similar to Only abstract classes can be faked using the A.Fake-method that takes an enumerable of objects as arguments for constructor, use the overload that takes an expression instead..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.MemberAccessorNotCorrectExpressionType">
+            <summary>
+              Looks up a localized string similar to The member accessor expression must be a lambda expression with a MethodCallExpression or MemberAccessExpression as its body..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.MemberCanNotBeIntercepted">
+            <summary>
+              Looks up a localized string similar to The specified method can not be configured since it can not be intercepted by the current IProxyGenerator..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.MethodMissmatchWhenPlayingBackRecording">
+            <summary>
+              Looks up a localized string similar to The method of the call did not match the method of the recorded call, the recorded sequence is no longer valid..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NoConstructorMatchingArguments">
+            <summary>
+              Looks up a localized string similar to No constructor matching the specified arguments was found on the type {0}..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NoDefaultConstructorMessage">
+            <summary>
+              Looks up a localized string similar to Can not generate fake object for the class since no usable default constructor was found, specify a constructor call..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NoMoreRecordedCalls">
+            <summary>
+              Looks up a localized string similar to All the recorded calls has been applied, the recorded sequence is no longer valid..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NonConstructorExpressionMessage">
+            <summary>
+              Looks up a localized string similar to Only expression of the type ExpressionType.New (constructor calls) are accepted..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NowCalledDirectly">
+            <summary>
+              Looks up a localized string similar to The Now-method on the event raise is not meant to be called directly, only use it to register to an event on a fake object that you want to be raised..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.NumberOfOutAndRefParametersDoesNotMatchCall">
+            <summary>
+              Looks up a localized string similar to The number of values for out and ref parameters specified does not match the number of out and ref parameters in the call..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.OrderedAssertionsAlreadyOpen">
+            <summary>
+              Looks up a localized string similar to A scope for ordered assertions is already opened, close that scope before opening another one..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.SpecifiedCallIsNotToFakedObject">
+            <summary>
+              Looks up a localized string similar to The specified call is not made on a fake object..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.TypeCanNotBeProxied">
+            <summary>
+              Looks up a localized string similar to The current fake proxy generator can not create proxies of the type {0}..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.UnableToCreateDummyPattern">
+            <summary>
+              Looks up a localized string similar to FakeItEasy was unable to create dummy of type &quot;{0}&quot;, register it in the current IFakeObjectContainer to enable this..
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.WasCalledWrongNumberOfTimes">
+            <summary>
+              Looks up a localized string similar to Expected to find call {0} the number of times specified by the predicate &apos;{1}&apos; but found it {2} times among the calls:.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.ExceptionMessages.WrongNumberOfArgumentNamesMessage">
+            <summary>
+              Looks up a localized string similar to The number of argument names does not match the number of arguments..
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.ExpectationException">
+            <summary>
+            An exception thrown when an expectation is not met (when asserting on fake object calls).
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ExpectationException.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ExpectationException.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+        </member>
+        <member name="M:FakeItEasy.ExpectationException.#ctor(System.String,System.Exception)">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
+            </summary>
+            <param name="message">The message.</param>
+            <param name="innerException">The inner exception.</param>
         </member>
         <member name="T:FakeItEasy.Expressions.ICallExpressionParser">
             <summary>
@@ -2170,83 +2426,130 @@
             <exception cref="T:System.ArgumentNullException">The fakedObject was null.</exception>
             <exception cref="T:System.ArgumentException">The object passed in is not a faked object.</exception>
         </member>
+        <member name="T:FakeItEasy.Fake">
+            <summary>
+            Provides static methods for accessing fake objects.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Fake.GetFakeManager(System.Object)">
+            <summary>
+            Gets the fake object that manages the faked object.
+            </summary>
+            <param name="fakedObject">The faked object to get the manager object for.</param>
+            <returns>The fake object manager.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake.CreateScope">
+            <summary>
+            Creates a new scope and sets it as the current scope. When inside a scope the
+            getting the calls made to a fake will return only the calls within that scope and when
+            asserting that calls were made, the calls must have been made within that scope.
+            </summary>
+            <returns>The created scope.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake.CreateScope(FakeItEasy.Core.IFakeObjectContainer)">
+            <summary>
+            Creates a new scope and sets it as the current scope. When inside a scope the
+            getting the calls made to a fake will return only the calls within that scope and when
+            asserting that calls were made, the calls must have been made within that scope.
+            </summary>
+            <param name="container">The container to use within the specified scope.</param>
+            <returns>The created scope.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake.Equals(System.Object,System.Object)">
+            <summary>
+            Gets a value indicating whether the two objects are equal.
+            </summary>
+            <param name="objA">The first object to compare.</param>
+            <param name="objB">The second object to compare.</param>
+            <returns>True if the two objects are equal.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake.ReferenceEquals(System.Object,System.Object)">
+            <summary>
+            Gets a value indicating whether the two objects are the same reference.
+            </summary>
+            <param name="objA">The object A.</param>
+            <param name="objB">The object B.</param>
+            <returns>True if the objects are the same reference.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake.GetCalls(System.Object)">
+            <summary>
+            Gets all the calls made to the specified fake object.
+            </summary>
+            <param name="fakedObject">The faked object.</param>
+            <returns>A collection containing the calls to the object.</returns>
+            <exception cref="T:System.ArgumentException">The object passed in is not a faked object.</exception>
+        </member>
+        <member name="M:FakeItEasy.Fake.ClearConfiguration(System.Object)">
+            <summary>
+            Clears the configuration of the faked object.
+            </summary>
+            <param name="fakedObject">The faked object to clear the configuration of.</param>
+        </member>
+        <member name="M:FakeItEasy.Fake.InitializeFixture(System.Object)">
+            <summary>
+            Sets a new fake to each property or field that is tagged with the FakeAttribute in the specified
+            fixture.
+            </summary>
+            <param name="fixture">The object to initialize.</param>
+        </member>
+        <member name="T:FakeItEasy.Fake`1">
+            <summary>
+            Represents a fake object that provides an API for configuring a faked object, exposed by the
+            FakedObject-property.
+            </summary>
+            <typeparam name="T">The type of the faked object.</typeparam>
+        </member>
+        <member name="M:FakeItEasy.Fake`1.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Fake`1"/> class. 
+            Creates a new fake object.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Fake`1.#ctor(System.Action{FakeItEasy.Creation.IFakeOptionsBuilder{`0}})">
+            <summary>
+            Initializes a new instance of the <see cref="T:FakeItEasy.Fake`1"/> class. 
+            Creates a new fake object using the specified options.
+            </summary>
+            <param name="options">
+            Options used to create the fake object.
+            </param>
+        </member>
+        <member name="M:FakeItEasy.Fake`1.CallsTo(System.Linq.Expressions.Expression{System.Action{`0}})">
+            <summary>
+            Configures calls to the specified member.
+            </summary>
+            <param name="callSpecification">An expression specifying the call to configure.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake`1.CallsTo``1(System.Linq.Expressions.Expression{System.Func{`0,``0}})">
+            <summary>
+            Configures calls to the specified member.
+            </summary>
+            <typeparam name="TMember">The type of value the member returns.</typeparam>
+            <param name="callSpecification">An expression specifying the call to configure.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.Fake`1.AnyCall">
+            <summary>
+            Configures any call to the fake object.
+            </summary>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="P:FakeItEasy.Fake`1.FakedObject">
+            <summary>
+            Gets the faked object.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Fake`1.RecordedCalls">
+            <summary>
+            Gets all calls made to the faked object.
+            </summary>
+        </member>
         <member name="T:FakeItEasy.FakeAttribute">
             <summary>
             Used to tag fields and properties that will be initialized through the
             Fake.Initialize-method.
             </summary>
-        </member>
-        <member name="T:FakeItEasy.IoC.DictionaryContainer">
-            <summary>
-            A simple implementation of an IoC container.
-            </summary>
-        </member>
-        <member name="F:FakeItEasy.IoC.DictionaryContainer.registeredServices">
-            <summary>
-            The dictionary that stores the registered services.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IoC.DictionaryContainer.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.IoC.DictionaryContainer"/> class.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IoC.DictionaryContainer.Resolve(System.Type)">
-            <summary>
-            Resolves an instance of the specified component type.
-            </summary>
-            <param name="componentType">Type of the component.</param>
-            <returns>An instance of the component type.</returns>
-        </member>
-        <member name="M:FakeItEasy.IoC.DictionaryContainer.Register``1(System.Func{FakeItEasy.IoC.DictionaryContainer,``0})">
-            <summary>
-            Registers the specified resolver.
-            </summary>
-            <typeparam name="T">The type of component to register.</typeparam>
-            <param name="resolver">The resolver.</param>
-        </member>
-        <member name="M:FakeItEasy.IoC.DictionaryContainer.RegisterSingleton``1(System.Func{FakeItEasy.IoC.DictionaryContainer,``0})">
-            <summary>
-            Registers the specified resolver as a singleton.
-            </summary>
-            <typeparam name="T">The type of component to register.</typeparam>
-            <param name="resolver">The resolver.</param>
-        </member>
-        <member name="T:FakeItEasy.IRepeatSpecification">
-            <summary>
-            Provides properties and methods to specify repeat.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IRepeatSpecification.Times(System.Int32)">
-            <summary>
-            Specifies the number of times as repeat.
-            </summary>
-            <param name="numberOfTimes">The number of times expected.</param>
-            <returns>A Repeated instance.</returns>
-        </member>
-        <member name="P:FakeItEasy.IRepeatSpecification.Once">
-            <summary>
-            Specifies once as the repeat.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.IRepeatSpecification.Twice">
-            <summary>
-            Specifies twice as the repeat.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.OrderedAssertion">
-            <summary>
-            Provides functionality for making ordered assertions on fakes.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.OrderedAssertion.OrderedAssertions(System.Collections.Generic.IEnumerable{FakeItEasy.Core.ICompletedFakeObjectCall})">
-            <summary>
-            Creates a scope that changes the behavior on asserts so that all asserts within
-            the scope must be to calls in the specified collection of calls. Calls must have happened
-            in the order that the asserts are specified or the asserts will fail.
-            </summary>
-            <param name="calls">The calls to assert among.</param>
-            <returns>A disposable used to close the scope.</returns>
         </member>
         <member name="T:FakeItEasy.FakeConfigurator`1">
             <summary>
@@ -2293,382 +2596,6 @@
             Gets the type the instance provides configuration for.
             </summary>
             <value></value>
-        </member>
-        <member name="T:FakeItEasy.DummyDefinition`1">
-            <summary>
-            Represents a definition of how a fake object of the type T should
-            be created.
-            </summary>
-            <typeparam name="T">The type of fake.</typeparam>
-        </member>
-        <member name="T:FakeItEasy.IDummyDefinition">
-            <summary>
-            Represents a definition of how dummies of the specified type should be created.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IDummyDefinition.CreateDummy">
-            <summary>
-            Creates the fake.
-            </summary>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="P:FakeItEasy.IDummyDefinition.ForType">
-            <summary>
-            Gets the type of fake object the definition is for.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.DummyDefinition`1.FakeItEasy#IDummyDefinition#CreateDummy">
-            <summary>
-            Creates the dummy.
-            </summary>
-            <returns>The dummy object.</returns>
-        </member>
-        <member name="M:FakeItEasy.DummyDefinition`1.CreateDummy">
-            <summary>
-            Creates the dummy.
-            </summary>
-            <returns>The dummy object.</returns>
-        </member>
-        <member name="P:FakeItEasy.DummyDefinition`1.ForType">
-            <summary>
-            Gets the type the definition is for.
-            </summary>
-            <value>For type.</value>
-        </member>
-        <member name="T:FakeItEasy.ArgumentConstraintExtensions">
-            <summary>
-            Provides validation extensions for <see cref="T:FakeItEasy.IArgumentConstraintManager`1"/>.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNull``1(FakeItEasy.IArgumentConstraintManager{``0})">
-            <summary>
-            Constrains an argument so that it must be null (Nothing in VB).
-            </summary>
-            <typeparam name="T">The type of the argument.</typeparam>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
-            <summary>
-            Constrains the string argument to contain the specified text.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The string the argument string should contain.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains``1(FakeItEasy.IArgumentConstraintManager{``0},System.Object)">
-            <summary>
-            Constrains the sequence so that it must contain the specified value.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The value the collection should contain.</param>
-            <typeparam name="T">The type of sequence.</typeparam>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.StartsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
-            <summary>
-            Constrains the string so that it must start with the specified value.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The value the string should start with.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.EndsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
-            <summary>
-            Constrains the string so that it must end with the specified value.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The value the string should end with.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNullOrEmpty(FakeItEasy.IArgumentConstraintManager{System.String})">
-            <summary>
-            Constrains the string so that it must be null or empty.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsGreaterThan``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
-            <summary>
-            Constrains argument value so that it must be greater than the specified value.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The value the string should start with.</param>
-            <typeparam name="T">The type of argument to constrain.</typeparam>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameSequenceAs``1(FakeItEasy.IArgumentConstraintManager{``0},System.Collections.IEnumerable)">
-            <summary>
-            The tested argument collection should contain the same elements as the
-            as the specified collection.
-            </summary>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The sequence to test against.</param>
-            <typeparam name="T">The type of argument to constrain.</typeparam>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEmpty``1(FakeItEasy.IArgumentConstraintManager{``0})">
-            <summary>
-            Tests that the IEnumerable contains no items.
-            </summary>
-            <typeparam name="T">The type of argument.</typeparam>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEqualTo``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
-            <summary>
-            Tests that the passed in argument is equal to the specified value.
-            </summary>
-            <typeparam name="T">The type of the argument.</typeparam>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The value to compare to.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameAs``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
-            <summary>
-            Tests that the passed in argument is the same instance (reference) as the specified value.
-            </summary>
-            <typeparam name="T">The type of the argument.</typeparam>
-            <param name="manager">The constraint manager to match the constraint.</param>
-            <param name="value">The reference to compare to.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsInstanceOf``1(FakeItEasy.IArgumentConstraintManager{``0},System.Type)">
-            <summary>
-            Constrains the argument to be of the specified type.
-            </summary>
-            <typeparam name="T">The type of argument in the method signature.</typeparam>
-            <param name="manager">The constraint manager.</param>
-            <param name="type">The type to constrain the argument with.</param>
-            <returns>A dummy value.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String)">
-            <summary>
-            Constrains the argument with a predicate.
-            </summary>
-            <param name="scope">
-            The constraint manager.
-            </param>
-            <param name="predicate">
-            The predicate that should constrain the argument.
-            </param>
-            <param name="description">
-            A human readable description of the constraint.
-            </param>
-            <typeparam name="T">
-            The type of argument in the method signature.
-            </typeparam>
-            <returns>
-            A dummy argument value.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
-            <summary>
-            Constrains the argument with a predicate.
-            </summary>
-            <param name="manager">
-            The constraint manager.
-            </param>
-            <param name="predicate">
-            The predicate that should constrain the argument.
-            </param>
-            <param name="descriptionFormat">
-            A human readable description of the constraint format string.
-            </param>
-            <param name="args">
-            Arguments for the format string.
-            </param>
-            <typeparam name="T">
-            The type of argument in the method signature.
-            </typeparam>
-            <returns>
-            A dummy argument value.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
-            <summary>
-            Constrains the argument with a predicate.
-            </summary>
-            <param name="scope">
-            The constraint manager.
-            </param>
-            <param name="predicate">
-            The predicate that should constrain the argument.
-            </param>
-            <typeparam name="T">
-            The type of argument in the method signature.
-            </typeparam>
-            <returns>
-            A dummy argument value.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.NullCheckedMatches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
-            <summary>
-            Constrains the argument to be not null (Nothing in VB) and to match
-            the specified predicate.
-            </summary>
-            <typeparam name="T">The type of the argument to constrain.</typeparam>
-            <param name="manager">The constraint manager.</param>
-            <param name="predicate">The predicate that constrains non null values.</param>
-            <param name="descriptionWriter">An action that writes a description of the constraint
-            to the output.</param>
-            <returns>A dummy argument value.</returns>
-        </member>
-        <member name="T:FakeItEasy.OutputWriter">
-            <summary>
-            Provides static methods for the IOutputWriter-interface.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.OutputWriter.WriteLine(FakeItEasy.IOutputWriter)">
-            <summary>
-            Writes a new line to the writer.
-            </summary>
-            <param name="writer">The writer to write to.</param>
-            <returns>The writer.</returns>
-        </member>
-        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.String,System.Object[])">
-            <summary>
-            Writes the format string to the writer.
-            </summary>
-            <param name="writer">The writer to write to.</param>
-            <param name="format">The format string to write.</param>
-            <param name="args">Replacements for the format string.</param>
-            <returns>The writer.</returns>
-        </member>
-        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.Object)">
-            <summary>
-            Writes the specified object to the writer (using the ToString-method of the object).
-            </summary>
-            <param name="writer">The writer to write to.</param>
-            <param name="value">The value to write to the writer.</param>
-            <returns>The writer.</returns>
-        </member>
-        <member name="T:FakeItEasy.Repeated">
-            <summary>
-            Provides syntax for specifying the number of times a call must have been repeated when asserting on 
-            fake object calls.
-            </summary>
-            <example><code>A.CallTo(() => foo.Bar()).Assert(Happened.Once.Exactly);</code></example>
-        </member>
-        <member name="M:FakeItEasy.Repeated.Like(System.Linq.Expressions.Expression{System.Func{System.Int32,System.Boolean}})">
-            <summary>
-            Specifies that a call must have been repeated a number of times
-            that is validated by the specified repeatValidation argument.
-            </summary>
-            <param name="repeatValidation">A predicate that specifies the number of times
-            a call must have been made.</param>
-            <returns>A Repeated-instance.</returns>
-        </member>
-        <member name="M:FakeItEasy.Repeated.Matches(System.Int32)">
-            <summary>
-            When implemented gets a value indicating if the repeat is matched
-            by the Happened-instance.
-            </summary>
-            <param name="repeat">The repeat of a call.</param>
-            <returns>True if the repeat is a match.</returns>
-        </member>
-        <member name="P:FakeItEasy.Repeated.Never">
-            <summary>
-            Asserts that a call has not happened at all.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Repeated.Exactly">
-            <summary>
-            The call must have happened exactly the number of times that is specified in the next step.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Repeated.AtLeast">
-            <summary>
-            The call must have happened any number of times greater than or equal to the number of times that is specified
-            in the next step.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.Repeated.NoMoreThan">
-            <summary>
-            The call must have happened any number of times less than or equal to the number of times that is specified
-            in the next step.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Recorders">
-            <summary>
-            Provides methods for creating recorders for self initializing fakes.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Recorders.FileRecorder(System.String)">
-            <summary>
-            Gets a recorder that records to and loads calls from the specified file.
-            </summary>
-            <param name="fileName">The file to use for recording.</param>
-            <returns>A recorder instance.</returns>
-        </member>
-        <member name="T:FakeItEasy.IFileSystem">
-            <summary>
-            Provides access to the file system.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.IFileSystem.Open(System.String,System.IO.FileMode)">
-            <summary>
-            Opens the specified file in the specified mode.
-            </summary>
-            <param name="fileName">The full path and name of the file to open.</param>
-            <param name="mode">The mode to open the file in.</param>
-            <returns>A stream for reading and writing the file.</returns>
-        </member>
-        <member name="M:FakeItEasy.IFileSystem.FileExists(System.String)">
-            <summary>
-            Gets a value indicating whether the specified file exists.
-            </summary>
-            <param name="fileName">The path and name of the file to check.</param>
-            <returns>True if the file exists.</returns>
-        </member>
-        <member name="M:FakeItEasy.IFileSystem.Create(System.String)">
-            <summary>
-            Creates a file with the specified name.
-            </summary>
-            <param name="fileName">The name of the file to create.</param>
-        </member>
-        <member name="M:FakeItEasy.Helpers.GetValueProducedByExpression(System.Linq.Expressions.Expression)">
-            <summary>
-            Gets the value produced by the specified expression when compiled and invoked.
-            </summary>
-            <param name="expression">The expression to get the value from.</param>
-            <returns>The value produced by the expression.</returns>
-        </member>
-        <member name="T:FakeItEasy.ExpectationException">
-            <summary>
-            An exception thrown when an expectation is not met (when asserting on fake object calls).
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.ExpectationException.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.ExpectationException.#ctor(System.String)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-        </member>
-        <member name="M:FakeItEasy.ExpectationException.#ctor(System.String,System.Exception)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
-            </summary>
-            <param name="message">The message.</param>
-            <param name="innerException">The inner exception.</param>
-        </member>
-        <member name="M:FakeItEasy.ExpectationException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.ExpectationException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">
-            The <paramref name="info"/> parameter is null.
-            </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">
-            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
-            </exception>
         </member>
         <member name="T:FakeItEasy.FakeExtensions">
             <summary>
@@ -3008,76 +2935,6 @@
             <typeparam name="T">The type of exception to throw.</typeparam>
             <returns>Configuration object.</returns>
         </member>
-        <member name="T:FakeItEasy.ArgumentCollection">
-            <summary>
-              A collection of method arguments.
-            </summary>
-        </member>
-        <member name="F:FakeItEasy.ArgumentCollection.arguments">
-            <summary>
-              The arguments this collection contains.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.ArgumentCollection.#ctor(System.Object[],System.Collections.Generic.IEnumerable{System.String})">
-            <summary>
-              Initializes a new instance of the <see cref="T:FakeItEasy.ArgumentCollection"/> class.
-            </summary>
-            <param name="arguments">The arguments.</param>
-            <param name="argumentNames">The argument names.</param>
-        </member>
-        <member name="M:FakeItEasy.ArgumentCollection.#ctor(System.Object[],System.Reflection.MethodInfo)">
-            <summary>
-              Initializes a new instance of the <see cref="T:FakeItEasy.ArgumentCollection"/> class.
-            </summary>
-            <param name="arguments">The arguments.</param>
-            <param name="method">The method.</param>
-        </member>
-        <member name="M:FakeItEasy.ArgumentCollection.GetEnumerator">
-            <summary>
-              Returns an enumerator that iterates through the collection or arguments.
-            </summary>
-            <returns>
-              A <see cref = "T:System.Collections.Generic.IEnumerator`1" /> that can be used to iterate through the collection.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentCollection.Get``1(System.Int32)">
-            <summary>
-              Gets the argument at the specified index.
-            </summary>
-            <typeparam name = "T">The type of the argument to get.</typeparam>
-            <param name = "index">The index of the argument.</param>
-            <returns>The argument at the specified index.</returns>
-        </member>
-        <member name="M:FakeItEasy.ArgumentCollection.Get``1(System.String)">
-            <summary>
-              Gets the argument with the specified name.
-            </summary>
-            <typeparam name = "T">The type of the argument to get.</typeparam>
-            <param name = "argumentName">The name of the argument.</param>
-            <returns>The argument with the specified name.</returns>
-        </member>
-        <member name="P:FakeItEasy.ArgumentCollection.Empty">
-            <summary>
-              Gets an empty ArgumentList.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ArgumentCollection.Count">
-            <summary>
-              Gets the number of arguments in the list.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ArgumentCollection.ArgumentNames">
-            <summary>
-              Gets the names of the arguments in the list.
-            </summary>
-        </member>
-        <member name="P:FakeItEasy.ArgumentCollection.Item(System.Int32)">
-            <summary>
-              Gets the argument at the specified index.
-            </summary>
-            <param name = "argumentIndex">The index of the argument to get.</param>
-            <returns>The argument at the specified index.</returns>
-        </member>
         <member name="T:FakeItEasy.Guard">
             <summary>
             Provides methods for guarding method arguments.
@@ -3091,71 +2948,153 @@
             <param name="argumentName">Name of the argument.</param>
             <exception cref="T:System.ArgumentNullException">The specified argument was null.</exception>
         </member>
-        <member name="T:FakeItEasy.Fake">
+        <member name="M:FakeItEasy.Helpers.GetValueProducedByExpression(System.Linq.Expressions.Expression)">
             <summary>
-            Provides static methods for accessing fake objects.
+            Gets the value produced by the specified expression when compiled and invoked.
+            </summary>
+            <param name="expression">The expression to get the value from.</param>
+            <returns>The value produced by the expression.</returns>
+        </member>
+        <member name="T:FakeItEasy.IFileSystem">
+            <summary>
+            Provides access to the file system.
             </summary>
         </member>
-        <member name="M:FakeItEasy.Fake.GetFakeManager(System.Object)">
+        <member name="M:FakeItEasy.IFileSystem.Open(System.String,System.IO.FileMode)">
             <summary>
-            Gets the fake object that manages the faked object.
+            Opens the specified file in the specified mode.
             </summary>
-            <param name="fakedObject">The faked object to get the manager object for.</param>
-            <returns>The fake object manager.</returns>
+            <param name="fileName">The full path and name of the file to open.</param>
+            <param name="mode">The mode to open the file in.</param>
+            <returns>A stream for reading and writing the file.</returns>
         </member>
-        <member name="M:FakeItEasy.Fake.CreateScope">
+        <member name="M:FakeItEasy.IFileSystem.FileExists(System.String)">
             <summary>
-            Creates a new scope and sets it as the current scope. When inside a scope the
-            getting the calls made to a fake will return only the calls within that scope and when
-            asserting that calls were made, the calls must have been made within that scope.
+            Gets a value indicating whether the specified file exists.
             </summary>
-            <returns>The created scope.</returns>
+            <param name="fileName">The path and name of the file to check.</param>
+            <returns>True if the file exists.</returns>
         </member>
-        <member name="M:FakeItEasy.Fake.CreateScope(FakeItEasy.Core.IFakeObjectContainer)">
+        <member name="M:FakeItEasy.IFileSystem.Create(System.String)">
             <summary>
-            Creates a new scope and sets it as the current scope. When inside a scope the
-            getting the calls made to a fake will return only the calls within that scope and when
-            asserting that calls were made, the calls must have been made within that scope.
+            Creates a file with the specified name.
             </summary>
-            <param name="container">The container to use within the specified scope.</param>
-            <returns>The created scope.</returns>
+            <param name="fileName">The name of the file to create.</param>
         </member>
-        <member name="M:FakeItEasy.Fake.Equals(System.Object,System.Object)">
+        <member name="T:FakeItEasy.IoC.DictionaryContainer">
             <summary>
-            Gets a value indicating whether the two objects are equal.
+            A simple implementation of an IoC container.
             </summary>
-            <param name="objA">The first object to compare.</param>
-            <param name="objB">The second object to compare.</param>
-            <returns>True if the two objects are equal.</returns>
         </member>
-        <member name="M:FakeItEasy.Fake.ReferenceEquals(System.Object,System.Object)">
+        <member name="F:FakeItEasy.IoC.DictionaryContainer.registeredServices">
             <summary>
-            Gets a value indicating whether the two objects are the same reference.
+            The dictionary that stores the registered services.
             </summary>
-            <param name="objA">The object A.</param>
-            <param name="objB">The object B.</param>
-            <returns>True if the objects are the same reference.</returns>
         </member>
-        <member name="M:FakeItEasy.Fake.GetCalls(System.Object)">
+        <member name="M:FakeItEasy.IoC.DictionaryContainer.#ctor">
             <summary>
-            Gets all the calls made to the specified fake object.
+            Initializes a new instance of the <see cref="T:FakeItEasy.IoC.DictionaryContainer"/> class.
             </summary>
-            <param name="fakedObject">The faked object.</param>
-            <returns>A collection containing the calls to the object.</returns>
-            <exception cref="T:System.ArgumentException">The object passed in is not a faked object.</exception>
         </member>
-        <member name="M:FakeItEasy.Fake.ClearConfiguration(System.Object)">
+        <member name="M:FakeItEasy.IoC.DictionaryContainer.Resolve(System.Type)">
             <summary>
-            Clears the configuration of the faked object.
+            Resolves an instance of the specified component type.
             </summary>
-            <param name="fakedObject">The faked object to clear the configuration of.</param>
+            <param name="componentType">Type of the component.</param>
+            <returns>An instance of the component type.</returns>
         </member>
-        <member name="M:FakeItEasy.Fake.InitializeFixture(System.Object)">
+        <member name="M:FakeItEasy.IoC.DictionaryContainer.Register``1(System.Func{FakeItEasy.IoC.DictionaryContainer,``0})">
             <summary>
-            Sets a new fake to each property or field that is tagged with the FakeAttribute in the specified
-            fixture.
+            Registers the specified resolver.
             </summary>
-            <param name="fixture">The object to initialize.</param>
+            <typeparam name="T">The type of component to register.</typeparam>
+            <param name="resolver">The resolver.</param>
+        </member>
+        <member name="M:FakeItEasy.IoC.DictionaryContainer.RegisterSingleton``1(System.Func{FakeItEasy.IoC.DictionaryContainer,``0})">
+            <summary>
+            Registers the specified resolver as a singleton.
+            </summary>
+            <typeparam name="T">The type of component to register.</typeparam>
+            <param name="resolver">The resolver.</param>
+        </member>
+        <member name="T:FakeItEasy.IRepeatSpecification">
+            <summary>
+            Provides properties and methods to specify repeat.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.IRepeatSpecification.Times(System.Int32)">
+            <summary>
+            Specifies the number of times as repeat.
+            </summary>
+            <param name="numberOfTimes">The number of times expected.</param>
+            <returns>A Repeated instance.</returns>
+        </member>
+        <member name="P:FakeItEasy.IRepeatSpecification.Once">
+            <summary>
+            Specifies once as the repeat.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.IRepeatSpecification.Twice">
+            <summary>
+            Specifies twice as the repeat.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.NextCall">
+            <summary>
+            Lets you specify options for the next call to a fake object.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.NextCall.To``1(``0)">
+            <summary>
+            Specifies options for the next call to the specified fake object. The next call will
+            be recorded as a call configuration.
+            </summary>
+            <typeparam name="TFake">The type of the faked object.</typeparam>
+            <param name="fake">The faked object to configure.</param>
+            <returns>A call configuration object.</returns>
+        </member>
+        <member name="T:FakeItEasy.OrderedAssertion">
+            <summary>
+            Provides functionality for making ordered assertions on fakes.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.OrderedAssertion.OrderedAssertions(System.Collections.Generic.IEnumerable{FakeItEasy.Core.ICompletedFakeObjectCall})">
+            <summary>
+            Creates a scope that changes the behavior on asserts so that all asserts within
+            the scope must be to calls in the specified collection of calls. Calls must have happened
+            in the order that the asserts are specified or the asserts will fail.
+            </summary>
+            <param name="calls">The calls to assert among.</param>
+            <returns>A disposable used to close the scope.</returns>
+        </member>
+        <member name="T:FakeItEasy.OutputWriter">
+            <summary>
+            Provides static methods for the IOutputWriter-interface.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.OutputWriter.WriteLine(FakeItEasy.IOutputWriter)">
+            <summary>
+            Writes a new line to the writer.
+            </summary>
+            <param name="writer">The writer to write to.</param>
+            <returns>The writer.</returns>
+        </member>
+        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.String,System.Object[])">
+            <summary>
+            Writes the format string to the writer.
+            </summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="format">The format string to write.</param>
+            <param name="args">Replacements for the format string.</param>
+            <returns>The writer.</returns>
+        </member>
+        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.Object)">
+            <summary>
+            Writes the specified object to the writer (using the ToString-method of the object).
+            </summary>
+            <param name="writer">The writer to write to.</param>
+            <param name="value">The value to write to the writer.</param>
+            <returns>The writer.</returns>
         </member>
         <member name="T:FakeItEasy.Raise">
             <summary>
@@ -3191,6 +3130,76 @@
             <returns>
             A Raise(TEventArgs)-object that exposes the event handler to attach.
             </returns>
+        </member>
+        <member name="T:FakeItEasy.Raise`1">
+            <summary>
+            A class exposing an event handler to attach to an event of a faked object
+            in order to raise that event.
+            </summary>
+            <typeparam name="TEventArgs">The type of the event args.</typeparam>
+        </member>
+        <member name="M:FakeItEasy.Raise`1.Now(System.Object,`0)">
+            <summary>
+            Register this event handler to an event on a faked object in order to raise that event.
+            </summary>
+            <param name="sender">The sender of the event.</param>
+            <param name="e">Event args for the event.</param>
+        </member>
+        <member name="P:FakeItEasy.Raise`1.Go">
+            <summary>
+            Gets a generic event handler to attach to the event to raise.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Recorders">
+            <summary>
+            Provides methods for creating recorders for self initializing fakes.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.Repeated">
+            <summary>
+            Provides syntax for specifying the number of times a call must have been repeated when asserting on 
+            fake object calls.
+            </summary>
+            <example><code>A.CallTo(() => foo.Bar()).Assert(Happened.Once.Exactly);</code></example>
+        </member>
+        <member name="M:FakeItEasy.Repeated.Like(System.Linq.Expressions.Expression{System.Func{System.Int32,System.Boolean}})">
+            <summary>
+            Specifies that a call must have been repeated a number of times
+            that is validated by the specified repeatValidation argument.
+            </summary>
+            <param name="repeatValidation">A predicate that specifies the number of times
+            a call must have been made.</param>
+            <returns>A Repeated-instance.</returns>
+        </member>
+        <member name="M:FakeItEasy.Repeated.Matches(System.Int32)">
+            <summary>
+            When implemented gets a value indicating if the repeat is matched
+            by the Happened-instance.
+            </summary>
+            <param name="repeat">The repeat of a call.</param>
+            <returns>True if the repeat is a match.</returns>
+        </member>
+        <member name="P:FakeItEasy.Repeated.Never">
+            <summary>
+            Asserts that a call has not happened at all.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Repeated.Exactly">
+            <summary>
+            The call must have happened exactly the number of times that is specified in the next step.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Repeated.AtLeast">
+            <summary>
+            The call must have happened any number of times greater than or equal to the number of times that is specified
+            in the next step.
+            </summary>
+        </member>
+        <member name="P:FakeItEasy.Repeated.NoMoreThan">
+            <summary>
+            The call must have happened any number of times less than or equal to the number of times that is specified
+            in the next step.
+            </summary>
         </member>
         <member name="T:FakeItEasy.RootModule">
             <summary>
@@ -3253,35 +3262,6 @@
             </summary>
             <param name="calls">The calls to save.</param>
         </member>
-        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.#ctor(System.String,FakeItEasy.IFileSystem)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.SelfInitializedFakes.FileStorage"/> class.
-            </summary>
-            <param name="fileName">Name of the file.</param>
-            <param name="fileSystem">The file system.</param>
-        </member>
-        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.Load">
-            <summary>
-            Loads the recorded calls for the specified recording.
-            </summary>
-            <returns>
-            The recorded calls for the recording with the specified id.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.SelfInitializedFakes.FileStorage.Save(System.Collections.Generic.IEnumerable{FakeItEasy.SelfInitializedFakes.CallData})">
-            <summary>
-            Saves the specified calls as the recording with the specified id,
-            overwriting any previous recording.
-            </summary>
-            <param name="calls">The calls to save.</param>
-        </member>
-        <member name="T:FakeItEasy.SelfInitializedFakes.FileStorage.Factory">
-            <summary>
-            A factory responsible for creating instances of FileStorage.
-            </summary>
-            <param name="fileName">The file name of the storage.</param>
-            <returns>A FileStorage instance.</returns>
-        </member>
         <member name="T:FakeItEasy.SelfInitializedFakes.ISelfInitializingFakeRecorder">
             <summary>
             An interface for recorders that provides stored responses for self initializing fakes.
@@ -3327,19 +3307,6 @@
             </summary>
             <param name="message">The message.</param>
             <param name="innerException">The inner exception.</param>
-        </member>
-        <member name="M:FakeItEasy.SelfInitializedFakes.RecordingException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.SelfInitializedFakes.RecordingException"/> class.
-            </summary>
-            <param name="info">The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.</param>
-            <param name="context">The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.</param>
-            <exception cref="T:System.ArgumentNullException">
-            The <paramref name="info"/> parameter is null.
-            </exception>
-            <exception cref="T:System.Runtime.Serialization.SerializationException">
-            The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
-            </exception>
         </member>
         <member name="T:FakeItEasy.SelfInitializedFakes.RecordingManager">
             <summary>
@@ -3420,53 +3387,6 @@
             </summary>
             <value></value>
         </member>
-        <member name="T:FakeItEasy.CommonExtensions">
-            <summary>
-            Provides extension methods for the common uses.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.CommonExtensions.FormatInvariant(System.String,System.Object[])">
-            <summary>
-            Replaces the format item in a specified System.String with the text equivalent
-            of the value of a corresponding System.Object instance in a specified array using
-            invariant culture as <see cref="T:System.IFormatProvider"/>.
-            </summary>
-            <param name="format">A composite format string.</param>
-            <param name="arguments">An <see cref="T:System.Object"/> array containing zero or more objects to format.</param>
-            <returns>The formatted string.</returns>
-        </member>
-        <member name="M:FakeItEasy.CommonExtensions.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
-            <summary>
-            Gets an enumerable of tuples where the first value of each tuple is a value
-            from the first collection and the second value of each tuple is the value at the same position
-            from the second collection.
-            </summary>
-            <typeparam name="TFirst">The type of values in the first collection.</typeparam>
-            <typeparam name="TSecond">The type of values in the second collection.</typeparam>
-            <param name="firstCollection">The first of the collections to combine.</param>
-            <param name="secondCollection">The second of the collections to combine.</param>
-            <returns>An enumerable of tuples.</returns>
-        </member>
-        <member name="M:FakeItEasy.CommonExtensions.ToCollectionString``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String},System.String)">
-            <summary>
-            Joins the collection to a string.
-            </summary>
-            <typeparam name="T">The type of items in the collection.</typeparam>
-            <param name="items">The items to join.</param>
-            <param name="stringConverter">A function that converts from an item to a string value.</param>
-            <param name="separator">Separator to insert between each item.</param>
-            <returns>A string representation of the collection.</returns>
-        </member>
-        <member name="M:FakeItEasy.CommonExtensions.FirstFromEachKey``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
-            <summary>
-            Gets a dictionary containing the first element from the sequence that has a key specified by the key selector.
-            </summary>
-            <typeparam name="T">The type of items in the sequence.</typeparam>
-            <typeparam name="TKey">The type of the key.</typeparam>
-            <param name="sequence">The sequence.</param>
-            <param name="keySelector">The key selector.</param>
-            <returns>A dictionary.</returns>
-        </member>
         <member name="T:FakeItEasy.SmellyAttribute">
             <summary>
             An attribute that can be applied to code that should be fixed because there's a
@@ -3478,23 +3398,21 @@
             Gets or sets the description of the smell.
             </summary>
         </member>
-        <member name="T:FakeItEasy.NextCall">
-            <summary>
-            Lets you specify options for the next call to a fake object.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.NextCall.To``1(``0)">
-            <summary>
-            Specifies options for the next call to the specified fake object. The next call will
-            be recorded as a call configuration.
-            </summary>
-            <typeparam name="TFake">The type of the faked object.</typeparam>
-            <param name="fake">The faked object to configure.</param>
-            <returns>A call configuration object.</returns>
-        </member>
         <member name="T:FakeItEasy.UnderTestAttribute">
             <summary>
             Used to tag fields and properties that will be initialized as a SUT through the Fake.Initialize-method.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.SerializableAttribute">
+            <summary>
+            Fixes so that existing Serializable-attributes are omitted in the compilation
+            of the silverlight project.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.NonSerializedAttribute">
+            <summary>
+            Fixes so that existing NonSerialized-attributes are omitted in the compilation
+            of the silverlight project.
             </summary>
         </member>
     </members>

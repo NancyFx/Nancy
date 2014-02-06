@@ -54,7 +54,7 @@
         },
 
         showSession: function () {
-            this.router.navigate(this.model.Id, true);
+            this.router.navigate(this.model.id, true);
         }
     });
 })(diagnostics.module("session"))

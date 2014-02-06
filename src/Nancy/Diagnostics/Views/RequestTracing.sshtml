@@ -41,15 +41,15 @@
 	</script>
 
 	<script id="session" type="text/x-handlebars-template">
-		{{model.Id}}
+		{{model.id}}
 	</script>
 
 	<script id="trace" type="text/x-handlebars-template">
-		Status: {{model.StatusCode}}<br/>
-		Method: {{model.Method}}<br/>
-		Path: {{model.RequestUrl.Path}}<br/>
-		Request Type: {{model.RequestContentType}}<br/>
-		Response Type: {{model.ResponseContentType}}
+		Status: {{model.statusCode}}<br/>
+		Method: {{model.method}}<br/>
+		Path: {{model.requestUrl.path}}<br/>
+		Request Type: {{model.requestContentType}}<br/>
+		Response Type: {{model.responseContentType}}
 	</script>
 @EndSection
 

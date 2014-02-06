@@ -10,14 +10,20 @@ namespace Nancy.Testing
     public class BrowserResponseBodyWrapper : IEnumerable<byte>
     {
         private readonly IEnumerable<byte> responseBytes;
+        private readonly string contentType;
         private DocumentWrapper responseDocument;
 
         public BrowserResponseBodyWrapper(Response response)
         {
-            var contentStream =
-                GetContentStream(response);
+            var contentStream = GetContentStream(response);
 
             this.responseBytes = contentStream.ToArray();
+            this.contentType = response.ContentType;
+        }
+
+        internal string ContentType
+        {
+            get { return this.contentType; }
         }
 
         private static MemoryStream GetContentStream(Response response)

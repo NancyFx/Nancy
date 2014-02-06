@@ -105,8 +105,20 @@ namespace Nancy
                 GetPort(this.Port) +
                 GetCorrectPath(this.BasePath) +
                 GetCorrectPath(this.Path) +
-                this.Query +
+                GetQuery(this.Query) +
                 GetFragment(this.Fragment);
+        }
+
+        private static string GetQuery(string query)
+        {
+            if (string.IsNullOrEmpty(query))
+            {
+                return string.Empty;
+            }
+
+            return query.StartsWith("?", StringComparison.OrdinalIgnoreCase) ?
+                query :
+                string.Concat("?", query);
         }
 
         /// <summary>
@@ -134,6 +146,26 @@ namespace Nancy
                            Path = this.Path,
                            Scheme = this.Scheme
                        };
+        }
+
+        /// <summary>
+        /// Casts the current <see cref="Url"/> instance to a <see cref="string"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>A <see cref="string"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator String(Url url)
+        {
+            return url.ToString();
+        }
+
+        /// <summary>
+        /// Casts the current <see cref="string"/> instance to a <see cref="Url"/> instance.
+        /// </summary>
+        /// <param name="url">The instance that should be cast.</param>
+        /// <returns>An <see cref="Url"/> representation of the <paramref name="url"/>.</returns>
+        public static implicit operator Url(string url)
+        {
+            return new Uri(url);
         }
 
         /// <summary>
