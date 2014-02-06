@@ -35,8 +35,10 @@ namespace Nancy.Json
     using System.IO;
     using System.Reflection;
     using System.Text;
-    
-    internal sealed class JsonSerializer
+
+    using Nancy.Extensions;
+
+	internal sealed class JsonSerializer
 	{
         internal static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
         static readonly DateTime MinimumJavaScriptDate = new DateTime(100, 1, 1, 0, 0, 0, DateTimeKind.Utc);
@@ -48,8 +50,8 @@ namespace Nancy.Json
 		int recursionLimit;
 		int maxJsonLength;
 		int recursionDepth;
-        bool retainCasing;
-        bool iso8601DateFormat;
+		bool retainCasing;
+		bool iso8601DateFormat;
         
 		
 		Dictionary <Type, MethodInfo> serializeGenericDictionaryMethods;
@@ -62,8 +64,8 @@ namespace Nancy.Json
 			typeResolver = serializer.TypeResolver;
 			recursionLimit = serializer.RecursionLimit;
 			maxJsonLength = serializer.MaxJsonLength;
-            retainCasing = serializer.RetainCasing;
-		    iso8601DateFormat = serializer.ISO8601DateFormat;
+			retainCasing = serializer.RetainCasing;
+			iso8601DateFormat = serializer.ISO8601DateFormat;
 		}
 
 		public void Serialize (object obj, StringBuilder output)
@@ -336,30 +338,22 @@ namespace Nancy.Json
 		{
 			MemberInfo member;
 			MethodInfo getMethod;
-			string name;
 			
-			foreach (T mi in members) {
+			foreach (T mi in members) 
+			{
 				if (ShouldIgnoreMember (mi as MemberInfo, out getMethod))
 					continue;
 
-				name = retainCasing ? mi.Name : ConvertToCamelCase(mi.Name);
 				if (getMethod != null)
 					member = getMethod;
 				else
 					member = mi;
 
-				WriteDictionaryEntry (output, first, name, GetMemberValue (obj, member));
+				WriteDictionaryEntry (output, first, mi.Name, GetMemberValue (obj, member));
 				if (first)
 					first = false;
 			}
 		}
-
-        private static string ConvertToCamelCase(string str)
-        {
-            if (String.IsNullOrEmpty(str))
-                return String.Empty;
-            return String.Concat(str.Substring(0, 1).ToLowerInvariant(), str.Substring(1));
-        }
 
         void SerializeEnumerable (StringBuilder output, IEnumerable enumerable)
 		{
@@ -414,7 +408,9 @@ namespace Nancy.Json
 			if (!skipComma)
 				StringBuilderExtensions.AppendCount (output, maxJsonLength, ',');
 
-			WriteValue (output, key);
+			key = retainCasing ? key : key.ToCamelCase();
+
+			WriteValue(output, key);
 			StringBuilderExtensions.AppendCount (output, maxJsonLength, ':');
 			SerializeValue (value, output);
 		}
