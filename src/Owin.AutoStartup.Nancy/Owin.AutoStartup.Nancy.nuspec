@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+    <id>Owin.AutoStartup.Nancy</id>
+    <version>0.0.0</version> <!-- The real version will be added by rake -->
+    <authors>Andreas Håkansson, Steven Robbins and contributors</authors>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Nancy extensions for OWIN hosting.</description>
+    <summary>Nancy is a lightweight web framework for the .Net platform, inspired by Sinatra. Nancy aim at delivering a low ceremony approach to building light, fast web applications.</summary>
+    <language>en-US</language>
+	<copyright>Andreas Håkansson, Steven Robbins and contributors</copyright>
+	<iconUrl>http://nancyfx.org/nancy-nuget.png</iconUrl>
+    <licenseUrl>https://github.com/NancyFx/Nancy/blob/master/license.txt</licenseUrl>
+    <projectUrl>http://nancyfx.org</projectUrl>
+    <dependencies>
+      <dependency id="Nancy.Owin" />
+      <dependency id="Owin.AutoStartup" />
+    </dependencies> 
+    <tags>Nancy OWIN</tags>
+  </metadata>
+  <files>
+    <file src="build\binaries\Owin.AutoStartup.Nancy.dll" target="lib\net40" />
+    <file src="build\binaries\Owin.AutoStartup.Nancy.pdb" target="lib\net40" />
+    <file src="build\binaries\Owin.AutoStartup.Nancy.XML" target="lib\net40" />
+    <file src="src\Nancy.Owin\**\*.cs" target="src" />
+  </files>
+</package>

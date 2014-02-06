@@ -1,0 +1,341 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Owin.AutoStartup</name>
+    </assembly>
+    <members>
+        <member name="T:Owin.AutoStartup.IAutoStartup">
+            <summary>
+            Defines an auto startup provider
+            </summary>
+        </member>
+        <member name="M:Owin.AutoStartup.IAutoStartup.Configuration(Owin.IAppBuilder)">
+            <summary>
+            Configure the auto startup
+            </summary>
+            <param name="builder">App builder interface</param>
+        </member>
+        <member name="P:Owin.AutoStartup.IAutoStartup.Name">
+            <summary>
+            Gets the name of the provider
+            e.g. Nancy, SignalR
+            </summary>
+        </member>
+        <member name="P:Owin.AutoStartup.IAutoStartup.Path">
+            <summary>
+            Gets the path that the provider will bind to
+            </summary>
+        </member>
+        <member name="P:Owin.AutoStartup.IAutoStartup.DefaultBuilderCommands">
+            <summary>
+            Gets the default builder commands that are called in configure.
+            Used for generating help text.
+            </summary>
+        </member>
+        <member name="T:Owin.AutoStartup.SSVE.IViewEngineHost">
+            <summary>
+            Provides the view engine with utility functions for
+            encoding, locating partial view templates etc.
+            </summary>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.IViewEngineHost.HtmlEncode(System.String)">
+            <summary>
+            Html "safe" encode a string
+            </summary>
+            <param name="input">Input string</param>
+            <returns>Encoded string</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.IViewEngineHost.GetTemplate(System.String,System.Object)">
+            <summary>
+            Get the contenst of a template
+            </summary>
+            <param name="templateName">Name/location of the template</param>
+            <param name="model">Model to use to locate the template via conventions</param>
+            <returns>Contents of the template, or null if not found</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.IViewEngineHost.GetUriString(System.String,System.String[])">
+            <summary>
+            Gets a uri string for a named route
+            </summary>
+            <param name="name">Named route name</param>
+            <param name="parameters">Parameters to use to expand the uri string</param>
+            <returns>Expanded uri string, or null if not found</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.IViewEngineHost.ExpandPath(System.String)">
+            <summary>
+            Expands a path to include any base paths
+            </summary>
+            <param name="path">Path to expand</param>
+            <returns>Expanded path</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.IViewEngineHost.AntiForgeryToken">
+            <summary>
+            Get the anti forgery token form element
+            </summary>
+            <returns>String containin the form element</returns>
+        </member>
+        <member name="P:Owin.AutoStartup.SSVE.IViewEngineHost.Context">
+            <summary>
+            Context object of the host application.
+            </summary>
+            <value>An instance of the context object from the host.</value>
+        </member>
+        <member name="T:Owin.AutoStartup.SSVE.SuperSimpleViewEngine">
+            <summary>
+            A super-simple view engine
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.SingleSubstitutionsRegEx">
+            <summary>
+            Compiled Regex for single substitutions
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.ContextSubstitutionsRegEx">
+            <summary>
+            Compiled Regex for context subsituations
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.EachSubstitutionRegEx">
+            <summary>
+            Compiled Regex for each blocks
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.EachItemSubstitutionRegEx">
+            <summary>
+            Compiled Regex for each block current substitutions
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.ConditionalSubstitutionRegEx">
+            <summary>
+            Compiled Regex for if blocks
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PartialSubstitutionRegEx">
+            <summary>
+            Compiled regex for partial blocks
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.SectionDeclarationRegEx">
+            <summary>
+            Compiled RegEx for section block declarations
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.SectionContentsRegEx">
+            <summary>
+            Compiled RegEx for section block contents
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.MasterPageHeaderRegEx">
+            <summary>
+            Compiled RegEx for master page declaration
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PathExpansionRegEx">
+            <summary>
+            Compiled RegEx for path expansion
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.AntiForgeryTokenRegEx">
+            <summary>
+            Compiled RegEx for the CSRF anti forgery token
+            </summary>
+        </member>
+        <member name="F:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.processors">
+            <summary>
+            View engine transform processors
+            </summary>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Owin.AutoStartup.SSVE.SuperSimpleViewEngine"/> class.
+            </summary>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.Render(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Renders a template
+            </summary>
+            <param name="template">The template to render.</param>
+            <param name="model">The model to user for rendering.</param>
+            <param name="host">The view engine host</param>
+            <returns>A string containing the expanded template.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetPropertyValue(System.Object,System.String)">
+            <summary>
+            <para>
+            Gets a property value from the given model.
+            </para>
+            <para>
+            Anonymous types, standard types and ExpandoObject are supported.
+            Arbitrary dynamics (implementing IDynamicMetaObjectProvicer) are not, unless
+            they also implement IDictionary string, object for accessing properties.
+            </para>
+            </summary>
+            <param name="model">The model.</param>
+            <param name="propertyName">The property name to evaluate.</param>
+            <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+            <exception cref="T:System.ArgumentException">Model type is not supported.</exception>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.StandardTypePropertyEvaluator(System.Object,System.String)">
+            <summary>
+            A property extractor for standard types.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="propertyName">The property name.</param>
+            <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.DynamicDictionaryPropertyEvaluator(System.Object,System.String)">
+            <summary>
+            A property extractor designed for ExpandoObject, but also for any
+            type that implements IDictionary string object for accessing its
+            properties.
+            </summary>
+            <param name="model">The model.</param>
+            <param name="propertyName">The property name.</param>
+            <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetCaptureGroupValues(System.Text.RegularExpressions.Match,System.String)">
+            <summary>
+            Gets an IEnumerable of capture group values
+            </summary>
+            <param name="m">The match to use.</param>
+            <param name="groupName">Group name containing the capture group.</param>
+            <returns>IEnumerable of capture group values as strings.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetPropertyValueFromParameterCollection(System.Object,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Gets a property value from a collection of nested parameter names
+            </summary>
+            <param name="model">The model containing properties.</param>
+            <param name="parameters">A collection of nested parameters (e.g. User, Name</param>
+            <returns>Tuple - Item1 being a bool for whether the evaluation was sucessful, Item2 being the value.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetPredicateResult(System.Object,System.Collections.Generic.IEnumerable{System.String},System.Boolean)">
+            <summary>
+            Gets the predicate result for an If or IfNot block
+            </summary>
+            <param name="item">The item to evaluate</param>
+            <param name="properties">Property list to evaluate</param>
+            <param name="nullCheck">Whether to check for null, rather than straight boolean</param>
+            <returns>Bool representing the predicate result</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetPredicateResultFromSubstitutionObject(System.Object,System.Boolean)">
+            <summary>
+            Returns the predicate result if the substitionObject is a valid bool
+            </summary>
+            <param name="substitutionObject">The substitution object.</param>
+            <param name="nullCheck"></param>
+            <returns>Bool value of the substitutionObject, or false if unable to cast.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetHasPredicateResultFromSubstitutionObject(System.Object)">
+            <summary>
+            Returns the predicate result if the substitionObject is a valid ICollection
+            </summary>
+            <param name="substitutionObject">The substitution object.</param>
+            <returns>Bool value of the whether the ICollection has items, or false if unable to cast.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformSingleSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Performs single @Model.PropertyName substitutions.
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with @Model.PropertyName blocks expanded.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformContextSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Peforms single @Context.PropertyName substitutions.
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with @Context.PropertyName blocks expanded.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformEachSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Performs @Each.PropertyName substitutions
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with @Each.PropertyName blocks expanded.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.ReplaceCurrentMatch(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Expand a @Current match inside an @Each iterator
+            </summary>
+            <param name="contents">Contents of the @Each block</param>
+            <param name="item">Current item from the @Each enumerable</param>
+            <param name="host">View engine host</param>
+            <returns>String result of the expansion of the @Each.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformConditionalSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Performs @If.PropertyName and @IfNot.PropertyName substitutions
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with @If.PropertyName @IfNot.PropertyName blocks removed/expanded.</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformPathSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Perform path expansion substitutions
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with paths expanded</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformAntiForgeryTokenSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Perform CSRF anti forgery token expansions
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with anti forgery tokens expanded</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformPartialSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Perform @Partial partial view expansion
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with partials expanded</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.PerformMasterPageSubstitutions(System.String,System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Invokes the master page rendering with current sections if necessary
+            </summary>
+            <param name="template">The template.</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with master page applied and sections substituted</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.RenderMasterPage(System.String,System.Collections.Generic.IDictionary{System.String,System.String},System.Object,Owin.AutoStartup.SSVE.IViewEngineHost)">
+            <summary>
+            Renders a master page - does a normal render then replaces any section tags with sections passed in
+            </summary>
+            <param name="masterTemplate">The master page template</param>
+            <param name="sections">Dictionary of section contents</param>
+            <param name="model">The model.</param>
+            <param name="host">View engine host</param>
+            <returns>Template with the master page applied and sections substituted</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.SSVE.SuperSimpleViewEngine.GetMasterPageName(System.String)">
+            <summary>
+            Gets the master page name, if one is specificed
+            </summary>
+            <param name="template">The template</param>
+            <returns>Master page name or String.Empty</returns>
+        </member>
+        <member name="M:Owin.AutoStartup.Startup.GetAssemblyDirectories">
+            <summary>
+            Returns the directories containing dll files. It uses the default convention as stated by microsoft.
+            </summary>
+            <see cref="!:http://msdn.microsoft.com/en-us/library/system.appdomainsetup.privatebinpathprobe.aspx"/>
+        </member>
+    </members>
+</doc>

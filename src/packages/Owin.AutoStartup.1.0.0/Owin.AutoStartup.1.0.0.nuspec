@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+  <metadata>
+    <id>Owin.AutoStartup</id>
+    <version>1.0.0</version>
+    <title>Owin AutoStartup</title>
+    <authors>Steven Robbins</authors>
+    <owners>Steven Robbins</owners>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Automatic startup support for compatible OWIN hosts and middlewares</description>
+    <copyright>Copyright (c) 2013 Steven Robbins</copyright>
+    <tags>Owin</tags>
+    <dependencies>
+      <dependency id="Owin" />
+    </dependencies>
+    <references>
+      <reference file="Owin.AutoStartup.dll" />
+    </references>
+  </metadata>
+</package>
