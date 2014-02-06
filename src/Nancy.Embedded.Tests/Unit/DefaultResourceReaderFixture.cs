@@ -5,6 +5,7 @@
     using System.Xml.Linq;
 
     using Nancy.Tests;
+    using Nancy.ViewEngines;
 
     using Xunit;
 

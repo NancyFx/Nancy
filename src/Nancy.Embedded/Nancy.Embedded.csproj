@@ -47,8 +47,6 @@
     </Compile>
     <Compile Include="Conventions\EmbeddedStaticContentConventionsExtensions.cs" />
     <Compile Include="Conventions\EmbeddedStaticContentConventionBuilder.cs" />
-    <Compile Include="DefaultResourceReader.cs" />
-    <Compile Include="IResourceReader.cs" />
     <Compile Include="EmbeddedViewLocationProvider.cs" />
     <Compile Include="Registrations.cs" />
   </ItemGroup>
