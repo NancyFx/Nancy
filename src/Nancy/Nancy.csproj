@@ -312,6 +312,7 @@
     <Compile Include="ViewEngines\DefaultRenderContext.cs" />
     <Compile Include="ViewEngines\DefaultRenderContextFactory.cs" />
     <Compile Include="ResourceAssemblyProvider.cs" />
+    <Compile Include="ViewEngines\DefaultResourceReader.cs" />
     <Compile Include="Localization\ResourceBasedTextResource.cs" />
     <Compile Include="ViewEngines\DefaultViewRenderer.cs" />
     <Compile Include="ViewEngines\DefaultViewCache.cs" />
@@ -416,6 +417,7 @@
     <Compile Include="ViewEngines\IRenderContext.cs" />
     <Compile Include="ViewEngines\IRenderContextFactory.cs" />
     <Compile Include="IResourceAssemblyProvider.cs" />
+    <Compile Include="ViewEngines\IResourceReader.cs" />
     <Compile Include="Localization\ITextResource.cs" />
     <Compile Include="ViewEngines\IViewCache.cs" />
     <Compile Include="ViewEngines\IViewEngine.cs" />
@@ -424,6 +426,7 @@
     <Compile Include="ViewEngines\IViewFactory.cs" />
     <Compile Include="ViewEngines\IViewRenderer.cs" />
     <Compile Include="ViewEngines\IViewResolver.cs" />
+    <Compile Include="ViewEngines\ResourceViewLocationProvider.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\ISuperSimpleViewEngineMatcher.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\IViewEngineHost.cs" />
     <Compile Include="ViewEngines\SuperSimpleViewEngine\NancyViewEngineHost.cs" />
