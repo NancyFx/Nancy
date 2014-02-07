@@ -27,7 +27,7 @@ namespace Nancy.Json
         
         /// <summary>
         /// Set to true to retain the casing used in the C# code in produced JSON.
-        /// Set to false to use camelCasig in the produced JSON.
+        /// Set to false to use camelCasing in the produced JSON.
         /// False by default.
         /// </summary>
         public static bool RetainCasing { get; set; }
