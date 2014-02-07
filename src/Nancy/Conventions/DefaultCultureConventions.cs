@@ -3,10 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using System.Threading;
-    using Nancy.Session;
 
     public class DefaultCultureConventions : IConvention
     {
@@ -16,7 +12,7 @@
         /// <param name="conventions"></param>
         public void Initialise(NancyConventions conventions)
         {
-            this.ConfigureDefaultConventions(conventions);
+            ConfigureDefaultConventions(conventions);
         }
 
         /// <summary>
@@ -40,19 +36,16 @@
         /// Setup default conventions
         /// </summary>
         /// <param name="conventions"></param>
-        private void ConfigureDefaultConventions(NancyConventions conventions)
+        private static void ConfigureDefaultConventions(NancyConventions conventions)
         {
-            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>(6)
+            conventions.CultureConventions = new List<Func<NancyContext, CultureInfo>>
             {
                 BuiltInCultureConventions.FormCulture,
-                BuiltInCultureConventions.PathCulture,
                 BuiltInCultureConventions.HeaderCulture,
                 BuiltInCultureConventions.SessionCulture,
                 BuiltInCultureConventions.CookieCulture,
                 BuiltInCultureConventions.ThreadCulture
             };
-
         }
-
     }
 }
