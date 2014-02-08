@@ -11,6 +11,6 @@
         /// <param name="routeResult">The route result.</param>
         /// <param name="context">The context.</param>
         /// <returns>A <see cref="Response"/>.</returns>
-        Response NegotiateResponse(object routeResult, NancyContext context);
+        Response NegotiateResponse(dynamic routeResult, NancyContext context);
     }
 }

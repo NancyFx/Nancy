@@ -53,9 +53,9 @@ namespace Nancy.Routing
 
                     try
                     {
-                        var negotiatedResult = this.InvokeRouteWithStrategy(returnResult, context);
+                        var response = this.negotiator.NegotiateResponse(returnResult, context);
 
-                        tcs.SetResult(negotiatedResult);
+                        tcs.SetResult(response);
                     }
                     catch (Exception e)
                     {
@@ -82,39 +82,6 @@ namespace Nancy.Routing
                 });
 
             return tcs.Task;
-        }
-
-        private Response InvokeRouteWithStrategy(dynamic result, NancyContext context)
-        {
-            var isResponse = (CastResultToResponse(result) != null);
-            if (isResponse)
-            {
-                return ProcessAsRealResponse(result, context);
-            }
-
-            context.WriteTraceLog(sb =>
-                sb.AppendLine("[DefaultRouteInvoker] Processing as negotiation"));
-
-            return this.negotiator.NegotiateResponse(result, context);
-        }
-
-        private static Response CastResultToResponse(dynamic result)
-        {
-            try
-            {
-                return (Response)result;
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        private static Response ProcessAsRealResponse(dynamic routeResult, NancyContext context)
-        {
-            context.WriteTraceLog(sb => sb.AppendLine("[DefaultRouteInvoker] Processing as real response"));
-
-            return (Response)routeResult;
         }
 
         private static RouteExecutionEarlyExitException GetEarlyExitException(Task<dynamic> faultedTask)

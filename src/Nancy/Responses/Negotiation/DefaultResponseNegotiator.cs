@@ -34,9 +34,21 @@
         /// <param name="routeResult">The route result.</param>
         /// <param name="context">The context.</param>
         /// <returns>A <see cref="Response" />.</returns>
-        public Response NegotiateResponse(object routeResult, NancyContext context)
+        public Response NegotiateResponse(dynamic routeResult, NancyContext context)
         {
-            var negotiationContext = GetNegotiationContext(routeResult, context);
+            Response response;
+            if (TryCastResultToResponse(routeResult, out response))
+            {
+                context.WriteTraceLog(sb =>
+                    sb.AppendLine("[DefaultResponseNegotiator] Processing as real response"));
+
+                return response;
+            }
+
+            context.WriteTraceLog(sb =>
+                sb.AppendLine("[DefaultResponseNegotiator] Processing as negotiation"));
+
+            NegotiationContext negotiationContext = GetNegotiationContext(routeResult, context);
 
             var coercedAcceptHeaders = this.GetCoercedAcceptHeaders(context).ToArray();
 
@@ -53,6 +65,26 @@
             }
 
             return CreateResponse(compatibleHeaders, negotiationContext, context);
+        }
+
+        /// <summary>
+        /// Tries to cast the dynamic result to a <see cref="Response"/>.
+        /// </summary>
+        /// <param name="routeResult">The result.</param>
+        /// <param name="response">The response.</param>
+        /// <returns><c>true</c> if the result is a <see cref="Response"/>, <c>false</c> otherwise.</returns>
+        private static bool TryCastResultToResponse(dynamic routeResult, out Response response)
+        {
+            try
+            {
+                response = (Response) routeResult;
+                return true;
+            }
+            catch
+            {
+                response = null;
+                return false;
+            }
         }
 
         /// <summary>

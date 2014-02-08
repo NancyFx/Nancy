@@ -1,7 +1,5 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
-    using System;
-    using System.IO;
     using System.Threading;
 
     using FakeItEasy;
@@ -45,91 +43,6 @@
 
             // Then
             Assert.Same(route.ParametersUsedToInvokeAction, parameters);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_int()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(10);
-            var context = new NancyContext
-            {
-                Trace = new DefaultRequestTrace
-                {
-                    TraceLog = new DefaultTraceLog()
-                }
-            };
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_string()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute("Hello World");
-            var context = new NancyContext
-            {
-                Trace = new DefaultRequestTrace
-                {
-                    TraceLog = new DefaultTraceLog()
-                }
-            };
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_status_code()
-        {
-            // Given
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(HttpStatusCode.OK);
-            var context = new NancyContext
-            {
-                Trace = new DefaultRequestTrace
-                {
-                    TraceLog = new DefaultTraceLog()
-                }
-            };
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
-        }
-
-        [Fact]
-        public void Should_return_response_when_route_returns_action()
-        {
-            // Given
-            Action<Stream> action = s => { };
-            var parameters = new DynamicDictionary();
-            var route = new FakeRoute(action);
-            var context = new NancyContext
-            {
-                Trace = new DefaultRequestTrace
-                {
-                    TraceLog = new DefaultTraceLog()
-                }
-            };
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            Assert.IsType<Response>(result);
         }
 
         [Fact]
@@ -177,7 +90,7 @@
         }
 
         [Fact]
-        public void Should_invoke_response_negotiator_if_route_result_is_not_response()
+        public void Should_invoke_response_negotiator()
         {
             // Given
             var model = new Person { FirstName = "First", LastName = "Last" };
@@ -190,24 +103,6 @@
 
             // Then
             A.CallTo(() => this.responseNegotiator.NegotiateResponse(model, context)).MustHaveHappened();
-        }
-
-        [Theory]
-        [InlineData(200)]
-        [InlineData("Hello")]
-        [InlineData(HttpStatusCode.OK)]
-        public void Should_not_invoke_response_negotiator_if_route_result_can_be_converted_to_response(object response)
-        {
-            // Given
-            var route = new FakeRoute(response);
-            var parameters = new DynamicDictionary();
-            var context = new NancyContext { Trace = new RequestTrace(true) };
-
-            // When
-            var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
-
-            // Then
-            A.CallTo(() => this.responseNegotiator.NegotiateResponse(A<object>.Ignored, context)).MustNotHaveHappened();
         }
     }
 }
