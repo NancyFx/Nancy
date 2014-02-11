@@ -19,5 +19,22 @@
 
             return request.Headers[ajaxRequestHeaderKey].Contains(ajaxRequestHeaderValue);
         }
+
+        public static bool IsLocal(this Request request)
+        {
+            string remoteAddress = request.UserHostAddress;
+
+            if (string.IsNullOrEmpty(remoteAddress))
+            {
+                return false;
+            }
+
+            if (remoteAddress == "127.0.0.1" || remoteAddress == "::1")
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

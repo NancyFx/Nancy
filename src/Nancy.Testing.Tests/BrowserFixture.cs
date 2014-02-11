@@ -65,6 +65,57 @@ namespace Nancy.Testing.Tests
         }
 
         [Fact]
+        public void Should_be_able_check_is_local_ipV4()
+        {
+            // Given
+            const string userHostAddress = "127.0.0.1";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("local");
+        }
+
+        [Fact]
+        public void Should_be_able_check_is_local_ipV6()
+        {
+            // Given
+            const string userHostAddress = "::1";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("local");
+        }
+
+        [Fact]
+        public void Should_be_able_check_is_not_local()
+        {
+            // Given
+            const string userHostAddress = "84.12.65.72";
+
+            // When
+            var result = browser.Get("/isLocal", with =>
+                    {
+                        with.HttpRequest();
+                        with.UserHostAddress(userHostAddress);
+                    });
+
+            // Then
+            result.Body.AsString().ShouldEqual("not-local");
+        }
+
+        [Fact]
         public void Should_be_able_to_send_stream_in_body()
         {
             // Given
@@ -452,6 +503,8 @@ namespace Nancy.Testing.Tests
                 Get["/nothing"] = ctx => string.Empty;
 
                 Get["/userHostAddress"] = ctx => this.Request.UserHostAddress;
+
+                Get["/isLocal"] = _ => this.Request.IsLocal() ? "local" : "not-local";
 
                 Get["/session"] = ctx =>
                     {

@@ -33,5 +33,35 @@
             // Then
             Assert.False(request.IsAjaxRequest());
         }
+
+        [Fact]
+        public void IsLocal_should_return_true_if_userHostAddr_is_localhost_IPV6()
+        {
+            // Given when
+            var request = new FakeRequest("GET", "/", string.Empty, "::1");
+
+            // Then
+            Assert.True(request.IsLocal());
+        }
+
+        [Fact]
+        public void IsLocal_should_return_true_if_userHostAddr_is_localhost_IPV4()
+        {
+            // Given when
+            var request = new FakeRequest("POST", "/", string.Empty, "127.0.0.1");
+
+            // Then
+            Assert.True(request.IsLocal());
+        }
+
+        [Fact]
+        public void IsLocal_should_return_false_if_userHostAddr_is_not_localhost()
+        {
+            // Given when
+            var request = new FakeRequest("GET", "/", string.Empty, "86.13.73.12");
+
+            // Then
+            Assert.False(request.IsLocal());
+        }
     }
 }
