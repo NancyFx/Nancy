@@ -16,18 +16,19 @@
             this.browser = new Browser(config =>
             {
                 config.Module<MyModule>();
-                config.StatusCodeHandlers(new Type[] {});
+                // explicitly declare the status code handler that throws, just 
+                // incase it's not there for some other reason.
+                config.StatusCodeHandlers(new[] { typeof(PassThroughStatusCodeHandler)});
             });
         }
 
-
-        [Fact] // Works as expected
+        [Fact]
         public void When_get_sync_then_should_throw()
         {
             Assert.Throws<Exception>(() => this.browser.Get("/sync"));
         }
 
-        [Fact] // Hangs indefinitely
+        [Fact]
         public void When_get_async_then_should_throw()
         {
             Assert.Throws<Exception>(() => this.browser.Get("/async"));
@@ -41,7 +42,7 @@
             this.Get["/sync"] = _ => { throw new Exception("Derp"); };
 
             this.Get["/async", true] = (_, __) =>
-                Task.Factory.StartNew(() => { })
+                Task.Factory.StartNew(() => { }) // Force continuation on a worker thread
                     .ContinueWith<dynamic>(t => { throw new Exception("Derp"); });
         }
     }
