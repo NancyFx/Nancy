@@ -101,9 +101,17 @@
             task.WhenCompleted(
                 completeTask =>
                 {
-                    this.CheckStatusCodeHandler(completeTask.Result);
+                    try
+                    {
+                        this.CheckStatusCodeHandler(completeTask.Result);
 
-                    this.SaveTraceInformation(completeTask.Result);
+                        this.SaveTraceInformation(completeTask.Result);
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.SetException(ex);
+                        return;
+                    }
 
                     tcs.SetResult(completeTask.Result);
                 },
@@ -280,7 +288,7 @@
             }
         }
 
-        private static Exception FlattenException(Exception exception)
+        internal static Exception FlattenException(Exception exception)
         {
             if (exception is AggregateException)
             {
