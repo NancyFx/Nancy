@@ -10,10 +10,12 @@
     public class ModelValidationResult
     {
         /// <summary>
-        /// Represents an instance of the <see cref="ModelValidationResult"/> type that will
-        /// return <see langword="true"/> when <see cref="IsValid"/> is queried.
+        /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
         /// </summary>
-        public static readonly ModelValidationResult Valid = new ModelValidationResult();
+        public ModelValidationResult()
+            : this(Enumerable.Empty<ModelValidationError>())
+        {
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ModelValidationResult"/> class.
@@ -31,11 +33,6 @@
         public ModelValidationResult(IDictionary<string, IList<ModelValidationError>> errors)
         {
             this.Errors = errors;
-        }
-
-        private ModelValidationResult()
-            : this(Enumerable.Empty<ModelValidationError>())
-        {
         }
 
         /// <summary>

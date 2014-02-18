@@ -51,7 +51,7 @@
                 .ToDictionary(x => x.Key, x => x.Value); ;
 
             return (!errors.Any()) ?
-                ModelValidationResult.Valid :
+                new ModelValidationResult() :
                 new ModelValidationResult(errors);
         }
 
