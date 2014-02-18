@@ -28,10 +28,14 @@ namespace Nancy
         public static NancyContext HandleRequest(this INancyEngine nancyEngine, Request request, Func<NancyContext, NancyContext> preRequest)
         {
             var task = nancyEngine.HandleRequest(request, preRequest, CancellationToken.None);
-            task.Wait();
-            if (task.IsFaulted)
+            try
             {
-                throw task.Exception ?? new Exception("Request task faulted");
+                task.Wait();
+            }
+            catch (Exception ex)
+            {
+                var flattenedException = NancyEngine.FlattenException(ex);
+                throw flattenedException;
             }
             return task.Result;
         }
