@@ -284,11 +284,13 @@ namespace Nancy.Tests.Unit.ModelBinding
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "IntProperty"
                                                                         && pe.AttemptedValue == "badint"
-                                                                        && pe.InnerException.Message == "badint is not a valid value for Int32.")
+                                                                        && pe.InnerException.Message.Contains("badint")
+                                                                        && pe.InnerException.Message.Contains("Int32"))
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "AnotherIntProperty"
                                                                         && pe.AttemptedValue == "morebad"
-                                                                        && pe.InnerException.Message == "morebad is not a valid value for Int32."));
+                                                                        && pe.InnerException.Message.Contains("morebad")
+                                                                        && pe.InnerException.Message.Contains("Int32")));
         }
 
         [Fact]
