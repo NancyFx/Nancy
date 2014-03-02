@@ -32,22 +32,19 @@
             var typeDescriptor =
                 new AssociatedMetadataTypeTypeDescriptionProvider(type).GetTypeDescriptor(type);
 
-            var propertyDescriptors =
-                typeDescriptor.GetProperties();
-
             var results =
                 new List<IPropertyValidator>();
 
-            var classAttributes =
-                typeDescriptor.GetAttributes().OfType<ValidationAttribute>();
+            results.Add(this.GetTypeValidator(typeDescriptor));
+            results.AddRange(this.GetPropertyValidators(typeDescriptor));
 
-            var classValidator =
-                new PropertyValidator
-                {
-                    AttributeAdaptors = this.GetAttributeAdaptors(classAttributes)
-                };
+            return results;
+        }
 
-            results.Add(classValidator);
+        private IEnumerable<PropertyValidator> GetPropertyValidators(ICustomTypeDescriptor typeDescriptor)
+        {
+            var propertyDescriptors =
+                typeDescriptor.GetProperties();
 
             foreach (PropertyDescriptor descriptor in propertyDescriptors)
             {
@@ -61,10 +58,21 @@
                         Descriptor = descriptor
                     };
 
-                results.Add(validator);
+                yield return validator;
             }
+        }
 
-            return results;
+        private PropertyValidator GetTypeValidator(ICustomTypeDescriptor typeDescriptor)
+        {
+            var classAttributes =
+                typeDescriptor.GetAttributes().OfType<ValidationAttribute>();
+
+            var classValidator =
+                new PropertyValidator
+                {
+                    AttributeAdaptors = this.GetAttributeAdaptors(classAttributes)
+                };
+            return classValidator;
         }
 
         private IDictionary<ValidationAttribute, IEnumerable<IDataAnnotationsValidatorAdapter>> GetAttributeAdaptors(IEnumerable<ValidationAttribute> attributes)
