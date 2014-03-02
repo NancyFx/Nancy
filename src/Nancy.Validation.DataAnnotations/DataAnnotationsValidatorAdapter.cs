@@ -38,7 +38,7 @@
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="ModelValidationRule"/> instances.</returns>
         public virtual IEnumerable<ModelValidationRule> GetRules(ValidationAttribute attribute, PropertyDescriptor descriptor)
         {
-            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, descriptor == null ? null : new[] { descriptor.Name });
+            yield return new ModelValidationRule(ruleType, attribute.FormatErrorMessage, new [] { descriptor == null ? string.Empty : descriptor.Name });
         }
 
         /// <summary>
