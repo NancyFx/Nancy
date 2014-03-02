@@ -38,6 +38,17 @@
             var results =
                 new List<IPropertyValidator>();
 
+            var classAttributes =
+                typeDescriptor.GetAttributes().OfType<ValidationAttribute>();
+
+            var classValidator =
+                new PropertyValidator
+                {
+                    AttributeAdaptors = this.GetAttributeAdaptors(classAttributes)
+                };
+
+            results.Add(classValidator);
+
             foreach (PropertyDescriptor descriptor in propertyDescriptors)
             {
                 var attributes =

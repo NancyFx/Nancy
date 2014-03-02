@@ -142,7 +142,7 @@
         {
             protected override ValidationResult IsValid(object value, ValidationContext validationContext)
             {
-                return new ValidationResult("Oops");
+                return new ValidationResult("Oops", new[] { string.Empty });
             }
         }
 
