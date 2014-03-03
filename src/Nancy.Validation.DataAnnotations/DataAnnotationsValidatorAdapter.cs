@@ -57,8 +57,13 @@
                     MemberName = descriptor == null ? null : descriptor.Name
                 };
 
-            if(descriptor != null)
+            if (descriptor != null)
             {
+                if (!string.IsNullOrEmpty(descriptor.DisplayName))
+                {
+                    validationContext.DisplayName = descriptor.DisplayName;
+                }
+
                 instance = descriptor.GetValue(instance);
             }
 
@@ -67,7 +72,7 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, string.Join(" ", result.MemberNames.Select(attribute.FormatErrorMessage)));
+                yield return new ModelValidationError(result.MemberNames, result.ErrorMessage);
             }
         }
     }
