@@ -202,7 +202,7 @@
         {
             protected override ValidationResult IsValid(object value, ValidationContext validationContext)
             {
-                return new ValidationResult("Oops", new[] { string.Empty });
+                return new ValidationResult("Oops");
             }
         }
 
@@ -216,6 +216,11 @@
             public override bool CanHandle(ValidationAttribute attribute)
             {
                 return attribute.GetType() == typeof(OopsValidationAttribute);
+            }
+
+            protected override ModelValidationError GetValidationError(ValidationResult result, ValidationContext context, ValidationAttribute attribute)
+            {
+                return new ModelValidationError(new[] { string.Empty }, result.ErrorMessage);
             }
         }
 

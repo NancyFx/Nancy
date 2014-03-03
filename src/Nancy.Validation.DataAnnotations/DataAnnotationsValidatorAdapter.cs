@@ -72,8 +72,20 @@
 
             if (result != null)
             {
-                yield return new ModelValidationError(result.MemberNames, result.ErrorMessage);
+                yield return this.GetValidationError(result, validationContext, attribute);
             }
+        }
+
+        /// <summary>
+        /// Gets a <see cref="ModelValidationError"/> instance based on the supplied <see cref="ValidationResult"/>.
+        /// </summary>
+        /// <param name="result">The <see cref="ValidationResult"/> to create a <see cref="ModelValidationError"/> for.</param>
+        /// <param name="context">The <see cref="ValidationContext"/> of the supplied <see cref="ValidationResult"/>.</param>
+        /// <param name="attribute">The <see cref="ValidationAttribute"/> being validated.</param>
+        /// <returns>A <see cref="ModelValidationError"/> of member names.</returns>
+        protected virtual ModelValidationError GetValidationError(ValidationResult result, ValidationContext context, ValidationAttribute attribute)
+        {
+            return new ModelValidationError(result.MemberNames, result.ErrorMessage);
         }
     }
 }
