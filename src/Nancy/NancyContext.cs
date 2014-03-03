@@ -26,7 +26,7 @@ namespace Nancy
         public NancyContext()
         {
             this.Items = new Dictionary<string, object>();
-            this.Trace = new RequestTrace();
+            this.Trace = new DefaultRequestTrace();
             this.ViewBag = new DynamicDictionary();
             
             // TODO - potentially additional logic to lock to ip etc?
@@ -79,7 +79,7 @@ namespace Nancy
         /// <summary>
         /// Diagnostic request tracing
         /// </summary>
-        public RequestTrace Trace { get; set; }
+        public DefaultRequestTrace Trace { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether control panel access is enabled for this request

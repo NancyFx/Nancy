@@ -122,7 +122,7 @@
             var response = new Response();
             var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response, "Reason Testing"); });
             var parameters = new DynamicDictionary();
-            var context = new NancyContext { Trace = new RequestTrace(true) };
+            var context = new NancyContext { Trace = new DefaultRequestTrace(true) };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;

@@ -6,21 +6,21 @@
     /// <summary>
     /// The default implementation of the <see cref="IRequestTrace"/> interface.
     /// </summary>
-    public class RequestTrace : IRequestTrace
+    public class DefaultRequestTrace : IRequestTrace
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTrace"/> class.
+        /// Initializes a new instance of the <see cref="DefaultRequestTrace"/> class.
         /// </summary>
-        public RequestTrace()
+        public DefaultRequestTrace()
             : this(StaticConfiguration.EnableRequestTracing)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="RequestTrace"/> class.
+        /// Initializes a new instance of the <see cref="DefaultRequestTrace"/> class.
         /// </summary>
         /// <param name="logActive"><see langword="true"/> if trace logging should be enabled; otherwise <see langword="false" />.</param>
-        public RequestTrace(bool logActive)
+        public DefaultRequestTrace(bool logActive)
         {
             this.TraceLog = logActive ? (ITraceLog)new TraceLog() : new NullLog();
             this.Items = new Dictionary<string, object>();

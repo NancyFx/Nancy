@@ -7,11 +7,11 @@ namespace Nancy.Diagnostics
     {
         private const int MaxSize = 500;
 
-        private readonly ConcurrentLimitedCollection<RequestTrace> requestTraces;
+        private readonly ConcurrentLimitedCollection<DefaultRequestTrace> requestTraces;
 
         public Guid Id { get; private set; }
 
-        public IEnumerable<RequestTrace> RequestTraces
+        public IEnumerable<DefaultRequestTrace> RequestTraces
         {
             get
             {
@@ -22,10 +22,10 @@ namespace Nancy.Diagnostics
         public RequestTraceSession(Guid id)
         {
             this.Id = id;
-            this.requestTraces = new ConcurrentLimitedCollection<RequestTrace>(MaxSize);
+            this.requestTraces = new ConcurrentLimitedCollection<DefaultRequestTrace>(MaxSize);
         }
 
-        public void AddRequestTrace(RequestTrace trace)
+        public void AddRequestTrace(DefaultRequestTrace trace)
         {
             this.requestTraces.Add(trace);
         }
