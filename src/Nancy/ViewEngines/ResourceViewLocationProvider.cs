@@ -13,12 +13,12 @@
     {
         private readonly IResourceReader resourceReader;
         private readonly IResourceAssemblyProvider resourceAssemblyProvider;
-        
+
         /// <summary>
         /// User-configured root namespaces for assemblies.
         /// </summary>
         public readonly static IDictionary<Assembly, string> RootNamespaces = new Dictionary<Assembly, string>();
-        
+
         /// <summary>
         /// A list of assemblies to ignore when scanning for embedded views.
         /// </summary>
@@ -58,6 +58,7 @@
 
             return this.resourceAssemblyProvider
                 .GetAssembliesToScan()
+                .Union(RootNamespaces.Keys)
                 .Where(x => !Ignore.Contains(x))
                 .SelectMany(x => GetViewLocations(x, supportedViewExtensions));
         }
@@ -79,7 +80,7 @@
 
         private IEnumerable<ViewLocationResult> GetViewLocations(Assembly assembly, IEnumerable<string> supportedViewExtensions)
         {
-            var resourceStreams = 
+            var resourceStreams =
                 this.resourceReader.GetResourceStreamMatches(assembly, supportedViewExtensions);
 
             if (!resourceStreams.Any())

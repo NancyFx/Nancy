@@ -45,7 +45,10 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Conventions\EmbeddedStaticContentConventionsExtensions.cs" />
     <Compile Include="Conventions\EmbeddedStaticContentConventionBuilder.cs" />
+    <Compile Include="EmbeddedViewLocationProvider.cs" />
+    <Compile Include="Registrations.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Nancy\Nancy.csproj">

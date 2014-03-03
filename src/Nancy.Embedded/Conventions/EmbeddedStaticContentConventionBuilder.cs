@@ -20,9 +20,10 @@
         }
 
         /// <summary>
-        /// Adds a directory-based convention for embedded static convention.
+        /// Adds a directory-based convention for embedded static convention
         /// </summary>
-        /// <param name="requestedPath">The path that should be matched with the request.</param>
+        /// <param name="requestedPath">The path that should be matched with the request</param>
+        /// <param name="assembly">The assembly that contains the embedded static content</param>
         /// <param name="contentPath">The path to where the content is stored in your application, relative to the root. If this is <see langword="null" /> then it will be the same as <paramref name="requestedPath"/>.</param>
         /// <param name="allowedExtensions">A list of extensions that is valid for the conventions. If not supplied, all extensions are valid.</param>
         /// <returns>A <see cref="EmbeddedFileResponse"/> instance for the requested embedded static contents if it was found, otherwise <see langword="null"/>.</returns>
