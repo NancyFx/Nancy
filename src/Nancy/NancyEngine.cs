@@ -138,12 +138,8 @@
 
             var sessionGuid = this.GetDiagnosticsSessionGuid(ctx);
 
-            ctx.Trace.ResponseType = ctx.Response.GetType();
-            ctx.Trace.StatusCode = ctx.Response.StatusCode;
-            ctx.Trace.RequestContentType = ctx.Request.Headers.ContentType;
-            ctx.Trace.ResponseContentType = ctx.Response.ContentType;
-            ctx.Trace.RequestHeaders = ctx.Request.Headers.ToDictionary(kv => kv.Key, kv => kv.Value);
-            ctx.Trace.ResponseHeaders = ctx.Response.Headers;
+            ctx.Trace.RequestData = ctx.Request;
+            ctx.Trace.ResponseData = ctx.Response;
 
             this.requestTracing.AddRequestDiagnosticToSession(sessionGuid, ctx);
 

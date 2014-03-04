@@ -6,12 +6,17 @@ namespace Nancy.Diagnostics
     public class RequestTraceSession
     {
         private const int MaxSize = 500;
+        private readonly ConcurrentLimitedCollection<IRequestTrace> requestTraces;
 
-        private readonly ConcurrentLimitedCollection<DefaultRequestTrace> requestTraces;
+        public RequestTraceSession(Guid id)
+        {
+            this.Id = id;
+            this.requestTraces = new ConcurrentLimitedCollection<IRequestTrace>(MaxSize);
+        }
 
         public Guid Id { get; private set; }
 
-        public IEnumerable<DefaultRequestTrace> RequestTraces
+        public IEnumerable<IRequestTrace> RequestTraces
         {
             get
             {
@@ -19,13 +24,7 @@ namespace Nancy.Diagnostics
             }
         }
 
-        public RequestTraceSession(Guid id)
-        {
-            this.Id = id;
-            this.requestTraces = new ConcurrentLimitedCollection<DefaultRequestTrace>(MaxSize);
-        }
-
-        public void AddRequestTrace(DefaultRequestTrace trace)
+        public void AddRequestTrace(IRequestTrace trace)
         {
             this.requestTraces.Add(trace);
         }

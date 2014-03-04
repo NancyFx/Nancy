@@ -22,7 +22,21 @@
         private readonly IEnumerable<IResponseProcessor> responseProcessors; 
         private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private readonly ICultureService cultureService;
+        private readonly IRequestTraceFactory requestTraceFactory;
 
+        /// <summary>
+        /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
+        /// </summary>
+        /// <param name="diagnosticsConfiguration"></param>
+        /// <param name="diagnosticProviders"></param>
+        /// <param name="rootPathProvider"></param>
+        /// <param name="requestTracing"></param>
+        /// <param name="configuration"></param>
+        /// <param name="modelBinderLocator"></param>
+        /// <param name="responseProcessors"></param>
+        /// <param name="routeSegmentConstraints"></param>
+        /// <param name="cultureService"></param>
+        /// <param name="requestTraceFactory"></param>
         public DefaultDiagnostics(
             DiagnosticsConfiguration diagnosticsConfiguration,
             IEnumerable<IDiagnosticsProvider> diagnosticProviders,
@@ -32,7 +46,8 @@
             IModelBinderLocator modelBinderLocator,
             IEnumerable<IResponseProcessor> responseProcessors,
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
-            ICultureService cultureService)
+            ICultureService cultureService,
+            IRequestTraceFactory requestTraceFactory)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -43,6 +58,7 @@
             this.responseProcessors = responseProcessors;
             this.routeSegmentConstraints = routeSegmentConstraints;
             this.cultureService = cultureService;
+            this.requestTraceFactory = requestTraceFactory;
         }
 
         /// <summary>
@@ -60,7 +76,8 @@
                 this.modelBinderLocator,
                 this.responseProcessors,
                 this.routeSegmentConstraints,
-                this.cultureService);
+                this.cultureService,
+                this.requestTraceFactory);
         }
     }
 }

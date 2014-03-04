@@ -136,6 +136,7 @@
     <Compile Include="Unit\DefaultResponseFormatterFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\ConcurrentLimitedCollectionFixture.cs" />
     <Compile Include="Unit\Diagnostics\CustomInteractiveDiagnosticsFixture.cs" />
+    <Compile Include="Unit\Diagnostics\DefaultRequestTraceFactoryFixture.cs" />
     <Compile Include="Unit\Diagnostics\DiagnosticsHookFixture.cs" />
     <Compile Include="Unit\ErrorHandling\DefaultStatusCodeHandlerFixture.cs" />
     <Compile Include="Unit\Extensions\TypeExtensionsFixture.cs" />

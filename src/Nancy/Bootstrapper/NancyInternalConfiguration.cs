@@ -73,7 +73,8 @@ namespace Nancy.Bootstrapper
                     StaticContentProvider = typeof(DefaultStaticContentProvider),
                     RouteResolverTrie = typeof(RouteResolverTrie),
                     TrieNodeFactory = typeof(TrieNodeFactory),
-                    RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList()
+                    RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList(),
+                    RequestTraceFactory = typeof(DefaultRequestTraceFactory)
                 };
             }
         }
@@ -154,7 +155,9 @@ namespace Nancy.Bootstrapper
 
         public Type TrieNodeFactory { get; set; }
 
-        public IList<Type> RouteSegmentConstraints { get; set; } 
+        public IList<Type> RouteSegmentConstraints { get; set; }
+
+        public Type RequestTraceFactory { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the configuration is valid.
@@ -230,6 +233,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IStaticContentProvider), this.StaticContentProvider), 
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
                 new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
+                new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory), 
             };
         }
 

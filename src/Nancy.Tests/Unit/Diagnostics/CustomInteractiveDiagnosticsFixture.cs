@@ -40,6 +40,7 @@
             private readonly IEnumerable<IResponseProcessor> responseProcessors;
             private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
             private readonly ICultureService cultureService;
+            private readonly IRequestTraceFactory requestTraceFactory;
 
             public FakeDiagnostics(
                 DiagnosticsConfiguration diagnosticsConfiguration,
@@ -49,7 +50,8 @@
                 IModelBinderLocator modelBinderLocator,
                 IEnumerable<IResponseProcessor> responseProcessors,
                 IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
-                ICultureService cultureService)
+                ICultureService cultureService,
+                IRequestTraceFactory requestTraceFactory)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -60,6 +62,7 @@
                 this.responseProcessors = responseProcessors;
                 this.routeSegmentConstraints = routeSegmentConstraints;
                 this.cultureService = cultureService;
+                this.requestTraceFactory = requestTraceFactory;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -73,7 +76,8 @@
                     this.modelBinderLocator,
                     this.responseProcessors,
                     this.routeSegmentConstraints,
-                    this.cultureService);
+                    this.cultureService,
+                    this.requestTraceFactory);
             }
         }
 
