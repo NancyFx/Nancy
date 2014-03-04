@@ -4,16 +4,16 @@ namespace Nancy.Diagnostics
     using System.Text;
 
     /// <summary>
-    /// Implementation of the <see cref="ITraceLog"/> interface that writes to a buffer.
+    /// Default implementation of the <see cref="ITraceLog"/> interface.
     /// </summary>
-    public class TraceLog : ITraceLog
+    public class DefaultTraceLog : ITraceLog
     {
         private readonly StringBuilder log;
 
         /// <summary>
-        /// Creates a new instance of the <see cref="TraceLog"/> class.
+        /// Creates a new instance of the <see cref="DefaultTraceLog"/> class.
         /// </summary>
-        public TraceLog()
+        public DefaultTraceLog()
         {
             this.log = new StringBuilder();
         }
