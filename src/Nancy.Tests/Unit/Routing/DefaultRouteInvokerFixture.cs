@@ -29,7 +29,13 @@
             // Given
             var parameters = new DynamicDictionary();
             var route = new FakeRoute(10);
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             this.invoker.Invoke(route, new CancellationToken(), parameters, context);
@@ -44,7 +50,13 @@
             // Given
             var parameters = new DynamicDictionary();
             var route = new FakeRoute(10);
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
@@ -59,7 +71,13 @@
             // Given
             var parameters = new DynamicDictionary();
             var route = new FakeRoute("Hello World");
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
@@ -74,7 +92,13 @@
             // Given
             var parameters = new DynamicDictionary();
             var route = new FakeRoute(HttpStatusCode.OK);
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
@@ -90,7 +114,13 @@
             Action<Stream> action = s => { };
             var parameters = new DynamicDictionary();
             var route = new FakeRoute(action);
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
@@ -106,7 +136,13 @@
             var response = new Response();
             var route = new FakeRoute((c, t) => { throw new RouteExecutionEarlyExitException(response); });
             var parameters = new DynamicDictionary();
-            var context = new NancyContext();
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace
+                {
+                    TraceLog = new DefaultTraceLog()
+                }
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;

@@ -144,6 +144,7 @@
     <Compile Include="DefaultResponseFormatterFactory.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="Diagnostics\DefaultRequestTraceFactory.cs" />
+    <Compile Include="Diagnostics\DefaultTraceLog.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
     <Compile Include="Diagnostics\ConcurrentLimitedCollection.cs" />
@@ -280,7 +281,6 @@
     <Compile Include="Diagnostics\RequestTraceSession.cs" />
     <Compile Include="Diagnostics\IRequestTracing.cs" />
     <Compile Include="Diagnostics\DefaultRequestTrace.cs" />
-    <Compile Include="Diagnostics\TraceLog.cs" />
     <Compile Include="DynamicDictionaryValue.cs" />
     <Compile Include="ErrorHandling\DefaultStatusCodeHandler.cs" />
     <Compile Include="IStatusCodeHandler.cs" />

@@ -1,13 +1,10 @@
 ﻿namespace Nancy.Tests.Unit.Diagnostics
 {
-    using System;
     using System.Collections.Generic;
     using System.IO;
-
-    using FakeItEasy;
-
     using Nancy.Diagnostics;
     using Nancy.IO;
+    using Nancy.Testing;
 
     using Xunit;
 
@@ -125,50 +122,6 @@
                 {
                     {"Content-Type", new[] {"text/plain"}}
                 });
-        }
-    }
-
-    public class StaticConfigurationContext : IDisposable
-    {
-        private readonly StaticConfigurationValues existingConfiguration = new StaticConfigurationValues();
-
-        public StaticConfigurationContext(Action<StaticConfigurationValues> closure)
-        {
-            this.existingConfiguration.CaseSensitive = StaticConfiguration.CaseSensitive;
-            this.existingConfiguration.DisableErrorTraces = StaticConfiguration.DisableErrorTraces;
-            this.existingConfiguration.DisableMethodNotAllowedResponses = StaticConfiguration.DisableMethodNotAllowedResponses;
-            this.existingConfiguration.RequestQueryFormMultipartLimit = StaticConfiguration.RequestQueryFormMultipartLimit;
-
-            var temporaryConfiguration =
-                new StaticConfigurationValues();
-
-            closure.Invoke(temporaryConfiguration);
-
-            AssignStaticConfigurationValues(temporaryConfiguration);
-        }
-
-        public void Dispose()
-        {
-            AssignStaticConfigurationValues(this.existingConfiguration);
-        }
-
-        private static void AssignStaticConfigurationValues(StaticConfigurationValues values)
-        {
-            StaticConfiguration.CaseSensitive = values.CaseSensitive;
-            StaticConfiguration.DisableErrorTraces = values.DisableErrorTraces;
-            StaticConfiguration.DisableMethodNotAllowedResponses = values.DisableMethodNotAllowedResponses;
-            StaticConfiguration.RequestQueryFormMultipartLimit = values.RequestQueryFormMultipartLimit;
-        }
-
-        public class StaticConfigurationValues
-        {
-            public bool CaseSensitive { get; set; }
-
-            public bool DisableErrorTraces { get; set; }
-
-            public bool DisableMethodNotAllowedResponses { get; set; }
-
-            public int RequestQueryFormMultipartLimit { get; set; }
         }
     }
 }
