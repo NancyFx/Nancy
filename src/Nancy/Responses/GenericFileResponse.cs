@@ -64,7 +64,7 @@ namespace Nancy.Responses
         /// <param name="context">Current context</param>
         public GenericFileResponse(string filePath, string contentType, NancyContext context = null)
         {
-            InitializeGenericFileResonse(filePath, contentType, context);
+            InitializeGenericFileResponse(filePath, contentType, context);
         }
 
         /// <summary>
@@ -101,7 +101,7 @@ namespace Nancy.Responses
             return fullPath.StartsWith(rootPath, StringComparison.OrdinalIgnoreCase);
         }
 
-        private void InitializeGenericFileResonse(string filePath, string contentType, NancyContext context)
+        private void InitializeGenericFileResponse(string filePath, string contentType, NancyContext context)
         {
             if (string.IsNullOrEmpty(filePath))
             {
