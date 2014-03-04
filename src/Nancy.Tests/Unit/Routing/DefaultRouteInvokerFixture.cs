@@ -126,7 +126,7 @@
             {
                 Trace = new DefaultRequestTrace
                 {
-                    TraceLog = new TraceLog()
+                    TraceLog = new DefaultTraceLog()
                 }
             };
 

@@ -29,7 +29,7 @@ namespace Nancy.Diagnostics
 
             requestTrace.TraceLog = (StaticConfiguration.DisableErrorTraces) ?
                 (ITraceLog)new NullLog() :
-                (ITraceLog)new TraceLog();
+                (ITraceLog)new DefaultTraceLog();
 
             return requestTrace;
         }

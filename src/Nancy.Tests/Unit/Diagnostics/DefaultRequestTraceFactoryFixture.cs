@@ -33,7 +33,7 @@
 
                 // Then
                 trace.TraceLog.ShouldNotBeNull();
-                trace.TraceLog.ShouldBeOfType<TraceLog>();
+                trace.TraceLog.ShouldBeOfType<DefaultTraceLog>();
             }
         }
 
