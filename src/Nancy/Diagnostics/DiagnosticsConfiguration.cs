@@ -46,7 +46,7 @@
 
         /// <summary>
         /// Gets or sets password for accessing the diagnostics screen.
-        /// This shoudl be secure :-)
+        /// This should be secure :-)
         /// </summary>
         public string Password { get; set; }
 
