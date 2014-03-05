@@ -96,8 +96,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Web" />
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Web.Razor.Unofficial">
-      <HintPath>..\packages\System.Web.Razor.Unofficial.2.0.2\lib\net40\System.Web.Razor.Unofficial.dll</HintPath>
+    <Reference Include="System.Web.Razor, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\packages\Microsoft.AspNet.Razor.2.0.30506.0\lib\net40\System.Web.Razor.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
