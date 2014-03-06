@@ -59,7 +59,8 @@
 
             if (descriptor != null)
             {
-                if (!string.IsNullOrEmpty(descriptor.DisplayName))
+                // Display(Name) will auto populate the context, while DisplayName() needs to be manually set
+                if (validationContext.MemberName == validationContext.DisplayName && !string.IsNullOrEmpty(descriptor.DisplayName))
                 {
                     validationContext.DisplayName = descriptor.DisplayName;
                 }

@@ -65,7 +65,7 @@
 
             // Then
             subject.Description.ShouldNotBeNull();
-            subject.Description.Rules.SelectMany(r => r.Value).ShouldHaveCount(9);
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHaveCount(10);
         }
 
         [Fact]
@@ -163,7 +163,22 @@
         }
 
         [Fact]
-        public void Should_use_display_name_attribute()
+        public void Should_use_display_attribute()
+        {
+            // Given
+            var subject = this.factory.Create(typeof(TestModel));
+            var instance = new TestModel { FirstName = "name", LastName = "a long name", Age = "1" };
+
+            // When
+            var result = subject.Validate(instance, new NancyContext());
+
+            // Then
+            result.IsValid.ShouldBeFalse();
+            result.Errors["LastName"][0].ErrorMessage.ShouldContain("Last Name");
+        }
+
+        [Fact]
+        public void Should_use_displayname_attribute()
         {
             // Given
             var subject = this.factory.Create(typeof(TestModel));
@@ -184,6 +199,10 @@
             [Required]
             [StringLength(5)]
             public string FirstName { get; set; }
+
+            [Display(Name = "Last Name")]
+            [StringLength(5)]
+            public string LastName { get; set; }
 
             [RegularExpression("\\d+")]
             [Required]
