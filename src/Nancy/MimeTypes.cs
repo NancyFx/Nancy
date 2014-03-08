@@ -212,7 +212,7 @@ namespace Nancy
 			mimeTypes.Add ("jpe", "image/jpeg");
 			mimeTypes.Add ("jpg", "image/jpeg");
 			mimeTypes.Add ("jps", "image/x-jps");
-			mimeTypes.Add ("js", "application/x-javascript");
+			mimeTypes.Add ("js", "application/javascript");
 			mimeTypes.Add ("json", "application/json");
 			mimeTypes.Add ("jut", "image/jutvision");
 			mimeTypes.Add ("kar", "audio/midi");
