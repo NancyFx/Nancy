@@ -31,8 +31,9 @@
 
             //Then
             var model = result.Body.AsString();
-            
-            Assert.Equal("{\"createdOn\":\"2013-12-25T12:10:30\"}", model);
+
+            TimeSpan localOffset = DateTime.Now - DateTime.Now.ToUniversalTime();
+            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000+{0:00}:{1:00}\"}}", localOffset.Hours, localOffset.Minutes), model);
         }
     }
 }
