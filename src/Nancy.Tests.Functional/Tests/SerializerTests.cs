@@ -32,8 +32,26 @@
             //Then
             var model = result.Body.AsString();
 
-            TimeSpan localOffset = DateTime.Now - DateTime.Now.ToUniversalTime();
-            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000+{0:00}:{1:00}\"}}", localOffset.Hours, localOffset.Minutes), model);
+            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000{0}\"}}", GetTimezoneSuffix(DateTime.Now)), model);
+        }
+
+
+        private static string GetTimezoneSuffix(DateTime value)
+        {
+            string suffix;
+            DateTime time = value.ToUniversalTime();
+            TimeSpan localTZOffset;
+            if (value >= time)
+            {
+                localTZOffset = value - time;
+                suffix = "+";
+            }
+            else
+            {
+                localTZOffset = time - value;
+                suffix = "-";
+            }
+            return suffix + localTZOffset.ToString("hh") + ":" + localTZOffset.ToString("mm");
         }
     }
 }

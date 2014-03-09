@@ -480,12 +480,12 @@ namespace Nancy.Json
 		{
 		    if (this.iso8601DateFormat)
 		    {
-                if (value.Kind == DateTimeKind.Unspecified)
-                {
-                    // To avoid confusion, treat "Unspecified" datetimes as Local -- just like the WCF datetime format does as well.
-                    value = new DateTime(value.Ticks, DateTimeKind.Local);
-                }
-                StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
+		        if (value.Kind == DateTimeKind.Unspecified)
+		        {
+		            // To avoid confusion, treat "Unspecified" datetimes as Local -- just like the WCF datetime format does as well.
+		            value = new DateTime(value.Ticks, DateTimeKind.Local);
+		        }
+		        StringBuilderExtensions.AppendCount(output, maxJsonLength, string.Concat("\"", value.ToString("o", CultureInfo.InvariantCulture), "\""));
 		    }
 		    else
 		    {
@@ -495,7 +495,7 @@ namespace Nancy.Json
 		        if (value.Kind != DateTimeKind.Utc)
 		        {
 		            TimeSpan localTZOffset;
-		            if (value > time)
+		            if (value >= time)
 		            {
 		                localTZOffset = value - time;
 		                suffix = "+";

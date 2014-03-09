@@ -133,16 +133,14 @@
                 UtcDateTime = new DateTime(2014, 3, 9, 16, 03, 25, DateTimeKind.Utc).AddMilliseconds(234)
             };
 
-            TimeSpan localOffset = input.LocalDateTime - input.LocalDateTime.ToUniversalTime();
-
             // When
             var output = new MemoryStream();
             sut.Serialize("application/json", input, output);
             var actual = Encoding.UTF8.GetString(output.ToArray());
 
             // Then
-            actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""2014-03-09T17:03:25.2340000+{0:00}:{1:00}"",""localDateTime"":""2014-03-09T17:03:25.2340000+{0:00}:{1:00}"",""utcDateTime"":""2014-03-09T16:03:25.2340000Z""}}",
-                localOffset.Hours, localOffset.Minutes));
+            actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""2014-03-09T17:03:25.2340000{0}"",""localDateTime"":""2014-03-09T17:03:25.2340000{0}"",""utcDateTime"":""2014-03-09T16:03:25.2340000Z""}}",
+                GetTimezoneSuffix(input.LocalDateTime, ":")));
         }
 
         [Fact]
@@ -166,7 +164,8 @@
                 var actual = Encoding.UTF8.GetString(output.ToArray());
 
                 // Then
-                actual.ShouldEqual(@"{""unspecifiedDateTime"":""\/Date(1394381005234+0100)\/"",""localDateTime"":""\/Date(1394381005234+0100)\/"",""utcDateTime"":""\/Date(1394381005234)\/""}");
+                actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date(1394381005234{0})\/"",""localDateTime"":""\/Date(1394381005234{0})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
+                    GetTimezoneSuffix(input.LocalDateTime)));
             }
             finally
             {
@@ -195,7 +194,26 @@
             var actual = Encoding.UTF8.GetString(output.ToArray());
 
             // Then
-            actual.ShouldEqual(@"{""unspecifiedDateTime"":""\/Date(1394381005234+0100)\/"",""localDateTime"":""\/Date(1394381005234+0100)\/"",""utcDateTime"":""\/Date(1394381005234)\/""}");
+            actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date(1394381005234{0})\/"",""localDateTime"":""\/Date(1394381005234{0})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
+                GetTimezoneSuffix(input.LocalDateTime)));
+        }
+
+        private static string GetTimezoneSuffix(DateTime value, string separator = "")
+        {
+            string suffix;
+		    DateTime time = value.ToUniversalTime();
+		    TimeSpan localTZOffset;
+		    if (value >= time)
+		    {
+		        localTZOffset = value - time;
+		        suffix = "+";
+		    }
+		    else
+		    {
+		        localTZOffset = time - value;
+		        suffix = "-";
+		    }
+            return suffix + localTZOffset.ToString("hh") + separator + localTZOffset.ToString("mm");
         }
     }
 }
