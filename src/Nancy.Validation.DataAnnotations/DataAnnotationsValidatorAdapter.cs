@@ -11,6 +11,7 @@
     /// </summary>
     public abstract class DataAnnotationsValidatorAdapter : IDataAnnotationsValidatorAdapter
     {
+        private static readonly Lazy<bool> isRunningOnMono = new Lazy<bool>(() => Type.GetType("Mono.Runtime") != null);
         protected readonly string ruleType;
 
         /// <summary>
@@ -20,6 +21,12 @@
         protected DataAnnotationsValidatorAdapter(string ruleType)
         {
             this.ruleType = ruleType;
+        }
+
+        // http://www.mono-project.com/Guide%3a_Porting_Winforms_Applications#Runtime_Conditionals
+        private static bool IsRunningOnMono
+        {
+            get { return isRunningOnMono.Value; }
         }
 
         /// <summary>
@@ -57,6 +64,16 @@
                     MemberName = descriptor == null ? null : descriptor.Name
                 };
 
+            // When running on Mono the Display attribute is not auto populated so for now we do it ourselves
+            if (IsRunningOnMono)
+            {
+                var displayName = this.GetDisplayNameForMember(instance, validationContext.MemberName);
+                if (!string.IsNullOrEmpty(displayName))
+                {
+                    validationContext.DisplayName = displayName;
+                }
+            }
+
             if (descriptor != null)
             {
                 // Display(Name) will auto populate the context, while DisplayName() needs to be manually set
@@ -87,6 +104,34 @@
         protected virtual ModelValidationError GetValidationError(ValidationResult result, ValidationContext context, ValidationAttribute attribute)
         {
             return new ModelValidationError(result.MemberNames, result.ErrorMessage);
+        }
+
+        private DisplayAttribute GetDisplayAttribute(object instance, string memberName)
+        {
+            if (string.IsNullOrEmpty(memberName))
+            {
+                return null;
+            }
+
+            var member = instance.GetType().GetProperty(memberName);
+
+            return member.GetCustomAttributes(typeof(DisplayAttribute), false)
+                         .Cast<DisplayAttribute>()
+                         .FirstOrDefault();
+        }
+
+        private string GetDisplayNameForMember(object instance, string memberName)
+        {
+            var attribute = this.GetDisplayAttribute(instance, memberName);
+
+            string displayName = null;
+
+            if (attribute != null)
+            {
+                displayName = attribute.GetName();
+            }
+
+            return displayName ?? memberName;
         }
     }
 }
