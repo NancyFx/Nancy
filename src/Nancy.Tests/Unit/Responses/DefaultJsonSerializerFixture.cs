@@ -7,6 +7,7 @@
 
     using Nancy.Json;
     using Nancy.Responses;
+    using Nancy.Tests.xUnitExtensions;
 
     using Xunit;
 
@@ -164,8 +165,9 @@
                 var actual = Encoding.UTF8.GetString(output.ToArray());
 
                 // Then
-                actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date(1394381005234{0})\/"",""localDateTime"":""\/Date(1394381005234{0})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
-                    GetTimezoneSuffix(input.LocalDateTime)));
+		        long ticks = (input.LocalDateTime.ToUniversalTime().Ticks - InitialJavaScriptDateTicks)/(long)10000;
+                actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date({0}{1})\/"",""localDateTime"":""\/Date({0}{1})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
+                    ticks, GetTimezoneSuffix(input.LocalDateTime)));
             }
             finally
             {
@@ -194,9 +196,12 @@
             var actual = Encoding.UTF8.GetString(output.ToArray());
 
             // Then
-            actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date(1394381005234{0})\/"",""localDateTime"":""\/Date(1394381005234{0})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
-                GetTimezoneSuffix(input.LocalDateTime)));
+            long ticks = (input.LocalDateTime.ToUniversalTime().Ticks - InitialJavaScriptDateTicks) / (long)10000;
+            actual.ShouldEqual(String.Format(@"{{""unspecifiedDateTime"":""\/Date({0}{1})\/"",""localDateTime"":""\/Date({0}{1})\/"",""utcDateTime"":""\/Date(1394381005234)\/""}}",
+                ticks, GetTimezoneSuffix(input.LocalDateTime)));
         }
+
+        private static readonly long InitialJavaScriptDateTicks = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc).Ticks;
 
         private static string GetTimezoneSuffix(DateTime value, string separator = "")
         {
