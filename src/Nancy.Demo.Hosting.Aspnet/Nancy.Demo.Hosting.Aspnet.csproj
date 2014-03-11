@@ -202,6 +202,7 @@
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\nustache.nustache" />
+    <Content Include="Views\meta.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ssve.sshtml" />

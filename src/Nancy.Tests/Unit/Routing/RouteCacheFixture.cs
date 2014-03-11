@@ -13,6 +13,7 @@
         private readonly IRouteCache routeCache;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IRouteMetadataProvider routeMetadataProvider;
 
         /// <summary>
         /// Initializes a new instance of the RouteCacheFixture class.
@@ -21,10 +22,11 @@
         {
             this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
             this.routeSegmentExtractor = A.Fake<IRouteSegmentExtractor>();
+            this.routeMetadataProvider = A.Fake<IRouteMetadataProvider>();
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
             this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>());
+                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>(), this.routeMetadataProvider);
         }
 
         [Fact]
@@ -136,7 +138,8 @@
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,
-                A.Fake<ICultureService>());
+                A.Fake<ICultureService>(),
+                A.Fake<IRouteMetadataProvider>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -165,7 +168,8 @@
                 A.Fake<INancyContextFactory>(),
                 this.routeSegmentExtractor,
                 descriptionProvider,
-                A.Fake<ICultureService>());
+                A.Fake<ICultureService>(),
+                A.Fake<IRouteMetadataProvider>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();

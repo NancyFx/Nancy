@@ -43,6 +43,8 @@ namespace Nancy.Routing
         /// <value>A <see cref="string"/> containing the description of the route.</value>
         public string Description { get; set; }
 
+        public object Metadata { get; set; }
+
         /// <summary>
         /// Gets the method of the route.
         /// </summary>
@@ -60,5 +62,36 @@ namespace Nancy.Routing
         /// </summary>
         /// <value>An <see cref="IEnumerable{T}"/>, containing the segments for the route.</value>
         public IEnumerable<string> Segments { get; set; }
+    }
+
+    public interface IRouteMetadataProvider
+    {
+        object GetMetadata(RouteDescription routeDescription);
+    }
+
+    public class DefaultRouteMetadataProvider : IRouteMetadataProvider
+    {
+        public object GetMetadata(RouteDescription routeDescription)
+        {
+            return new MyRouteMetadata();
+        }
+    }
+
+    public class MyRouteMetadata
+    {
+        public MyRouteMetadata()
+        {
+            this.Description = "Lorem ipsum";
+            this.ValidStatusCodes = new[] { HttpStatusCode.Accepted, HttpStatusCode.OK, HttpStatusCode.Processing };
+            this.CodeSample = "Get['/'] = x => {" +
+                            "return View['routes', routeCacheProvider.GetCache()];" +
+                            "};";
+        }
+
+        public string Description { get; set; }
+
+        public IEnumerable<HttpStatusCode> ValidStatusCodes { get; set; }
+
+        public string CodeSample { get; set; }
     }
 }

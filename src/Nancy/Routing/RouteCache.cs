@@ -13,6 +13,7 @@
     {
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
+        private readonly IRouteMetadataProvider routeMetadataProvider;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -20,10 +21,14 @@
         /// <param name="moduleCatalog">The <see cref="INancyModuleCatalog"/> that should be used by the cache.</param>
         /// <param name="contextFactory">The <see cref="INancyContextFactory"/> that should be used to create a context instance.</param>
         /// <param name="routeSegmentExtractor"> </param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService)
+        /// <param name="cultureService"></param>
+        /// <param name="routeMetadataProvider"></param>
+        /// <param name="routeDescriptionProvider"></param>
+        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService, IRouteMetadataProvider routeMetadataProvider)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
+            this.routeMetadataProvider = routeMetadataProvider;
 
             var request = new Request("GET", "/", "http");
 
@@ -55,10 +60,18 @@
                 {
                     routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
                     routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
+                    routeDescription.Metadata = this.GetRouteMetadata(routeDescription);
                 }
 
                 this.AddRoutesToCache(routes, moduleType);
             }
+        }
+
+        private object GetRouteMetadata(RouteDescription routeDescription)
+        {
+            return (this.routeMetadataProvider != null) ? 
+                this.routeMetadataProvider.GetMetadata(routeDescription) :
+                null;
         }
 
         private void AddRoutesToCache(IEnumerable<RouteDescription> routes, Type moduleType)
