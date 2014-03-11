@@ -155,6 +155,11 @@
     <Compile Include="Piratizer4000.cs" />
     <Compile Include="PngSerializer.cs" />
     <Compile Include="RequestDependencyClass.cs" />
+    <Compile Include="Resources\Menu.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Menu.resx</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\razor.cshtml" />
@@ -200,7 +205,12 @@
     <None Include="Views\spark.spark" />
     <None Include="Views\ssve.sshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Menu.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Menu.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
