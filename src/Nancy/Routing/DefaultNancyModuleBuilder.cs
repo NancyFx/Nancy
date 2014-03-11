@@ -1,9 +1,9 @@
-﻿using Nancy.Extensions;
-using Nancy.Responses.Negotiation;
-
-namespace Nancy.Routing
+﻿namespace Nancy.Routing
 {
     using ModelBinding;
+    using Nancy.Extensions;
+    using Nancy.Localization;
+    using Nancy.Responses.Negotiation;
     using Nancy.ViewEngines;
     using Nancy.Validation;
 
@@ -16,6 +16,7 @@ namespace Nancy.Routing
         private readonly IResponseFormatterFactory responseFormatterFactory;
         private readonly IModelBinderLocator modelBinderLocator;
         private readonly IModelValidatorLocator validatorLocator;
+        private readonly ITextResource textResource;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultNancyModuleBuilder"/> class.
@@ -24,12 +25,13 @@ namespace Nancy.Routing
         /// <param name="responseFormatterFactory">An <see cref="IResponseFormatterFactory"/> instance that should be used to create a response formatter for the module.</param>
         /// <param name="modelBinderLocator">A <see cref="IModelBinderLocator"/> instance that should be assigned to the module.</param>
         /// <param name="validatorLocator">A <see cref="IModelValidatorLocator"/> instance that should be assigned to the module.</param>
-        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator)
+        public DefaultNancyModuleBuilder(IViewFactory viewFactory, IResponseFormatterFactory responseFormatterFactory, IModelBinderLocator modelBinderLocator, IModelValidatorLocator validatorLocator, ITextResource textResource)
         {
             this.viewFactory = viewFactory;
             this.responseFormatterFactory = responseFormatterFactory;
             this.modelBinderLocator = modelBinderLocator;
             this.validatorLocator = validatorLocator;
+            this.textResource = textResource;
         }
 
         /// <summary>
@@ -47,6 +49,7 @@ namespace Nancy.Routing
             module.ViewFactory = this.viewFactory;
             module.ModelBinderLocator = this.modelBinderLocator;
             module.ValidatorLocator = this.validatorLocator;
+            module.Text = new TextResourceFinder(this.textResource, context);
 
             return module;
         }

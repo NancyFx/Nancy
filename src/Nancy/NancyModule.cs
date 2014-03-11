@@ -54,6 +54,8 @@ namespace Nancy
             }
         }
 
+        public dynamic Text { get; set; }
+
         /// <summary>
         /// Gets <see cref="RouteBuilder"/> for declaring actions for DELETE requests.
         /// </summary>

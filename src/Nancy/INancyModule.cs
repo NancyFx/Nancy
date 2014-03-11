@@ -3,6 +3,7 @@ namespace Nancy
     using System.Collections.Generic;
     using System.ComponentModel;
 
+    using Nancy.Localization;
     using Nancy.ModelBinding;
     using Nancy.Routing;
     using Nancy.Validation;
@@ -85,5 +86,10 @@ namespace Nancy
         ///  Gets all declared routes by the module.
         ///  </summary><value>A <see cref="T:System.Collections.Generic.IEnumerable`1" /> instance, containing all <see cref="T:Nancy.Routing.Route" /> instances declared by the module.</value>
         IEnumerable<Route> Routes { get; }
+
+        /// <summary>
+        /// Gets or sets the dynamic object used to locate text resources.
+        /// </summary>
+        dynamic Text { get; set; }
     }
 }

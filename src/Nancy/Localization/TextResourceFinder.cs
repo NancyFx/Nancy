@@ -23,6 +23,15 @@
         }
 
         /// <summary>
+        /// Gets the <see cref="ITextResource"/> that is being used to locate texts.
+        /// </summary>
+        /// <value>An <see cref="ITextResource"/> instance.</value>
+        public ITextResource Resource
+        {
+            get { return this.textResource; }
+        }
+
+        /// <summary>
         /// Finds text resource
         /// </summary>
         /// <param name="binder">GetMemberBinder with dynamic text key</param>
