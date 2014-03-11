@@ -24,7 +24,7 @@
 <body>
 
 	<h1>Route metadata</h1>
-	<p>Below is a list of route metadata that was generated from a custom IRouteMetadataProvider implementation</p>
+    <p>Below is a list of route metadata that was generated from a custom <strong>IRouteMetadataProvider</strong> implementation</p>
 	
     <div class="meta">
         @foreach (var module in @Model)
@@ -34,8 +34,7 @@
                 var meta = (MyRouteMetadata)route.Item2.Metadata;
                 
                 <div>
-                    <h1>@route.Item2.Path</h1>
-                    <h3>@route.Item2.Method</h3>
+                    <h1>(@route.Item2.Method) @route.Item2.Path</h1>
                     
                     <strong>Description:</strong>
                     <p>@meta.Description</p>
