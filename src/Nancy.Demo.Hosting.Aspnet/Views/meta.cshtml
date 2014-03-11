@@ -31,7 +31,7 @@
         {
             foreach (var route in @module.Value)
             {
-                var meta = (MyRouteMetadata)route.Item2.Metadata;
+                var meta = (MyRouteMetadata)route.Item2.Metadata.Retrieve<MyRouteMetadata>();
                 
                 <div>
                     <h1>(@route.Item2.Method) @route.Item2.Path</h1>

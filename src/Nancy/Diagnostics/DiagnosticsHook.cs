@@ -40,7 +40,7 @@ namespace Nancy.Diagnostics
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
-            IRouteMetadataProvider routeMetadataProvider)
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 

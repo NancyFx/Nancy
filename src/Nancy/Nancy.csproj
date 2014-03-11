@@ -255,6 +255,7 @@
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\ResolveResult.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
+    <Compile Include="Routing\RouteMetadata.cs" />
     <Compile Include="Routing\Trie\IRouteResolverTrie.cs" />
     <Compile Include="Routing\Trie\ITrieNodeFactory.cs" />
     <Compile Include="Routing\Trie\MatchResult.cs" />

@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Tests.Unit.Routing
 {
+    using System.Collections.Generic;
     using System.Linq;
     using Nancy.Tests.Fakes;
     using Xunit;
@@ -13,7 +14,7 @@
         private readonly IRouteCache routeCache;
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
-        private readonly IRouteMetadataProvider routeMetadataProvider;
+        private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
         /// <summary>
         /// Initializes a new instance of the RouteCacheFixture class.
@@ -22,11 +23,11 @@
         {
             this.routeDescriptionProvider = A.Fake<IRouteDescriptionProvider>();
             this.routeSegmentExtractor = A.Fake<IRouteSegmentExtractor>();
-            this.routeMetadataProvider = A.Fake<IRouteMetadataProvider>();
+            this.routeMetadataProviders = new IRouteMetadataProvider[0];
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
             this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>(), this.routeMetadataProvider);
+                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>(), this.routeMetadataProviders);
         }
 
         [Fact]
@@ -139,7 +140,7 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                A.Fake<IRouteMetadataProvider>());
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -169,7 +170,7 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                A.Fake<IRouteMetadataProvider>());
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();

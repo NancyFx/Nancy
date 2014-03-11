@@ -24,7 +24,7 @@
         private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private readonly ICultureService cultureService;
         private readonly IRequestTraceFactory requestTraceFactory;
-        private readonly IRouteMetadataProvider reouteMetadataProvider;
+        private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
@@ -50,7 +50,7 @@
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
             ICultureService cultureService,
             IRequestTraceFactory requestTraceFactory,
-            IRouteMetadataProvider reouteMetadataProvider)
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -62,7 +62,7 @@
             this.routeSegmentConstraints = routeSegmentConstraints;
             this.cultureService = cultureService;
             this.requestTraceFactory = requestTraceFactory;
-            this.reouteMetadataProvider = reouteMetadataProvider;
+            this.routeMetadataProviders = routeMetadataProviders;
         }
 
         /// <summary>
@@ -82,7 +82,7 @@
                 this.routeSegmentConstraints,
                 this.cultureService,
                 this.requestTraceFactory,
-                this.reouteMetadataProvider);
+                this.routeMetadataProviders);
         }
     }
 }

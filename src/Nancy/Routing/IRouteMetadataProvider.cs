@@ -1,14 +1,23 @@
 namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
 
+    // Possibly make this generic and remove the MetadataType property.
     public interface IRouteMetadataProvider
     {
+        Type MetadataType { get; }
+
         object GetMetadata(RouteDescription routeDescription);
     }
 
     public class DefaultRouteMetadataProvider : IRouteMetadataProvider
     {
+        public Type MetadataType
+        {
+            get { return typeof (MyRouteMetadata); }
+        }
+
         // Returns object so you can have you own application-specific
         // metadata for your routes.
         public object GetMetadata(RouteDescription routeDescription)
