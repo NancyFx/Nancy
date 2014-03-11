@@ -16,7 +16,7 @@ namespace Nancy.Demo.Hosting.Aspnet
 
             Get["/text"] = x =>
             {
-                var value = (string)this.Text.Menu.Home;
+                var value = (string)this.Text.Home;
                 return string.Concat("Value of 'Home' resource key in the Menu resource file: ", value);
             };
 
