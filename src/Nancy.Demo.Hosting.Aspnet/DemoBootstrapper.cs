@@ -3,15 +3,12 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-
     using Bootstrapper;
     using Conventions;
-
     using Nancy.Diagnostics;
     using Nancy.Security;
     using Nancy.Session;
     using Nancy.TinyIoc;
-    using Nancy.ViewEngines;
     using Nancy.ViewEngines.Razor;
 
     public class DemoBootstrapper : DefaultNancyBootstrapper
