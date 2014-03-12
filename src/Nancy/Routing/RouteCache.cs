@@ -60,17 +60,17 @@
                 {
                     routeDescription.Description = this.routeDescriptionProvider.GetDescription(module, routeDescription.Path);
                     routeDescription.Segments = this.routeSegmentExtractor.Extract(routeDescription.Path).ToArray();
-                    routeDescription.Metadata = this.GetRouteMetadata(routeDescription);
+                    routeDescription.Metadata = this.GetRouteMetadata(module, routeDescription);
                 }
 
                 this.AddRoutesToCache(routes, moduleType);
             }
         }
 
-        private RouteMetadata GetRouteMetadata(RouteDescription routeDescription)
+        private RouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
         {
             var data = this.routeMetadataProviders
-                .Select(x => new {Type = x.MetadataType, Data = x.GetMetadata(routeDescription)})
+                .Select(x => new {Type = x.MetadataType, Data = x.GetMetadata(module, routeDescription)})
                 .ToDictionary(x => x.Type, x => x.Data);
 
             return new RouteMetadata(data);

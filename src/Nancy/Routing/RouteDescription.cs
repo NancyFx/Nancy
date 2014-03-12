@@ -43,6 +43,10 @@ namespace Nancy.Routing
         /// <value>A <see cref="string"/> containing the description of the route.</value>
         public string Description { get; set; }
 
+        /// <summary>
+        /// Gets or sets the metadata information for a route.
+        /// </summary>
+        /// <value>A <see cref="RouteMetadata"/> instance.</value>
         public RouteMetadata Metadata { get; set; }
 
         /// <summary>

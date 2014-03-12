@@ -141,6 +141,7 @@
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
     <Compile Include="CustomStatusHandler.cs" />
+    <Compile Include="DefaultRouteMetadataProvider.cs" />
     <Compile Include="HereBeAResponseYouScurvyDog.cs" />
     <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="DependencyModule.cs" />
