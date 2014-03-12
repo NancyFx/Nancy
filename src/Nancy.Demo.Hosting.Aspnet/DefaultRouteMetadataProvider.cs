@@ -18,20 +18,26 @@
             // Return the same metadata for all routes in this sample
             // You would use the Path & Method of the routeDescription
             // to determin route specific metadata
-            return new MyRouteMetadata();
+            return new MyRouteMetadata(routeDescription.Method, routeDescription.Path);
         }
     }
 
     public class MyRouteMetadata
     {
-        public MyRouteMetadata()
+        public MyRouteMetadata(string method, string path)
         {
+            this.Method = method;
+            this.Path = path;
             this.Description = "Lorem ipsum";
             this.ValidStatusCodes = new[] { HttpStatusCode.Accepted, HttpStatusCode.OK, HttpStatusCode.Processing };
             this.CodeSample = "Get['/'] = x => {\n" +
                             "\treturn View['routes', routeCacheProvider.GetCache()];\n" +
                             "};";
         }
+
+        public string Path { get; set; }
+
+        public string Method { get; set; }
 
         public string Description { get; set; }
 

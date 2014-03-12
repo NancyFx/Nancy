@@ -10,16 +10,16 @@ namespace Nancy.Demo.Hosting.Aspnet
     {
         public MainModule(IRouteCacheProvider routeCacheProvider)
         {
-Get["/"] = x => {
-    return View["routes", routeCacheProvider.GetCache()];
-};
+            Get["/"] = x => {
+                return View["routes", routeCacheProvider.GetCache()];
+            };
 
-    Get["/meta"] = parameters =>
-    {
-        return Negotiate
-            .WithModel(routeCacheProvider.GetCache())
-            .WithView("meta");
-    };
+            Get["/meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().Retrieve<MyRouteMetadata>())
+                    .WithView("meta");
+            };
 
             Get["/text"] = x =>
             {

@@ -1,6 +1,5 @@
-﻿@using Nancy.Routing
-@using Nancy.Demo.Hosting.Aspnet
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<Nancy.Routing.IRouteCache>
+﻿@using Nancy.Demo.Hosting.Aspnet
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<System.Collections.Generic.IEnumerable<MyRouteMetadata>>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -28,28 +27,22 @@
     <p>Below is a list of route metadata that was generated from a custom <strong>IRouteMetadataProvider</strong> implementation</p>
 	
     <div class="meta">
-        @foreach (var module in @Model)
+        @foreach (var meta in @Model)
         {
-            foreach (var route in @module.Value)
-            {
-                var meta = (MyRouteMetadata)route.Item2.Metadata.Retrieve<MyRouteMetadata>();
-                
-                <div>
-                    <h1>(@route.Item2.Method) @route.Item2.Path</h1>
+            <div>
+                <h1>(@meta.Method) @meta.Path</h1>
                     
-                    <strong>Description:</strong>
-                    <p>@meta.Description</p>
+                <strong>Description:</strong>
+                <p>@meta.Description</p>
                     
-                    <strong>Valid return status codes:</strong>
-                    <p>
-                        @string.Join(", ", @meta.ValidStatusCodes)
-                    </p>
+                <strong>Valid return status codes:</strong>
+                <p>
+                    @string.Join(", ", @meta.ValidStatusCodes)
+                </p>
                     
-                    <strong>Code sample:</strong>
+                <strong>Code sample:</strong>
 <pre><code class="csharp">@meta.CodeSample</code></pre>
-
-                </div>
-            }
+            </div>
         }
     </div>
     <script>hljs.initHighlightingOnLoad();</script>
