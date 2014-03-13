@@ -17,7 +17,7 @@ namespace Nancy.Demo.Hosting.Aspnet
             Get["/meta"] = parameters =>
             {
                 return Negotiate
-                    .WithModel(routeCacheProvider.GetCache().Retrieve<MyRouteMetadata>())
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyRouteMetadata>())
                     .WithView("meta");
             };
 
