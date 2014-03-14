@@ -1,14 +1,19 @@
 ﻿namespace Nancy
 {
+    using System;
+
     /// <summary>
-    /// Defines the functionality to retrieve the root folder path of the current Nancy application.
+    /// Default implementation of <see cref="IRootPathProvider"/>.
     /// </summary>
-    public interface IRootPathProvider : IHideObjectMembers
+    public class DefaultRootPathProvider : IRootPathProvider
     {
         /// <summary>
         /// Returns the root folder path of the current Nancy application.
         /// </summary>
         /// <returns>A <see cref="string"/> containing the path of the root folder.</returns>
-        string GetRootPath();
+        public string GetRootPath()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory;
+        }
     }
 }

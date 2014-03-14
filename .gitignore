@@ -6,6 +6,7 @@
 *.user
 *.orig
 *.pidb
+*.ide
 *.userprefs
 AssemblyInfo.cs
 .DS_Store

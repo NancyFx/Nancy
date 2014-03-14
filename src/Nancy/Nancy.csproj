@@ -142,6 +142,7 @@
     <Compile Include="Culture\DefaultCultureService.cs" />
     <Compile Include="Culture\ICultureService.cs" />
     <Compile Include="DefaultResponseFormatterFactory.cs" />
+    <Compile Include="DefaultRootPathProvider.cs" />
     <Compile Include="DefaultStaticContentProvider.cs" />
     <Compile Include="Diagnostics\DiagnosticsConfiguration.cs" />
     <Compile Include="Diagnostics\DiagnosticsSession.cs" />
