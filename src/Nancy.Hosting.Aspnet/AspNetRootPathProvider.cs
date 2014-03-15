@@ -2,7 +2,7 @@ namespace Nancy.Hosting.Aspnet
 {
     using System.Web.Hosting;
 
-    public class AspNetRootSourceProvider : IRootPathProvider
+    public class AspNetRootPathProvider : IRootPathProvider
     {
         public string GetRootPath()
         {
