@@ -256,7 +256,6 @@
                 BasePath = baseUri.AbsolutePath.TrimEnd('/'),
                 Path = HttpUtility.UrlDecode(relativeUrl),
                 Query = request.Url.Query,
-                Fragment = request.Url.Fragment,
             };
 
             byte[] certificate = null;
