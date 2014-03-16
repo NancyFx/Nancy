@@ -278,17 +278,19 @@ namespace Nancy.Tests.Unit.ModelBinding
             context.Request.Form["AnotherIntProperty"] = "morebad";
 
             // Then
-            Assert.Throws<ModelBindingException>(() => binder.Bind(context, typeof(TestModel), null, BindingConfig.Default))
+            Type modelType = typeof(TestModel);
+            Assert.Throws<ModelBindingException>(() => binder.Bind(context, modelType, null, BindingConfig.Default))
                 .ShouldMatch(exception =>
-                             exception.BoundType == typeof(TestModel)
+                             exception.BoundType == modelType
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "IntProperty"
-                                                                        && pe.AttemptedValue == "badint"
-                                                                        && pe.InnerException.Message == "badint is not a valid value for Int32.")
+                                                                        && pe.AttemptedValue == "badint")
                              && exception.PropertyBindingExceptions.Any(pe =>
                                                                         pe.PropertyName == "AnotherIntProperty"
-                                                                        && pe.AttemptedValue == "morebad"
-                                                                        && pe.InnerException.Message == "morebad is not a valid value for Int32."));
+                                                                        && pe.AttemptedValue == "morebad")
+                             && exception.PropertyBindingExceptions.All(pe =>
+                                                                        pe.InnerException.Message.Contains(pe.AttemptedValue)
+                                                                        && pe.InnerException.Message.Contains(modelType.GetProperty(pe.PropertyName).PropertyType.Name)));
         }
 
         [Fact]
