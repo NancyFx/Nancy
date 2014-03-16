@@ -105,7 +105,7 @@ namespace Nancy.ModelBinding
         /// <example>this.Bind&lt;Person&gt;(p =&gt; p.Name, p =&gt; p.Age)</example>
         /// <returns>Bound model instance</returns>
         /// <remarks><see cref="ModelValidationResult"/> is stored in NancyModule.ModelValidationResult and NancyContext.ModelValidationResult.</remarks>
-        public static TModel BindAndValidate<TModel>(this INancyModule module, Expression<Func<TModel, object>>[] blacklistedProperties)
+        public static TModel BindAndValidate<TModel>(this INancyModule module, params Expression<Func<TModel, object>>[] blacklistedProperties)
         {
             var model = module.Bind<TModel>(blacklistedProperties.ParseBlacklistedPropertiesExpressionTree());
             module.Validate(model);
