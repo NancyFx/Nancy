@@ -15,6 +15,11 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
     public class SuperSimpleViewEngine
     {
         /// <summary>
+        /// Compiled Regex for viewbag substitutions
+        /// </summary>
+        private static readonly Regex ViewBagSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?ViewBag(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
+
+        /// <summary>
         /// Compiled Regex for single substitutions
         /// </summary>
         private static readonly Regex SingleSubstitutionsRegEx = new Regex(@"@(?<Encode>!)?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*;?", RegexOptions.Compiled);
@@ -98,6 +103,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
             this.processors = new List<Func<string, object, IViewEngineHost, string>>
             {
+                PerformViewBagSubstitutions,
                 PerformSingleSubstitutions,
                 PerformContextSubstitutions,
                 PerformEachSubstitutions,
@@ -311,6 +317,37 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
             }
 
             return predicateResult;
+        }
+
+        /// <summary>
+        /// Performs single @ViewBag.PropertyName substitutions.
+        /// </summary>
+        /// <param name="template">The template.</param>
+        /// <param name="model">This parameter is not used, the model is based on the "host.Context.ViewBag".</param>
+        /// <param name="host">View engine host</param>
+        /// <returns>Template with @ViewBag.PropertyName blocks expanded.</returns>
+        private static string PerformViewBagSubstitutions(string template, object model, IViewEngineHost host)
+        {
+            return ViewBagSubstitutionsRegEx.Replace(
+                template,
+                m =>
+                {
+                    var properties = GetCaptureGroupValues(m, "ParameterName");
+
+                    var substitution = GetPropertyValueFromParameterCollection(((dynamic)host.Context).ViewBag, properties);
+
+                    if (!substitution.Item1)
+                    {
+                        return "[ERR!]";
+                    }
+
+                    if (substitution.Item2 == null)
+                    {
+                        return string.Empty;
+                    }
+
+                    return m.Groups["Encode"].Success ? host.HtmlEncode(substitution.Item2.ToString()) : substitution.Item2.ToString();
+                });
         }
 
         /// <summary>
