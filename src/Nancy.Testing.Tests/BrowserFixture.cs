@@ -74,6 +74,7 @@ namespace Nancy.Testing.Tests
             var result = browser.Get("/isLocal", with =>
                     {
                         with.HttpRequest();
+                        with.HostName("localhost");
                         with.UserHostAddress(userHostAddress);
                     });
 
@@ -91,6 +92,7 @@ namespace Nancy.Testing.Tests
             var result = browser.Get("/isLocal", with =>
                     {
                         with.HttpRequest();
+                        with.HostName("localhost");
                         with.UserHostAddress(userHostAddress);
                     });
 
@@ -108,6 +110,7 @@ namespace Nancy.Testing.Tests
             var result = browser.Get("/isLocal", with =>
                     {
                         with.HttpRequest();
+                        with.HostName("anotherhost");
                         with.UserHostAddress(userHostAddress);
                     });
 

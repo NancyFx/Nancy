@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Extensions
 {
+    using System;
     using System.Linq;
 
     /// <summary>
@@ -19,22 +20,27 @@
 
             return request.Headers[ajaxRequestHeaderKey].Contains(ajaxRequestHeaderValue);
         }
-
+        /// <summary>
+        /// Gets a value indicating whether the request is local.
+        /// </summary>
+        /// <param name="request">The request made by client</param>
+        /// <returns><see langword="true" /> if the request is local, otherwise <see langword="false"/>.</returns>
         public static bool IsLocal(this Request request)
         {
-            string remoteAddress = request.UserHostAddress;
-
-            if (string.IsNullOrEmpty(remoteAddress))
+            if (string.IsNullOrEmpty(request.UserHostAddress) || string.IsNullOrEmpty(request.Url))
             {
                 return false;
             }
-
-            if (remoteAddress == "127.0.0.1" || remoteAddress == "::1")
+            try
             {
-                return true;
+                var uri = new Uri(request.Url);
+                return uri.IsLoopback;
             }
-
-            return false;
+            catch (Exception)
+            {
+                // Invalid Request.Url string
+                return false;
+            }
         }
     }
 }
