@@ -47,7 +47,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <summary>
         /// Compiled regex for partial blocks
         /// </summary>
-        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>.+)'(?<Model>.[ ]?Model(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*)?\];?", RegexOptions.Compiled);
+        private static readonly Regex PartialSubstitutionRegEx = new Regex(@"@Partial\['(?<ViewName>[^\]]+)'(?:.[ ]?@?(?<Model>(Model|Current)(?:\.(?<ParameterName>[a-zA-Z0-9-_]+))*))?\];?", RegexOptions.Compiled);
 
         /// <summary>
         /// Compiled RegEx for section block declarations
@@ -124,7 +124,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <returns>A string containing the expanded template.</returns>
         public string Render(string template, dynamic model, IViewEngineHost host)
         {
-            var output = 
+            var output =
                 this.processors.Aggregate(template, (current, processor) => processor(current, model ?? new object(), host));
 
             return this.matchers.Aggregate(output, (current, extension) => extension.Invoke(current, model, host));
@@ -419,7 +419,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with @Each.PropertyName blocks expanded.</returns>
-        private static string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformEachSubstitutions(string template, object model, IViewEngineHost host)
         {
             return EachSubstitutionRegEx.Replace(
                 template,
@@ -453,15 +453,23 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                     }
 
                     var contents = m.Groups["Contents"].Value;
+
                     var result = string.Empty;
                     foreach (var item in substitutionEnumerable)
                     {
-                        var postConditionalResult = PerformConditionalSubstitutions(contents, item, host);
-                        result += ReplaceCurrentMatch(postConditionalResult, item, host);
+                        var modifiedContent = PerformPartialSubstitutions(contents, item, host);
+                        modifiedContent = PerformConditionalSubstitutions(modifiedContent, item, host);
+                        result += ReplaceCurrentMatch(modifiedContent, item, host);
                     }
 
                     return result;
                 });
+        }
+
+        private class FooBar
+        {
+            public object Current { get; set; }
+            public object Model { get; set; }
         }
 
         /// <summary>
@@ -579,7 +587,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         /// <param name="model">The model.</param>
         /// <param name="host">View engine host</param>
         /// <returns>Template with partials expanded</returns>
-        private string PerformPartialSubstitutions(string template, object model, IViewEngineHost host)
+        private string PerformPartialSubstitutions(string template, dynamic model, IViewEngineHost host)
         {
             var result = template;
 
@@ -593,7 +601,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
 
                     if (m.Groups["Model"].Length > 0)
                     {
-                        var modelValue = GetPropertyValueFromParameterCollection(model, properties);
+                        var modelValue = GetPropertyValueFromParameterCollection(partialModel, properties);
 
                         if (modelValue.Item1 != true)
                         {
@@ -659,7 +667,7 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
         }
 
         /// <summary>
-		/// Gets the master page name, if one is specified
+        /// Gets the master page name, if one is specified
         /// </summary>
         /// <param name="template">The template</param>
         /// <returns>Master page name or String.Empty</returns>
