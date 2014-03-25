@@ -1,9 +1,7 @@
 namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
-    using System.IO;
     using System.Linq;
-    using IO;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
@@ -14,6 +12,12 @@ namespace Nancy.Demo.Hosting.Aspnet
         {
             Get["/"] = x => {
                 return View["routes", routeCacheProvider.GetCache()];
+            };
+
+            Get["/text"] = x =>
+            {
+                var value = (string)this.Text.Home;
+                return string.Concat("Value of 'Home' resource key in the Menu resource file: ", value);
             };
 
             Get["/negotiated"] = parameters => {

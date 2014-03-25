@@ -68,6 +68,8 @@
             }
         }
 
+        public dynamic Text { get; set; }
+
         private UglifiedNancyModule(string modulePath)
         {
             this.After = new AfterPipeline();

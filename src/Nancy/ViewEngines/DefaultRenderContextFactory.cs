@@ -1,10 +1,6 @@
 ﻿namespace Nancy.ViewEngines
 {
-    using Cryptography;
-
     using Nancy.Localization;
-
-    using Session;
 
     /// <summary>
     /// Default render context factory implementation.
