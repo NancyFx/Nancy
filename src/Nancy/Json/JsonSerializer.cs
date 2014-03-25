@@ -33,6 +33,7 @@ namespace Nancy.Json
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
+    using System.Linq;
     using System.Reflection;
     using System.Text;
 
@@ -265,8 +266,8 @@ namespace Nancy.Json
 			getMethod = null;
 			if (mi == null)
 				return true;
-			
-			if (mi.IsDefined (typeof (ScriptIgnoreAttribute), true))
+
+			if (mi.GetCustomAttributes(true).Any(a => a.GetType().Name == "ScriptIgnoreAttribute"))
 				return true;
 			
 			FieldInfo fi = mi as FieldInfo;
