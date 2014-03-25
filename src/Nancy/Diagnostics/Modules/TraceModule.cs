@@ -30,7 +30,7 @@
                     return HttpStatusCode.NotFound;
                 }
 
-                var session = 
+                var session =
                     this.sessionProvider.GetSessions().FirstOrDefault(s => s.Id == id);
 
                 if (session == null)
@@ -40,15 +40,14 @@
 
                 return this.Response.AsJson(session.RequestTraces.Select(t => new
                     {
-                        t.Method,
-                        t.RequestUrl,
-                        ResponseType = t.ResponseType.ToString(),
-                        t.RequestContentType,
-                        t.ResponseContentType,
-                        t.RequestHeaders,
-                        t.ResponseHeaders,
-                        t.StatusCode,
-                        Log = t.TraceLog.ToString().Replace("\r", "").Split(new [] { "\n" }, StringSplitOptions.None),
+                        t.RequestData.Method,
+                        RequestUrl = t.RequestData.Url,
+                        RequestContentType = t.RequestData.ContentType,
+                        ResponseContentType = t.ResponseData.ContentType,
+                        RequestHeaders = t.RequestData.Headers,
+                        ResponseHeaders = t.ResponseData.Headers,
+                        t.ResponseData.StatusCode,
+                        Log = t.TraceLog.ToString().Replace("\r", "").Split(new[] { "\n" }, StringSplitOptions.None),
                     }).ToArray());
             };
         }

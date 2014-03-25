@@ -4,16 +4,30 @@ namespace Nancy.Diagnostics
     using System.Text;
 
     /// <summary>
-    /// Implementation of <see cref="ITraceLog"/> that does not log anything.
+    /// Default implementation of the <see cref="ITraceLog"/> interface.
     /// </summary>
-    public class NullLog : ITraceLog
+    public class DefaultTraceLog : ITraceLog
     {
+        private readonly StringBuilder log;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="DefaultTraceLog"/> class.
+        /// </summary>
+        public DefaultTraceLog()
+        {
+            this.log = new StringBuilder();
+        }
+
         /// <summary>
         /// Write to the log
         /// </summary>
         /// <param name="logDelegate">Log writing delegate</param>
         public void WriteLog(Action<StringBuilder> logDelegate)
         {
+            if (this.log != null)
+            {
+                logDelegate.Invoke(this.log);
+            }
         }
 
         /// <summary>
@@ -24,7 +38,7 @@ namespace Nancy.Diagnostics
         /// </returns>
         public override string ToString()
         {
-            return string.Empty;
+            return this.log != null ? this.log.ToString() : string.Empty;
         }
     }
 }

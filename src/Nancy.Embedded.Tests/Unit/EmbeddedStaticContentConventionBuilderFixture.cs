@@ -6,6 +6,8 @@
     using System.Reflection;
     using System.Text;
     using Conventions;
+
+    using Nancy.Diagnostics;
     using Nancy.Tests;
     using Responses;
     using Xunit;
@@ -64,7 +66,11 @@
             var context =
                 new NancyContext
                 {
-                    Request = new Request("GET", resource, "http")
+                    Request = new Request("GET", resource, "http"),
+                    Trace = new DefaultRequestTrace
+                    {
+                        TraceLog = new DefaultTraceLog()
+                    }
                 };
 
             var assembly =
