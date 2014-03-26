@@ -223,7 +223,7 @@
         {
             foreach (var baseUri in this.baseUriList)
             {
-                var prefix = baseUri.ToString();
+                var prefix = baseUri.Scheme + "://" + baseUri.Host + ":" + baseUri.Port + baseUri.AbsolutePath;
 
                 if (this.configuration.RewriteLocalhost && !baseUri.Host.Contains("."))
                 {
