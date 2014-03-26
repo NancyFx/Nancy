@@ -31,14 +31,15 @@
             {
                 return false;
             }
-            try
+            
+            Uri uri = null;
+            if (Uri.TryCreate(request.Url, UriKind.Absolute, out uri))
             {
-                var uri = new Uri(request.Url);
                 return uri.IsLoopback;
             }
-            catch (Exception)
+            else
             {
-                // Invalid Request.Url string
+                // Invalid or relative Request.Url string
                 return false;
             }
         }
