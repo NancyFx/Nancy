@@ -124,11 +124,30 @@ namespace Nancy
         {
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
-                container.Register(
-                    typeof(INancyModule), 
-                    moduleRegistrationType.ModuleType,
-                    moduleRegistrationType.ModuleType.FullName).
-                    AsSingleton();
+                // check if the container already has moduleType registered so we don't overwrite it's registration
+                bool resolvable = container.CanResolve(moduleRegistrationType.ModuleType);
+
+                if (resolvable)
+                {
+                    object module = container.Resolve(moduleRegistrationType.ModuleType);
+
+                    container.Register(
+                        typeof(INancyModule),
+                        module,
+                        moduleRegistrationType.ModuleType.FullName
+                    );
+                }
+                else
+                {
+                    container.Register(
+                        typeof(INancyModule),
+                        moduleRegistrationType.ModuleType,
+                        moduleRegistrationType.ModuleType.FullName
+                    )
+                    .AsSingleton();
+                }
+
+
             }
         }
 
@@ -202,7 +221,18 @@ namespace Nancy
         /// <returns>NancyModule instance</returns>
         protected override sealed INancyModule GetModule(TinyIoCContainer container, Type moduleType)
         {
-            container.Register(typeof(INancyModule), moduleType);
+            // check if the container already has moduleType registered so we don't overwrite it's registration
+            bool resolvable = container.CanResolve(moduleType);
+
+            if (resolvable)
+            {
+                object module = container.Resolve(moduleType);
+                container.Register(typeof(INancyModule), module);
+            }
+            else
+            {
+                container.Register(typeof(INancyModule), moduleType);
+            }
 
             return container.Resolve<INancyModule>();
         }
