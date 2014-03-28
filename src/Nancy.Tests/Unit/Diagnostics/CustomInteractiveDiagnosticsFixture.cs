@@ -54,6 +54,7 @@
                 IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
                 ICultureService cultureService,
                 IRequestTraceFactory requestTraceFactory,
+                IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
