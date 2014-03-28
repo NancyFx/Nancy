@@ -1,23 +1,17 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet
 {
-    using System;
     using System.Collections.Generic;
     using Nancy.Routing;
 
-    public class DefaultRouteMetadataProvider : IRouteMetadataProvider
+    public class DefaultRouteMetadataProvider : RouteMetadataProvider<MyRouteMetadata>
     {
-        public Type MetadataType
-        {
-            get { return typeof(MyRouteMetadata); }
-        }
-
         // Returns object so you can have you own application-specific
         // metadata for your routes.
-        public object GetMetadata(INancyModule module, RouteDescription routeDescription)
+        protected override MyRouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
         {
             // Return the same metadata for all routes in this sample
             // You would use the Path & Method of the routeDescription
-            // to determin route specific metadata
+            // to determine route specific metadata
             return new MyRouteMetadata(routeDescription.Method, routeDescription.Path);
         }
     }
