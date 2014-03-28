@@ -1266,7 +1266,7 @@ namespace Nancy.Testing
             /// </summary>
             /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> instance that should be used by the bootstrapper.</param>
             /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator RouteMetadataProviders(IRouteMetadataProvider routeMetadataProviders)
+            public ConfigurableBootstrapperConfigurator RouteMetadataProvider(IRouteMetadataProvider routeMetadataProviders)
             {
                 this.bootstrapper.registeredInstances.Add(
                     new InstanceRegistration(typeof(IRouteMetadataProvider), routeMetadataProviders));
