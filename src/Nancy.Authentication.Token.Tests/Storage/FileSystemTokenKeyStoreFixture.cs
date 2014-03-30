@@ -1,7 +1,6 @@
-﻿using System;
-
-namespace Nancy.Authentication.Token.Tests.Storage
+﻿namespace Nancy.Authentication.Token.Tests.Storage
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -10,46 +9,62 @@ namespace Nancy.Authentication.Token.Tests.Storage
     using Nancy.Testing.Fakes;
     using Xunit;
 
-    public class FileSystemTokenKeyStoreFixture : IDisposable
+    public class FileSystemTokenKeyStoreFixture
     {
-        private FileSystemTokenKeyStore keyStore;
-
-        public FileSystemTokenKeyStoreFixture()
-        {
-            var rootPathProvider = new FakeRootPathProvider();
-            this.keyStore = new FileSystemTokenKeyStore(rootPathProvider);
-        }
-
         [Fact]
         public void Should_store_keys_in_file()
         {
-            var keys = new Dictionary<DateTime, byte[]>();
+            // Given
+            var keyStore = GetKeyStore();
+            try
+            {
+                var keys = new Dictionary<DateTime, byte[]>
+                {
+                    { DateTime.UtcNow, Encoding.UTF8.GetBytes("fake encryption key") }
+                };
 
-            keys.Add(DateTime.UtcNow, Encoding.UTF8.GetBytes("fake encryption key"));
+                // When
+                keyStore.Store(keys);
 
-            keyStore.Store(keys);
-
-            Assert.True(File.Exists(keyStore.FilePath));
+                // Then
+                Assert.True(File.Exists(keyStore.FilePath));
+            }
+            finally
+            {
+                keyStore.Purge();
+            }
         }
 
         [Fact]
         public void Should_retrieve_keys_from_file()
         {
-            var keys = new Dictionary<DateTime, byte[]>();
+            // Given
+            var keyStore = GetKeyStore();
+            try
+            {
+                var keys = new Dictionary<DateTime, byte[]>
+                {
+                    { DateTime.UtcNow, Encoding.UTF8.GetBytes("fake encryption key") }
+                };
 
-            keys.Add(DateTime.UtcNow, Encoding.UTF8.GetBytes("fake encryption key"));
+                keyStore.Store(keys);
 
-            keyStore.Store(keys);
+                // When
+                var retrievedKeys = keyStore.Retrieve();
 
-            var retrievedKeys = keyStore.Retrieve();
-
-            Assert.True(Encoding.UTF8.GetString(retrievedKeys.Values.First()) 
-                == "fake encryption key");
+                // Then
+                Assert.True(Encoding.UTF8.GetString(retrievedKeys.Values.First()) == "fake encryption key");
+            }
+            finally
+            {
+                keyStore.Purge();
+            }
         }
 
-        public void Dispose()
+        private static FileSystemTokenKeyStore GetKeyStore()
         {
-            keyStore.Purge();
+            var rootPathProvider = new FakeRootPathProvider();
+            return new FileSystemTokenKeyStore(rootPathProvider);
         }
     }
 }
