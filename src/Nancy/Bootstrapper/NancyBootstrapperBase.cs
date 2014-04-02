@@ -26,6 +26,12 @@
         private bool initialised;
 
         /// <summary>
+        /// Stores whether the bootstrapper is in the process of 
+        /// being disposed.
+        /// </summary>
+        private bool disposing;
+
+        /// <summary>
         /// Stores the <see cref="IRootPathProvider"/> used by Nancy
         /// </summary>
         private IRootPathProvider rootPathProvider;
@@ -370,11 +376,19 @@
         /// <filterpriority>2</filterpriority>
         public void Dispose()
         {
+            // Prevent StackOverflowException if ApplicationContainer.Dispose re-triggers this Dispose
+            if (this.disposing)
+            {
+                return;
+            }
+
             // Only dispose if we're initialised, prevents possible issue with recursive disposing.
             if (!this.initialised)
             {
                 return;
             }
+
+            this.disposing = true;
 
             var container = this.ApplicationContainer as IDisposable;
 
