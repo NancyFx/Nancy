@@ -96,7 +96,10 @@
             var model = new Person { FirstName = "First", LastName = "Last" };
             var route = new FakeRoute(model);
             var parameters = new DynamicDictionary();
-            var context = new NancyContext { Trace = new RequestTrace(true) };
+            var context = new NancyContext
+            {
+                Trace = new DefaultRequestTrace()
+            };
 
             // When
             var result = this.invoker.Invoke(route, new CancellationToken(), parameters, context).Result;
