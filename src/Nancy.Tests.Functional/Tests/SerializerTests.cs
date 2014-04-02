@@ -31,7 +31,7 @@
 
             //Then
             var model = result.Body.AsString();
-            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000{0}\"}}", GetTimezoneSuffix(DateTime.Now)), model);
+            Assert.Equal(String.Format("{{\"createdOn\":\"2013-12-25T12:10:30.0000000{0}\"}}", GetTimezoneSuffix(new DateTime(2013, 12, 25, 12, 10, 30))), model);
         }
 
 
