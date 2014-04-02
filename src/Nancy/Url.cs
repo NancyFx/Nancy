@@ -12,7 +12,7 @@ namespace Nancy
         private string basePath;
 
         /// <summary>
-        /// Represents a URL made up of component parts
+        /// Creates an instance of the <see cref="Url" /> class
         /// </summary>
         public Url()
         {
@@ -26,9 +26,9 @@ namespace Nancy
         }
 
         /// <summary>
-        /// Represents a ULR made up of component parts
+        /// Creates an instance of the <see cref="Url" /> class
         /// </summary>
-        /// <param name="url">a string representing the url</param>
+        /// <param name="url">A <see cref="string" /> containing a URL.</param>
         public Url(string url)
         {
             var uri = new Uri(url);
