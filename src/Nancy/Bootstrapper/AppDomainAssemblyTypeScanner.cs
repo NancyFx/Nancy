@@ -304,17 +304,27 @@ namespace Nancy.Bootstrapper
         {
             var returnTypes =
                 Types.Where(type.IsAssignableFrom);
-     
-            if ((mode == ScanMode.OnlyNancy))           
+
+            if ((mode == ScanMode.OnlyNancy))
+            {
                 return returnTypes.Where(t => t.Assembly == nancyAssembly);
-            else if ((mode == ScanMode.ExcludeNancy))            
+            }
+            else if ((mode == ScanMode.ExcludeNancy))
+            {
                 return returnTypes.Where(t => t.Assembly != nancyAssembly);
+            }
             else if ((mode == ScanMode.OnlyNancyNamespace))
+            {
                 return returnTypes.Where(t => t.FullName.StartsWith("Nancy"));
-            else if ((mode == ScanMode.ExcludeNancyNamespace))            
+            }
+            else if ((mode == ScanMode.ExcludeNancyNamespace))
+            {
                 return returnTypes.Where(t => !t.FullName.StartsWith("Nancy"));
+            }
             else//mode == ScanMode.All
+            {
                 return returnTypes;
+            }
         }
 
         /// <summary>
