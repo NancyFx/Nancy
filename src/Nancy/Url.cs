@@ -13,7 +13,7 @@ namespace Nancy
         private string basePath;
 
         /// <summary>
-        /// Represents a URL made up of component parts
+        /// Creates an instance of the <see cref="Url" /> class
         /// </summary>
         public Url()
         {
@@ -23,6 +23,20 @@ namespace Nancy
             this.BasePath = String.Empty;
             this.Path = String.Empty;
             this.Query = String.Empty;
+        }
+
+        /// <summary>
+        /// Creates an instance of the <see cref="Url" /> class
+        /// </summary>
+        /// <param name="url">A <see cref="string" /> containing a URL.</param>
+        public Url(string url)
+        {
+            var uri = new Uri(url);
+            this.HostName = uri.Host;
+            this.Path = uri.LocalPath;
+            this.Port = uri.Port;
+            this.Query = uri.Query;
+            this.Scheme = uri.Scheme;
         }
 
         /// <summary>

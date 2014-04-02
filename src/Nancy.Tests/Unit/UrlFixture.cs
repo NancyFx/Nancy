@@ -267,6 +267,20 @@ namespace Nancy.Tests.Unit
             result.IsAbsoluteUri.ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_be_able_to_take_a_string_in_the_constructor()
+        {
+            //Given, When
+            var url = new Url("https://www.nancyfx.org:1234/base?foo=some text");
+
+            //Then
+            url.Scheme.ShouldEqual("https");
+            url.HostName.ShouldEqual("www.nancyfx.org");
+            url.Port.ShouldEqual(1234);
+            url.Path.ShouldEqual("/base");
+            url.Query.ShouldEqual("?foo=some%20text");
+        }
+        
         [Theory]
         [InlineData("https://www.nancyfx.org:1234/base?foo=some%20text", "https", "www.nancyfx.org", 1234, "/base", "?foo=some%20text")]
         [InlineData("http://nancyfx.org", "http", "nancyfx.org", 80, "/", "")]
