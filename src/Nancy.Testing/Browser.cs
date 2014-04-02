@@ -295,6 +295,7 @@ namespace Nancy.Testing
 
             var requestUrl = url;
             requestUrl.Scheme = string.IsNullOrWhiteSpace(contextValues.Protocol) ? requestUrl.Scheme : contextValues.Protocol;
+            requestUrl.HostName = string.IsNullOrWhiteSpace(contextValues.HostName) ? requestUrl.HostName : contextValues.HostName;
             requestUrl.Query = string.IsNullOrWhiteSpace(url.Query) ? (contextValues.QueryString ?? string.Empty) : url.Query;
 
             return new Request(method, requestUrl, requestStream, contextValues.Headers, contextValues.UserHostAddress, certBytes);

@@ -24,6 +24,7 @@
             this.Values.QueryString = String.Empty;
             this.Values.BodyString = String.Empty;
             this.Values.FormValues = String.Empty;
+            this.Values.HostName = String.Empty;
         }
 
         /// <summary>
@@ -42,6 +43,11 @@
         /// Gets or sets the querystring
         /// </summary>
         string IBrowserContextValues.QueryString { get; set; }
+
+        /// <summary>
+        /// Gets or sets the user host name
+        /// </summary>
+        string IBrowserContextValues.HostName { get; set; }
 
         /// <summary>
         /// Gets or sets the user host address
@@ -171,6 +177,15 @@
         public void UserHostAddress(string userHostAddress)
         {
             this.Values.UserHostAddress = userHostAddress;
+        }
+
+        /// <summary>
+        /// Sets the host name.
+        /// </summary>
+        /// <param name="hostName">is the host name of request url string</param>
+        public void HostName(string hostName)
+        {
+            this.Values.HostName = hostName;
         }
 
         /// <summary>
