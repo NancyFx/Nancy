@@ -1698,15 +1698,49 @@ namespace Nancy.Testing
                 return this;
             }
 
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteSegmentConstraint"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteSegmentConstraint"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteSegmentConstraint<T>() where T : IRouteSegmentConstraint
             {
                 this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type> { typeof(T) };
                 return this;
             }
 
+            /// <summary>
+            /// Configures the bootstrapper to use specific route segment constraints.
+            /// </summary>
+            /// <param name="types">Collection of route segment constraint types.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
             public ConfigurableBootstrapperConfigurator RouteSegmentConstraints(params Type[] types)
             {
                 this.bootstrapper.configuration.RouteSegmentConstraints = new List<Type>(types);
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IResponseNegotiator"/>.
+            /// </summary>
+            /// <param name="negotiator">The <see cref="IResponseNegotiator"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator(IResponseNegotiator negotiator)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IResponseNegotiator), negotiator));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IResponseNegotiator"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IResponseNegotiator"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator ResponseNegotiator<T>() where T : IResponseNegotiator
+            {
+                this.bootstrapper.configuration.ResponseNegotiator = typeof(T);
                 return this;
             }
 
