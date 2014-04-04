@@ -33,6 +33,7 @@ namespace Nancy.Bootstrapper
 
             this.RegistrationType = registrationType;
             this.ImplementationTypes = implementationTypes;
+            this.Lifetime = lifetime;
 
             this.ValidateTypeCompatibility(implementationTypes.ToArray());
         }

@@ -2,6 +2,7 @@ namespace Nancy.Bootstrapper
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     /// <summary>
     /// Nancy bootstrapper base with per-request container support.
@@ -22,6 +23,16 @@ namespace Nancy.Bootstrapper
         /// Stores the module registrations to be registered into the request container
         /// </summary>
         private IEnumerable<ModuleRegistration> moduleRegistrationTypeCache;
+
+        /// <summary>
+        /// Stores the per-request type registations
+        /// </summary>
+        private TypeRegistration[] RequestScopedTypes { get; set; }
+
+        /// <summary>
+        /// Stores the per-request collection registations
+        /// </summary>
+        private CollectionTypeRegistration[] RequestScopedCollectionTypes { get; set; }
 
         /// <summary>
         /// Gets the context key for storing the child container in the context
@@ -68,7 +79,7 @@ namespace Nancy.Bootstrapper
         /// <returns>An <see cref="IPipelines"/> instance.</returns>
         protected override sealed IPipelines InitializeRequestPipelines(NancyContext context)
         {
-            var requestContainer = 
+            var requestContainer =
                 this.GetConfiguredRequestContainer(context);
 
             var requestPipelines =
@@ -77,6 +88,41 @@ namespace Nancy.Bootstrapper
             this.RequestStartup(requestContainer, requestPipelines, context);
 
             return requestPipelines;
+        }
+
+        /// <summary>
+        /// Takes the registration tasks and calls the relevant methods to register them
+        /// </summary>
+        /// <param name="registrationTasks">Registration tasks</param>
+        protected override sealed void RegisterApplicationRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
+        {
+            foreach (var applicationRegistrationTask in registrationTasks.ToList())
+            {
+                var applicationTypeRegistrations = applicationRegistrationTask.TypeRegistrations == null ?
+                                                        new TypeRegistration[] { } :
+                                                        applicationRegistrationTask.TypeRegistrations.ToArray();
+
+                this.RegisterTypes(this.ApplicationContainer, applicationTypeRegistrations.Where(tr => tr.Lifetime != Lifetime.PerRequest));
+                this.RequestScopedTypes = applicationTypeRegistrations.Where(tr => tr.Lifetime == Lifetime.PerRequest)
+                                                                      .Select(tr => new TypeRegistration(tr.RegistrationType, tr.ImplementationType, Lifetime.Singleton))
+                                                                      .ToArray();
+
+                var applicationCollectionRegistrations = applicationRegistrationTask.CollectionTypeRegistrations == null ?
+                                                            new CollectionTypeRegistration[] { } :
+                                                            applicationRegistrationTask.CollectionTypeRegistrations.ToArray();
+
+                this.RegisterCollectionTypes(this.ApplicationContainer, applicationCollectionRegistrations.Where(tr => tr.Lifetime != Lifetime.PerRequest));
+                this.RequestScopedCollectionTypes = applicationCollectionRegistrations.Where(tr => tr.Lifetime == Lifetime.PerRequest)
+                                                      .Select(tr => new CollectionTypeRegistration(tr.RegistrationType, tr.ImplementationTypes, Lifetime.Singleton))
+                                                      .ToArray();
+
+                var applicationInstanceRegistrations = applicationRegistrationTask.InstanceRegistrations;
+
+                if (applicationInstanceRegistrations != null)
+                {
+                    this.RegisterInstances(this.ApplicationContainer, applicationInstanceRegistrations);
+                }
+            }
         }
 
         /// <summary>
