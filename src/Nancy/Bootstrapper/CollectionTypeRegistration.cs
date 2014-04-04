@@ -18,7 +18,8 @@ namespace Nancy.Bootstrapper
         /// </summary>
         /// <param name="registrationType">Registration type i.e. IMyInterface</param>
         /// <param name="implementationTypes">Collection of implementation type i.e. MyClassThatImplementsIMyInterface</param>
-        public CollectionTypeRegistration(Type registrationType, IEnumerable<Type> implementationTypes)
+        /// <param name="lifetime">Lifetime to register the type as</param>
+        public CollectionTypeRegistration(Type registrationType, IEnumerable<Type> implementationTypes, Lifetime lifetime = Lifetime.Singleton)
         {
             if (registrationType == null)
             {

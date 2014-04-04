@@ -119,6 +119,7 @@
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />
+    <Compile Include="Bootstrapper\Lifetime.cs" />
     <Compile Include="Bootstrapper\MultipleRootPathProvidersLocatedException.cs" />
     <Compile Include="Bootstrapper\NancyInternalConfiguration.cs" />
     <Compile Include="Bootstrapper\Pipelines.cs" />
