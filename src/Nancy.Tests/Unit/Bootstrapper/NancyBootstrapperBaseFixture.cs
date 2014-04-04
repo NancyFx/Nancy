@@ -156,7 +156,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             this.bootstrapper.Initialise();
 
             // Then
-            this.bootstrapper.TypeRegistrations.ShouldBeSameAs(typeRegistrations);
+            this.bootstrapper.ApplicationTypeRegistrations.ShouldBeSameAs(typeRegistrations);
         }
 
         [Fact]
@@ -250,7 +250,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public INancyEngine FakeNancyEngine { get; set; }
         public FakeContainer FakeContainer { get; set; }
         public FakeContainer AppContainer { get; set; }
-        public IEnumerable<TypeRegistration> TypeRegistrations { get; set; }
+        public IEnumerable<TypeRegistration> ApplicationTypeRegistrations { get; set; }
         public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; set; }
         public IEnumerable<InstanceRegistration> InstanceRegistrations { get; set; }
         public List<ModuleRegistration> PassedModules { get; set; }
@@ -341,7 +341,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
 
         protected override void RegisterTypes(FakeContainer container, IEnumerable<TypeRegistration> typeRegistrations)
         {
-            this.TypeRegistrations = typeRegistrations;
+            this.ApplicationTypeRegistrations = typeRegistrations;
         }
 
         protected override void RegisterCollectionTypes(FakeContainer container, IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)

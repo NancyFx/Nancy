@@ -127,6 +127,7 @@
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
     <Compile Include="Unit\Bootstrapper\CollectionTypeRegistrationFixture.cs" />
     <Compile Include="Unit\Bootstrapper\InstanceRegistrationFixture.cs" />
+    <Compile Include="Unit\Bootstrapper\NancyBootstrapperWithRequestContainerBaseFixture.cs" />
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
