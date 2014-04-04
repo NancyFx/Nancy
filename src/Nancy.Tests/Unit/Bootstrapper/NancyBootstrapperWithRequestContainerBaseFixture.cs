@@ -3,11 +3,13 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading;
 
     using FakeItEasy;
 
     using Nancy.Bootstrapper;
     using Nancy.Diagnostics;
+    using Nancy.Tests.Fakes;
 
     using Xunit;
 
@@ -99,14 +101,19 @@
                                     };
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionRegistrations);
+            A.CallTo(() => this.bootstrapper.FakeNancyEngine.HandleRequest(A.Dummy<Request>(), A.Dummy<Func<NancyContext, NancyContext>>(), A.Dummy<CancellationToken>()))
+                               .Invokes(foc => ((INancyEngine)foc.FakedObject).RequestPipelinesFactory.Invoke(new NancyContext()));
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.Initialise();
+            var engine = this.bootstrapper.GetEngine();
 
             // When
-            this.bootstrapper.Initialise();
+            engine.HandleRequest(new FakeRequest("GET", "/"));
 
             // Then
             this.bootstrapper.RequestCollectionTypeRegistrations.Any(tr => tr.RegistrationType == typeof(string) && tr.Lifetime == Lifetime.Singleton).ShouldBeTrue();
         }
+
         internal class FakeBootstrapper : NancyBootstrapperWithRequestContainerBase<FakeContainer>
         {
             public IDiagnostics FakeDiagnostics { get; set; }
@@ -202,14 +209,28 @@
                 FakeContainer container,
                 IEnumerable<TypeRegistration> typeRegistrations)
             {
-                this.ApplicationTypeRegistrations = typeRegistrations;
+                if (ReferenceEquals(container, this.AppContainer))
+                {
+                    this.ApplicationTypeRegistrations = typeRegistrations;
+                }
+                else
+                {
+                    this.RequestTypeRegistrations = typeRegistrations;
+                }
             }
 
             protected override void RegisterCollectionTypes(
                 FakeContainer container,
                 IEnumerable<CollectionTypeRegistration> collectionTypeRegistrations)
             {
-                this.ApplicationCollectionTypeRegistrations = collectionTypeRegistrations;
+                if (ReferenceEquals(container, this.AppContainer))
+                {
+                    this.ApplicationCollectionTypeRegistrations = collectionTypeRegistrations;
+                }
+                else
+                {
+                    this.RequestCollectionTypeRegistrations = collectionTypeRegistrations;
+                }
             }
 
             protected override FakeContainer CreateRequestContainer()

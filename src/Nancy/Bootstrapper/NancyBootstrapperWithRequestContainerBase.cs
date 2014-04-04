@@ -143,6 +143,9 @@ namespace Nancy.Bootstrapper
                 context.Items[this.ContextKey] = requestContainer;
 
                 this.ConfigureRequestContainer(requestContainer, context);
+
+                this.RegisterTypes(requestContainer, this.RequestScopedTypes);
+                this.RegisterCollectionTypes(requestContainer, this.RequestScopedCollectionTypes);
             }
 
             return requestContainer;
