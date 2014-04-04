@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
+    using System.Threading.Tasks;
 
     using FakeItEasy;
 
@@ -57,10 +58,14 @@
                                     };
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
+            var engine = new FakeEngine();
+            this.bootstrapper.FakeNancyEngine = engine;
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.Initialise();
 
             // When
-            this.bootstrapper.Initialise();
+            var builtEngine = this.bootstrapper.GetEngine();
+            builtEngine.HandleRequest(new FakeRequest("GET", "/"));
 
             // Then
             this.bootstrapper.RequestTypeRegistrations.Any(tr => tr.RegistrationType == typeof(string) && tr.Lifetime == Lifetime.Singleton).ShouldBeTrue();
@@ -101,17 +106,35 @@
                                     };
             var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionRegistrations);
-            A.CallTo(() => this.bootstrapper.FakeNancyEngine.HandleRequest(A.Dummy<Request>(), A.Dummy<Func<NancyContext, NancyContext>>(), A.Dummy<CancellationToken>()))
-                               .Invokes(foc => ((INancyEngine)foc.FakedObject).RequestPipelinesFactory.Invoke(new NancyContext()));
+            var engine = new FakeEngine();
+            this.bootstrapper.FakeNancyEngine = engine;
             this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
             this.bootstrapper.Initialise();
-            var engine = this.bootstrapper.GetEngine();
 
             // When
-            engine.HandleRequest(new FakeRequest("GET", "/"));
+            var builtEngine = this.bootstrapper.GetEngine();
+            builtEngine.HandleRequest(new FakeRequest("GET", "/"));
 
             // Then
             this.bootstrapper.RequestCollectionTypeRegistrations.Any(tr => tr.RegistrationType == typeof(string) && tr.Lifetime == Lifetime.Singleton).ShouldBeTrue();
+        }
+
+        internal class FakeEngine : INancyEngine
+        {
+            public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
+
+            public Task<NancyContext> HandleRequest(Request request, Func<NancyContext, NancyContext> preRequest, CancellationToken cancellationToken)
+            {
+                var tcs = new TaskCompletionSource<NancyContext>();
+
+                var nancyContext = new NancyContext() { Request = request };
+
+                this.RequestPipelinesFactory.Invoke(nancyContext);
+
+                tcs.SetResult(nancyContext);
+                
+                return tcs.Task;
+            }
         }
 
         internal class FakeBootstrapper : NancyBootstrapperWithRequestContainerBase<FakeContainer>
