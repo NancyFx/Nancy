@@ -1,9 +1,15 @@
 ﻿namespace Nancy.Tests.Unit
 {
+    using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.CodeDom.Compiler;
+
+    using FakeItEasy;
+
     using Microsoft.CSharp;
 
+    using Nancy.Bootstrapper;
     using Nancy.Tests.Fakes;
     using Nancy.TinyIoc;
     
@@ -83,5 +89,63 @@
                 () => this.bootstrapper.Container.Resolve(ass.GetType("IWillNotBeResolved")));
             
         }
+
+        [Fact]
+        public void Should_honour_registration_lifetimes()
+        {
+            // Given
+            this.bootstrapper.OverriddenRegistrationTasks = new [] { typeof(FakeRegistrations) };
+
+            // When
+            this.bootstrapper.Initialise();
+            var instance1 = this.bootstrapper.Container.Resolve<IMultiInstance>();
+            var instance2 = this.bootstrapper.Container.Resolve<IMultiInstance>();
+
+            // Then
+            ReferenceEquals(instance1, instance2).ShouldBeFalse();
+        }
+
+        [Fact]
+        public void Should_honour_collection_registration_lifetimes()
+        {
+            this.bootstrapper.OverriddenRegistrationTasks = new[] { typeof(FakeRegistrations) };
+
+            // When
+            this.bootstrapper.Initialise();
+            var instance1 = this.bootstrapper.Container.ResolveAll<IMultiInstance>(false);
+            var instance2 = this.bootstrapper.Container.ResolveAll<IMultiInstance>(false);
+
+            // Then
+            ReferenceEquals(instance1.Single(), instance2.Single()).ShouldBeFalse();
+        }
+    }
+
+    public class FakeRegistrations : IRegistrations
+    {
+        public IEnumerable<TypeRegistration> TypeRegistrations { get; private set; }
+
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
+
+        public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
+
+        public FakeRegistrations()
+        {
+            this.TypeRegistrations = new[] { new TypeRegistration(typeof(IMultiInstance), typeof(MultiInstance), Lifetime.Transient) };
+            this.CollectionTypeRegistrations = new[]
+                                               {
+                                                   new CollectionTypeRegistration(
+                                                       typeof(IMultiInstance),
+                                                       new[] { typeof(MultiInstance) },
+                                                       Lifetime.Transient)
+                                               };
+        }
+    }
+
+    public class MultiInstance : IMultiInstance
+    {
+    }
+
+    public interface IMultiInstance
+    {
     }
 }
