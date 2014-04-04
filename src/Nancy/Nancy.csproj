@@ -110,12 +110,13 @@
     </Compile>
     <Compile Include="AsyncNamedPipelineBase.cs" />
     <Compile Include="Bootstrapper\AppDomainAssemblyTypeScanner.cs" />
-    <Compile Include="Bootstrapper\ApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\Registrations.cs" />
     <Compile Include="Bootstrapper\BootstrapperException.cs" />
     <Compile Include="Bootstrapper\CollectionTypeRegistration.cs" />
     <Compile Include="Bootstrapper\ContainerRegistration.cs" />
     <Compile Include="Bootstrapper\FavIconApplicationStartup.cs" />
-    <Compile Include="Bootstrapper\IApplicationRegistrations.cs" />
+    <Compile Include="Bootstrapper\IRegistrations.cs" />
     <Compile Include="Bootstrapper\IPipelines.cs" />
     <Compile Include="Bootstrapper\InstanceRegistration.cs" />
     <Compile Include="Bootstrapper\IApplicationStartup.cs" />

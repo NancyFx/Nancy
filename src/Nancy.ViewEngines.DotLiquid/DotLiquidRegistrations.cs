@@ -9,12 +9,12 @@
     ///
     /// This can be overridden in a bootstrapper.
     /// </summary>
-    public class DotLiquidApplicationRegistrations : ApplicationRegistrations
+    public class DotLiquidRegistrations : Registrations
     {
         /// <summary>
         /// Register the <c>RubyNamingConvention</c> as the default.
         /// </summary>
-        public DotLiquidApplicationRegistrations()
+        public DotLiquidRegistrations()
         {
             this.RegisterWithDefault<INamingConvention>(typeof(RubyNamingConvention));
         }

@@ -7,7 +7,7 @@
     /// <summary>
     /// Helper class for providing application registrations
     /// </summary>
-    public abstract class ApplicationRegistrations : IApplicationRegistrations
+    public abstract class Registrations : IRegistrations
     {
         private readonly IList<CollectionTypeRegistration> collectionRegistrations = new List<CollectionTypeRegistration>();
         private readonly IList<InstanceRegistration> instanceRegistrations = new List<InstanceRegistration>();
@@ -104,7 +104,7 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementation">The implementation of <typeparamref name="TRegistration"/> that will be use if no other implementation can be found.</param>
         /// <remarks>
-        /// When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in and it will also ignore
+        /// When scanning, it will exclude the assembly that the <see cref="Registrations"/> instance is defined in and it will also ignore
         /// the type specified by <paramref name="defaultImplementation"/>.
         /// </remarks>
         public void RegisterWithDefault<TRegistration>(Type defaultImplementation)
@@ -124,7 +124,7 @@
         /// </summary>
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementationFactory">Factory that provides an instance of <typeparamref name="TRegistration"/>.</param>
-        /// <remarks>When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in</remarks>
+        /// <remarks>When scanning, it will exclude the assembly that the <see cref="Registrations"/> instance is defined in</remarks>
         public void RegisterWithDefault<TRegistration>(Func<TRegistration> defaultImplementationFactory)
         {
             var implementation = AppDomainAssemblyTypeScanner
@@ -148,7 +148,7 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementations">The types to register if non could be located while scanning.</param>
         /// <remarks>
-        /// When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in and it will also ignore
+        /// When scanning, it will exclude the assembly that the <see cref="Registrations"/> instance is defined in and it will also ignore
         /// the types specified by <paramref name="defaultImplementations"/>.
         /// </remarks>
         public void RegisterWithDefault<TRegistration>(IEnumerable<Type> defaultImplementations)
@@ -174,7 +174,7 @@
         /// <typeparam name="TRegistration">The <see cref="Type"/> to register as.</typeparam>
         /// <param name="defaultImplementations">The types to register last.</param>
         /// <remarks>
-        /// When scanning, it will exclude the assembly that the <see cref="ApplicationRegistrations"/> instance is defined in and it will also ignore
+        /// When scanning, it will exclude the assembly that the <see cref="Registrations"/> instance is defined in and it will also ignore
         /// the types specified by <paramref name="defaultImplementations"/>.
         /// </remarks>
         public void RegisterWithUserThenDefault<TRegistration>(IEnumerable<Type> defaultImplementations)

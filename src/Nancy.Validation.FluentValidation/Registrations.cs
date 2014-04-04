@@ -7,7 +7,7 @@ namespace Nancy.Validation.FluentValidation
     /// <summary>
     /// Application registrations for Fluent Validation types.
     /// </summary>
-    public class Registrations : ApplicationRegistrations
+    public class Registrations : Bootstrapper.Registrations
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Registrations"/> class, that performs

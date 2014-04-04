@@ -5,7 +5,7 @@ namespace Nancy.Validation.DataAnnotations
     /// <summary>
     /// Application registrations for Data Annotations validation types.
     /// </summary>
-    public class Registrations : ApplicationRegistrations
+    public class Registrations : Bootstrapper.Registrations
     {
         /// <summary>
         /// Creates a new instance of the <see cref="Registrations"/> class, that performs

@@ -30,9 +30,9 @@
                                         new TypeRegistration(typeof(FakeBootstrapperBaseImplementation), typeof(FakeBootstrapperBaseImplementation), Lifetime.Transient),
                                         new TypeRegistration(typeof(string), typeof(string), Lifetime.PerRequest),
                                     };
-            var startupStub = A.Fake<IApplicationRegistrations>();
+            var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
-            this.bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
 
             // When
             this.bootstrapper.Initialise();
@@ -53,9 +53,9 @@
                                         new TypeRegistration(typeof(FakeBootstrapperBaseImplementation), typeof(FakeBootstrapperBaseImplementation), Lifetime.Transient),
                                         new TypeRegistration(typeof(string), typeof(string), Lifetime.PerRequest),
                                     };
-            var startupStub = A.Fake<IApplicationRegistrations>();
+            var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.TypeRegistrations).Returns(typeRegistrations);
-            this.bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
 
             // When
             this.bootstrapper.Initialise();
@@ -74,9 +74,9 @@
                                         new CollectionTypeRegistration(typeof(FakeBootstrapperBaseImplementation), new[] { typeof(FakeBootstrapperBaseImplementation) }, Lifetime.Transient),
                                         new CollectionTypeRegistration(typeof(string), new[] { typeof(string) }, Lifetime.PerRequest),
                                     };
-            var startupStub = A.Fake<IApplicationRegistrations>();
+            var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionRegistrations);
-            this.bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
 
             // When
             this.bootstrapper.Initialise();
@@ -97,9 +97,9 @@
                                         new CollectionTypeRegistration(typeof(FakeBootstrapperBaseImplementation), new[] { typeof(FakeBootstrapperBaseImplementation) }, Lifetime.Transient),
                                         new CollectionTypeRegistration(typeof(string), new[] { typeof(string) }, Lifetime.PerRequest),
                                     };
-            var startupStub = A.Fake<IApplicationRegistrations>();
+            var startupStub = A.Fake<IRegistrations>();
             A.CallTo(() => startupStub.CollectionTypeRegistrations).Returns(collectionRegistrations);
-            this.bootstrapper.OverriddenApplicationRegistrationTasks = new[] { startupStub };
+            this.bootstrapper.OverriddenRegistrationTasks = new[] { startupStub };
 
             // When
             this.bootstrapper.Initialise();
@@ -131,7 +131,7 @@
 
             public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
 
-            public IApplicationRegistrations[] OverriddenApplicationRegistrationTasks { get; set; }
+            public IRegistrations[] OverriddenRegistrationTasks { get; set; }
 
             public bool ShouldThrowWhenGettingEngine { get; set; }
 
@@ -172,10 +172,10 @@
             /// <summary>
             /// Gets all registered application registration tasks
             /// </summary>
-            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationRegistrations"/> instances.</returns>
-            protected override IEnumerable<IApplicationRegistrations> GetApplicationRegistrationTasks()
+            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
+            protected override IEnumerable<IRegistrations> GetApplicationRegistrationTasks()
             {
-                return this.OverriddenApplicationRegistrationTasks ?? new IApplicationRegistrations[] { };
+                return this.OverriddenRegistrationTasks ?? new IRegistrations[] { };
             }
 
             protected override void ConfigureApplicationContainer(FakeContainer existingContainer)
