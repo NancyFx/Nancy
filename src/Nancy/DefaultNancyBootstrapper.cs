@@ -97,7 +97,20 @@ namespace Nancy
         {
             foreach (var typeRegistration in typeRegistrations)
             {
-                container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                switch (typeRegistration.Lifetime)
+                {
+                    case Lifetime.Transient:
+                        container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsMultiInstance();
+                        break;
+                    case Lifetime.Singleton:
+                        container.Register(typeRegistration.RegistrationType, typeRegistration.ImplementationType).AsSingleton();
+                        break;
+                    case Lifetime.PerRequest:
+                        throw new InvalidOperationException("Unable to directly register a per request lifetime.");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -111,7 +124,20 @@ namespace Nancy
         {
             foreach (var collectionTypeRegistration in collectionTypeRegistrationsn)
             {
-                container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes);
+                switch (collectionTypeRegistration.Lifetime)
+                {
+                    case Lifetime.Transient:
+                        container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes).AsMultiInstance();
+                        break;
+                    case Lifetime.Singleton:
+                        container.RegisterMultiple(collectionTypeRegistration.RegistrationType, collectionTypeRegistration.ImplementationTypes).AsSingleton();
+                        break;
+                    case Lifetime.PerRequest:
+                        throw new InvalidOperationException("Unable to directly register a per request lifetime.");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
             }
         }
 
@@ -125,7 +151,7 @@ namespace Nancy
             foreach (var moduleRegistrationType in moduleRegistrationTypes)
             {
                 container.Register(
-                    typeof(INancyModule), 
+                    typeof(INancyModule),
                     moduleRegistrationType.ModuleType,
                     moduleRegistrationType.ModuleType.FullName).
                     AsSingleton();
@@ -142,7 +168,7 @@ namespace Nancy
             foreach (var instanceRegistration in instanceRegistrations)
             {
                 container.Register(
-                    instanceRegistration.RegistrationType, 
+                    instanceRegistration.RegistrationType,
                     instanceRegistration.Implementation);
             }
         }

@@ -163,9 +163,9 @@
         }
 
         /// <summary>
-        /// Gets all application registration tasks
+        /// Gets all registration tasks
         /// </summary>
-        protected virtual IEnumerable<Type> ApplicationRegistrationTasks
+        protected virtual IEnumerable<Type> RegistrationTasks
         {
             get { return AppDomainAssemblyTypeScanner.TypesOf<IRegistrations>(); }
         }
@@ -551,7 +551,7 @@
                     new CollectionTypeRegistration(typeof(ITypeConverter), this.TypeConverters),
                     new CollectionTypeRegistration(typeof(IBodyDeserializer), this.BodyDeserializers),
                     new CollectionTypeRegistration(typeof(IApplicationStartup), this.ApplicationStartupTasks), 
-                    new CollectionTypeRegistration(typeof(IRegistrations), this.ApplicationRegistrationTasks), 
+                    new CollectionTypeRegistration(typeof(IRegistrations), this.RegistrationTasks), 
                     new CollectionTypeRegistration(typeof(IModelValidatorFactory), this.ModelValidatorFactories)
                 };
         }
