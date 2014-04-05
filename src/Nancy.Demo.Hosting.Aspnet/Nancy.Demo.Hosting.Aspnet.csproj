@@ -196,6 +196,7 @@
     <None Include="Views\anon.spark" />
     <Content Include="Views\csrf.cshtml" />
     <Content Include="Views\razor-strong.cshtml" />
+    <Content Include="Views\razor-divzero.cshtml" />
     <None Include="Views\razor-strong.vbhtml" />
     <None Include="Views\dot.liquid" />
     <Content Include="Views\razor-dependency.cshtml" />

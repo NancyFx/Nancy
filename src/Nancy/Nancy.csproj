@@ -199,6 +199,7 @@
     <Compile Include="Jsonp.cs" />
     <Compile Include="JsonpApplicationStartup.cs" />
     <Compile Include="RequestExecutionException.cs" />
+    <Compile Include="Responses\MaterialisingResponse.cs" />
     <Compile Include="Responses\NegotiatedResponse.cs" />
     <Compile Include="Responses\Negotiation\DefaultResponseNegotiator.cs" />
     <Compile Include="Responses\Negotiation\IResponseNegotiator.cs" />

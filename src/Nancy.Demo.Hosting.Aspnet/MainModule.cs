@@ -70,6 +70,12 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["razor.cshtml", model];
             };
 
+            Get["/razor-divzero"] = x =>
+            {
+                var model = new { FirstName = "Frank", Number = 22 };
+                return View["razor-divzero.cshtml", model];
+            };
+
             Get["/razorError"] = x =>
             {
                 var model = new RatPack { FirstName = "Frank" };
