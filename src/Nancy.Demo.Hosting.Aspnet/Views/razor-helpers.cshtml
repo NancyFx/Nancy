@@ -1,0 +1,17 @@
+﻿<html>
+    <head>
+        <title>Razor View Engine Demo</title>
+    </head>
+    <body>
+        <h1>CSharp razor helpers</h1>
+    
+        @Render("Render from page helper")
+    
+        @CodeHelper.Render("Hello world")
+    </body>
+</html>
+
+@helper Render(string text)
+{
+    <p>@text</p>
+}
