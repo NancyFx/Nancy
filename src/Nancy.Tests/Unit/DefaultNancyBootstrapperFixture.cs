@@ -27,26 +27,32 @@
         [Fact]
         public void Should_only_initialise_request_container_once_per_request()
         {
+            // Given
             this.bootstrapper.Initialise();
             var engine = this.bootstrapper.GetEngine();
             var request = new FakeRequest("GET", "/");
             var request2 = new FakeRequest("GET", "/");
 
+            // When
             engine.HandleRequest(request);
             engine.HandleRequest(request2);
 
+            // Then
             bootstrapper.RequestContainerInitialisations.Any(kvp => kvp.Value > 1).ShouldBeFalse();
         }
 
         [Fact]
         public void Request_should_be_available_to_configure_request_container()
         {
+            // Given
             this.bootstrapper.Initialise();
             var engine = this.bootstrapper.GetEngine();
             var request = new FakeRequest("GET", "/");
 
+            // When
             engine.HandleRequest(request);
 
+            // Then
             this.bootstrapper.ConfigureRequestContainerLastRequest.ShouldNotBeNull();
             this.bootstrapper.ConfigureRequestContainerLastRequest.ShouldBeSameAs(request);
         }
@@ -54,12 +60,15 @@
         [Fact]
         public void Request_should_be_available_to_request_startup()
         {
+            // Given
             this.bootstrapper.Initialise();
             var engine = this.bootstrapper.GetEngine();
             var request = new FakeRequest("GET", "/");
 
+            // When
             engine.HandleRequest(request);
 
+            // Then
             this.bootstrapper.RequestStartupLastRequest.ShouldNotBeNull();
             this.bootstrapper.RequestStartupLastRequest.ShouldBeSameAs(request);
         }
@@ -67,6 +76,7 @@
         [Fact]
         public void Container_should_ignore_specified_assemblies()
         {
+            // Given
             var ass = CSharpCodeProvider
                 .CreateProvider("CSharp")
                 .CompileAssemblyFromSource(
@@ -84,10 +94,12 @@
                     })
                 .CompiledAssembly;
 
+            // When
             this.bootstrapper.Initialise ();
+
+            // Then
             Assert.Throws<TinyIoCResolutionException>(
                 () => this.bootstrapper.Container.Resolve(ass.GetType("IWillNotBeResolved")));
-            
         }
 
         [Fact]
@@ -108,6 +120,7 @@
         [Fact]
         public void Should_honour_collection_registration_lifetimes()
         {
+            // Given
             this.bootstrapper.OverriddenRegistrationTasks = new[] { typeof(FakeRegistrations) };
 
             // When
