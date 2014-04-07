@@ -5,13 +5,13 @@ namespace Nancy.Validation.DataAnnotations
     /// <summary>
     /// Application registrations for Data Annotations validation types.
     /// </summary>
-    public class Registrations : Bootstrapper.Registrations
+    public class DataAnnotationsRegistrations : Registrations
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="Registrations"/> class, that performs
+        /// Creates a new instance of the <see cref="DataAnnotationsRegistrations"/> class, that performs
         /// the default registrations of the Data Annotations types.
         /// </summary>
-        public Registrations()
+        public DataAnnotationsRegistrations()
         {
             this.Register<IModelValidator>(typeof(DataAnnotationsValidator));
             this.RegisterAll<IDataAnnotationsValidatorAdapter>();
