@@ -7,13 +7,13 @@ namespace Nancy.Validation.FluentValidation
     /// <summary>
     /// Application registrations for Fluent Validation types.
     /// </summary>
-    public class Registrations : Bootstrapper.Registrations
+    public class FluentValidationRegistrations : Bootstrapper.Registrations
     {
         /// <summary>
-        /// Creates a new instance of the <see cref="Registrations"/> class, that performs
+        /// Creates a new instance of the <see cref="FluentValidationRegistrations"/> class, that performs
         /// the default registrations of the Fluent Validation types.
         /// </summary>
-        public Registrations()
+        public FluentValidationRegistrations()
         {
             this.Register<IModelValidator>(typeof(FluentValidationValidator));
             this.Register<IFluentAdapterFactory>(typeof(DefaultFluentAdapterFactory));
