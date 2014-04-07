@@ -26,6 +26,7 @@ namespace Nancy.Bootstrapper
 
             this.RegistrationType = registrationType;
             this.Implementation = implementation;
+            this.Lifetime = Lifetime.Singleton;
 
             this.ValidateTypeCompatibility(implementation.GetType());
         }

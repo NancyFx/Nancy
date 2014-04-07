@@ -102,7 +102,7 @@
     </Compile>
     <Compile Include="AdapterBase.cs" />
     <Compile Include="FallbackAdapter.cs" />
-    <Compile Include="Registrations.cs" />
+    <Compile Include="FluentValidationRegistrations.cs" />
     <Compile Include="DefaultFluentAdapterFactory.cs" />
     <Compile Include="EmailAdapter.cs" />
     <Compile Include="EqualAdapter.cs" />

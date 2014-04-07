@@ -998,6 +998,34 @@ namespace Nancy.TinyIoc
                 return this;
             }
 
+            /// <summary>
+            /// Switches to a custom lifetime manager factory if possible.
+            /// 
+            /// Usually used for RegisterOptions "To*" extension methods such as the ASP.Net per-request one.
+            /// </summary>
+            /// <param name="instance">MultiRegisterOptions instance</param>
+            /// <param name="lifetimeProvider">Custom lifetime manager</param>
+            /// <param name="errorString">Error string to display if switch fails</param>
+            /// <returns>MultiRegisterOptions</returns>
+            public static MultiRegisterOptions ToCustomLifetimeManager(
+                MultiRegisterOptions instance,
+                ITinyIoCObjectLifetimeProvider lifetimeProvider,
+                string errorString)
+            {
+                if (instance == null)
+                    throw new ArgumentNullException("instance", "instance is null.");
+
+                if (lifetimeProvider == null)
+                    throw new ArgumentNullException("lifetimeProvider", "lifetimeProvider is null.");
+
+                if (String.IsNullOrEmpty(errorString))
+                    throw new ArgumentException("errorString is null or empty.", "errorString");
+
+                instance._RegisterOptions = instance.ExecuteOnAllRegisterOptions(ro => RegisterOptions.ToCustomLifetimeManager(ro, lifetimeProvider, errorString));
+
+                return instance;
+            }
+
             private IEnumerable<RegisterOptions> ExecuteOnAllRegisterOptions(Func<RegisterOptions, RegisterOptions> action)
             {
                 var newRegisterOptions = new List<RegisterOptions>();

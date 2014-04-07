@@ -10,6 +10,11 @@ namespace Nancy.Bootstrapper
     public abstract class ContainerRegistration
     {
         /// <summary>
+        /// Gets the lifetime of the registration
+        /// </summary>
+        public Lifetime Lifetime { get; protected set; }
+
+        /// <summary>
         /// Registration type i.e. IMyInterface
         /// </summary>
         public Type RegistrationType { get; protected set; }
