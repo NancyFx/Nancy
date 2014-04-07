@@ -252,7 +252,7 @@
             this.RegisterCollectionTypes(this.ApplicationContainer, collectionTypeRegistrations);
             this.RegisterModules(this.ApplicationContainer, this.Modules);
             this.RegisterInstances(this.ApplicationContainer, instanceRegistrations);
-            this.RegisterApplicationRegistrationTasks(this.GetApplicationRegistrationTasks());
+            this.RegisterRegistrationTasks(this.GetRegistrationTasks());
 
             foreach (var applicationStartupTask in this.GetApplicationStartupTasks().ToList())
             {
@@ -309,7 +309,7 @@
         /// Gets all registered application registration tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
-        protected abstract IEnumerable<IRegistrations> GetApplicationRegistrationTasks();
+        protected abstract IEnumerable<IRegistrations> GetRegistrationTasks();
 
         /// <summary>
         /// Get all NancyModule implementation instances
@@ -574,25 +574,25 @@
         /// Takes the registration tasks and calls the relevant methods to register them
         /// </summary>
         /// <param name="registrationTasks">Registration tasks</param>
-        protected virtual void RegisterApplicationRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
+        protected virtual void RegisterRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
         {
-            foreach (var applicationRegistrationTask in registrationTasks.ToList())
+            foreach (var registrationTask in registrationTasks.ToList())
             {
-                var applicationTypeRegistrations = applicationRegistrationTask.TypeRegistrations;
+                var applicationTypeRegistrations = registrationTask.TypeRegistrations;
 
                 if (applicationTypeRegistrations != null)
                 {
                     this.RegisterTypes(this.ApplicationContainer, applicationTypeRegistrations);
                 }
 
-                var applicationCollectionRegistrations = applicationRegistrationTask.CollectionTypeRegistrations;
+                var applicationCollectionRegistrations = registrationTask.CollectionTypeRegistrations;
 
                 if (applicationCollectionRegistrations != null)
                 {
                     this.RegisterCollectionTypes(this.ApplicationContainer, applicationCollectionRegistrations);
                 }
 
-                var applicationInstanceRegistrations = applicationRegistrationTask.InstanceRegistrations;
+                var applicationInstanceRegistrations = registrationTask.InstanceRegistrations;
 
                 if (applicationInstanceRegistrations != null)
                 {

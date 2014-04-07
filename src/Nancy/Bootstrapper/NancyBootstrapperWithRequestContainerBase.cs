@@ -94,7 +94,7 @@ namespace Nancy.Bootstrapper
         /// Takes the registration tasks and calls the relevant methods to register them
         /// </summary>
         /// <param name="registrationTasks">Registration tasks</param>
-        protected override sealed void RegisterApplicationRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
+        protected override sealed void RegisterRegistrationTasks(IEnumerable<IRegistrations> registrationTasks)
         {
             foreach (var applicationRegistrationTask in registrationTasks.ToList())
             {

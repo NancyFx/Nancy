@@ -204,7 +204,7 @@ namespace Nancy
         /// Gets all registered application registration tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRegistrations"/> instances.</returns>
-        protected override IEnumerable<IRegistrations> GetApplicationRegistrationTasks()
+        protected override IEnumerable<IRegistrations> GetRegistrationTasks()
         {
             return this.ApplicationContainer.ResolveAll<IRegistrations>(false);
         }
