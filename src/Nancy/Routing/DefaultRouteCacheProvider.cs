@@ -68,6 +68,7 @@
                 this.cacheProvider = cacheProvider;
             }
 
+            // ReSharper disable once UnusedMember.Local
             public IDictionary<string, IList<object>> GetAllRoutes()
             {
                 var result = new Dictionary<string, IList<object>>();
