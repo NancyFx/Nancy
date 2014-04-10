@@ -11,10 +11,11 @@ namespace Nancy.Routing
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteDescription"/> class.
         /// </summary>
+        /// <param name="name">Route name</param>
         /// <param name="method">The request method of the route.</param>
         /// <param name="path">The path that the route will be invoked for.</param>
         /// <param name="condition">The condition that has to be fulfilled for the route to be a valid match.</param>
-        public RouteDescription(string method, string path, Func<NancyContext, bool> condition)
+        public RouteDescription(string name, string method, string path, Func<NancyContext, bool> condition)
         {
             if (String.IsNullOrEmpty(method))
             {
@@ -26,10 +27,16 @@ namespace Nancy.Routing
                 throw new ArgumentException("Path must be specified", method);
             }
 
+            this.Name = name;
             this.Method = method;
             this.Path = path;
             this.Condition = condition;
         }
+
+        /// <summary>
+        /// The name of the route
+        /// </summary>
+        public string Name { get; set; }
 
         /// <summary>
         /// The condition that has to be fulfilled inorder for the route to be a valid match.
