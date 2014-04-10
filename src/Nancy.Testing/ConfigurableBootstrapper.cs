@@ -1262,6 +1262,61 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to use the provided instance of <see cref="IRouteMetadataProvider"/>.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> instance that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProvider(IRouteMetadataProvider routeMetadataProviders)
+            {
+                this.bootstrapper.registeredInstances.Add(
+                    new InstanceRegistration(typeof(IRouteMetadataProvider), routeMetadataProviders));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IRouteMetadataProvider"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IRouteMetadataProvider"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProvider<T>() where T : IRouteMetadataProvider
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IRouteMetadataProvider), new[] { typeof(T) }));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided <see cref="IRouteMetadataProvider"/> types.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProviders(params Type[] routeMetadataProviders)
+            {
+                this.bootstrapper.registeredTypes.Add(
+                    new CollectionTypeRegistration(typeof(IRouteMetadataProvider), routeMetadataProviders));
+
+                return this;
+            }
+
+            /// <summary>
+            /// Configures the bootstrapper to use the provided instances of <see cref="IRouteMetadataProvider"/>.
+            /// </summary>
+            /// <param name="routeMetadataProviders">The <see cref="IRouteMetadataProvider"/> types that should be used by the bootstrapper.</param>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator RouteMetadataProviders(params IRouteMetadataProvider[] routeMetadataProviders)
+            {
+                foreach (var routeMetadataProvider in routeMetadataProviders)
+                {
+                    this.bootstrapper.registeredTypes.Add(
+                        new InstanceRegistration(typeof(IRouteMetadataProvider), routeMetadataProvider));
+                }
+
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to create an <see cref="IRouteSegmentExtractor"/> instance of the specified type.
             /// </summary>
             /// <typeparam name="T">The type of the <see cref="IRouteSegmentExtractor"/> that the bootstrapper should use.</typeparam>

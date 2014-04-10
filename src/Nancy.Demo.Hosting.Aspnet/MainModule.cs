@@ -14,6 +14,13 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["routes", routeCacheProvider.GetCache()];
             };
 
+            Get["/meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyRouteMetadata>())
+                    .WithView("meta");
+            };
+
             Get["/text"] = x =>
             {
                 var value = (string)this.Text.Home;

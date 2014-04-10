@@ -10,6 +10,7 @@
     using Nancy.Diagnostics;
     using Nancy.ModelBinding;
     using Nancy.Responses.Negotiation;
+    using Nancy.Routing;
     using Nancy.Routing.Constraints;
     using Nancy.Testing;
     using Nancy.Tests; //While this directive is redundant, it's required to build on mono 2.x to allow it to resolve the Should* extension methods
@@ -41,6 +42,7 @@
             private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
             private readonly ICultureService cultureService;
             private readonly IRequestTraceFactory requestTraceFactory;
+            private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
             public FakeDiagnostics(
                 DiagnosticsConfiguration diagnosticsConfiguration,
@@ -51,7 +53,8 @@
                 IEnumerable<IResponseProcessor> responseProcessors,
                 IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
                 ICultureService cultureService,
-                IRequestTraceFactory requestTraceFactory)
+                IRequestTraceFactory requestTraceFactory,
+                IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
             {
                 this.diagnosticsConfiguration = diagnosticsConfiguration;
                 this.diagnosticProviders = (new IDiagnosticsProvider[] { new FakeDiagnosticsProvider() }).ToArray();
@@ -63,6 +66,7 @@
                 this.routeSegmentConstraints = routeSegmentConstraints;
                 this.cultureService = cultureService;
                 this.requestTraceFactory = requestTraceFactory;
+                this.routeMetadataProviders = routeMetadataProviders;
             }
 
             public void Initialize(IPipelines pipelines)
@@ -77,7 +81,8 @@
                     this.responseProcessors,
                     this.routeSegmentConstraints,
                     this.cultureService,
-                    this.requestTraceFactory);
+                    this.requestTraceFactory,
+                    this.routeMetadataProviders);
             }
         }
 

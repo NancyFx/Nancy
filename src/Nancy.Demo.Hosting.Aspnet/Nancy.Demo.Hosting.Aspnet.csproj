@@ -141,6 +141,7 @@
     </Compile>
     <Compile Include="ApplicationDependencyClass.cs" />
     <Compile Include="CustomStatusHandler.cs" />
+    <Compile Include="DefaultRouteMetadataProvider.cs" />
     <Compile Include="HereBeAResponseYouScurvyDog.cs" />
     <Compile Include="DemoBootstrapper.cs" />
     <Compile Include="DependencyModule.cs" />
@@ -202,6 +203,7 @@
     <Content Include="Views\razor-dependency.cshtml" />
     <Content Include="Views\razor-simple.cshtml" />
     <None Include="Views\nustache.nustache" />
+    <Content Include="Views\meta.cshtml" />
     <None Include="Views\routes.cshtml" />
     <None Include="Views\spark.spark" />
     <None Include="Views\ssve.sshtml" />

@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using ModelBinding;
     using Nancy.Bootstrapper;
+    using Nancy.Routing;
     using Nancy.Routing.Constraints;
 
     using Responses.Negotiation;
@@ -23,6 +24,7 @@
         private readonly IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints;
         private readonly ICultureService cultureService;
         private readonly IRequestTraceFactory requestTraceFactory;
+        private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
 
         /// <summary>
         /// Creates a new instance of the <see cref="DefaultDiagnostics"/> class.
@@ -47,7 +49,8 @@
             IEnumerable<IResponseProcessor> responseProcessors,
             IEnumerable<IRouteSegmentConstraint> routeSegmentConstraints,
             ICultureService cultureService,
-            IRequestTraceFactory requestTraceFactory)
+            IRequestTraceFactory requestTraceFactory,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.diagnosticsConfiguration = diagnosticsConfiguration;
             this.diagnosticProviders = diagnosticProviders;
@@ -59,6 +62,7 @@
             this.routeSegmentConstraints = routeSegmentConstraints;
             this.cultureService = cultureService;
             this.requestTraceFactory = requestTraceFactory;
+            this.routeMetadataProviders = routeMetadataProviders;
         }
 
         /// <summary>
@@ -77,7 +81,8 @@
                 this.responseProcessors,
                 this.routeSegmentConstraints,
                 this.cultureService,
-                this.requestTraceFactory);
+                this.requestTraceFactory,
+                this.routeMetadataProviders);
         }
     }
 }
