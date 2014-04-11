@@ -255,10 +255,6 @@ namespace Nancy.Bootstrapper
                 }
             }
 
-
-            UpdateTypes();
-
-           
             UpdateTypes();
 
             nancyReferencingAssembliesLoaded = true;
