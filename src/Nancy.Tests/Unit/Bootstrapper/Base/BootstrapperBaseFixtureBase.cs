@@ -95,8 +95,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             this.Bootstrapper.Initialise();
             
             // When
-            var result1 = this.Bootstrapper.GetEngine() as FakeEngine;
-            var result2 = this.Bootstrapper.GetEngine() as FakeEngine;
+            var result1 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+            var result2 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
 
             // Then
             result1.Singleton.ShouldBeSameAs(result2.Singleton);
@@ -109,8 +109,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             this.Bootstrapper.Initialise();
 
             // When
-            var result1 = this.Bootstrapper.GetEngine() as FakeEngine;
-            var result2 = this.Bootstrapper.GetEngine() as FakeEngine;
+            var result1 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
+            var result2 = ((TestDependencyModule)this.Bootstrapper.GetModule(typeof(TestDependencyModule), new NancyContext()));
 
             // Then
             result1.Transient.ShouldNotBeSameAs(result2.Transient);
@@ -137,10 +137,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 get { return this.resolver; }
             }
 
-            public Singleton Singleton { get; set; }
-
-            public Transient Transient { get; set; }
-
             public Func<NancyContext, Response> PreRequestHook { get; set; }
 
             public Action<NancyContext> PostRequestHook { get; set; }
@@ -154,10 +150,8 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 throw new NotImplementedException();
             }
 
-            public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory, Singleton singleton, Transient transient)
+            public FakeEngine(IRouteResolver resolver, IRouteCache routeCache, INancyContextFactory contextFactory)
             {
-                this.Singleton = singleton;
-                this.Transient = transient;
                 if (resolver == null)
                 {
                     throw new ArgumentNullException("resolver", "The resolver parameter cannot be null.");
@@ -210,6 +204,19 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
 
     public class Transient
     {
+    }
+
+    public class TestDependencyModule : NancyModule
+    {
+        public Singleton Singleton { get; set; }
+
+        public Transient Transient { get; set; }
+
+        public TestDependencyModule(Singleton singleton, Transient transient)
+        {
+            this.Singleton = singleton;
+            this.Transient = transient;
+        }
     }
 }
 #endif
