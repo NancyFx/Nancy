@@ -116,38 +116,6 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
             result1.Transient.ShouldNotBeSameAs(result2.Transient);
         }
 
-        public class TestRegistrations : IRegistrations
-        {
-            public IEnumerable<TypeRegistration> TypeRegistrations { get; private set; }
-
-            public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
-
-            public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
-
-            public TestRegistrations()
-            {
-                this.TypeRegistrations = new[]
-                                         {
-                                             new TypeRegistration(
-                                                 typeof(Singleton),
-                                                 typeof(Singleton),
-                                                 Lifetime.Singleton),
-                                             new TypeRegistration(
-                                                 typeof(Transient),
-                                                 typeof(Transient),
-                                                 Lifetime.Transient),
-                                         };
-            }
-        }
-
-        public class Singleton
-        {
-        }
-
-        public class Transient
-        {
-        }
-
         public class FakeEngine : INancyEngine
         {
             private readonly IRouteResolver resolver;
@@ -210,6 +178,38 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
                 this.contextFactory = contextFactory;
             }
         }
+    }
+
+    public class TestRegistrations : IRegistrations
+    {
+        public IEnumerable<TypeRegistration> TypeRegistrations { get; private set; }
+
+        public IEnumerable<CollectionTypeRegistration> CollectionTypeRegistrations { get; private set; }
+
+        public IEnumerable<InstanceRegistration> InstanceRegistrations { get; private set; }
+
+        public TestRegistrations()
+        {
+            this.TypeRegistrations = new[]
+                                         {
+                                             new TypeRegistration(
+                                                 typeof(Singleton),
+                                                 typeof(Singleton),
+                                                 Lifetime.Singleton),
+                                             new TypeRegistration(
+                                                 typeof(Transient),
+                                                 typeof(Transient),
+                                                 Lifetime.Transient),
+                                         };
+        }
+    }
+
+    public class Singleton
+    {
+    }
+
+    public class Transient
+    {
     }
 }
 #endif
