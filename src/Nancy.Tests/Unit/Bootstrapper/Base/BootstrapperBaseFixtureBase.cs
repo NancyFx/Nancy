@@ -41,6 +41,7 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_throw_if_get_engine_called_without_being_initialised()
         {
+            // Given / When
             var result = Record.Exception(() => this.Bootstrapper.GetEngine());
 
             result.ShouldNotBeNull();
@@ -49,10 +50,13 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_resolve_engine_when_initialised()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result = this.Bootstrapper.GetEngine();
 
+            // Then
             result.ShouldNotBeNull();
             result.ShouldBeOfType(typeof(INancyEngine));
         }
@@ -60,28 +64,56 @@ namespace Nancy.Tests.Unit.Bootstrapper.Base
         [Fact]
         public virtual void Should_use_types_from_config()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result = this.Bootstrapper.GetEngine();
 
+            // Then
             result.ShouldBeOfType(typeof(FakeEngine));
         }
 
         [Fact]
         public virtual void Should_register_config_types_as_singletons()
         {
+            // Given
             this.Bootstrapper.Initialise();
 
+            // When
             var result1 = this.Bootstrapper.GetEngine();
             var result2 = this.Bootstrapper.GetEngine();
             
+            // Then
             result1.ShouldBeSameAs(result2);
         }
 
         [Fact]
         public void Should_honour_typeregistration_singleton_lifetimes()
         {
+            // Given
+            this.Bootstrapper.Initialise();
             
+            // When
+            var result1 = this.Bootstrapper.GetEngine() as FakeEngine;
+            var result2 = this.Bootstrapper.GetEngine() as FakeEngine;
+
+            // Then
+            result1.Singleton.ShouldBeSameAs(result2.Singleton);
+        }
+
+        [Fact]
+        public void Should_honour_typeregistration_transient_lifetimes()
+        {
+            // Given
+            this.Bootstrapper.Initialise();
+
+            // When
+            var result1 = this.Bootstrapper.GetEngine() as FakeEngine;
+            var result2 = this.Bootstrapper.GetEngine() as FakeEngine;
+
+            // Then
+            result1.Transient.ShouldNotBeSameAs(result2.Transient);
         }
 
         public class TestRegistrations : IRegistrations
