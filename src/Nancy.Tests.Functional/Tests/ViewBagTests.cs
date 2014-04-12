@@ -56,7 +56,6 @@
         public void Should_serialize_ViewBag()
         {
             // Given
-            // When
             var response = browser.Get(
                 @"/razor-viewbag-serialized",
                 with =>
@@ -64,7 +63,8 @@
                     with.HttpRequest();
                     with.Accept("application/json");
                 });
-
+                
+            // When
             var model = response.Body.DeserializeJson<ViewBagModel>();
 
             // Then
