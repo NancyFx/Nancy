@@ -149,6 +149,19 @@
             this.bootstrapper.RequestStartupTasksResolveContainer.Parent.ShouldNotBeNull();
         }
 
+        [Fact]
+        public void Should_not_ask_to_resolve_request_startups_if_none_registered()
+        {
+            // Given
+            this.bootstrapper.OverriddenRequestStartupTasks = new IRequestStartup[] { };
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            this.bootstrapper.GetRequestStartupTasksCalled.ShouldBeFalse();
+        }
+
         internal class FakeEngine : INancyEngine
         {
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
@@ -199,6 +212,8 @@
 
             public FakeContainer RequestStartupTasksResolveContainer { get; set; }
 
+            public bool GetRequestStartupTasksCalled { get; set; }
+
             public FakeBootstrapper()
             {
                 FakeNancyEngine = A.Fake<INancyEngine>();
@@ -236,6 +251,8 @@
             protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container)
             {
                 this.RequestStartupTasksResolveContainer = container;
+
+                this.GetRequestStartupTasksCalled = true;
 
                 return this.OverriddenRequestStartupTasks ?? new IRequestStartup[] { };
             }
