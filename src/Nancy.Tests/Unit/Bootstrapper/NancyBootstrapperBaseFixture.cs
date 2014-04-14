@@ -6,12 +6,9 @@ namespace Nancy.Tests.Unit.Bootstrapper
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Collections;
-    using System.Reflection;
     using System.Threading;
     using FakeItEasy;
     using Nancy.Bootstrapper;
-    using Nancy.Routing.Trie.Nodes;
     using Nancy.Tests.Fakes;
     using Xunit;
 
