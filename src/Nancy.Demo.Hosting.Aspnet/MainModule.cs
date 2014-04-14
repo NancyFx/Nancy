@@ -221,6 +221,7 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return View["FileUpload", new { Posted = fileDetails }];
             };
 
+            Get["NamedRoute", "/namedRoute"] = _ => "I am a named route!";
         }
     }
 }

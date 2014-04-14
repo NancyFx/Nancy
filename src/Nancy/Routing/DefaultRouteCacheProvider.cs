@@ -68,18 +68,19 @@
                 this.cacheProvider = cacheProvider;
             }
 
-            public IDictionary<string, IList<string>> GetAllRoutes()
+            // ReSharper disable once UnusedMember.Local
+            public IDictionary<string, IList<object>> GetAllRoutes()
             {
-                var result = new Dictionary<string, IList<string>>();
+                var result = new Dictionary<string, IList<object>>();
 
                 foreach (var entry in this.cacheProvider.GetCache().Values.SelectMany(t => t.Select(t1 => t1.Item2)))
                 {
                     if (!result.ContainsKey(entry.Method))
                     {
-                        result[entry.Method] = new List<string>();
+                        result[entry.Method] = new List<object>();
                     }
 
-                    result[entry.Method].Add(entry.Path);
+                    result[entry.Method].Add(new { Name = entry.Name, Path = entry.Path });
                 }
 
                 return result;
