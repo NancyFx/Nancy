@@ -119,6 +119,36 @@
             this.bootstrapper.RequestCollectionTypeRegistrations.Any(tr => tr.RegistrationType == typeof(string) && tr.Lifetime == Lifetime.Singleton).ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_invoke_request_startup_tasks_when_request_pipelines_initialised()
+        {
+            // Given
+            var startupMock = A.Fake<IRequestStartup>();
+            var startupMock2 = A.Fake<IRequestStartup>();
+            this.bootstrapper.OverriddenRequestStartupTasks = new[] { startupMock, startupMock2 };
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_resolve_request_startup_tasks_from_request_container()
+        {
+            // Given
+            var startupMock = A.Fake<IRequestStartup>();
+            this.bootstrapper.OverriddenRequestStartupTasks = new[] { startupMock };
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            this.bootstrapper.RequestStartupTasksResolveContainer.Parent.ShouldNotBeNull();
+        }
+
         internal class FakeEngine : INancyEngine
         {
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
@@ -167,6 +197,8 @@
 
             public bool ShouldThrowWhenGettingEngine { get; set; }
 
+            public FakeContainer RequestStartupTasksResolveContainer { get; set; }
+
             public FakeBootstrapper()
             {
                 FakeNancyEngine = A.Fake<INancyEngine>();
@@ -203,6 +235,8 @@
 
             protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container)
             {
+                this.RequestStartupTasksResolveContainer = container;
+
                 return this.OverriddenRequestStartupTasks ?? new IRequestStartup[] { };
             }
 
@@ -326,6 +360,11 @@
             }
 
             public byte[] Favicon { get; set; }
+
+            public IPipelines GetRequestPipelines(NancyContext nancyContext)
+            {
+                return this.InitializeRequestPipelines(nancyContext);
+            }
         }
 
         internal class FakeContainer : IDisposable
