@@ -85,6 +85,16 @@ namespace Nancy.Bootstrapper
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
+            if (this.RequestStartupTaskTypeCache.Any())
+            {
+                var startupTasks = this.RegisterAndGetRequestStartupTasks(requestContainer, this.RequestStartupTaskTypeCache);
+
+                foreach (var requestStartup in startupTasks)
+                {
+                    requestStartup.Initialize(requestPipelines, context);
+                }
+            }
+
             this.RequestStartup(requestContainer, requestPipelines, context);
 
             return requestPipelines;

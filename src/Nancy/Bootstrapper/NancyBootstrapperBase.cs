@@ -59,6 +59,11 @@
         private ModuleRegistration[] modules;
 
         /// <summary>
+        /// Cache of request startup task types
+        /// </summary>
+        protected Type[] RequestStartupTaskTypeCache { get; private set; }
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -163,6 +168,14 @@
         }
 
         /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestStartupTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
+        }
+
+        /// <summary>
         /// Gets all registration tasks
         /// </summary>
         protected virtual IEnumerable<Type> RegistrationTasks
@@ -261,6 +274,8 @@
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
+            this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
+
             if (this.FavIcon != null)
             {
                 this.ApplicationPipelines.BeforeRequest.AddItemToStartOfPipeline(ctx =>
@@ -304,6 +319,14 @@
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances.</returns>
         protected abstract IEnumerable<IApplicationStartup> GetApplicationStartupTasks();
+
+        /// <summary>
+        /// Registers and resolves all request startup tasks
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="requestStartupTypes">Types to register</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
+        protected abstract IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(TContainer container, Type[] requestStartupTypes);
 
         /// <summary>
         /// Gets all registered application registration tasks
@@ -408,6 +431,16 @@
         {
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
+
+            if (this.RequestStartupTaskTypeCache.Any())
+            {
+                var startupTasks = this.RegisterAndGetRequestStartupTasks(this.ApplicationContainer, this.RequestStartupTaskTypeCache);
+
+                foreach (var requestStartup in startupTasks)
+                {
+                    requestStartup.Initialize(requestPipelines, context);
+                }
+            }
 
             this.RequestStartup(this.ApplicationContainer, requestPipelines, context);
 

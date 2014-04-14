@@ -119,6 +119,55 @@
             this.bootstrapper.RequestCollectionTypeRegistrations.Any(tr => tr.RegistrationType == typeof(string) && tr.Lifetime == Lifetime.Singleton).ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_invoke_request_startup_tasks_when_request_pipelines_initialised()
+        {
+            // Given
+            var startupMock = A.Fake<IRequestStartup>();
+            var startupMock2 = A.Fake<IRequestStartup>();
+            this.bootstrapper.RequestStartupTypes = new[] { typeof(object) };
+            this.bootstrapper.OverriddenRequestStartupTasks = new[] { startupMock, startupMock2 };
+            this.bootstrapper.Initialise();
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._, A<NancyContext>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
+        [Fact]
+        public void Should_resolve_request_startup_tasks_from_request_container()
+        {
+            // Given
+            var startupMock = A.Fake<IRequestStartup>();
+            this.bootstrapper.RequestStartupTypes = new[] { typeof(object) };
+            this.bootstrapper.OverriddenRequestStartupTasks = new[] { startupMock };
+            this.bootstrapper.Initialise();
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            this.bootstrapper.RequestStartupTasksResolveContainer.Parent.ShouldNotBeNull();
+        }
+
+        [Fact]
+        public void Should_not_ask_to_resolve_request_startups_if_none_registered()
+        {
+            // Given
+            this.bootstrapper.RequestStartupTypes = new Type[] { };
+            this.bootstrapper.OverriddenRequestStartupTasks = new IRequestStartup[] { };
+            this.bootstrapper.Initialise();
+
+            // When
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
+
+            // Then
+            this.bootstrapper.GetRequestStartupTasksCalled.ShouldBeFalse();
+        }
+
         internal class FakeEngine : INancyEngine
         {
             public Func<NancyContext, IPipelines> RequestPipelinesFactory { get; set; }
@@ -161,14 +210,30 @@
 
             public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
 
+            public IRequestStartup[] OverriddenRequestStartupTasks { get; set; }
+
             public IRegistrations[] OverriddenRegistrationTasks { get; set; }
 
             public bool ShouldThrowWhenGettingEngine { get; set; }
+
+            public FakeContainer RequestStartupTasksResolveContainer { get; set; }
+
+            public bool GetRequestStartupTasksCalled { get; set; }
+
+            public IEnumerable<Type> RequestStartupTypes { get; set; }
 
             public FakeBootstrapper()
             {
                 FakeNancyEngine = A.Fake<INancyEngine>();
                 FakeContainer = new FakeContainer();
+            }
+
+            protected override IEnumerable<Type> RequestStartupTasks
+            {
+                get
+                {
+                    return this.RequestStartupTypes ?? base.RequestStartupTasks;
+                }
             }
 
             protected override INancyEngine GetEngineInternal()
@@ -197,6 +262,15 @@
             protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
             {
                 return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+            }
+
+            protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
+            {
+                this.RequestStartupTasksResolveContainer = container;
+
+                this.GetRequestStartupTasksCalled = true;
+
+                return this.OverriddenRequestStartupTasks ?? new IRequestStartup[] { };
             }
 
             /// <summary>
@@ -319,6 +393,11 @@
             }
 
             public byte[] Favicon { get; set; }
+
+            public IPipelines GetRequestPipelines(NancyContext nancyContext)
+            {
+                return this.InitializeRequestPipelines(nancyContext);
+            }
         }
 
         internal class FakeContainer : IDisposable
