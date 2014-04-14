@@ -61,7 +61,7 @@
         /// <summary>
         /// Cache of request startup task types
         /// </summary>
-        private Type[] requestStartupTaskTypeCache;
+        protected Type[] RequestStartupTaskTypeCache { get; private set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
@@ -274,7 +274,7 @@
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
 
-            this.requestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
+            this.RequestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
 
             if (this.FavIcon != null)
             {
@@ -432,11 +432,14 @@
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
-            var startupTasks = this.RegisterAndGetRequestStartupTasks(this.ApplicationContainer, this.requestStartupTaskTypeCache);
-
-            foreach (var requestStartup in startupTasks)
+            if (this.RequestStartupTaskTypeCache.Any())
             {
-                requestStartup.Initialize(requestPipelines);
+                var startupTasks = this.RegisterAndGetRequestStartupTasks(this.ApplicationContainer, this.RequestStartupTaskTypeCache);
+
+                foreach (var requestStartup in startupTasks)
+                {
+                    requestStartup.Initialize(requestPipelines);
+                }
             }
 
             this.RequestStartup(this.ApplicationContainer, requestPipelines, context);

@@ -254,12 +254,15 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public void Should_invoke_request_startup_tasks_when_request_pipelines_initialised()
         {
             // Given
+            var uninitialiedBootstrapper = new FakeBootstrapperBaseImplementation();
             var startupMock = A.Fake<IRequestStartup>();
             var startupMock2 = A.Fake<IRequestStartup>();
-            this.bootstrapper.RequestStartups = new[] { startupMock, startupMock2 };
+            uninitialiedBootstrapper.RequestStartupTypes = new[] { typeof(object) };
+            uninitialiedBootstrapper.RequestStartups = new[] { startupMock, startupMock2 };
+            uninitialiedBootstrapper.Initialise();
 
             // When
-            this.bootstrapper.GetRequestPipelines(new NancyContext());
+            uninitialiedBootstrapper.GetRequestPipelines(new NancyContext());
 
             // Then
             A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
@@ -270,13 +273,15 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public void Should_not_ask_to_resolve_request_startups_if_none_registered()
         {
             // Given
-            this.bootstrapper.RequestStartups = new IRequestStartup[] { };
+            var uninitialiedBootstrapper = new FakeBootstrapperBaseImplementation();
+            uninitialiedBootstrapper.RequestStartupTypes = new Type[] { };
+            uninitialiedBootstrapper.Initialise();
 
             // When
-            this.bootstrapper.GetRequestPipelines(new NancyContext());
+            uninitialiedBootstrapper.GetRequestPipelines(new NancyContext());
 
             // Then
-            this.bootstrapper.GetRequestStartupTasksCalled.ShouldBeFalse();
+            uninitialiedBootstrapper.GetRequestStartupTasksCalled.ShouldBeFalse();
         }
 
         private static IEnumerable<byte> GetBodyBytes(Response response)
@@ -306,6 +311,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public int RequestStartupTasksCalls { get; set; }
         public IEnumerable<IRequestStartup> RequestStartups { get; set; }
         public bool GetRequestStartupTasksCalled { get; set; }
+        public IEnumerable<Type> RequestStartupTypes { get; set; }
 
         public FakeBootstrapperBaseImplementation()
         {
@@ -319,7 +325,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             {
                 this.RequestStartupTasksCalls++;
 
-                return base.RequestStartupTasks;
+                return this.RequestStartupTypes ?? base.RequestStartupTasks;
             }
         }
 
