@@ -48,6 +48,12 @@ namespace Nancy.Hosting.Aspnet
             return this.ApplicationContainer.ResolveAll<IApplicationStartup>(false);
         }
 
+        /// <summary>
+        /// Resolves all request startup tasks
+        /// </summary>
+        /// <param name="container">Container to use</param>
+        /// <param name="requestStartupTypes">Types to register - not used</param>
+        /// <returns>An <see cref="System.Collections.Generic.IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
         protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(TinyIoCContainer container, Type[] requestStartupTypes)
         {
             return container.ResolveAll<IRequestStartup>();
