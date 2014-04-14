@@ -9,6 +9,7 @@
         /// Perform any initialisation tasks
         /// </summary>
         /// <param name="pipelines">Application pipelines</param>
-        void Initialize(IPipelines pipelines);
+        /// <param name="context">The current context</param>
+        void Initialize(IPipelines pipelines, NancyContext context);
     }
 }

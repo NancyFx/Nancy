@@ -438,7 +438,7 @@
 
                 foreach (var requestStartup in startupTasks)
                 {
-                    requestStartup.Initialize(requestPipelines);
+                    requestStartup.Initialize(requestPipelines, context);
                 }
             }
 
