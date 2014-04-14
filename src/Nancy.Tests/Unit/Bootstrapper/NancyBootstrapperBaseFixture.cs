@@ -250,16 +250,15 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         [Fact]
-        public void Should_invoke_request_startup_tasks()
+        public void Should_invoke_request_startup_tasks_when_request_pipelines_initialised()
         {
             // Given
             var startupMock = A.Fake<IRequestStartup>();
             var startupMock2 = A.Fake<IRequestStartup>();
             this.bootstrapper.RequestStartups = new[] { startupMock, startupMock2 };
-            var engine = this.bootstrapper.GetEngine();
 
             // When
-            engine.HandleRequest(new FakeRequest("GET", "/"));
+            this.bootstrapper.GetRequestPipelines(new NancyContext());
 
             // Then
             A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
@@ -427,6 +426,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         }
 
         public byte[] Favicon { get; set; }
+
+        public IPipelines GetRequestPipelines(NancyContext context)
+        {
+            return this.InitializeRequestPipelines(context);
+        }
     }
 
     internal class FakeContainer : IDisposable

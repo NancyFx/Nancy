@@ -430,6 +430,13 @@
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
+            var startupTasks = this.GetRequestStartupTasks(this.ApplicationContainer);
+
+            foreach (var requestStartup in startupTasks)
+            {
+                requestStartup.Initialize(requestPipelines);
+            }
+
             this.RequestStartup(this.ApplicationContainer, requestPipelines, context);
 
             return requestPipelines;
