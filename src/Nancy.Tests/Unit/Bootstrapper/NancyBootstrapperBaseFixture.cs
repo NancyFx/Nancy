@@ -233,6 +233,22 @@ namespace Nancy.Tests.Unit.Bootstrapper
             this.bootstrapper.AppContainer.Disposed.ShouldBeTrue();
         }
 
+        [Fact]
+        public void Should_only_get_request_startup_tasks_once()
+        {
+            // Given
+            var uninitialiedBootstrapper = new FakeBootstrapperBaseImplementation();
+            uninitialiedBootstrapper.Initialise();
+            var engine = uninitialiedBootstrapper.GetEngine();
+
+            // When
+            engine.HandleRequest(new FakeRequest("GET", "/"));
+            engine.HandleRequest(new FakeRequest("GET", "/"));
+
+            // Then
+            uninitialiedBootstrapper.RequestStartupTasksCalls.ShouldEqual(1);
+        }
+
         private static IEnumerable<byte> GetBodyBytes(Response response)
         {
             using (var contentsStream = new MemoryStream())
@@ -257,11 +273,22 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
         public IRegistrations[] OverriddenRegistrationTasks { get; set; }
         public bool ShouldThrowWhenGettingEngine { get; set; }
+        public int RequestStartupTasksCalls { get; set; }
 
         public FakeBootstrapperBaseImplementation()
         {
             FakeNancyEngine = A.Fake<INancyEngine>();
             FakeContainer = new FakeContainer();
+        }
+
+        protected override IEnumerable<Type> RequestStartupTasks
+        {
+            get
+            {
+                this.RequestStartupTasksCalls++;
+
+                return base.RequestStartupTasks;
+            }
         }
 
         protected override INancyEngine GetEngineInternal()

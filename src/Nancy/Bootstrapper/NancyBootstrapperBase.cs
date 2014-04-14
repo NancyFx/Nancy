@@ -59,6 +59,11 @@
         private ModuleRegistration[] modules;
 
         /// <summary>
+        /// Cache of request startup task types
+        /// </summary>
+        private Type[] requestStartupTaskTypeCache;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="NancyBootstrapperBase{TContainer}"/> class.
         /// </summary>
         protected NancyBootstrapperBase()
@@ -163,6 +168,14 @@
         }
 
         /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected virtual IEnumerable<Type> RequestStartupTasks
+        {
+            get { return AppDomainAssemblyTypeScanner.TypesOf<IRequestStartup>(); }
+        }
+
+        /// <summary>
         /// Gets all registration tasks
         /// </summary>
         protected virtual IEnumerable<Type> RegistrationTasks
@@ -260,6 +273,8 @@
             }
 
             this.ApplicationStartup(this.ApplicationContainer, this.ApplicationPipelines);
+
+            this.requestStartupTaskTypeCache = this.RequestStartupTasks.ToArray();
 
             if (this.FavIcon != null)
             {
