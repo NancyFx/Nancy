@@ -204,8 +204,10 @@ namespace Nancy
         /// Gets all registered request startup tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
-        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(TinyIoCContainer container)
+        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(TinyIoCContainer container, Type[] requestStartupTypes)
         {
+            container.RegisterMultiple(typeof(IRequestStartup), requestStartupTypes);
+
             return container.ResolveAll<IRequestStartup>(false);
         }
 

@@ -324,7 +324,7 @@
         /// Gets all registered request startup tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IRequestStartup"/> instances.</returns>
-        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks(TContainer container);
+        protected abstract IEnumerable<IRequestStartup> GetRequestStartupTasks(TContainer container, Type[] requestStartupTypes);
 
         /// <summary>
         /// Gets all registered application registration tasks
@@ -430,7 +430,7 @@
             var requestPipelines =
                 new Pipelines(this.ApplicationPipelines);
 
-            var startupTasks = this.GetRequestStartupTasks(this.ApplicationContainer);
+            var startupTasks = this.GetRequestStartupTasks(this.ApplicationContainer, this.requestStartupTaskTypeCache);
 
             foreach (var requestStartup in startupTasks)
             {
