@@ -161,6 +161,8 @@
 
             public IApplicationStartup[] OverriddenApplicationStartupTasks { get; set; }
 
+            public IRequestStartup[] OverriddenRequestStartupTasks { get; set; }
+
             public IRegistrations[] OverriddenRegistrationTasks { get; set; }
 
             public bool ShouldThrowWhenGettingEngine { get; set; }
@@ -197,6 +199,11 @@
             protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
             {
                 return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+            }
+
+            protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container)
+            {
+                return this.OverriddenRequestStartupTasks ?? new IRequestStartup[] { };
             }
 
             /// <summary>

@@ -249,6 +249,23 @@ namespace Nancy.Tests.Unit.Bootstrapper
             uninitialiedBootstrapper.RequestStartupTasksCalls.ShouldEqual(1);
         }
 
+        [Fact]
+        public void Should_invoke_request_startup_tasks()
+        {
+            // Given
+            var startupMock = A.Fake<IRequestStartup>();
+            var startupMock2 = A.Fake<IRequestStartup>();
+            this.bootstrapper.RequestStartups = new[] { startupMock, startupMock2 };
+            var engine = this.bootstrapper.GetEngine();
+
+            // When
+            engine.HandleRequest(new FakeRequest("GET", "/"));
+
+            // Then
+            A.CallTo(() => startupMock.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+            A.CallTo(() => startupMock2.Initialize(A<IPipelines>._)).MustHaveHappened(Repeated.Exactly.Once);
+        }
+
         private static IEnumerable<byte> GetBodyBytes(Response response)
         {
             using (var contentsStream = new MemoryStream())
@@ -274,6 +291,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
         public IRegistrations[] OverriddenRegistrationTasks { get; set; }
         public bool ShouldThrowWhenGettingEngine { get; set; }
         public int RequestStartupTasksCalls { get; set; }
+        public IEnumerable<IRequestStartup> RequestStartups { get; set; }
 
         public FakeBootstrapperBaseImplementation()
         {
@@ -317,6 +335,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
             return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
+        }
+
+        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container)
+        {
+            return this.RequestStartups;
         }
 
         /// <summary>
@@ -450,6 +473,11 @@ namespace Nancy.Tests.Unit.Bootstrapper
         protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
             return new IApplicationStartup[] { };
+        }
+
+        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(object container)
+        {
+            return new IRequestStartup[] { };
         }
 
         /// <summary>
