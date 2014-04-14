@@ -4,6 +4,7 @@ namespace Nancy.Hosting.Aspnet
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
 
     using Bootstrapper;
     using Nancy.TinyIoc;
@@ -24,12 +25,32 @@ namespace Nancy.Hosting.Aspnet
         }
 
         /// <summary>
+        /// Gets all request startup tasks
+        /// </summary>
+        protected override IEnumerable<Type> RequestStartupTasks
+        {
+            get
+            {
+                var types = base.RequestStartupTasks.ToArray();
+
+                this.ApplicationContainer.RegisterMultiple(typeof(IRequestStartup), types).AsPerRequestSingleton();
+
+                return types;
+            }
+        }
+
+        /// <summary>
         /// Gets all registered startup tasks
         /// </summary>
         /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="IApplicationStartup"/> instances. </returns>
         protected override IEnumerable<IApplicationStartup> GetApplicationStartupTasks()
         {
             return this.ApplicationContainer.ResolveAll<IApplicationStartup>(false);
+        }
+
+        protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(TinyIoCContainer container, Type[] requestStartupTypes)
+        {
+            return container.ResolveAll<IRequestStartup>();
         }
 
         /// <summary>
