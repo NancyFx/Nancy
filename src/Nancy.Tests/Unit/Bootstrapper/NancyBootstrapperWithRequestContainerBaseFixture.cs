@@ -248,7 +248,7 @@
                 return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
             }
 
-            protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
+            protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
             {
                 this.RequestStartupTasksResolveContainer = container;
 

@@ -351,7 +351,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return this.OverriddenApplicationStartupTasks ?? new IApplicationStartup[] { };
         }
 
-        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
+        protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(FakeContainer container, Type[] requestStartupTypes)
         {
             this.GetRequestStartupTasksCalled = true;
 
@@ -496,7 +496,7 @@ namespace Nancy.Tests.Unit.Bootstrapper
             return new IApplicationStartup[] { };
         }
 
-        protected override IEnumerable<IRequestStartup> GetRequestStartupTasks(object container, Type[] requestStartupTypes)
+        protected override IEnumerable<IRequestStartup> RegisterAndGetRequestStartupTasks(object container, Type[] requestStartupTypes)
         {
             return new IRequestStartup[] { };
         }
