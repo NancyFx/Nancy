@@ -27,7 +27,7 @@ namespace Nancy.Routing
                 throw new ArgumentException("Path must be specified", method);
             }
 
-            this.Name = name;
+            this.Name = name ?? string.Empty;
             this.Method = method;
             this.Path = path;
             this.Condition = condition;

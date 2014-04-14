@@ -216,6 +216,17 @@ namespace Nancy.Tests.Unit
             });
         }
 
+        [Fact]
+        public void Adds_named_route_when_named_indexer_used()
+        {
+            // Given, When
+            this.module.Get["Foo", "/test"] = d => null;
+
+            // Then
+            this.module.Routes.Count().ShouldEqual(1);
+            this.module.Routes.First().Description.Name.ShouldEqual("Foo");
+        }
+
         private class CustomModulePathModule : NancyModule
         {
             public CustomModulePathModule(string modulePath)
@@ -244,7 +255,7 @@ namespace Nancy.Tests.Unit
                     {
                         foreach (var path in paths)
                         {
-                            this.AddRoute(path, null, value);
+                            this.AddRoute(String.Empty, path, null, value);
                         }
                     }
                 }
