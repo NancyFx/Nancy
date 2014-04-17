@@ -84,7 +84,7 @@
       <HintPath>..\packages\CsQuery.1.3.3\lib\net40\CsQuery.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.14.0\lib\net40\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>

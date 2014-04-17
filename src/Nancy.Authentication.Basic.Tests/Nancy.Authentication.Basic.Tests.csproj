@@ -82,7 +82,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.14.0\lib\net40\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

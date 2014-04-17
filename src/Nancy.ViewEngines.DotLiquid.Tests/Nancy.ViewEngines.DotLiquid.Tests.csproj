@@ -88,7 +88,7 @@
       <HintPath>..\packages\DotLiquid.1.7.0\lib\NET40\DotLiquid.dll</HintPath>
     </Reference>
     <Reference Include="FakeItEasy">
-      <HintPath>..\packages\FakeItEasy.1.14.0\lib\net40\FakeItEasy.dll</HintPath>
+      <HintPath>..\packages\FakeItEasy.1.19.0\lib\net40\FakeItEasy.dll</HintPath>
     </Reference>
     <Reference Include="System">
     </Reference>

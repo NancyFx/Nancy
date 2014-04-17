@@ -205,12 +205,12 @@
             <param name = "argumentIndex">The index of the argument to get.</param>
             <returns>The argument at the specified index.</returns>
         </member>
-        <member name="T:FakeItEasy.ArgumentConstraintExtensions">
+        <member name="T:FakeItEasy.ArgumentConstraintManagerExtensions">
             <summary>
             Provides validation extensions for <see cref="T:FakeItEasy.IArgumentConstraintManager`1"/>.
             </summary>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNull``1(FakeItEasy.IArgumentConstraintManager{``0})">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsNull``1(FakeItEasy.IArgumentConstraintManager{``0})">
             <summary>
             Constrains an argument so that it must be null (Nothing in VB).
             </summary>
@@ -218,7 +218,7 @@
             <param name="manager">The constraint manager to match the constraint.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.Contains(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
             <summary>
             Constrains the string argument to contain the specified text.
             </summary>
@@ -226,7 +226,7 @@
             <param name="value">The string the argument string should contain.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Contains``1(FakeItEasy.IArgumentConstraintManager{``0},System.Object)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.Contains``1(FakeItEasy.IArgumentConstraintManager{``0},System.Object)">
             <summary>
             Constrains the sequence so that it must contain the specified value.
             </summary>
@@ -235,7 +235,7 @@
             <typeparam name="T">The type of sequence.</typeparam>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.StartsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.StartsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
             <summary>
             Constrains the string so that it must start with the specified value.
             </summary>
@@ -243,7 +243,7 @@
             <param name="value">The value the string should start with.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.EndsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.EndsWith(FakeItEasy.IArgumentConstraintManager{System.String},System.String)">
             <summary>
             Constrains the string so that it must end with the specified value.
             </summary>
@@ -251,14 +251,14 @@
             <param name="value">The value the string should end with.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsNullOrEmpty(FakeItEasy.IArgumentConstraintManager{System.String})">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsNullOrEmpty(FakeItEasy.IArgumentConstraintManager{System.String})">
             <summary>
             Constrains the string so that it must be null or empty.
             </summary>
             <param name="manager">The constraint manager to match the constraint.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsGreaterThan``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsGreaterThan``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
             <summary>
             Constrains argument value so that it must be greater than the specified value.
             </summary>
@@ -267,7 +267,7 @@
             <typeparam name="T">The type of argument to constrain.</typeparam>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameSequenceAs``1(FakeItEasy.IArgumentConstraintManager{``0},System.Collections.IEnumerable)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsSameSequenceAs``1(FakeItEasy.IArgumentConstraintManager{``0},System.Collections.IEnumerable)">
             <summary>
             The tested argument collection should contain the same elements as the
             as the specified collection.
@@ -277,7 +277,7 @@
             <typeparam name="T">The type of argument to constrain.</typeparam>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEmpty``1(FakeItEasy.IArgumentConstraintManager{``0})">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsEmpty``1(FakeItEasy.IArgumentConstraintManager{``0})">
             <summary>
             Tests that the IEnumerable contains no items.
             </summary>
@@ -285,7 +285,7 @@
             <param name="manager">The constraint manager to match the constraint.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsEqualTo``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsEqualTo``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
             <summary>
             Tests that the passed in argument is equal to the specified value.
             </summary>
@@ -294,7 +294,7 @@
             <param name="value">The value to compare to.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsSameAs``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsSameAs``1(FakeItEasy.IArgumentConstraintManager{``0},``0)">
             <summary>
             Tests that the passed in argument is the same instance (reference) as the specified value.
             </summary>
@@ -303,7 +303,7 @@
             <param name="value">The reference to compare to.</param>
             <returns>A dummy argument value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.IsInstanceOf``1(FakeItEasy.IArgumentConstraintManager{``0},System.Type)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.IsInstanceOf``1(FakeItEasy.IArgumentConstraintManager{``0},System.Type)">
             <summary>
             Constrains the argument to be of the specified type.
             </summary>
@@ -312,7 +312,7 @@
             <param name="type">The type to constrain the argument with.</param>
             <returns>A dummy value.</returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String)">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String)">
             <summary>
             Constrains the argument with a predicate.
             </summary>
@@ -332,7 +332,7 @@
             A dummy argument value.
             </returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.String,System.Object[])">
             <summary>
             Constrains the argument with a predicate.
             </summary>
@@ -355,7 +355,7 @@
             A dummy argument value.
             </returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.Matches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Linq.Expressions.Expression{System.Func{``0,System.Boolean}})">
             <summary>
             Constrains the argument with a predicate.
             </summary>
@@ -372,7 +372,7 @@
             A dummy argument value.
             </returns>
         </member>
-        <member name="M:FakeItEasy.ArgumentConstraintExtensions.NullCheckedMatches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
+        <member name="M:FakeItEasy.ArgumentConstraintManagerExtensions.NullCheckedMatches``1(FakeItEasy.IArgumentConstraintManager{``0},System.Func{``0,System.Boolean},System.Action{FakeItEasy.IOutputWriter})">
             <summary>
             Constrains the argument to be not null (Nothing in VB) and to match
             the specified predicate.
@@ -383,6 +383,20 @@
             <param name="descriptionWriter">An action that writes a description of the constraint
             to the output.</param>
             <returns>A dummy argument value.</returns>
+        </member>
+        <member name="T:FakeItEasy.ArgumentValidationConfigurationExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:FakeItEasy.Configuration.IArgumentValidationConfiguration`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ArgumentValidationConfigurationExtensions.WithAnyArguments``1(FakeItEasy.Configuration.IArgumentValidationConfiguration{``0})">
+            <summary>
+            Specifies that a call to the configured call should be applied no matter what arguments
+            are used in the call to the faked object.
+            </summary>
+            <typeparam name="TInterface">The type of the interface.</typeparam>
+            <param name="configuration">The configuration.</param>
+            <returns>A configuration object.</returns>
         </member>
         <member name="T:FakeItEasy.ArgumentValueFormatter`1">
             <summary>
@@ -441,52 +455,100 @@
             priority is used.
             </summary>
         </member>
-        <member name="T:FakeItEasy.CommonExtensions">
+        <member name="T:FakeItEasy.AssertConfigurationExtensions">
             <summary>
-            Provides extension methods for the common uses.
+            Provides extension methods for <see cref="T:FakeItEasy.Configuration.IAssertConfiguration"/>.
             </summary>
         </member>
-        <member name="M:FakeItEasy.CommonExtensions.FormatInvariant(System.String,System.Object[])">
+        <member name="M:FakeItEasy.AssertConfigurationExtensions.MustHaveHappened(FakeItEasy.Configuration.IAssertConfiguration)">
             <summary>
-            Replaces the format item in a specified System.String with the text equivalent
-            of the value of a corresponding System.Object instance in a specified array using
-            invariant culture as <see cref="T:System.IFormatProvider"/>.
+            Asserts that the specified call must have happened once or more.
             </summary>
-            <param name="format">A composite format string.</param>
-            <param name="arguments">An <see cref="T:System.Object"/> array containing zero or more objects to format.</param>
-            <returns>The formatted string.</returns>
+            <param name="configuration">The configuration to assert on.</param>
         </member>
-        <member name="M:FakeItEasy.CommonExtensions.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+        <member name="M:FakeItEasy.AssertConfigurationExtensions.MustNotHaveHappened(FakeItEasy.Configuration.IAssertConfiguration)">
             <summary>
-            Gets an enumerable of tuples where the first value of each tuple is a value
-            from the first collection and the second value of each tuple is the value at the same position
-            from the second collection.
+            Asserts that the specified call has not happened.
             </summary>
-            <typeparam name="TFirst">The type of values in the first collection.</typeparam>
-            <typeparam name="TSecond">The type of values in the second collection.</typeparam>
-            <param name="firstCollection">The first of the collections to combine.</param>
-            <param name="secondCollection">The second of the collections to combine.</param>
-            <returns>An enumerable of tuples.</returns>
+            <param name="configuration">The configuration to assert on.</param>
         </member>
-        <member name="M:FakeItEasy.CommonExtensions.ToCollectionString``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String},System.String)">
+        <member name="T:FakeItEasy.CallbackConfigurationExtensions">
             <summary>
-            Joins the collection to a string.
+            Provides extension methods for <see cref="T:FakeItEasy.Configuration.ICallbackConfiguration`1"/>.
             </summary>
-            <typeparam name="T">The type of items in the collection.</typeparam>
-            <param name="items">The items to join.</param>
-            <param name="stringConverter">A function that converts from an item to a string value.</param>
-            <param name="separator">Separator to insert between each item.</param>
-            <returns>A string representation of the collection.</returns>
         </member>
-        <member name="M:FakeItEasy.CommonExtensions.FirstFromEachKey``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+        <member name="M:FakeItEasy.CallbackConfigurationExtensions.Invokes``1(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action)">
             <summary>
-            Gets a dictionary containing the first element from the sequence that has a key specified by the key selector.
+            Executes the specified action when a matching call is being made. This overload can also be used to fake calls with arguments when they don't need to be accessed.
             </summary>
-            <typeparam name="T">The type of items in the sequence.</typeparam>
-            <typeparam name="TKey">The type of the key.</typeparam>
-            <param name="sequence">The sequence.</param>
-            <param name="keySelector">The key selector.</param>
-            <returns>A dictionary.</returns>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+            <param name="configuration">The configuration that is extended.</param>
+            <param name="actionToInvoke">The <see cref="T:System.Action"/> to invoke.</param>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="M:FakeItEasy.CallbackConfigurationExtensions.Invokes``2(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1})">
+            <summary>
+            Executes the specified action when a matching call is being made.
+            </summary>
+            <param name="configuration">The configuration that is extended.</param>
+            <param name="actionToInvoke">The <see cref="T:System.Action`1"/> to invoke.</param>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="M:FakeItEasy.CallbackConfigurationExtensions.Invokes``3(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2})">
+            <summary>
+            Executes the specified action when a matching call is being made.
+            </summary>
+            <param name="configuration">The configuration that is extended.</param>
+            <param name="actionToInvoke">The <see cref="T:System.Action`2"/> to invoke.</param>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="M:FakeItEasy.CallbackConfigurationExtensions.Invokes``4(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2,``3})">
+            <summary>
+            Executes the specified action when a matching call is being made.
+            </summary>
+            <param name="configuration">The configuration that is extended.</param>
+            <param name="actionToInvoke">The <see cref="T:System.Action`3"/> to invoke.</param>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="M:FakeItEasy.CallbackConfigurationExtensions.Invokes``5(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2,``3,``4})">
+            <summary>
+            Executes the specified action when a matching call is being made.
+            </summary>
+            <param name="configuration">The configuration that is extended.</param>
+            <param name="actionToInvoke">The <see cref="T:System.Action`4"/> to invoke.</param>
+            <typeparam name="TFake">The type of fake object.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
+            <returns>The fake object.</returns>
+        </member>
+        <member name="T:FakeItEasy.CompletedFakeObjectCallExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:FakeItEasy.Core.ICompletedFakeObjectCall"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.CompletedFakeObjectCallExtensions.Matching``1(System.Collections.Generic.IEnumerable{FakeItEasy.Core.ICompletedFakeObjectCall},System.Linq.Expressions.Expression{System.Action{``0}})">
+            <summary>
+            Filters to contain only the calls that matches the call specification.
+            </summary>
+            <typeparam name="TFake">The type of fake the call is made on.</typeparam>
+            <param name="calls">The calls to filter.</param>
+            <param name="callSpecification">The call to match on.</param>
+            <returns>A collection of the calls that matches the call specification.</returns>
         </member>
         <member name="T:FakeItEasy.Configuration.BuildableCallRule">
             <summary>
@@ -984,33 +1046,6 @@
             <exception cref="T:System.ArgumentException">The specified object is not a faked object.</exception>
             <exception cref="T:System.ArgumentNullException">The fakedObject parameter was null.</exception>
         </member>
-        <member name="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue">
-            <summary>
-            Access all types in all assemblies in the same directory as the FakeItEasy assembly.
-            </summary>
-        </member>
-        <member name="T:FakeItEasy.Core.ITypeCatalogue">
-            <summary>
-            Provides a set of types that are available.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Core.ITypeCatalogue.GetAvailableTypes">
-            <summary>
-            Gets a collection of available types.
-            </summary>
-            <returns>The available types.</returns>
-        </member>
-        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue"/> class.
-            </summary>
-        </member>
-        <member name="M:FakeItEasy.Core.ApplicationDirectoryAssembliesTypeCatalogue.GetAvailableTypes">
-            <summary>
-            Gets a collection of available types.
-            </summary>
-            <returns>The available types.</returns>
-        </member>
         <member name="T:FakeItEasy.Core.ArgumentInfo">
             <summary>
             Represents an argument and a dummy value to use for that argument.
@@ -1045,6 +1080,32 @@
             Holds a formatter as well as the distance between a type to be formatted
             and the type for which the formatted is registered.
             </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.AssemblyExtensions.ReferencesFakeItEasy(System.Reflection.Assembly)">
+            <summary>
+            Determines whether an assembly references FakeItEasy.
+            </summary>
+            <param name="assembly">The assembly to check.</param>
+            <returns>Whether or not the assembly references FakeItEasy.</returns>
+        </member>
+        <member name="T:FakeItEasy.Core.BootstrapperLocator">
+            <summary>
+            Locate an <see cref="T:FakeItEasy.IBootstrapper"/> implementation.
+            </summary>
+            <remarks>
+            Will search the app domain for a concrete implementation,
+            and if it can't find one will use the <see cref="T:FakeItEasy.DefaultBootstrapper"/>.
+            </remarks>
+        </member>
+        <member name="M:FakeItEasy.Core.BootstrapperLocator.FindBootstrapper">
+            <summary>
+            Scans app domain assemblies looking for a concrete implementation of
+            <see cref="T:FakeItEasy.IBootstrapper"/> that is not the <see cref="T:FakeItEasy.DefaultBootstrapper"/>.
+            Otherwise, the first matching type is instantiated and returned, or an
+            instance of DefaultBootstrapper is used if no other implementation is found.
+            </summary>
+            <returns>An instance of the first non-default IBootstrapper implementation found,
+            or a DefaultBootstrapper.</returns>
         </member>
         <member name="T:FakeItEasy.Core.CallInterceptedEventArgs">
             <summary>
@@ -1487,6 +1548,17 @@
             Sets that the call should not be recorded by the fake manager.
             </summary>
         </member>
+        <member name="M:FakeItEasy.Core.FakeManager.EventRule.TryPreserveStackTrace(System.Exception)">
+            <summary>
+            Attempts to preserve the stack trace of an existing exception when rethrown via <c>throw</c> or <c>throw ex</c>.
+            </summary>
+            <remarks>Nicked from
+            http://weblogs.asp.net/fmarguerie/archive/2008/01/02/rethrowing-exceptions-and-preserving-the-full-call-stack-trace.aspx.
+            If reduced trust context (for example) precludes
+            invoking internal members on <see cref="T:System.Exception"/>, the stack trace will not be preserved.
+            </remarks>
+            <param name="exception">The exception whose stack trace needs preserving.</param>
+        </member>
         <member name="T:FakeItEasy.Core.FakeScope">
             <summary>
             Represents a scope for fake objects, calls configured within a scope
@@ -1584,6 +1656,17 @@
             <param name="interceptedCall">The intercepted call.</param>
             <param name="ruleThatWasApplied">The rule that was applied to the call.</param>
         </member>
+        <member name="T:FakeItEasy.Core.ITypeCatalogue">
+            <summary>
+            Provides a set of types that are available.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.ITypeCatalogue.GetAvailableTypes">
+            <summary>
+            Gets a collection of available types.
+            </summary>
+            <returns>The available types.</returns>
+        </member>
         <member name="T:FakeItEasy.Core.MethodInfoManager">
             <summary>
             Handles comparisons of instances of <see cref="T:System.Reflection.MethodInfo"/>.
@@ -1618,6 +1701,31 @@
             </summary>
             <param name="typeOfFake">The type the fake object represents.</param>
             <param name="fakeObject">The fake object to configure.</param>
+        </member>
+        <member name="T:FakeItEasy.Core.TypeCatalogue">
+            <summary>
+            Provides access to all types in:
+            <list type="bullet">
+              <item>FakeItEasy,</item>
+              <item>assemblies loaded into the current <see cref="T:System.AppDomain"/> that reference FakeItEasy and</item>
+              <item>assemblies whose paths are supplied to the constructor, that also reference FakeItEasy.</item>
+            </list>
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.Core.TypeCatalogue.Load(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Loads the available types into the <see cref="T:FakeItEasy.Core.TypeCatalogue"/>.
+            </summary>
+            <param name="extraAssemblyFiles">
+            The full paths to assemblies from which to load types,
+            as well as assemblies loaded into the current <see cref="T:System.AppDomain"/>.
+            </param>
+        </member>
+        <member name="M:FakeItEasy.Core.TypeCatalogue.GetAvailableTypes">
+            <summary>
+            Gets a collection of available types.
+            </summary>
+            <returns>The available types.</returns>
         </member>
         <member name="T:FakeItEasy.Core.TypeCatalogueInstanceProvider">
             <summary>
@@ -2078,6 +2186,46 @@
             Gets the reason for failure when the generation was not successful.
             </summary>
         </member>
+        <member name="T:FakeItEasy.DefaultBootstrapper">
+            <summary>
+            The default bootstrapper, used to initialize FakeItEasy unless another 
+            implementation of <see cref="T:FakeItEasy.IBootstrapper"/> is present in the assemblies
+            loaded in the app domain.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.IBootstrapper">
+            <summary>
+            Bootstrapper for FakeItEasy.
+            </summary>
+            <remarks>
+            <para>When FakeItEasy is initialized, it scans the executing app domain for implementations
+            of this interface. If any are found, one will be instantiated and used to bootstrap
+            FakeItEasy. If no implementations are found, then a <see cref="T:FakeItEasy.DefaultBootstrapper"/>
+            will be used.</para>
+            <para>The recommended way to implement IBootstrapper is to extend DefaultBootstrapper 
+            and override selected methods.</para>
+            </remarks>
+        </member>
+        <member name="M:FakeItEasy.IBootstrapper.GetAssemblyFileNamesToScanForExtensions">
+            <summary>
+            Provides a list of assembly file names to scan for extension points, such as
+            <see cref="T:FakeItEasy.IDummyDefinition"/>s, <see cref="T:FakeItEasy.IArgumentValueFormatter"/>s, and 
+            <see cref="T:FakeItEasy.IFakeConfigurator"/>s.
+            </summary>
+            <returns>A list of absolute paths pointing to assemblies to scan for extension points.</returns>
+        </member>
+        <member name="M:FakeItEasy.DefaultBootstrapper.GetAssemblyFileNamesToScanForExtensions">
+            <summary>
+            When overridden in a derived class, provides a custom list of assembly file
+            names to scan for extension points, such as
+            <see cref="T:FakeItEasy.IDummyDefinition"/>s, <see cref="T:FakeItEasy.IArgumentValueFormatter"/>s, and 
+            <see cref="T:FakeItEasy.IFakeConfigurator"/>s.
+            </summary>
+            <returns>
+            An empty list, but may be overridden to provide a list of absolute paths
+            to assemblies to scan for extension points.
+            </returns>
+        </member>
         <member name="T:FakeItEasy.IOutputWriter">
             <summary>
             Represents a text writer that writes to the output.
@@ -2144,6 +2292,43 @@
             Gets the type the definition is for.
             </summary>
             <value>For type.</value>
+        </member>
+        <member name="T:FakeItEasy.EnumerableExtensions">
+            <summary>
+            Provides extension methods for generic usage of <see cref="T:System.Collections.Generic.IEnumerable`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.EnumerableExtensions.Zip``2(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1})">
+            <summary>
+            Gets an enumerable of tuples where the first value of each tuple is a value
+            from the first collection and the second value of each tuple is the value at the same position
+            from the second collection.
+            </summary>
+            <typeparam name="TFirst">The type of values in the first collection.</typeparam>
+            <typeparam name="TSecond">The type of values in the second collection.</typeparam>
+            <param name="firstCollection">The first of the collections to combine.</param>
+            <param name="secondCollection">The second of the collections to combine.</param>
+            <returns>An enumerable of tuples.</returns>
+        </member>
+        <member name="M:FakeItEasy.EnumerableExtensions.ToCollectionString``1(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.String},System.String)">
+            <summary>
+            Joins the collection to a string.
+            </summary>
+            <typeparam name="T">The type of items in the collection.</typeparam>
+            <param name="items">The items to join.</param>
+            <param name="stringConverter">A function that converts from an item to a string value.</param>
+            <param name="separator">Separator to insert between each item.</param>
+            <returns>A string representation of the collection.</returns>
+        </member>
+        <member name="M:FakeItEasy.EnumerableExtensions.FirstFromEachKey``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Gets a dictionary containing the first element from the sequence that has a key specified by the key selector.
+            </summary>
+            <typeparam name="T">The type of items in the sequence.</typeparam>
+            <typeparam name="TKey">The type of the key.</typeparam>
+            <param name="sequence">The sequence.</param>
+            <param name="keySelector">The key selector.</param>
+            <returns>A dictionary.</returns>
         </member>
         <member name="T:FakeItEasy.ExceptionMessages">
             <summary>
@@ -2316,6 +2501,88 @@
               Looks up a localized string similar to The number of argument names does not match the number of arguments..
             </summary>
         </member>
+        <member name="T:FakeItEasy.ExceptionThrowerConfigurationExtensions">
+            <summary>
+            Provides the extension methods for <see cref="T:FakeItEasy.Configuration.IExceptionThrowerConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Exception)">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exception">The exception to throw when a call that matches is invoked.</param>
+            <returns>Configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{System.Exception})">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
+            <returns>Configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws``1(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,System.Exception})">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <returns>Configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws``2(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,System.Exception})">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <returns>Configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws``3(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,``2,System.Exception})">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <returns>Configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws``4(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,``2,``3,System.Exception})">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
+            <returns>Configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ExceptionThrowerConfigurationExtensions.Throws``1(FakeItEasy.Configuration.IExceptionThrowerConfiguration)">
+            <summary>
+            Throws the specified exception when the currently configured
+            call gets called.
+            </summary>
+            <param name="configuration">The configuration to use.</param>
+            <typeparam name="T">The type of exception to throw.</typeparam>
+            <returns>Configuration object.</returns>
+        </member>
         <member name="T:FakeItEasy.ExpectationException">
             <summary>
             An exception thrown when an expectation is not met (when asserting on fake object calls).
@@ -2351,6 +2618,18 @@
             <exception cref="T:System.Runtime.Serialization.SerializationException">
             The class name is null or <see cref="P:System.Exception.HResult"/> is zero (0).
             </exception>
+        </member>
+        <member name="T:FakeItEasy.ExpressionExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Linq.Expressions.Expression"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ExpressionExtensions.Evaluate(System.Linq.Expressions.Expression)">
+            <summary>
+            Evaluates an expression by compiling it into a delegate and invoking the delegate.
+            </summary>
+            <param name="expression">The expression to be evaluated.</param>
+            <returns>The value returned from the delegate compiled from the expression.</returns>
         </member>
         <member name="T:FakeItEasy.Expressions.ICallExpressionParser">
             <summary>
@@ -2453,13 +2732,13 @@
             <exception cref="T:System.ArgumentNullException">The fakeObjectCall is null.</exception>
             <exception cref="T:System.ArgumentException">The specified expression is not an expression where a call is made to a faked object.</exception>
         </member>
-        <member name="T:FakeItEasy.ExtensionSyntax.Full.FullExtensionSyntax">
+        <member name="T:FakeItEasy.ExtensionSyntax.Full.ObjectExtensions">
             <summary>
             Provides extension methods for configuring and asserting on faked objects
             without going through the static methods of the Fake-class.
             </summary>
         </member>
-        <member name="M:FakeItEasy.ExtensionSyntax.Full.FullExtensionSyntax.CallsTo``2(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
+        <member name="M:FakeItEasy.ExtensionSyntax.Full.ObjectExtensions.CallsTo``2(``0,System.Linq.Expressions.Expression{System.Func{``0,``1}})">
             <summary>
             Configures the behavior of the fake object when a call that matches the specified
             call happens.
@@ -2470,7 +2749,7 @@
             <param name="callSpecification">An expression that specifies the calls to configure.</param>
             <returns>A configuration object.</returns>
         </member>
-        <member name="M:FakeItEasy.ExtensionSyntax.Full.FullExtensionSyntax.CallsTo``1(``0,System.Linq.Expressions.Expression{System.Action{``0}})">
+        <member name="M:FakeItEasy.ExtensionSyntax.Full.ObjectExtensions.CallsTo``1(``0,System.Linq.Expressions.Expression{System.Action{``0}})">
             <summary>
             Configures the behavior of the fake object when a call that matches the specified
             call happens.
@@ -2480,7 +2759,7 @@
             <param name="callSpecification">An expression that specifies the calls to configure.</param>
             <returns>A configuration object.</returns>
         </member>
-        <member name="M:FakeItEasy.ExtensionSyntax.Full.FullExtensionSyntax.AnyCall``1(``0)">
+        <member name="M:FakeItEasy.ExtensionSyntax.Full.ObjectExtensions.AnyCall``1(``0)">
             <summary>
             Configures the behavior of the fake object when a call is made to any method on the
             object.
@@ -2489,12 +2768,12 @@
             <param name="fakedObject">The faked object.</param>
             <returns>A configuration object.</returns>
         </member>
-        <member name="T:FakeItEasy.ExtensionSyntax.Syntax">
+        <member name="T:FakeItEasy.ExtensionSyntax.ObjectExtensions">
             <summary>
             Provides an extension method for configuring fake objects.
             </summary>
         </member>
-        <member name="M:FakeItEasy.ExtensionSyntax.Syntax.Configure``1(``0)">
+        <member name="M:FakeItEasy.ExtensionSyntax.ObjectExtensions.Configure``1(``0)">
             <summary>
             Gets an object that provides a fluent interface syntax for configuring
             the fake object.
@@ -2676,162 +2955,12 @@
             </summary>
             <value></value>
         </member>
-        <member name="T:FakeItEasy.FakeExtensions">
+        <member name="T:FakeItEasy.FakeObjectCallExtensions">
             <summary>
-            Provides extension methods for fake objects.
+            Provides extension methods for <see cref="T:FakeItEasy.Core.IFakeObjectCall"/>.
             </summary>
         </member>
-        <member name="M:FakeItEasy.FakeExtensions.Once(FakeItEasy.Configuration.IRepeatConfiguration)">
-            <summary>
-            Specifies NumberOfTimes(1) to the IRepeatConfiguration{TFake}.
-            </summary>
-            <param name="configuration">The configuration to set repeat 1 to.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Twice(FakeItEasy.Configuration.IRepeatConfiguration)">
-            <summary>
-            Specifies NumberOfTimes(2) to the IRepeatConfiguration{TFake}.
-            </summary>
-            <param name="configuration">The configuration to set repeat 2 to.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.WithAnyArguments``1(FakeItEasy.Configuration.IArgumentValidationConfiguration{``0})">
-            <summary>
-            Specifies that a call to the configured call should be applied no matter what arguments
-            are used in the call to the faked object.
-            </summary>
-            <typeparam name="TInterface">The type of the interface.</typeparam>
-            <param name="configuration">The configuration.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Matching``1(System.Collections.Generic.IEnumerable{FakeItEasy.Core.ICompletedFakeObjectCall},System.Linq.Expressions.Expression{System.Action{``0}})">
-            <summary>
-            Filters to contain only the calls that matches the call specification.
-            </summary>
-            <typeparam name="TFake">The type of fake the call is made on.</typeparam>
-            <param name="calls">The calls to filter.</param>
-            <param name="callSpecification">The call to match on.</param>
-            <returns>A collection of the calls that matches the call specification.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.MustHaveHappened(FakeItEasy.Configuration.IAssertConfiguration)">
-            <summary>
-            Asserts that the specified call must have happened once or more.
-            </summary>
-            <param name="configuration">The configuration to assert on.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.MustNotHaveHappened(FakeItEasy.Configuration.IAssertConfiguration)">
-            <summary>
-            Asserts that the specified has not happened.
-            </summary>
-            <param name="configuration">The configuration to assert on.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsNextFromSequence``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},``0[])">
-            <summary>
-            Configures the call to return the next value from the specified sequence each time it's called. Null will
-            be returned when all the values in the sequence has been returned.
-            </summary>
-            <typeparam name="T">
-            The type of return value.
-            </typeparam>
-            <param name="configuration">
-            The call configuration to extend.
-            </param>
-            <param name="values">
-            The values to return in sequence.
-            </param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Returns``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},``0)">
-            <summary>
-            Specifies the value to return when the configured call is made.
-            </summary>
-            <typeparam name="T">The type of the return value.</typeparam>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="value">The value to return.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsLazily``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <typeparam name="T">The type of the return value.</typeparam>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="valueProducer">A function that produces the return value.</param>
-            <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsLazily``2(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <typeparam name="TReturnType">The type of the return value.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="valueProducer">A function that produces the return value.</param>
-            <returns>A configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsLazily``3(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="valueProducer">A function that produces the return value.</param>
-            <typeparam name="TReturnType">The type of the return value.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <returns>A configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsLazily``4(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``3,``0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="valueProducer">A function that produces the return value.</param>
-            <typeparam name="TReturnType">The type of the return value.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <returns>A configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.ReturnsLazily``5(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``3,``4,``0})">
-            <summary>
-            Specifies a function used to produce a return value when the configured call is made.
-            The function will be called each time this call is made and can return different values
-            each time.
-            </summary>
-            <param name="configuration">The configuration to extend.</param>
-            <param name="valueProducer">A function that produces the return value.</param>
-            <typeparam name="TReturnType">The type of the return value.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
-            <returns>A configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Write``1(System.Collections.Generic.IEnumerable{``0},FakeItEasy.IOutputWriter)">
-            <summary>
-            Writes the calls in the collection to the specified text writer.
-            </summary>
-            <typeparam name="T">The type of the calls.</typeparam>
-            <param name="calls">The calls to write.</param>
-            <param name="writer">The writer to write the calls to.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.WriteToConsole``1(System.Collections.Generic.IEnumerable{``0})">
-            <summary>
-            Writes all calls in the collection to the console.
-            </summary>
-            <typeparam name="T">The type of the calls.</typeparam>
-            <param name="calls">The calls to write.</param>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.GetArgument``1(FakeItEasy.Core.IFakeObjectCall,System.Int32)">
+        <member name="M:FakeItEasy.FakeObjectCallExtensions.GetArgument``1(FakeItEasy.Core.IFakeObjectCall,System.Int32)">
             <summary>
             Gets the argument at the specified index in the arguments collection
             for the call.
@@ -2841,7 +2970,7 @@
             <param name="argumentIndex">The index of the argument.</param>
             <returns>The value of the argument with the specified index.</returns>
         </member>
-        <member name="M:FakeItEasy.FakeExtensions.GetArgument``1(FakeItEasy.Core.IFakeObjectCall,System.String)">
+        <member name="M:FakeItEasy.FakeObjectCallExtensions.GetArgument``1(FakeItEasy.Core.IFakeObjectCall,System.String)">
             <summary>
             Gets the argument with the specified name in the arguments collection
             for the call.
@@ -2851,7 +2980,34 @@
             <param name="argumentName">The name of the argument.</param>
             <returns>The value of the argument with the specified name.</returns>
         </member>
-        <member name="M:FakeItEasy.FakeExtensions.Strict``1(FakeItEasy.Creation.IFakeOptionsBuilder{``0})">
+        <member name="M:FakeItEasy.FakeObjectCallExtensions.Write``1(System.Collections.Generic.IEnumerable{``0},FakeItEasy.IOutputWriter)">
+            <summary>
+            Writes the calls in the collection to the specified output writer.
+            </summary>
+            <typeparam name="T">The type of the calls.</typeparam>
+            <param name="calls">The calls to write.</param>
+            <param name="writer">The writer to write the calls to.</param>
+        </member>
+        <member name="M:FakeItEasy.FakeObjectCallExtensions.WriteToConsole``1(System.Collections.Generic.IEnumerable{``0})">
+            <summary>
+            Writes all calls in the collection to the console.
+            </summary>
+            <typeparam name="T">The type of the calls.</typeparam>
+            <param name="calls">The calls to write.</param>
+        </member>
+        <member name="M:FakeItEasy.FakeObjectCallExtensions.GetDescription(FakeItEasy.Core.IFakeObjectCall)">
+            <summary>
+            Gets the description of a call to a fake object.
+            </summary>
+            <param name="fakeObjectCall">The call to describe.</param>
+            <returns>A description of the call.</returns>
+        </member>
+        <member name="T:FakeItEasy.FakeOptionsBuilderExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:FakeItEasy.Creation.IFakeOptionsBuilder`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.FakeOptionsBuilderExtensions.Strict``1(FakeItEasy.Creation.IFakeOptionsBuilder{``0})">
             <summary>
             Makes the fake strict, this means that any call to the fake
             that has not been explicitly configured will throw an exception.
@@ -2859,160 +3015,6 @@
             <typeparam name="T">The type of fake object.</typeparam>
             <param name="options">The configuration.</param>
             <returns>A configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Where``1(FakeItEasy.Configuration.IWhereConfiguration{``0},System.Linq.Expressions.Expression{System.Func{FakeItEasy.Core.IFakeObjectCall,System.Boolean}})">
-            <summary>
-            Applies a predicate to constrain which calls will be considered for interception.
-            </summary>
-            <typeparam name="T">
-            The return type of the where method.
-            </typeparam>
-            <param name="configuration">
-            The configuration object to extend.
-            </param>
-            <param name="predicate">
-            A predicate for a fake object call.
-            </param>
-            to the output.
-            <returns>
-            The configuration object.
-            </returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Invokes``1(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action)">
-            <summary>
-            Executes the specified action when a matching call is being made. This overload can also be used to fake calls with arguments when they don't need to be accessed.
-            </summary>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-            <param name="configuration">The configuration that is extended.</param>
-            <param name="actionToInvoke">The <see cref="T:System.Action"/> to invoke.</param>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Invokes``2(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1})">
-            <summary>
-            Executes the specified action when a matching call is being made.
-            </summary>
-            <param name="configuration">The configuration that is extended.</param>
-            <param name="actionToInvoke">The <see cref="T:System.Action`1"/> to invoke.</param>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Invokes``3(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2})">
-            <summary>
-            Executes the specified action when a matching call is being made.
-            </summary>
-            <param name="configuration">The configuration that is extended.</param>
-            <param name="actionToInvoke">The <see cref="T:System.Action`2"/> to invoke.</param>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Invokes``4(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2,``3})">
-            <summary>
-            Executes the specified action when a matching call is being made.
-            </summary>
-            <param name="configuration">The configuration that is extended.</param>
-            <param name="actionToInvoke">The <see cref="T:System.Action`3"/> to invoke.</param>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Invokes``5(FakeItEasy.Configuration.ICallbackConfiguration{``0},System.Action{``1,``2,``3,``4})">
-            <summary>
-            Executes the specified action when a matching call is being made.
-            </summary>
-            <param name="configuration">The configuration that is extended.</param>
-            <param name="actionToInvoke">The <see cref="T:System.Action`4"/> to invoke.</param>
-            <typeparam name="TFake">The type of fake object.</typeparam>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="actionToInvoke"/> do not match.</exception>
-            <returns>The fake object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Exception)">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exception">The exception to throw when a call that matches is invoked.</param>
-            <returns>Configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{System.Exception})">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
-            <returns>Configuration object.</returns>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws``1(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,System.Exception})">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <returns>Configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws``2(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,System.Exception})">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <returns>Configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws``3(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,``2,System.Exception})">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <returns>Configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws``4(FakeItEasy.Configuration.IExceptionThrowerConfiguration,System.Func{``0,``1,``2,``3,System.Exception})">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <param name="exceptionFactory">A function that returns the exception to throw when invoked.</param>
-            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
-            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
-            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
-            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
-            <returns>Configuration object.</returns>
-            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="exceptionFactory"/> do not match.</exception>
-        </member>
-        <member name="M:FakeItEasy.FakeExtensions.Throws``1(FakeItEasy.Configuration.IExceptionThrowerConfiguration)">
-            <summary>
-            Throws the specified exception when the currently configured
-            call gets called.
-            </summary>
-            <param name="configuration">The configuration to use.</param>
-            <typeparam name="T">The type of exception to throw.</typeparam>
-            <returns>Configuration object.</returns>
         </member>
         <member name="T:FakeItEasy.Guard">
             <summary>
@@ -3027,12 +3029,10 @@
             <param name="argumentName">Name of the argument.</param>
             <exception cref="T:System.ArgumentNullException">The specified argument was null.</exception>
         </member>
-        <member name="M:FakeItEasy.Helpers.GetValueProducedByExpression(System.Linq.Expressions.Expression)">
+        <member name="T:FakeItEasy.Guard.ValidatedNotNullAttribute">
             <summary>
-            Gets the value produced by the specified expression when compiled and invoked.
+            When applied to a parameter, this attribute provides an indication to code analysis that the argument has been null checked.
             </summary>
-            <param name="expression">The expression to get the value from.</param>
-            <returns>The value produced by the expression.</returns>
         </member>
         <member name="T:FakeItEasy.IFileSystem">
             <summary>
@@ -3118,6 +3118,11 @@
             Specifies twice as the repeat.
             </summary>
         </member>
+        <member name="T:FakeItEasy.MethodBaseExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Reflection.MethodBase"/>.
+            </summary>
+        </member>
         <member name="T:FakeItEasy.NextCall">
             <summary>
             Lets you specify options for the next call to a fake object.
@@ -3146,19 +3151,19 @@
             <param name="calls">The calls to assert among.</param>
             <returns>A disposable used to close the scope.</returns>
         </member>
-        <member name="T:FakeItEasy.OutputWriter">
+        <member name="T:FakeItEasy.OutputWriterExtensions">
             <summary>
-            Provides static methods for the IOutputWriter-interface.
+            Provides extensions for <see cref="T:FakeItEasy.IOutputWriter"/>.
             </summary>
         </member>
-        <member name="M:FakeItEasy.OutputWriter.WriteLine(FakeItEasy.IOutputWriter)">
+        <member name="M:FakeItEasy.OutputWriterExtensions.WriteLine(FakeItEasy.IOutputWriter)">
             <summary>
             Writes a new line to the writer.
             </summary>
             <param name="writer">The writer to write to.</param>
             <returns>The writer.</returns>
         </member>
-        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.String,System.Object[])">
+        <member name="M:FakeItEasy.OutputWriterExtensions.Write(FakeItEasy.IOutputWriter,System.String,System.Object[])">
             <summary>
             Writes the format string to the writer.
             </summary>
@@ -3167,7 +3172,7 @@
             <param name="args">Replacements for the format string.</param>
             <returns>The writer.</returns>
         </member>
-        <member name="M:FakeItEasy.OutputWriter.Write(FakeItEasy.IOutputWriter,System.Object)">
+        <member name="M:FakeItEasy.OutputWriterExtensions.Write(FakeItEasy.IOutputWriter,System.Object)">
             <summary>
             Writes the specified object to the writer (using the ToString-method of the object).
             </summary>
@@ -3241,6 +3246,23 @@
             <param name="fileName">The file to use for recording.</param>
             <returns>A recorder instance.</returns>
         </member>
+        <member name="T:FakeItEasy.RepeatConfigurationExtensions">
+            <summary>
+            Provides extensions for <see cref="T:FakeItEasy.Configuration.IRepeatConfiguration"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.RepeatConfigurationExtensions.Once(FakeItEasy.Configuration.IRepeatConfiguration)">
+            <summary>
+            Specifies NumberOfTimes(1) to the repeat configuration.
+            </summary>
+            <param name="configuration">The configuration to set repeat 1 to.</param>
+        </member>
+        <member name="M:FakeItEasy.RepeatConfigurationExtensions.Twice(FakeItEasy.Configuration.IRepeatConfiguration)">
+            <summary>
+            Specifies NumberOfTimes(2) to the repeat configuration.
+            </summary>
+            <param name="configuration">The configuration to set repeat 2 to.</param>
+        </member>
         <member name="T:FakeItEasy.Repeated">
             <summary>
             Provides syntax for specifying the number of times a call must have been repeated when asserting on 
@@ -3286,6 +3308,98 @@
             The call must have happened any number of times less than or equal to the number of times that is specified
             in the next step.
             </summary>
+        </member>
+        <member name="T:FakeItEasy.ReturnValueConfigurationExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:FakeItEasy.Configuration.IReturnValueConfiguration`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.Returns``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},``0)">
+            <summary>
+            Specifies the value to return when the configured call is made.
+            </summary>
+            <typeparam name="T">The type of the return value.</typeparam>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="value">The value to return.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsLazily``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <typeparam name="T">The type of the return value.</typeparam>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <returns>A configuration object.</returns>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsLazily``2(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <typeparam name="TReturnType">The type of the return value.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <returns>A configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsLazily``3(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <typeparam name="TReturnType">The type of the return value.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <returns>A configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsLazily``4(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``3,``0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <typeparam name="TReturnType">The type of the return value.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <returns>A configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsLazily``5(FakeItEasy.Configuration.IReturnValueConfiguration{``0},System.Func{``1,``2,``3,``4,``0})">
+            <summary>
+            Specifies a function used to produce a return value when the configured call is made.
+            The function will be called each time this call is made and can return different values
+            each time.
+            </summary>
+            <param name="configuration">The configuration to extend.</param>
+            <param name="valueProducer">A function that produces the return value.</param>
+            <typeparam name="TReturnType">The type of the return value.</typeparam>
+            <typeparam name="T1">Type of the first argument of the faked method call.</typeparam>
+            <typeparam name="T2">Type of the second argument of the faked method call.</typeparam>
+            <typeparam name="T3">Type of the third argument of the faked method call.</typeparam>
+            <typeparam name="T4">Type of the fourth argument of the faked method call.</typeparam>
+            <returns>A configuration object.</returns>
+            <exception cref="T:FakeItEasy.Configuration.FakeConfigurationException">The signatures of the faked method and the <paramref name="valueProducer"/> do not match.</exception>
+        </member>
+        <member name="M:FakeItEasy.ReturnValueConfigurationExtensions.ReturnsNextFromSequence``1(FakeItEasy.Configuration.IReturnValueConfiguration{``0},``0[])">
+            <summary>
+            Configures the call to return the next value from the specified sequence each time it's called.
+            After the sequence has been exhausted, the call will revert to the previously configured behavior.
+            </summary>
+            <typeparam name="T">The type of return value.</typeparam>
+            <param name="configuration">The call configuration to extend.</param>
+            <param name="values">The values to return in sequence.</param>
         </member>
         <member name="T:FakeItEasy.RootModule">
             <summary>
@@ -3526,10 +3640,54 @@
             Gets or sets the description of the smell.
             </summary>
         </member>
+        <member name="T:FakeItEasy.StringBuilderExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Text.StringBuilder"/>.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.StringExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.String"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.StringExtensions.FormatInvariant(System.String,System.Object[])">
+            <summary>
+            Replaces the format item in a specified System.String with the text equivalent
+            of the value of a corresponding System.Object instance in a specified array using
+            invariant culture as <see cref="T:System.IFormatProvider"/>.
+            </summary>
+            <param name="format">A composite format string.</param>
+            <param name="arguments">An <see cref="T:System.Object"/> array containing zero or more objects to format.</param>
+            <returns>The formatted string.</returns>
+        </member>
+        <member name="T:FakeItEasy.TypeExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:System.Type"/>.
+            </summary>
+        </member>
         <member name="T:FakeItEasy.UnderTestAttribute">
             <summary>
             Used to tag fields and properties that will be initialized as a SUT through the Fake.Initialize-method.
             </summary>
+        </member>
+        <member name="T:FakeItEasy.ValueProducerSignatureHelper">
+            <summary>
+            Provides helper methods for checking the value producer signature against call signatures.
+            </summary>
+        </member>
+        <member name="T:FakeItEasy.WhereConfigurationExtensions">
+            <summary>
+            Provides extension methods for <see cref="T:FakeItEasy.Configuration.IWhereConfiguration`1"/>.
+            </summary>
+        </member>
+        <member name="M:FakeItEasy.WhereConfigurationExtensions.Where``1(FakeItEasy.Configuration.IWhereConfiguration{``0},System.Linq.Expressions.Expression{System.Func{FakeItEasy.Core.IFakeObjectCall,System.Boolean}})">
+            <summary>
+            Applies a predicate to constrain which calls will be considered for interception.
+            </summary>
+            <typeparam name="T">The return type of the where method.</typeparam>
+            <param name="configuration">The configuration object to extend.</param>
+            <param name="predicate">A predicate for a fake object call.</param>
+            <returns>The configuration object.</returns>
         </member>
     </members>
 </doc>
