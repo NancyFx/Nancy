@@ -466,12 +466,6 @@ namespace Nancy.ViewEngines.SuperSimpleViewEngine
                 });
         }
 
-        private class FooBar
-        {
-            public object Current { get; set; }
-            public object Model { get; set; }
-        }
-
         /// <summary>
         /// Expand a @Current match inside an @Each iterator
         /// </summary>
