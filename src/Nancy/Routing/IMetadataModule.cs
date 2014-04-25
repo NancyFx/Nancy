@@ -6,6 +6,6 @@
     {
         Type MetadataType { get; }
 
-        object ApplyMetadata(RouteDescription description);
+        object GetMetadata(RouteDescription description);
     }
 }

@@ -50,8 +50,7 @@ namespace Nancy.Diagnostics
                 new DefaultRouteSegmentExtractor(),
                 new DefaultRouteDescriptionProvider(),
                 cultureService,
-                routeMetadataProviders,
-                new DefaultMetadataModuleCatalog());
+                routeMetadataProviders);
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,

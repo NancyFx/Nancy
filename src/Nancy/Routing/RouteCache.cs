@@ -87,7 +87,7 @@
                     data.Add(type, metadata);
                 }
             }
-
+            
             return new RouteMetadata(data);
         }
 

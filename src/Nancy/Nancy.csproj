@@ -257,6 +257,7 @@
     <Compile Include="Routing\IRouteMetadataProvider.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
     <Compile Include="Routing\MetadataModule.cs" />
+    <Compile Include="Routing\MetadataModuleRouteMetadataProvider.cs" />
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\ResolveResult.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />
