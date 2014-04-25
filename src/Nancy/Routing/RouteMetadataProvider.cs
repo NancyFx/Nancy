@@ -8,13 +8,9 @@ namespace Nancy.Routing
     /// <typeparam name="TMetadata">The metadata type.</typeparam>
     public abstract class RouteMetadataProvider<TMetadata> : IRouteMetadataProvider
     {
-        /// <summary>
-        /// Gets the <see cref="Type" /> of the metadata that is created by the provider.
-        /// </summary>
-        /// <value>A <see cref="Type" /> instance.</value>
-        public Type MetadataType
+        public Type GetMetadataType(INancyModule module, RouteDescription routeDescription)
         {
-            get { return typeof(TMetadata); }
+            return typeof(TMetadata);
         }
 
         /// <summary>

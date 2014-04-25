@@ -28,7 +28,7 @@
             }
         }
 
-        public object ApplyMetadata(RouteDescription description)
+        public object GetMetadata(RouteDescription description)
         {
             if (this.metadata.ContainsKey(description.Name))
             {

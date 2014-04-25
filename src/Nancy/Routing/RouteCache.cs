@@ -2,7 +2,6 @@
 {
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
     using System;
     using Nancy.Culture;
 
@@ -31,13 +30,11 @@
             IRouteSegmentExtractor routeSegmentExtractor,
             IRouteDescriptionProvider routeDescriptionProvider,
             ICultureService cultureService,
-            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
-            IMetadataModuleCatalog metadataModuleCatalog)
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
             this.routeMetadataProviders = routeMetadataProviders;
-            this.metadataModuleCatalog = metadataModuleCatalog;
 
             var request = new Request("GET", "/", "http");
 
@@ -78,22 +75,19 @@
 
         private RouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
         {
-            var data = this.routeMetadataProviders
-                .Select(x => new { Type = x.MetadataType, Data = x.GetMetadata(module, routeDescription) })
-                .ToDictionary(x => x.Type, x => x.Data);
+            var data = new Dictionary<Type, object>();
 
-            var metadataModule = this.metadataModuleCatalog.GetMetadataModule(module.GetType());
-
-            if (metadataModule != null)
+            foreach (var provider in this.routeMetadataProviders)
             {
-                var metadata = metadataModule.ApplyMetadata(routeDescription);
+                var type = provider.GetMetadataType(module, routeDescription);
+                var metadata = provider.GetMetadata(module, routeDescription);
 
-                if (metadata != null)
+                if (type != null && metadata != null)
                 {
-                    data[metadataModule.MetadataType] = metadata;
+                    data.Add(type, metadata);
                 }
             }
-
+            
             return new RouteMetadata(data);
         }
 

@@ -32,8 +32,7 @@
                     this.routeSegmentExtractor,
                     this.routeDescriptionProvider,
                     A.Fake<ICultureService>(),
-                    this.routeMetadataProviders,
-                    A.Fake<IMetadataModuleCatalog>());
+                    this.routeMetadataProviders);
         }
 
         [Fact]
@@ -146,8 +145,7 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                new IRouteMetadataProvider[0],
-                A.Fake<IMetadataModuleCatalog>());
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -177,8 +175,7 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                new IRouteMetadataProvider[0],
-                A.Fake<IMetadataModuleCatalog>());
+                new IRouteMetadataProvider[0]);
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();
