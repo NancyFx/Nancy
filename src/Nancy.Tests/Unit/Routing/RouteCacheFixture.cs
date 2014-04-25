@@ -26,8 +26,14 @@
             this.routeMetadataProviders = new IRouteMetadataProvider[0];
             this.fakeModuleCatalog = new FakeModuleCatalog();
 
-            this.routeCache =
-                new RouteCache(this.fakeModuleCatalog, A.Fake<INancyContextFactory>(), this.routeSegmentExtractor, this.routeDescriptionProvider, A.Fake<ICultureService>(), this.routeMetadataProviders);
+            this.routeCache = new RouteCache(
+                    this.fakeModuleCatalog,
+                    A.Fake<INancyContextFactory>(),
+                    this.routeSegmentExtractor,
+                    this.routeDescriptionProvider,
+                    A.Fake<ICultureService>(),
+                    this.routeMetadataProviders,
+                    A.Fake<IMetadataModuleCatalog>());
         }
 
         [Fact]
@@ -140,7 +146,8 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                new IRouteMetadataProvider[0]);
+                new IRouteMetadataProvider[0],
+                A.Fake<IMetadataModuleCatalog>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(module, A<string>._)).MustHaveHappened();
@@ -170,7 +177,8 @@
                 this.routeSegmentExtractor,
                 descriptionProvider,
                 A.Fake<ICultureService>(),
-                new IRouteMetadataProvider[0]);
+                new IRouteMetadataProvider[0],
+                A.Fake<IMetadataModuleCatalog>());
 
             // Then
             A.CallTo(() => descriptionProvider.GetDescription(A<NancyModule>._, expectedPath)).MustHaveHappened();

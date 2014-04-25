@@ -14,6 +14,7 @@
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
         private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
+        private readonly IMetadataModuleCatalog metadataModuleCatalog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.
@@ -24,11 +25,19 @@
         /// <param name="cultureService"></param>
         /// <param name="routeMetadataProviders"></param>
         /// <param name="routeDescriptionProvider"></param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService, IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+        public RouteCache(
+            INancyModuleCatalog moduleCatalog,
+            INancyContextFactory contextFactory,
+            IRouteSegmentExtractor routeSegmentExtractor,
+            IRouteDescriptionProvider routeDescriptionProvider,
+            ICultureService cultureService,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders,
+            IMetadataModuleCatalog metadataModuleCatalog)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
             this.routeMetadataProviders = routeMetadataProviders;
+            this.metadataModuleCatalog = metadataModuleCatalog;
 
             var request = new Request("GET", "/", "http");
 
@@ -70,8 +79,20 @@
         private RouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
         {
             var data = this.routeMetadataProviders
-                .Select(x => new {Type = x.MetadataType, Data = x.GetMetadata(module, routeDescription)})
+                .Select(x => new { Type = x.MetadataType, Data = x.GetMetadata(module, routeDescription) })
                 .ToDictionary(x => x.Type, x => x.Data);
+
+            var metadataModule = this.metadataModuleCatalog.GetMetadataModule(module.GetType());
+
+            if (metadataModule != null)
+            {
+                var metadata = metadataModule.ApplyMetadata(routeDescription);
+
+                if (metadata != null)
+                {
+                    data[metadataModule.MetadataType] = metadata;
+                }
+            }
 
             return new RouteMetadata(data);
         }
