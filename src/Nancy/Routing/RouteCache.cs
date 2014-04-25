@@ -24,7 +24,13 @@
         /// <param name="cultureService"></param>
         /// <param name="routeMetadataProviders"></param>
         /// <param name="routeDescriptionProvider"></param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService, IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+        public RouteCache(
+            INancyModuleCatalog moduleCatalog,
+            INancyContextFactory contextFactory,
+            IRouteSegmentExtractor routeSegmentExtractor,
+            IRouteDescriptionProvider routeDescriptionProvider,
+            ICultureService cultureService,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;

@@ -21,6 +21,13 @@ namespace Nancy.Demo.Hosting.Aspnet
                     .WithView("meta");
             };
 
+            Get["/super-meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MySuperRouteMetadata>().OfType<MySuperRouteMetadata>())
+                    .WithView("super-meta");
+            };
+
             Get["/text"] = x =>
             {
                 var value = (string)this.Text.Home;
