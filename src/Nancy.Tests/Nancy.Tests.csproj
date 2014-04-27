@@ -110,6 +110,7 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\ResponseExtensions.cs" />
+    <Compile Include="Fakes\FakeMetadataModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithDependency.cs" />
@@ -210,6 +211,8 @@
     <Compile Include="Fakes\FakeNancyModule.cs" />
     <Compile Include="Fakes\FakeRequest.cs" />
     <Compile Include="Unit\Routing\DefaultRouteSegmentExtractorFixture.cs" />
+    <Compile Include="Unit\Routing\MetadataModuleFixture.cs" />
+    <Compile Include="Unit\Routing\MetadataModuleRouteMetadataProviderFixture.cs" />
     <Compile Include="Unit\Routing\NotFoundRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteCacheFixture.cs" />
