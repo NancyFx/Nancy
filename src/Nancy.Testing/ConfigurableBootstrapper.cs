@@ -1862,6 +1862,11 @@ namespace Nancy.Testing
                 this.moduleInstances = new Dictionary<string, IMetadataModule>();
             }
 
+            /// <summary>
+            /// Retrieves a specific <see cref="IMetadataModule"/> implementation for the given <see cref="INancyModule"/> - should be per-request lifetime.
+            /// </summary>
+            /// <param name="moduleType">Module type</param>
+            /// <returns>The <see cref="IMetadataModule"/> instance</returns>
             public IMetadataModule GetMetadataModule(Type moduleType)
             {
                 return this.moduleInstances.ContainsKey(moduleType.FullName) ? this.moduleInstances[moduleType.FullName] : null;

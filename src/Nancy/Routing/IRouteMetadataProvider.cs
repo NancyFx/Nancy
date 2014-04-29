@@ -12,7 +12,7 @@ namespace Nancy.Routing
         /// </summary>
         /// <param name="module">The <see cref="INancyModule"/> instance that the route is declared in.</param>
         /// <param name="routeDescription">A <see cref="RouteDescription"/> for the route.</param>
-        /// <returns>A <see cref="Type"/> instance.</returns>
+        /// <returns>A <see cref="Type"/> instance, or null if none are found.</returns>
         Type GetMetadataType(INancyModule module, RouteDescription routeDescription);
 
         /// <summary>
@@ -20,7 +20,7 @@ namespace Nancy.Routing
         /// </summary>
         /// <param name="module">The <see cref="INancyModule"/> instance that the route is declared in.</param>
         /// <param name="routeDescription">A <see cref="RouteDescription"/> for the route.</param>
-        /// <returns>An object representing the metadata for the given route.</returns>
+        /// <returns>An object representing the metadata for the given route, or null if none are found.</returns>
         object GetMetadata(INancyModule module, RouteDescription routeDescription);
     }
 }
