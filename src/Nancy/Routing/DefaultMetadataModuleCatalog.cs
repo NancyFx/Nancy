@@ -6,15 +6,26 @@
     using Nancy.Bootstrapper;
     using Nancy.TinyIoc;
 
+    /// <summary>
+    /// Wires up default <see cref="IMetadataModule"/> instances by scanning the <see cref="AppDomain"/>.
+    /// </summary>
     public class DefaultMetadataModuleCatalog : IMetadataModuleCatalog
     {
         private readonly TinyIoCContainer container;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DefaultMetadataModuleCatalog"/> class.
+        /// </summary>
         public DefaultMetadataModuleCatalog()
         {
             this.container = ConfigureContainer();
         }
 
+        /// <summary>
+        /// Retrieves a specific <see cref="IMetadataModule"/> implementation for the given <see cref="INancyModule"/> - should be per-request lifetime.
+        /// </summary>
+        /// <param name="moduleType">Module type.</param>
+        /// <returns>The <see cref="IMetadataModule"/> instance.</returns>
         public IMetadataModule GetMetadataModule(Type moduleType)
         {
             var metadataModuleName = GetMetadataModuleName(moduleType.FullName);
