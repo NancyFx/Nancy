@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     using System;
+    using System.Collections.Generic;
 
     /// <summary>
     /// Provides <see cref="IMetadataModule"/> instances.
@@ -8,10 +9,16 @@
     public interface IMetadataModuleCatalog
     {
         /// <summary>
-        /// Retrieves a specific <see cref="IMetadataModule"/> implementation for the given <see cref="INancyModule"/> - should be per-request lifetime.
+        /// Get all <see cref="IMetadataModule"/> types.
         /// </summary>
-        /// <param name="moduleType">Module type.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="Type"/> instances.</returns>
+        IEnumerable<Type> GetMetadataModuleTypes();
+
+        /// <summary>
+        /// Retrieves a specific <see cref="IMetadataModule"/> instance.
+        /// </summary>
+        /// <param name="metadataModuleType">Metadata module type.</param>
         /// <returns>The <see cref="IMetadataModule"/> instance.</returns>
-        IMetadataModule GetMetadataModule(Type moduleType);
+        IMetadataModule GetMetadataModule(Type metadataModuleType);
     }
 }

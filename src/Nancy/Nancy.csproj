@@ -132,9 +132,11 @@
     <Compile Include="Conventions\CultureConventions.cs" />
     <Compile Include="Conventions\DefaultAcceptHeaderCoercionConventions.cs" />
     <Compile Include="Conventions\DefaultCultureConventions.cs" />
+    <Compile Include="Conventions\DefaultMetadataModuleConventions.cs" />
     <Compile Include="Conventions\DefaultStaticContentsConventions.cs" />
     <Compile Include="Conventions\DefaultViewLocationConventions.cs" />
     <Compile Include="Conventions\IConvention.cs" />
+    <Compile Include="Conventions\MetadataModuleConventions.cs" />
     <Compile Include="Conventions\NancyConventions.cs" />
     <Compile Include="Conventions\StaticContentConventionBuilder.cs" />
     <Compile Include="Conventions\StaticContentHelper.cs" />
@@ -245,12 +247,14 @@
     <Compile Include="Routing\Constraints\RouteSegmentConstraintBase.cs" />
     <Compile Include="Routing\Constraints\ParameterizedRouteSegmentConstraintBase.cs" />
     <Compile Include="Routing\DefaultMetadataModuleCatalog.cs" />
+    <Compile Include="Routing\DefaultMetadataModuleResolver.cs" />
     <Compile Include="Routing\DefaultRequestDispatcher.cs" />
     <Compile Include="Routing\DefaultRouteDescriptionProvider.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
     <Compile Include="Routing\DefaultRouteSegmentExtractor.cs" />
     <Compile Include="Routing\IMetadataModule.cs" />
     <Compile Include="Routing\IMetadataModuleCatalog.cs" />
+    <Compile Include="Routing\IMetadataModuleResolver.cs" />
     <Compile Include="Routing\IRequestDispatcher.cs" />
     <Compile Include="Routing\IRouteDescriptionProvider.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />

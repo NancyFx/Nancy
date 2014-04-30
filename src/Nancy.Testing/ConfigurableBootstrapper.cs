@@ -907,6 +907,17 @@ namespace Nancy.Testing
             }
 
             /// <summary>
+            /// Configures the bootstrapper to create an <see cref="IMetadataModuleResolver"/> instance of the specified type.
+            /// </summary>
+            /// <typeparam name="T">The type of the <see cref="IMetadataModuleResolver"/> that the bootstrapper should use.</typeparam>
+            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
+            public ConfigurableBootstrapperConfigurator MetadataModuleResolver<T>() where T : IMetadataModuleResolver
+            {
+                this.bootstrapper.configuration.MetadataModuleResolver = typeof(T);
+                return this;
+            }
+
+            /// <summary>
             /// Configures the bootstrapper to use the provided instance of <see cref="INancyEngine"/>.
             /// </summary>
             /// <param name="engine">The <see cref="INancyEngine"/> instance that should be used by the bootstrapper.</param>
@@ -1860,6 +1871,15 @@ namespace Nancy.Testing
             public ConfigurableMetadataModuleCatalog()
             {
                 this.moduleInstances = new Dictionary<string, IMetadataModule>();
+            }
+
+            /// <summary>
+            /// Get all <see cref="IMetadataModule"/> types.
+            /// </summary>
+            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="Type"/> instances.</returns>
+            public IEnumerable<Type> GetMetadataModuleTypes()
+            {
+                return this.moduleInstances.Select(i => i.GetType());
             }
 
             /// <summary>

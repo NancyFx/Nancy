@@ -1,6 +1,7 @@
 ﻿namespace Nancy.Routing
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
 
     using Nancy.Bootstrapper;
@@ -11,6 +12,7 @@
     /// </summary>
     public class DefaultMetadataModuleCatalog : IMetadataModuleCatalog
     {
+        private readonly IEnumerable<Type> metadataModuleTypes;
         private readonly TinyIoCContainer container;
 
         /// <summary>
@@ -18,39 +20,44 @@
         /// </summary>
         public DefaultMetadataModuleCatalog()
         {
-            this.container = ConfigureContainer();
+            this.metadataModuleTypes = ScanForMetadataModules();
+            this.container = ConfigureContainer(this.metadataModuleTypes);
         }
 
         /// <summary>
-        /// Retrieves a specific <see cref="IMetadataModule"/> implementation for the given <see cref="INancyModule"/> - should be per-request lifetime.
+        /// Get all <see cref="IMetadataModule"/> types.
         /// </summary>
-        /// <param name="moduleType">Module type.</param>
-        /// <returns>The <see cref="IMetadataModule"/> instance.</returns>
-        public IMetadataModule GetMetadataModule(Type moduleType)
+        /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="Type"/> instances.</returns>
+        public IEnumerable<Type> GetMetadataModuleTypes()
         {
-            var metadataModuleName = GetMetadataModuleName(moduleType.FullName);
-
-            return this.container.ResolveAll<IMetadataModule>()
-                .FirstOrDefault(m => string.Compare(m.GetType().FullName, metadataModuleName, StringComparison.OrdinalIgnoreCase) == 0);
+            return this.metadataModuleTypes;
         }
 
-        private static TinyIoCContainer ConfigureContainer()
+        /// <summary>
+        /// Retrieves a specific <see cref="IMetadataModule"/> instance.
+        /// </summary>
+        /// <param name="metadataModuleType">Metadata module type.</param>
+        /// <returns>The <see cref="IMetadataModule"/> instance.</returns>
+        public IMetadataModule GetMetadataModule(Type metadataModuleType)
+        {
+            return (IMetadataModule)this.container.Resolve(metadataModuleType);
+        }
+
+        private static IEnumerable<Type> ScanForMetadataModules()
+        {
+            return AppDomainAssemblyTypeScanner.TypesOf<IMetadataModule>().ToArray();
+        }
+
+        private static TinyIoCContainer ConfigureContainer(IEnumerable<Type> metadataModuleTypes)
         {
             var container = new TinyIoCContainer();
 
-            foreach (var metadataModuleType in AppDomainAssemblyTypeScanner.TypesOf<IMetadataModule>().ToArray())
+            foreach (var metadataModuleType in metadataModuleTypes)
             {
                 container.Register(typeof(IMetadataModule), metadataModuleType, metadataModuleType.FullName).AsMultiInstance();
             }
 
             return container;
-        }
-
-        private static string GetMetadataModuleName(string moduleName)
-        {
-            var i = moduleName.LastIndexOf("Module");
-
-            return moduleName.Substring(0, i) + "MetadataModule";
         }
     }
 }
