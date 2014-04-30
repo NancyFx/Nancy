@@ -7,15 +7,15 @@
     /// </summary>
     public class MetadataModuleRouteMetadataProvider : IRouteMetadataProvider
     {
-        private readonly IMetadataModuleCatalog catalog;
+        private readonly IMetadataModuleResolver resolver;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MetadataModuleRouteMetadataProvider"/> class.
         /// </summary>
-        /// <param name="catalog">Catalog for obtaining <see cref="IMetadataModule"/> instances.</param>
-        public MetadataModuleRouteMetadataProvider(IMetadataModuleCatalog catalog)
+        /// <param name="resolver">Resolves <see cref="IMetadataModule"/> instances.</param>
+        public MetadataModuleRouteMetadataProvider(IMetadataModuleResolver resolver)
         {
-            this.catalog = catalog;
+            this.resolver = resolver;
         }
 
         /// <summary>
@@ -26,7 +26,7 @@
         /// <returns>A <see cref="Type"/> instance, or null if none are found.</returns>
         public Type GetMetadataType(INancyModule module, RouteDescription routeDescription)
         {
-            var metadataModule = this.catalog.GetMetadataModule(module.GetType());
+            var metadataModule = this.resolver.GetMetadataModule(module.GetType());
 
             return metadataModule != null ? metadataModule.MetadataType : null;
         }
@@ -39,7 +39,7 @@
         /// <returns>An object representing the metadata for the given route, or null if none are found.</returns>
         public object GetMetadata(INancyModule module, RouteDescription routeDescription)
         {
-            var metadataModule = this.catalog.GetMetadataModule(module.GetType());
+            var metadataModule = this.resolver.GetMetadataModule(module.GetType());
 
             return metadataModule != null ? metadataModule.GetMetadata(routeDescription) : null;
         }

@@ -2,7 +2,7 @@
 {
     using Nancy.Routing;
 
-    public class FakeMetadataModuleNoRoutes : MetadataModule<string>
+    public class FakeNancyMetadataModule : MetadataModule<string>
     {
     }
 }
