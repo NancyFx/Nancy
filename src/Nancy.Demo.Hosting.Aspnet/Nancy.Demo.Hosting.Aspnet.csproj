@@ -117,7 +117,7 @@
     <Content Include="Views\negotiatedview.cshtml" />
     <Content Include="Views\razor2.cshtml" />
     <Content Include="Views\nustachePartial.nustache" />
-    <Content Include="Views\super-meta.cshtml" />
+    <Content Include="Views\uber-meta.cshtml" />
     <None Include="Views\FileUpload.sshtml">
       <SubType>Designer</SubType>
     </None>
@@ -148,8 +148,9 @@
     <Compile Include="DependencyModule.cs" />
     <Compile Include="IApplicationDependency.cs" />
     <Compile Include="IRequestDependency.cs" />
-    <Compile Include="MainMetadataModule.cs" />
     <Compile Include="MainModule.cs" />
+    <Compile Include="Metadata\MainMetadataModule.cs" />
+    <Compile Include="Metadata\MyUberRouteMetadata.cs" />
     <Compile Include="Models\Payload.cs" />
     <Compile Include="Models\RatPack.cs" />
     <Compile Include="Models\RatPackWithDependencyText.cs" />

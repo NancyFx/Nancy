@@ -1,5 +1,5 @@
-﻿@using Nancy.Demo.Hosting.Aspnet
-@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<System.Collections.Generic.IEnumerable<MySuperRouteMetadata>>
+﻿@using Nancy.Demo.Hosting.Aspnet.Metadata
+@inherits Nancy.ViewEngines.Razor.NancyRazorViewBase<System.Collections.Generic.IEnumerable<MyUberRouteMetadata>>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -20,7 +20,7 @@
 </head>
 <body>
 	<h1>Route metadata</h1>
-    <p>Below is a list of route metadata that was generated from a MetadataModule implementation</p>
+    <p>Below is a list of route metadata that was declared within a metadata module.</p>
 	
     <div class="meta">
         @foreach (var meta in @Model)
