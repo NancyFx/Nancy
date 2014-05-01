@@ -7,7 +7,6 @@
     /// </summary>
     public interface IMetadataModule
     {
-
         /// <summary>
         /// Gets the <see cref="Type"/> of metadata the <see cref="IMetadataModule"/> returns.
         /// </summary>
