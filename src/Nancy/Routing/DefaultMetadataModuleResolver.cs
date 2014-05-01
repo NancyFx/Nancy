@@ -26,6 +26,11 @@
                 throw new InvalidOperationException("Cannot create an instance of DefaultMetadataModuleResolver with conventions parameter having null value.");
             }
 
+            if (catalog == null)
+            {
+                throw new InvalidOperationException("Cannot create an instance of DefaultMetadataModuleResolver with catalog parameter having null value.");
+            }
+
             this.conventions = conventions;
             this.catalog = catalog;
         }
