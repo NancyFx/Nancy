@@ -5,6 +5,7 @@
 
     using Nancy.Conventions;
     using Nancy.Tests.Fakes;
+    using Nancy.Tests.Fakes.Metadata;
 
     using Xunit;
 
@@ -78,7 +79,8 @@
             this.conventions.MetadataModuleConventions =
                 new List<Func<Type, IEnumerable<Type>, Type>>
                 {
-                    (moduleType, metadataModuleTypes) => {
+                    (moduleType, metadataModuleTypes) =>
+                    {
                         return null;
                     }
                 };
@@ -97,7 +99,8 @@
             this.conventions.MetadataModuleConventions =
                 new List<Func<Type, IEnumerable<Type>, Type>>
                 {
-                    (moduleType, metadataModuleTypes) => {
+                    (moduleType, metadataModuleTypes) =>
+                    {
                         return null;
                     }
                 };
@@ -129,10 +132,42 @@
             // When
             var result = convention.Invoke(
                 typeof(FakeNancyModule),
-                new[] { typeof(FakeNancyMetadataModule) });
+                new[] { typeof(Fakes.FakeNancyMetadataModule) });
 
             // Then
-            result.ShouldEqual(typeof(FakeNancyMetadataModule));
+            result.ShouldEqual(typeof(Fakes.FakeNancyMetadataModule));
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_metadata_module_type_in_metadata_subfolder()
+        {
+            // Given
+            this.metadataModuleConventions.Initialise(this.conventions);
+            var convention = this.conventions.MetadataModuleConventions[1];
+
+            // When
+            var result = convention.Invoke(
+                typeof(FakeNancyModule),
+                new[] { typeof(Fakes.Metadata.FakeNancyMetadataModule) });
+
+            // Then
+            result.ShouldEqual(typeof(Fakes.Metadata.FakeNancyMetadataModule));
+        }
+
+        [Fact]
+        public void Should_define_convention_that_returns_metadata_module_type_in_peer_metadata_folder()
+        {
+            // Given
+            this.metadataModuleConventions.Initialise(this.conventions);
+            var convention = this.conventions.MetadataModuleConventions[2];
+
+            // When
+            var result = convention.Invoke(
+                typeof(Fakes.Modules.FakeNancyModule),
+                new[] { typeof(Fakes.Metadata.FakeNancyMetadataModule) });
+
+            // Then
+            result.ShouldEqual(typeof(Fakes.Metadata.FakeNancyMetadataModule));
         }
     }
 }
