@@ -1,9 +1,9 @@
 ﻿namespace Nancy.Routing
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Nancy.Bootstrapper;
-    using System;
+
     using Nancy.Culture;
 
     /// <summary>
@@ -69,9 +69,18 @@
 
         private RouteMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription)
         {
-            var data = this.routeMetadataProviders
-                .Select(x => new {Type = x.MetadataType, Data = x.GetMetadata(module, routeDescription)})
-                .ToDictionary(x => x.Type, x => x.Data);
+            var data = new Dictionary<Type, object>();
+
+            foreach (var provider in this.routeMetadataProviders)
+            {
+                var type = provider.GetMetadataType(module, routeDescription);
+                var metadata = provider.GetMetadata(module, routeDescription);
+
+                if (type != null && metadata != null)
+                {
+                    data.Add(type, metadata);
+                }
+            }
 
             return new RouteMetadata(data);
         }
