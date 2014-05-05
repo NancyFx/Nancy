@@ -116,6 +116,7 @@
     <Compile Include="NancyFxSection.cs" />
     <Compile Include="NancyHandler.cs" />
     <Compile Include="NancyHttpRequestHandler.cs" />
+    <Compile Include="NancyResponseStream.cs" />
     <Compile Include="TinyIoCAspNetExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
