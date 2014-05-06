@@ -1,6 +1,8 @@
-﻿namespace Nancy.Routing
+﻿namespace Nancy.Metadata.Module
 {
     using System;
+
+    using Nancy.Routing;
 
     /// <summary>
     /// Provides metadata for routes by obtaining it from <see cref="IMetadataModule"/> instances associated with <see cref="INancyModules"/>.
@@ -26,7 +28,7 @@
         /// <returns>A <see cref="Type"/> instance, or null if none are found.</returns>
         public Type GetMetadataType(INancyModule module, RouteDescription routeDescription)
         {
-            var metadataModule = this.resolver.GetMetadataModule(module.GetType());
+            var metadataModule = this.resolver.GetMetadataModule(module);
 
             return metadataModule != null ? metadataModule.MetadataType : null;
         }
@@ -39,7 +41,7 @@
         /// <returns>An object representing the metadata for the given route, or null if none are found.</returns>
         public object GetMetadata(INancyModule module, RouteDescription routeDescription)
         {
-            var metadataModule = this.resolver.GetMetadataModule(module.GetType());
+            var metadataModule = this.resolver.GetMetadataModule(module);
 
             return metadataModule != null ? metadataModule.GetMetadata(routeDescription) : null;
         }

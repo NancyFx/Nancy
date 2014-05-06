@@ -76,16 +76,10 @@ namespace Nancy.Bootstrapper
                     RouteSegmentConstraints = AppDomainAssemblyTypeScanner.TypesOf<IRouteSegmentConstraint>().ToList(),
                     RequestTraceFactory = typeof(DefaultRequestTraceFactory),
                     ResponseNegotiator = typeof(DefaultResponseNegotiator),
-                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList(),
-                    MetadataModuleCatalog = typeof(DefaultMetadataModuleCatalog),
-                    MetadataModuleResolver = typeof(DefaultMetadataModuleResolver)
+                    RouteMetadataProviders = AppDomainAssemblyTypeScanner.TypesOf<IRouteMetadataProvider>().ToList()
                 };
             }
         }
-
-        public Type MetadataModuleCatalog { get; set; }
-
-        public Type MetadataModuleResolver { get; set; }
 
         public IList<Type> RouteMetadataProviders { get; set; }
 
@@ -246,9 +240,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
                 new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
                 new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory), 
-                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator),
-                new TypeRegistration(typeof(IMetadataModuleCatalog), this.MetadataModuleCatalog),
-                new TypeRegistration(typeof(IMetadataModuleResolver), this.MetadataModuleResolver)
+                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator)
             };
         }
 

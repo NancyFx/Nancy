@@ -6,7 +6,6 @@
     using System.Text;
     using System.Globalization;
     using Nancy.Bootstrapper;
-    using Nancy.Routing;
 
     using ViewEngines;
 
@@ -51,11 +50,6 @@
         public IList<Func<NancyContext, CultureInfo>> CultureConventions { get; set; }
 
         /// <summary>
-        /// Gets or sets the conventions for locating metadata modules
-        /// </summary>
-        public IList<Func<Type, IEnumerable<Type>, Type>> MetadataModuleConventions { get; set; }
-
-        /// <summary>
         /// Validates the conventions
         /// </summary>
         /// <returns>A tuple containing a flag indicating validity, and any error messages</returns>
@@ -84,8 +78,7 @@
                 new InstanceRegistration(typeof(ViewLocationConventions), new ViewLocationConventions(this.ViewLocationConventions)),
                 new InstanceRegistration(typeof(StaticContentsConventions), new StaticContentsConventions(this.StaticContentsConventions)), 
                 new InstanceRegistration(typeof(AcceptHeaderCoercionConventions), new AcceptHeaderCoercionConventions(this.AcceptHeaderCoercionConventions)), 
-                new InstanceRegistration(typeof(CultureConventions), new CultureConventions(this.CultureConventions)), 
-                new InstanceRegistration(typeof(MetadataModuleConventions), new MetadataModuleConventions(this.MetadataModuleConventions)) 
+                new InstanceRegistration(typeof(CultureConventions), new CultureConventions(this.CultureConventions))
             };
         }
 

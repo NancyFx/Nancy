@@ -30,7 +30,6 @@ namespace Nancy.Testing
         private readonly List<InstanceRegistration> registeredInstances;
         private readonly NancyInternalConfiguration configuration;
         private readonly ConfigurableModuleCatalog catalog;
-        private readonly ConfigurableMetadataModuleCatalog metadataCatalog;
         private bool enableAutoRegistration;
         private DiagnosticsConfiguration diagnosticConfiguration;
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
@@ -60,7 +59,6 @@ namespace Nancy.Testing
         public ConfigurableBootstrapper(Action<ConfigurableBootstrapperConfigurator> configuration)
         {
             this.catalog = new ConfigurableModuleCatalog();
-            this.metadataCatalog = new ConfigurableMetadataModuleCatalog();
             this.configuration = NancyInternalConfiguration.Default;
             this.registeredTypes = new List<object>();
             this.registeredInstances = new List<InstanceRegistration>();
@@ -877,39 +875,6 @@ namespace Nancy.Testing
 
                 this.bootstrapper.registeredTypes.AddRange(moduleRegistrations);
 
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to register the provided <see cref="IMetadataModule"/> instance.
-            /// </summary>
-            /// <param name="metadataModule">The <see cref="IMetadataModule"/> instance to register.</param>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MetadataModule(IMetadataModule metadataModule)
-            {
-                this.bootstrapper.metadataCatalog.RegisterModuleInstance(metadataModule);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IMetadataModuleCatalog"/> instance of the specified type.
-            /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IMetadataModuleCatalog"/> that the bootstrapper should use.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MetadataModuleCatalog<T>() where T : IMetadataModuleCatalog
-            {
-                this.bootstrapper.configuration.MetadataModuleCatalog = typeof(T);
-                return this;
-            }
-
-            /// <summary>
-            /// Configures the bootstrapper to create an <see cref="IMetadataModuleResolver"/> instance of the specified type.
-            /// </summary>
-            /// <typeparam name="T">The type of the <see cref="IMetadataModuleResolver"/> that the bootstrapper should use.</typeparam>
-            /// <returns>A reference to the current <see cref="ConfigurableBootstrapperConfigurator"/>.</returns>
-            public ConfigurableBootstrapperConfigurator MetadataModuleResolver<T>() where T : IMetadataModuleResolver
-            {
-                this.bootstrapper.configuration.MetadataModuleResolver = typeof(T);
                 return this;
             }
 
@@ -1851,50 +1816,6 @@ namespace Nancy.Testing
             {
                 this.bootstrapper.requestStartupActions.Add(action);
                 return this;
-            }
-        }
-
-        /// <summary>
-        /// Provides the functionality to register <see cref="IMetadataModule"/> instances in a <see cref="IMetadataModuleCatalog"/>.
-        /// </summary>
-        public class ConfigurableMetadataModuleCatalog : IMetadataModuleCatalog
-        {
-            private readonly IDictionary<string, IMetadataModule> moduleInstances;
-
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ConfigurableMetadataModuleCatalog"/> class.
-            /// </summary>
-            public ConfigurableMetadataModuleCatalog()
-            {
-                this.moduleInstances = new Dictionary<string, IMetadataModule>();
-            }
-
-            /// <summary>
-            /// Get all <see cref="IMetadataModule"/> types.
-            /// </summary>
-            /// <returns>An <see cref="IEnumerable{T}"/> instance containing <see cref="Type"/> instances.</returns>
-            public IEnumerable<Type> GetMetadataModuleTypes()
-            {
-                return this.moduleInstances.Select(i => i.GetType());
-            }
-
-            /// <summary>
-            /// Retrieves a specific <see cref="IMetadataModule"/> implementation for the given <see cref="INancyModule"/> - should be per-request lifetime.
-            /// </summary>
-            /// <param name="moduleType">Module type</param>
-            /// <returns>The <see cref="IMetadataModule"/> instance</returns>
-            public IMetadataModule GetMetadataModule(Type moduleType)
-            {
-                return this.moduleInstances.ContainsKey(moduleType.FullName) ? this.moduleInstances[moduleType.FullName] : null;
-            }
-
-            /// <summary>
-            /// Registers an <see cref="IMetadataModule"/> instance.
-            /// </summary>
-            /// <param name="module">The <see cref="IMetadataModule"/> instance to register.</param>
-            public void RegisterModuleInstance(IMetadataModule module)
-            {
-                this.moduleInstances.Add(module.GetType().FullName, module);
             }
         }
 
