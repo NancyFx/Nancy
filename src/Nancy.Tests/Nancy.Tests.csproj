@@ -110,7 +110,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Extensions\ResponseExtensions.cs" />
-    <Compile Include="Fakes\FakeNancyMetadataModule.cs" />
     <Compile Include="Fakes\FakeNancyModuleNoRoutes.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithBasePath.cs" />
     <Compile Include="Fakes\FakeNancyModuleWithDependency.cs" />
@@ -122,9 +121,7 @@
     <Compile Include="Fakes\FakeHookedModule.cs" />
     <Compile Include="Fakes\FakeUserIdentity.cs" />
     <Compile Include="Fakes\FakeViewEngineHost.cs" />
-    <Compile Include="Fakes\Metadata\FakeNancyMetadataModule.cs" />
     <Compile Include="Fakes\MockPipelines.cs" />
-    <Compile Include="Fakes\Modules\FakeNancyModule.cs" />
     <Compile Include="Fakes\Person.cs" />
     <Compile Include="Fakes\ViewModel.cs" />
     <Compile Include="Helpers\CacheHelpersFixture.cs" />
@@ -134,7 +131,6 @@
     <Compile Include="Unit\Bootstrapper\PipelinesFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultAcceptHeaderCoercionConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultCultureConventionsFixture.cs" />
-    <Compile Include="Unit\Conventions\DefaultMetadataModuleConventionsFixture.cs" />
     <Compile Include="Unit\Conventions\DefaultStaticContentsConventionsFixture.cs" />
     <Compile Include="Unit\Culture\BuiltInCultureConventionFixture.cs" />
     <Compile Include="Unit\DefaultNancyBootstrapperFixture.cs" />
@@ -214,8 +210,6 @@
     <Compile Include="Fakes\FakeNancyModule.cs" />
     <Compile Include="Fakes\FakeRequest.cs" />
     <Compile Include="Unit\Routing\DefaultRouteSegmentExtractorFixture.cs" />
-    <Compile Include="Unit\Routing\MetadataModuleFixture.cs" />
-    <Compile Include="Unit\Routing\MetadataModuleRouteMetadataProviderFixture.cs" />
     <Compile Include="Unit\Routing\NotFoundRouteFixture.cs" />
     <Compile Include="Unit\ResponseFixture.cs" />
     <Compile Include="Unit\Routing\RouteCacheFixture.cs" />

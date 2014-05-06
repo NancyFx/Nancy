@@ -13,7 +13,6 @@
         private readonly IRouteSegmentExtractor routeSegmentExtractor;
         private readonly IRouteDescriptionProvider routeDescriptionProvider;
         private readonly IEnumerable<IRouteMetadataProvider> routeMetadataProviders;
-        private readonly IMetadataModuleCatalog metadataModuleCatalog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RouteCache"/> class.

@@ -1,9 +1,9 @@
-﻿namespace Nancy.Tests.Unit.Routing
+﻿namespace Nancy.Metadata.Module.Tests
 {
     using FakeItEasy;
 
     using Nancy.Routing;
-    using Nancy.Tests.Fakes;
+    using Nancy.Tests;
 
     using Xunit;
 
