@@ -27,7 +27,7 @@
         /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
         public override bool CanHandle(ValidationAttribute attribute)
         {
-            return attribute.GetType() == typeof(RangeAttribute);
+            return attribute is RangeAttribute;
         }
 
         /// <summary>

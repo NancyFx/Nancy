@@ -1,5 +1,6 @@
 ﻿namespace Nancy.Validation.DataAnnotations.Tests
 {
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
@@ -78,10 +79,31 @@
         }
 
         [Fact]
+        public void Should_read_derived_range_annotation()
+        {
+            // Given, When
+            var subject = this.factory.Create(typeof(TestModelWithDerivedDataAnnotations));
+
+            // Then
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Comparison" && r.MemberNames.Contains("Value"));
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Comparison" && r.MemberNames.Contains("Value"));
+        }
+
+        [Fact]
         public void Should_read_regex_annotation()
         {
             // Given, When
             var subject = this.factory.Create(typeof(TestModel));
+
+            // Then
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Regex" && r.MemberNames.Contains("Age"));
+        }
+
+        [Fact]
+        public void Should_read_derived_regex_annotation()
+        {
+            // Given, When
+            var subject = this.factory.Create(typeof(TestModelWithDerivedDataAnnotations));
 
             // Then
             subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "Regex" && r.MemberNames.Contains("Age"));
@@ -99,10 +121,31 @@
         }
 
         [Fact]
+        public void Should_read_derived_required_annotation()
+        {
+            // Given, When
+            var subject = this.factory.Create(typeof(TestModelWithDerivedDataAnnotations));
+
+            // Then
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "NotNull" && r.MemberNames.Contains("FirstName"));
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "NotEmpty" && r.MemberNames.Contains("FirstName"));
+        }
+
+        [Fact]
         public void Should_read_string_length_annotation()
         {
             // Given, When
             var subject = this.factory.Create(typeof(TestModel));
+
+            // Then
+            subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "StringLength" && r.MemberNames.Contains("FirstName"));
+        }
+
+        [Fact]
+        public void Should_read_derived_string_length_annotation()
+        {
+            // Given, When
+            var subject = this.factory.Create(typeof(TestModelWithDerivedDataAnnotations));
 
             // Then
             subject.Description.Rules.SelectMany(r => r.Value).ShouldHave(r => r.RuleType == "StringLength" && r.MemberNames.Contains("FirstName"));
@@ -156,6 +199,58 @@
             public override bool CanHandle(ValidationAttribute attribute)
             {
                 return attribute.GetType() == typeof(OopsValidationAttribute);
+            }
+        }
+
+        private class TestModelWithDerivedDataAnnotations
+        {
+            [DerivedRequired]
+            [DerivedStringLength(5)]
+            public string FirstName { get; set; }
+
+            [DerivedRegularExpression("\\d+")]
+            [DerivedRequired]
+            public string Age { get; set; }
+
+            [DerivedRange(0, 10)]
+            public int Value { get; set; }
+        }
+
+        public class DerivedRequiredAttribute : RequiredAttribute
+        {
+        }
+
+        public class DerivedStringLengthAttribute : StringLengthAttribute
+        {
+            public DerivedStringLengthAttribute(int maximumLength)
+                : base(maximumLength)
+            {
+            }
+        }
+
+        public class DerivedRegularExpressionAttribute : RegularExpressionAttribute
+        {
+            public DerivedRegularExpressionAttribute(string pattern)
+                : base(pattern)
+            {
+            }
+        }
+
+        public class DerivedRangeAttribute : RangeAttribute
+        {
+            public DerivedRangeAttribute(int minimum, int maximum)
+                : base(minimum, maximum)
+            {
+            }
+
+            public DerivedRangeAttribute(double minimum, double maximum)
+                : base(minimum, maximum)
+            {
+            }
+
+            public DerivedRangeAttribute(Type type, string minimum, string maximum)
+                : base(type, minimum, maximum)
+            {
             }
         }
     }

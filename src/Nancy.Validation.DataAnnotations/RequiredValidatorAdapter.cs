@@ -25,7 +25,7 @@
         /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
         public override bool CanHandle(ValidationAttribute attribute)
         {
-            return attribute.GetType() == typeof(RequiredAttribute);
+            return attribute is RequiredAttribute;
         }
 
         /// <summary>
