@@ -10,15 +10,17 @@ namespace Nancy.Routing
         /// <summary>
         /// Gets the <see cref="Type"/> of the metadata that is created by the provider.
         /// </summary>
-        /// <value>A <see cref="Type"/> instance.</value>
-        Type MetadataType { get; }
+        /// <param name="module">The <see cref="INancyModule"/> instance that the route is declared in.</param>
+        /// <param name="routeDescription">A <see cref="RouteDescription"/> for the route.</param>
+        /// <returns>A <see cref="Type"/> instance, or <see langword="null" /> if nothing is found.</returns>
+        Type GetMetadataType(INancyModule module, RouteDescription routeDescription);
 
         /// <summary>
         /// Gets the metadata for the provided route.
         /// </summary>
         /// <param name="module">The <see cref="INancyModule"/> instance that the route is declared in.</param>
         /// <param name="routeDescription">A <see cref="RouteDescription"/> for the route.</param>
-        /// <returns>An instance of <see cref="MetadataType"/>.</returns>
+        /// <returns>An object representing the metadata for the given route, or <see langword="null" /> if nothing is found.</returns>
         object GetMetadata(INancyModule module, RouteDescription routeDescription);
     }
 }
