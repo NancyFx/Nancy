@@ -29,7 +29,7 @@
 
         private static string GetEncoding()
         {
-            return (!XmlSettings.EncodingEnabled ? string.Empty : "; charset=" + XmlSettings.DefaultEncoding.WebName);
+            return (!XmlSettings.EncodingEnabled ? string.Empty : string.Concat("; charset=", XmlSettings.DefaultEncoding.WebName));
         }
 
         private static Action<Stream> GetXmlContents(TModel model, ISerializer serializer)
