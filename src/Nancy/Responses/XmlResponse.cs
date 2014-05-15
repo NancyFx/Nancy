@@ -3,8 +3,18 @@
     using System;
     using System.IO;
 
-    public class XmlResponse<TModel> : Response
+    using Nancy.Xml;
+
+	public class XmlResponse<TModel> : Response
     {
+		private static string contentType
+		{
+			get
+			{
+				return "application/xml" + (!XmlSettings.EncodingEnabled ? "" : "; charset=" + XmlSettings.DefaultEncoding.WebName);
+			}
+		}
+
         public XmlResponse(TModel model, string contentType, ISerializer serializer)
         {
             if (serializer == null)
@@ -19,7 +29,7 @@
 
         private static Action<Stream> GetXmlContents(TModel model, ISerializer serializer)
         {
-            return stream => serializer.Serialize("application/xml", model, stream);
+			return stream => serializer.Serialize(contentType, model, stream);
         }
     }
 }
