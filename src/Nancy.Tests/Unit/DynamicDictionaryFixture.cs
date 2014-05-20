@@ -285,7 +285,7 @@ namespace Nancy.Tests.Unit
 
             // When
             DateTime result = GetDateTimeValue(this.dictionary.value);
-            
+
             // Then
             result.ShouldEqual(date);
         }
@@ -779,7 +779,8 @@ namespace Nancy.Tests.Unit
 
             // When
             var names = new List<string>();
-            foreach (var name in parameters) {
+            foreach (var name in parameters)
+            {
                 names.Add(name);
             }
 
@@ -1105,7 +1106,7 @@ namespace Nancy.Tests.Unit
             result.ShouldBeFalse();
         }
 
-        [Fact]
+	[Fact]
         public void Should_remove_natural_key()
         {
             // Given
@@ -1117,6 +1118,45 @@ namespace Nancy.Tests.Unit
 
             //then
             input.ContainsKey("abc").ShouldBeFalse();           
+        }
+
+        [Fact]
+        public void Should_return_dictionary_from_dynamic_dictionary()
+        {
+            //Given
+            var input = new DynamicDictionary();
+
+            //When
+            var result = input.ToDictionary();
+
+            //Then
+            Assert.IsType(typeof(Dictionary<string, object>), result);
+        }
+
+        [Fact]
+        public void Should_return_dynamic_values_as_objects()
+        {
+            //Given/When
+            var result = this.dictionary.ToDictionary();
+
+            //Then
+            Assert.IsType(typeof(long), GetLongValue(result["TestInt"]));
+            Assert.IsType(typeof(string), GetStringValue(result["TestString"]));
+        }
+
+        [Fact]
+        public void Should_return_dynamic_objects_as_objects()
+        {
+            //Given
+            var input = new DynamicDictionary();
+            input.Add("Test", new { Title = "Fred", Number = 123 });
+
+            //When
+            var result = input.ToDictionary();
+
+            //Then
+            Assert.Equal("Fred", ((dynamic)result["Test"]).Title);
+            Assert.Equal(123, ((dynamic)result["Test"]).Number);
         }
     }
 }

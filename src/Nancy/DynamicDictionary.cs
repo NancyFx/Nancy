@@ -4,7 +4,7 @@
     using System.Collections;
     using System.Collections.Generic;
     using System.Dynamic;
-    
+
     /// <summary>
     /// A dictionary that supports dynamic access.
     /// </summary>
@@ -12,6 +12,7 @@
     {
         private readonly IDictionary<string, dynamic> dictionary =
             new Dictionary<string, dynamic>(StaticConfiguration.CaseSensitive ? StringComparer.InvariantCulture : StringComparer.InvariantCultureIgnoreCase);
+
 
         /// <summary>
         /// Returns an empty dynamic dictionary.
@@ -49,7 +50,7 @@
         /// <param name="binder">Provides information about the object that called the dynamic operation. The binder.Name property provides the name of the member to which the value is being assigned. For example, for the statement sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, binder.Name returns "SampleProperty". The binder.IgnoreCase property specifies whether the member name is case-sensitive.</param><param name="value">The value to set to the member. For example, for sampleObject.SampleProperty = "Test", where sampleObject is an instance of the class derived from the <see cref="T:System.Dynamic.DynamicObject"/> class, the <paramref name="value"/> is "Test".</param>
         public override bool TrySetMember(SetMemberBinder binder, object value)
         {
-        	this[binder.Name] = value;
+            this[binder.Name] = value;
             return true;
         }
 
@@ -153,7 +154,7 @@
                 return true;
             }
 
-            return obj.GetType() == typeof (DynamicDictionary) && this.Equals((DynamicDictionary) obj);
+            return obj.GetType() == typeof(DynamicDictionary) && this.Equals((DynamicDictionary)obj);
         }
 
         /// <summary>
@@ -292,7 +293,7 @@
         /// <param name="item">The object to remove from the <see cref="DynamicDictionary"/>.</param>
         public bool Remove(KeyValuePair<string, dynamic> item)
         {
-            var dynamicValueKeyValuePair = 
+            var dynamicValueKeyValuePair =
                 GetDynamicKeyValuePair(item);
 
             return this.dictionary.Remove(dynamicValueKeyValuePair);
@@ -304,7 +305,10 @@
         /// <returns>An <see cref="T:System.Collections.Generic.ICollection`1"/> containing the values in the <see cref="DynamicDictionary"/>.</returns>
         public ICollection<dynamic> Values
         {
-            get { return this.dictionary.Values; }
+            get
+            {
+                return this.dictionary.Values;
+            }
         }
 
         private static KeyValuePair<string, dynamic> GetDynamicKeyValuePair(KeyValuePair<string, dynamic> item)
@@ -317,6 +321,25 @@
         private static string GetNeutralKey(string key)
         {
             return key.Replace("-", string.Empty);
+        }
+
+        /// <summary>
+        /// Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/>
+        /// </summary>
+        /// <returns>Gets a typed Dictionary of <see cref="T:Dictionary{String, Object}" /> from <see cref="DynamicDictionary"/></returns>
+        public Dictionary<string, object> ToDictionary()
+        {
+            var data = new Dictionary<string, object>();
+
+            foreach (var item in dictionary)
+            {
+                var newKey = item.Key;
+                var newValue = ((DynamicDictionaryValue)item.Value).Value;
+
+                data.Add(newKey, newValue);
+            }
+
+            return data;
         }
     }
 }

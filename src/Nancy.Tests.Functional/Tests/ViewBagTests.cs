@@ -51,5 +51,29 @@
             // Then
             Assert.True(response.Body.AsString().Contains(@"Hello Bob"));
         }
+
+        [Fact]
+        public void Should_serialize_ViewBag()
+        {
+            // Given
+            var response = browser.Get(
+                @"/razor-viewbag-serialized",
+                with =>
+                {
+                    with.HttpRequest();
+                    with.Accept("application/json");
+                });
+                
+            // When
+            var model = response.Body.DeserializeJson<ViewBagModel>();
+
+            // Then
+            Assert.Equal("Bob", model.Name);
+        }
+
+        public class ViewBagModel
+        {
+            public string Name { get; set; }
+        }
     }
 }
