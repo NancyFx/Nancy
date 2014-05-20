@@ -119,6 +119,7 @@
     <Compile Include="AndConnectorTests.cs" />
     <Compile Include="AssertEqualityComparerFixture.cs" />
     <Compile Include="BrowserContextExtensionsFixture.cs" />
+    <Compile Include="BrowserDefaultsFixture.cs" />
     <Compile Include="BrowserResponseBodyWrapperExtensionsFixture.cs" />
     <Compile Include="BrowserResponseBodyWrapperFixture.cs" />
     <Compile Include="BrowserResponseExtensionsTests.cs" />

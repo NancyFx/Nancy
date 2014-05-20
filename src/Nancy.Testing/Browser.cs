@@ -14,6 +14,7 @@ namespace Nancy.Testing
     /// </summary>
     public class Browser : IHideObjectMembers
     {
+        private readonly Action<BrowserContext> defaultBrowserContext;
         private readonly INancyBootstrapper bootstrapper;
         private readonly INancyEngine engine;
 
@@ -24,8 +25,9 @@ namespace Nancy.Testing
         /// provided <see cref="ConfigurableBootstrapper"/> configuration.
         /// </summary>
         /// <param name="action">The <see cref="ConfigurableBootstrapper"/> configuration that should be used by the bootstrapper.</param>
-        public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action)
-            : this(new ConfigurableBootstrapper(action))
+        /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
+        public Browser(Action<ConfigurableBootstrapper.ConfigurableBootstrapperConfigurator> action, Action<BrowserContext> defaults = null)
+            : this(new ConfigurableBootstrapper(action), defaults)
         {
         }
 
@@ -33,11 +35,13 @@ namespace Nancy.Testing
         /// Initializes a new instance of the <see cref="Browser"/> class.
         /// </summary>
         /// <param name="bootstrapper">A <see cref="INancyBootstrapper"/> instance that determines the Nancy configuration that should be used by the browser.</param>
-        public Browser(INancyBootstrapper bootstrapper)
+        /// <param name="defaults">The default <see cref="BrowserContext"/> that should be used in a all requests through this browser object.</param>
+        public Browser(INancyBootstrapper bootstrapper, Action<BrowserContext> defaults = null)
         {
             this.bootstrapper = bootstrapper;
             this.bootstrapper.Initialise();
             this.engine = this.bootstrapper.GetEngine();
+            this.defaultBrowserContext = defaults ?? this.DefaultBrowserContext;
         }
 
         /// <summary>
@@ -198,7 +202,7 @@ namespace Nancy.Testing
         private BrowserResponse HandleRequest(string method, Url url, Action<BrowserContext> browserContext)
         {
             var request =
-                CreateRequest(method, url, browserContext ?? this.DefaultBrowserContext);
+                CreateRequest(method, url, browserContext ?? (with => {}));
 
             var response = new BrowserResponse(this.engine.HandleRequest(request), this);
 
@@ -279,6 +283,7 @@ namespace Nancy.Testing
 
             this.SetCookies(context);
 
+            defaultBrowserContext.Invoke(context);
             browserContext.Invoke(context);
 
             var contextValues =
