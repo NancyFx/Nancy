@@ -75,8 +75,8 @@
             var collection = HttpUtility.ParseQueryString(query);
 
             // Then
-            collection["key1"].ShouldEqual(true);
-            collection["key2"].ShouldEqual(true);
+            collection["key1"].ShouldEqual("key1");
+            collection["key2"].ShouldEqual("key2");
         }
 
         [Fact]
