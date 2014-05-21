@@ -64,5 +64,19 @@
             collection["key"].ShouldEqual("value,value");
             collection["KEY"].ShouldEqual("VALUE");
         }
+
+        [Fact]
+        public void ParseQueryString_handler_keys_without_values()
+        {
+            // Given
+            var query = "key1&key2";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key1"].ShouldEqual(true);
+            collection["key2"].ShouldEqual(true);
+        }
     }
 }
