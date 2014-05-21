@@ -78,5 +78,31 @@
             collection["key1"].ShouldEqual(true);
             collection["key2"].ShouldEqual(true);
         }
+
+        [Fact]
+        public void ParseQueryString_handles_duplicate_keys_when_one_has_no_value()
+        {
+            // Given
+            var query = "key&key=value";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key"].ShouldEqual("key,value");
+        }
+
+        [Fact]
+        public void ParseQueryString_handles_duplicate_keys_when_they_have_no_values()
+        {
+            // Given
+            var query = "key&key";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key"].ShouldEqual("key,key");
+        }
     }
 }
