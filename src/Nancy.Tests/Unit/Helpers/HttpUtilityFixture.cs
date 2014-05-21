@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public void ParseQueryString_handler_keys_without_values()
+        public void ParseQueryString_handles_keys_without_values()
         {
             // Given
             var query = "key1&key2";
