@@ -35,10 +35,6 @@ namespace Nancy.Testing
         private readonly List<Action<TinyIoCContainer, IPipelines>> applicationStartupActions;
         private readonly List<Action<TinyIoCContainer, IPipelines, NancyContext>> requestStartupActions;
 
-        private bool configuredCollectionsRegistered;
-        private bool configuredInstancesRegistered;
-        private bool configuredTypesRegistered;
-
         /// <summary>
         /// Test project name suffixes that will be stripped from the test name project
         /// in order to try and resolve the name of the assembly that is under test so
