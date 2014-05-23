@@ -21,7 +21,7 @@ namespace Nancy.Testing
         }
 
         /// <summary>
-        /// Gets the <see cref="TValue"/> with the specified key.
+        /// Gets the <typeparamref name="TValue"/> with the specified key.
         /// </summary>
         /// <value>The value of the indexer.</value>
         public TValue this[TKey key]

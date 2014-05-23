@@ -9,7 +9,7 @@
         /// Gets the route, and the corresponding parameter dictionary from the URL
         /// </summary>
         /// <param name="context">Current context</param>
-        /// <returns>A <see cref="ResolveResult"> containing the resolved route information.</returns>
+        /// <returns>A <see cref="ResolveResult"/> containing the resolved route information.</returns>
         ResolveResult Resolve(NancyContext context);
     }
 }
