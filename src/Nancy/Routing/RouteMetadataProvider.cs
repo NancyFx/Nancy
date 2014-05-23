@@ -24,7 +24,7 @@ namespace Nancy.Routing
         /// </summary>
         /// <param name="module">The <see cref="INancyModule" /> instance that the route is declared in.</param>
         /// <param name="routeDescription">A <see cref="RouteDescription" /> for the route.</param>
-        /// <returns>An instance of <see cref="MetadataType" />.</returns>
+        /// <returns>An instance of <typeparamref name="TMetadata"/>.</returns>
         public object GetMetadata(INancyModule module, RouteDescription routeDescription)
         {
             return this.GetRouteMetadata(module, routeDescription);
@@ -35,7 +35,7 @@ namespace Nancy.Routing
         /// </summary>
         /// <param name="module">The <see cref="INancyModule"/> instance that the route is declared in.</param>
         /// <param name="routeDescription">A <see cref="RouteDescription"/> for the route.</param>
-        /// <returns>An instance of <see cref="TMetadata"/>.</returns>
+        /// <returns>An instance of <typeparamref name="TMetadata"/>.</returns>
         protected abstract TMetadata GetRouteMetadata(INancyModule module, RouteDescription routeDescription);
     }
 }

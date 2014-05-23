@@ -40,7 +40,7 @@
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ViewNotFoundExcepton"/>
+        /// Initializes a new instance of the <see cref="ViewNotFoundException"/>
         /// </summary>
         /// <param name="msg">A message describing the problem</param>
         public ViewNotFoundException(string msg)

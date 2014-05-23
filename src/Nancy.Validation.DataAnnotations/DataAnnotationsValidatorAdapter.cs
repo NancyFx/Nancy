@@ -24,7 +24,7 @@
 
         /// <summary>
         /// Gets a boolean that indicates if the adapter can handle the
-        /// provided <param name="attribute">.</param>
+        /// provided <paramref name="attribute"/>.
         /// </summary>
         /// <param name="attribute">The <see cref="ValidationAttribute"/> that should be handled.</param>
         /// <returns><see langword="true" /> if the attribute can be handles, otherwise <see langword="false" />.</returns>
