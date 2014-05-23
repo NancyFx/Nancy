@@ -55,7 +55,7 @@
         /// Gets or sets the value stream.
         /// </summary>
         /// <value>A <see cref="Stream"/> containing the contents of the file.</value>
-        /// <remarks>This is a <see cref="HttpMultiparSubStream"/> instance that sits ontop of the request stream.</remarks>
+        /// <remarks>This is a <see cref="HttpMultipartSubStream"/> instance that sits ontop of the request stream.</remarks>
         public Stream Value { get; private set; }
     }
 }
