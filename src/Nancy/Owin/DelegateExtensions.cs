@@ -10,8 +10,17 @@ namespace Nancy.Owin
         Func<IDictionary<string, object>, Task>, 
         Func<IDictionary<string, object>, Task>>;
 
+    /// <summary>
+    /// OWIN extensions for the delegate-based approach.
+    /// </summary>
     public static class DelegateExtensions
     {
+        /// <summary>
+        /// Adds Nancy to the OWIN pipeline.
+        /// </summary>
+        /// <param name="builder">The application builder delegate.</param>
+        /// <param name="action">A configuration builder action.</param>
+        /// <returns>The application builder delegate.</returns>
         public static Action<MiddlewareFunc> UseNancy(this Action<MiddlewareFunc> builder, Action<NancyOptions> action)
         {
             var options = new NancyOptions();
@@ -21,6 +30,12 @@ namespace Nancy.Owin
             return builder.UseNancy(options);
         }
 
+        /// <summary>
+        /// Adds Nancy to the OWIN pipeline.
+        /// </summary>
+        /// <param name="builder">The application builder delegate.</param>
+        /// <param name="options">The Nancy options.</param>
+        /// <returns>The application builder delegate.</returns>
         public static Action<MiddlewareFunc> UseNancy(this Action<MiddlewareFunc> builder, NancyOptions options = null)
         {
             var nancyOptions = options ?? new NancyOptions();
