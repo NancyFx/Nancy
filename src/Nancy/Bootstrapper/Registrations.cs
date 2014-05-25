@@ -52,10 +52,10 @@
         }
 
         /// <summary>
-        /// 
+        /// Scans for all implementations of <typeparamref name="TRegistration"/> and registers them.
         /// </summary>
         /// <param name="lifetime">Lifetime of the registration, defaults to singleton</param>
-        /// <typeparam name="TRegistration"></typeparam>
+        /// <typeparam name="TRegistration">The <see cref="Type"/> to scan for and register as.</typeparam>
         public void RegisterAll<TRegistration>(Lifetime lifetime = Lifetime.Singleton)
         {
             var implementations = AppDomainAssemblyTypeScanner
