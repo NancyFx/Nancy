@@ -186,6 +186,10 @@
     <Compile Include="INancyModule.cs" />
     <Compile Include="NancyEngineExtensions.cs" />
     <Compile Include="NegotiatorExtensions.cs" />
+    <Compile Include="Owin\NancyContextExtensions.cs" />
+    <Compile Include="Owin\NancyOptions.cs" />
+    <Compile Include="Owin\NancyOptionsExtensions.cs" />
+    <Compile Include="Owin\NancyOwinHost.cs" />
     <Compile Include="Responses\EmbeddedFileResponse.cs" />
     <Compile Include="Diagnostics\IDiagnosticsProvider.cs" />
     <Compile Include="Diagnostics\IInteractiveDiagnostics.cs" />
