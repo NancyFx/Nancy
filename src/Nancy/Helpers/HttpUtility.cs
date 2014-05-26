@@ -3,7 +3,7 @@
 //
 // Authors:
 //   Patrik Torstensson (Patrik.Torstensson@labs2.com)
-//   Wictor Wilén (decode/encode functions) (wictor@ibizkit.se)
+//   Wictor Wilï¿½n (decode/encode functions) (wictor@ibizkit.se)
 //   Tim Coleman (tim@timcoleman.com)
 //   Gonzalo Paniagua Javier (gonzalo@ximian.com)
 //
@@ -737,7 +737,8 @@ namespace Nancy.Helpers
                 if (valuePos == -1)
                 {
                     var valueLen = valueEnd;
-                    if (valueLen == -1) valueLen = decoded.Length - namePos;
+                    if (valueLen == -1) 
+                        valueLen = decoded.Length - namePos;
 
                     name = UrlDecode(decoded.Substring(namePos, valueLen), encoding);
                     valuePos = namePos;
