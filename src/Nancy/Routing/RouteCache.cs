@@ -3,11 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-<<<<<<< HEAD
-
-=======
-    using System;
->>>>>>> a4e013a92442d7045dc2fce4bf528b0e023e99a5
+    
     using Nancy.Culture;
 
     /// <summary>
