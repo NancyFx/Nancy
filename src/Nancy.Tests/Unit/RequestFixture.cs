@@ -770,7 +770,7 @@ namespace Nancy.Tests.Unit
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1=key1" }, memory);
 
             // Then
-            ((string)request.Query.key1).ShouldEqual("key1"); 
+            ShouldAssertExtensions.ShouldBeOfType<string>(request.Query["key1"].Value);
         }
 
         private static RequestStream CreateRequestStream()
