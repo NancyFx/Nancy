@@ -44,7 +44,13 @@ namespace Nancy.Diagnostics
         {
             var diagnosticsModuleCatalog = new DiagnosticsModuleCatalog(providers, rootPathProvider, requestTracing, configuration, diagnosticsConfiguration);
 
-            var diagnosticsRouteCache = new RouteCache(diagnosticsModuleCatalog, new DefaultNancyContextFactory(cultureService, requestTraceFactory), new DefaultRouteSegmentExtractor(), new DefaultRouteDescriptionProvider(), cultureService, routeMetadataProviders);
+            var diagnosticsRouteCache = new RouteCache(
+                diagnosticsModuleCatalog,
+                new DefaultNancyContextFactory(cultureService, requestTraceFactory),
+                new DefaultRouteSegmentExtractor(),
+                new DefaultRouteDescriptionProvider(),
+                cultureService,
+                routeMetadataProviders);
 
             var diagnosticsRouteResolver = new DefaultRouteResolver(
                 diagnosticsModuleCatalog,

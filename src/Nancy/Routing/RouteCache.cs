@@ -3,7 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
+    
     using Nancy.Culture;
 
     /// <summary>
@@ -24,7 +24,13 @@
         /// <param name="cultureService"></param>
         /// <param name="routeMetadataProviders"></param>
         /// <param name="routeDescriptionProvider"></param>
-        public RouteCache(INancyModuleCatalog moduleCatalog, INancyContextFactory contextFactory, IRouteSegmentExtractor routeSegmentExtractor, IRouteDescriptionProvider routeDescriptionProvider, ICultureService cultureService, IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
+        public RouteCache(
+            INancyModuleCatalog moduleCatalog,
+            INancyContextFactory contextFactory,
+            IRouteSegmentExtractor routeSegmentExtractor,
+            IRouteDescriptionProvider routeDescriptionProvider,
+            ICultureService cultureService,
+            IEnumerable<IRouteMetadataProvider> routeMetadataProviders)
         {
             this.routeSegmentExtractor = routeSegmentExtractor;
             this.routeDescriptionProvider = routeDescriptionProvider;
@@ -81,7 +87,7 @@
                     data.Add(type, metadata);
                 }
             }
-
+            
             return new RouteMetadata(data);
         }
 

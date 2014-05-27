@@ -162,6 +162,7 @@ namespace Nancy.Bootstrapper
         public IList<Type> RouteSegmentConstraints { get; set; }
 
         public Type RequestTraceFactory { get; set; }
+
         public Type ResponseNegotiator { get; set; }
 
         /// <summary>
@@ -239,7 +240,7 @@ namespace Nancy.Bootstrapper
                 new TypeRegistration(typeof(IRouteResolverTrie), this.RouteResolverTrie), 
                 new TypeRegistration(typeof(ITrieNodeFactory), this.TrieNodeFactory), 
                 new TypeRegistration(typeof(IRequestTraceFactory), this.RequestTraceFactory), 
-                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator),
+                new TypeRegistration(typeof(IResponseNegotiator), this.ResponseNegotiator)
             };
         }
 

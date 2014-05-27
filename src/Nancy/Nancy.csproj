@@ -248,11 +248,13 @@
     <Compile Include="Routing\DefaultRouteDescriptionProvider.cs" />
     <Compile Include="Routing\DefaultRouteInvoker.cs" />
     <Compile Include="Routing\DefaultRouteSegmentExtractor.cs" />
+    <Compile Include="Routing\IMetadataModule.cs" />
     <Compile Include="Routing\IRequestDispatcher.cs" />
     <Compile Include="Routing\IRouteDescriptionProvider.cs" />
     <Compile Include="Routing\IRouteInvoker.cs" />
     <Compile Include="Routing\IRouteMetadataProvider.cs" />
     <Compile Include="Routing\IRouteSegmentExtractor.cs" />
+    <Compile Include="Routing\MetadataModule.cs" />
     <Compile Include="Routing\ParameterSegmentInformation.cs" />
     <Compile Include="Routing\ResolveResult.cs" />
     <Compile Include="Routing\OptionsRoute.cs" />

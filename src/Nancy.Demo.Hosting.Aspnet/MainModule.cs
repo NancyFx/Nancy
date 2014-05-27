@@ -2,6 +2,8 @@ namespace Nancy.Demo.Hosting.Aspnet
 {
     using System;
     using System.Linq;
+
+    using Nancy.Demo.Hosting.Aspnet.Metadata;
     using Nancy.Demo.Hosting.Aspnet.Models;
     using Nancy.Routing;
     using Security;
@@ -19,6 +21,13 @@ namespace Nancy.Demo.Hosting.Aspnet
                 return Negotiate
                     .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyRouteMetadata>())
                     .WithView("meta");
+            };
+
+            Get["/uber-meta"] = parameters =>
+            {
+                return Negotiate
+                    .WithModel(routeCacheProvider.GetCache().RetrieveMetadata<MyUberRouteMetadata>().OfType<MyUberRouteMetadata>())
+                    .WithView("uber-meta");
             };
 
             Get["/text"] = x =>
