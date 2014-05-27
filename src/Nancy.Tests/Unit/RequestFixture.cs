@@ -746,6 +746,33 @@ namespace Nancy.Tests.Unit
             request.Path.ShouldEqual("/");
         }
 
+        [Fact]
+        public void Should_replace_value_of_query_key_without_value_with_true()
+        {
+            // Given
+            var memory = CreateRequestStream();
+
+            // When
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1" }, memory);
+
+            // Then
+            ((bool)request.Query.key1).ShouldBeTrue();
+            ((string)request.Query.key1).ShouldEqual("key1"); 
+        }
+
+        [Fact]
+        public void Should_not_replace_equal_key_value_query_with_bool()
+        {
+            // Given
+            var memory = CreateRequestStream();
+
+            // When
+            var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1=key1" }, memory);
+
+            // Then
+            ShouldAssertExtensions.ShouldBeOfType<string>(request.Query["key1"].Value);
+        }
+
         private static RequestStream CreateRequestStream()
         {
             return CreateRequestStream(new MemoryStream());

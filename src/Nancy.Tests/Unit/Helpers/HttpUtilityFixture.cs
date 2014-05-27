@@ -64,5 +64,45 @@
             collection["key"].ShouldEqual("value,value");
             collection["KEY"].ShouldEqual("VALUE");
         }
+
+        [Fact]
+        public void ParseQueryString_handles_keys_without_values()
+        {
+            // Given
+            var query = "key1&key2";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key1"].ShouldEqual("key1");
+            collection["key2"].ShouldEqual("key2");
+        }
+
+        [Fact]
+        public void ParseQueryString_handles_duplicate_keys_when_one_has_no_value()
+        {
+            // Given
+            var query = "key&key=value";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key"].ShouldEqual("key,value");
+        }
+
+        [Fact]
+        public void ParseQueryString_handles_duplicate_keys_when_they_have_no_values()
+        {
+            // Given
+            var query = "key&key";
+
+            // When
+            var collection = HttpUtility.ParseQueryString(query);
+
+            // Then
+            collection["key"].ShouldEqual("key,key");
+        }
     }
 }
