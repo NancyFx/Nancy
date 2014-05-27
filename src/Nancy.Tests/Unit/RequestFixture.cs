@@ -752,10 +752,10 @@ namespace Nancy.Tests.Unit
             // Given
             var memory = CreateRequestStream();
 
-            // when
+            // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1" }, memory);
 
-            // then
+            // Then
             ((bool)request.Query.key1).ShouldBeTrue();
             ((string)request.Query.key1).ShouldEqual("key1"); 
         }
@@ -766,10 +766,10 @@ namespace Nancy.Tests.Unit
             // Given
             var memory = CreateRequestStream();
 
-            // when
+            // When
             var request = new Request("GET", new Url { Path = "/", Scheme = "http", Query = "key1=key1" }, memory);
 
-            // then
+            // Then
             ((string)request.Query.key1).ShouldEqual("key1"); 
         }
 
