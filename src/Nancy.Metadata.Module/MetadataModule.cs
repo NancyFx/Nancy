@@ -1,7 +1,9 @@
-﻿namespace Nancy.Routing
+﻿namespace Nancy.Metadata.Module
 {
     using System;
     using System.Collections.Generic;
+
+    using Nancy.Routing;
 
     /// <summary>
     /// Base class containing the functionality for obtaining metadata for a given <see cref="RouteDescription"/>.

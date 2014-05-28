@@ -1,6 +1,6 @@
 ﻿namespace Nancy.Demo.Hosting.Aspnet.Metadata
 {
-    using Nancy.Routing;
+    using Nancy.Metadata.Module;
 
     public class MainMetadataModule : MetadataModule<MyUberRouteMetadata>
     {

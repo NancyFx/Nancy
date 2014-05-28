@@ -1,6 +1,8 @@
-﻿namespace Nancy.Routing
+﻿namespace Nancy.Metadata.Module
 {
     using System;
+
+    using Nancy.Routing;
 
     /// <summary>
     /// Defines facilities for obtaining metadata for a given <see cref="RouteDescription"/>.
